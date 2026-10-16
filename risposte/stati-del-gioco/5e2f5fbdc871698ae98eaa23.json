@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.7-flash",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"La verifica script_godot tenta di aumentare il punteggio con call_if_exists(main, \\\"add_score\\\", [100]), ma la funzione add_score non esiste nello script di partenza e la consegna non ne richiede l'implementazione. Il punteggio rimane 0, la funzione check_win() non attiva lo stato WIN e il test fallisce.\",\n      \"correzione\": \"Nella verifica script_godot del test, sostituisci la riga 'call_if_exists(main, \\\"add_score\\\", [100])' con 'main.set(\\\"score\\\", 100)', oppure aggiungi alla consegna la specifica di creare la funzione add_score(amount: int).\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
+ "ragionamento": 3882,
+ "quando": "2026-10-16T22:18:34.262Z",
+ "ruolo": "revisore"
+}
