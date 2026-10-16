@@ -1,0 +1,101 @@
+{
+ "n": 21,
+ "quando": "2026-10-16T22:13:56.132Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (estendi): approvato",
+ "spiegazione": "«Profili e dialoghi di una visual novel». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: dialogue_system.gd",
+ "richieste": 0,
+ "durataMs": 8129,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "estendi",
+   "titolo": "Profili e dialoghi di una visual novel",
+   "consegna": "Ricevi il progetto `ProfiliPersonaggi`, un modulo per visual novel che gestisce i profili degli interlocutori tramite dizionari annidati.\nNel file `dialogue_system.gd` è presente il dizionario principale `characters`, in cui ogni personaggio possiede nome (`\"name\"`), affinità con il protagonista (`\"affinity\"`) e una mappa di espressioni emotive (`\"emotions\"`). Il sistema include già le funzioni `set_speaker()`, `get_speaker_name()` e `update_display()`.\n\nIl tuo compito è estendere `dialogue_system.gd` implementando due nuove funzioni per gestire gli sviluppi della storia, senza alterare il funzionamento di quelle esistenti:\n\n1. `add_emotion(char_id: String, emotion_id: String, description: String) -> bool`:\n   - Se `char_id` non è presente in `characters`, restituisci `false`.\n   - Accedi al dizionario delle emozioni del personaggio (`characters[char_id][\"emotions\"]`).\n   - Se `emotion_id` esiste già in quel dizionario, non sovrascriverla e restituisci `false`.\n   - Se non esiste, memorizza la nuova emozione (`emotions[emotion_id] = description`). Se `char_id == current_character`, chiama `update_display()` per aggiornare la visualizzazione. Restituisci `true`.\n\n2. `change_affinity(char_id: String, amount: int) -> int`:\n   - Se `char_id` non è presente in `characters`, restituisci `-1`.\n   - Calcola la nuova affinità sommando `amount` al valore attuale (`characters[char_id][\"affinity\"]`).\n   - L'affinità non può scendere sotto zero: se il risultato è negativo, impostalo a `0`.\n   - Assegna il nuovo valore in `characters[char_id][\"affinity\"]`, chiama `update_display()` e restituisci il valore intero dell'affinità aggiornata.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "profili-personaggi",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Verifica l'esistenza del personaggio con `if not (char_id in characters):` in entrambe le funzioni."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "Node2D",
+     "nome": "Main",
+     "descrizione": "La scena main.tscn contiene il nodo Node2D chiamato Main"
+    },
+    {
+     "tipo": "script_collegato",
+     "scena": "res://main.tscn",
+     "nodo": "Main",
+     "descrizione": "Il nodo Main ha lo script dialogue_system.gd collegato"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_inst\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\t\n\tcheck(\"has_add_emo\", has_function(main, \"add_emotion\"), \"dialogue_system.gd deve implementare add_emotion\")\n\tcheck(\"has_change_aff\", has_function(main, \"change_affinity\"), \"dialogue_system.gd deve implementare change_affinity\")\n\t\n\t# Verifica funzioni preesistenti (regression test)\n\tvar hero_name = call_if_exists(main, \"get_speaker_name\", [\"hero\"])\n\tcheck(\"existing_speaker\", hero_name == \"Eldrin\", \"get_speaker_name('hero') deve continuare a restituire 'Eldrin'\")\n\t\n\t# Test change_affinity\n\tvar new_aff: int = call_if_exists(main, \"change_affinity\", [\"mage\", 5], -99)\n\tcheck(\"aff_increase\", new_aff == 30, \"Aumentare l'affinita' di Lyra di 5 deve restituire 30 (25 + 5)\")\n\t\n\tvar clamped_aff: int = call_if_exists(main, \"change_affinity\", [\"mage\", -50], -99)\n\tcheck(\"aff_clamp_zero\", clamped_aff == 0, \"L'affinita' non puo' essere negativa e deve fermarsi a 0\")\n\t\n\tvar missing_aff: int = call_if_exists(main, \"change_affinity\", [\"sconosciuto\", 10], 0)\n\tcheck(\"aff_missing\", missing_aff == -1, \"change_affinity su un personaggio inesistente deve restituire -1\")\n\t\n\t# Test add_emotion\n\tvar added_emo = call_if_exists(main, \"add_emotion\", [\"mage\", \"sad\", \"Sguardo malinconico\"]) as bool\n\tcheck(\"emo_added\", added_emo == true, \"add_emotion con chiave nuova deve restituire true\")\n\t\n\tvar chars: Dictionary = get_prop(main, \"characters\", {})\n\tvar mage_emotions: Dictionary = chars.get(\"mage\", {}).get(\"emotions\", {})\n\tcheck(\"emo_stored\", mage_emotions.get(\"sad\") == \"Sguardo malinconico\", \"L'emozione 'sad' deve essere memorizzata nel dizionario del personaggio\")\n\t\n\tvar duplicate_emo = call_if_exists(main, \"add_emotion\", [\"mage\", \"sad\", \"Altra descrizione\"]) as bool\n\tcheck(\"emo_no_overwrite\", duplicate_emo == false, \"add_emotion non deve sovrascrivere emozioni esistenti e deve restituire false\")\n\t\n\tvar invalid_char_emo = call_if_exists(main, \"add_emotion\", [\"sconosciuto\", \"happy\", \"Test\"]) as bool\n\tcheck(\"emo_invalid_char\", invalid_char_emo == false, \"add_emotion su personaggio inesistente deve restituire false\")\n",
+     "descrizione": "Le funzioni add_emotion e change_affinity gestiscono correttamente i dati annidati e i casi limite"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "ProfiliPersonaggi",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ProfiliPersonaggi\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://dialogue_system.gd\" id=\"1_dialogue\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_dialogue\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 32.0\noffset_top = 32.0\noffset_right = 600.0\noffset_bottom = 120.0\n"
+     },
+     {
+      "percorso": "dialogue_system.gd",
+      "contenuto": "extends Node2D\n\n# Archivio dei personaggi con affinita' e mappa delle espressioni emotive\nvar characters: Dictionary = {\n\t\"hero\": {\n\t\t\"name\": \"Eldrin\",\n\t\t\"affinity\": 10,\n\t\t\"emotions\": {\n\t\t\t\"neutral\": \"Serio e composto\",\n\t\t\t\"happy\": \"Sorpreso e felice\",\n\t\t\t\"angry\": \"Accigliato e teso\"\n\t\t}\n\t},\n\t\"mage\": {\n\t\t\"name\": \"Lyra\",\n\t\t\"affinity\": 25,\n\t\t\"emotions\": {\n\t\t\t\"neutral\": \"Calma e riflessiva\",\n\t\t\t\"happy\": \"Sorriso raggiante\"\n\t\t}\n\t}\n}\n\nvar current_character: String = \"hero\"\nvar current_emotion: String = \"neutral\"\n\n\nfunc _ready() -> void:\n\tupdate_display()\n\n\nfunc set_speaker(char_id: String) -> bool:\n\t# Cambia personaggio attivo se registrato nel dizionario\n\tif char_id in characters:\n\t\tcurrent_character = char_id\n\t\tcurrent_emotion = \"neutral\"\n\t\tupdate_display()\n\t\treturn true\n\treturn false\n\n\nfunc get_speaker_name(char_id: String) -> String:\n\t# Restituisce il nome leggibile o 'Sconosciuto' se assente\n\tif char_id in characters:\n\t\treturn characters[char_id][\"name\"]\n\treturn \"Sconosciuto\"\n\n\nfunc update_display() -> void:\n\t# Aggiorna il testo a video leggendo i dati dal dizionario\n\tif current_character in characters:\n\t\tvar profile: Dictionary = characters[current_character]\n\t\tvar speaker_name: String = profile[\"name\"]\n\t\tvar affinity: int = profile[\"affinity\"]\n\t\tvar emotion_map: Dictionary = profile[\"emotions\"]\n\t\tvar emotion_text: String = emotion_map.get(current_emotion, \"Indifferente\")\n\t\t$Label.text = \"%s (Affinita': %d)\\nEspressione: %s\" % [speaker_name, affinity, emotion_text]\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ProfiliPersonaggi\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://dialogue_system.gd\" id=\"1_dialogue\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_dialogue\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 32.0\noffset_top = 32.0\noffset_right = 600.0\noffset_bottom = 120.0\n"
+     },
+     {
+      "percorso": "dialogue_system.gd",
+      "contenuto": "extends Node2D\n\n# Archivio dei personaggi con affinita' e mappa delle espressioni emotive\nvar characters: Dictionary = {\n\t\"hero\": {\n\t\t\"name\": \"Eldrin\",\n\t\t\"affinity\": 10,\n\t\t\"emotions\": {\n\t\t\t\"neutral\": \"Serio e composto\",\n\t\t\t\"happy\": \"Sorpreso e felice\",\n\t\t\t\"angry\": \"Accigliato e teso\"\n\t\t}\n\t},\n\t\"mage\": {\n\t\t\"name\": \"Lyra\",\n\t\t\"affinity\": 25,\n\t\t\"emotions\": {\n\t\t\t\"neutral\": \"Calma e riflessiva\",\n\t\t\t\"happy\": \"Sorriso raggiante\"\n\t\t}\n\t}\n}\n\nvar current_character: String = \"hero\"\nvar current_emotion: String = \"neutral\"\n\n\nfunc _ready() -> void:\n\tupdate_display()\n\n\nfunc set_speaker(char_id: String) -> bool:\n\t# Cambia personaggio attivo se registrato nel dizionario\n\tif char_id in characters:\n\t\tcurrent_character = char_id\n\t\tcurrent_emotion = \"neutral\"\n\t\tupdate_display()\n\t\treturn true\n\treturn false\n\n\nfunc get_speaker_name(char_id: String) -> String:\n\t# Restituisce il nome leggibile o 'Sconosciuto' se assente\n\tif char_id in characters:\n\t\treturn characters[char_id][\"name\"]\n\treturn \"Sconosciuto\"\n\n\nfunc add_emotion(char_id: String, emotion_id: String, description: String) -> bool:\n\t# Verifica esistenza personaggio nel dizionario principale\n\tif not (char_id in characters):\n\t\treturn false\n\t\n\tvar emotions: Dictionary = characters[char_id][\"emotions\"]\n\t\n\t# Non sovrascrive emozioni gia' definite\n\tif emotion_id in emotions:\n\t\treturn false\n\t\n\temotions[emotion_id] = description\n\tif char_id == current_character:\n\t\tupdate_display()\n\treturn true\n\n\nfunc change_affinity(char_id: String, amount: int) -> int:\n\t# Restituisce -1 se il personaggio non esiste nel dizionario\n\tif not (char_id in characters):\n\t\treturn -1\n\t\n\tvar new_affinity: int = characters[char_id][\"affinity\"] + amount\n\tif new_affinity < 0:\n\t\tnew_affinity = 0\n\t\n\tcharacters[char_id][\"affinity\"] = new_affinity\n\tupdate_display()\n\treturn new_affinity\n\n\nfunc update_display() -> void:\n\t# Aggiorna il testo a video leggendo i dati dal dizionario\n\tif current_character in characters:\n\t\tvar profile: Dictionary = characters[current_character]\n\t\tvar speaker_name: String = profile[\"name\"]\n\t\tvar affinity: int = profile[\"affinity\"]\n\t\tvar emotion_map: Dictionary = profile[\"emotions\"]\n\t\tvar emotion_text: String = emotion_map.get(current_emotion, \"Indifferente\")\n\t\t$Label.text = \"%s (Affinita': %d)\\nEspressione: %s\" % [speaker_name, affinity, emotion_text]\n"
+     }
+    ],
+    "progetto": {
+     "nome": "ProfiliPersonaggi",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "I dizionari annidati permettono di modellare strutture dati complesse con chiavi semantiche. In `add_emotion()`, accedere a `characters[char_id][\"emotions\"]` restituisce il dizionario delle espressioni specifiche di quell'interlocutore, su cui verifichiamo la presenza della chiave prima di assegnare la nuova descrizione. In `change_affinity()`, leggiamo e modifichiamo il valore numerico prevenendo risultati negativi e aggiorniamo subito la visualizzazione se il personaggio è attivo.",
+    "cambiati": [
+     "dialogue_system.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
