@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T18:58:15.445Z",
+ "aggiornato": "2026-10-16T19:31:44.471Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -101,6 +101,15 @@
    "file": "lezioni/f01-programmare/casualita-e-distanze.json",
    "sha256": "77485cc9d4397e8ddc9b557f8e7204d9fd1cd5d6641d059f22ff6ce5dbc2264f",
    "byte": 69947
+  },
+  {
+   "slug": "punteggio-e-testo",
+   "numero": "1.8",
+   "titolo": "Punteggio e testo sullo schermo",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/punteggio-e-testo.json",
+   "sha256": "31b40acd237ce037170d830c53473469a8e57741775c929809e4ebcf235619bf",
+   "byte": 59869
   }
  ],
  "documentazione": {
