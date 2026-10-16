@@ -1,6 +1,214 @@
 {
  "creato": "2026-10-16T18:58:16.910Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Formatta le statistiche del cesto con l'operatore %",
+    "consegna": "Nel file `basket.gd`, il testo del nodo `Label` viene composto dentro `_ready()` sommando stringhe con `+` e convertendo i numeri con `str()`. Questo approccio non controlla i decimali e rende il codice difficile da leggere.\n\nRiorganizza la gestione del testo del cesto seguendo queste specifiche:\n\n1. Crea in `basket.gd` la funzione `update_ui() -> void` che assegna alla proprietà `text` di `$Label` una stringa formattata con l'operatore `%`:\n   - Il formato deve essere: `\"%s | Vite: %d | Vel: %.1f\"` sostituito dai valori di `player_name`, `lives` e `speed`.\n2. In `_ready()`, elimina la vecchia riga che componeva il testo con `+` e chiama invece `update_ui()` per impostare la scritta iniziale.\n3. Crea la funzione `set_speed(new_speed: float) -> void` che aggiorna la variabile `speed` con il valore ricevuto e chiama subito `update_ui()`, così il testo a schermo si aggiorna solo quando la velocità cambia davvero.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Usa l'operatore di formattazione `%` seguito da una lista tra parentesi quadre: `\"%s | Vite: %d | Vel: %.1f\" % [player_name, lives, speed]`.",
+     "Ricorda di non toccare la funzione `_process(delta)`: la regola dell'interfaccia è aggiornare il `Label` solo dentro `update_ui()` quando i valori cambiano.",
+     "Dentro `set_speed(new_speed: float)` basta scrivere `speed = new_speed` e poi chiamare `update_ui()`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://basket.tscn",
+      "tipoNodo": "Label",
+      "nome": "Label",
+      "descrizione": "La scena basket.tscn contiene il nodo Label figlio del cesto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "func update_ui\\(\\)",
+      "descrizione": "In basket.gd è definita la funzione update_ui()"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "func set_speed\\(",
+      "descrizione": "In basket.gd è definita la funzione set_speed()"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale basket.tscn deve avviarsi correttamente\"):\n\t\treturn\n\tvar label := find_by_class(main, \"Label\") as Label\n\tif not check(\"label\", label != null, \"Il nodo Label deve essere presente nel cesto\"):\n\t\treturn\n\tawait wait_frames(2)\n\tcheck(\"initial_text\", label.text == \"Cesto | Vite: 3 | Vel: 350.0\", \"All'avvio il Label deve mostrare 'Cesto | Vite: 3 | Vel: 350.0', ma mostra '%s'\" % label.text)\n\tif not check(\"has_set_speed\", has_function(main, \"set_speed\"), \"Lo script basket.gd deve possedere la funzione set_speed(new_speed: float)\"):\n\t\treturn\n\tcall_if_exists(main, \"set_speed\", [420.5])\n\tcheck(\"updated_speed\", label.text == \"Cesto | Vite: 3 | Vel: 420.5\", \"Dopo set_speed(420.5) il Label deve mostrare 'Cesto | Vite: 3 | Vel: 420.5', ma mostra '%s'\" % label.text)\n\tcall_if_exists(main, \"set_speed\", 200.0)\n\tcheck(\"integer_speed\", label.text == \"Cesto | Vite: 3 | Vel: 200.0\", \"Con velocità 200.0 il segnaposto %%.1f deve mostrare sempre un decimale: '200.0'\")",
+      "descrizione": "Il testo iniziale è formattato correttamente e set_speed aggiorna la scritta"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Mostra lo stato iniziale del gioco nel Label formattato\n\tupdate_ui()\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n\n\nfunc update_ui() -> void:\n\t# Formatta nome, vite e velocita' con un decimale fisso\n\t$Label.text = \"%s | Vite: %d | Vel: %.1f\" % [player_name, lives, speed]\n\n\nfunc set_speed(new_speed: float) -> void:\n\t# Aggiorna la velocita' e riflette subito il cambiamento a schermo\n\tspeed = new_speed\n\tupdate_ui()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "res://basket.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Invece di concatenare stringhe con l'operatore `+` e ripetere chiamate a `str()`, usiamo l'operatore `%` con i segnaposto corrispondenti: `%s` per il nome (`String`), `%d` per le vite (`int`) e `%.1f` per la velocità (`float`). Il modificatore `.1f` garantisce che il numero decimale mantenga sempre e solo una cifra dopo la virgola (ad esempio `350.0` invece di `350`). Racchiudendo l'aggiornamento in `update_ui()` e chiamandolo solo in `_ready()` e dentro `set_speed()`, evitiamo sprechi di calcolo in `_process()` e garantiamo che il testo a schermo rifletta sempre i dati attuali del cesto.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedi il testo formattato e il momento dell'aggiornamento",
+    "consegna": "Leggi con attenzione ciascuno script GDScript e scrivi il valore o il testo esatto restituito dalla funzione `run()`, senza eseguire il codice nell'editor.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> String:\n\tvar item_name: String = \"Stella\"\n\tvar points: int = 50\n\treturn \"%s vale %d pt\" % [item_name, points]",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "L'operatore `%` sostituisce in ordine il primo segnaposto `%s` con il valore della stringa `item_name` (\"Stella\") e il secondo segnaposto `%d` con il numero intero `points` (50), producendo la stringa finale 'Stella vale 50 pt'."
+     },
+     {
+      "codice": "func run() -> String:\n\tvar score: int = 42\n\treturn \"Punti: %04d\" % score",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "Il segnaposto `%04d` impone una larghezza minima di 4 cifre complessive, riempiendo gli spazi liberi a sinistra con zeri. Poiché il numero 42 occupa due cifre, vengono inseriti due zeri davanti, restituendo 'Punti: 0042'."
+     },
+     {
+      "codice": "func run() -> String:\n\tvar current_speed: float = 12.86\n\treturn \"Velocità: %.1f\" % current_speed",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "Il segnaposto `%.1f` limita la visualizzazione a una singola cifra decimale, arrotondando il valore al decimo più vicino. Poiché la seconda cifra dopo la virgola è 6, il numero 12.86 viene arrotondato a 12.9, restituendo 'Velocità: 12.9'."
+     },
+     {
+      "codice": "func run() -> String:\n\tvar lives: int = 3\n\tvar score: int = 150\n\treturn \"Vite: %d | Punti: %04d\" % [score, lives]",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "I valori tra parentesi quadre vengono assegnati rigorosamente nell'ordine in cui compaiono: il primo segnaposto `%d` riceve `score` (150), mentre il secondo `%04d` riceve `lives` (3, formattato su 4 cifre come 0003). Il risultato è 'Vite: 150 | Punti: 0003'. Questo mostra l'importanza di allineare l'ordine dei dati nell'array con quello dei segnaposto."
+     },
+     {
+      "codice": "func run() -> String:\n\tvar label_text: String = \"In attesa\"\n\tvar score: int = 0\n\t\n\tscore += 10\n\tif score >= 20:\n\t\tlabel_text = \"Punteggio: %04d\" % score\n\t\n\tscore += 15\n\tif score >= 20:\n\t\tlabel_text = \"Punteggio: %04d\" % score\n\t\n\treturn label_text",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "Dopo il primo incremento `score` vale 10; la condizione `score >= 20` è falsa, quindi `label_text` rimane invariato su 'In attesa'. Con il secondo incremento `score` sale a 25; ora la condizione è vera e `label_text` viene aggiornato con `%04d`, restituendo 'Punteggio: 0025'."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Punteggio arcade e vite aggiornati a ogni stella o impatto",
+    "consegna": "Trasforma il testo del cesto in una vera interfaccia di gioco arcade, tenendo traccia del punteggio accumulato e delle vite rimaste.\n\nModifica `basket.gd` implementando le seguenti caratteristiche:\n\n1. Aggiungi la variabile `var score: int = 0`.\n2. Modifica la funzione `update_ui() -> void` in modo che assegni a `$Label.text` la stringa con punteggio a 4 cifre e vite correnti nel formato esatto:\n   `\"Punti: %04d | Vite: %d\"` sostituito da `score` e `lives`.\n3. Crea la funzione `add_score(amount: int) -> void` che incrementa `score` della quantità ricevuta e chiama subito `update_ui()`.\n4. Crea la funzione `take_damage(amount: int) -> void` che sottrae `amount` dalla variabile `lives`. Se `lives` scende a 0 o meno, imposta `lives = 0` e disattiva il cesto ponendo `is_active = false`. In ogni caso, chiama `update_ui()` per mostrare le vite aggiornate.\n5. Assicurati che `_ready()` chiami `update_ui()`, in modo che all'avvio il gioco mostri subito `Punti: 0000 | Vite: 3`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per il formato arcade a 4 cifre usa `%04d`: `$Label.text = \"Punti: %04d | Vite: %d\" % [score, lives]`.",
+     "Dentro `take_damage(amount: int)`, sottrai `amount` prima di controllare se `lives <= 0`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://basket.tscn",
+      "tipoNodo": "Label",
+      "nome": "Label",
+      "descrizione": "La scena basket.tscn contiene il nodo Label per mostrare punteggio e vite"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "var score: int",
+      "descrizione": "In basket.gd è dichiarata la variabile score di tipo int"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "func add_score\\(",
+      "descrizione": "In basket.gd è presente la funzione add_score(amount: int)"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "func take_damage\\(",
+      "descrizione": "In basket.gd è presente la funzione take_damage(amount: int)"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale basket.tscn deve avviarsi senza errori\"):\n\t\treturn\n\tvar label := find_by_class(main, \"Label\") as Label\n\tif not check(\"label\", label != null, \"Il nodo Label deve essere presente nel cesto\"):\n\t\treturn\n\tawait wait_frames(2)\n\tcheck(\"initial_hud\", label.text == \"Punti: 0000 | Vite: 3\", \"All'avvio il Label deve mostrare 'Punti: 0000 | Vite: 3', ma mostra '%s'\" % label.text)\n\tif not check(\"has_add_score\", has_function(main, \"add_score\"), \"Serve la funzione add_score(amount: int) in basket.gd\"):\n\t\treturn\n\tif not check(\"has_take_damage\", has_function(main, \"take_damage\"), \"Serve la funzione take_damage(amount: int) in basket.gd\"):\n\t\treturn\n\tcall_if_exists(main, \"add_score\", [25])\n\tcheck(\"star_1\", label.text == \"Punti: 0025 | Vite: 3\", \"Dopo la prima stella (+25 pt) il testo deve essere 'Punti: 0025 | Vite: 3'\")\n\tcall_if_exists(main, \"add_score\", [15])\n\tcheck(\"star_2\", label.text == \"Punti: 0040 | Vite: 3\", \"Dopo la seconda stella (+15 pt) il testo deve essere 'Punti: 0040 | Vite: 3'\")\n\tcall_if_exists(main, \"add_score\", [30])\n\tcheck(\"star_3\", label.text == \"Punti: 0070 | Vite: 3\", \"Dopo la terza stella (+30 pt) il testo deve essere 'Punti: 0070 | Vite: 3'\")\n\tcall_if_exists(main, \"take_damage\", [1])\n\tcheck(\"lost_star\", label.text == \"Punti: 0070 | Vite: 2\", \"Dopo aver perso una vita per danno il testo deve essere 'Punti: 0070 | Vite: 2'\")\n\tcall_if_exists(main, \"take_damage\", [2])\n\tvar is_active = get_prop(main, \"is_active\", true)\n\tcheck(\"game_over_active\", is_active == false, \"A zero vite la variabile is_active deve diventare false\")\n\tcheck(\"zero_lives\", label.text == \"Punti: 0070 | Vite: 0\", \"A zero vite il Label deve mostrare 'Punti: 0070 | Vite: 0'\")\n\tcall_if_exists(main, \"take_damage\", [1])\n\tcheck(\"clamp_lives\", label.text == \"Punti: 0070 | Vite: 0\", \"Le vite non devono scendere sotto zero: il testo deve rimanere 'Punti: 0070 | Vite: 0'\")",
+      "descrizione": "La piattaforma fa prendere tre stelle e ne fa perdere una, verificando l'aggiornamento del Label"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar score: int = 0\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Mostra lo stato iniziale del gioco nel Label\n\tupdate_ui()\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n\n\nfunc update_ui() -> void:\n\t# Formatta punteggio con 4 cifre fisse e numero di vite\n\t$Label.text = \"Punti: %04d | Vite: %d\" % [score, lives]\n\n\nfunc set_speed(new_speed: float) -> void:\n\t# Aggiorna la velocita' del cesto\n\tspeed = new_speed\n\n\nfunc add_score(amount: int) -> void:\n\t# Incrementa il punteggio e aggiorna subito la scritta\n\tscore += amount\n\tupdate_ui()\n\n\nfunc take_damage(amount: int) -> void:\n\t# Riduce le vite, disattiva il cesto a zero e aggiorna il testo\n\tlives -= amount\n\tif lives <= 0:\n\t\tlives = 0\n\t\tis_active = false\n\tupdate_ui()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "res://basket.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Aggiungiamo la variabile intera `score` inizializzata a 0 e aggiorniamo `update_ui()` usando la stringa formattata `\"Punti: %04d | Vite: %d\" % [score, lives]`. Il segnaposto `%04d` visualizza sempre 4 cifre inserendo zeri davanti, perfetto per lo stile arcade (`0000`, `0025`, ecc.). Creiamo le due funzioni cardine dell'interazione: `add_score()` aumenta il punteggio e richiama `update_ui()`; `take_damage()` sottrae vite, protegge il valore evitando numeri negativi con `lives = 0`, disattiva il cesto impostando `is_active = false` quando le vite si esauriscono, e richiama a sua volta `update_ui()`. In questo modo l'interfaccia si aggiorna con precisione matematica ogni volta che una stella viene raccolta o persa, senza consumare risorse inutili dentro `_process()`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -78,5 +286,10 @@
     "md": "- La proprietà `text` di un nodo `Label` accetta solo stringhe; per convertire numeri interi o decimali in testo semplice si usa la funzione `str()`.\n- Non puoi sommare direttamente testo e numeri con `+`: entrambi gli elementi devono essere convertiti in `String` per evitare errori di esecuzione.\n- L'operatore di formattazione `%` permette di inserire valori all'interno di una frase tramite segnaposto come `%d` (interi), `%.1f` (decimali) e `%s` (testo).\n- Con `%04d` imponi un numero fisso di cifre riempiendo gli spazi vuoti con zeri iniziali, ideale per punteggi in stile arcade.\n- Quando usi più segnaposto nella stessa frase, fornisci i valori in ordine racchiusi tra parentesi quadre: `\"%d - %d\" % [a, b]`.\n- Non aggiornare mai il testo di un `Label` dentro `_process()`: raccogli la formattazione in una funzione dedicata da chiamare solo quando i valori cambiano."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
