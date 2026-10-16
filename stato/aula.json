@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T17:43:30.689Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-16T18:45:11.159Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "casualita-e-distanze",
   "numero": "1.7",
   "titolo": "Numeri casuali e distanze"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 1.7 riprende da sola appena rispondono.",
- "riprende": "2026-10-16T18:43:30.689Z"
+ "messaggio": "Sta scrivendo la lezione 1.7 «Numeri casuali e distanze».",
+ "riprende": null
 }
