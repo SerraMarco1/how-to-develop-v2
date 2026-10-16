@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T19:16:44.544Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-16T19:28:41.210Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "punteggio-e-testo",
   "numero": "1.8",
   "titolo": "Punteggio e testo sullo schermo"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 1.8 riprende da sola appena rispondono.",
- "riprende": "2026-10-16T19:26:44.543Z"
+ "messaggio": "Sta scrivendo la lezione 1.8 «Punteggio e testo sullo schermo».",
+ "riprende": null
 }
