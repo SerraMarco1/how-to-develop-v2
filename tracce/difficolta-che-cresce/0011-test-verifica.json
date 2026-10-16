@@ -1,0 +1,117 @@
+{
+ "n": 11,
+ "quando": "2026-10-16T22:27:49.360Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (obiettivo): 1 problema",
+ "spiegazione": "«Far nascere le stelle a intervalli regolari sempre più frequenti», scritto da gemini/gemini-3.7-flash. 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://basket.gd deve caricarsi senza errori: Parse Error: Unindent doesn't match the previous indentation level. (res://basket.gd:124 in GDScript::reload)\nFailed to load script \"res://basket.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  basket.gd, riga 124: `remove_child(current_star)`\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 2995,
+ "dati": {
+  "problemi": [
+   "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://basket.gd deve caricarsi senza errori: Parse Error: Unindent doesn't match the previous indentation level. (res://basket.gd:124 in GDScript::reload)\nFailed to load script \"res://basket.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  basket.gd, riga 124: `remove_child(current_star)`"
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Far nascere le stelle a intervalli regolari sempre più frequenti",
+   "consegna": "Completa il sistema di generazione dinamica in `res://basket.gd`, facendo comparire nuove stelle periodicamente senza usare il nodo Timer, con un ritmo che si intensifica nel tempo.\n\nEcco i requisiti da realizzare:\n1. Aggiungi la variabile `spawn_timer: float = 0.0` per accumulare il tempo trascorso dall'ultima generazione.\n2. Crea la funzione `get_spawn_interval() -> float`: restituisce l'intervallo in secondi tra una stella e la successiva. All'inizio del gioco (difficoltà 0.0) l'intervallo deve essere di `2.0` secondi; a difficoltà massima (1.0) deve scendere a `0.5` secondi. Usa `lerpf(2.0, 0.5, get_difficulty_factor())` e assicurati con `max(intervallo, 0.5)` che non scenda mai sotto mezzo secondo.\n3. In `_process(delta: float)`, durante lo stato `GameState.PLAYING`, somma `delta` a `spawn_timer`.\n4. Sempre nello stato `GameState.PLAYING`, quando `spawn_timer` raggiunge o supera `get_spawn_interval()`, sottrai l'intervallo corrente da `spawn_timer` e chiama `spawn_star()`.\n5. In `reset_game()`, azzera anche `spawn_timer` a `0.0`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "pioggia-di-stelle",
+   "passiGuida": [],
+   "suggerimenti": [
+    "In `get_spawn_interval()`, calcola prima la durata con `lerpf(2.0, 0.5, get_difficulty_factor())` e poi restituisci `max(durata, 0.5)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://basket.gd",
+     "descrizione": "Il file res://basket.gd esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://basket.gd",
+     "regex": "spawn_timer",
+     "descrizione": "Lo script basket.gd definisce la variabile spawn_timer"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://basket.gd",
+     "regex": "get_spawn_interval",
+     "descrizione": "Lo script basket.gd contiene la funzione get_spawn_interval()"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve aprirsi senza errori\"):\n\t\treturn\n\t\n\tif not check(\"fn_interval\", has_function(basket, \"get_spawn_interval\"), \"basket.gd deve avere una funzione get_spawn_interval()\"):\n\t\treturn\n\t\n\tbasket.set(\"game_time\", 0.0)\n\tvar interval_0 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_at_0\", typeof(interval_0) == TYPE_FLOAT and absf(interval_0 - 2.0) < 0.05, \"All'inizio (tempo 0s) get_spawn_interval() deve restituire 2.0 secondi\")\n\t\n\tbasket.set(\"game_time\", 30.0)\n\tvar interval_30 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_at_30\", typeof(interval_30) == TYPE_FLOAT and absf(interval_30 - 1.25) < 0.05, \"A meta' percorso (tempo 30s) get_spawn_interval() deve restituire 1.25 secondi\")\n\t\n\tbasket.set(\"game_time\", 60.0)\n\tvar interval_60 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_at_60\", typeof(interval_60) == TYPE_FLOAT and absf(interval_60 - 0.5) < 0.05, \"A difficolta' massima (tempo 60s) get_spawn_interval() deve restituire 0.5 secondi\")\n\t\n\tbasket.set(\"game_time\", 120.0)\n\tvar interval_120 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_min\", typeof(interval_120) == TYPE_FLOAT and absf(interval_120 - 0.5) < 0.05, \"L'intervallo non deve scendere sotto 0.5 secondi anche con tempo avanzato\")\n\t\n\t# Conteggio generazioni all'inizio (tempo 0.0) in una finestra di 1.6s\n\tbasket.set(\"game_time\", 0.0)\n\tbasket.set(\"spawn_timer\", 0.0)\n\tvar stars_arr = get_prop(basket, \"stars\")\n\tvar count_start_before: int = stars_arr.size()\n\tawait wait_seconds(1.6)\n\tstars_arr = get_prop(basket, \"stars\")\n\tvar spawned_at_start: int = stars_arr.size() - count_start_before\n\t\n\t# Conteggio generazioni dopo (tempo 60.0) nella stessa finestra di 1.6s\n\tbasket.set(\"game_time\", 60.0)\n\tbasket.set(\"spawn_timer\", 0.0)\n\tstars_arr = get_prop(basket, \"stars\")\n\tvar count_later_before: int = stars_arr.size()\n\tawait wait_seconds(1.6)\n\tstars_arr = get_prop(basket, \"stars\")\n\tvar spawned_later: int = stars_arr.size() - count_later_before\n\t\n\tcheck(\"spawn_rate_grows\", spawned_later > spawned_at_start, \"Nello stesso lasso di tempo (1.6s) a difficolta' avanzata devono nascere piu' stelle rispetto all'inizio (all'inizio: %d, dopo: %d)\" % [spawned_at_start, spawned_later])\n\t\n\tbasket.set(\"spawn_timer\", 1.8)\n\tcall_if_exists(basket, \"reset_game\")\n\tvar timer_reset = get_prop(basket, \"spawn_timer\", -1.0)\n\tcheck(\"reset_timer\", timer_reset == 0.0, \"reset_game() deve azzerare spawn_timer portandolo a 0.0\")\n",
+     "descrizione": "L'intervallo di nascita scende da 2.0s a 0.5s e la frequenza di generazione aumenta all'avanzare del tempo"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per coordinate di riferimento, limiti di ripristino, danno massimo e impatto\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 120.0\nconst SPAWN_MAX_X: float = 960.0\nconst RESET_Y: float = 680.0\nconst MAX_DAMAGE: int = 3\nconst HIT_DISTANCE: float = 50.0\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Mantiene la posizione definita prima di add_child se già impostata\n\tvar initial_pos: Vector2 = position\n\treset_rock()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\tmodulate = Color.RED\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i confini visibili ed aggiorna l'aspetto\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x < 50.0 or position.x > 1050.0:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia lungo entrambi gli assi con le rispettive velocità\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Genera coordinate e parametri casuali per la nuova discesa\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tfall_speed = randf_range(200.0, 320.0)\n\thorizontal_speed = randf_range(-100.0, 100.0)\n\tdamage = randi_range(1, 3)\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n\n\nfunc hits_basket(basket_position: Vector2) -> bool:\n\t# Verifica se la distanza dal cesto rientra nella soglia di impatto\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < HIT_DISTANCE\n\n\nfunc check_hit(basket_position: Vector2) -> int:\n\t# Se colpisce il cesto, infligge danno e si ripristina subito in alto\n\tif hits_basket(basket_position):\n\t\tvar dealt_damage: int = damage\n\t\treset_rock()\n\t\treturn dealt_damage\n\treturn 0\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Coordinate di riferimento e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst RESET_Y: float = 680.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Tabella dei tipi di oggetto configurati come dati\nconst ITEM_TYPES: Dictionary = {\n\t\"star\": {\n\t\t\"points\": 10,\n\t\t\"speed\": 180.0,\n\t\t\"color\": Color.YELLOW\n\t},\n\t\"gold_star\": {\n\t\t\"points\": 50,\n\t\t\"speed\": 260.0,\n\t\t\"color\": Color.ORANGE\n\t},\n\t\"rock\": {\n\t\t\"points\": -20,\n\t\t\"speed\": 220.0,\n\t\t\"color\": Color.GRAY\n\t}\n}\n\n# Variabili di stato dell'oggetto che cade\nvar star_name: String = \"star\"\nvar fall_speed: float = 180.0\nvar points: int = 10\nvar is_collected: bool = false\n\n\nfunc _ready() -> void:\n\t# Mantiene la posizione definita prima di add_child se gia' impostata\n\tvar initial_pos: Vector2 = position\n\treset_star()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\n\nfunc _process(delta: float) -> void:\n\t# L'oggetto scende solo se non e' ancora stato raccolto\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\n\nfunc reset_star() -> void:\n\t# Assegna una coordinata orizzontale casuale e riposiziona in alto\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\t\n\t# Sceglie a caso uno dei tre tipi dall'Array di nomi e ne applica i dati\n\tvar types: Array[String] = [\"star\", \"gold_star\", \"rock\"]\n\tvar random_index: int = randi_range(0, types.size() - 1)\n\tvar chosen_type: String = types[random_index]\n\tapply_item_type(chosen_type)\n\n\nfunc apply_item_type(type_name: String) -> void:\n\t# Verifica che la chiave esista prima di accedere ai suoi dati\n\tif type_name in ITEM_TYPES:\n\t\tvar config: Dictionary = ITEM_TYPES[type_name]\n\t\tstar_name = type_name\n\t\tpoints = config[\"points\"]\n\t\tfall_speed = config[\"speed\"]\n\t\tmodulate = config[\"color\"]\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Misura la distanza in pixel dal cesto e verifica se rientra nella soglia\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Enumerazione degli stati del gioco\nenum GameState { PLAYING, GAME_OVER, PAUSED, WIN }\n\n# Variabili di stato del cesto\nvar current_state: GameState = GameState.PLAYING\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar score: int = 0\nvar is_active: bool = true\n\n# Variabili per contare il tempo e scandire la generazione periodica\nvar game_time: float = 0.0\nvar spawn_timer: float = 0.0\n\n# Array delle stelle attive sullo schermo\nvar stars: Array[Sprite2D] = []\n\n# Dizionario per memorizzare il numero di oggetti raccolti per ogni tipo\nvar collected_counts: Dictionary = {\n\t\"star\": 0,\n\t\"gold_star\": 0,\n\t\"rock\": 0\n}\n\n\nfunc _ready() -> void:\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\tupdate_ui()\n\tspawn_initial_stars(5)\n\tspawn_rock_row()\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\tmatch current_state:\n\t\tGameState.PLAYING:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PAUSED\n\t\t\t\t$Label.text = \"Gioco in pausa. Premi Esc per riprendere\"\n\t\t\telse:\n\t\t\t\t# Accumula il tempo totale e il timer di generazione periodica\n\t\t\t\tgame_time += delta\n\t\t\t\tspawn_timer += delta\n\t\t\t\t\n\t\t\t\t# Genera una nuova stella ogni volta che il timer raggiunge l'intervallo\n\t\t\t\tvar interval: float = get_spawn_interval()\n\t\t\t\tif spawn_timer >= interval:\n\t\t\t\t\tspawn_timer -= interval\n\t\t\t\t\tspawn_star()\n\t\t\t\t\n\t\t\t\tmove_basket(delta)\n\t\t\t\tcheck_stars()\n\t\t\t\tcheck_win()\n\t\t\t\tcheck_game_over()\n\t\tGameState.GAME_OVER:\n\t\t\tcheck_restart()\n\t\tGameState.PAUSED:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PLAYING\n\t\t\t\tupdate_ui()\n\t\tGameState.WIN:\n\t\t\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\t\t\treset_game()\n\n\nfunc move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n\n\nfunc get_difficulty_factor() -> float:\n\t# Restituisce un valore da 0.0 a 1.0 nei primi 60 secondi\n\treturn min(game_time / 60.0, 1.0)\n\n\nfunc get_spawn_interval() -> float:\n\t# L'intervallo scende da 2.0 a 0.5 secondi e non puo' scendere oltre\n\tvar interval: float = lerpf(2.0, 0.5, get_difficulty_factor())\n\treturn max(interval, 0.5)\n\n\nfunc spawn_star() -> void:\n\tvar star_scene: PackedScene = load(\"res://star.tscn\")\n\tvar new_star: Sprite2D = star_scene.instantiate() as Sprite2D\n\t\n\t# Calcola un aumento di velocita' in base alla difficolta' corrente\n\tvar speed_boost: float = lerpf(0.0, 150.0, get_difficulty_factor())\n\tnew_star.fall_speed += speed_boost\n\t\n\tadd_child(new_star)\n\tstars.append(new_star)\n\n\nfunc spawn_initial_stars(count: int) -> void:\n\tfor i in range(count):\n\t\tspawn_star()\n\n\nfunc check_stars() -> void:\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: Sprite2D = stars[i]\n\t\tif current_star.is_caught(position):\n\t\t\tif current_star.points >= 0:\n\t\t\t\tadd_score(current_star.points)\n\t\t\telse:\n\t\t\t\ttake_damage(1)\n\t\t\t\n\t\tif current_star.star_name in collected_counts:\n\t\t\t\tcollected_counts[current_star.star_name] += 1\n\t\t\t\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\t\telif current_star.position.y > 680.0:\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\n\nfunc get_collected_count(type_name: String) -> int:\n\treturn collected_counts.get(type_name, 0)\n\n\nfunc boost_all_stars(extra_speed: float) -> void:\n\tfor star in stars:\n\t\tstar.fall_speed += extra_speed\n\n\nfunc spawn_rock_row() -> void:\n\tvar rock_scene: PackedScene = load(\"res://rock.tscn\")\n\tvar current_x: float = 160.0\n\twhile current_x <= 960.0:\n\t\tvar rock: Sprite2D = rock_scene.instantiate() as Sprite2D\n\t\trock.position = Vector2(current_x, 200.0)\n\t\tadd_child(rock)\n\t\tcurrent_x += 200.0\n\n\nfunc update_ui() -> void:\n\t$Label.text = \"Punti: %04d | Vite: %d\" % [score, lives]\n\n\nfunc set_speed(new_speed: float) -> void:\n\tspeed = new_speed\n\n\nfunc add_score(amount: int) -> void:\n\tscore += amount\n\tboost_all_stars(10.0)\n\tupdate_ui()\n\n\nfunc take_damage(amount: int) -> void:\n\tlives -= amount\n\tif lives <= 0:\n\t\tlives = 0\n\t\tis_active = false\n\tupdate_ui()\n\n\nfunc check_win() -> void:\n\tif score >= 100:\n\t\tcurrent_state = GameState.WIN\n\t\t$Label.text = \"Vittoria! Punti: %d | Premi Invio per giocare ancora\" % score\n\n\nfunc check_game_over() -> void:\n\tif lives <= 0:\n\t\tcurrent_state = GameState.GAME_OVER\n\t\t$Label.text = \"Partita finita! Premi Invio per ricominciare\"\n\n\nfunc check_restart() -> void:\n\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\treset_game()\n\n\nfunc reset_game() -> void:\n\tlives = 3\n\tscore = 0\n\tgame_time = 0.0\n\tspawn_timer = 0.0\n\tposition = START_POSITION\n\tcurrent_state = GameState.PLAYING\n\tis_active = true\n\tupdate_ui()\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Abbiamo implementato un timer accumulatore senza ricorrere al nodo Timer. La variabile `spawn_timer` accumula `delta` in ogni fotogramma di gioco attivo. La funzione `get_spawn_interval()` calcola la distanza temporale tra due stelle tramite `lerpf(2.0, 0.5, get_difficulty_factor())` e fissa la soglia minima a `0.5` secondi con `max()`. Quando `spawn_timer >= interval`, sottraiamo l'intervallo esatto dal timer e chiamiamo `spawn_star()`, generando stelle con cadenza sempre più ravvicinata all'aumentare della difficoltà. In `reset_game()`, reimpostiamo `spawn_timer = 0.0` per ripartire puliti a ogni partita.",
+    "cambiati": [
+     "basket.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
