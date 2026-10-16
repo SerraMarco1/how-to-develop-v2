@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T20:20:20.006Z",
+ "aggiornato": "2026-10-16T20:28:50.447Z",
  "stato": "lavora",
  "lezione": {
   "slug": "array",
   "numero": "1.10",
   "titolo": "Array: tanti oggetti insieme"
  },
- "messaggio": "Sta scrivendo la lezione 1.10 «Array: tanti oggetti insieme».",
+ "messaggio": "Sta scrivendo la lezione 1.10 «Array: tanti oggetti insieme»: riprende al prossimo giro.",
  "riprende": null
 }
