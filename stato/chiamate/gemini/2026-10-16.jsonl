@@ -68,3 +68,4 @@
 {"quando":1792189086298,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"stati-del-gioco","ok":true,"contata":true,"durataMs":27961,"tokenInput":12019,"tokenOutput":213,"ragionamento":3882}
 {"quando":1792189115881,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"stati-del-gioco","ok":true,"contata":true,"durataMs":34120,"tokenInput":12413,"tokenOutput":5263,"ragionamento":3944}
 {"quando":1792189162807,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"stati-del-gioco","ok":true,"contata":true,"durataMs":6762,"tokenInput":2921,"tokenOutput":844,"ragionamento":2297}
+{"quando":1792189175393,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"difficolta-che-cresce","ok":true,"contata":true,"durataMs":35370,"tokenInput":13120,"tokenOutput":2739,"ragionamento":4675}

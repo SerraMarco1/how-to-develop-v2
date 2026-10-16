@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T22:15:49.027Z",
+ "aggiornato": "2026-10-16T22:19:35.381Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "stati-del-gioco",
-  "numero": "1.12",
-  "titolo": "Stati del gioco: enum e match"
+  "slug": "difficolta-che-cresce",
+  "numero": "1.13",
+  "titolo": "Difficoltà che cresce nel tempo"
  },
- "messaggio": "Sta scrivendo la lezione 1.12 «Stati del gioco: enum e match».",
+ "messaggio": "Sta scrivendo la lezione 1.13 «Difficoltà che cresce nel tempo».",
  "riprende": null
 }
