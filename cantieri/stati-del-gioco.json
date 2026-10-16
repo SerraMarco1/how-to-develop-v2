@@ -397,7 +397,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tcall_if_exists(main, \"add_score\", [100])\n\tawait wait_frames(2)\n\tvar win_state = get_prop(main, \"current_state\")\n\tcheck(\"win_state\", win_state == 3, \"Raggiunti 100 punti lo stato del gioco deve diventare WIN (3)\")\n\tvar label := main.get_node_or_null(\"Label\") as Label\n\tcheck(\"label_win\", label != null and \"Vittoria\" in label.text, \"A vittoria raggiunta il Label deve mostrare il messaggio di vittoria\")\n\tvar start_x: float = main.position.x\n\tawait hold_action(\"move_right\", 10)\n\tcheck(\"no_move_in_win\", main.position.x == start_x, \"In stato di vittoria il cesto non deve muoversi\")\n\tawait tap_action(\"ui_accept\")\n\tawait wait_frames(2)\n\tvar reset_state = get_prop(main, \"current_state\")\n\tcheck(\"restart_state\", reset_state == 0, \"Premendo ui_accept dopo la vittoria lo stato deve tornare a PLAYING (0)\")\n\tvar reset_score: int = get_prop(main, \"score\", -1)\n\tcheck(\"reset_score\", reset_score == 0, \"Dopo il riavvio il punteggio deve essere azzerato\")\n",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tmain.set(\"score\", 100)\n\tawait wait_frames(2)\n\tvar win_state = get_prop(main, \"current_state\")\n\tcheck(\"win_state\", win_state == 3, \"Raggiunti 100 punti lo stato del gioco deve diventare WIN (3)\")\n\tvar label := main.get_node_or_null(\"Label\") as Label\n\tcheck(\"label_win\", label != null and \"Vittoria\" in label.text, \"A vittoria raggiunta il Label deve mostrare il messaggio di vittoria\")\n\tvar start_x: float = main.position.x\n\tawait hold_action(\"move_right\", 10)\n\tcheck(\"no_move_in_win\", main.position.x == start_x, \"In stato di vittoria il cesto non deve muoversi\")\n\tawait tap_action(\"ui_accept\")\n\tawait wait_frames(2)\n\tvar reset_state = get_prop(main, \"current_state\")\n\tcheck(\"restart_state\", reset_state == 0, \"Premendo ui_accept dopo la vittoria lo stato deve tornare a PLAYING (0)\")\n\tvar reset_score: int = get_prop(main, \"score\", -1)\n\tcheck(\"reset_score\", reset_score == 0, \"Dopo il riavvio il punteggio deve essere azzerato\")\n",
       "descrizione": "Raggiunti 100 punti il gioco entra nello stato WIN e premendo ui_accept la partita ricomincia"
      }
     ],
@@ -558,6 +558,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
