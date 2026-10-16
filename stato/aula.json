@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:39:59.098Z",
+ "aggiornato": "2026-10-16T07:40:24.901Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "condizioni",
-  "numero": "1.3",
-  "titolo": "Condizioni: if, elif, else"
+  "slug": "input-da-tastiera",
+  "numero": "1.4",
+  "titolo": "Input: leggere la tastiera"
  },
- "messaggio": "Sta scrivendo la lezione 1.3 «Condizioni: if, elif, else».",
+ "messaggio": "Sta scrivendo la lezione 1.4 «Input: leggere la tastiera».",
  "riprende": null
 }
