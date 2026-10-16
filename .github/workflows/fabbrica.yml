@@ -5,7 +5,7 @@ name: Fabbrica
 
 on:
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "3,18,33,48 * * * *"
   workflow_dispatch:
     inputs:
       riprova:
