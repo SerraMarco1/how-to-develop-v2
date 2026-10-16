@@ -396,7 +396,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar coins_array = get_prop(main, \"coins\")\n\tif not check(\"coins_prop\", typeof(coins_array) == TYPE_ARRAY, \"coin_manager.gd deve avere l'Array coins\"):\n\t\treturn\n\t\n\tawait wait_frames(5)\n\t\n\tcheck(\"all_cleaned\", coins_array.size() == 0, \"Tutte le monete con y > 500.0 devono essere rimosse dall'Array coins\")\n\tcheck(\"no_errors\", errors_text() == \"\", \"L'eliminazione non deve causare errori nel Debugger\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar coins_array = get_prop(main, \"coins\")\n\tif not check(\"coins_prop\", typeof(coins_array) == TYPE_ARRAY, \"coin_manager.gd deve avere l'Array coins\"):\n\t\treturn\n\t\n\tawait wait_frames(15)\n\t\n\tcheck(\"all_cleaned\", coins_array.size() == 0, \"Tutte le monete con y > 500.0 devono essere rimosse dall'Array coins\")\n\tcheck(\"no_errors\", errors_text() == \"\", \"L'eliminazione non deve causare errori nel Debugger\")",
       "descrizione": "Tutte le monete che superano i 500 pixel vengono rimosse correttamente senza essere saltate e senza errori"
      }
     ],
@@ -404,6 +404,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"InventarioMonete\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
       {
        "percorso": "main.tscn",
        "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://coin_manager.gd\" id=\"1_manager\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_manager\")\n"
@@ -456,18 +460,21 @@
       "impostazioni": []
      },
      "spiegazione": "L'errore era causato dallo scorrimento in avanti con `for i in range(coins.size())`. Quando una moneta veniva rimossa all'indice `0`, la moneta successiva scalava all'indice `0`. Al giro seguente l'indice avanzava a `1`, saltando la moneta slittata. Modificando il ciclo in `for i in range(coins.size() - 1, -1, -1)` la scansione avviene a ritroso senza saltare alcun elemento.",
-     "cambiati": [],
+     "cambiati": [
+      "coin_manager.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Tutte le monete con y > 500.0 devono essere rimosse dall'Array coins\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
@@ -574,7 +581,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Array: gestire tanti oggetti insieme",
