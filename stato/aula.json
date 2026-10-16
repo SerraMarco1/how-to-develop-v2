@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:41:18.294Z",
+ "aggiornato": "2026-10-16T07:41:48.188Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "funzioni",
-  "numero": "1.5",
-  "titolo": "Funzioni: dare un nome a un pezzo di lavoro"
+  "slug": "leggere-gli-errori",
+  "numero": "1.6",
+  "titolo": "Leggere gli errori e usare il Debugger"
  },
- "messaggio": "Sta scrivendo la lezione 1.5 «Funzioni: dare un nome a un pezzo di lavoro».",
+ "messaggio": "Sta scrivendo la lezione 1.6 «Leggere gli errori e usare il Debugger».",
  "riprende": null
 }

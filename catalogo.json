@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:41:45.308Z",
+ "aggiornato": "2026-10-16T07:42:05.335Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -83,6 +83,15 @@
    "file": "lezioni/f01-programmare/funzioni.json",
    "sha256": "8149e6b86c7d70e4438d177df5c587376fe33bd1c70b7bcdb7ea38df7531f29c",
    "byte": 65631
+  },
+  {
+   "slug": "leggere-gli-errori",
+   "numero": "1.6",
+   "titolo": "Leggere gli errori e usare il Debugger",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/leggere-gli-errori.json",
+   "sha256": "3af9f4ae8472f1c28679a578e09ed22a4c841d95645ac6cd8f1cb34e5bfa23b8",
+   "byte": 53286
   }
  ],
  "documentazione": {
