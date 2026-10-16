@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T21:11:06.169Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-16T21:52:50.526Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "dictionary",
   "numero": "1.11",
   "titolo": "Dictionary: dati con un nome"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 1.11 riprende da sola appena rispondono.",
- "riprende": "2026-10-16T21:51:06.169Z"
+ "messaggio": "Sta scrivendo la lezione 1.11 «Dictionary: dati con un nome».",
+ "riprende": null
 }
