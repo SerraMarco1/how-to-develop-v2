@@ -207,7 +207,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -268,7 +268,103 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Accelerazione di gruppo per tutte le stelle",
+    "consegna": "Ora che tutte le stelle sono gestite nell'Array `stars`, rendi il gioco più dinamico velocizzando tutte le stelle a ogni punto guadagnato.\n\n1. In `basket.gd`, crea la funzione `boost_all_stars(extra_speed: float) -> void`.\n2. La funzione deve scorrere l'Array `stars` in avanti con un ciclo `for star in stars:` e sommare `extra_speed` alla variabile `fall_speed` di ciascuna stella.\n3. Dentro la funzione `add_score(amount: int)` di `basket.gd`, chiama `boost_all_stars(10.0)` in modo che ogni stella raccolta aumenti la velocità di tutte le stelle a schermo di 10 pixel al secondo.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Un ciclo for diretto per leggere o modificare elementi si scrive: for star in stars:",
+     "Accedi direttamente alla proprietà con la sintassi del punto: star.fall_speed += extra_speed.",
+     "Chiama boost_all_stars(10.0) dentro add_score(amount) subito dopo aver incrementato score."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "func boost_all_stars",
+      "descrizione": "basket.gd dichiara la funzione boost_all_stars"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "for \\w+ in stars:",
+      "descrizione": "boost_all_stars usa un ciclo for per scorrere l'Array stars"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket_scene := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket_scene\", basket_scene != null, \"La scena basket.tscn deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar stars_array = get_prop(basket_scene, \"stars\")\n\tif not check(\"stars_array\", typeof(stars_array) == TYPE_ARRAY and stars_array.size() > 0, \"L'array stars deve contenere le stelle\"):\n\t\treturn\n\t\n\tvar star1 = stars_array[0]\n\tvar initial_speed: float = get_prop(star1, \"fall_speed\", 0.0)\n\t\n\tif not check(\"has_boost\", has_function(basket_scene, \"boost_all_stars\"), \"basket.gd deve contenere la funzione boost_all_stars\"):\n\t\treturn\n\t\n\tbasket_scene.call(\"boost_all_stars\", 20.0)\n\tvar new_speed: float = get_prop(star1, \"fall_speed\", 0.0)\n\tcheck(\"boost_works\", new_speed == initial_speed + 20.0, \"boost_all_stars(20.0) deve aumentare fall_speed della stella di 20.0\")\n\t\n\tvar speed_before_score: float = get_prop(star1, \"fall_speed\", 0.0)\n\tif has_function(basket_scene, \"add_score\"):\n\t\tbasket_scene.call(\"add_score\", 10)\n\t\tvar speed_after_score: float = get_prop(star1, \"fall_speed\", 0.0)\n\t\tcheck(\"add_score_boosts\", speed_after_score == speed_before_score + 10.0, \"add_score deve chiamare boost_all_stars(10.0) e aumentare la velocita' delle stelle\")\n",
+      "descrizione": "Chiamando add_score, la velocità fall_speed di tutte le stelle nell'Array aumenta di 10 pixel al secondo"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "star.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+      },
+      {
+       "percorso": "rock.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+      },
+      {
+       "percorso": "basket.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+      },
+      {
+       "percorso": "rock.gd",
+       "contenuto": "extends Sprite2D\n\n# Costanti per coordinate di riferimento, limiti di ripristino, danno massimo e impatto\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 120.0\nconst SPAWN_MAX_X: float = 960.0\nconst RESET_Y: float = 680.0\nconst MAX_DAMAGE: int = 3\nconst HIT_DISTANCE: float = 50.0\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Mantiene la posizione definita prima di add_child se già impostata\n\tvar initial_pos: Vector2 = position\n\treset_rock()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\tmodulate = Color.RED\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i confini visibili ed aggiorna l'aspetto\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x < 50.0 or position.x > 1050.0:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia lungo entrambi gli assi con le rispettive velocità\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Genera coordinate e parametri casuali per la nuova discesa\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tfall_speed = randf_range(200.0, 320.0)\n\thorizontal_speed = randf_range(-100.0, 100.0)\n\tdamage = randi_range(1, 3)\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n\n\nfunc hits_basket(basket_position: Vector2) -> bool:\n\t# Verifica se la distanza dal cesto rientra nella soglia di impatto\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < HIT_DISTANCE\n\n\nfunc check_hit(basket_position: Vector2) -> int:\n\t# Se colpisce il cesto, infligge danno e si ripristina subito in alto\n\tif hits_basket(basket_position):\n\t\tvar dealt_damage: int = damage\n\t\treset_rock()\n\t\treturn dealt_damage\n\treturn 0\n"
+      },
+      {
+       "percorso": "star.gd",
+       "contenuto": "extends Sprite2D\n\n# Coordinate di riferimento e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Genera un valore base casuale tra 10 e 30 prima di calcolare i punti\n\tbase_value = randi_range(10, 30)\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Mantiene la posizione definita prima di add_child se già impostata\n\tvar initial_pos: Vector2 = position\n\treset_star()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\tmodulate = Color.YELLOW\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella scende solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Aggiorna il colore in base all'altezza raggiunta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Assegna una coordinata orizzontale casuale e riposiziona la stella in alto\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Misura la distanza in pixel dal cesto e verifica se rientra nella soglia\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n"
+      },
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar score: int = 0\nvar is_active: bool = true\n\n# Array delle stelle attive nello schermo\nvar stars: Array[Sprite2D] = []\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Mostra lo stato iniziale del gioco nel Label\n\tupdate_ui()\n\t\n\t# Crea le 5 stelle usando l'Array\n\tspawn_initial_stars(5)\n\t\n\t# Genera la fila di rocce tramite il ciclo while\n\tspawn_rock_row()\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega il movimento e il controllo delle stelle\n\tmove_basket(delta)\n\tcheck_stars()\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n\n\nfunc spawn_star() -> void:\n\t# Istanzia una singola stella, la aggiunge alla scena e all'Array\n\tvar star_scene: PackedScene = load(\"res://star.tscn\")\n\tvar new_star: Sprite2D = star_scene.instantiate() as Sprite2D\n\tadd_child(new_star)\n\tstars.append(new_star)\n\n\nfunc spawn_initial_stars(count: int) -> void:\n\t# Genera il gruppo iniziale di stelle riempiendo l'Array\n\tfor i in range(count):\n\t\tspawn_star()\n\n\nfunc check_stars() -> void:\n\t# Scorre l'Array all'indietro per eliminare e sostituire le stelle in sicurezza\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: Sprite2D = stars[i]\n\t\tif current_star.is_caught(position):\n\t\t\tadd_score(current_star.points)\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\t\telif current_star.position.y > 680.0:\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\n\nfunc boost_all_stars(extra_speed: float) -> void:\n\t# Scorre l'Array per aumentare la velocita' di caduta di ogni stella\n\tfor star in stars:\n\t\tstar.fall_speed += extra_speed\n\n\nfunc spawn_rock_row() -> void:\n\t# Genera ostacoli a passo fisso lungo lo schermo usando un ciclo while\n\tvar rock_scene: PackedScene = load(\"res://rock.tscn\")\n\tvar current_x: float = 160.0\n\twhile current_x <= 960.0:\n\t\tvar rock: Sprite2D = rock_scene.instantiate() as Sprite2D\n\t\trock.position = Vector2(current_x, 200.0)\n\t\tadd_child(rock)\n\t\tcurrent_x += 200.0\n\n\nfunc update_ui() -> void:\n\t# Formatta punteggio con 4 cifre fisse e numero di vite\n\t$Label.text = \"Punti: %04d | Vite: %d\" % [score, lives]\n\n\nfunc set_speed(new_speed: float) -> void:\n\t# Aggiorna la velocita' del cesto\n\tspeed = new_speed\n\n\nfunc add_score(amount: int) -> void:\n\t# Incrementa il punteggio, velocizza le stelle e aggiorna l'interfaccia\n\tscore += amount\n\tboost_all_stars(10.0)\n\tupdate_ui()\n\n\nfunc take_damage(amount: int) -> void:\n\t# Riduce le vite, disattiva il cesto a zero e aggiorna il testo\n\tlives -= amount\n\tif lives <= 0:\n\t\tlives = 0\n\t\tis_active = false\n\tupdate_ui()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "res://basket.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "Left",
+         "A"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "Right",
+         "D"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Usiamo un ciclo `for star in stars:` per scorrere l'Array senza modificarne la lunghezza. Accediamo alla variabile `fall_speed` di ciascun oggetto e le sommiamo `extra_speed`. Inserendo la chiamata dentro `add_score`, il gioco aumenta automaticamente il ritmo a ogni stella presa.",
+     "cambiati": [
+      "basket.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "es3": {
    "stato": "da_fare",
