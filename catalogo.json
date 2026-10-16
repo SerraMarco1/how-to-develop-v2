@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T22:15:47.539Z",
+ "aggiornato": "2026-10-16T22:19:33.692Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -137,6 +137,15 @@
    "file": "lezioni/f01-programmare/dictionary.json",
    "sha256": "09ca9f185698240a21a79bd02c6d7cb40d9dbf99914559ada8360c4220ec3600",
    "byte": 92902
+  },
+  {
+   "slug": "stati-del-gioco",
+   "numero": "1.12",
+   "titolo": "Stati del gioco: enum e match",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/stati-del-gioco.json",
+   "sha256": "b587b8c92af0e6b4e1b58ac33b19ddc7c0a5a671876f50694898a89bc270b579",
+   "byte": 81121
   }
  ],
  "documentazione": {
