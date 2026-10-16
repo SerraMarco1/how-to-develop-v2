@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T19:36:17.042Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-16T19:47:29.248Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "cicli",
   "numero": "1.9",
   "titolo": "Cicli: for e while"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 1.9 riprende da sola appena rispondono.",
- "riprende": "2026-10-16T19:46:17.042Z"
+ "messaggio": "Sta scrivendo la lezione 1.9 «Cicli: for e while».",
+ "riprende": null
 }

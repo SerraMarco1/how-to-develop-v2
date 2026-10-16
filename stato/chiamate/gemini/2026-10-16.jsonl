@@ -30,3 +30,6 @@
 {"quando":1792179106756,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":33925,"tokenInput":13277,"tokenOutput":2157,"ragionamento":4869}
 {"quando":1792179141889,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"cicli","ok":false,"contata":true,"durataMs":217431,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792179359323,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"cicli","ok":false,"contata":true,"durataMs":17714,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792180049292,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":494612,"tokenInput":14167,"tokenOutput":2152,"ragionamento":51841}
+{"quando":1792180543905,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":186175,"tokenInput":14167,"tokenOutput":2898,"ragionamento":27298}
+{"quando":1792180730081,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":200320,"tokenInput":14167,"tokenOutput":7140}
