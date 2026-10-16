@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T19:47:29.248Z",
+ "aggiornato": "2026-10-16T20:20:20.006Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "cicli",
-  "numero": "1.9",
-  "titolo": "Cicli: for e while"
+  "slug": "array",
+  "numero": "1.10",
+  "titolo": "Array: tanti oggetti insieme"
  },
- "messaggio": "Sta scrivendo la lezione 1.9 «Cicli: for e while».",
+ "messaggio": "Sta scrivendo la lezione 1.10 «Array: tanti oggetti insieme».",
  "riprende": null
 }
