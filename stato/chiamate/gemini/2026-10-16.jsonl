@@ -12,3 +12,4 @@
 {"quando":1792176311199,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":87850,"tokenInput":11882,"tokenOutput":2646,"ragionamento":8726}
 {"quando":1792176400378,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":319176,"tokenInput":14463,"tokenOutput":9204,"ragionamento":36265}
 {"quando":1792176724473,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":28763,"tokenInput":11278,"tokenOutput":4428,"ragionamento":6130}
+{"quando":1792176762990,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":17829,"tokenInput":11581,"tokenOutput":4724,"ragionamento":2643}
