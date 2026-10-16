@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T18:45:11.159Z",
+ "aggiornato": "2026-10-16T18:58:16.899Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "casualita-e-distanze",
-  "numero": "1.7",
-  "titolo": "Numeri casuali e distanze"
+  "slug": "punteggio-e-testo",
+  "numero": "1.8",
+  "titolo": "Punteggio e testo sullo schermo"
  },
- "messaggio": "Sta scrivendo la lezione 1.7 «Numeri casuali e distanze».",
+ "messaggio": "Sta scrivendo la lezione 1.8 «Punteggio e testo sullo schermo».",
  "riprende": null
 }
