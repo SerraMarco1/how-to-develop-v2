@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:42:05.335Z",
+ "aggiornato": "2026-10-16T18:58:15.445Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -92,6 +92,15 @@
    "file": "lezioni/f01-programmare/leggere-gli-errori.json",
    "sha256": "3af9f4ae8472f1c28679a578e09ed22a4c841d95645ac6cd8f1cb34e5bfa23b8",
    "byte": 53286
+  },
+  {
+   "slug": "casualita-e-distanze",
+   "numero": "1.7",
+   "titolo": "Numeri casuali e distanze",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/casualita-e-distanze.json",
+   "sha256": "77485cc9d4397e8ddc9b557f8e7204d9fd1cd5d6641d059f22ff6ce5dbc2264f",
+   "byte": 69947
   }
  ],
  "documentazione": {
