@@ -1,0 +1,14 @@
+{
+ "formato": 1,
+ "aggiornato": "2026-10-16T07:37:48.378Z",
+ "lezioniNelPiano": 179,
+ "lezioni": [],
+ "documentazione": {
+  "media": {
+   "sha256": "98068e7ef361a298ed5db0832c9e4844efeeadc017a3232d1c6cd3ceadae76e0",
+   "estensione": "gz",
+   "byte": 6564222
+  },
+  "commit": "9adca4c1c72917bfe1b7be3108abed5ce26696a6"
+ }
+}
