@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:38:01.151Z",
+ "aggiornato": "2026-10-16T07:38:23.627Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -11,6 +11,15 @@
    "file": "lezioni/f00-orientamento/installare-godot-e-gestire-i-progetti.json",
    "sha256": "8d15b56a429c25895cef7a57884a4f8542b3fe858b8deb6749462901bdd735f2",
    "byte": 19337
+  },
+  {
+   "slug": "l-editor-costruendo-una-scena",
+   "numero": "0.1",
+   "titolo": "L'editor, costruendo una scena",
+   "versione": 1,
+   "file": "lezioni/f00-orientamento/l-editor-costruendo-una-scena.json",
+   "sha256": "bcd7007aee81a81f8544c2377799a1bac98f41fbb1a1db6ef999922685409765",
+   "byte": 26709
   }
  ],
  "documentazione": {
