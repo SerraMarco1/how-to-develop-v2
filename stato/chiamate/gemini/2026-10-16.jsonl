@@ -33,3 +33,4 @@
 {"quando":1792180049292,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":494612,"tokenInput":14167,"tokenOutput":2152,"ragionamento":51841}
 {"quando":1792180543905,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":186175,"tokenInput":14167,"tokenOutput":2898,"ragionamento":27298}
 {"quando":1792180730081,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":200320,"tokenInput":14167,"tokenOutput":7140}
+{"quando":1792180931955,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"cicli","ok":true,"contata":true,"durataMs":24165,"tokenInput":11280,"tokenOutput":4114,"ragionamento":6802}
