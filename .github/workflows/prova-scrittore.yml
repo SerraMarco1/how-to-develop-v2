@@ -56,6 +56,8 @@ jobs:
       - name: Utente separato per Godot, cartelle di lavoro
         run: |
           sudo useradd --create-home --shell /usr/sbin/nologin htdgodot
+          # Le protezioni del kernel sui collegamenti nelle cartelle condivise (di solito già attive: qui si fissano).
+          sudo sysctl -q -w fs.protected_symlinks=1 fs.protected_hardlinks=1 fs.protected_regular=2 fs.protected_fifos=2
           sudo mkdir -p /opt/htd-cache
           sudo chown "$(id -u):$(id -g)" /opt/htd-cache
           chmod 755 /opt/htd-cache

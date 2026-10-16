@@ -61,7 +61,26 @@ function comando(exe: string, argomenti: string[], env: NodeJS.ProcessEnv, timeo
   };
 }
 
-/** Con un utente separato per Godot, la cartella di lavoro deve poterla scrivere anche lui (solo quella). */
+/**
+ * Con un utente separato, alla fine di ogni esecuzione non deve restare acceso niente di suo: un processo rimasto (un
+ * codice che si stacca da Godot) potrebbe cambiare i file mentre la fabbrica li usa. Si chiudono tutti, sempre.
+ */
+function chiudiProcessiDiGodot(): Promise<void> {
+  const utente = process.platform === "linux" ? process.env.HTD_GODOT_UTENTE : undefined;
+  if (!utente || !/^[a-z_][a-z0-9_-]{0,31}$/.test(utente)) return Promise.resolve();
+  return new Promise((resolve) => {
+    // pkill esce con 1 quando non trova niente da chiudere: va bene così.
+    const p = spawn("sudo", ["-n", "pkill", "-KILL", "-u", utente], { stdio: "ignore", env: { PATH: process.env.PATH } });
+    p.on("close", () => resolve());
+    p.on("error", () => resolve());
+  });
+}
+
+/**
+ * Con un utente separato per Godot, la cartella di lavoro deve poterla scrivere anche lui (solo quella). Si apre solo
+ * una cartella appena preparata, con dentro già TUTTO ciò che serve alle esecuzioni (progetto, base di verifica, script
+ * di verifica): da quando Godot ci ha girato, la fabbrica non ci scrive più e non segue collegamenti che ci trova.
+ */
 export function apriAGodot(cartella: string): void {
   if (process.platform !== "linux" || !process.env.HTD_GODOT_UTENTE) return;
   const apri = (p: string) => {
@@ -99,14 +118,17 @@ export function eseguiGodot(argomenti: string[], opzioni: { timeoutMs?: number; 
     const timer = setTimeout(() => {
       scadutoTempo = true;
       processo.kill("SIGKILL");
+      void chiudiProcessiDiGodot();
     }, timeoutMs);
+    // Appena Godot esce si chiude anche ciò che avesse lasciato acceso (che terrebbe aperto l'output).
+    processo.on("exit", () => void chiudiProcessiDiGodot());
     processo.on("close", (codice) => {
       clearTimeout(timer);
-      resolve({ codiceUscita: codice, output, scadutoTempo });
+      void chiudiProcessiDiGodot().then(() => resolve({ codiceUscita: codice, output, scadutoTempo }));
     });
     processo.on("error", (errore) => {
       clearTimeout(timer);
-      resolve({ codiceUscita: -1, output: `${output}${String(errore)}`, scadutoTempo });
+      void chiudiProcessiDiGodot().then(() => resolve({ codiceUscita: -1, output: `${output}${String(errore)}`, scadutoTempo }));
     });
   });
 }

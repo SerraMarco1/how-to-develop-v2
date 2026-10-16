@@ -26,8 +26,20 @@ const ConsegnaSchema = z.object({
 });
 const ControlliSchema = z.array(z.object({ descrizione: z.string().max(2000), superato: z.boolean(), dettaglio: z.string().max(4000).optional(), origine: z.enum(["verifica", "sicurezza"]).optional() })).max(100);
 
-/** Siti che l'aula può aprire nel browser. */
-const SITI_AMMESSI = [/^https:\/\/docs\.godotengine\.org\//, /^https:\/\/godotengine\.org\//, new RegExp(`^https://github\\.com/${REPOSITORY.replace("/", "\\/")}(/|$)`), /^https:\/\/aistudio\.google\.com\//, /^https:\/\/console\.groq\.com\//, /^https:\/\/console\.mistral\.ai\//, /^https:\/\/admin\.mistral\.ai\//];
+/** Siti che l'aula può aprire nel browser: la documentazione di Godot, le pagine delle chiavi e il repository del corso. */
+const SITI_AMMESSI = new Set(["docs.godotengine.org", "godotengine.org", "aistudio.google.com", "console.groq.com", "console.mistral.ai", "admin.mistral.ai"]);
+
+function linkAmmesso(indirizzo: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(indirizzo);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== "https:" || url.username || url.password || url.port) return false;
+  if (url.hostname === "github.com") return url.pathname === `/${REPOSITORY}` || url.pathname.startsWith(`/${REPOSITORY}/`);
+  return SITI_AMMESSI.has(url.hostname);
+}
 
 let finestraAula: BrowserWindow | null = null;
 
@@ -126,10 +138,11 @@ export function registraCanali(versione: string): void {
     const base = path.resolve(cartellaProgetti());
     const scelta = path.resolve(percorso);
     if (scelta !== base && !scelta.startsWith(base + path.sep)) return;
-    if (fs.existsSync(scelta)) await shell.openPath(scelta);
+    // Solo cartelle: aprire un file vorrebbe dire eseguirlo con il programma associato.
+    if (fs.existsSync(scelta) && fs.statSync(scelta).isDirectory()) await shell.openPath(scelta);
   });
   canale("apriLink", z.tuple([z.string().url().max(1000)]), async (url) => {
-    if (SITI_AMMESSI.some((r) => r.test(url))) await shell.openExternal(url);
+    if (linkAmmesso(url)) await shell.openExternal(new URL(url).href);
   });
   canale("aggiornamento", z.tuple([]), aggiornamento);
   canale("installaAggiornamento", z.tuple([]), installaAggiornamento);

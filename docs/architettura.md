@@ -127,7 +127,7 @@ precedente. L'aula mostra che il corso è fermo. Per ripartire: Actions → Fabb
 | Qualcuno modifica il codice | Solo il proprietario scrive su `main`; le prove proposte da altri partono solo con approvazione; azioni esterne solo di GitHub e fissate per impronta |
 | Qualcuno detta istruzioni alla fabbrica | La fabbrica legge solo il piano, la documentazione ufficiale a una revisione fissata e le segnalazioni scritte dal proprietario |
 | Codice delle lezioni che danneggia il PC | Controllo di sicurezza sul codice in fabbrica e di nuovo in aula; percorsi solo dentro il progetto; impronte di ogni file |
-| Codice delle lezioni che legge le chiavi della fabbrica | Nel cloud Godot gira come un utente a parte (`htdgodot`), con un ambiente vuoto: non vede i file né le variabili della fabbrica |
+| Codice delle lezioni che legge le chiavi della fabbrica | Nel cloud Godot gira come un utente a parte (`htdgodot`), con un ambiente vuoto: non vede i file né le variabili della fabbrica. Dopo ogni esecuzione si chiude ogni suo processo; la cartella in cui Godot lavora viene preparata tutta prima e poi la fabbrica non ci scrive più (il video esce in una cartella a parte) |
 | Lezione alterata durante il download | Impronta SHA-256 di ogni file nel catalogo, letto a una revisione precisa del ramo |
 | Godot alterato | Impronta SHA-512 ufficiale scritta nel codice |
 | Pagina dell'aula che esegue codice | Finestra isolata (sandbox, niente Node), politica dei contenuti rigida, markdown senza HTML |

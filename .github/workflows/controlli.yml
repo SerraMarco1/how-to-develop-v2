@@ -29,6 +29,15 @@ jobs:
       - name: Schermo finto e ffmpeg
         run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends xvfb ffmpeg libgl1-mesa-dri > /dev/null
 
+      # Come nella fabbrica: Godot gira come un utente a parte. Le prove lo usano (vedi condiviso/test/recinto.test.ts).
+      - name: Utente separato per Godot
+        run: |
+          sudo useradd --create-home --shell /usr/sbin/nologin htdgodot
+          sudo sysctl -q -w fs.protected_symlinks=1 fs.protected_hardlinks=1 fs.protected_regular=2 fs.protected_fifos=2
+          sudo mkdir -p /opt/htd-cache
+          sudo chown "$(id -u):$(id -g)" /opt/htd-cache
+          chmod 755 /opt/htd-cache
+
       - name: Dipendenze
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
@@ -41,6 +50,9 @@ jobs:
         run: npm run piano -- --controlla
 
       - name: Prove
+        env:
+          HTD_GODOT_UTENTE: htdgodot
+          HTD_CACHE: /opt/htd-cache
         run: npm run prove
 
       # Tutte le dipendenze, anche quelle «di sviluppo»: le librerie dell'aula sono impacchettate dentro il programma.

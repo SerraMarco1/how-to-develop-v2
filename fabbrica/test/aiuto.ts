@@ -14,7 +14,8 @@ export const CHIAVE_FINTA = "chiave-finta-di-prova-0123456789";
 export function preparaAmbiente(nome: string): { dati: string; cache: string } {
   const dati = fs.mkdtempSync(path.join(os.tmpdir(), `htd-prova-${nome}-`));
   execFileSync("git", ["init", "-q", "-b", "corso"], { cwd: dati });
-  const cache = path.join(REPO, "lavoro", "cache");
+  // La cache di Godot e della documentazione: quella indicata (nei controlli su GitHub, come nella fabbrica) o lavoro/cache.
+  const cache = process.env.HTD_CACHE ?? path.join(REPO, "lavoro", "cache");
   fs.mkdirSync(cache, { recursive: true });
   Object.assign(process.env, {
     HTD_REPO: REPO,

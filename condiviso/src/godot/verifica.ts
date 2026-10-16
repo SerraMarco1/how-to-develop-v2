@@ -209,10 +209,9 @@ const SCRIPT_FUMO = 'extends "res://htd/htd_test.gd"\n\n\nfunc _run_tests() -> v
 
 type ScriptVerifica = { descrizione: string; codice: string };
 
-/** Esegue uno script di verifica nel progetto e traduce il risultato in controlli. */
+/** Esegue uno script di verifica già scritto nel progetto (htd/<nomeFile>) e traduce il risultato in controlli. */
 async function eseguiScriptVerifica(cartella: string, nomeFile: string, v: ScriptVerifica): Promise<{ controlli: Controllo[]; output: string }> {
   const controlli: Controllo[] = [];
-  fs.writeFileSync(path.join(cartella, "htd", nomeFile), riparaScriptVerifica(v.codice));
   // La base di verifica si chiude da sola dopo 25 secondi: questo limite scatta solo se Godot stesso si blocca.
   const esito = await eseguiGodot(["--headless", "--path", cartella, "-s", `res://htd/${nomeFile}`], { timeoutMs: 45_000, cwd: cartella });
   const riga = esito.output.split(/\r?\n/).findLast((r) => r.startsWith("HTD_RESULT "));
@@ -243,8 +242,12 @@ async function eseguiScriptVerifica(cartella: string, nomeFile: string, v: Scrip
 
 async function controlliGodot(cartella: string, verifiche: ScriptVerifica[], fumo: boolean): Promise<{ controlli: Controllo[]; fumo?: Controllo[]; output: string }> {
   const controlli: Controllo[] = [];
+  // Tutto ciò che serve alle esecuzioni si scrive PRIMA che Godot parta: da lì in poi la cartella è anche di Godot (nel
+  // cloud gira come un altro utente) e la fabbrica non ci scrive più (vedi apriAGodot).
   fs.mkdirSync(path.join(cartella, "htd"), { recursive: true });
   fs.copyFileSync(percorsoMotore("harness", "htd_test.gd"), path.join(cartella, "htd", "htd_test.gd"));
+  if (fumo) fs.writeFileSync(path.join(cartella, "htd", "fumo.gd"), riparaScriptVerifica(SCRIPT_FUMO));
+  verifiche.forEach((v, indice) => fs.writeFileSync(path.join(cartella, "htd", `verifica_${indice + 1}.gd`), riparaScriptVerifica(v.codice)));
   const importazione = await importaProgetto(cartella);
   let outputTotale = importazione.output;
   let controlliFumo: Controllo[] | undefined;

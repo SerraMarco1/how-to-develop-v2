@@ -30,10 +30,18 @@ export async function ffmpegDisponibile(): Promise<string | null> {
 /**
  * Registra `durata` secondi della scena indicata (o della principale) simulando le azioni di input, e scrive l'MP4 in
  * `fileMp4`. La cartella del progetto deve essere una copia: ci vengono scritti i file della registrazione.
+ * `fileMp4` deve stare FUORI dalla cartella del progetto: quella, dopo che Godot ci ha girato, può contenere qualunque
+ * cosa (nel cloud Godot è un altro utente), e la fabbrica non ci scrive.
  */
+const dentro = (cartella: string, file: string) => {
+  const relativo = path.relative(path.resolve(cartella), path.resolve(file));
+  return relativo === "" || (!relativo.startsWith("..") && !path.isAbsolute(relativo));
+};
+
 export async function registraVideo(opzioni: { cartellaProgetto: string; scena?: string; durata: number; azioni: AzioneDemo[]; fileMp4: string }): Promise<void> {
   const ffmpeg = await ffmpegDisponibile();
   if (!ffmpeg) throw new Error("ffmpeg non trovato: serve per convertire il video");
+  if (dentro(opzioni.cartellaProgetto, opzioni.fileMp4)) throw new Error("Il video va scritto fuori dalla cartella del progetto");
   const htd = path.join(opzioni.cartellaProgetto, "htd");
   fs.mkdirSync(htd, { recursive: true });
   fs.copyFileSync(percorsoMotore("harness", "htd_demo.gd"), path.join(htd, "htd_demo.gd"));
@@ -54,7 +62,9 @@ export async function registraVideo(opzioni: { cartellaProgetto: string; scena?:
     prefisso = [xvfb, "-a", "-s", "-screen 0 1280x720x24"];
   }
   const esito = await eseguiGodot(argomenti, { timeoutMs, cwd: opzioni.cartellaProgetto, prefisso, ambiente: process.platform === "linux" ? { LIBGL_ALWAYS_SOFTWARE: "1", GALLIUM_DRIVER: "llvmpipe" } : {} });
-  if (!fs.existsSync(avi) || fs.statSync(avi).size < 1000) {
+  // Il video dev'essere un file vero scritto lì (non un collegamento verso altro).
+  const voce = fs.existsSync(avi) ? fs.lstatSync(avi) : null;
+  if (!voce || !voce.isFile() || voce.size < 1000) {
     throw new Error(`Registrazione non riuscita: ${esito.output.split(/\r?\n/).filter((r) => /error/i.test(r)).slice(0, 5).join(" | ") || "nessun video prodotto"}`);
   }
   fs.mkdirSync(path.dirname(opzioni.fileMp4), { recursive: true });

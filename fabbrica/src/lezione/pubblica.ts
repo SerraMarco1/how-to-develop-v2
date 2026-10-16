@@ -83,7 +83,9 @@ async function videoDeiBlocchi(lezione: LezioneNelCorso, scritta: LezioneScritta
     const esercizio = scritta.lezione.esercizi.find((e) => e.id === blocco.esercizio);
     if (!esercizio) continue;
     const cartella = nuovaCartellaTemporanea("video");
-    const mp4 = path.join(cartella, "risultato.mp4");
+    // Il video esce in una cartella a parte, che Godot non può toccare (vedi registraVideo).
+    const uscita = nuovaCartellaTemporanea("video-mp4");
+    const mp4 = path.join(uscita, "risultato.mp4");
     try {
       scriviFileProgetto(cartella, esercizio.soluzione.file, esercizio.titolo);
       await registraVideo({ cartellaProgetto: cartella, scena: blocco.scena, durata: blocco.durata, azioni: blocco.azioni, fileMp4: mp4 });
@@ -92,6 +94,7 @@ async function videoDeiBlocchi(lezione: LezioneNelCorso, scritta: LezioneScritta
       registra({ slug: lezione.slug, pezzo: "lezione", azione: "video", esito: "saltato", titolo: "Video del risultato non registrato", spiegazione: `La registrazione non è riuscita (${(errore as Error).message.slice(0, 300)}): la lezione esce senza quel video.` });
     } finally {
       togliCartella(cartella);
+      togliCartella(uscita);
     }
   }
   return media;
