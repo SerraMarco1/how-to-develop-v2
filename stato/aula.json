@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:39:04.738Z",
+ "aggiornato": "2026-10-16T07:39:30.124Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "variabili-e-tipi",
-  "numero": "1.1",
-  "titolo": "Variabili e tipi: ricordare i valori"
+  "slug": "process-e-delta",
+  "numero": "1.2",
+  "titolo": "_process e delta: far muovere qualcosa"
  },
- "messaggio": "Sta scrivendo la lezione 1.1 «Variabili e tipi: ricordare i valori».",
+ "messaggio": "Sta scrivendo la lezione 1.2 «_process e delta: far muovere qualcosa».",
  "riprende": null
 }

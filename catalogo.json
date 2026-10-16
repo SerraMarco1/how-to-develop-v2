@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:39:27.537Z",
+ "aggiornato": "2026-10-16T07:39:56.254Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -47,6 +47,15 @@
    "file": "lezioni/f01-programmare/variabili-e-tipi.json",
    "sha256": "a6c88ee3a2de6d597d47083019df22fcfd083c8f53b011b85962094c6e81a91e",
    "byte": 43913
+  },
+  {
+   "slug": "process-e-delta",
+   "numero": "1.2",
+   "titolo": "_process e delta: far muovere qualcosa",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/process-e-delta.json",
+   "sha256": "d4fbe6a3362dc967508076d6efd90cd243e6a4076d23131b95996d082cf7a849",
+   "byte": 41145
   }
  ],
  "documentazione": {
