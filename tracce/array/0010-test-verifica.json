@@ -1,0 +1,115 @@
+{
+ "n": 10,
+ "quando": "2026-10-16T20:26:15.188Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (ripara): approvato",
+ "spiegazione": "«Test finale: Ripara il tracciamento dei bersagli colpiti». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: enemy_manager.gd",
+ "richieste": 0,
+ "durataMs": 5220,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Test finale: Ripara il tracciamento dei bersagli colpiti",
+   "consegna": "Hai ricevuto il progetto `GestoreNemici` in cui uno script memorizza i nemici in un Array `enemies: Array[Sprite2D]`. Quando un nemico subisce danno ed esaurisce i punti vita (`health <= 0`), la funzione `process_hits()` deve eliminare quel nemico dalla scena e dall'Array `enemies`.\n\nTuttavia, quando più nemici vengono sconfitti contemporaneamente, il gioco mostra errori di esecuzione nel pannello Debugger oppure lascia nemici 'fantasmi' sconfitti dentro l'Array.\n\nSintomi: eliminare più nemici con un colpo solo genera l'errore `Index out of bounds` oppure lascia nemici con 0 punti vita nell'Array.\n\nAnalizza `enemy_manager.gd` e correggi la funzione `process_hits()` in modo che la scansione e la rimozione dei nemici con `health <= 0` avvengano correttamente senza errori.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "gestore-nemici",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Verifica la direzione di percorrenza dell'Array enemies durante l'eliminazione dei nemici."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://enemy_manager.gd",
+     "descrizione": "Il file enemy_manager.gd esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://enemy_manager.gd",
+     "regex": "range\\(enemies\\.size\\(\\)\\s*-\\s*1",
+     "descrizione": "process_hits scorre l'Array enemies all'indietro con range(enemies.size() - 1, -1, -1)"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar enemies_array = get_prop(main, \"enemies\")\n\tif not check(\"enemies_prop\", typeof(enemies_array) == TYPE_ARRAY, \"enemy_manager.gd deve definire l'Array enemies\"):\n\t\treturn\n\t\n\tcheck(\"initial_count\", enemies_array.size() == 4, \"Inizialmente ci devono essere 4 nemici nell'Array enemies\")\n\t\n\tif has_function(main, \"hit_all_enemies\"):\n\t\tmain.call(\"hit_all_enemies\", 100)\n\t\n\tif has_function(main, \"process_hits\"):\n\t\tmain.call(\"process_hits\")\n\t\n\tcheck(\"all_enemies_removed\", enemies_array.size() == 0, \"Dopo aver eliminato tutti i nemici, l'Array enemies deve essere vuoto\")\n\tcheck(\"no_runtime_errors\", errors_text() == \"\", \"La rimozione non deve causare errori nel Debugger\")\n",
+     "descrizione": "Sconfiggendo tutti i nemici, l'Array enemies viene svuotato completamente senza generare errori"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "GestoreNemici",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"GestoreNemici\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_manager.gd\" id=\"1_manager\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_manager\")\n"
+     },
+     {
+      "percorso": "enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Enemy\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_enemy\")\n"
+     },
+     {
+      "percorso": "enemy.gd",
+      "contenuto": "extends Sprite2D\n\nvar health: int = 100\n\n\nfunc take_damage(amount: int) -> void:\n\thealth -= amount\n"
+     },
+     {
+      "percorso": "enemy_manager.gd",
+      "contenuto": "extends Node2D\n\nvar enemies: Array[Sprite2D] = []\n\n\nfunc _ready() -> void:\n\t# Crea 4 nemici nell'Array\n\tvar enemy_scene: PackedScene = load(\"res://enemy.tscn\")\n\tfor i in range(4):\n\t\tvar enemy: Sprite2D = enemy_scene.instantiate() as Sprite2D\n\t\tenemy.position = Vector2(100.0 + i * 120.0, 200.0)\n\t\tadd_child(enemy)\n\t\tenemies.append(enemy)\n\n\nfunc hit_all_enemies(damage: int) -> void:\n\tfor enemy in enemies:\n\t\tenemy.take_damage(damage)\n\n\nfunc process_hits() -> void:\n\t# ERRORE: ciclo in avanti che fallisce durante le eliminazioni multiple!\n\tfor i in range(enemies.size()):\n\t\tif enemies[i].health <= 0:\n\t\t\tremove_child(enemies[i])\n\t\t\tenemies.remove_at(i)\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"GestoreNemici\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_manager.gd\" id=\"1_manager\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_manager\")\n"
+     },
+     {
+      "percorso": "enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Enemy\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_enemy\")\n"
+     },
+     {
+      "percorso": "enemy.gd",
+      "contenuto": "extends Sprite2D\n\nvar health: int = 100\n\n\nfunc take_damage(amount: int) -> void:\n\thealth -= amount\n"
+     },
+     {
+      "percorso": "enemy_manager.gd",
+      "contenuto": "extends Node2D\n\nvar enemies: Array[Sprite2D] = []\n\n\nfunc _ready() -> void:\n\t# Crea 4 nemici nell'Array\n\tvar enemy_scene: PackedScene = load(\"res://enemy.tscn\")\n\tfor i in range(4):\n\t\tvar enemy: Sprite2D = enemy_scene.instantiate() as Sprite2D\n\t\tenemy.position = Vector2(100.0 + i * 120.0, 200.0)\n\t\tadd_child(enemy)\n\t\tenemies.append(enemy)\n\n\nfunc hit_all_enemies(damage: int) -> void:\n\tfor enemy in enemies:\n\t\tenemy.take_damage(damage)\n\n\nfunc process_hits() -> void:\n\t# Corretto: scorre l'Array all'indietro dall'ultimo elemento verso il primo\n\tfor i in range(enemies.size() - 1, -1, -1):\n\t\tif enemies[i].health <= 0:\n\t\t\tremove_child(enemies[i])\n\t\t\tenemies.remove_at(i)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "GestoreNemici",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Scorrendo l'Array in avanti con `for i in range(enemies.size())`, quando un nemico viene eliminato la dimensione dell'Array diminuisce. L'indice di ciclo tenta di raggiungere il valore limite iniziale, superando la nuova lunghezza ridotta dell'Array e generando l'errore `Index out of bounds`. Sostituendo la condizione con `for i in range(enemies.size() - 1, -1, -1)` gli indici inferiori rimangono inalterati e tutti i nemici con `health <= 0` vengono eliminati in totale sicurezza.",
+    "cambiati": [
+     "enemy_manager.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}

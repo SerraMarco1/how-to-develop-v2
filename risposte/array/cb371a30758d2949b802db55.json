@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.7-flash",
+ "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test finale è una copia dell'esercizio es3 con i soli nomi cambiati: entrambi sono esercizi di tipo 'ripara' incentrati sull'errore di slittamento degli indici, in cui lo studente deve semplicemente sostituire lo scorrimento in avanti con range(...size() - 1, -1, -1) per rimuovere elementi da un Array[Sprite2D]. Inoltre, non verifica gli altri obiettivi della lezione (come la dichiarazione di un Array tipizzato, l'uso di append() o lo scorrimento in avanti per modificare proprietà).\", \"correzione\": \"Sostituire il test con un esercizio autonomo che verifichi in modo integrato gli obiettivi della lezione (dichiarazione di un Array tipizzato, inserimento con append, scorrimento e rimozione sicura all'indietro), evitando di duplicare la struttura e la consegna di es3.\", \"fonte\": \"\"}]}",
+ "ragionamento": 6896,
+ "quando": "2026-10-16T20:28:48.764Z",
+ "ruolo": "revisore"
+}
