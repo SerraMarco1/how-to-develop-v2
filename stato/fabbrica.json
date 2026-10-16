@@ -21,7 +21,12 @@
  "stessoLimite": {},
  "rpd": {},
  "maxToken": {},
- "troncate": {},
+ "troncate": {
+  "gemini/gemini-flash-latest:14000": {
+   "volte": 1,
+   "quando": 1792177866314
+  }
+ },
  "scrittoriApprovati": [],
  "corsoFermo": null,
  "prossimoTentativo": null
