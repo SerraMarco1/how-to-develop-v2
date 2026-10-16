@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:39:01.660Z",
+ "aggiornato": "2026-10-16T07:39:27.537Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -38,6 +38,15 @@
    "file": "lezioni/f01-programmare/il-primo-script.json",
    "sha256": "512b7bd16499ade178a31579aad8b52ff21dcafda7b75814383f43f2a072365c",
    "byte": 27768
+  },
+  {
+   "slug": "variabili-e-tipi",
+   "numero": "1.1",
+   "titolo": "Variabili e tipi: ricordare i valori",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/variabili-e-tipi.json",
+   "sha256": "a6c88ee3a2de6d597d47083019df22fcfd083c8f53b011b85962094c6e81a91e",
+   "byte": 43913
   }
  ],
  "documentazione": {

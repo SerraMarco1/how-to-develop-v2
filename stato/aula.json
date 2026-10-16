@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:38:42.323Z",
+ "aggiornato": "2026-10-16T07:39:04.738Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "il-primo-script",
-  "numero": "1.0",
-  "titolo": "Il primo script: dare ordini a un nodo"
+  "slug": "variabili-e-tipi",
+  "numero": "1.1",
+  "titolo": "Variabili e tipi: ricordare i valori"
  },
- "messaggio": "Sta scrivendo la lezione 1.0 «Il primo script: dare ordini a un nodo».",
+ "messaggio": "Sta scrivendo la lezione 1.1 «Variabili e tipi: ricordare i valori».",
  "riprende": null
 }
