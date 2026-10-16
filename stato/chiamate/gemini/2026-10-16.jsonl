@@ -1,0 +1,3 @@
+{"quando":1792148311087,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"casualita-e-distanze","ok":false,"contata":true,"durataMs":318,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792148311408,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":106817,"tokenInput":11882,"tokenOutput":2355,"ragionamento":4072}
+{"quando":1792148418227,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"casualita-e-distanze","ok":false,"contata":true,"durataMs":413,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
