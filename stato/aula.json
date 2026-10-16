@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T19:28:41.210Z",
+ "aggiornato": "2026-10-16T19:31:45.973Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "punteggio-e-testo",
-  "numero": "1.8",
-  "titolo": "Punteggio e testo sullo schermo"
+  "slug": "cicli",
+  "numero": "1.9",
+  "titolo": "Cicli: for e while"
  },
- "messaggio": "Sta scrivendo la lezione 1.8 «Punteggio e testo sullo schermo».",
+ "messaggio": "Sta scrivendo la lezione 1.9 «Cicli: for e while».",
  "riprende": null
 }

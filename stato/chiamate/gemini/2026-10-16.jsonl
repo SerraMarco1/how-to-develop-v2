@@ -26,3 +26,5 @@
 {"quando":1792178203930,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"punteggio-e-testo","ok":false,"contata":true,"durataMs":609,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792178921268,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"punteggio-e-testo","ok":true,"contata":true,"durataMs":129643,"tokenInput":10984,"tokenOutput":18,"ragionamento":2858}
 {"quando":1792179069186,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"punteggio-e-testo","ok":true,"contata":true,"durataMs":29890,"tokenInput":2964,"tokenOutput":745,"ragionamento":2416}
+{"quando":1792179105994,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"cicli","ok":false,"contata":true,"durataMs":758,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792179106756,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"cicli","ok":true,"contata":true,"durataMs":33925,"tokenInput":13277,"tokenOutput":2157,"ragionamento":4869}
