@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:41:15.535Z",
+ "aggiornato": "2026-10-16T07:41:45.308Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -74,6 +74,15 @@
    "file": "lezioni/f01-programmare/input-da-tastiera.json",
    "sha256": "1a89a18c617f1f0f718cbcdee8cfca40b2e85c8045def5625ff87137a448edd0",
    "byte": 51804
+  },
+  {
+   "slug": "funzioni",
+   "numero": "1.5",
+   "titolo": "Funzioni: dare un nome a un pezzo di lavoro",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/funzioni.json",
+   "sha256": "8149e6b86c7d70e4438d177df5c587376fe33bd1c70b7bcdb7ea38df7531f29c",
+   "byte": 65631
   }
  ],
  "documentazione": {

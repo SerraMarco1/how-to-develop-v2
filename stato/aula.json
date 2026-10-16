@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:40:24.901Z",
+ "aggiornato": "2026-10-16T07:41:18.294Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "input-da-tastiera",
-  "numero": "1.4",
-  "titolo": "Input: leggere la tastiera"
+  "slug": "funzioni",
+  "numero": "1.5",
+  "titolo": "Funzioni: dare un nome a un pezzo di lavoro"
  },
- "messaggio": "Sta scrivendo la lezione 1.4 «Input: leggere la tastiera».",
+ "messaggio": "Sta scrivendo la lezione 1.5 «Funzioni: dare un nome a un pezzo di lavoro».",
  "riprende": null
 }
