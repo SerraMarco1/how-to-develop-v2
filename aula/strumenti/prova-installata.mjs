@@ -2,10 +2,12 @@
 // sorgenti: avvia l'eseguibile con una cartella dati temporanea e controlla, dalla finestra, che
 //   - il programma parta dal suo app.asar e trovi il pacchetto del motore tra le risorse (il piano del corso);
 //   - la finestra sia isolata (niente Node, niente require);
-//   - con il ramo `corso` non ancora disponibile l'aula lo dica e non si blocchi.
+//   - la sincronizzazione con il repository vero riesca, o se non riesce l'aula lo dica e non si blocchi.
 // Poi verifica le protezioni dell'eseguibile: con ELECTRON_RUN_AS_NODE non diventa un Node.js, e con app.asar alterato
 // non parte.
-//   node aula/strumenti/prova-installata.mjs
+//   node aula/strumenti/prova-installata.mjs [cartella del programma]
+// (senza cartella: aula/rilascio/win-unpacked; con una cartella: per esempio il programma estratto dall'installatore
+// pubblicato tra le Release, per provare proprio quello che si scarica)
 
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -14,7 +16,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const aula = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const cartella = path.join(aula, "rilascio", "win-unpacked");
+const cartella = path.resolve(process.argv[2] ?? path.join(aula, "rilascio", "win-unpacked"));
 const eseguibile = path.join(cartella, "How to Develop.exe");
 if (!fs.existsSync(eseguibile)) {
   console.error(`Manca ${eseguibile}: prima npm run installatore --workspace aula`);
@@ -31,7 +33,10 @@ const attendi = (ms) => new Promise((r) => setTimeout(r, ms));
 // 1. Il programma vero, con una cartella dati temporanea e la porta di controllo della finestra.
 const dati = fs.mkdtempSync(path.join(os.tmpdir(), "htd-installata-"));
 const porta = 9300 + Math.floor(Math.random() * 500);
-const figlio = spawn(eseguibile, [`--user-data-dir=${dati}`, `--remote-debugging-port=${porta}`], { stdio: "ignore" });
+const figlio = spawn(eseguibile, [`--user-data-dir=${dati}`, `--remote-debugging-port=${porta}`], { stdio: ["ignore", "pipe", "pipe"] });
+let registro = "";
+figlio.stdout.on("data", (d) => (registro += d));
+figlio.stderr.on("data", (d) => (registro += d));
 let pagina = null;
 for (let i = 0; i < 60 && !pagina; i++) {
   await attendi(500);
@@ -73,8 +78,16 @@ else {
   const fabbrica = oggi?.fabbrica;
   console.log(`   sincronizzazione con il repository vero: ${JSON.stringify(sinc).slice(0, 300)}`);
   console.log(`   stato della fabbrica mostrato: ${JSON.stringify(fabbrica).slice(0, 300)}`);
-  if (sinc && typeof sinc === "object" && !("eccezione" in sinc)) ok("con il ramo corso non disponibile l'aula risponde senza bloccarsi");
+  const dopo = await js("window.htd.oggi()");
+  if (sinc && typeof sinc === "object" && !("eccezione" in sinc)) ok(sinc.errore ? `la sincronizzazione non riesce ma l'aula lo dice senza bloccarsi: «${sinc.errore}»` : `sincronizzata con il repository vero: ${dopo?.pubblicate} lezioni scaricate e controllate`);
   else no(`sincronizzazione: ${JSON.stringify(sinc).slice(0, 300)}`);
+  // Gli aggiornamenti: il programma chiede a GitHub l'ultima release. Non deve dare errore; se la release più recente è
+  // la sua stessa versione non c'è niente da aggiornare.
+  const aggiornamento = await js("window.htd.aggiornamento()");
+  const righe = registro.split(/\r?\n/);
+  const risposta = righe.find((r) => /is not available|Found version|Update for version/i.test(r));
+  if (aggiornamento?.stato && aggiornamento.stato !== "errore" && risposta) ok(`controllo degli aggiornamenti su GitHub riuscito: «${risposta.trim().slice(0, 160)}»`);
+  else no(`controllo degli aggiornamenti: ${JSON.stringify(aggiornamento).slice(0, 200)} | registro: ${righe.filter((r) => /updat|aggiorn/i.test(r)).slice(0, 4).join(" / ").slice(0, 400)}`);
   const impostazioni = await js("window.htd.impostazioni()");
   if (impostazioni?.versione) ok(`versione del programma: ${impostazioni.versione}`);
   else no(`impostazioni: ${JSON.stringify(impostazioni).slice(0, 200)}`);
