@@ -41,6 +41,9 @@ fabbrica controlla; se l'errore c'è, la lezione esce corretta e la risposta arr
 La fabbrica non chiede niente finché funziona. Lavora da sola ogni 15 minuti; lo stato si vede nell'aula (pagina Oggi)
 e, nel dettaglio, nella scheda **Actions** del repository.
 
+GitHub sospende i workflow a orario di un repository pubblico dopo 60 giorni senza attività: se nella scheda Actions,
+sotto «Fabbrica», compare «This scheduled workflow is disabled», basta premere **Enable workflow**.
+
 ### Le chiavi
 
 Nel repository: **Settings → Secrets and variables → Actions → New repository secret**.
