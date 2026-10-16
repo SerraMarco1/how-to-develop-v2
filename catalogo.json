@@ -1,8 +1,18 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:37:48.378Z",
+ "aggiornato": "2026-10-16T07:38:01.151Z",
  "lezioniNelPiano": 179,
- "lezioni": [],
+ "lezioni": [
+  {
+   "slug": "installare-godot-e-gestire-i-progetti",
+   "numero": "0.0",
+   "titolo": "Installare Godot e gestire i progetti",
+   "versione": 1,
+   "file": "lezioni/f00-orientamento/installare-godot-e-gestire-i-progetti.json",
+   "sha256": "8d15b56a429c25895cef7a57884a4f8542b3fe858b8deb6749462901bdd735f2",
+   "byte": 19337
+  }
+ ],
  "documentazione": {
   "media": {
    "sha256": "98068e7ef361a298ed5db0832c9e4844efeeadc017a3232d1c6cd3ceadae76e0",
