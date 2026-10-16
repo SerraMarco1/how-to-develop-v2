@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T20:36:04.948Z",
+ "aggiornato": "2026-10-16T22:15:47.539Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -128,6 +128,15 @@
    "file": "lezioni/f01-programmare/array.json",
    "sha256": "df02d59c727cd4144bf3077bfdfc95099d2280e6d843723687aae4c97d606411",
    "byte": 79462
+  },
+  {
+   "slug": "dictionary",
+   "numero": "1.11",
+   "titolo": "Dictionary: dati con un nome",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/dictionary.json",
+   "sha256": "09ca9f185698240a21a79bd02c6d7cb40d9dbf99914559ada8360c4220ec3600",
+   "byte": 92902
   }
  ],
  "documentazione": {
