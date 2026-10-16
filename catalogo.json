@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:38:23.627Z",
+ "aggiornato": "2026-10-16T07:38:39.578Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -20,6 +20,15 @@
    "file": "lezioni/f00-orientamento/l-editor-costruendo-una-scena.json",
    "sha256": "bcd7007aee81a81f8544c2377799a1bac98f41fbb1a1db6ef999922685409765",
    "byte": 26709
+  },
+  {
+   "slug": "trovare-le-risposte-nella-documentazione",
+   "numero": "0.2",
+   "titolo": "Trovare le risposte da soli: l'aiuto integrato",
+   "versione": 1,
+   "file": "lezioni/f00-orientamento/trovare-le-risposte-nella-documentazione.json",
+   "sha256": "2460cba0f0b50e2f9642fa8608ec3feb5c048d756f33659156ba5d1b1fb058f1",
+   "byte": 18695
   }
  ],
  "documentazione": {
