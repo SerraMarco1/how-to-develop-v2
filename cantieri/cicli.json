@@ -1,0 +1,82 @@
+{
+ "creato": "2026-10-16T19:31:45.988Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Cicli: for e while",
+  "sommario": "In questa lezione imparerai a ripetere blocchi di codice in modo automatico usando i cicli `for` e `while`. Scoprirai come generare sequenze di numeri con `range()`, come creare nuovi nodi direttamente da codice con `new()` e `add_child()`, e come gestire le condizioni dei cicli evitando blocchi infiniti del gioco.",
+  "concetti": [
+   "Ciclo for",
+   "Funzione range() con 1, 2 o 3 argomenti",
+   "Creazione di nodi da codice con .new()",
+   "Aggiunta di nodi all'albero con add_child()",
+   "Ciclo while e condizioni di uscita",
+   "Prevenzione dei cicli infiniti (infinite loop)"
+  ],
+  "obiettivi": [
+   "Ripetere un lavoro con for e range()",
+   "while: ripetere finché una condizione è vera, e come non restare bloccati",
+   "Creare nodi dal codice con new() e add_child()"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Fino a questo momento, ogni nodo del gioco è stato creato a mano nell'editor o posizionato singolarmente. Se però volessi creare cinque stelle all'avvio del gioco, ognuna a un'altezza diversa, scrivere cinque volte le stesse righe di codice sarebbe lungo e inefficiente.\n\nI **cicli** servono proprio a questo: permettono a GDScript di eseguire lo stesso blocco di istruzioni più volte, modificando solo i valori che cambiano a ogni passaggio."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Il ciclo for e la funzione range()\n\nIl ciclo `for` si usa quando sai già quante volte devi ripetere un'operazione. In GDScript il ciclo `for` lavora spesso insieme alla funzione `range()`, che genera una sequenza numerica.\n\nQuando scrivi `for i in range(5):`, GDScript esegue il codice dentro il ciclo per 5 volte. Alla variabile `i` (chiamata indice del ciclo) viene assegnato un valore diverso a ogni passaggio, partendo da `0` fino a `4` (il limite superiore `5` è escluso)."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Creare nodi dal codice: new() e add_child()\n\nPer creare un nuovo oggetto da script senza aggiungerlo a mano nel pannello *Scene*, si seguono due passaggi fondamentali:\n\n1. **`Sprite2D.new()`**: crea una nuova istanza del nodo in memoria.\n2. **`add_child(nodo)`**: aggiunge il nodo appena creato come figlio del nodo corrente, inserendolo nell'albero della scena in modo che compaia e si aggiorni a schermo."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "func _ready() -> void:\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\tupdate_ui()\n\t\n\t# Crea 5 stelle a altezze e posizioni diverse usando un ciclo for\n\tfor i in range(5):\n\t\tvar star: Sprite2D = Sprite2D.new()\n\t\tstar.texture = load(\"res://icon.svg\")\n\t\tstar.set_script(load(\"res://star.gd\"))\n\t\tstar.position = Vector2(150.0 + i * 180.0, 80.0 + i * 50.0)\n\t\tadd_child(star)\n\t\n\tprint(\"Cesto e 5 stelle pronti!\")",
+    "spiegazione": "Nel metodo `_ready()` di `basket.gd`, il ciclo `for i in range(5):` si ripete 5 volte. A ogni passaggio:\n- `Sprite2D.new()` crea una nuova stella in memoria.\n- `star.texture` assegna l'immagine e `star.set_script()` collega lo script `star.gd`.\n- `star.position` calcola coordinate diverse per ogni stella sfruttando il valore di `i` (0, 1, 2, 3, 4).\n- `add_child(star)` la rende visibile e attiva nell'albero dei nodi."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Il ciclo while\n\nA differenza del ciclo `for`, che ripete il codice un numero prefissato di volte, il ciclo `while` continua a ripetere le istruzioni **finché una condizione rimane vera (`true`)**.\n\nNon appena la condizione diventa falsa (`false`), il ciclo termina e GDScript prosegue con le istruzioni successive. Il ciclo `while` è utile quando non puoi sapere in anticipo quanti passaggi saranno necessari per completare un lavoro."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "var current_y: float = 80.0\nvar target_y: float = 380.0\n\n# Continua ad abbassare la posizione finche' non raggiunge la quota target\nwhile current_y < target_y:\n\tprint(\"Posizione di controllo Y: \", current_y)\n\tcurrent_y += 100.0",
+    "spiegazione": "Prima del ciclo `current_y` vale 80.0. La condizione `current_y < target_y` viene verificata ad ogni inizio di ciclo:\n- 1° giro: 80.0 < 380.0 è vero (`true`), stampa e porta `current_y` a 180.0.\n- 2° giro: 180.0 < 380.0 è vero (`true`), stampa e porta `current_y` a 280.0.\n- 3° giro: 280.0 < 380.0 è vero (`true`), stampa e porta `current_y` a 380.0.\n- 4° giro: 380.0 < 380.0 è falso (`false`), il ciclo si interrompe."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Se dentro un ciclo `while` ti dimentichi di aggiornare le variabili usate nella condizione (ad esempio omettendo `current_y += 100.0`), la condizione rimarrà `true` per sempre. Questo genera un **ciclo infinito**: il gioco si bloccherà e la finestra dell'editor smetterà di rispondere."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Personalizzare la sequenza con range()\n\nLa funzione `range()` può accogliere fino a tre parametri per adattarsi a esigenze diverse:\n\n- **`range(stop)`**: conta da `0` fino a `stop - 1`. Esempio: `range(4)` genera `0, 1, 2, 3`.\n- **`range(start, stop)`**: conta da `start` fino a `stop - 1`. Esempio: `range(2, 6)` genera `2, 3, 4, 5`.\n- **`range(start, stop, step)`**: conta da `start` fino a `stop - 1`, incrementando del valore `step` ad ogni passaggio. Esempio: `range(0, 10, 2)` genera `0, 2, 4, 6, 8`.\n\nÈ anche possibile contare all'indietro usando uno `step` negativo, come ad esempio `range(5, 0, -1)` che produrrà la sequenza `5, 4, 3, 2, 1`."
+   },
+   {
+    "tipo": "video",
+    "titolo": "Cinque stelle create all'avvio",
+    "esercizio": "es1",
+    "durata": 5,
+    "azioni": [
+     {
+      "azione": "move_right",
+      "inizio": 0.5,
+      "fine": 2,
+      "tasto": "D"
+     }
+    ]
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Il ciclo `for` unito a `range()` permette di eseguire istruzioni per un numero preciso di volte.\n- `range(n)` produce una sequenza da `0` a `n - 1`; si possono specificare anche inizio, fine e passo (step).\n- `Sprite2D.new()` crea un nuovo nodo in memoria, mentre `add_child()` lo aggancia alla scena rendendolo visibile.\n- Il ciclo `while` ripete il blocco di codice finché la sua condizione risulta vera (`true`).\n- In un ciclo `while` è essenziale modificare i dati della condizione ad ogni passaggio per evitare blocchi infiniti."
+   }
+  ]
+ }
+}
