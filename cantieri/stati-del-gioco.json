@@ -468,7 +468,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Stati del gioco: enum e match",
@@ -545,5 +546,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "La verifica script_godot tenta di aumentare il punteggio con call_if_exists(main, \"add_score\", [100]), ma la funzione add_score non esiste nello script di partenza e la consegna non ne richiede l'implementazione. Il punteggio rimane 0, la funzione check_win() non attiva lo stato WIN e il test fallisce.",
+    "correzione": "Nella verifica script_godot del test, sostituisci la riga 'call_if_exists(main, \"add_score\", [100])' con 'main.set(\"score\", 100)', oppure aggiungi alla consegna la specifica di creare la funzione add_score(amount: int).",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
