@@ -57,8 +57,11 @@ nsis:
   createDesktopShortcut: always
   createStartMenuShortcut: true
 
+# Le release dell'aula hanno l'etichetta aula-v<versione> (la crea il proprietario: vedi docs/guida.md). L'aula installata
+# trova l'ultima release e legge la versione da latest.yml, qualunque sia il nome dell'etichetta.
 publish:
   provider: github
   owner: SerraMarco1
   repo: how-to-develop-v2
   releaseType: release
+  tagNamePrefix: aula-v

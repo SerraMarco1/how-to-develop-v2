@@ -37,10 +37,33 @@ jobs:
       - name: Tipi
         run: npm run tipi
 
-      - name: Installatore e pubblicazione
+      # La release nasce come bozza (una sola volta: l'installatore carica i suoi file in parallelo e, se la release non
+      # esistesse, proverebbe a crearla da ogni caricamento); diventa pubblica solo quando ha tutti i suoi file.
+      - name: Release in bozza
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          versione="${GITHUB_REF_NAME#aula-v}"
+          gh release create "$GITHUB_REF_NAME" --draft --verify-tag --title "How to Develop ${versione}" \
+            --notes "L'aula di How to Develop, versione ${versione}. Si installa con How-to-Develop-${versione}-installa.exe; un'aula già installata si aggiorna da sola."
+
+      - name: Installatore
         working-directory: aula
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           node strumenti/compila.mjs --produzione
           npx electron-builder --win --publish always
+
+      - name: Pubblicazione, solo se la release ha tutti i suoi file
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          versione="${GITHUB_REF_NAME#aula-v}"
+          file="$(gh release view "$GITHUB_REF_NAME" --json assets --jq '.assets[].name')"
+          for atteso in "How-to-Develop-${versione}-installa.exe" "How-to-Develop-${versione}-installa.exe.blockmap" latest.yml; do
+            grep -qxF "$atteso" <<< "$file" || { echo "Manca $atteso nella release"; exit 1; }
+          done
+          gh release edit "$GITHUB_REF_NAME" --draft=false --latest
