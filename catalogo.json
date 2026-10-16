@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T20:20:18.526Z",
+ "aggiornato": "2026-10-16T20:36:04.948Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -119,6 +119,15 @@
    "file": "lezioni/f01-programmare/cicli.json",
    "sha256": "2ddf745fbab8001fab62895c9fcda5b3ef9c6e37a5bb9a2a08f0b0ab02ab1e97",
    "byte": 70602
+  },
+  {
+   "slug": "array",
+   "numero": "1.10",
+   "titolo": "Array: tanti oggetti insieme",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/array.json",
+   "sha256": "df02d59c727cd4144bf3077bfdfc95099d2280e6d843723687aae4c97d606411",
+   "byte": 79462
   }
  ],
  "documentazione": {
