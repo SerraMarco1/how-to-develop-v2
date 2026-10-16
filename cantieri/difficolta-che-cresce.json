@@ -211,7 +211,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "prevedi",
@@ -268,7 +268,63 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.7-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedere i calcoli del tempo e dell'interpolazione",
+    "consegna": "Leggi attentamente ciascun frammento di codice GDScript e indica quale valore viene restituito dalla funzione `run()`, senza eseguire il programma.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> float:\n\tvar start_val: float = 100.0\n\tvar end_val: float = 300.0\n\tvar weight: float = 0.5\n\treturn lerpf(start_val, end_val, weight)\n",
+      "domanda": "Quale valore restituisce la funzione run()?",
+      "risposta": "200.0",
+      "spiegazione": "La funzione `lerpf(da, a, peso)` con peso `0.5` restituisce il valore esattamente a metà strada tra `100.0` e `300.0`: `100.0 + (300.0 - 100.0) * 0.5 = 200.0`.",
+      "id": "es2p1"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar tempo: float = 90.0\n\tvar progresso: float = min(tempo / 60.0, 1.0)\n\tvar intervallo: float = lerpf(2.0, 0.5, progresso)\n\treturn max(intervallo, 0.5)\n",
+      "domanda": "Quale valore numerico restituisce la funzione run()?",
+      "risposta": "0.5",
+      "spiegazione": "`90.0 / 60.0` produce `1.5`, ma `min(1.5, 1.0)` blocca il progresso a `1.0`. Quando il peso è `1.0`, `lerpf(2.0, 0.5, 1.0)` restituisce il valore finale `0.5`, e `max(0.5, 0.5)` conferma `0.5`.",
+      "id": "es2p2"
+     },
+     {
+      "codice": "func run() -> int:\n\tvar spawn_timer: float = 0.0\n\tvar interval: float = 0.5\n\tvar spawns: int = 0\n\tvar delta: float = 0.16\n\t\n\tfor frame in range(4):\n\t\tspawn_timer += delta\n\t\tif spawn_timer >= interval:\n\t\t\tspawn_timer -= interval\n\t\t\tspawns += 1\n\t\t\t\n\treturn spawns\n",
+      "domanda": "Quale numero intero restituisce la funzione run()?",
+      "risposta": "1",
+      "spiegazione": "A ogni fotogramma il timer aumenta di 0.16: frame 0 -> 0.16; frame 1 -> 0.32; frame 2 -> 0.48; frame 3 -> 0.64. Solo al quarto frame `spawn_timer >= 0.5` risulta vero, incrementando `spawns` a 1 e lasciando nel timer il resto di `0.14` (`0.64 - 0.5`).",
+      "id": "es2p3"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar current_second: int = 45\n\tvar total_seconds: int = 60\n\tvar progress: float = current_second / total_seconds\n\treturn progress\n",
+      "domanda": "Quale numero restituisce la funzione run()?",
+      "risposta": "0.0",
+      "spiegazione": "Sia `current_second` che `total_seconds` sono di tipo `int`. In GDScript, la divisione tra due numeri interi è una divisione intera, che tronca la parte decimale: `45 / 60` produce `0`. Assegnato a un `float`, diventa `0.0`. Per ottenere `0.75` almeno uno dei due operandi avrebbe dovuto essere decimale (`45.0 / 60.0`).",
+      "id": "es2p4"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar start_val: float = 10.0\n\tvar end_val: float = 2.0\n\tvar weight: float = 1.5\n\treturn lerpf(start_val, end_val, weight)\n",
+      "domanda": "Quale valore restituisce la funzione run()?",
+      "risposta": "-2.0",
+      "spiegazione": "La funzione `lerpf(da, a, peso)` applica la formula matematica `da + (a - da) * peso` senza limitare automaticamente il peso. Quando il peso è `1.5`, la formula estrapola oltre il valore finale: `10.0 + (2.0 - 10.0) * 1.5 = 10.0 + (-8.0 * 1.5) = 10.0 - 12.0 = -2.0`. Per evitare valori fuori scala è quindi fondamentale applicare `min()` o `clamp()` prima di usare `lerpf()`.",
+      "id": "es2p5"
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "Gli esercizi mettono alla prova il funzionamento dell'interpolazione lineare con `lerpf`, l'uso di `min` e `max` come limiti di sicurezza, il meccanismo del timer accumulatore senza nodi dedicati e la differenza fondamentale tra divisione intera e decimale in GDScript.",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "test": {
    "stato": "da_fare",
