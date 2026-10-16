@@ -565,7 +565,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar rock := instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_exists\", rock != null, \"La scena rock.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"has_hits\", has_function(rock, \"hits_basket\"), \"In rock.gd deve esistere la funzione hits_basket\"):\n\t\treturn\n\tif not check(\"has_check\", has_function(rock, \"check_hit\"), \"In rock.gd deve esistere la funzione check_hit\"):\n\t\treturn\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar hit_close = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 530.0)], false)\n\tcheck(\"hit_at_30\", hit_close == true, \"A distanza di 30 pixel hits_basket deve restituire true\")\n\tvar hit_far = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 560.0)], true)\n\tcheck(\"miss_at_60\", hit_far == false, \"A distanza di 60 pixel hits_basket deve restituire false\")\n\trock.set(\"position\", Vector2(400.0, 400.0))\n\tvar miss_dmg = call_if_exists(rock, \"check_hit\", [Vector2(800.0, 800.0)], -1)\n\tcheck(\"dmg_zero_on_miss\", miss_dmg == 0, \"Senza collisione check_hit deve restituire 0\")\n\tvar pos_after_miss = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"no_reset_on_miss\", is_equal_approx(pos_after_miss.y, 400.0), \"Senza collisione la roccia non deve ripristinarsi\")\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar current_dmg = get_prop(rock, \"damage\", 1)\n\tvar dealt_dmg = call_if_exists(rock, \"check_hit\", [Vector2(500.0, 520.0)], 0)\n\tcheck(\"dmg_returned\", dealt_dmg == current_dmg, \"In caso di urto check_hit deve restituire il danno inflitto dall'ostacolo\")\n\tvar pos_after_hit = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"reset_on_hit\", is_equal_approx(pos_after_hit.y, 80.0), \"In caso di urto check_hit deve chiamare reset_rock() riportando la roccia a Y = 80.0\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar rock := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_exists\", rock != null, \"La scena rock.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"has_hits\", has_function(rock, \"hits_basket\"), \"In rock.gd deve esistere la funzione hits_basket\"):\n\t\treturn\n\tif not check(\"has_check\", has_function(rock, \"check_hit\"), \"In rock.gd deve esistere la funzione check_hit\"):\n\t\treturn\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar hit_close = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 530.0)], false)\n\tcheck(\"hit_at_30\", hit_close == true, \"A distanza di 30 pixel hits_basket deve restituire true\")\n\tvar hit_far = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 560.0)], true)\n\tcheck(\"miss_at_60\", hit_far == false, \"A distanza di 60 pixel hits_basket deve restituire false\")\n\trock.set(\"position\", Vector2(400.0, 400.0))\n\tvar miss_dmg = call_if_exists(rock, \"check_hit\", [Vector2(800.0, 800.0)], -1)\n\tcheck(\"dmg_zero_on_miss\", miss_dmg == 0, \"Senza collisione check_hit deve restituire 0\")\n\tvar pos_after_miss = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"no_reset_on_miss\", is_equal_approx(pos_after_miss.y, 400.0), \"Senza collisione la roccia non deve ripristinarsi\")\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar current_dmg = get_prop(rock, \"damage\", 1)\n\tvar dealt_dmg = call_if_exists(rock, \"check_hit\", [Vector2(500.0, 520.0)], 0)\n\tcheck(\"dmg_returned\", dealt_dmg == current_dmg, \"In caso di urto check_hit deve restituire il danno inflitto dall'ostacolo\")\n\tvar pos_after_hit = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"reset_on_hit\", is_equal_approx(pos_after_hit.y, 80.0), \"In caso di urto check_hit deve chiamare reset_rock() riportando la roccia a Y = 80.0\")",
       "descrizione": "hits_basket rileva il contatto e check_hit restituisce il danno ripristinando la roccia in alto"
      }
     ],
@@ -574,22 +574,67 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "star.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+      },
+      {
+       "percorso": "rock.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+      },
+      {
+       "percorso": "basket.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+      },
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+      },
+      {
+       "percorso": "star.gd",
+       "contenuto": "extends Sprite2D\n\n# Coordinate di riferimento e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Genera un valore base casuale tra 10 e 30 prima di calcolare i punti\n\tbase_value = randi_range(10, 30)\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Posiziona la stella in alto e imposta il colore\n\treset_star()\n\tmodulate = Color.YELLOW\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella scende solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto\n\tif position.y > RESET_Y:\n\t\treset_star()\n\t\n\t# Aggiorna il colore in base all'altezza raggiunta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Assegna una coordinata orizzontale casuale e riposiziona la stella in alto\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Misura la distanza in pixel dal cesto e verifica se rientra nella soglia\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n"
+      },
+      {
        "percorso": "rock.gd",
        "contenuto": "extends Sprite2D\n\n# Costanti per coordinate di riferimento, limiti di ripristino, danno massimo e impatto\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 120.0\nconst SPAWN_MAX_X: float = 960.0\nconst RESET_Y: float = 680.0\nconst MAX_DAMAGE: int = 3\nconst HIT_DISTANCE: float = 50.0\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Inizializza posizione, velocità e danno casuali\n\treset_rock()\n\tmodulate = Color.RED\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i confini visibili ed aggiorna l'aspetto\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x < 50.0 or position.x > 1050.0:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia lungo entrambi gli assi con le rispettive velocità\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Genera coordinate e parametri casuali per la nuova discesa\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tfall_speed = randf_range(200.0, 320.0)\n\thorizontal_speed = randf_range(-100.0, 100.0)\n\tdamage = randi_range(1, 3)\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n\n\nfunc hits_basket(basket_position: Vector2) -> bool:\n\t# Verifica se la distanza dal cesto rientra nella soglia di impatto\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < HIT_DISTANCE\n\n\nfunc check_hit(basket_position: Vector2) -> int:\n\t# Se colpisce il cesto, infligge danno e si ripristina subito in alto\n\tif hits_basket(basket_position):\n\t\tvar dealt_damage: int = damage\n\t\treset_rock()\n\t\treturn dealt_damage\n\treturn 0\n"
       }
      ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "res://basket.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "Left",
+         "A"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "Right",
+         "D"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
      "spiegazione": "La funzione `hits_basket()` misura la distanza geometrica tra il centro della roccia e il centro del cesto usando `distance_to()`: se il valore è inferiore a `HIT_DISTANCE` (50 pixel), segnala il contatto. La funzione `check_hit()` sfrutta questa verifica: memorizza il danno inflitto prima del reset, azzera la posizione dell'ostacolo con `reset_rock()` e restituisce il numero di vite da sottrarre al giocatore, permettendo al gioco di gestire urti e ripartenze in modo pulito.",
-     "cambiati": [],
+     "cambiati": [
+      "rock.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] hits_basket rileva il contatto e check_hit restituisce il danno ripristinando la roccia in alto: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:4)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:4)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 4: `var rock := instantiate_scene(\"res://rock.tscn\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
    ],
    "modelli": [
+    "gemini/gemini-flash-latest",
     "gemini/gemini-flash-latest"
    ]
   }
