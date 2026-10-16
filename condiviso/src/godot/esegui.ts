@@ -41,6 +41,9 @@ function ambienteRidotto(extra: Record<string, string> = {}): NodeJS.ProcessEnv 
 /** Limite di sicurezza sull'output: un progetto che stampa all'infinito non deve riempire la memoria. */
 const MAX_OUTPUT = 400_000;
 
+/** Le esecuzioni in corso con l'utente separato (al massimo una: vedi chiudiProcessiDiGodot). */
+let esecuzioniSeparate = 0;
+
 /**
  * Sulla macchina della fabbrica (Linux) Godot può girare con un altro utente del sistema, indicato da HTD_GODOT_UTENTE:
  * quell'utente non può leggere i file né l'ambiente del processo che lo lancia, dove stanno le chiavi. È un recinto vero,
@@ -64,6 +67,8 @@ function comando(exe: string, argomenti: string[], env: NodeJS.ProcessEnv, timeo
 /**
  * Con un utente separato, alla fine di ogni esecuzione non deve restare acceso niente di suo: un processo rimasto (un
  * codice che si stacca da Godot) potrebbe cambiare i file mentre la fabbrica li usa. Si chiudono tutti, sempre.
+ * Per questo con l'utente separato Godot gira UNA volta alla volta (la fabbrica fa un giro alla volta; le prove girano
+ * un file alla volta): chiudere i processi dell'utente chiuderebbe anche un'altra esecuzione in corso.
  */
 function chiudiProcessiDiGodot(): Promise<void> {
   const utente = process.platform === "linux" ? process.env.HTD_GODOT_UTENTE : undefined;
@@ -106,7 +111,10 @@ export function eseguiGodot(argomenti: string[], opzioni: { timeoutMs?: number; 
   if (!eseguibile) throw new Error("Godot di servizio non impostato (impostaGodot)");
   const timeoutMs = opzioni.timeoutMs ?? 60_000;
   const c = comando(eseguibile, argomenti, ambienteRidotto(opzioni.ambiente), timeoutMs, opzioni.prefisso ?? []);
-  return new Promise((resolve) => {
+  const separato = c.programma === "sudo";
+  if (separato && esecuzioniSeparate > 0) return Promise.reject(new Error("Godot sta già girando con l'utente separato: le esecuzioni vanno una alla volta"));
+  if (separato) esecuzioniSeparate++;
+  return new Promise<EsitoGodot>((resolve) => {
     const processo = spawn(c.programma, c.argomenti, { cwd: opzioni.cwd, windowsHide: true, env: c.env, stdio: ["ignore", "pipe", "pipe"] });
     let output = "";
     let scadutoTempo = false;
@@ -122,14 +130,18 @@ export function eseguiGodot(argomenti: string[], opzioni: { timeoutMs?: number; 
     }, timeoutMs);
     // Appena Godot esce si chiude anche ciò che avesse lasciato acceso (che terrebbe aperto l'output).
     processo.on("exit", () => void chiudiProcessiDiGodot());
-    processo.on("close", (codice) => {
+    let finita = false;
+    const fine = (esito: EsitoGodot) => {
+      if (finita) return;
+      finita = true;
       clearTimeout(timer);
-      void chiudiProcessiDiGodot().then(() => resolve({ codiceUscita: codice, output, scadutoTempo }));
-    });
-    processo.on("error", (errore) => {
-      clearTimeout(timer);
-      void chiudiProcessiDiGodot().then(() => resolve({ codiceUscita: -1, output: `${output}${String(errore)}`, scadutoTempo }));
-    });
+      void chiudiProcessiDiGodot().then(() => {
+        if (separato) esecuzioniSeparate--;
+        resolve(esito);
+      });
+    };
+    processo.on("close", (codice) => fine({ codiceUscita: codice, output, scadutoTempo }));
+    processo.on("error", (errore) => fine({ codiceUscita: -1, output: `${output}${String(errore)}`, scadutoTempo }));
   });
 }
 

@@ -15,7 +15,7 @@
   "scripts": {
     "controlla": "npm run tipi && npm run prove",
     "tipi": "tsc -p condiviso && tsc -p fabbrica && tsc -p aula && tsc -p strumenti",
-    "prove": "tsx --test \"condiviso/test/**/*.test.ts\" \"fabbrica/test/**/*.test.ts\" \"aula/test/**/*.test.ts\"",
+    "prove": "tsx --test --test-concurrency=1 \"condiviso/test/**/*.test.ts\" \"fabbrica/test/**/*.test.ts\" \"aula/test/**/*.test.ts\"",
     "piano": "tsx strumenti/piano.ts"
   },
   "devDependencies": {
