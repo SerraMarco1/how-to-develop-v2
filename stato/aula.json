@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:41:48.188Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-16T07:42:07.752Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "leggere-gli-errori",
-  "numero": "1.6",
-  "titolo": "Leggere gli errori e usare il Debugger"
+  "slug": "casualita-e-distanze",
+  "numero": "1.7",
+  "titolo": "Numeri casuali e distanze"
  },
- "messaggio": "Sta scrivendo la lezione 1.6 «Leggere gli errori e usare il Debugger».",
- "riprende": null
+ "messaggio": "Non può ancora scrivere la lezione 1.7: manca la chiave di un fornitore.",
+ "riprende": "2026-10-16T08:12:07.752Z"
 }
