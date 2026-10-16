@@ -13,3 +13,5 @@
 {"quando":1792176400378,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":319176,"tokenInput":14463,"tokenOutput":9204,"ragionamento":36265}
 {"quando":1792176724473,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":28763,"tokenInput":11278,"tokenOutput":4428,"ragionamento":6130}
 {"quando":1792176762990,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":17829,"tokenInput":11581,"tokenOutput":4724,"ragionamento":2643}
+{"quando":1792176792751,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"casualita-e-distanze","ok":false,"contata":true,"durataMs":1488,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792176794246,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":110523,"tokenInput":11158,"tokenOutput":4000,"ragionamento":2418}

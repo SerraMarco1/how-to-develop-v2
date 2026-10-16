@@ -12,6 +12,10 @@
   "gemini/gemini-3.6-flash": {
    "fino": 1792176210686,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+  },
+  "gemini/gemini-flash-lite-latest": {
+   "fino": 1792177094241,
+   "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   }
  },
  "stessoLimite": {},
