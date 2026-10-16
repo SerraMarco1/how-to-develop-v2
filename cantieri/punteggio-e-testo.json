@@ -67,7 +67,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Il testo iniziale è formattato correttamente e set_speed aggiorna la scritta: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Cannot pass a value of type \"float\" as \"Array\".\n          at: GDScript::reload (res://htd/verifica_1.gd:17)\nSCRIPT ERROR: Parse Error: Invalid argument for \"call_if_exists()\" function: argument 3 should be \"Array\" but is \"float\".\n          at: GDScript::reload (res://htd/verifica_1.gd:17)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Cannot pass a value of type \"float\" as \"Array\".\n          at: GDScript::reload (res://htd/verifica_1.gd:17)\nSCRIPT ERROR: Parse Error: Invalid argument for \"call_if_exists()\" function: argument 3 should be \"Array\" but is \"float\".\n          at: GDScript::reload (res://htd/verifica_1.gd:17)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 17: `call_if_exists(main, \"set_speed\", 200.0)`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
