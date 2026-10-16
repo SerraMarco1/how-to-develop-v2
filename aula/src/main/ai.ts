@@ -1,4 +1,5 @@
 import type { z } from "zod";
+import { estraiJson } from "@htd/condiviso/json.ts";
 import { adesso, database } from "./db.ts";
 import { leggiChiave, type FornitoreAula } from "./impostazioni.ts";
 
@@ -74,9 +75,7 @@ export async function chiedi<T = string>(opzioni: { ruolo: string; messaggi: Mes
         registra(m, opzioni.ruolo, true);
         return { dati: contenuto as T, testo: contenuto, modello: nome };
       }
-      const pulito = contenuto.replace(/^```(?:json)?\s*|\s*```$/g, "");
-      const inizio = pulito.indexOf("{");
-      const esito = opzioni.schema.safeParse(JSON.parse(inizio >= 0 ? pulito.slice(inizio, pulito.lastIndexOf("}") + 1) : pulito));
+      const esito = opzioni.schema.safeParse(estraiJson(contenuto));
       if (!esito.success) throw new Error("risposta nel formato sbagliato");
       registra(m, opzioni.ruolo, true);
       return { dati: esito.data, testo: contenuto, modello: nome };
