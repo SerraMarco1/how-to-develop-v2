@@ -1,0 +1,70 @@
+{
+ "n": 31,
+ "quando": "2026-10-16T18:53:09.759Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (prevedi): approvato",
+ "spiegazione": "«Prevedi il calcolo di distanze e vettori». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 80.0 · 0.0 · true · false · 40.0",
+ "richieste": 0,
+ "durataMs": 2345,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedi il calcolo di distanze e vettori",
+   "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce la funzione `run()`, senza eseguirlo.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "func run() -> float:\n\tvar basket_pos: Vector2 = Vector2(200.0, 500.0)\n\tvar star_pos: Vector2 = Vector2(200.0, 420.0)\n\treturn basket_pos.distance_to(star_pos)\n",
+     "domanda": "Quale valore numerico restituisce la funzione run()?",
+     "risposta": "80.0",
+     "spiegazione": "I due punti hanno la stessa coordinata X (200.0), quindi la distanza corrisponde esattamente allo scostamento verticale tra 500.0 e 420.0, ossia 80.0 pixel. Il metodo distance_to() restituisce sempre un numero positivo.",
+     "id": "es3p1"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar pos_a: Vector2 = Vector2(576.0, 300.0)\n\tvar pos_b: Vector2 = Vector2(576.0, 300.0)\n\treturn pos_a.distance_to(pos_b)\n",
+     "domanda": "Quale valore numerico restituisce la funzione run()?",
+     "risposta": "0.0",
+     "spiegazione": "Quando due vettori condividono le stesse identiche coordinate X e Y, occupano lo stesso punto dello spazio. La loro distanza geometrica in linea retta è quindi pari a 0.0.",
+     "id": "es3p2"
+    },
+    {
+     "codice": "func run() -> bool:\n\tvar player_pos: Vector2 = Vector2(100.0, 600.0)\n\tvar rock_pos: Vector2 = Vector2(130.0, 560.0)\n\tvar dist_a: float = player_pos.distance_to(rock_pos)\n\tvar dist_b: float = rock_pos.distance_to(player_pos)\n\treturn dist_a == dist_b\n",
+     "domanda": "Cosa restituisce la funzione run(): true oppure false?",
+     "risposta": "true",
+     "spiegazione": "La distanza in linea d'aria è una proprietà bidirezionale e priva di segno: misurare la distanza da A verso B produce esattamente lo stesso risultato che misurarla da B verso A. Il confronto dist_a == dist_b è sempre true.",
+     "id": "es3p3"
+    },
+    {
+     "codice": "func run() -> bool:\n\tvar threshold: float = 50.0\n\tvar star_pos: Vector2 = Vector2(300.0, 100.0)\n\tvar basket_pos: Vector2 = Vector2(350.0, 100.0)\n\tvar distance: float = star_pos.distance_to(basket_pos)\n\treturn distance < threshold\n",
+     "domanda": "Cosa restituisce la funzione run(): true oppure false?",
+     "risposta": "false",
+     "spiegazione": "La distanza orizzontale tra 300.0 e 350.0 è esattamente 50.0 pixel. Poiché il controllo usa l'operatore strettamente minore < (50.0 < 50.0), l'uguaglianza non soddisfa la condizione e la funzione restituisce false.",
+     "id": "es3p4"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar basket_pos: Vector2 = Vector2(500.0, 600.0)\n\tvar rock_pos: Vector2 = Vector2(460.0, 600.0)\n\tvar offset: Vector2 = basket_pos - rock_pos\n\treturn offset.x\n",
+     "domanda": "Quale valore numerico restituisce la funzione run()?",
+     "risposta": "40.0",
+     "spiegazione": "Sottraendo i due vettori (basket_pos - rock_pos), si sottraggono separatamente le coordinate: offset.x vale 500.0 - 460.0 = 40.0. Questo vettore indica che il cesto si trova 40 pixel più a destra rispetto alla roccia.",
+     "id": "es3p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
