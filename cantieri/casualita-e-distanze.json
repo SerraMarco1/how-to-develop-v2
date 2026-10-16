@@ -1,9 +1,274 @@
 {
  "creato": "2026-10-16T07:42:07.744Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Posizione casuale e raccolta della stella",
+    "consegna": "Nel gioco «Pioggia di stelle», la stella scende sempre dalla coordinata orizzontale fissa di 576 pixel e controlla il contatto con il cesto usando due verifiche separate sugli assi X e Y.\n\nModifica lo script `star.gd` per renderla imprevedibile e misurare la reale distanza circolare:\n1. Rimuovi la costante `START_POSITION` e dichiara al suo posto quattro costanti numeriche di tipo `float`:\n   - `START_Y = 80.0`\n   - `SPAWN_MIN_X = 64.0`\n   - `SPAWN_MAX_X = 1088.0`\n   - `CATCH_DISTANCE = 60.0`\n2. Nella funzione `_ready()`, assegna a `base_value` un valore intero casuale tra `10` e `30` (estremi inclusi) tramite `randi_range(10, 30)` prima di calcolare `points`.\n3. Nella funzione `reset_star()`:\n   - Genera una coordinata orizzontale casuale con `randf_range(SPAWN_MIN_X, SPAWN_MAX_X)`.\n   - Assegna a `position` il vettore `Vector2(random_x, START_Y)`.\n   - Imposta `is_collected = false`.\n4. Riscrivi la funzione `is_caught(basket_position: Vector2) -> bool`:\n   - Calcola la distanza in pixel tra la posizione della stella (`position`) e quella del cesto (`basket_position`) usando il metodo `distance_to()`.\n   - Restituisce `true` se la distanza è strettamente minore di `CATCH_DISTANCE`, altrimenti `false`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [
+     "Nel pannello *FileSystem* fai doppio clic su `star.gd` per aprirlo nell'editor di script.",
+     "All'inizio dello script, cancella la riga `const START_POSITION: Vector2 = Vector2(576, 80)` e scrivi le quattro nuove costanti: `const START_Y: float = 80.0`, `const SPAWN_MIN_X: float = 64.0`, `const SPAWN_MAX_X: float = 1088.0` e `const CATCH_DISTANCE: float = 60.0`.",
+     "Dentro `_ready()`, prima del calcolo di `points`, inserisci la riga `base_value = randi_range(10, 30)` per generare il valore base a caso.",
+     "Sostituisci il contenuto di `reset_star()` creando una variabile locale `var random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)`, assegna a `position` il vettore `Vector2(random_x, START_Y)` e mantieni `is_collected = false`.",
+     "Cancella le istruzioni dentro `is_caught(basket_position: Vector2) -> bool` e scrivi: `var distance: float = position.distance_to(basket_position)` seguito da `return distance < CATCH_DISTANCE`.",
+     "Salva il file con Ctrl+S ed esegui la scena con F6 per vedere la stella cadere da colonne orizzontali sempre diverse."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://star.gd",
+      "descrizione": "Il file star.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://star.gd",
+      "regex": "randf_range\\(",
+      "descrizione": "Lo script star.gd usa randf_range() per estrarre la coordinata orizzontale"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://star.gd",
+      "regex": "distance_to\\(",
+      "descrizione": "Lo script star.gd usa distance_to() per verificare la vicinanza al cesto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar star := instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_exists\", star != null, \"La scena star.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar min_x: float = 9999.0\n\tvar max_x: float = -9999.0\n\tfor i in range(100):\n\t\tcall_if_exists(star, \"reset_star\")\n\t\tvar current_pos = get_prop(star, \"position\", Vector2.ZERO)\n\t\tif not check(\"y_at_start\", is_equal_approx(current_pos.y, 80.0), \"A ogni reset la stella deve tornare a Y = 80.0\"):\n\t\t\treturn\n\t\tif not check(\"x_in_bounds\", current_pos.x >= 64.0 and current_pos.x <= 1088.0, \"La coordinata X deve rimanere tra 64.0 e 1088.0\"):\n\t\t\treturn\n\t\tif current_pos.x < min_x:\n\t\t\tmin_x = current_pos.x\n\t\tif current_pos.x > max_x:\n\t\t\tmax_x = current_pos.x\n\tcheck(\"positions_vary\", (max_x - min_x) > 300.0, \"Su 100 tentativi le stelle non devono comparire tutte nella stessa colonna\")\n\tstar.set(\"position\", Vector2(500.0, 500.0))\n\tvar caught_close = call_if_exists(star, \"is_caught\", [Vector2(500.0, 540.0)], false)\n\tcheck(\"caught_close\", caught_close == true, \"A distanza di 40 pixel la stella deve risultare presa\")\n\tvar caught_edge = call_if_exists(star, \"is_caught\", [Vector2(500.0, 559.0)], false)\n\tcheck(\"caught_edge\", caught_edge == true, \"A distanza di 59 pixel la stella deve risultare presa\")\n\tvar caught_far = call_if_exists(star, \"is_caught\", [Vector2(500.0, 565.0)], true)\n\tcheck(\"caught_far\", caught_far == false, \"A distanza di 65 pixel la stella NON deve risultare presa\")",
+      "descrizione": "Le stelle nascono in punti casuali dentro lo schermo e is_caught rileva il contatto a distanze note"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "star.gd",
+       "contenuto": "extends Sprite2D\n\n# Coordinate di riferimento e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Genera un valore base casuale tra 10 e 30 prima di calcolare i punti\n\tbase_value = randi_range(10, 30)\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Posiziona la stella in alto e imposta il colore\n\treset_star()\n\tmodulate = Color.YELLOW\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella scende solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto\n\tif position.y > RESET_Y:\n\t\treset_star()\n\t\n\t# Aggiorna il colore in base all'altezza raggiunta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Assegna una coordinata orizzontale casuale e riposiziona la stella in alto\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Misura la distanza in pixel dal cesto e verifica se rientra nella soglia\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "res://basket.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "Left",
+         "A"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "Right",
+         "D"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Sostituendo la coordinata fissa con `randf_range(SPAWN_MIN_X, SPAWN_MAX_X)` dentro `reset_star()`, ogni nuova stella compare in una colonna orizzontale imprevedibile ma sempre compresa nell'area visibile dello schermo. La funzione `randi_range(10, 30)` genera un punteggio base intero diverso per ogni partita. Infine, `position.distance_to(basket_position)` calcola la lunghezza in pixel del segmento in linea d'aria tra stella e cesto: confrontandola con `CATCH_DISTANCE` otteniamo un'area circolare precisa senza dover controllare separatamente gli assi X e Y.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Traiettoria e velocità casuali per la roccia",
+    "consegna": "Finora la roccia in `rock.gd` scende sempre dalle stesse coordinate fisse, con velocità identica e danno costante. Rendi l'ostacolo vario e imprevedibile applicando numeri casuali a tutti i suoi parametri di discesa.\n\nModifica lo script `rock.gd`:\n1. Sostituisci la costante `START_POSITION` con tre costanti di tipo `float`:\n   - `START_Y = 80.0`\n   - `SPAWN_MIN_X = 120.0`\n   - `SPAWN_MAX_X = 960.0`\n   Rimuovi anche `RESET_X`.\n2. Aggiorna la funzione `reset_rock()` in modo che a ogni chiamata:\n   - Generi una coordinata orizzontale casuale con `randf_range(SPAWN_MIN_X, SPAWN_MAX_X)` e assegni a `position` il vettore `Vector2(random_x, START_Y)`.\n   - Assegni a `fall_speed` una velocità decimale casuale compresa tra `200.0` e `320.0` con `randf_range()`.\n   - Assegni a `horizontal_speed` una velocità decimale casuale compresa tra `-100.0` e `100.0` con `randf_range()` (così la roccia potrà deviare sia verso sinistra sia verso destra).\n   - Assegni a `damage` un danno intero casuale compreso tra `1` e `3` (inclusi) con `randi_range()`.\n   - Ricalcoli `danger_ratio` dividendo `float(damage)` per `float(MAX_DAMAGE)`.\n3. Nella funzione `_ready()`, chiama `reset_rock()` all'inizio (prima di impostare `modulate` e stampare) per assegnare coordinate e velocità casuali fin dal primo fotogramma.\n4. In `_process()`, aggiorna la condizione di uscita dai bordi in modo che la roccia si ripristini con `reset_rock()` se scende sotto `RESET_Y`, oppure se esce lateralmente a sinistra (`position.x < 50.0`) o a destra (`position.x > 1050.0`).",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Usa `randf_range(minimo, massimo)` per le grandezze continue (posizione X, fall_speed, horizontal_speed) e `randi_range(minimo, massimo)` per la quantità intera discreta di `damage`.",
+     "Ricorda di convertire sia `damage` sia `MAX_DAMAGE` con `float()` quando aggiorni `danger_ratio`, altrimenti la divisione tra numeri interi troncherebbe il risultato a zero.",
+     "Nel controllo dei confini di `_process()`, unisci le verifiche con l'operatore logico `or`: `if position.y > RESET_Y or position.x < 50.0 or position.x > 1050.0:`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://rock.gd",
+      "descrizione": "Il file rock.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://rock.gd",
+      "regex": "randf_range\\(",
+      "descrizione": "Lo script rock.gd usa randf_range() per posizione orizzontale e velocità"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://rock.gd",
+      "regex": "randi_range\\(",
+      "descrizione": "Lo script rock.gd usa randi_range() per estrarre il danno dell'ostacolo"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar rock := instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_exists\", rock != null, \"La scena rock.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar min_x: float = 9999.0\n\tvar max_x: float = -9999.0\n\tvar min_v: float = 9999.0\n\tvar max_v: float = -9999.0\n\tvar min_h: float = 9999.0\n\tvar max_h: float = -9999.0\n\tfor i in range(50):\n\t\tcall_if_exists(rock, \"reset_rock\")\n\t\tvar pos = get_prop(rock, \"position\", Vector2.ZERO)\n\t\tvar f_speed = get_prop(rock, \"fall_speed\", 0.0)\n\t\tvar h_speed = get_prop(rock, \"horizontal_speed\", 0.0)\n\t\tvar dmg = get_prop(rock, \"damage\", 0)\n\t\tvar ratio = get_prop(rock, \"danger_ratio\", 0.0)\n\t\tif not check(\"rock_y\", is_equal_approx(pos.y, 80.0), \"A ogni reset la roccia deve ripartire da Y = 80.0\"):\n\t\t\treturn\n\t\tif not check(\"rock_x_bounds\", pos.x >= 120.0 and pos.x <= 960.0, \"La coordinata X deve rimanere compresa tra 120.0 e 960.0\"):\n\t\t\treturn\n\t\tif not check(\"fall_bounds\", f_speed >= 200.0 and f_speed <= 320.0, \"fall_speed deve essere compresa tra 200.0 e 320.0\"):\n\t\t\treturn\n\t\tif not check(\"h_bounds\", h_speed >= -100.0 and h_speed <= 100.0, \"horizontal_speed deve essere compresa tra -100.0 e 100.0\"):\n\t\t\treturn\n\t\tif not check(\"damage_bounds\", dmg >= 1 and dmg <= 3, \"damage deve essere compreso tra 1 e 3\"):\n\t\t\treturn\n\t\tif not check(\"ratio_match\", is_equal_approx(ratio, float(dmg) / 3.0), \"danger_ratio deve corrispondere al rapporto esatto damage / MAX_DAMAGE\"):\n\t\t\treturn\n\t\tif pos.x < min_x: min_x = pos.x\n\t\tif pos.x > max_x: max_x = pos.x\n\t\tif f_speed < min_v: min_v = f_speed\n\t\tif f_speed > max_v: max_v = f_speed\n\t\tif h_speed < min_h: min_h = h_speed\n\t\tif h_speed > max_h: max_h = h_speed\n\tcheck(\"rock_x_varies\", (max_x - min_x) > 200.0, \"Le posizioni orizzontali della roccia devono variare nel tempo\")\n\tcheck(\"rock_v_varies\", (max_v - min_v) > 30.0, \"La velocità di caduta deve variare tra discese diverse\")\n\tcheck(\"rock_h_varies\", min_h < 0.0 and max_h > 0.0, \"La deriva orizzontale deve poter assumere valori sia positivi sia negativi\")",
+      "descrizione": "La roccia varia coordinate X, velocità verticale, deriva orizzontale e danno a ogni ripristino"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "rock.gd",
+       "contenuto": "extends Sprite2D\n\n# Costanti per coordinate di riferimento, limiti di ripristino e danno massimo\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 120.0\nconst SPAWN_MAX_X: float = 960.0\nconst RESET_Y: float = 680.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Inizializza posizione, velocità e danno casuali\n\treset_rock()\n\tmodulate = Color.RED\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i confini visibili ed aggiorna l'aspetto\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x < 50.0 or position.x > 1050.0:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia lungo entrambi gli assi con le rispettive velocità\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Genera coordinate e parametri casuali per la nuova discesa\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tfall_speed = randf_range(200.0, 320.0)\n\thorizontal_speed = randf_range(-100.0, 100.0)\n\tdamage = randi_range(1, 3)\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+      }
+     ],
+     "spiegazione": "Invocando `reset_rock()` direttamente da `_ready()`, la roccia riceve parametri casuali fin dalla nascita. L'estrazione con `randf_range(-100.0, 100.0)` su `horizontal_speed` le consente di scivolare sia a sinistra sia a destra, rendendo obbligatorio controllare l'uscita da entrambi i lati dello schermo (`position.x < 50.0 or position.x > 1050.0`) prima di farla ripartire dall'alto.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedi il calcolo di distanze e vettori",
+    "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce la funzione `run()`, senza eseguirlo.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> float:\n\tvar basket_pos: Vector2 = Vector2(200.0, 500.0)\n\tvar star_pos: Vector2 = Vector2(200.0, 420.0)\n\treturn basket_pos.distance_to(star_pos)",
+      "domanda": "Quale valore numerico restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "I due punti hanno la stessa coordinata X (200.0), quindi la distanza corrisponde esattamente allo scostamento verticale tra 500.0 e 420.0, ossia 80.0 pixel. Il metodo distance_to() restituisce sempre un numero positivo."
+     },
+     {
+      "codice": "func run() -> float:\n\tvar pos_a: Vector2 = Vector2(576.0, 300.0)\n\tvar pos_b: Vector2 = Vector2(576.0, 300.0)\n\treturn pos_a.distance_to(pos_b)",
+      "domanda": "Quale valore numerico restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "Quando due vettori condividono le stesse identiche coordinate X e Y, occupano lo stesso punto dello spazio. La loro distanza geometrica in linea retta è quindi pari a 0.0."
+     },
+     {
+      "codice": "func run() -> bool:\n\tvar player_pos: Vector2 = Vector2(100.0, 600.0)\n\tvar rock_pos: Vector2 = Vector2(130.0, 560.0)\n\tvar dist_a: float = player_pos.distance_to(rock_pos)\n\tvar dist_b: float = rock_pos.distance_to(player_pos)\n\treturn dist_a == dist_b",
+      "domanda": "Cosa restituisce la funzione run(): true oppure false?",
+      "risposta": "",
+      "spiegazione": "La distanza in linea d'aria è una proprietà bidirezionale e priva di segno: misurare la distanza da A verso B produce esattamente lo stesso risultato che misurarla da B verso A. Il confronto dist_a == dist_b è sempre true."
+     },
+     {
+      "codice": "func run() -> bool:\n\tvar threshold: float = 50.0\n\tvar star_pos: Vector2 = Vector2(300.0, 100.0)\n\tvar basket_pos: Vector2 = Vector2(350.0, 100.0)\n\tvar distance: float = star_pos.distance_to(basket_pos)\n\treturn distance < threshold",
+      "domanda": "Cosa restituisce la funzione run(): true oppure false?",
+      "risposta": "",
+      "spiegazione": "La distanza orizzontale tra 300.0 e 350.0 è esattamente 50.0 pixel. Poiché il controllo usa l'operatore strettamente minore < (50.0 < 50.0), l'uguaglianza non soddisfa la condizione e la funzione restituisce false."
+     },
+     {
+      "codice": "func run() -> float:\n\tvar basket_pos: Vector2 = Vector2(500.0, 600.0)\n\tvar rock_pos: Vector2 = Vector2(460.0, 600.0)\n\tvar offset: Vector2 = basket_pos - rock_pos\n\treturn offset.x",
+      "domanda": "Quale valore numerico restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "Sottraendo i due vettori (basket_pos - rock_pos), si sottraggono separatamente le coordinate: offset.x vale 500.0 - 460.0 = 40.0. Questo vettore indica che il cesto si trova 40 pixel più a destra rispetto alla roccia."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Rilevamento dell'impatto e danno della roccia",
+    "consegna": "Ora che la roccia scende in punti casuali dello schermo, il gioco deve determinare con precisione quando urta il cesto del giocatore. In caso di collisione, la roccia deve infliggere il suo danno e riposizionarsi subito in alto per ricominciare la caduta.\n\nModifica lo script `rock.gd`:\n1. Dichiara in cima allo script una costante `HIT_DISTANCE: float = 50.0` per definire la soglia circolare di impatto in pixel.\n2. Aggiungi la funzione `hits_basket(basket_position: Vector2) -> bool`:\n   - Calcola la distanza tra la posizione attuale della roccia (`position`) e quella del cesto (`basket_position`) tramite `distance_to()`.\n   - Restituisce `true` se la distanza è strettamente inferiore a `HIT_DISTANCE`, altrimenti `false`.\n3. Aggiungi la funzione `check_hit(basket_position: Vector2) -> int`:\n   - Verifica se la roccia colpisce il cesto richiamando `hits_basket(basket_position)`.\n   - Se si verifica il contatto (`true`), salva il danno corrente dell'ostacolo (`damage`), chiama immediatamente `reset_rock()` per far ripartire la roccia dall'alto e restituisce il danno salvato.\n   - Se non si verifica alcun contatto (`false`), lascia la roccia dov'è e restituisce `0`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `check_hit()`, salva `damage` in una variabile locale prima di chiamare `reset_rock()`, perché il reset assegnerà un nuovo danno casuale alla roccia per la discesa successiva."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://rock.gd",
+      "descrizione": "Il file rock.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://rock.gd",
+      "regex": "distance_to\\(",
+      "descrizione": "Lo script rock.gd usa distance_to() per misurare la distanza di collisione"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar rock := instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_exists\", rock != null, \"La scena rock.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"has_hits\", has_function(rock, \"hits_basket\"), \"In rock.gd deve esistere la funzione hits_basket\"):\n\t\treturn\n\tif not check(\"has_check\", has_function(rock, \"check_hit\"), \"In rock.gd deve esistere la funzione check_hit\"):\n\t\treturn\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar hit_close = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 530.0)], false)\n\tcheck(\"hit_at_30\", hit_close == true, \"A distanza di 30 pixel hits_basket deve restituire true\")\n\tvar hit_far = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 560.0)], true)\n\tcheck(\"miss_at_60\", hit_far == false, \"A distanza di 60 pixel hits_basket deve restituire false\")\n\trock.set(\"position\", Vector2(400.0, 400.0))\n\tvar miss_dmg = call_if_exists(rock, \"check_hit\", [Vector2(800.0, 800.0)], -1)\n\tcheck(\"dmg_zero_on_miss\", miss_dmg == 0, \"Senza collisione check_hit deve restituire 0\")\n\tvar pos_after_miss = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"no_reset_on_miss\", is_equal_approx(pos_after_miss.y, 400.0), \"Senza collisione la roccia non deve ripristinarsi\")\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar current_dmg = get_prop(rock, \"damage\", 1)\n\tvar dealt_dmg = call_if_exists(rock, \"check_hit\", [Vector2(500.0, 520.0)], 0)\n\tcheck(\"dmg_returned\", dealt_dmg == current_dmg, \"In caso di urto check_hit deve restituire il danno inflitto dall'ostacolo\")\n\tvar pos_after_hit = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"reset_on_hit\", is_equal_approx(pos_after_hit.y, 80.0), \"In caso di urto check_hit deve chiamare reset_rock() riportando la roccia a Y = 80.0\")",
+      "descrizione": "hits_basket rileva il contatto e check_hit restituisce il danno ripristinando la roccia in alto"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "rock.gd",
+       "contenuto": "extends Sprite2D\n\n# Costanti per coordinate di riferimento, limiti di ripristino, danno massimo e impatto\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 120.0\nconst SPAWN_MAX_X: float = 960.0\nconst RESET_Y: float = 680.0\nconst MAX_DAMAGE: int = 3\nconst HIT_DISTANCE: float = 50.0\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Inizializza posizione, velocità e danno casuali\n\treset_rock()\n\tmodulate = Color.RED\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i confini visibili ed aggiorna l'aspetto\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x < 50.0 or position.x > 1050.0:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia lungo entrambi gli assi con le rispettive velocità\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Genera coordinate e parametri casuali per la nuova discesa\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tfall_speed = randf_range(200.0, 320.0)\n\thorizontal_speed = randf_range(-100.0, 100.0)\n\tdamage = randi_range(1, 3)\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n\n\nfunc hits_basket(basket_position: Vector2) -> bool:\n\t# Verifica se la distanza dal cesto rientra nella soglia di impatto\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < HIT_DISTANCE\n\n\nfunc check_hit(basket_position: Vector2) -> int:\n\t# Se colpisce il cesto, infligge danno e si ripristina subito in alto\n\tif hits_basket(basket_position):\n\t\tvar dealt_damage: int = damage\n\t\treset_rock()\n\t\treturn dealt_damage\n\treturn 0\n"
+      }
+     ],
+     "spiegazione": "La funzione `hits_basket()` misura la distanza geometrica tra il centro della roccia e il centro del cesto usando `distance_to()`: se il valore è inferiore a `HIT_DISTANCE` (50 pixel), segnala il contatto. La funzione `check_hit()` sfrutta questa verifica: memorizza il danno inflitto prima del reset, azzera la posizione dell'ostacolo con `reset_rock()` e restituisce il numero di vite da sottrarre al giocatore, permettendo al gioco di gestire urti e ripartenze in modo pulito.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Numeri casuali e distanze",
@@ -81,5 +346,11 @@
     "md": "- `randf_range(from, to)` restituisce un numero decimale casuale (`float`) compreso tra i due valori specificati; si usa per posizioni, velocità e grandezze continue.\n- `randi_range(from, to)` restituisce un numero intero casuale (`int`) compreso tra gli estremi inclusi; si usa per dadi, conteggi e punteggi.\n- La sottrazione tra due `Vector2` rappresenta lo scostamento spaziale tra due punti nello schermo.\n- Il metodo `distance_to()` di `Vector2` misura la distanza in pixel in linea retta tra due posizioni, restituendo sempre un valore positivo.\n- Confrontare la distanza con un valore di raggio (`distance < CATCH_DISTANCE`) permette di rilevare il contatto tra due oggetti in modo circolare e uniforme in ogni direzione."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
