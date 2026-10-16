@@ -1,0 +1,216 @@
+{
+  "slug": "f02-nodi-scene-segnali",
+  "titolo": "Il modo di Godot: nodi, scene e segnali",
+  "descrizione": "Nella fase 1 hai fatto tutto a mano. Qui impari gli strumenti che Godot ti dà per non farlo: l'albero dei nodi, le scene riutilizzabili, i segnali con cui i nodi si avvisano. Riscrivi il tuo gioco in questo modo e ne costruisci uno nuovo.",
+  "gioco": "«Pioggia di stelle», ricostruito con scene e segnali e arricchito: ondate, potenziamenti, un pulsante per ricominciare, piccole animazioni.",
+  "prova": "«Memory», da un progetto vuoto: una griglia di carte coperte create dal codice, due alla volta si girano, le coppie restano scoperte, le altre si ricoprono dopo un attimo. Contatore delle mosse, vittoria, nuova partita, tre grandezze di griglia.",
+  "progetto": {"nome": "Pioggia di stelle", "cartella": "pioggia-di-stelle", "continuaDa": "f01-programmare"},
+  "provaProgetto": {"nome": "Memory", "cartella": "memory"},
+  "allaFine": [
+    "Dividi un gioco in scene piccole e le crei dal codice quando servono.",
+    "Fai parlare i nodi con i segnali, anche con segnali tuoi.",
+    "Regoli il gioco dall'Inspector con le proprietà esportate.",
+    "Apri la pagina di una classe che non conosci e la usi."
+  ],
+  "sezioniDocumentazione": ["getting_started/step_by_step/nodes_and_scenes", "getting_started/step_by_step/instancing", "getting_started/step_by_step/signals", "tutorials/scripting/scene_tree", "tutorials/scripting/nodes_and_scene_instances", "tutorials/scripting/groups", "tutorials/scripting/scene_unique_nodes", "tutorials/scripting/gdscript/gdscript_exports", "tutorials/best_practices/scene_organization"],
+  "lezioni": [
+    {
+      "slug": "albero-dei-nodi",
+      "titolo": "L'albero dei nodi: genitori e figli",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "prevedi", "obiettivo"],
+      "impari": [
+        "Un figlio si muove, ruota e si nasconde insieme al genitore",
+        "Posizione locale e posizione globale",
+        "L'ordine dei nodi decide chi viene disegnato sopra"
+      ],
+      "costruisci": "Il cesto diventa un piccolo albero (corpo, manico, ombra) che si muove tutto insieme; l'interfaccia passa davanti al gioco.",
+      "verifica": "La piattaforma legge l'albero della scena, sposta il genitore e controlla la posizione globale dei figli.",
+      "parole": ["scene tree", "parent", "child", "global_position", "z_index"]
+    },
+    {
+      "slug": "raggiungere-i-nodi",
+      "titolo": "Raggiungere i nodi dal codice",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "ripara", "obiettivo"],
+      "impari": [
+        "$Percorso, get_node() e i nomi unici con %",
+        "@onready: prendere un nodo quando esiste davvero",
+        "L'errore più comune di tutti: «null instance», e come si legge"
+      ],
+      "costruisci": "Lo script principale smette di cercare i nodi a ogni fotogramma: li prende una volta sola, con riferimenti che non si rompono se sposti un nodo nell'albero.",
+      "verifica": "La piattaforma sposta un nodo dentro l'albero ed esegue: il gioco deve funzionare ancora; controlla le variabili @onready.",
+      "parole": ["get_node", "@onready", "unique name", "NodePath"]
+    },
+    {
+      "slug": "scene-riutilizzabili",
+      "titolo": "Scene riutilizzabili: lo stampo e le copie",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "riordina", "obiettivo"],
+      "impari": [
+        "Salvare un ramo come scena: uno stampo da cui fare copie",
+        "PackedScene, preload() e instantiate()",
+        "Cosa mettere dentro una scena e cosa lasciare fuori"
+      ],
+      "costruisci": "L'oggetto che cade diventa la scena falling_item.tscn, con il suo script; il gioco ne crea copie quando servono.",
+      "verifica": "La piattaforma controlla che la scena esista e si apra da sola, e che gli oggetti in gioco siano sue copie.",
+      "parole": ["PackedScene", "instantiate", "preload", "instancing"]
+    },
+    {
+      "slug": "vita-di-un-nodo",
+      "titolo": "La vita di un nodo: dalla nascita a queue_free()",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["prevedi", "ripara", "obiettivo"],
+      "impari": [
+        "L'ordine in cui il motore chiama _init, _enter_tree, _ready, _process",
+        "queue_free(): togliere un nodo nel modo giusto",
+        "Riconoscere un riferimento a un nodo che non esiste più"
+      ],
+      "costruisci": "Gli oggetti presi o usciti dallo schermo vengono eliminati davvero; dopo dieci minuti di gioco i nodi sono quanti all'inizio.",
+      "verifica": "La piattaforma fa girare il gioco a lungo e conta i nodi; elimina un oggetto e controlla che niente provi più a usarlo.",
+      "parole": ["queue_free", "_enter_tree", "_ready", "is_instance_valid"]
+    },
+    {
+      "slug": "segnali-esistenti",
+      "titolo": "Segnali: collegare ciò che esiste già",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Un segnale è un avviso: chi lo manda non sa chi ascolta",
+        "Collegare un segnale dall'editor e dal codice con connect()",
+        "I segnali che userai sempre: pressed, timeout"
+      ],
+      "costruisci": "Un pulsante «Ricomincia» nella schermata di fine partita e un Timer che fa nascere gli oggetti al posto del conteggio fatto a mano.",
+      "verifica": "La piattaforma clicca il pulsante e controlla che la partita ricominci; controlla i collegamenti dei segnali e il ritmo delle nascite.",
+      "parole": ["signal", "connect", "pressed", "Button", "Timer"]
+    },
+    {
+      "slug": "timer",
+      "titolo": "Timer: far succedere le cose nel tempo",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Timer a ripetizione e a colpo singolo, avviare e fermare",
+        "Un'attesa in mezzo a una funzione con await",
+        "Scegliere tra un nodo Timer e un'attesa nel codice"
+      ],
+      "costruisci": "Ondate: dieci secondi di pioggia, tre di pausa, poi più fitta. Dopo un sasso sei intoccabile per un secondo.",
+      "verifica": "La piattaforma fa passare il tempo e conta le nascite in pioggia e in pausa; fa colpire due sassi a mezzo secondo di distanza e controlla le vite.",
+      "parole": ["Timer", "one_shot", "await", "create_timer"]
+    },
+    {
+      "slug": "segnali-propri",
+      "titolo": "Segnali tuoi, con parametri",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "riordina", "obiettivo"],
+      "impari": [
+        "Dichiarare un segnale ed emetterlo con dei dati",
+        "La regola che tiene in ordine un progetto: chiamate verso il basso, segnali verso l'alto",
+        "Togliere una dipendenza: chi manda il segnale funziona anche se nessuno ascolta"
+      ],
+      "costruisci": "Ogni oggetto avvisa quando viene preso e quanto vale; punteggio e interfaccia ascoltano. L'oggetto non conosce più né il gioco né l'interfaccia.",
+      "verifica": "La piattaforma apre la scena dell'oggetto da sola (deve funzionare), controlla il segnale e i suoi parametri, e che il punteggio cambi quando il segnale parte.",
+      "parole": ["signal", "emit", "connect", "decoupling"]
+    },
+    {
+      "slug": "gruppi",
+      "titolo": "Gruppi: parlare a tanti nodi insieme",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "estendi"],
+      "impari": [
+        "Mettere un nodo in un gruppo dall'editor e dal codice",
+        "Prendere tutti i nodi di un gruppo o chiamare una funzione su tutti",
+        "Gruppi o Array: quando conviene l'uno o l'altro"
+      ],
+      "costruisci": "Due potenziamenti: uno ferma per tre secondi tutto ciò che cade, l'altro trasforma tutti i sassi in stelle.",
+      "verifica": "La piattaforma fa prendere ogni potenziamento e controlla l'effetto su tutti gli oggetti presenti.",
+      "parole": ["groups", "get_nodes_in_group", "call_group", "add_to_group"]
+    },
+    {
+      "slug": "export",
+      "titolo": "@export: regolare il gioco dall'Inspector",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Esporre una variabile nell'Inspector: numeri con limiti, colori, scelte, scene",
+        "Stessa scena, valori diversi: varianti senza scrivere altro codice",
+        "Cosa conviene esportare e cosa lasciare nel codice"
+      ],
+      "costruisci": "Velocità, durata delle ondate, vite e scene da far nascere si regolano dall'Inspector; nasce una variante «difficile» del gioco senza toccare il codice.",
+      "verifica": "La piattaforma legge le proprietà esportate (nome, tipo, limiti) e controlla che cambiandole il gioco cambi.",
+      "parole": ["@export", "@export_range", "Inspector", "PackedScene"]
+    },
+    {
+      "slug": "tween",
+      "titolo": "Tween: animare con il codice",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "imita"],
+      "impari": [
+        "Portare una proprietà da un valore a un altro in un certo tempo",
+        "Curve di movimento: partire piano, arrivare piano, rimbalzare",
+        "Mettere più animazioni in fila o insieme e fare qualcosa alla fine"
+      ],
+      "costruisci": "Il cesto si gonfia un attimo quando prende una stella, il punteggio guadagnato sale e svanisce, la schermata finale entra in dissolvenza.",
+      "verifica": "La piattaforma fa prendere una stella e legge la scala del cesto durante e dopo l'animazione; controlla che al termine tutto sia tornato com'era.",
+      "parole": ["Tween", "create_tween", "tween_property", "ease"]
+    },
+    {
+      "slug": "leggere-una-classe",
+      "titolo": "Leggere la pagina di una classe che non conosci",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["trova"],
+      "impari": [
+        "Come è fatta una pagina della documentazione: descrizione, proprietà, metodi, segnali, costanti",
+        "Leggere la firma di un metodo: cosa vuole e cosa restituisce",
+        "Provare una cosa nuova in una scena di prova prima di metterla nel gioco"
+      ],
+      "costruisci": "Tre aggiunte che la lezione descrive solo come risultato: una barra che mostra quanto manca alla fine dell'ondata, una scia dietro alle stelle d'oro, il gioco che si ferma quando la finestra perde il fuoco. I nodi e i metodi vanno trovati.",
+      "verifica": "La piattaforma controlla i tre comportamenti, senza imporre come sono stati ottenuti.",
+      "parole": ["class reference", "ProgressBar", "Line2D", "notification"]
+    },
+    {
+      "slug": "progetto-memory-1",
+      "titolo": "Progetto «Memory» – tappa 1: la griglia",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Progettare da soli una scena riutilizzabile e crearne tante copie in ordine"],
+      "costruisci": "La scena della carta (coperta o scoperta, con il suo valore) e la griglia creata dal codice, con le coppie mescolate.",
+      "verifica": "La piattaforma conta le carte, controlla che ogni valore compaia esattamente due volte e che l'ordine cambi a ogni partita.",
+      "parole": ["instantiate", "Array", "shuffle"]
+    },
+    {
+      "slug": "progetto-memory-2",
+      "titolo": "Progetto «Memory» – tappa 2: le regole",
+      "tipo": "progetto",
+      "minuti": 105,
+      "esercizi": ["da-zero"],
+      "impari": ["Tradurre le regole di un gioco in stati, segnali e attese"],
+      "costruisci": "Due carte si girano; se sono uguali restano scoperte, altrimenti si ricoprono dopo un secondo; durante l'attesa non si può cliccare altro.",
+      "verifica": "La piattaforma clicca coppie giuste e sbagliate e controlla lo stato di ogni carta nel tempo, compreso il clic durante l'attesa.",
+      "parole": ["signal", "await", "state"]
+    },
+    {
+      "slug": "progetto-memory-3",
+      "titolo": "Progetto «Memory» – tappa 3: partita completa",
+      "tipo": "progetto",
+      "minuti": 75,
+      "esercizi": ["da-zero"],
+      "impari": ["Rendere un gioco regolabile e rigiocabile"],
+      "costruisci": "Contatore delle mosse, messaggio di vittoria, nuova partita, tre grandezze di griglia scelte da una proprietà esportata, carte che si girano con un'animazione.",
+      "verifica": "La piattaforma gioca una partita intera conoscendo i valori delle carte: mosse contate, vittoria, nuova partita rimescolata; ripete con le tre griglie.",
+      "parole": ["@export", "Tween", "Label"]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "nota": "Le impostazioni dell'editor (Editor → Editor Settings) che una verifica `impostazione_editor` può leggere. Le chiavi sono quelle che Godot 4.7 scrive nel suo file editor_settings-4.7.tres: sono state lette da lì, non vanno inventate. `predefinito` è il valore di partenza: una verifica deve chiedere un valore DIVERSO, altrimenti passa senza fare niente.",
+  "impostazioni": [
+    { "chiave": "interface/editor/fonts/main_font_size", "dove": "Interface → Editor → Main Font Size", "predefinito": "14", "esempio": "16" },
+    { "chiave": "interface/editor/fonts/code_font_size", "dove": "Interface → Editor → Code Font Size", "predefinito": "14", "esempio": "16" },
+    { "chiave": "interface/theme/color_preset", "dove": "Interface → Theme → Color Preset", "predefinito": "Default", "esempio": "Light" },
+    { "chiave": "text_editor/appearance/whitespace/line_spacing", "dove": "Text Editor → Appearance → Line Spacing", "predefinito": "4", "esempio": "6" }
+  ]
+}

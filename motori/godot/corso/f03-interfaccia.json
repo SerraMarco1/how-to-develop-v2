@@ -1,0 +1,201 @@
+{
+  "slug": "f03-interfaccia",
+  "titolo": "Interfaccia: menu, schermate e più scene",
+  "descrizione": "Un gioco non è solo la partita: ci sono il menu, il punteggio, la pausa, le impostazioni. Impari i nodi Control e i contenitori, i temi, il passaggio da una scena all'altra e i dati che devono restare. È la base della visual novel, che è quasi tutta interfaccia.",
+  "gioco": "«Pioggia di stelle» diventa un gioco con un inizio e una fine: menu principale, punteggio e vite in sovrimpressione, pausa, schermata finale con il record.",
+  "prova": "«Quiz», da un progetto vuoto: menu, domande con quattro risposte prese da una tabella di dati, tempo per rispondere mostrato da una barra, schermata dei risultati, tutto usabile anche solo con la tastiera.",
+  "progetto": {"nome": "Pioggia di stelle", "cartella": "pioggia-di-stelle", "continuaDa": "f02-nodi-scene-segnali"},
+  "provaProgetto": {"nome": "Quiz", "cartella": "quiz"},
+  "allaFine": [
+    "Costruisci un'interfaccia che resta in ordine quando la finestra cambia grandezza.",
+    "Dai a tutto il gioco lo stesso aspetto con un tema.",
+    "Passi da una scena all'altra e tieni i dati che servono con un Autoload.",
+    "Fai funzionare i menu con tastiera e gamepad."
+  ],
+  "sezioniDocumentazione": ["tutorials/ui", "tutorials/scripting/singletons_autoload", "tutorials/scripting/change_scenes_manually", "tutorials/scripting/pausing_games", "tutorials/2d/canvas_layers", "tutorials/rendering/multiple_resolutions"],
+  "lezioni": [
+    {
+      "slug": "control-ancore-e-dimensioni",
+      "titolo": "Control: ancore e dimensioni",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "imita", "ripara"],
+      "impari": [
+        "La differenza tra i nodi 2D del gioco e i nodi Control dell'interfaccia",
+        "Ancore: a quale punto dello schermo resta attaccato un elemento",
+        "Dimensione minima e riempimento"
+      ],
+      "costruisci": "Punteggio in alto a sinistra, vite in alto a destra, un messaggio al centro: restano al loro posto con la finestra a tre grandezze diverse.",
+      "verifica": "La piattaforma esegue la scena a tre grandezze di finestra e misura dove si trova ogni elemento rispetto ai bordi.",
+      "parole": ["Control", "anchors", "offsets", "size flags"]
+    },
+    {
+      "slug": "contenitori",
+      "titolo": "Contenitori: l'interfaccia che si dispone da sola",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "imita"],
+      "impari": [
+        "VBoxContainer, HBoxContainer, GridContainer, MarginContainer, CenterContainer",
+        "Chi decide la dimensione: il contenitore, non il figlio",
+        "Annidare contenitori per ottenere una disposizione complessa"
+      ],
+      "costruisci": "Il menu principale: titolo, tre pulsanti in colonna, la versione in un angolo. Aggiungere un quarto pulsante non richiede di spostare niente.",
+      "verifica": "La piattaforma aggiunge un pulsante al contenitore e controlla che gli altri si siano ridisposti senza sovrapporsi, a più grandezze di finestra.",
+      "parole": ["Container", "VBoxContainer", "HBoxContainer", "GridContainer", "MarginContainer"]
+    },
+    {
+      "slug": "controlli-di-uso-comune",
+      "titolo": "I controlli che userai sempre",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Label, Button, TextureRect, ProgressBar, Slider, CheckBox, LineEdit: proprietà e segnali di ognuno",
+        "Leggere e scrivere il loro valore dal codice",
+        "Disattivare e nascondere un controllo"
+      ],
+      "costruisci": "Una schermata «Nuova partita»: nome del giocatore, difficoltà con uno Slider, una casella per i potenziamenti; «Gioca» resta spento finché il nome è vuoto.",
+      "verifica": "La piattaforma scrive nei controlli, li sposta e li spunta, e legge cosa arriva al gioco; controlla quando il pulsante è spento.",
+      "parole": ["Button", "LineEdit", "Slider", "CheckBox", "ProgressBar", "TextureRect"]
+    },
+    {
+      "slug": "temi-e-font",
+      "titolo": "Temi e font: un aspetto coerente",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "imita"],
+      "impari": [
+        "Un Theme vale per tutti i controlli sotto il nodo a cui è dato",
+        "StyleBoxFlat: sfondo, bordo, angoli, margini; gli stati di un pulsante",
+        "Usare un font e le sue dimensioni; quando usare una modifica locale"
+      ],
+      "costruisci": "Un tema del gioco: pulsanti con quattro stati, pannelli, font del titolo e del testo. Menu e schermate lo usano senza modifiche locali.",
+      "verifica": "La piattaforma legge il tema e i suoi stili, e controlla che i controlli delle scene lo ereditino invece di avere colori messi a mano.",
+      "parole": ["Theme", "StyleBoxFlat", "theme override", "Font"]
+    },
+    {
+      "slug": "interfaccia-in-partita",
+      "titolo": "L'interfaccia durante la partita: CanvasLayer",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "riordina"],
+      "impari": [
+        "CanvasLayer: un piano che non si muove con il gioco",
+        "L'interfaccia come scena a parte, che ascolta i segnali del gioco",
+        "Una barra che mostra un valore"
+      ],
+      "costruisci": "La scena hud.tscn: punteggio, vite come icone, barra dell'ondata. Non conosce il gioco: riceve tutto dai segnali.",
+      "verifica": "La piattaforma apre l'interfaccia da sola, emette i segnali a mano e legge cosa mostra.",
+      "parole": ["CanvasLayer", "HUD", "signal", "ProgressBar"]
+    },
+    {
+      "slug": "cambiare-scena",
+      "titolo": "Più scene: dal menu alla partita e ritorno",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "change_scene_to_file() e change_scene_to_packed()",
+        "Cosa succede alla scena vecchia: tutto ciò che conteneva sparisce",
+        "Chiudere il gioco"
+      ],
+      "costruisci": "Menu → partita → schermata finale → menu, con «Esci».",
+      "verifica": "La piattaforma clicca i pulsanti e controlla quale scena è in esecuzione a ogni passo.",
+      "parole": ["change_scene_to_file", "SceneTree", "quit"]
+    },
+    {
+      "slug": "autoload",
+      "titolo": "Autoload: i dati che restano",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo", "ripara"],
+      "impari": [
+        "Un Autoload esiste per tutta la durata del gioco, sopra le scene",
+        "Cosa metterci (record, impostazioni, dati della partita) e cosa no",
+        "Il rischio: un posto dove finisce di tutto"
+      ],
+      "costruisci": "L'Autoload Game: nome del giocatore, difficoltà scelta, record. La schermata finale mostra il record anche dopo essere passati dal menu.",
+      "verifica": "La piattaforma controlla che l'Autoload sia registrato, cambia scena più volte e legge i valori.",
+      "parole": ["Autoload", "singleton", "Project Settings"]
+    },
+    {
+      "slug": "pausa",
+      "titolo": "Pausa",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "ripara"],
+      "impari": [
+        "get_tree().paused ferma il gioco, non l'interfaccia che dici tu",
+        "process_mode: chi continua a funzionare in pausa",
+        "Un menu di pausa che non lascia il gioco in uno stato strano"
+      ],
+      "costruisci": "Esc mette in pausa e mostra «Riprendi», «Ricomincia», «Menu».",
+      "verifica": "La piattaforma mette in pausa a metà partita: niente si muove e il tempo non avanza, i pulsanti rispondono; riprende e controlla che si riparta dallo stesso punto.",
+      "parole": ["paused", "process_mode", "pause menu"]
+    },
+    {
+      "slug": "focus-tastiera-e-gamepad",
+      "titolo": "Menu con tastiera e gamepad: il focus",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "Il focus: quale controllo riceve i tasti",
+        "Dare il focus al primo pulsante quando una schermata si apre",
+        "Decidere a mano dove va il focus quando l'ordine automatico sbaglia"
+      ],
+      "costruisci": "Tutti i menu del gioco si usano senza mouse: frecce per muoversi, Invio per scegliere, Esc per tornare indietro.",
+      "verifica": "La piattaforma naviga ogni menu premendo solo le azioni dell'interfaccia e controlla dove si trova il focus e cosa succede a ogni conferma.",
+      "parole": ["focus", "grab_focus", "focus neighbor", "ui_accept"]
+    },
+    {
+      "slug": "schermi-diversi",
+      "titolo": "Schermi diversi",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "prevedi"],
+      "impari": [
+        "La risoluzione di base del progetto e come viene adattata alla finestra",
+        "Le modalità di stretch e di aspect, e quale scegliere per un gioco 2D",
+        "Finestra e schermo intero"
+      ],
+      "costruisci": "Il gioco resta proporzionato su finestre larghe e strette e passa a schermo intero con un tasto.",
+      "verifica": "La piattaforma legge le impostazioni del progetto ed esegue il gioco a più proporzioni, controllando che niente esca dallo schermo.",
+      "parole": ["stretch mode", "aspect", "viewport", "window mode"]
+    },
+    {
+      "slug": "progetto-quiz-1",
+      "titolo": "Progetto «Quiz» – tappa 1: dati e schermate",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Separare i dati (le domande) dall'interfaccia che li mostra"],
+      "costruisci": "Le domande in una tabella di dati; menu e schermata della domanda con quattro risposte generate dai dati; tema del gioco.",
+      "verifica": "La piattaforma sostituisce la tabella con domande sue e controlla che la schermata mostri quelle, anche con un numero diverso di domande.",
+      "parole": ["Array", "Dictionary", "Container", "Theme"]
+    },
+    {
+      "slug": "progetto-quiz-2",
+      "titolo": "Progetto «Quiz» – tappa 2: partita",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Gestire da soli il flusso di una partita fatta di schermate"],
+      "costruisci": "Risposta giusta o sbagliata mostrata prima di passare oltre, tempo per rispondere con una barra, punteggio, schermata dei risultati con il record.",
+      "verifica": "La piattaforma gioca una partita conoscendo le risposte: punteggio, tempo scaduto, risultati, record dopo due partite.",
+      "parole": ["Timer", "ProgressBar", "Autoload", "change_scene_to_file"]
+    },
+    {
+      "slug": "progetto-quiz-3",
+      "titolo": "Progetto «Quiz» – tappa 3: rifinitura",
+      "tipo": "progetto",
+      "minuti": 60,
+      "esercizi": ["da-zero"],
+      "impari": ["Portare un'interfaccia al livello di un gioco che si può dare a qualcuno"],
+      "costruisci": "Tutto usabile con la sola tastiera, pausa, finestra ridimensionabile senza difetti, piccole animazioni tra una domanda e l'altra.",
+      "verifica": "La piattaforma gioca una partita intera senza mouse, a due grandezze di finestra, mettendo in pausa a metà.",
+      "parole": ["focus", "paused", "Tween", "stretch mode"]
+    }
+  ]
+}

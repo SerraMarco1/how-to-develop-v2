@@ -1,0 +1,137 @@
+{
+  "slug": "f11-il-tuo-gioco",
+  "titolo": "Il tuo gioco",
+  "descrizione": "L'ultima fase è il traguardo del corso messo alla prova: un gioco tuo, di qualsiasi genere, portato dall'idea alla pubblicazione. Le poche lezioni riguardano il metodo: scegliere un'idea che si può finire, pianificare, imparare da soli ciò che manca. Il resto è lavoro tuo, controllato a tappe.",
+  "gioco": "Il tuo.",
+  "prova": "Il gioco finito: giocabile dall'inizio alla fine, con menu, salvataggi, impostazioni, asset con i loro crediti, provato da almeno un'altra persona, esportato e pronto per la pubblicazione.",
+  "progetto": {"nome": "Prove di metodo", "cartella": "prove-di-metodo"},
+  "provaProgetto": {"nome": "Il mio gioco", "cartella": "il-mio-gioco"},
+  "allaFine": [
+    "Scegli un'idea e la riduci a qualcosa che puoi finire.",
+    "Dividi un gioco in sistemi, compiti e tappe, e parti dal rischio più grosso.",
+    "Impari da solo un argomento che il corso non ha trattato.",
+    "Porti un gioco tuo fino alla pubblicazione."
+  ],
+  "sezioniDocumentazione": ["tutorials/best_practices", "getting_started/introduction/learning_new_features", "tutorials/inputs/input_examples", "tutorials/export/exporting_projects", "about/list_of_features", "tutorials/io/background_loading", "tutorials/2d/custom_drawing_in_2d"],
+  "lezioni": [
+    {
+      "slug": "l-idea-in-una-pagina",
+      "titolo": "Scegliere e ridurre: l'idea in una pagina",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Il cuore del gioco: cosa fa il giocatore, ogni dieci secondi e ogni dieci minuti",
+        "Tagliare: la versione più piccola che è ancora quel gioco",
+        "Guardare un gioco simile e capire di quali sistemi è fatto"
+      ],
+      "costruisci": "Una pagina: cosa si fa nel gioco, come si vince o si finisce, i sistemi necessari, cosa hai deciso di lasciare fuori, quanto dura.",
+      "verifica": "La piattaforma controlla che la pagina abbia tutte le voci e che ogni sistema elencato sia tra quelli costruiti nel corso, oppure sia dichiarato «da imparare».",
+      "parole": ["game design", "scope", "core loop"]
+    },
+    {
+      "slug": "pianificare",
+      "titolo": "Pianificare: sistemi, compiti, tappe",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Da un sistema a compiti di un'ora o due",
+        "Mettere per prima la parte che potrebbe non funzionare",
+        "Una tappa è qualcosa che si può giocare, non un elenco di file"
+      ],
+      "costruisci": "Il piano del tuo gioco in quattro tappe giocabili, con i compiti di ognuna; il progetto in Git con un segno per ogni tappa.",
+      "verifica": "La piattaforma controlla che il piano abbia le quattro tappe con compiti e che il progetto sia in Git.",
+      "parole": ["planning", "Git", "tag", "milestone"]
+    },
+    {
+      "slug": "tappa-prototipo",
+      "titolo": "Tappa 1: il prototipo del cuore del gioco",
+      "tipo": "progetto",
+      "minuti": 240,
+      "esercizi": ["da-zero"],
+      "impari": ["Scoprire in poche ore se l'idea regge"],
+      "costruisci": "Il cuore del gioco giocabile con forme grezze: niente menu, niente grafica, solo ciò che il giocatore fa.",
+      "verifica": "La piattaforma controlla che il progetto parta senza errori, che esistano le azioni di input e che rispondano; il resto lo dichiari tu rispondendo a tre domande sul prototipo.",
+      "parole": ["prototype", "Input Map", "main scene"]
+    },
+    {
+      "slug": "imparare-un-argomento-nuovo",
+      "titolo": "Imparare da soli un argomento nuovo",
+      "tipo": "metodo",
+      "minuti": 75,
+      "esercizi": ["trova", "obiettivo"],
+      "impari": [
+        "Il metodo: pagina della documentazione, progetto dimostrativo ufficiale, scena di prova, poi il gioco",
+        "Leggere il codice di un progetto dimostrativo senza perdersi",
+        "Capire quando una risposta trovata in rete riguarda una versione vecchia di Godot"
+      ],
+      "costruisci": "Scegli da un elenco un argomento mai trattato nel corso (per esempio disegnare forme dal codice, un percorso curvo da seguire, una minimappa con una seconda vista, il caricamento in sottofondo) e ne fai una scena dimostrativa che funziona.",
+      "verifica": "Per ogni argomento dell'elenco la piattaforma ha i suoi controlli di comportamento sulla scena dimostrativa.",
+      "parole": ["class reference", "demo projects", "SubViewport", "Path2D", "_draw", "ResourceLoader"]
+    },
+    {
+      "slug": "tappa-sistemi",
+      "titolo": "Tappa 2: i sistemi",
+      "tipo": "progetto",
+      "minuti": 360,
+      "esercizi": ["da-zero"],
+      "impari": ["Costruire i sistemi del gioco riusando tutto ciò che puoi"],
+      "costruisci": "Tutti i sistemi della tua pagina funzionano insieme, ancora con forme grezze; salvataggio compreso.",
+      "verifica": "La piattaforma controlla che il progetto parta, che salvi e ricarichi, e la storia in Git; per ogni sistema dichiari come si prova e la piattaforma esegue ciò che è eseguibile.",
+      "parole": ["systems", "save", "Git"]
+    },
+    {
+      "slug": "rimappare-i-tasti",
+      "titolo": "Lasciare al giocatore la scelta dei tasti",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "Cambiare la Input Map mentre il gioco gira",
+        "Aspettare il prossimo tasto premuto e assegnarlo",
+        "Salvare la scelta e gestire due azioni sullo stesso tasto"
+      ],
+      "costruisci": "Una schermata in cui ogni azione si riassegna a tastiera o gamepad; le scelte restano al prossimo avvio; un tasto già usato viene segnalato.",
+      "verifica": "La piattaforma riassegna un'azione, controlla che il tasto nuovo funzioni e il vecchio no, chiude e riapre.",
+      "parole": ["InputMap", "InputEvent", "action_add_event", "ConfigFile"]
+    },
+    {
+      "slug": "tappa-contenuto",
+      "titolo": "Tappa 3: il contenuto",
+      "tipo": "progetto",
+      "minuti": 300,
+      "esercizi": ["da-zero"],
+      "impari": ["Riempire il gioco: livelli, storia, asset, suoni"],
+      "costruisci": "Il gioco intero dall'inizio alla fine, con asset trovati e adattati da te e il registro completo.",
+      "verifica": "La piattaforma controlla asset, registro e crediti, e che il gioco si possa cominciare e portare a una schermata finale lungo il percorso che dichiari.",
+      "parole": ["assets", "license", "content"]
+    },
+    {
+      "slug": "tappa-rifinitura",
+      "titolo": "Tappa 4: rifinitura e collaudo",
+      "tipo": "progetto",
+      "minuti": 240,
+      "esercizi": ["da-zero", "collauda"],
+      "impari": ["Far provare il gioco a qualcuno e correggere ciò che non capisce"],
+      "costruisci": "Menu, impostazioni, effetti e suoni; l'elenco di collaudo eseguito; il gioco provato da almeno un'altra persona, con le segnalazioni scritte e le correzioni fatte.",
+      "verifica": "La piattaforma controlla menu, impostazioni salvate, elenco di collaudo, segnalazioni e storia delle correzioni in Git; misura le prestazioni.",
+      "parole": ["testing", "bug report", "profiler", "polish"]
+    },
+    {
+      "slug": "pubblicare-e-guardare-avanti",
+      "titolo": "Pubblicare e guardare avanti",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Esportare, preparare la pagina, pubblicare",
+        "Guardare indietro: cosa è andato bene, cosa rifaresti in un altro modo",
+        "Cosa c'è oltre il corso e dove si impara: C#, multiplayer, telefoni, strumenti per l'editor, estensioni in C++"
+      ],
+      "costruisci": "Il gioco esportato e il pacchetto per la pubblicazione; una pagina di bilancio; la tua scheda «Cosa so fare» completa, con la tua valutazione voce per voce.",
+      "verifica": "La piattaforma esegue il gioco esportato e controlla il pacchetto; la pubblicazione la confermi tu.",
+      "parole": ["export", "itch.io", "postmortem", "release"]
+    }
+  ]
+}

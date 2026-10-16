@@ -1,0 +1,64 @@
+# L'installatore dell'aula per Windows. Si costruisce con `npm run installatore --workspace aula` (in locale) o dal
+# workflow «Rilascio dell'aula» (tag aula-v*), che lo pubblica tra le release del repository: da lì l'aula installata
+# scarica da sola gli aggiornamenti.
+
+appId: io.github.serramarco1.howtodevelop
+productName: How to Develop
+copyright: Marco
+
+directories:
+  output: rilascio
+  buildResources: risorse
+
+# Il programma è già tutto in out/ (main e preload impacchettati da esbuild, la finestra da vite): niente node_modules.
+files:
+  - package.json
+  - out/**
+  - "!out/prova-aula.mjs"
+  - "!**/*.map"
+npmRebuild: false
+nodeGypRebuild: false
+buildDependenciesFromSource: false
+
+# Il pacchetto del motore (piano del corso, istruzioni per i modelli, verifiche) accanto al programma, in sola lettura.
+extraResources:
+  - from: ../motori/godot
+    to: motore
+
+asar: true
+
+# Le protezioni scritte dentro l'eseguibile di Electron (non si cambiano dall'esterno):
+# - niente ELECTRON_RUN_AS_NODE, NODE_OPTIONS, --inspect: nessuno può usare l'eseguibile come un Node.js qualsiasi;
+# - il codice si carica solo da app.asar, e app.asar è controllato con la sua impronta: modificarlo blocca l'avvio;
+# - file:// senza privilegi speciali (l'aula usa il suo protocollo htd://).
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  loadBrowserProcessSpecificV8Snapshot: false
+  grantFileProtocolExtraPrivileges: false
+
+win:
+  target:
+    - target: nsis
+      arch: x64
+  icon: risorse/icona.png
+  artifactName: How-to-Develop-${version}-installa.${ext}
+
+# Installazione per il solo utente (niente permessi di amministratore): così anche gli aggiornamenti si installano da soli.
+nsis:
+  oneClick: true
+  perMachine: false
+  deleteAppDataOnUninstall: false
+  shortcutName: How to Develop
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+
+publish:
+  provider: github
+  owner: SerraMarco1
+  repo: how-to-develop-v2
+  releaseType: release

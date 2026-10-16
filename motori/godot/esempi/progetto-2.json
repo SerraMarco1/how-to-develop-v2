@@ -1,0 +1,62 @@
+{
+ "titolo": "Un contatore con un pulsante",
+ "consegna": "Crea un progetto chiamato `Contatore`.\n\n1. Crea la scena `main.tscn` con un `Control` come radice, chiamato `Main`, e impostala come scena principale.\n2. Dentro `Main` aggiungi un `Label` chiamato `CountLabel` con il testo `0` e un `Button` chiamato `AddButton` con il testo `Aggiungi`.\n3. Collega a `Main` lo script `main.gd`: ogni volta che si preme `AddButton`, il numero mostrato da `CountLabel` aumenta di 1.",
+ "modalita": "progetto",
+ "cartella": "contatore",
+ "passiGuida": [
+  "Nel Project Manager premi **Create**, scrivi il nome `Contatore` e crea il progetto.",
+  "Nel pannello *Scene* scegli **User Interface**, rinomina la radice in `Main` e salva con Ctrl+S come `main.tscn`.",
+  "Con `Main` selezionato premi **+** e aggiungi un `Label`; rinominalo `CountLabel` e scrivi `0` nella proprietà **Text** dell'*Inspector*.",
+  "Aggiungi a `Main` anche un `Button`; rinominalo `AddButton`, scrivi `Aggiungi` nella proprietà **Text** e spostalo sotto l'etichetta.",
+  "Seleziona `Main`, premi l'icona della pergamena e crea lo script `main.gd`.",
+  "Nello script dichiara una variabile `count` che parte da 0 e, in `_ready()`, collega il segnale `pressed` del pulsante a una tua funzione.",
+  "Nella funzione aumenta `count` di 1 e scrivi il nuovo valore nel testo dell'etichetta con `str(count)`.",
+  "Premi F5, scegli `main.tscn` come scena principale e prova il pulsante."
+ ],
+ "suggerimenti": [],
+ "verifiche": [
+  {
+   "tipo": "nodo",
+   "scena": "res://main.tscn",
+   "tipoNodo": "Button",
+   "nome": "AddButton",
+   "descrizione": "La scena main.tscn contiene un Button chiamato AddButton"
+  },
+  {
+   "tipo": "nodo",
+   "scena": "res://main.tscn",
+   "tipoNodo": "Label",
+   "nome": "CountLabel",
+   "descrizione": "La scena main.tscn contiene un Label chiamato CountLabel"
+  },
+  {
+   "tipo": "script_collegato",
+   "scena": "res://main.tscn",
+   "nodo": "Main",
+   "descrizione": "Il nodo Main ha uno script collegato"
+  },
+  {
+   "tipo": "script_godot",
+   "descrizione": "Premendo il pulsante il numero mostrato aumenta di 1 ogni volta",
+   "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve essere impostata e aprirsi senza errori\"):\n\t\treturn\n\tvar button := find_by_name(main, \"AddButton\") as Button\n\tvar label := find_by_name(main, \"CountLabel\") as Label\n\tif not check(\"nodes\", button != null and label != null, \"Nella scena servono un Button chiamato AddButton e un Label chiamato CountLabel\"):\n\t\treturn\n\tcheck(\"start\", label.text == \"0\", \"All'inizio l'etichetta deve mostrare 0\")\n\tawait click_button(button)\n\tcheck(\"one\", label.text == \"1\", \"Dopo un clic l'etichetta deve mostrare 1\")\n\tawait click_button(button)\n\tawait click_button(button)\n\tcheck(\"three\", label.text == \"3\", \"Dopo tre clic l'etichetta deve mostrare 3\")\n"
+  }
+ ],
+ "domande": [],
+ "soluzione": {
+  "progetto": {
+   "nome": "Contatore",
+   "scenaPrincipale": "res://main.tscn"
+  },
+  "file": [
+   {
+    "percorso": "main.tscn",
+    "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[node name=\"Main\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\nscript = ExtResource(\"1_main\")\n\n[node name=\"CountLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 200.0\noffset_bottom = 70.0\ntext = \"0\"\n\n[node name=\"AddButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 90.0\noffset_right = 200.0\noffset_bottom = 130.0\ntext = \"Aggiungi\"\n"
+   },
+   {
+    "percorso": "main.gd",
+    "contenuto": "extends Control\n\nvar count: int = 0\n\n@onready var count_label: Label = $CountLabel\n@onready var add_button: Button = $AddButton\n\n\nfunc _ready() -> void:\n\tadd_button.pressed.connect(_on_add_button_pressed)\n\n\nfunc _on_add_button_pressed() -> void:\n\tcount += 1\n\tcount_label.text = str(count)\n"
+   }
+  ],
+  "spiegazione": "Lo script tiene il conteggio nella variabile `count`. In `_ready()` collega il segnale `pressed` del pulsante alla funzione `_on_add_button_pressed`, che viene quindi chiamata a ogni clic: aumenta `count` e aggiorna il testo dell'etichetta, convertendo il numero in testo con `str()`."
+ }
+}

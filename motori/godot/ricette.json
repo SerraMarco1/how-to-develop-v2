@@ -1,0 +1,19 @@
+{
+  "nota": "Pezzi di scena .tscn già verificati in Godot 4.7 per le risorse più difficili da scrivere a mano. Quando il testo di un esercizio corrisponde a `quando` (espressione regolare), la ricetta viene aggiunta alle istruzioni date al modello che scrive o corregge la soluzione. `npm run controlla:esempi` le esegue in Godot: se ne aggiungi una, deve passare quel controllo.",
+  "ricette": [
+    {
+      "id": "sprite-frames",
+      "quando": "AnimatedSprite2D|SpriteFrames|foglio di sprite|sprite ?sheet",
+      "titolo": "AnimatedSprite2D con le animazioni prese da un foglio di sprite",
+      "spiegazione": "Ogni fotogramma è un [sub_resource type=\"AtlasTexture\"] che ritaglia una regione del foglio; il [sub_resource type=\"SpriteFrames\"] elenca le animazioni. Il foglio del corso res://assets/sprites/player_sheet.png ha 4 fotogrammi da 32x32 in riga: 0-1 fermo, 2-3 camminata. Nel codice: $AnimatedSprite2D.play(\"walk\").",
+      "scena": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player_sheet.png\" id=\"1_sheet\"]\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle0\"]\natlas = ExtResource(\"1_sheet\")\nregion = Rect2(0, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle1\"]\natlas = ExtResource(\"1_sheet\")\nregion = Rect2(32, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_walk0\"]\natlas = ExtResource(\"1_sheet\")\nregion = Rect2(64, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_walk1\"]\natlas = ExtResource(\"1_sheet\")\nregion = Rect2(96, 0, 32, 32)\n\n[sub_resource type=\"SpriteFrames\" id=\"SpriteFrames_player\"]\nanimations = [{\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle0\")\n}, {\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle1\")\n}],\n\"loop\": true,\n\"name\": &\"idle\",\n\"speed\": 4.0\n}, {\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_walk0\")\n}, {\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_walk1\")\n}],\n\"loop\": true,\n\"name\": &\"walk\",\n\"speed\": 8.0\n}]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"AnimatedSprite2D\" type=\"AnimatedSprite2D\" parent=\".\"]\nsprite_frames = SubResource(\"SpriteFrames_player\")\nanimation = &\"idle\"\nautoplay = \"idle\"\n"
+    },
+    {
+      "id": "animation-player",
+      "quando": "AnimationPlayer|AnimationLibrary",
+      "titolo": "AnimationPlayer con un'animazione che muove una proprietà",
+      "spiegazione": "Ogni animazione è un [sub_resource type=\"Animation\"] con le sue tracce; l'[sub_resource type=\"AnimationLibrary\"] le raccoglie e il nodo AnimationPlayer la usa in `libraries`. Il percorso della traccia è \"NomeNodo:proprietà\", relativo al genitore dell'AnimationPlayer. `loop_mode = 1` la ripete. Nel codice: $AnimationPlayer.play(\"bounce\").",
+      "scena": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"Animation\" id=\"Animation_bounce\"]\nresource_name = \"bounce\"\nlength = 1.0\nloop_mode = 1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:position\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.5, 1),\n\"transitions\": PackedFloat32Array(1, 1, 1),\n\"update\": 0,\n\"values\": [Vector2(0, 0), Vector2(0, -40), Vector2(0, 0)]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_main\"]\n_data = {\n&\"bounce\": SubResource(\"Animation_bounce\")\n}\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n&\"\": SubResource(\"AnimationLibrary_main\")\n}\nautoplay = \"bounce\"\n"
+    }
+  ]
+}

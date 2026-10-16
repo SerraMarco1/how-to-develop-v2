@@ -1,0 +1,114 @@
+{
+  "versione": 2,
+  "stato": "approvato",
+  "approvatoIl": "2026-10-12",
+  "motore": "godot",
+  "titolo": "Imparare a fare videogiochi con Godot 4.7",
+  "nota": "Il piano completo del corso, scritto a mano (non generato): le fasi in ordine, ognuna nel suo file, con tutte le lezioni. I modelli AI scrivono le lezioni restando dentro questo piano. Si legge in docs/piano-del-corso.md, che si rigenera con `npm run piano`.",
+  "traguardo": "Alla fine prendi in mano Godot e realizzi ciò che vuoi: sai programmare un gioco intero in GDScript, in 2D e in 3D, sai trovare e adattare gli asset che ti servono, e quando incontri qualcosa che non conosci sai dove cercare e come arrivare alla soluzione.",
+  "comeSiMisura": [
+    "Ogni fase finisce con un gioco costruito da solo, partendo da un progetto vuoto, con la sola documentazione: se lo porti in fondo, la fase è imparata.",
+    "Tre giochi completi, finiti ed esportati: una visual novel, un gioco a piattaforme, un gioco 3D. Poi un gioco tuo.",
+    "La piattaforma controlla ogni esercizio eseguendo il progetto: preme i tasti, clicca i pulsanti e guarda cosa succede."
+  ],
+  "regole": [
+    "Si parte da zero: nessuna conoscenza data per scontata, nemmeno di programmazione o di matematica.",
+    "La programmazione si impara vedendo il risultato sullo schermo, non stampando numeri: ogni concetto entra quando il gioco ne ha bisogno.",
+    "Dentro una fase si lavora sullo stesso gioco, che cresce di un passo a ogni lezione. Ogni lezione parte dal gioco com'era alla fine della precedente.",
+    "In ogni lezione la guida cala: il primo esercizio è accompagnato, i successivi dicono solo il risultato da ottenere, il test si fa senza aiuto.",
+    "Le lezioni di metodo insegnano a cavarsela: leggere la documentazione, leggere gli errori, fare debug, scomporre un problema, imparare da soli un argomento nuovo.",
+    "Gli asset si usano, si cercano e si adattano; non si disegnano e non si compongono.",
+    "Una sola lingua, GDScript, sempre con i tipi dichiarati. Editor, codice e nomi in inglese; spiegazioni in italiano.",
+    "Il piano può adattarsi: se un test ti riesce a fatica, il sistema può aggiungere una lezione di rinforzo prima di proseguire. Non toglie e non riordina lezioni."
+  ],
+  "tipiDiEsercizio": {
+    "nota": "Ogni lezione dichiara quali tipi di esercizio usa. Sono tutti lavori pratici, controllati eseguendo il progetto: non esistono domande a crocette. Il test di una lezione è sempre uno di questi lavori, fatto senza aiuto.",
+    "tipi": [
+      { "id": "guidato", "nome": "Costruisci, accompagnato", "cosa": "Aggiungi un pezzo al gioco seguendo i passi. È sempre il primo esercizio su un argomento nuovo, mai l'unico.", "allena": "Fare la cosa nuova una prima volta, senza perdersi." },
+      { "id": "obiettivo", "nome": "Costruisci, dato il risultato", "cosa": "Ti viene detto cosa deve succedere, non come ottenerlo.", "allena": "Passare da una richiesta al codice: è il lavoro di tutti i giorni." },
+      { "id": "prevedi", "nome": "Prevedi", "cosa": "Leggi un pezzo di codice o una scena e scrivi cosa succederà (un valore, un testo, una posizione) prima di eseguirlo. Poi la piattaforma lo esegue e confronta.", "allena": "Leggere il codice e simularlo a mente: senza questo non si trova nessun errore." },
+      { "id": "ripara", "nome": "Ripara", "cosa": "Ricevi un progetto che non funziona, o funziona male, e lo rimetti a posto. A volte gli errori fermano il gioco, a volte lo fanno solo sbagliare.", "allena": "Il debug: leggere gli errori, restringere il campo, verificare un'ipotesi." },
+      { "id": "estendi", "nome": "Estendi il codice di un altro", "cosa": "Ricevi un progetto che funziona, scritto da altri, e aggiungi una funzione. I controlli di prima vengono rifatti: niente deve rompersi.", "allena": "Leggere e capire codice non tuo, e modificarlo con rispetto." },
+      { "id": "riordina", "nome": "Riordina", "cosa": "Riscrivi un codice che funziona ma è fatto male, senza cambiarne il comportamento. I controlli di comportamento devono passare prima e dopo.", "allena": "Dare struttura: è ciò che distingue un programma che cresce da uno che crolla." },
+      { "id": "trova", "nome": "Trova nella documentazione", "cosa": "Devi ottenere un risultato che la lezione non spiega: il nodo, la proprietà o il metodo giusto vanno cercati.", "allena": "Cavarsela davanti a ciò che non conosci." },
+      { "id": "collauda", "nome": "Collauda", "cosa": "Scrivi tu i controlli. La piattaforma li esegue contro una versione giusta e alcune versioni sbagliate: devono promuovere solo la giusta.", "allena": "Pensare ai casi che rompono un programma, prima che lo trovi un giocatore." },
+      { "id": "ottimizza", "nome": "Rendi veloce", "cosa": "Ricevi un progetto che va a scatti. Misuri, trovi la causa, lo sistemi. La piattaforma misura prima e dopo.", "allena": "Misurare invece di indovinare." },
+      { "id": "dati", "nome": "Scrivi i dati", "cosa": "Produci contenuto nel formato del gioco: una storia, un livello, una tabella di nemici. La piattaforma lo controlla e lo gioca.", "allena": "Usare i propri strumenti, e capire se il formato scelto regge." },
+      { "id": "imita", "nome": "Rifai uguale", "cosa": "Ti viene mostrato un risultato (un'immagine, un breve video, un gioco da provare) e devi ottenere lo stesso. La piattaforma confronta con il riferimento.", "allena": "Osservare con precisione e tradurre ciò che vedi in impostazioni e codice." },
+      { "id": "da-zero", "nome": "Da un progetto vuoto", "cosa": "Le tappe dei progetti di fine fase: nessun file di partenza, nessun passo, solo ciò che il gioco deve fare.", "allena": "Tutto insieme. È la misura vera di ciò che hai imparato." }
+    ]
+  },
+  "scheda": {
+    "nome": "Cosa so fare",
+    "cosa": "Un documento che si scarica alla fine di ogni fase e alla fine del corso. Elenca, voce per voce, le cose che dovresti saper fare (sono le righe «impari» di ogni lezione e «alla fine» di ogni fase).",
+    "perOgniVoce": [
+      "Ciò che la piattaforma ha misurato: test superato o no, al primo tentativo o dopo quanti, con quanto aiuto del tutor, in quanto tempo, quando.",
+      "La tua valutazione, da «non la so» a «la insegnerei», e una nota libera.",
+      "In quali progetti l'hai usata da solo."
+    ],
+    "aCosaServe": [
+      "A te, per vedere cosa sai davvero e cosa ripassare.",
+      "Quando avrai l'idea di un gioco: dai la scheda a Claude insieme all'idea. Dal confronto esce cosa sai già fare, cosa ti manca, e un ramo di lezioni scritto apposta per arrivarci."
+    ],
+    "formati": ["Markdown, da leggere e stampare", "JSON, da far leggere a un programma"]
+  },
+  "scelte": [
+    {
+      "scelta": "GDScript come unica lingua del corso; C# è un ramo facoltativo.",
+      "perche": "È la lingua per cui Godot è pensato e quella usata dalla grande maggioranza dei progetti (nel sondaggio della comunità del 2025 solo il 16% circa usa C#). Tutta la documentazione e gli esempi partono da GDScript."
+    },
+    {
+      "scelta": "Molta interfaccia e molti dati, non solo movimento.",
+      "perche": "I giochi più venduti fatti con Godot (Brotato, Dome Keeper, Backpack Battles, Halls of Torment, Slay the Spire 2) sono fatti soprattutto di sistemi, menu, dati e salvataggi. È anche la parte che si programma di più."
+    },
+    {
+      "scelta": "La visual novel è il primo gioco completo, prima dei giochi d'azione.",
+      "perche": "È il genere che preferisci, è quasi tutta programmazione (dialoghi come dati, scelte, variabili, salvataggi) e non richiede la fisica. E si verifica con certezza: il testo mostrato, lo stato, il file salvato."
+    },
+    {
+      "scelta": "Il motore dei dialoghi si costruisce a mano; il plugin Dialogic si prova dopo.",
+      "perche": "Costruirlo è il modo per imparare a programmare un sistema vero. Sapere poi valutare e usare un plugin è una competenza a parte, con la sua lezione."
+    },
+    {
+      "scelta": "Il 3D ha lo stesso peso del 2D d'azione (circa 42 ore ciascuno).",
+      "perche": "L'hai chiesto, e i giochi 3D fatti con Godot (Buckshot Roulette, Cruelty Squad, Road to Vostok) mostrano che il motore lo regge."
+    },
+    {
+      "scelta": "Dentro il corso: Git, esportazione e pubblicazione, navigazione dei nemici, shader di base, traduzioni.",
+      "perche": "Servono a finire e a distribuire un gioco vero, e la documentazione ufficiale li tratta come parti normali del lavoro."
+    },
+    {
+      "scelta": "Rami facoltativi: gioco di ruolo a turni, roguelite d'arena, carte, sparatutto in prima persona, avventura narrativa esplorabile, generazione procedurale, multiplayer, strumenti per l'editor, C#.",
+      "perche": "Sono specializzazioni: si capiscono in fretta quando le basi ci sono, e non tutte ti interesseranno."
+    },
+    {
+      "scelta": "Fuori dal corso: realtà virtuale, esportazione per telefoni e console, GDExtension e C++, modifiche al motore.",
+      "perche": "Sono argomenti per chi ha già pubblicato qualcosa. L'ultima lezione ti dice dove si trovano."
+    }
+  ],
+  "fasi": [
+    "f00-orientamento.json",
+    "f01-programmare.json",
+    "f02-nodi-scene-segnali.json",
+    "f03-interfaccia.json",
+    "f04-programmare-meglio.json",
+    "f05-asset-e-audio.json",
+    "f06-visual-novel.json",
+    "f07-azione-2d.json",
+    "f08-piattaforme.json",
+    "f09-3d-basi.json",
+    "f10-3d-gioco.json",
+    "f11-il-tuo-gioco.json"
+  ],
+  "rami": [
+    { "slug": "ramo-gdr-a-turni", "titolo": "Gioco di ruolo a turni", "ore": 14, "dopo": "f08-piattaforme", "contenuto": "Statistiche e formule, ordine dei turni, menu di battaglia, nemici e abilità descritti come dati, oggetti ed equipaggiamento, esperienza e livelli. Gioco: una serie di battaglie con un gruppo di tre personaggi." },
+    { "slug": "ramo-roguelite-arena", "titolo": "Roguelite d'arena", "ore": 10, "dopo": "f07-azione-2d", "contenuto": "Ondate bilanciate con i dati, potenziamenti che si combinano, riuso degli oggetti in memoria (object pooling) per centinaia di nemici, progressi che restano tra una partita e l'altra. Gioco: l'Arena della fase 7 portata a un gioco completo." },
+    { "slug": "ramo-carte", "titolo": "Giochi di carte e da tavolo", "ore": 12, "dopo": "f06-visual-novel", "contenuto": "Trascinare con il mouse, mazzo mano e scarti come strutture dati, struttura a turni, effetti delle carte descritti come Resource, un avversario semplice. Gioco: un duello di carte contro il computer." },
+    { "slug": "ramo-sparatutto-3d", "titolo": "Sparatutto in prima persona", "ore": 12, "dopo": "f10-3d-gioco", "contenuto": "Armi a colpo istantaneo e a proiettile, rinculo e dispersione, munizioni e ricarica, nemici 3D che cercano riparo, costruzione di un livello. Gioco: un livello con tre armi." },
+    { "slug": "ramo-avventura-narrativa", "titolo": "Avventura narrativa esplorabile", "ore": 10, "dopo": "f07-azione-2d", "contenuto": "Il motore dei dialoghi dentro un mondo in cui ci si muove: personaggi con cui parlare, missioni, scene d'intermezzo con AnimationPlayer. Gioco: un piccolo villaggio con tre missioni." },
+    { "slug": "ramo-procedurale", "titolo": "Generazione procedurale", "ore": 8, "dopo": "f07-azione-2d", "contenuto": "Numeri casuali con seme, rumore (FastNoiseLite), stanze e corridoi generati, mappe a tessere generate dal codice. Gioco: un sotterraneo diverso a ogni partita." },
+    { "slug": "ramo-multiplayer", "titolo": "Multiplayer in rete locale", "ore": 10, "dopo": "f08-piattaforme", "contenuto": "L'API multiplayer di alto livello: collegare due istanze, chiamate remote, chi comanda cosa, MultiplayerSpawner e MultiplayerSynchronizer, una sala d'attesa. Gioco: un Pong e poi un'arena per due." },
+    { "slug": "ramo-strumenti-editor", "titolo": "Strumenti per l'editor", "ore": 8, "dopo": "f06-visual-novel", "contenuto": "Script @tool, EditorScript, un plugin con il suo pannello, proprietà personalizzate nell'Inspector. Strumento: un pannello che controlla e mostra la storia della tua visual novel." },
+    { "slug": "ramo-csharp", "titolo": "C# in Godot", "ore": 9, "dopo": "f08-piattaforme", "contenuto": "Godot .NET, differenze con GDScript, nodi segnali ed export in C#, far convivere le due lingue. Progetto: riscrivere in C# uno dei tuoi giochi piccoli." }
+  ]
+}

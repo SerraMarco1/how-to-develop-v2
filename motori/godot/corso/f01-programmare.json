@@ -1,0 +1,291 @@
+{
+  "slug": "f01-programmare",
+  "titolo": "Programmare da zero, vedendo il risultato",
+  "descrizione": "Le basi della programmazione, imparate facendo muovere cose sullo schermo. Niente fisica e niente scorciatoie del motore: posizioni, condizioni, cicli e dati, scritti da te. Alla fine hai un piccolo gioco arcade fatto solo di codice tuo.",
+  "gioco": "«Pioggia di stelle»: muovi un cesto a destra e a sinistra, prendi le stelle che cadono, eviti i sassi. Tre vite, difficoltà che cresce, fine partita e nuova partita.",
+  "prova": "«Schiva!», da un progetto vuoto: una navicella si muove in quattro direzioni, i meteoriti arrivano sempre più fitti, il punteggio è il tempo di sopravvivenza, con record della sessione e nuova partita.",
+  "progetto": {"nome": "Pioggia di stelle", "cartella": "pioggia-di-stelle"},
+  "provaProgetto": {"nome": "Schiva", "cartella": "schiva"},
+  "allaFine": [
+    "Scrivi uno script da un file vuoto: variabili con i tipi, condizioni, cicli, funzioni.",
+    "Tieni tanti oggetti in un Array e i loro dati in un Dictionary.",
+    "Leggi un messaggio d'errore, trovi la riga e correggi.",
+    "Organizzi un gioco in stati (in partita, finita) e in funzioni piccole con nomi chiari."
+  ],
+  "sezioniDocumentazione": ["tutorials/scripting/gdscript", "getting_started/step_by_step/scripting_first_script", "getting_started/step_by_step/scripting_player_input", "tutorials/math/vector_math", "tutorials/math/random_number_generation", "tutorials/scripting/debug"],
+  "lezioni": [
+    {
+      "slug": "il-primo-script",
+      "titolo": "Il primo script: dare ordini a un nodo",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Cos'è uno script e come si collega a un nodo",
+        "La funzione _ready(): cosa viene eseguito all'avvio",
+        "Cambiare una proprietà dal codice (position, modulate) e usare print() per guardare dentro al programma"
+      ],
+      "costruisci": "Il cesto: uno Sprite2D che all'avvio si mette da solo in basso al centro, cambia colore e scrive nell'Output dove si trova.",
+      "verifica": "La piattaforma esegue la scena: posizione e colore del nodo dopo l'avvio, testo stampato.",
+      "parole": ["GDScript", "_ready", "print", "position", "modulate"]
+    },
+    {
+      "slug": "variabili-e-tipi",
+      "titolo": "Variabili e tipi: ricordare i valori",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "prevedi", "obiettivo"],
+      "impari": [
+        "Dichiarare variabili e costanti con il tipo: int, float, String, bool",
+        "La differenza tra numeri interi e con la virgola, e cosa succede quando si mescolano",
+        "Vector2: due numeri insieme, per posizioni e velocità"
+      ],
+      "costruisci": "Velocità, posizione di partenza e nome del giocatore diventano variabili; un Label mostra un testo composto con quei valori.",
+      "verifica": "La piattaforma legge i valori delle variabili dello script e il testo del Label dopo l'avvio.",
+      "parole": ["var", "const", "static typing", "Vector2", "String"]
+    },
+    {
+      "slug": "process-e-delta",
+      "titolo": "_process e delta: far muovere qualcosa",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "prevedi", "obiettivo"],
+      "impari": [
+        "Il ciclo del gioco: _process() viene chiamata a ogni fotogramma",
+        "Perché si moltiplica per delta: stessa velocità su ogni computer",
+        "Sommare una velocità a una posizione"
+      ],
+      "costruisci": "Una stella che cade dall'alto a velocità costante, in pixel al secondo.",
+      "verifica": "La piattaforma fa passare un tempo noto e controlla di quanto è scesa la stella, a due frequenze di fotogrammi diverse.",
+      "parole": ["_process", "delta", "position"]
+    },
+    {
+      "slug": "condizioni",
+      "titolo": "Condizioni: if, elif, else",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "prevedi", "obiettivo"],
+      "impari": [
+        "Confronti e valori vero/falso",
+        "if, elif, else e come si combinano le condizioni con and, or, not",
+        "Ragionare sui casi limite: esattamente sul bordo, appena oltre"
+      ],
+      "costruisci": "La stella, arrivata in fondo allo schermo, ricomincia dall'alto; cambia colore quando supera la metà.",
+      "verifica": "La piattaforma porta la stella in posizioni precise (prima, sul bordo, oltre) e controlla cosa succede.",
+      "parole": ["if", "elif", "else", "bool", "and", "or"]
+    },
+    {
+      "slug": "input-da-tastiera",
+      "titolo": "Input: leggere la tastiera",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Le azioni di input e la Input Map: perché non si leggono i tasti direttamente",
+        "Input.is_action_pressed() dentro _process()",
+        "Tenere un valore dentro un intervallo con clamp()"
+      ],
+      "costruisci": "Il cesto si muove a destra e a sinistra con le frecce e con A e D, e non esce dallo schermo.",
+      "verifica": "La piattaforma tiene premute le azioni per un tempo noto: spostamento, direzione, blocco ai bordi.",
+      "parole": ["Input", "InputMap", "is_action_pressed", "clamp"]
+    },
+    {
+      "slug": "funzioni",
+      "titolo": "Funzioni: dare un nome a un pezzo di lavoro",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "riordina", "prevedi"],
+      "impari": [
+        "Scrivere una funzione, con parametri e con un valore restituito",
+        "Variabili locali e variabili dello script",
+        "Spezzare un programma lungo in funzioni che fanno una cosa sola"
+      ],
+      "costruisci": "Il codice scritto finora diviso in move_basket(), reset_star() e is_caught(), che dice se una stella è stata presa.",
+      "verifica": "La piattaforma chiama le funzioni con valori di prova e confronta il risultato; poi controlla che il gioco si comporti come prima.",
+      "parole": ["func", "return", "parameters", "scope"]
+    },
+    {
+      "slug": "leggere-gli-errori",
+      "titolo": "Leggere gli errori e usare il Debugger",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["ripara"],
+      "impari": [
+        "Distinguere un errore di scrittura (il gioco non parte) da un errore durante l'esecuzione",
+        "Leggere il messaggio: file, riga, cosa si aspettava il motore",
+        "Guardare i valori mentre il gioco gira: print(), punti di interruzione, esecuzione passo passo"
+      ],
+      "costruisci": "Ricevi una copia del gioco con cinque errori dentro (due di scrittura, tre di logica) e la rimetti in funzione.",
+      "verifica": "La piattaforma esegue il progetto: nessun errore, e il gioco si comporta come quello giusto.",
+      "parole": ["Debugger", "breakpoint", "Output", "errors", "stack trace"]
+    },
+    {
+      "slug": "casualita-e-distanze",
+      "titolo": "Numeri casuali e distanze",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo", "prevedi"],
+      "impari": [
+        "randf_range() e randi_range(): il caso dentro un intervallo",
+        "Sottrarre due Vector2 e misurare una distanza con distance_to()",
+        "Decidere che due oggetti si toccano quando sono abbastanza vicini"
+      ],
+      "costruisci": "Ogni stella parte da un punto a caso in alto; viene presa quando è abbastanza vicina al cesto.",
+      "verifica": "La piattaforma fa nascere cento stelle e controlla che stiano tutte dentro lo schermo e non tutte nello stesso punto; poi mette stella e cesto a distanze note.",
+      "parole": ["randf_range", "randi_range", "distance_to", "Vector2"]
+    },
+    {
+      "slug": "punteggio-e-testo",
+      "titolo": "Punteggio e testo sullo schermo",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "prevedi"],
+      "impari": [
+        "Trasformare un numero in testo e comporre una frase",
+        "Formattare: zeri davanti, decimali, più valori nella stessa frase",
+        "Aggiornare un Label solo quando il valore cambia"
+      ],
+      "costruisci": "Punteggio e vite mostrati in alto, aggiornati a ogni stella presa o persa.",
+      "verifica": "La piattaforma fa prendere tre stelle e ne fa perdere una, poi legge il testo dei Label.",
+      "parole": ["Label", "str", "format string", "String"]
+    },
+    {
+      "slug": "cicli",
+      "titolo": "Cicli: for e while",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "prevedi", "obiettivo"],
+      "impari": [
+        "Ripetere un lavoro con for e range()",
+        "while: ripetere finché una condizione è vera, e come non restare bloccati",
+        "Creare nodi dal codice con new() e add_child()"
+      ],
+      "costruisci": "Cinque stelle create dal codice all'avvio, ognuna a un'altezza diversa.",
+      "verifica": "La piattaforma conta i nodi creati e controlla le loro posizioni di partenza.",
+      "parole": ["for", "while", "range", "add_child", "new"]
+    },
+    {
+      "slug": "array",
+      "titolo": "Array: tanti oggetti insieme",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "ripara"],
+      "impari": [
+        "Creare un Array con il tipo dei suoi elementi, aggiungere e togliere",
+        "Scorrere un Array e fare la stessa cosa a ogni elemento",
+        "L'errore tipico: togliere elementi mentre si scorre"
+      ],
+      "costruisci": "Tutte le stelle stanno in un Array: cadono insieme, quelle prese o uscite vengono tolte e sostituite.",
+      "verifica": "La piattaforma controlla la lunghezza dell'Array nel tempo e che ogni stella si muova; fa prendere una stella e controlla che sparisca dall'Array e dalla scena.",
+      "parole": ["Array", "append", "erase", "for in", "typed array"]
+    },
+    {
+      "slug": "dictionary",
+      "titolo": "Dictionary: dati con un nome",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo", "estendi"],
+      "impari": [
+        "Chiavi e valori: quando un Dictionary è meglio di tante variabili",
+        "Leggere, scrivere, controllare se una chiave esiste",
+        "Descrivere i tipi di oggetto del gioco come dati, invece che con tanti if"
+      ],
+      "costruisci": "Tre tipi di oggetto che cadono (stella, stella d'oro, sasso), ognuno con punti, velocità e colore scritti in un Dictionary.",
+      "verifica": "La piattaforma legge la tabella dei tipi e controlla l'effetto di ognuno: punti aggiunti o vita tolta.",
+      "parole": ["Dictionary", "has", "keys", "get"]
+    },
+    {
+      "slug": "stati-del-gioco",
+      "titolo": "Stati del gioco: enum e match",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "enum: dare un nome a un insieme di casi",
+        "match al posto di una catena di if",
+        "Un gioco è sempre in uno stato: in partita, finita"
+      ],
+      "costruisci": "Alla terza vita persa il gioco si ferma e mostra «Partita finita»; un tasto la fa ricominciare da zero.",
+      "verifica": "La piattaforma fa perdere tre vite, controlla lo stato e che niente si muova più; preme il tasto e controlla che tutto sia tornato all'inizio.",
+      "parole": ["enum", "match", "state"]
+    },
+    {
+      "slug": "difficolta-che-cresce",
+      "titolo": "Difficoltà che cresce nel tempo",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "prevedi"],
+      "impari": [
+        "Contare il tempo che passa sommando delta",
+        "Una funzione che dal tempo calcola un valore: min(), max(), lerp()",
+        "Far succedere qualcosa a intervalli regolari senza un Timer"
+      ],
+      "costruisci": "Le stelle cadono sempre più in fretta e nascono sempre più spesso, fino a un massimo.",
+      "verifica": "La piattaforma chiama la funzione della difficoltà a tempi diversi e conta quante stelle nascono in due intervalli uguali, all'inizio e dopo.",
+      "parole": ["lerp", "min", "max", "delta"]
+    },
+    {
+      "slug": "ordinare-il-codice",
+      "titolo": "Ordinare il codice",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["riordina"],
+      "impari": [
+        "Le convenzioni di GDScript: nomi, ordine dentro al file, righe vuote",
+        "Togliere i numeri sparsi nel codice dandogli un nome",
+        "Commenti che spiegano il perché, non il cosa"
+      ],
+      "costruisci": "Ricevi una versione disordinata ma funzionante del gioco e la riordini senza cambiarne il comportamento.",
+      "verifica": "La piattaforma rifà tutti i controlli delle lezioni precedenti (il gioco deve funzionare come prima) e controlla lo script: tipi dichiarati ovunque, nessun numero sparso, nessuna funzione troppo lunga.",
+      "parole": ["GDScript style guide", "const", "refactoring"]
+    },
+    {
+      "slug": "classi-e-oggetti",
+      "titolo": "Classi e oggetti: ogni cosa pensa a sé",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "riordina", "obiettivo"],
+      "impari": [
+        "Uno script è una classe; ogni nodo che lo usa è un oggetto con i suoi valori",
+        "extends e class_name",
+        "Spostare dati e comportamento dentro l'oggetto a cui appartengono"
+      ],
+      "costruisci": "Lo script FallingItem: ogni oggetto che cade sa di che tipo è, come muoversi e quanto vale. Lo script principale si accorcia.",
+      "verifica": "La piattaforma crea oggetti FallingItem di tipi diversi, controlla le loro proprietà e i loro metodi, poi rifà i controlli sul gioco intero.",
+      "parole": ["class_name", "extends", "class", "method", "property"]
+    },
+    {
+      "slug": "progetto-schiva-1",
+      "titolo": "Progetto «Schiva!» – tappa 1: muoversi e nascere",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Partire da un progetto vuoto e decidere da soli scene, script e nomi"],
+      "costruisci": "La navicella si muove in quattro direzioni dentro lo schermo; i meteoriti nascono fuori dallo schermo e lo attraversano.",
+      "verifica": "La piattaforma tiene premute le quattro azioni e controlla spostamenti e bordi; conta i meteoriti nel tempo e controlla che si muovano e vengano tolti quando escono.",
+      "parole": ["Input", "Array", "Vector2"]
+    },
+    {
+      "slug": "progetto-schiva-2",
+      "titolo": "Progetto «Schiva!» – tappa 2: urti, vite e tempo",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Mettere insieme da soli distanze, stati e difficoltà"],
+      "costruisci": "Urto per vicinanza, tre vite, punteggio che è il tempo di sopravvivenza, meteoriti sempre più fitti.",
+      "verifica": "La piattaforma mette navicella e meteorite a distanze note, controlla vite e punteggio nel tempo e la frequenza delle nascite.",
+      "parole": ["distance_to", "enum", "delta"]
+    },
+    {
+      "slug": "progetto-schiva-3",
+      "titolo": "Progetto «Schiva!» – tappa 3: fine partita, record e ordine",
+      "tipo": "progetto",
+      "minuti": 60,
+      "esercizi": ["da-zero"],
+      "impari": ["Chiudere un gioco: ogni partita deve poter finire e ricominciare pulita"],
+      "costruisci": "Schermata di fine partita con il tempo fatto e il record della sessione, nuova partita con un tasto, codice riordinato.",
+      "verifica": "La piattaforma gioca due partite di seguito: stato, record, azzeramento completo; poi controlla lo script come nella lezione sull'ordine.",
+      "parole": ["state", "refactoring"]
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "slug": "f07-azione-2d",
+  "titolo": "2D d'azione: movimento, fisica, livelli, nemici",
+  "descrizione": "Finora le collisioni le hai calcolate a mano. Ora usi la fisica di Godot: corpi, forme, aree, livelli a tessere, telecamera, proiettili, nemici che ti cercano. E impari il pezzo riutilizzabile, che scrivi una volta e monti su giocatore e nemici.",
+  "gioco": "«Il custode»: un'avventura vista dall'alto. Stanze con muri, chiavi e porte, nemici che pattugliano e inseguono, cuori, proiettili, livelli a tessere, punto di salvataggio.",
+  "prova": "«Arena», da un progetto vuoto: nemici in ondate sempre più dure, si mira e si spara, i nemici lasciano esperienza, tra un'ondata e l'altra si sceglie un potenziamento tra tre, fine partita con record salvato.",
+  "progetto": {"nome": "Il custode", "cartella": "il-custode"},
+  "provaProgetto": {"nome": "Arena", "cartella": "arena"},
+  "allaFine": [
+    "Fai muovere un personaggio con la fisica e lo fai scontrare con il mondo.",
+    "Costruisci un livello con le tessere, collisioni comprese.",
+    "Scrivi nemici che pattugliano, inseguono e aggirano gli ostacoli.",
+    "Costruisci componenti riutilizzabili (vita, danno) invece di riscrivere.",
+    "Misuri perché un gioco rallenta e lo sistemi."
+  ],
+  "sezioniDocumentazione": ["tutorials/physics/physics_introduction", "tutorials/physics/using_character_body_2d", "tutorials/physics/using_area_2d", "tutorials/physics/collision_shapes_2d", "tutorials/physics/rigid_body", "tutorials/physics/ray-casting", "tutorials/2d/2d_movement", "tutorials/2d/using_tilesets", "tutorials/2d/using_tilemaps", "tutorials/math/vector_math", "tutorials/navigation/navigation_introduction_2d", "tutorials/navigation/navigation_using_navigationagents", "tutorials/inputs", "tutorials/performance/general_optimization", "tutorials/scripting/debug/the_profiler"],
+  "lezioni": [
+    {
+      "slug": "vettori-per-il-movimento",
+      "titolo": "Vettori per il movimento",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["prevedi", "obiettivo"],
+      "impari": [
+        "Un vettore è una direzione con una lunghezza: sommare, sottrarre, moltiplicare",
+        "normalized(): perché in diagonale si va più veloci, e come si evita",
+        "direction_to(), angle(), move_toward()"
+      ],
+      "costruisci": "Funzioni di movimento provate una per una: direzione dai tasti, velocità uguale in ogni direzione, avvicinamento graduale a un punto.",
+      "verifica": "Per otto calcoli scrivi il risultato prima di eseguirli; poi la piattaforma chiama le tue funzioni con valori noti, diagonali comprese.",
+      "parole": ["Vector2", "normalized", "length", "direction_to", "move_toward", "Input.get_vector"]
+    },
+    {
+      "slug": "characterbody2d",
+      "titolo": "CharacterBody2D e move_and_slide()",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "I tipi di corpo fisico e a cosa serve ognuno",
+        "_physics_process e velocity; move_and_slide() ferma e fa scivolare",
+        "Accelerare e frenare invece di partire e fermarsi di colpo"
+      ],
+      "costruisci": "Il custode si muove in otto direzioni con accelerazione e frenata regolabili dall'Inspector.",
+      "verifica": "La piattaforma tiene premute le azioni e misura velocità massima, tempo per raggiungerla e spazio di frenata, diagonali comprese.",
+      "parole": ["CharacterBody2D", "move_and_slide", "velocity", "_physics_process", "CollisionShape2D"]
+    },
+    {
+      "slug": "muri-layer-e-maschere",
+      "titolo": "Muri, forme, layer e maschere",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "ripara", "obiettivo"],
+      "impari": [
+        "StaticBody2D e le forme di collisione",
+        "Layer e maschere: su quale strato sto e quali strati vedo",
+        "Rendere visibili le collisioni mentre il gioco gira"
+      ],
+      "costruisci": "Una stanza con muri e un tavolo; strati con un nome per giocatore, muri, nemici, oggetti. Poi ricevi un progetto in cui tre cose si attraversano e non dovrebbero. Infine imposti strati e maschere di sei oggetti perché valga una tabella data di chi urta chi.",
+      "verifica": "La piattaforma spinge il personaggio contro ogni ostacolo e controlla che si fermi; fa incontrare a due a due i sei oggetti e confronta chi si ferma e chi passa con la tabella.",
+      "parole": ["StaticBody2D", "collision layer", "collision mask", "CollisionShape2D"]
+    },
+    {
+      "slug": "tilemap",
+      "titolo": "Livelli a tessere: TileSet e TileMapLayer",
+      "tipo": "lezione",
+      "minuti": 90,
+      "esercizi": ["guidato", "obiettivo", "imita"],
+      "impari": [
+        "Creare un TileSet da un foglio di immagini e dare le collisioni alle tessere",
+        "Dipingere su più strati: pavimento, muri, decorazioni",
+        "I terreni: bordi e angoli che si sistemano da soli"
+      ],
+      "costruisci": "Il primo livello del gioco dipinto su tre strati con muri solidi. Poi riproduci una stanza partendo da una sua immagine.",
+      "verifica": "La piattaforma controlla strati, tessere con collisione e che il personaggio non attraversi i muri in venti punti; confronta la tua stanza con quella di riferimento cella per cella.",
+      "parole": ["TileSet", "TileMapLayer", "terrain", "physics layer", "atlas"]
+    },
+    {
+      "slug": "camera2d",
+      "titolo": "La telecamera",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "Camera2D che segue il personaggio",
+        "Limiti: non mostrare ciò che sta fuori dal livello",
+        "Ammorbidire il movimento"
+      ],
+      "costruisci": "La telecamera segue il custode con dolcezza e si ferma ai bordi del livello, calcolati dalla mappa. Come si ottiene la grandezza della mappa lo trovi nella documentazione.",
+      "verifica": "La piattaforma porta il personaggio ai quattro angoli e controlla cosa inquadra la telecamera.",
+      "parole": ["Camera2D", "limit", "position_smoothing", "get_used_rect"]
+    },
+    {
+      "slug": "area2d-oggetti",
+      "titolo": "Area2D: oggetti da raccogliere e zone",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Un'area si accorge di chi entra e di chi esce, senza fermarlo",
+        "Riconoscere chi è entrato",
+        "Un oggetto raccoglibile come scena con dati esportati"
+      ],
+      "costruisci": "Monete, cuori e chiavi da raccogliere; una zona che mostra un messaggio quando ci entri e lo toglie quando esci.",
+      "verifica": "La piattaforma fa camminare il personaggio sugli oggetti e nelle zone e controlla conteggi, oggetti spariti e messaggio; ci fa passare un nemico e controlla che non raccolga niente.",
+      "parole": ["Area2D", "body_entered", "body_exited", "monitoring"]
+    },
+    {
+      "slug": "porte-chiavi-interruttori",
+      "titolo": "Porte, chiavi e interruttori",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "estendi"],
+      "impari": [
+        "Oggetti del livello con un loro stato, che si parlano con i segnali",
+        "Collegare gli oggetti tra loro dall'Inspector",
+        "Un tasto «interagisci» che agisce su ciò che hai davanti"
+      ],
+      "costruisci": "Porte che chiedono una chiave, interruttori che ne aprono una o più, una leva che va tenuta abbassata. In un livello scritto da altri aggiungi una piastra a pressione senza toccare le porte.",
+      "verifica": "La piattaforma risolve piccole stanze di prova nell'ordine giusto e in quello sbagliato e controlla lo stato di ogni porta.",
+      "parole": ["signal", "@export", "Area2D", "AnimatableBody2D"]
+    },
+    {
+      "slug": "proiettili",
+      "titolo": "Proiettili e mira",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "ripara"],
+      "impari": [
+        "Creare una scena nel punto e nella direzione giusti",
+        "Mirare con il mouse o con una seconda leva",
+        "Tempo tra un colpo e l'altro, e togliere i proiettili che non servono più"
+      ],
+      "costruisci": "Il custode spara dove mira con un ritmo massimo; i proiettili spariscono contro i muri e dopo due secondi. Poi ricevi un progetto in cui i proiettili si accumulano all'infinito.",
+      "verifica": "La piattaforma mira in quattro direzioni e controlla direzione e velocità dei proiettili, il ritmo tenendo premuto e il numero di nodi dopo un minuto di fuoco.",
+      "parole": ["instantiate", "global_position", "look_at", "Timer", "queue_free"]
+    },
+    {
+      "slug": "componente-vita",
+      "titolo": "Vita e danno: un componente riutilizzabile",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "collauda", "estendi"],
+      "impari": [
+        "Un componente è un nodo con un solo compito, da montare su scene diverse",
+        "Chi colpisce e chi viene colpito: due aree con ruoli distinti",
+        "Tempo di intoccabilità dopo un colpo"
+      ],
+      "costruisci": "I componenti Health, Hitbox e Hurtbox, usati uguali da giocatore, nemici e casse che si rompono. Scrivi tu i controlli di Health.",
+      "verifica": "La piattaforma monta i componenti su una scena sua e controlla danno, cura, morte e intoccabilità; esegue i tuoi controlli contro una versione giusta e tre sbagliate.",
+      "parole": ["composition", "Area2D", "signal", "class_name"]
+    },
+    {
+      "slug": "nemici-pattuglia-e-inseguimento",
+      "titolo": "Nemici: pattugliare e inseguire",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Il comportamento di un nemico come stati: pattuglia, insegue, torna",
+        "Accorgersi del giocatore: distanza e linea di vista con RayCast2D",
+        "Punti di pattuglia messi nel livello"
+      ],
+      "costruisci": "Un nemico che fa la ronda tra punti scelti nel livello, insegue quando ti vede (non attraverso i muri) e torna al suo giro quando ti perde.",
+      "verifica": "La piattaforma mette il giocatore fuori vista, in vista e dietro un muro e controlla lo stato del nemico e dove si dirige.",
+      "parole": ["RayCast2D", "enum", "state machine", "Marker2D"]
+    },
+    {
+      "slug": "navigazione-2d",
+      "titolo": "Nemici che trovano la strada",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Perché andare dritti verso il giocatore non basta",
+        "La zona percorribile ricavata dalle tessere e NavigationAgent2D",
+        "Ricalcolare la strada ogni tanto, non a ogni fotogramma"
+      ],
+      "costruisci": "Il nemico raggiunge il giocatore girando attorno ai muri e passando dalle porte aperte.",
+      "verifica": "La piattaforma mette nemico e giocatore ai lati opposti di un muro con un solo varco e controlla che il nemico arrivi entro un tempo dato; chiude il varco e controlla che si fermi.",
+      "parole": ["NavigationAgent2D", "NavigationRegion2D", "navigation layer", "target_position"]
+    },
+    {
+      "slug": "rigidbody2d",
+      "titolo": "Oggetti spinti dalla fisica",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "ripara"],
+      "impari": [
+        "RigidBody2D: lo muove la fisica, tu gli dai solo spinte",
+        "Massa, attrito, rimbalzo",
+        "Quale corpo usare per cosa"
+      ],
+      "costruisci": "Casse che si spingono e che tengono abbassate le piastre a pressione; un barile che rotola. Poi ricevi una scena in cui sei oggetti hanno il tipo di corpo sbagliato (una porta che cade, una cassa che non si sposta, una piattaforma che si lascia spingere) e dai a ognuno quello giusto.",
+      "verifica": "La piattaforma spinge una cassa su una piastra e controlla che la porta si apra; nella scena ricevuta spinge, lascia cadere e urta ognuno dei sei oggetti e controlla come reagisce.",
+      "parole": ["RigidBody2D", "apply_impulse", "PhysicsMaterial", "mass"]
+    },
+    {
+      "slug": "riusare-il-guscio",
+      "titolo": "Riusare il proprio lavoro: menu e salvataggi in un gioco diverso",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "estendi"],
+      "impari": [
+        "Portare in un altro progetto ciò che hai già scritto: cosa è generico e cosa no",
+        "Salvare un gioco d'azione: posizione, inventario, porte aperte, oggetti presi",
+        "Dare a ogni oggetto del livello un nome che resta uguale tra le partite"
+      ],
+      "costruisci": "Menu, impostazioni e gestione delle scene della visual novel portati nel «Custode»; un punto di salvataggio che registra tutto lo stato del livello.",
+      "verifica": "La piattaforma gioca, salva, continua, ricarica e confronta posizione, inventario e stato di ogni porta e oggetto.",
+      "parole": ["Autoload", "JSON", "user://", "persistent id"]
+    },
+    {
+      "slug": "profilare",
+      "titolo": "Quando il gioco rallenta: misurare",
+      "tipo": "metodo",
+      "minuti": 45,
+      "esercizi": ["ottimizza"],
+      "impari": [
+        "Misurare prima di cambiare: i contatori e il profiler",
+        "Le cause più comuni: troppo lavoro a ogni fotogramma, troppi nodi, ricerche ripetute",
+        "Fare meno spesso, fare su meno oggetti, non rifare"
+      ],
+      "costruisci": "Ricevi un'arena con cinquecento nemici che va a scatti e la porta a girare fluida senza cambiarne il comportamento.",
+      "verifica": "La piattaforma misura il tempo di calcolo di mille fotogrammi prima e dopo (deve scendere sotto una soglia) e rifà i controlli di comportamento.",
+      "parole": ["profiler", "monitors", "optimization", "Performance"]
+    },
+    {
+      "slug": "progetto-arena-1",
+      "titolo": "Progetto «Arena» – tappa 1: muoversi e sparare",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Impostare da soli scene, strati di collisione e componenti di un gioco d'azione"],
+      "costruisci": "Arena chiusa, giocatore che si muove, mira e spara, componenti di vita e danno.",
+      "verifica": "La piattaforma controlla movimento, muri, direzione e ritmo dei colpi, danno ricevuto.",
+      "parole": ["CharacterBody2D", "collision layer", "composition"]
+    },
+    {
+      "slug": "progetto-arena-2",
+      "titolo": "Progetto «Arena» – tappa 2: nemici e ondate",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Descrivere nemici e ondate come dati"],
+      "costruisci": "Tre tipi di nemico descritti come Resource, ondate descritte come dati, nemici che nascono ai bordi e inseguono.",
+      "verifica": "La piattaforma sostituisce i dati delle ondate con i suoi e controlla quanti e quali nemici nascono e come si comportano.",
+      "parole": ["Resource", "Timer", "instantiate", "state machine"]
+    },
+    {
+      "slug": "progetto-arena-3",
+      "titolo": "Progetto «Arena» – tappa 3: esperienza e potenziamenti",
+      "tipo": "progetto",
+      "minuti": 105,
+      "esercizi": ["da-zero"],
+      "impari": ["Progettare un sistema di potenziamenti che si sommano senza una catena di if"],
+      "costruisci": "I nemici lasciano esperienza; a fine ondata il gioco si ferma e propone tre potenziamenti a caso tra almeno otto; gli effetti si sommano.",
+      "verifica": "La piattaforma raccoglie esperienza, sceglie potenziamenti noti e misura gli effetti (ritmo, danno, velocità), anche presi due volte.",
+      "parole": ["Resource", "paused", "Control", "randomize"]
+    },
+    {
+      "slug": "progetto-arena-4",
+      "titolo": "Progetto «Arena» – tappa 4: gioco completo",
+      "tipo": "progetto",
+      "minuti": 75,
+      "esercizi": ["da-zero"],
+      "impari": ["Chiudere il giro: menu, fine partita, record, suoni, prestazioni"],
+      "costruisci": "Menu, pausa, fine partita con record salvato, suoni e musica, cento nemici insieme senza scatti, esportazione per Windows.",
+      "verifica": "La piattaforma gioca una partita fino alla fine, controlla record e impostazioni salvate, misura il tempo di calcolo con cento nemici ed esegue il gioco esportato.",
+      "parole": ["Autoload", "ConfigFile", "export", "profiler"]
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "slug": "f04-programmare-meglio",
+  "titolo": "Programmare meglio: classi, dati, file",
+  "descrizione": "Prima del primo gioco grande servono strumenti più forti: classi tue, dati salvati come file, attese, funzioni passate come valori. E due abitudini da professionista: tenere la storia del progetto con Git e trovare un errore con metodo.",
+  "gioco": "«Quiz» cresce da dentro: le domande diventano file di dati, i record si salvano su disco, il codice si divide in classi con un compito ciascuna.",
+  "prova": "«Avventura testuale», da un progetto vuoto: stanze, uscite e oggetti descritti in un file JSON; ci si muove e si raccolgono oggetti con dei pulsanti; alcune uscite chiedono un oggetto; la partita si salva e si ricarica. Cambiando il file cambia l'avventura, senza toccare il codice.",
+  "progetto": {"nome": "Quiz", "cartella": "quiz", "continuaDa": "prova:f03-interfaccia"},
+  "provaProgetto": {"nome": "Avventura testuale", "cartella": "avventura-testuale"},
+  "allaFine": [
+    "Progetti le classi di un piccolo sistema e decidi chi fa cosa.",
+    "Tieni i dati del gioco fuori dal codice, in Resource e in file JSON.",
+    "Salvi e ricarichi una partita.",
+    "Usi Git ogni giorno e trovi un errore di logica con il debugger."
+  ],
+  "sezioniDocumentazione": ["tutorials/scripting/gdscript/gdscript_basics", "tutorials/scripting/gdscript/static_typing", "tutorials/scripting/resources", "tutorials/io/runtime_file_loading_and_saving", "tutorials/io/data_paths", "tutorials/io/saving_games", "tutorials/best_practices/what_are_godot_classes", "tutorials/best_practices/data_preferences", "tutorials/best_practices/version_control_systems", "tutorials/scripting/debug"],
+  "lezioni": [
+    {
+      "slug": "classi-fatte-bene",
+      "titolo": "Classi fatte bene",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "prevedi"],
+      "impari": [
+        "Una classe che non è un nodo: RefCounted, _init() con parametri",
+        "Proprietà con controllo sui valori (set e get) e funzioni statiche",
+        "Cosa rendere usabile da fuori e cosa tenere per sé"
+      ],
+      "costruisci": "Le classi Question e QuizSession: la sessione sa qual è la domanda corrente, se una risposta è giusta, quanto vale il punteggio. L'interfaccia non fa più calcoli.",
+      "verifica": "La piattaforma usa le classi senza interfaccia: crea una sessione con domande sue, risponde e confronta punteggio e stato, compresi i casi sbagliati (risposta fuori elenco, sessione finita).",
+      "parole": ["class", "RefCounted", "_init", "setter", "getter", "static func"]
+    },
+    {
+      "slug": "ereditarieta-e-composizione",
+      "titolo": "Ereditarietà e composizione",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "estendi", "prevedi"],
+      "impari": [
+        "Una classe che estende una classe tua: ridefinire un metodo, chiamare super()",
+        "is e as: chiedere di che tipo è un oggetto",
+        "Quando conviene comporre (un oggetto che ne contiene altri) invece di ereditare"
+      ],
+      "costruisci": "Tre tipi di domanda (scelta singola, vero o falso, numero da indovinare con tolleranza) che il quiz tratta allo stesso modo.",
+      "verifica": "La piattaforma crea domande dei tre tipi e chiama gli stessi metodi su tutte; aggiunge un quarto tipo suo e controlla che il quiz lo accetti senza modifiche.",
+      "parole": ["extends", "super", "override", "is", "as", "composition"]
+    },
+    {
+      "slug": "resource",
+      "titolo": "Resource: i dati come file",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "ripara"],
+      "impari": [
+        "Una Resource tua, con proprietà esportate, salvata come file .tres",
+        "Creare e modificare i dati dall'Inspector",
+        "L'errore tipico: due oggetti che condividono la stessa Resource senza saperlo"
+      ],
+      "costruisci": "Ogni argomento del quiz è una Resource con il suo elenco di domande; il menu elenca gli argomenti trovati nella cartella.",
+      "verifica": "La piattaforma aggiunge un file di argomento suo nella cartella e controlla che compaia nel menu e si possa giocare.",
+      "parole": ["Resource", ".tres", "@export", "load", "duplicate"]
+    },
+    {
+      "slug": "file-e-json",
+      "titolo": "File e JSON: leggere e scrivere",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "ripara"],
+      "impari": [
+        "res:// e user://: dove stanno i file del gioco e dove quelli del giocatore",
+        "FileAccess e JSON: scrivere una struttura di dati e rileggerla",
+        "Non fidarsi di un file: mancante, vuoto, rovinato"
+      ],
+      "costruisci": "I record per argomento si salvano su disco e tornano alla riapertura; un file rovinato non blocca il gioco.",
+      "verifica": "La piattaforma gioca, chiude, riapre e legge i record; poi sostituisce il file con uno mancante, uno vuoto e uno rovinato e controlla che il gioco parta lo stesso.",
+      "parole": ["FileAccess", "JSON", "user://", "stringify", "parse"]
+    },
+    {
+      "slug": "await-e-coroutine",
+      "titolo": "await: aspettare senza fermare il gioco",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["prevedi", "riordina", "obiettivo"],
+      "impari": [
+        "Una funzione che si ferma a metà e riprende: aspettare un segnale, un tempo, un'altra funzione",
+        "Scrivere una sequenza di passi dall'alto in basso",
+        "Cosa succede se, mentre aspetti, l'oggetto viene eliminato o la scena cambia"
+      ],
+      "costruisci": "La sequenza tra una domanda e l'altra (mostra l'esito, aspetta, sfuma, cambia domanda, riappare) scritta come una sola funzione.",
+      "verifica": "La piattaforma segue la sequenza nel tempo, e torna al menu a metà sequenza: non deve comparire nessun errore.",
+      "parole": ["await", "coroutine", "signal", "is_instance_valid"]
+    },
+    {
+      "slug": "callable-e-lambda",
+      "titolo": "Funzioni come valori: Callable e lambda",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["prevedi", "obiettivo"],
+      "impari": [
+        "Mettere una funzione in una variabile e passarla a un'altra funzione",
+        "Filtrare, trasformare e ordinare un Array: filter, map, sort_custom, any, all",
+        "Collegare un segnale passando dati in più con bind"
+      ],
+      "costruisci": "Filtri del quiz (solo le domande difficili, solo quelle sbagliate l'ultima volta) e classifica dei record ordinata; i pulsanti delle risposte collegati tutti alla stessa funzione.",
+      "verifica": "La piattaforma chiama le funzioni di filtro e di ordinamento con dati suoi e confronta il risultato.",
+      "parole": ["Callable", "lambda", "filter", "map", "sort_custom", "bind"]
+    },
+    {
+      "slug": "scegliere-le-strutture-dati",
+      "titolo": "Scegliere come tenere i dati",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "riordina"],
+      "impari": [
+        "Array, Dictionary, classe o Resource: cosa cambia quando leggi, cerchi, salvi",
+        "Dati dentro altri dati, e come descrivere un collegamento (questa stanza porta a quella)",
+        "Riconoscere quando una struttura è sbagliata: troppi if, troppe ricerche"
+      ],
+      "costruisci": "Due modelli di dati progettati da te e messi alla prova: un inventario con quantità e limite di posti, e una mappa di stanze collegate.",
+      "verifica": "La piattaforma usa i due modelli attraverso le funzioni richieste (aggiungi, togli, conta, «da qui dove posso andare») con casi normali e casi limite.",
+      "parole": ["Array", "Dictionary", "Resource", "data structures"]
+    },
+    {
+      "slug": "collaudare-il-proprio-codice",
+      "titolo": "Collaudare il proprio codice: scrivere i controlli",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["guidato", "collauda"],
+      "impari": [
+        "Un controllo automatico: uno script che usa il tuo codice e dice se il risultato è quello atteso",
+        "Scegliere i casi: quello normale, i bordi, i dati sbagliati",
+        "Un buon controllo fallisce quando il codice è sbagliato: come accorgersi di un controllo che passa sempre"
+      ],
+      "costruisci": "I controlli per l'inventario e per la mappa di stanze della lezione precedente, lanciabili con un comando.",
+      "verifica": "La piattaforma esegue i tuoi controlli contro la versione giusta di ogni classe e contro quattro versioni con un errore ciascuna: devono promuovere la giusta e bocciare tutte le altre.",
+      "parole": ["assert", "testing", "edge cases", "EditorScript"]
+    },
+    {
+      "slug": "git",
+      "titolo": "Git: la storia del progetto",
+      "tipo": "metodo",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Cosa salva Git e perché serve anche quando lavori da solo",
+        "Il ciclo di ogni giorno: guardare cosa è cambiato, salvare un passo con un messaggio, tornare indietro",
+        "Quali file di un progetto Godot non vanno salvati (.gitignore)"
+      ],
+      "costruisci": "Il progetto del quiz entra in Git: file esclusi impostati, almeno cinque passi con messaggi chiari, una modifica sbagliata fatta apposta e poi annullata.",
+      "verifica": "La piattaforma legge la storia del progetto: cartella .godot esclusa, numero di passi, messaggi non vuoti e non tutti uguali, stato finale pulito.",
+      "parole": ["Git", "commit", ".gitignore", "version control", "restore"]
+    },
+    {
+      "slug": "trovare-un-errore-con-metodo",
+      "titolo": "Trovare un errore con metodo",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["ripara"],
+      "impari": [
+        "Il metodo: far succedere l'errore a comando, restringere dove può essere, fare un'ipotesi, verificarla",
+        "Punti di interruzione, esecuzione passo passo, valori delle variabili, albero della scena mentre il gioco gira",
+        "assert() e push_error(): far parlare il programma quando qualcosa non torna"
+      ],
+      "costruisci": "Ricevi un quiz che parte senza errori ma sbaglia in quattro modi (punteggio, ordine, salvataggio, una domanda saltata) e lo correggi.",
+      "verifica": "La piattaforma gioca partite con risposte note e confronta punteggi, ordine e file salvato con quelli giusti.",
+      "parole": ["Debugger", "breakpoint", "assert", "push_error", "remote scene tree"]
+    },
+    {
+      "slug": "progetto-avventura-1",
+      "titolo": "Progetto «Avventura testuale» – tappa 1: il mondo come dati",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero", "dati"],
+      "impari": ["Progettare un formato di dati e il codice che lo legge e lo controlla"],
+      "costruisci": "Il file JSON dell'avventura (stanze, uscite, oggetti) e le classi che lo caricano; un file sbagliato produce un messaggio chiaro invece di un blocco.",
+      "verifica": "La piattaforma carica un'avventura sua e interroga il mondo; poi dà file con errori (uscita verso una stanza che non esiste, campo mancante) e controlla che vengano segnalati.",
+      "parole": ["JSON", "class", "Dictionary", "validation"]
+    },
+    {
+      "slug": "progetto-avventura-2",
+      "titolo": "Progetto «Avventura testuale» – tappa 2: giocare",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Collegare un modello di dati a un'interfaccia generata dai dati"],
+      "costruisci": "Descrizione della stanza, pulsanti per le uscite e per gli oggetti creati dai dati, inventario, uscite che chiedono un oggetto, una stanza finale.",
+      "verifica": "La piattaforma percorre l'avventura cliccando i pulsanti: stanza corrente, inventario, uscita bloccata e poi aperta, arrivo alla fine.",
+      "parole": ["Button", "signal", "RichTextLabel", "bind"]
+    },
+    {
+      "slug": "progetto-avventura-3",
+      "titolo": "Progetto «Avventura testuale» – tappa 3: salvare",
+      "tipo": "progetto",
+      "minuti": 60,
+      "esercizi": ["da-zero"],
+      "impari": ["Decidere qual è lo stato di una partita e salvarlo tutto"],
+      "costruisci": "Salva e carica in qualsiasi momento; progetto in Git con la storia delle tre tappe.",
+      "verifica": "La piattaforma salva a metà, continua, ricarica e controlla che stanza, inventario e uscite aperte siano quelli del salvataggio; legge la storia in Git.",
+      "parole": ["FileAccess", "JSON", "user://", "Git"]
+    }
+  ]
+}

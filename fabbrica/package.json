@@ -1,0 +1,16 @@
+{
+  "name": "@htd/fabbrica",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Il generatore delle lezioni: gira su GitHub Actions, scrive con i modelli gratuiti e verifica in Godot.",
+  "type": "module",
+  "scripts": {
+    "giro": "tsx src/giro.ts",
+    "compila": "esbuild src/giro.ts src/prova-scrittore.ts --bundle --platform=node --target=node24 --format=esm --outdir=dist --out-extension:.js=.mjs --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\""
+  },
+  "dependencies": {
+    "@htd/condiviso": "2.0.0",
+    "undici": "7.29.1",
+    "zod": "4.6.5"
+  }
+}

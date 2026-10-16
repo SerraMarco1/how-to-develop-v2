@@ -1,0 +1,246 @@
+{
+  "slug": "f09-3d-basi",
+  "titolo": "3D: le basi",
+  "descrizione": "Una dimensione in più cambia come si pensa: assi, rotazioni, luci, telecamere. Tutto ciò che sai di nodi, segnali, fisica e stati vale ancora. Qui impari lo spazio 3D, a dare forma e luce a una scena, a far muovere un personaggio e a seguirlo con la telecamera, a importare modelli e animazioni fatti da altri.",
+  "gioco": "«L'isola»: un personaggio in terza persona cammina, corre e salta su un'isola costruita a blocchi, raccoglie cristalli, apre passaggi, spinge oggetti. Con modelli e animazioni importati.",
+  "prova": "«Percorso a ostacoli», da un progetto vuoto: un percorso 3D in terza persona con piattaforme mobili, oggetti da raccogliere, punti di ripartenza, tempo, schermata d'arrivo. Modelli trovati da te.",
+  "progetto": {"nome": "L'isola", "cartella": "l-isola"},
+  "provaProgetto": {"nome": "Percorso a ostacoli", "cartella": "percorso-a-ostacoli"},
+  "allaFine": [
+    "Ti orienti nello spazio 3D: assi, posizioni, rotazioni, locale e globale.",
+    "Costruisci e illumini una scena.",
+    "Scrivi un personaggio in terza persona e uno in prima, con la loro telecamera.",
+    "Importi un modello con le sue animazioni e lo fai funzionare nel gioco."
+  ],
+  "sezioniDocumentazione": ["tutorials/3d/introduction_to_3d", "tutorials/3d/using_transforms", "tutorials/math/vector_math", "tutorials/math/matrices_and_transforms", "tutorials/3d/standard_material_3d", "tutorials/3d/lights_and_shadows", "tutorials/3d/environment_and_post_processing", "tutorials/3d/csg_tools", "tutorials/3d/using_gridmaps", "tutorials/physics/collision_shapes_3d", "tutorials/physics/using_character_body_2d", "tutorials/physics/ray-casting", "tutorials/physics/rigid_body", "tutorials/3d/spring_arm", "tutorials/assets_pipeline/importing_3d_scenes", "tutorials/animation/animation_tree", "getting_started/first_3d_game", "tutorials/inputs/mouse_and_input_coordinates"],
+  "lezioni": [
+    {
+      "slug": "spazio-3d",
+      "titolo": "Lo spazio 3D",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "imita", "prevedi"],
+      "impari": [
+        "Muoversi nell'editor 3D; i tre assi, con Y verso l'alto e l'avanti verso −Z",
+        "Node3D: posizione, rotazione, scala; locale e globale",
+        "Le unità sono metri: dare alle cose dimensioni sensate"
+      ],
+      "costruisci": "Una piccola scena di blocchi ricostruita da una descrizione con misure e posizioni. Per otto nodi figli scrivi la posizione globale prima di leggerla.",
+      "verifica": "La piattaforma legge posizioni, rotazioni e scale e le confronta con quelle di riferimento entro una tolleranza.",
+      "parole": ["Node3D", "Transform3D", "global_position", "rotation", "gizmo"]
+    },
+    {
+      "slug": "vettori-e-rotazioni-3d",
+      "titolo": "Vettori e rotazioni in 3D",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["prevedi", "obiettivo"],
+      "impari": [
+        "Vector3 e le direzioni proprie di un oggetto: il suo avanti, il suo destra, il suo alto",
+        "Ruotare attorno a un asse, guardare verso un punto, gradi e radianti",
+        "Girarsi con gradualità invece che di scatto"
+      ],
+      "costruisci": "Una torretta che si gira verso un bersaglio a velocità limitata; una freccia che indica sempre l'uscita; un oggetto che avanza nel verso in cui guarda.",
+      "verifica": "La piattaforma sposta il bersaglio e misura l'angolo della torretta nel tempo; per sei situazioni scrivi il vettore risultante prima di eseguire.",
+      "parole": ["Vector3", "Basis", "look_at", "rotate_y", "lerp_angle", "deg_to_rad"]
+    },
+    {
+      "slug": "mesh-e-materiali",
+      "titolo": "Mesh e materiali",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "imita"],
+      "impari": [
+        "MeshInstance3D e le forme di base",
+        "StandardMaterial3D: colore, ruvidità, metallo, luce propria, immagini",
+        "Un materiale condiviso tra più oggetti, o uno per oggetto"
+      ],
+      "costruisci": "Cinque materiali (legno opaco, metallo lucido, plastica, vetro, cristallo luminoso) applicati agli oggetti dell'isola secondo una tabella.",
+      "verifica": "La piattaforma legge le proprietà di ogni materiale e a quali oggetti è applicato.",
+      "parole": ["MeshInstance3D", "StandardMaterial3D", "albedo", "roughness", "metallic", "emission"]
+    },
+    {
+      "slug": "luci-e-ambiente",
+      "titolo": "Luci, ombre e ambiente",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Luce direzionale, puntiforme, a cono; quando accendere le ombre",
+        "WorldEnvironment: cielo, luce ambientale, nebbia, bagliore",
+        "La stessa scena in atmosfere diverse cambiando solo luce e ambiente"
+      ],
+      "costruisci": "L'isola di giorno, al tramonto e di notte con una lanterna: tre impostazioni di luce e ambiente che si scambiano con un tasto.",
+      "verifica": "La piattaforma legge luci e ambiente delle tre impostazioni (tipo, colore, energia, ombre, cielo, nebbia) e controlla lo scambio.",
+      "parole": ["DirectionalLight3D", "OmniLight3D", "SpotLight3D", "WorldEnvironment", "Environment", "Sky"]
+    },
+    {
+      "slug": "camera3d",
+      "titolo": "La telecamera 3D",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "Campo visivo, distanza minima e massima",
+        "Più telecamere e quale è attiva",
+        "Dal mondo allo schermo: dove appare un punto 3D"
+      ],
+      "costruisci": "Tre inquadrature fisse dell'isola che si alternano; un'etichetta dell'interfaccia che resta sopra un cristallo mentre la telecamera si muove. Il metodo che serve lo trovi nella documentazione.",
+      "verifica": "La piattaforma cambia telecamera e controlla quale è attiva; muove la telecamera e controlla che l'etichetta segua il cristallo.",
+      "parole": ["Camera3D", "fov", "current", "unproject_position"]
+    },
+    {
+      "slug": "costruire-un-livello-3d",
+      "titolo": "Costruire un livello in fretta",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "imita"],
+      "impari": [
+        "CSG: abbozzare un livello sommando e sottraendo forme, con le collisioni",
+        "GridMap: livelli a blocchi con una libreria di pezzi",
+        "Prima la forma grezza e giocabile, poi l'aspetto"
+      ],
+      "costruisci": "L'isola abbozzata con le forme CSG (colline, un ponte, una grotta scavata) e un sotterraneo fatto con GridMap da una pianta data.",
+      "verifica": "La piattaforma controlla i nodi, le collisioni attive e le celle del GridMap rispetto alla pianta; fa cadere un corpo di prova in dieci punti e controlla che si fermi.",
+      "parole": ["CSGBox3D", "CSGCombiner3D", "GridMap", "MeshLibrary", "use_collision"]
+    },
+    {
+      "slug": "collisioni-3d",
+      "titolo": "Collisioni in 3D",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "ripara"],
+      "impari": [
+        "Corpi e forme in 3D: cosa cambia e cosa no rispetto al 2D",
+        "Ricavare una forma di collisione da un modello: semplice o fedele",
+        "Layer e maschere, con gli stessi nomi usati nel 2D"
+      ],
+      "costruisci": "Collisioni per gli oggetti dell'isola, semplici dove basta e fedeli dove serve. Poi ricevi una scena in cui si cade attraverso il pavimento in tre punti.",
+      "verifica": "La piattaforma fa cadere e scorrere un corpo di prova in venti punti e controlla dove si ferma.",
+      "parole": ["StaticBody3D", "CollisionShape3D", "ConvexPolygonShape3D", "ConcavePolygonShape3D", "collision layer"]
+    },
+    {
+      "slug": "characterbody3d",
+      "titolo": "Un personaggio in terza persona",
+      "tipo": "lezione",
+      "minuti": 90,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "CharacterBody3D: gravità, salto, move_and_slide() in tre dimensioni",
+        "Muoversi rispetto alla telecamera, non rispetto al mondo",
+        "Girare il personaggio verso dove sta andando"
+      ],
+      "costruisci": "Il personaggio cammina, corre e salta; «avanti» è sempre il verso in cui guarda la telecamera; il corpo si gira con gradualità.",
+      "verifica": "La piattaforma tiene premuto «avanti» con la telecamera in quattro orientamenti e misura la direzione dello spostamento; misura salto e rotazione.",
+      "parole": ["CharacterBody3D", "move_and_slide", "is_on_floor", "Basis", "lerp_angle"]
+    },
+    {
+      "slug": "telecamera-terza-persona",
+      "titolo": "Telecamera in terza persona",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Un braccio che tiene la telecamera a distanza e la avvicina se c'è un muro",
+        "Girare con il mouse: catturare il puntatore, leggere il movimento",
+        "Limiti verso l'alto e verso il basso; la stessa cosa con il gamepad"
+      ],
+      "costruisci": "La telecamera gira attorno al personaggio con mouse o leva destra, non entra nei muri e non si ribalta; Esc libera il puntatore.",
+      "verifica": "La piattaforma simula movimenti del mouse e legge gli angoli; mette un muro dietro al personaggio e controlla che la telecamera si avvicini.",
+      "parole": ["SpringArm3D", "InputEventMouseMotion", "mouse_mode", "clamp"]
+    },
+    {
+      "slug": "prima-persona-e-interazione",
+      "titolo": "Prima persona e interazione con lo sguardo",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["obiettivo", "estendi"],
+      "impari": [
+        "Lo stesso personaggio visto dai suoi occhi",
+        "Un raggio dal centro dello schermo: cosa sto guardando",
+        "Oggetti che rispondono allo stesso comando, ognuno a modo suo"
+      ],
+      "costruisci": "Una variante in prima persona; guardando un oggetto compare «Premi E»; leve, porte e cartelli rispondono ciascuno a modo suo. In un progetto scritto da altri aggiungi un oggetto nuovo che risponde allo stesso comando.",
+      "verifica": "La piattaforma orienta lo sguardo verso oggetti vicini, lontani e coperti da un muro, e controlla scritta ed effetto dell'interazione.",
+      "parole": ["RayCast3D", "Camera3D", "has_method", "groups", "collision mask"]
+    },
+    {
+      "slug": "importare-modelli-3d",
+      "titolo": "Importare modelli 3D",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "ripara"],
+      "impari": [
+        "Dove trovare modelli gratuiti e in quale formato prenderli (glTF)",
+        "Le impostazioni di importazione: scala, materiali, collisioni generate",
+        "Usare un modello importato senza modificare l'originale"
+      ],
+      "costruisci": "Alberi, rocce e un ponte presi da un pacchetto gratuito, alla scala giusta e con collisioni. Poi ricevi tre modelli importati male (enorme, coricato, senza colori) e li sistemi.",
+      "verifica": "La piattaforma misura le dimensioni dei modelli nella scena, controlla orientamento, materiali e collisioni, e il registro degli asset.",
+      "parole": ["glTF", "import", "inherited scene", "Advanced Import Settings", "-col"]
+    },
+    {
+      "slug": "animazioni-3d",
+      "titolo": "Animazioni 3D importate",
+      "tipo": "lezione",
+      "minuti": 90,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Le animazioni che arrivano con un modello, e come farle ripetere",
+        "AnimationTree: da fermo a camminata a corsa secondo la velocità",
+        "Animazioni che si sovrappongono al movimento: salto, caduta, atterraggio"
+      ],
+      "costruisci": "Il personaggio dell'isola con un modello animato: fermo, camminata e corsa che sfumano l'una nell'altra, salto e caduta.",
+      "verifica": "La piattaforma fa muovere il personaggio a velocità diverse e legge il valore di mescolamento e l'animazione in corso; controlla salto e caduta.",
+      "parole": ["AnimationPlayer", "AnimationTree", "BlendSpace1D", "AnimationNodeStateMachine", "Skeleton3D"]
+    },
+    {
+      "slug": "oggetti-fisici-3d",
+      "titolo": "Oggetti fisici e zone in 3D",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "RigidBody3D: casse da spingere, oggetti che rotolano",
+        "Area3D: raccogliere, zone, piastre a pressione",
+        "Riusare in 3D i componenti scritti per il 2D: cosa passa uguale"
+      ],
+      "costruisci": "Cristalli da raccogliere, casse da spingere su piastre che aprono un passaggio, una zona d'acqua in cui si va più piano.",
+      "verifica": "La piattaforma raccoglie i cristalli, spinge una cassa su una piastra e controlla il passaggio, attraversa la zona d'acqua e misura la velocità.",
+      "parole": ["RigidBody3D", "Area3D", "body_entered", "apply_central_impulse"]
+    },
+    {
+      "slug": "progetto-percorso-1",
+      "titolo": "Progetto «Percorso a ostacoli» – tappa 1: personaggio e telecamera",
+      "tipo": "progetto",
+      "minuti": 105,
+      "esercizi": ["da-zero"],
+      "impari": ["Mettere in piedi da soli un progetto 3D con personaggio animato e telecamera"],
+      "costruisci": "Personaggio in terza persona con modello e animazioni trovati da te, telecamera che gira e non entra nei muri.",
+      "verifica": "La piattaforma misura movimento rispetto alla telecamera, salto, animazioni, e controlla il registro degli asset.",
+      "parole": ["CharacterBody3D", "SpringArm3D", "AnimationTree"]
+    },
+    {
+      "slug": "progetto-percorso-2",
+      "titolo": "Progetto «Percorso a ostacoli» – tappa 2: il percorso",
+      "tipo": "progetto",
+      "minuti": 105,
+      "esercizi": ["da-zero"],
+      "impari": ["Costruire un livello 3D giocabile e illuminarlo"],
+      "costruisci": "Il percorso: piattaforme ferme e mobili, ostacoli che girano, vuoto, punti di ripartenza, oggetti da raccogliere, luce e ambiente.",
+      "verifica": "La piattaforma controlla gli elementi chiesti, fa cadere il personaggio nel vuoto e controlla la ripartenza, sale su una piattaforma mobile.",
+      "parole": ["AnimatableBody3D", "Area3D", "WorldEnvironment"]
+    },
+    {
+      "slug": "progetto-percorso-3",
+      "titolo": "Progetto «Percorso a ostacoli» – tappa 3: gioco completo",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Chiudere un gioco 3D con ciò che hai già: interfaccia, menu, salvataggi"],
+      "costruisci": "Tempo e oggetti raccolti sullo schermo, schermata d'arrivo con il miglior tempo salvato, menu, pausa, esportazione.",
+      "verifica": "La piattaforma porta il personaggio al traguardo lungo un tracciato noto, controlla tempo, record salvato ed esegue il gioco esportato.",
+      "parole": ["CanvasLayer", "ConfigFile", "export"]
+    }
+  ]
+}

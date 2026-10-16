@@ -1,0 +1,62 @@
+{
+  "slug": "f00-orientamento",
+  "titolo": "Orientamento",
+  "descrizione": "Installi Godot, impari a muoverti nell'editor costruendo una scena, e impari subito la cosa più utile di tutto il corso: trovare da solo una risposta nella documentazione.",
+  "gioco": "Nessun gioco ancora: una scena che parte.",
+  "prova": "",
+  "progetto": {"nome": "Prima scena", "cartella": "prima-scena"},
+  "allaFine": [
+    "Crei, apri, rinomini e togli un progetto senza pensarci.",
+    "Costruisci una scena da una descrizione scritta, la salvi e la esegui.",
+    "Cerchi una classe nell'aiuto integrato e trovi la proprietà che ti serve."
+  ],
+  "sezioniDocumentazione": ["getting_started/introduction", "getting_started/step_by_step/nodes_and_scenes", "tutorials/editor/project_manager", "tutorials/editor/index", "tutorials/editor/inspector_dock", "tutorials/scripting/how_to_read_the_godot_api"],
+  "lezioni": [
+    {
+      "slug": "installare-godot-e-gestire-i-progetti",
+      "titolo": "Installare Godot e gestire i progetti",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["guidato", "obiettivo"],
+      "dove": "a-parte",
+      "impari": [
+        "Scaricare l'edizione giusta di Godot 4.7 (standard, non .NET) e avviarla",
+        "Creare un progetto, capire cosa c'è nella sua cartella (project.godot, .godot, res://)",
+        "Rinominare un progetto, toglierlo dall'elenco senza cancellarlo, reimportarlo"
+      ],
+      "costruisci": "Due progetti: uno resta nell'elenco con un nome nuovo, l'altro viene tolto dall'elenco ma resta sul disco e poi viene reimportato.",
+      "verifica": "La piattaforma legge l'elenco dei progetti di Godot e le cartelle sul disco: nome, presenza nell'elenco, file project.godot.",
+      "parole": ["Project Manager", "project.godot", "res://"]
+    },
+    {
+      "slug": "l-editor-costruendo-una-scena",
+      "titolo": "L'editor, costruendo una scena",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "A cosa servono le aree 2D, 3D e Script e i pannelli Scene, FileSystem, Inspector e Output",
+        "Aggiungere nodi, spostarli, cambiare le loro proprietà nell'Inspector",
+        "Salvare una scena, impostarla come principale ed eseguirla (F5, F6)"
+      ],
+      "costruisci": "Una scena ricostruita da una descrizione scritta: un Node2D con tre Sprite2D e un Label messi in posizioni, scale e colori precisi.",
+      "verifica": "La piattaforma apre la scena: tipi dei nodi, nomi, posizioni, scala, colore, testo; poi esegue il progetto e controlla che parta senza errori.",
+      "parole": ["Node2D", "Sprite2D", "Label", "Inspector", "main scene"]
+    },
+    {
+      "slug": "trovare-le-risposte-nella-documentazione",
+      "titolo": "Trovare le risposte da soli: l'aiuto integrato",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["trova"],
+      "impari": [
+        "Cercare una classe con F1 e leggerne la pagina: proprietà, metodi, segnali",
+        "Risalire la catena delle classi: una proprietà può stare in una classe madre",
+        "Passare dalla descrizione di una proprietà al suo campo nell'Inspector"
+      ],
+      "costruisci": "Quattro modifiche alla scena della lezione precedente di cui la lezione non dice il nome: specchiare uno sprite, nasconderne un altro, ruotare un nodo di 45 gradi, mettere un testo tutto in maiuscolo. I nomi delle proprietà vanno trovati.",
+      "verifica": "La piattaforma legge le quattro proprietà nella scena salvata.",
+      "parole": ["class reference", "CanvasItem", "Node2D", "Label", "Sprite2D"]
+    }
+  ]
+}

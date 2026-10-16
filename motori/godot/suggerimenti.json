@@ -1,0 +1,57 @@
+{
+  "nota": "Errori che i modelli AI ripetono spesso nelle soluzioni e negli script di verifica. Quando il messaggio di Godot corrisponde a `se` (espressione regolare), al modello che deve correggere viene aggiunto il suggerimento `allora`. Si allunga man mano che si scoprono nuovi errori ricorrenti (vedi data/diagnostica).",
+  "suggerimenti": [
+    {
+      "se": "property or key 'font_size' on a base object of type '(Label|Button|RichTextLabel|LineEdit)'",
+      "allora": "I nodi di interfaccia non hanno una proprietà `font_size`: la dimensione del testo è una sovrascrittura del tema. Per leggerla usa `nodo.get_theme_font_size(\"font_size\")`; per impostarla dal codice `nodo.add_theme_font_size_override(\"font_size\", 48)`; in un file `.tscn` la riga è `theme_override_font_sizes/font_size = 48`."
+    },
+    {
+      "se": "Too few arguments for \"get_vector\\(\\)\"",
+      "allora": "`Input.get_vector` vuole QUATTRO azioni, nell'ordine sinistra, destra, su, giù: `Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")`, e tutte e quattro devono essere in `soluzione.progetto.azioni`. Per un solo asse (solo destra/sinistra) usa invece `Input.get_axis(\"move_left\", \"move_right\")`, che restituisce un numero."
+    },
+    {
+      "se": "Cannot infer the type of \"\\w+\" variable",
+      "allora": "`:=` funziona solo se il valore a destra ha un tipo noto. Scrivi `var nome = valore` (con `=`) oppure dichiara il tipo: `var nome: float = valore`. Succede sempre con `get_prop(...)`, `call_if_exists(...)`, `get_node(...)`, `load(...)` e con i valori presi da Array e Dictionary."
+    },
+    {
+      "se": "Function \"(get_parent|get_children|get_child|queue_free|get_viewport|get_viewport_rect|get_tree|get_node|get_node_or_null|add_child|get_window)\\(\\)\" not found in base self",
+      "allora": "Lo script di verifica non è un nodo della scena: quelle funzioni vanno chiamate su un nodo, per esempio sulla scena istanziata (`var main := await instantiate_main_scene()`, poi `main.get_children()`)."
+    },
+    {
+      "se": "Function \"type\\(\\)\" not found",
+      "allora": "Non esiste `type()`: per il tipo di un valore usa `typeof(valore) == TYPE_INT` (o TYPE_FLOAT, TYPE_STRING, TYPE_BOOL, TYPE_ARRAY, TYPE_DICTIONARY)."
+    },
+    {
+      "se": "Unrecognized binary resource file|\\.res\"|\\.tres\", ma quel file non è tra i file",
+      "allora": "Non usare file di risorsa esterni (`.res`, `.tres`) scritti a parte: definisci la risorsa DENTRO la scena con un blocco `[sub_resource type=\"...\" id=\"...\"]` in cima al file e usala con `SubResource(\"id\")`. Se è troppo complicata da scrivere a mano, semplifica l'esercizio."
+    },
+    {
+      "se": "Cannot use shorthand \"get_node\\(\\)\" notation",
+      "allora": "Nello script di verifica non si può usare `$Nodo`: prendi il nodo dalla scena istanziata con `find_by_name(main, \"Nodo\")` oppure `main.get_node_or_null(\"Nodo\")`."
+    },
+    {
+      "se": "Expected \"get\" or \"set\" for property declaration",
+      "allora": "Dopo la dichiarazione di una variabile la riga successiva è rientrata (o la riga finisce con `:`): Godot crede che tu stia scrivendo un getter/setter. Le variabili del copione vanno tutte a inizio riga, senza rientro, una per riga."
+    },
+    {
+      "se": "is a coroutine, so it must be called with \"await\"",
+      "allora": "Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
+    },
+    {
+      "se": "Identifier \"\\w+\" not declared in the current scope",
+      "allora": "Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+    },
+    {
+      "se": "Invalid call\\. Nonexistent function|Nonexistent function '\\w+' in base",
+      "allora": "Stai chiamando un metodo che quell'oggetto non ha in Godot 4.7 (spesso è un metodo di Godot 3 o inventato). Usa solo metodi che compaiono negli estratti della documentazione."
+    },
+    {
+      "se": "Parse error\\. \\[Resource file res://[\\w./-]+\\.tscn:\\d+\\]",
+      "allora": "La scena `.tscn` ha una riga scritta male (vedi la riga citata). Le intestazioni dei nodi hanno la forma `[node name=\"Nome\" type=\"Tipo\" parent=\".\"]`; le proprietà stanno una per riga come `nome = valore`, con valori di Godot (`Vector2(10, 20)`, `\"testo\"`, `true`, `ExtResource(\"id\")`, `SubResource(\"id\")`)."
+    },
+    {
+      "se": "La scena principale deve essere impostata|non ha una scena principale impostata",
+      "allora": "Se una verifica pretende una scena principale, `soluzione.progetto.scenaPrincipale` deve indicarla (es. \"res://main.tscn\") e quel file deve essere in `soluzione.file`. Se l'esercizio non fa creare scene, togli quella verifica."
+    }
+  ]
+}

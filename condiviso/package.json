@@ -1,0 +1,13 @@
+{
+  "name": "@htd/condiviso",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Il codice usato sia dalla fabbrica sia dall'aula: formato delle lezioni, Godot, controlli di sicurezza.",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "dependencies": {
+    "zod": "4.6.5"
+  }
+}

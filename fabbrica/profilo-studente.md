@@ -1,0 +1,7 @@
+- Programmazione: conosce le basi della programmazione ma non sa realizzare un programma da solo (linguaggi visti: C# con Unity, C++ e Blueprints con Unreal). Il corso non dà per scontato niente di quello che ha visto altrove.
+- Motori provati: Unity, Unreal, RPG Maker, Construct, Godot, Blender, Aseprite.
+- Godot: lo ha aperto qualche volta senza realizzare nulla. Il corso parte comunque da zero (installazione compresa).
+- Obiettivo: saper usare Godot in modo completo, per realizzare da solo qualsiasi tipo di gioco.
+- Generi di gioco di interesse: visual novel 2D in pixel art; forse 3D più avanti.
+- Tempo di studio: 3-4 ore al giorno.
+- Preferenze sull'insegnamento: spiegazioni semplici, chiare e dettagliate, con esempi pratici.

@@ -1,0 +1,243 @@
+{
+  "slug": "f10-3d-gioco",
+  "titolo": "3D: un gioco completo",
+  "descrizione": "Dalle basi a un gioco 3D finito. Porti nel 3D ciò che hai già costruito (dialoghi, menu, salvataggi, componenti), aggiungi personaggi che trovano la strada, un inventario, enigmi, effetti, e impari a misurare e alleggerire una scena 3D. È il terzo gioco completo.",
+  "gioco": "«Il faro»: un'avventura d'esplorazione in 3D. Giri un'isola, parli con chi ci abita usando il tuo motore dei dialoghi, raccogli e usi oggetti, risolvi enigmi per riaccendere il faro, eviti le creature che di notte pattugliano.",
+  "prova": "«Il tuo gioco 3D», da un progetto vuoto, a scelta tra tre tracce: esplorazione con dialoghi, arena d'azione, enigmi in prima persona. Asset trovati da te, menu, salvataggi, impostazioni grafiche, esportazione.",
+  "progetto": {"nome": "Il faro", "cartella": "il-faro"},
+  "provaProgetto": {"nome": "Il mio gioco 3D", "cartella": "il-mio-gioco-3d"},
+  "allaFine": [
+    "Riusi i tuoi sistemi in un gioco diverso da quello per cui li avevi scritti.",
+    "Scrivi personaggi 3D che trovano la strada e reagiscono al giocatore.",
+    "Costruisci un inventario e degli enigmi guidati dai dati.",
+    "Misuri e alleggerisci una scena 3D.",
+    "Porti a termine un gioco 3D completo."
+  ],
+  "sezioniDocumentazione": ["tutorials/navigation/navigation_introduction_3d", "tutorials/navigation/navigation_using_navigationagents", "tutorials/navigation/navigation_using_navigationmeshes", "tutorials/3d/particles", "tutorials/shaders/your_first_shader/your_first_3d_shader", "tutorials/shaders/shader_reference/spatial_shader", "tutorials/shaders/visual_shaders", "tutorials/3d/global_illumination", "tutorials/3d/environment_and_post_processing", "tutorials/performance/optimizing_3d_performance", "tutorials/3d/mesh_lod", "tutorials/3d/occlusion_culling", "tutorials/performance/using_multimesh", "tutorials/audio/audio_streams", "tutorials/3d/3d_text", "tutorials/scripting/resources", "tutorials/rendering/multiple_resolutions"],
+  "lezioni": [
+    {
+      "slug": "portare-i-propri-sistemi-nel-3d",
+      "titolo": "Riusare i propri sistemi in un gioco 3D",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["obiettivo", "riordina"],
+      "impari": [
+        "Trovare ciò che lega un sistema al gioco per cui è nato, e tagliarlo",
+        "Tenere i sistemi riusabili in una cartella a parte, copiabile tra progetti",
+        "Collegare un sistema vecchio a un gioco nuovo solo con segnali e funzioni pubbliche"
+      ],
+      "costruisci": "Il motore dei dialoghi, il gestore delle scene, salvataggi e impostazioni entrano nel «Faro»: parli con un abitante dell'isola e la conversazione usa i tuoi file della storia.",
+      "verifica": "La piattaforma controlla che i sistemi stiano nella cartella comune senza riferimenti alle scene della visual novel, avvia una conversazione in 3D e la segue fino alla fine, scelte comprese.",
+      "parole": ["addons", "decoupling", "signal", "CanvasLayer", "Autoload"]
+    },
+    {
+      "slug": "navigazione-3d",
+      "titolo": "Personaggi che trovano la strada in 3D",
+      "tipo": "lezione",
+      "minuti": 90,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "La superficie percorribile calcolata dalla scena",
+        "NavigationAgent3D: dare una meta e seguire il percorso",
+        "Più personaggi che non si ammassano"
+      ],
+      "costruisci": "Gli abitanti camminano tra i loro posti durante il giorno; una creatura pattuglia e ti insegue aggirando rocce e case.",
+      "verifica": "La piattaforma dà una meta dietro un ostacolo e controlla l'arrivo entro un tempo dato; mette tre personaggi verso lo stesso punto e controlla le distanze tra loro.",
+      "parole": ["NavigationRegion3D", "NavigationMesh", "NavigationAgent3D", "avoidance", "bake"]
+    },
+    {
+      "slug": "nemici-3d",
+      "titolo": "Creature e scontri semplici in 3D",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["obiettivo", "estendi"],
+      "impari": [
+        "Macchina a stati e componenti di vita e danno, portati in 3D",
+        "Vedere il giocatore: distanza, angolo di vista, ostacoli",
+        "Un colpo con la sua zona attiva e una spinta all'indietro"
+      ],
+      "costruisci": "La creatura ha stati (ronda, sospetto, inseguimento, ritorno) e ti vede solo davanti a sé e non attraverso i muri; la lanterna la respinge.",
+      "verifica": "La piattaforma mette il giocatore davanti, dietro e oltre un muro e legge lo stato della creatura; usa la lanterna e misura la spinta.",
+      "parole": ["state machine", "Area3D", "RayCast3D", "dot", "composition"]
+    },
+    {
+      "slug": "interfaccia-nel-3d",
+      "titolo": "Interfaccia in un gioco 3D",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "Testo e immagini dentro al mondo, sempre rivolti alla telecamera",
+        "Un indicatore sullo schermo che punta a qualcosa nel mondo, anche quando è fuori vista",
+        "Tenere leggibile l'interfaccia sopra una scena che cambia luce"
+      ],
+      "costruisci": "Nomi sopra gli abitanti, un indicatore della meta che si ferma al bordo dello schermo quando la meta è fuori vista, la scritta di interazione.",
+      "verifica": "La piattaforma gira la telecamera e controlla dove sta l'indicatore con la meta in vista, di lato e alle spalle.",
+      "parole": ["Label3D", "Sprite3D", "billboard", "unproject_position", "is_position_behind"]
+    },
+    {
+      "slug": "audio-3d",
+      "titolo": "Suoni nello spazio",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Un suono che ha un posto: più forte da vicino, da destra o da sinistra",
+        "Zone che cambiano il suono: dentro la grotta c'è l'eco",
+        "Passi diversi su terreni diversi"
+      ],
+      "costruisci": "Il mare lungo la costa, il fuoco nel villaggio, l'eco nella grotta, passi che cambiano tra erba, legno e pietra.",
+      "verifica": "La piattaforma controlla sorgenti e loro distanze, porta il personaggio nella grotta e legge il bus in uso, lo fa camminare su tre terreni e legge quale suono parte.",
+      "parole": ["AudioStreamPlayer3D", "attenuation", "Area3D audio bus", "AudioStreamRandomizer"]
+    },
+    {
+      "slug": "inventario",
+      "titolo": "Un inventario",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "collauda", "obiettivo"],
+      "impari": [
+        "Gli oggetti come Resource; l'inventario come classe che non sa niente dell'interfaccia",
+        "Un'interfaccia a griglia che si aggiorna con i segnali",
+        "Usare un oggetto su qualcosa nel mondo, combinare due oggetti"
+      ],
+      "costruisci": "Inventario con posti limitati e oggetti che si impilano, schermata a griglia, uso di un oggetto su una porta o su un altro oggetto. Scrivi tu i controlli della classe.",
+      "verifica": "La piattaforma usa la classe senza interfaccia con casi normali e limite; esegue i tuoi controlli contro una versione giusta e tre sbagliate; raccoglie e usa oggetti nel gioco.",
+      "parole": ["Resource", "class", "signal", "GridContainer", "data-driven"]
+    },
+    {
+      "slug": "enigmi",
+      "titolo": "Enigmi: condizioni ed effetti come dati",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "dati"],
+      "impari": [
+        "Un enigma è un insieme di condizioni e un effetto",
+        "Pezzi generici (un interruttore, un sensore, un contatore) collegati dall'Inspector",
+        "Far conoscere lo stato degli enigmi alla storia e ai salvataggi"
+      ],
+      "costruisci": "Tre enigmi fatti con gli stessi pezzi: una sequenza di leve, specchi da orientare, pesi sulle piastre. Un quarto lo progetti tu combinando i pezzi.",
+      "verifica": "La piattaforma risolve ogni enigma nell'ordine giusto e in uno sbagliato; salva a metà e ricarica; controlla che il tuo enigma sia risolvibile e non già risolto all'inizio.",
+      "parole": ["signal", "@export", "Resource", "state", "NodePath"]
+    },
+    {
+      "slug": "particelle-3d",
+      "titolo": "Particelle ed effetti in 3D",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "imita"],
+      "impari": [
+        "GPUParticles3D: forma di emissione, direzione, vita, colore nel tempo",
+        "Particelle che urtano il mondo o ne sono attratte",
+        "Scie dietro a un oggetto"
+      ],
+      "costruisci": "Fuoco e fumo nel villaggio, spruzzi sulla costa, scintille quando raccogli un cristallo, la scia della luce del faro. Un effetto lo rifai guardandone uno di riferimento.",
+      "verifica": "La piattaforma legge le impostazioni degli effetti e controlla che quelli a evento partano nel punto giusto e vengano tolti.",
+      "parole": ["GPUParticles3D", "ParticleProcessMaterial", "GPUParticlesCollision3D", "trail"]
+    },
+    {
+      "slug": "shader-3d",
+      "titolo": "Shader 3D: primi passi",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Spostare i punti di un modello: onde, erba che si muove",
+        "Decidere colore e luce propria di ogni punto",
+        "Lo stesso con i nodi grafici (VisualShader), quando conviene"
+      ],
+      "costruisci": "L'acqua che ondeggia, l'erba mossa dal vento, i cristalli che pulsano; l'altezza delle onde si regola dal codice quando arriva la tempesta.",
+      "verifica": "La piattaforma controlla che gli shader si compilino, che i parametri esistano e che cambino quando parte la tempesta.",
+      "parole": ["spatial shader", "vertex", "fragment", "uniform", "VisualShader", "TIME"]
+    },
+    {
+      "slug": "luce-di-qualita",
+      "titolo": "Luce di qualità e ciclo del giorno",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Luce che rimbalza: le tecniche che Godot offre e quanto costano",
+        "Riflessi e nebbia con volume",
+        "Cambiare luce e cielo nel tempo dal codice"
+      ],
+      "costruisci": "Un ciclo giorno-notte: sole che si muove, colori del cielo e della luce che cambiano, luci del villaggio che si accendono al buio, creature che escono di notte.",
+      "verifica": "La piattaforma porta l'ora a valori noti e legge direzione ed energia del sole, stato delle luci del villaggio e presenza delle creature.",
+      "parole": ["DirectionalLight3D", "Environment", "ReflectionProbe", "VoxelGI", "LightmapGI", "volumetric fog"]
+    },
+    {
+      "slug": "prestazioni-3d",
+      "titolo": "Prestazioni in 3D",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["ottimizza"],
+      "impari": [
+        "Cosa pesa in una scena 3D: oggetti disegnati, ombre, luci, particelle",
+        "Disegnare migliaia di copie con un oggetto solo; non disegnare ciò che non si vede",
+        "Dare al giocatore la scelta: qualità delle ombre, risoluzione di calcolo"
+      ],
+      "costruisci": "Ricevi l'isola con diecimila fili d'erba e trecento alberi come nodi separati, ombre ovunque, e la alleggerisci senza cambiarne l'aspetto in modo evidente; aggiungi le impostazioni grafiche.",
+      "verifica": "La piattaforma conta nodi e oggetti disegnati prima e dopo (devono scendere sotto una soglia), controlla che erba e alberi ci siano ancora e che le impostazioni grafiche cambino i valori giusti.",
+      "parole": ["MultiMeshInstance3D", "visibility range", "occlusion culling", "LOD", "scaling_3d_scale", "profiler"]
+    },
+    {
+      "slug": "gioco-3d-completo",
+      "titolo": "Il gioco completo",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Cosa salvare in un gioco 3D con storia, inventario ed enigmi",
+        "Un inizio e una fine: introduzione, obiettivo, conclusione",
+        "Esportare un gioco 3D e controllare peso e tempi di caricamento"
+      ],
+      "costruisci": "«Il faro» dall'inizio alla fine: introduzione, i tre enigmi, il faro riacceso, titoli di coda con i crediti; salvataggio completo; esportazione.",
+      "verifica": "La piattaforma porta la partita a metà lungo un percorso noto, salva, ricarica e confronta tutto lo stato; esegue il gioco esportato.",
+      "parole": ["JSON", "export", "background loading", "credits"]
+    },
+    {
+      "slug": "progetto-3d-1",
+      "titolo": "Progetto «Il tuo gioco 3D» – tappa 1: scegliere e abbozzare",
+      "tipo": "progetto",
+      "minuti": 120,
+      "esercizi": ["da-zero"],
+      "impari": ["Partire da un'idea e arrivare in fretta a qualcosa che si può provare"],
+      "costruisci": "La traccia scelta in una pagina (obiettivo, cosa si fa, cosa serve), il livello abbozzato a blocchi, personaggio e telecamera funzionanti.",
+      "verifica": "La piattaforma controlla la pagina, che il progetto parta, che personaggio e telecamera rispondano e che il livello abbia collisioni.",
+      "parole": ["CSG", "CharacterBody3D", "prototype"]
+    },
+    {
+      "slug": "progetto-3d-2",
+      "titolo": "Progetto «Il tuo gioco 3D» – tappa 2: i sistemi",
+      "tipo": "progetto",
+      "minuti": 150,
+      "esercizi": ["da-zero"],
+      "impari": ["Scegliere quali dei propri sistemi riusare e scrivere solo ciò che manca"],
+      "costruisci": "I sistemi della tua traccia: dialoghi e inventario, oppure nemici e ondate, oppure enigmi e interazione. Con i tuoi sistemi riusati dalla cartella comune.",
+      "verifica": "Per ogni traccia la piattaforma ha i suoi controlli di comportamento; controlla quali sistemi sono stati riusati.",
+      "parole": ["composition", "Resource", "signal", "NavigationAgent3D"]
+    },
+    {
+      "slug": "progetto-3d-3",
+      "titolo": "Progetto «Il tuo gioco 3D» – tappa 3: il mondo",
+      "tipo": "progetto",
+      "minuti": 120,
+      "esercizi": ["da-zero"],
+      "impari": ["Sostituire l'abbozzo con asset veri senza rompere il gioco"],
+      "costruisci": "Modelli, materiali, luce, ambiente, suoni ed effetti, con asset trovati da te.",
+      "verifica": "La piattaforma rifà i controlli della tappa 2, controlla asset e registro, luci e ambiente, e misura il peso della scena.",
+      "parole": ["glTF", "WorldEnvironment", "AudioStreamPlayer3D", "license"]
+    },
+    {
+      "slug": "progetto-3d-4",
+      "titolo": "Progetto «Il tuo gioco 3D» – tappa 4: finire",
+      "tipo": "progetto",
+      "minuti": 90,
+      "esercizi": ["da-zero"],
+      "impari": ["Rifinire, collaudare, consegnare"],
+      "costruisci": "Menu, salvataggi, impostazioni grafiche e audio, un inizio e una fine, collaudo, esportazione.",
+      "verifica": "La piattaforma salva e ricarica in due punti, cambia le impostazioni ed esegue il gioco esportato.",
+      "parole": ["export", "testing", "ConfigFile"]
+    }
+  ]
+}

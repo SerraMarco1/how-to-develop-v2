@@ -1,0 +1,46 @@
+# Il programma Windows dell'aula: quando il proprietario crea un'etichetta «aula-v2.x.y», GitHub costruisce
+# l'installatore e lo pubblica tra le Release. L'aula installata lo trova da sola e propone di aggiornarsi.
+
+name: Rilascio dell'aula
+
+on:
+  push:
+    tags: ["aula-v*"]
+
+permissions: {}
+
+jobs:
+  rilascio:
+    runs-on: windows-2025
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Dipendenze
+        run: npm ci --no-audit --no-fund
+
+      - name: La versione dell'etichetta è quella del programma
+        shell: bash
+        run: |
+          versione="$(node -p "require('./aula/package.json').version")"
+          test "aula-v$versione" = "$GITHUB_REF_NAME" || { echo "Etichetta $GITHUB_REF_NAME ma aula/package.json dice $versione"; exit 1; }
+
+      - name: Tipi
+        run: npm run tipi
+
+      - name: Installatore e pubblicazione
+        working-directory: aula
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node strumenti/compila.mjs --produzione
+          npx electron-builder --win --publish always

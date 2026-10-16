@@ -1,0 +1,21 @@
+{
+  "nota": "Nomi dell'interfaccia che i modelli scrivono spesso ma che in Godot 4.7.2 non esistono (o non sono dove dicono): vengono da versioni precedenti di Godot o da guide in rete. Ogni voce è stata verificata sulle schermate del vero editor (cartella immagini). `se` è un'espressione regolare cercata nel testo di lezioni ed esercizi; `allora` è la correzione mostrata al modello che deve riscrivere.",
+  "nomi": [
+    {
+      "se": "\\bAssetLib\\b|\\bAsset Library\\b",
+      "allora": "in Godot 4.7 si chiama **Asset Store**, sia nell'editor (in alto al centro) sia nel Project Manager"
+    },
+    {
+      "se": "Create\\s*(&|and|e)\\s*Edit",
+      "allora": "nella finestra Create New Project il pulsante si chiama **Create**; il progetto si apre subito nell'editor se la casella **Edit Now** è spuntata. Non esiste \"Create & Edit\""
+    },
+    {
+      "se": "(pannello|dock|scheda)\\s+[*_`]{0,2}Node[*_`]{0,2}(?![0-9A-Za-z])",
+      "allora": "in Godot 4.7 non c'è un pannello Node: i segnali del nodo selezionato stanno nella scheda **Signals**, accanto a **Inspector**"
+    },
+    {
+      "se": "(pulsante|clicca su|clicca sul pulsante|premi|premi su)\\s+[*_`]{0,2}Create New Project[*_`]{0,2}",
+      "allora": "nel Project Manager il pulsante **Create New Project** compare solo quando l'elenco dei progetti è vuoto: indica il pulsante **Create** in alto a sinistra, che c'è sempre (\"Create New Project\" è il titolo della finestra che si apre)"
+    }
+  ]
+}

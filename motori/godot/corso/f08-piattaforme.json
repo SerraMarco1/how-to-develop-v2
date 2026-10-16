@@ -1,0 +1,273 @@
+{
+  "slug": "f08-piattaforme",
+  "titolo": "Piattaforme: animazione, stati, sensazione",
+  "descrizione": "Un gioco a piattaforme è il banco di prova della sensazione: come salta, come atterra, come reagisce. Impari le animazioni, la macchina a stati (lo schema che userai in ogni gioco), le particelle, i piccoli effetti che fanno la differenza. Alla fine hai il secondo gioco completo.",
+  "gioco": "«Salti»: un personaggio animato che corre e salta, piattaforme mobili, pericoli, nemici, punti di ripartenza, tre livelli a tessere con sfondi in profondità, effetti e suoni, menu e salvataggio dei livelli sbloccati.",
+  "prova": "«Il tuo gioco a piattaforme», da un progetto vuoto: tre livelli brevi, asset trovati da te, una meccanica in più scelta da un elenco (scatto, doppio salto, salto sul muro, interruttori e piattaforme, gravità invertita), menu, salvataggio, esportazione.",
+  "progetto": {"nome": "Salti", "cartella": "salti"},
+  "provaProgetto": {"nome": "Il mio gioco a piattaforme", "cartella": "il-mio-gioco-a-piattaforme"},
+  "allaFine": [
+    "Regoli un salto finché «si sente» giusto, e sai quali numeri toccare.",
+    "Animi un personaggio e fai seguire le animazioni a ciò che sta facendo.",
+    "Scrivi una macchina a stati e ne riconosci il bisogno.",
+    "Aggiungi particelle, scuotimenti, lampeggi e suoni che danno peso alle azioni.",
+    "Porti a termine un secondo gioco completo riusando il lavoro già fatto."
+  ],
+  "sezioniDocumentazione": ["tutorials/physics/using_character_body_2d", "tutorials/physics/kinematic_character_2d", "tutorials/2d/2d_sprite_animation", "tutorials/animation/introduction", "tutorials/animation/animation_tree", "tutorials/animation/animation_track_types", "tutorials/2d/2d_parallax", "tutorials/2d/particle_systems_2d", "tutorials/2d/using_tilesets", "tutorials/shaders/your_first_shader/your_first_2d_shader", "tutorials/shaders/shader_reference/canvas_item_shader", "tutorials/physics/ray-casting"],
+  "lezioni": [
+    {
+      "slug": "gravita-e-salto",
+      "titolo": "Gravità e salto",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "prevedi"],
+      "impari": [
+        "La gravità come accelerazione; is_on_floor()",
+        "Altezza e durata del salto calcolate, invece di numeri trovati a tentativi",
+        "Salto più basso se lasci subito il tasto"
+      ],
+      "costruisci": "Il personaggio corre e salta; altezza e durata del salto si scelgono dall'Inspector e il codice calcola gravità e spinta.",
+      "verifica": "La piattaforma misura altezza massima e durata con tocco breve e lungo e controlla che non si possa saltare in aria; per tre coppie di valori scrivi l'altezza attesa prima di provarla.",
+      "parole": ["CharacterBody2D", "is_on_floor", "gravity", "velocity", "move_and_slide"]
+    },
+    {
+      "slug": "salto-che-perdona",
+      "titolo": "Un salto che perdona",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "imita"],
+      "impari": [
+        "Saltare ancora per un istante dopo aver lasciato il bordo",
+        "Ricordare il tasto premuto un istante prima di toccare terra",
+        "Accelerazione diversa a terra e in aria"
+      ],
+      "costruisci": "Le due tolleranze del salto, regolabili; controllo in aria ridotto. Poi regoli il personaggio finché si comporta come quello di un gioco di riferimento che puoi provare.",
+      "verifica": "La piattaforma preme il salto pochi fotogrammi dopo il bordo e pochi prima dell'atterraggio, dentro e fuori tolleranza; confronta altezza, durata e distanza del salto con il riferimento.",
+      "parole": ["coyote time", "jump buffer", "Timer", "move_toward"]
+    },
+    {
+      "slug": "animatedsprite2d",
+      "titolo": "Animazioni a fotogrammi",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "SpriteFrames: più animazioni ricavate da un foglio di immagini",
+        "Scegliere l'animazione da ciò che il personaggio sta facendo",
+        "Girare il personaggio nel verso in cui va"
+      ],
+      "costruisci": "Fermo, corsa, salto, caduta, con il personaggio girato nel verso giusto.",
+      "verifica": "La piattaforma mette il personaggio in ogni situazione e legge animazione in corso e verso.",
+      "parole": ["AnimatedSprite2D", "SpriteFrames", "flip_h", "play"]
+    },
+    {
+      "slug": "macchina-a-stati",
+      "titolo": "La macchina a stati",
+      "tipo": "lezione",
+      "minuti": 90,
+      "esercizi": ["guidato", "estendi", "riordina"],
+      "impari": [
+        "Il problema: tante variabili vero/falso che si contraddicono",
+        "Uno stato alla volta, con entrata, uscita, aggiornamento e passaggi",
+        "Ogni stato in un suo script, con una classe base comune"
+      ],
+      "costruisci": "Ricevi un personaggio che funziona ma è scritto con dodici variabili vero/falso e lo riscrivi come macchina a stati; poi aggiungi lo stato «accovacciato» senza toccare gli altri.",
+      "verifica": "La piattaforma rifà tutti i controlli di comportamento (devono passare come prima), legge lo stato corrente in dieci situazioni e controlla il nuovo stato.",
+      "parole": ["state machine", "class_name", "extends", "enum", "match"]
+    },
+    {
+      "slug": "animationplayer",
+      "titolo": "AnimationPlayer: animare qualsiasi cosa",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Tracce e fotogrammi chiave su qualsiasi proprietà di qualsiasi nodo",
+        "Chiamare una funzione in un punto preciso dell'animazione",
+        "Accorgersi di quando un'animazione finisce"
+      ],
+      "costruisci": "Un attacco con la sua animazione, in cui il colpo è attivo solo nei fotogrammi giusti; una porta che si apre; un cartello che oscilla da solo.",
+      "verifica": "La piattaforma legge le tracce e segue nel tempo le proprietà animate; controlla che il colpo faccia danno solo nell'intervallo attivo.",
+      "parole": ["AnimationPlayer", "track", "keyframe", "call method track", "animation_finished"]
+    },
+    {
+      "slug": "animationtree",
+      "titolo": "AnimationTree: comandare le animazioni",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Una macchina a stati fatta apposta per le animazioni",
+        "Passaggi con condizioni e passaggi comandati dal codice",
+        "Mescolare due animazioni secondo un valore"
+      ],
+      "costruisci": "Le animazioni del personaggio passano all'AnimationTree, con passaggi morbidi tra corsa e fermo.",
+      "verifica": "La piattaforma legge l'animazione in corso in ogni situazione e durante i passaggi.",
+      "parole": ["AnimationTree", "AnimationNodeStateMachine", "travel", "blend"]
+    },
+    {
+      "slug": "piattaforme-speciali",
+      "titolo": "Piattaforme mobili, a senso unico, scale",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "AnimatableBody2D: una piattaforma che ti porta con sé",
+        "Piattaforme che si attraversano da sotto e da cui si può scendere",
+        "Una zona che cambia le regole del movimento: la scala"
+      ],
+      "costruisci": "Piattaforme che vanno avanti e indietro lungo un percorso, piattaforme a senso unico da cui scendi con giù più salto, scale. Le impostazioni necessarie le trovi nella documentazione.",
+      "verifica": "La piattaforma fa salire il personaggio su una piattaforma mobile e controlla che si muova con lei; lo fa passare da sotto e scendere; lo fa arrampicare.",
+      "parole": ["AnimatableBody2D", "one way collision", "Path2D", "PathFollow2D", "Area2D"]
+    },
+    {
+      "slug": "pericoli-e-ripartenza",
+      "titolo": "Pericoli, punti di ripartenza, rinascita",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "ripara"],
+      "impari": [
+        "Riusare i componenti di vita e danno in un gioco diverso",
+        "La sequenza di morte e rinascita scritta con le attese",
+        "Rimettere il livello com'era: cosa torna e cosa resta"
+      ],
+      "costruisci": "Spine, vuoto sotto al livello, bandierine di ripartenza; alla morte una breve sequenza e si riparte dall'ultima bandierina. Poi ricevi un progetto in cui dopo la rinascita il personaggio resta bloccato.",
+      "verifica": "La piattaforma fa morire il personaggio in tre modi, prima e dopo una bandierina, e controlla dove riparte, in che stato e con quali nemici e oggetti.",
+      "parole": ["Area2D", "await", "composition", "reset"]
+    },
+    {
+      "slug": "nemici-a-piattaforme",
+      "titolo": "Nemici a piattaforme",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "estendi"],
+      "impari": [
+        "Camminare fino al bordo e girarsi: RayCast2D verso il basso",
+        "Da dove arriva l'urto: saltarci sopra o toccarlo di lato",
+        "Varianti dello stesso nemico con dati diversi"
+      ],
+      "costruisci": "Un nemico che cammina e si gira ai bordi e ai muri, si elimina saltandoci sopra con un rimbalzo; uno che lancia proiettili a intervalli; uno che vola avanti e indietro.",
+      "verifica": "La piattaforma controlla il giro del nemico su piattaforme di lunghezze diverse e l'urto dall'alto e di lato.",
+      "parole": ["RayCast2D", "get_slide_collision", "normal", "@export", "inheritance"]
+    },
+    {
+      "slug": "livelli-e-sfondi",
+      "titolo": "Livelli: terreni, sfondi in profondità, più livelli",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["obiettivo", "imita"],
+      "impari": [
+        "Terreni che disegnano da soli bordi e angoli",
+        "Sfondi che scorrono a velocità diverse",
+        "Un gestore dei livelli: fine livello, livello successivo, conteggio degli oggetti"
+      ],
+      "costruisci": "Tre livelli con terreni, sfondo su tre piani, un traguardo che porta al livello dopo. Un livello lo ricostruisci da una sua immagine.",
+      "verifica": "La piattaforma controlla tessere e collisioni, lo scorrimento degli sfondi rispetto alla telecamera e il passaggio tra i livelli.",
+      "parole": ["TileMapLayer", "terrain", "Parallax2D", "change_scene_to_packed"]
+    },
+    {
+      "slug": "particelle-2d",
+      "titolo": "Particelle",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "GPUParticles2D e il materiale che descrive come nascono, si muovono e muoiono",
+        "Sbuffi singoli ed emissioni continue",
+        "Far partire un effetto nel punto e nel momento giusti"
+      ],
+      "costruisci": "Polvere all'atterraggio e alla partenza, scintille quando raccogli una moneta, frammenti quando un nemico viene eliminato.",
+      "verifica": "La piattaforma fa succedere i tre eventi e controlla che l'effetto giusto parta nel punto giusto e che i nodi vengano tolti alla fine.",
+      "parole": ["GPUParticles2D", "ParticleProcessMaterial", "one_shot", "emitting"]
+    },
+    {
+      "slug": "sensazione",
+      "titolo": "Dare peso alle azioni",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "imita"],
+      "impari": [
+        "Schiacciare e allungare il personaggio",
+        "Scuotere la telecamera e fermare il gioco per un istante al momento dell'urto",
+        "Suoni con piccole variazioni, perché non siano sempre uguali"
+      ],
+      "costruisci": "Deformazione al salto e all'atterraggio, scuotimento e fermo immagine quando vieni colpito, suoni con intonazione variabile. Ricevi lo stesso gioco con e senza questi effetti e porti il tuo al livello della versione rifinita.",
+      "verifica": "La piattaforma legge la scala del personaggio attorno a salto e atterraggio, lo scostamento della telecamera e la velocità del tempo attorno a un colpo, e che tutto torni normale.",
+      "parole": ["Tween", "Camera2D offset", "Engine.time_scale", "pitch_scale"]
+    },
+    {
+      "slug": "shader-2d-utili",
+      "titolo": "Shader utili: lampeggio e contorno",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Leggere il colore di un punto dell'immagine e cambiarlo",
+        "Un parametro comandato dal codice",
+        "Guardare i punti vicini per disegnare un contorno"
+      ],
+      "costruisci": "Il personaggio lampeggia di bianco quando viene colpito; gli oggetti con cui puoi interagire hanno un contorno quando sei vicino.",
+      "verifica": "La piattaforma controlla che gli shader si compilino, colpisce il personaggio e legge il parametro nel tempo; avvicina e allontana il personaggio da un oggetto.",
+      "parole": ["shader", "canvas_item", "uniform", "set_shader_parameter", "mix"]
+    },
+    {
+      "slug": "gioco-completo-a-piattaforme",
+      "titolo": "Il gioco completo",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Montare il guscio (menu, impostazioni, salvataggi) attorno a un gioco nuovo",
+        "Una schermata di scelta del livello con i livelli sbloccati",
+        "Esportare e provare il gioco esportato"
+      ],
+      "costruisci": "Menu, scelta del livello, pausa, salvataggio dei livelli sbloccati e del miglior tempo, esportazione per Windows e Web.",
+      "verifica": "La piattaforma completa il primo livello, controlla che il secondo sia sbloccato anche dopo aver chiuso e riaperto, ed esegue il gioco esportato.",
+      "parole": ["Autoload", "ConfigFile", "export", "level select"]
+    },
+    {
+      "slug": "progetto-piattaforme-1",
+      "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 1: il personaggio",
+      "tipo": "progetto",
+      "minuti": 105,
+      "esercizi": ["da-zero"],
+      "impari": ["Costruire da soli un personaggio con macchina a stati e animazioni, da asset trovati"],
+      "costruisci": "Personaggio con asset tuoi: corsa, salto con le tolleranze, animazioni, macchina a stati.",
+      "verifica": "La piattaforma misura il salto, legge stati e animazioni nelle situazioni di base, controlla il registro degli asset.",
+      "parole": ["CharacterBody2D", "state machine", "AnimatedSprite2D"]
+    },
+    {
+      "slug": "progetto-piattaforme-2",
+      "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 2: la tua meccanica",
+      "tipo": "progetto",
+      "minuti": 105,
+      "esercizi": ["da-zero", "trova"],
+      "impari": ["Aggiungere una meccanica che nessuna lezione ha spiegato"],
+      "costruisci": "Una meccanica scelta dall'elenco (scatto, doppio salto, salto sul muro, interruttori e piattaforme, gravità invertita), come nuovo stato o nuovo componente.",
+      "verifica": "Per ogni meccanica dell'elenco la piattaforma ha i suoi controlli di comportamento.",
+      "parole": ["state machine", "class reference", "RayCast2D"]
+    },
+    {
+      "slug": "progetto-piattaforme-3",
+      "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 3: livelli e nemici",
+      "tipo": "progetto",
+      "minuti": 105,
+      "esercizi": ["da-zero"],
+      "impari": ["Costruire livelli che insegnano la meccanica al giocatore, un passo alla volta"],
+      "costruisci": "Tre livelli brevi che introducono, sviluppano e mettono alla prova la tua meccanica; due tipi di nemico, pericoli, bandierine.",
+      "verifica": "La piattaforma controlla che ogni livello abbia partenza, traguardo raggiungibile, almeno una bandierina e gli elementi chiesti; fa morire e rinascere il personaggio.",
+      "parole": ["TileMapLayer", "Area2D", "level design"]
+    },
+    {
+      "slug": "progetto-piattaforme-4",
+      "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 4: finire",
+      "tipo": "progetto",
+      "minuti": 75,
+      "esercizi": ["da-zero"],
+      "impari": ["Rifinire e consegnare"],
+      "costruisci": "Effetti e suoni, menu e scelta del livello, salvataggio, collaudo con l'elenco, esportazione.",
+      "verifica": "La piattaforma controlla effetti e suoni sugli eventi principali, il salvataggio dopo riavvio ed esegue il gioco esportato.",
+      "parole": ["export", "testing", "GPUParticles2D", "ConfigFile"]
+    }
+  ]
+}

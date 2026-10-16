@@ -1,0 +1,29 @@
+{
+ "titolo": "Pari o dispari",
+ "consegna": "Scrivi uno script che inizia con `extends Node` e contiene due funzioni:\n\n- `func is_even(number: int) -> bool`: restituisce `true` se `number` è pari, `false` se è dispari.\n- `func count_even(numbers: Array) -> int`: restituisce quanti numeri pari ci sono nell'array `numbers` (usa `is_even`).\n\nIn `_ready()` stampa con `print()` il risultato di `count_even([1, 2, 3, 4])`.",
+ "modalita": "codice",
+ "fileCodice": "res://solution.gd",
+ "passiGuida": [],
+ "suggerimenti": [
+  "Un numero è pari quando il resto della divisione per 2 è zero: l'operatore del resto è `%`.",
+  "Per contare usa una variabile che parte da 0 e un ciclo `for number in numbers:`.",
+  "Dentro il ciclo chiama `is_even(number)` in un `if` e aumenta il contatore di 1."
+ ],
+ "verifiche": [
+  {
+   "tipo": "script_godot",
+   "descrizione": "Le funzioni is_even e count_even danno i risultati corretti e _ready stampa 2",
+   "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar obj := await instantiate_script(\"res://solution.gd\")\n\tif not check(\"script\", obj != null, \"Lo script deve caricarsi senza errori\"):\n\t\treturn\n\tcheck(\"even\", call_if_exists(obj, \"is_even\", [4], null) == true, \"is_even(4) deve restituire true\")\n\tcheck(\"odd\", call_if_exists(obj, \"is_even\", [7], null) == false, \"is_even(7) deve restituire false\")\n\tcheck(\"zero\", call_if_exists(obj, \"is_even\", [0], null) == true, \"is_even(0) deve restituire true\")\n\tcheck(\"count\", call_if_exists(obj, \"count_even\", [[1, 2, 3, 4, 6]], null) == 3, \"count_even([1, 2, 3, 4, 6]) deve restituire 3\")\n\tcheck(\"empty\", call_if_exists(obj, \"count_even\", [[]], null) == 0, \"count_even([]) deve restituire 0\")\n\tcheck(\"print\", printed_text().contains(\"2\"), \"_ready() deve stampare il risultato di count_even([1, 2, 3, 4]), cioè 2\")\n"
+  }
+ ],
+ "domande": [],
+ "soluzione": {
+  "file": [
+   {
+    "percorso": "solution.gd",
+    "contenuto": "extends Node\n\n\nfunc _ready() -> void:\n\tprint(count_even([1, 2, 3, 4]))\n\n\nfunc is_even(number: int) -> bool:\n\treturn number % 2 == 0\n\n\nfunc count_even(numbers: Array) -> int:\n\tvar count := 0\n\tfor number in numbers:\n\t\tif is_even(number):\n\t\t\tcount += 1\n\treturn count\n"
+   }
+  ],
+  "spiegazione": "`number % 2` è il resto della divisione per 2: vale 0 per i numeri pari, quindi `is_even` restituisce direttamente il confronto `number % 2 == 0`. `count_even` scorre l'array con un ciclo `for` e aumenta un contatore ogni volta che `is_even` risponde `true`."
+ }
+}

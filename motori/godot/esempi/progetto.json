@@ -1,0 +1,79 @@
+{
+ "titolo": "Muovi il personaggio a destra e a sinistra",
+ "consegna": "Crea un progetto chiamato `MuoviPersonaggio`.\n\n1. Crea la scena `main.tscn` con un `Node2D` come radice, chiamato `Main`, e impostala come scena principale.\n2. Dentro `Main` aggiungi un `CharacterBody2D` chiamato `Player`, con due figli: uno `Sprite2D` (usa `icon.svg` come immagine) e un `CollisionShape2D` con una forma rettangolare.\n3. Nella Input Map crea le azioni `move_left` (tasto A) e `move_right` (tasto D).\n4. Collega a `Player` lo script `player.gd`: tenendo premute le azioni, il personaggio si muove in orizzontale a 200 pixel al secondo.",
+ "modalita": "progetto",
+ "cartella": "muovi-personaggio",
+ "passiGuida": [
+  "Nel Project Manager premi **Create**, scrivi il nome `MuoviPersonaggio` e crea il progetto.",
+  "Nel pannello *Scene* scegli **2D Scene**, rinomina la radice in `Main` e salva con Ctrl+S come `main.tscn`.",
+  "Seleziona `Main`, premi **+** e aggiungi un `CharacterBody2D`; rinominalo `Player`.",
+  "Con `Player` selezionato aggiungi uno `Sprite2D` e trascina `icon.svg` dal pannello *FileSystem* nella proprietà **Texture** dell'*Inspector*.",
+  "Sempre dentro `Player` aggiungi un `CollisionShape2D` e nell'*Inspector* scegli **Shape → New RectangleShape2D**.",
+  "Apri **Project → Project Settings → Input Map**, aggiungi `move_left` con il tasto A e `move_right` con il tasto D.",
+  "Seleziona `Player`, premi l'icona della pergamena per collegare un nuovo script `player.gd` e scrivi il movimento in `_physics_process`.",
+  "Premi F5: se Godot chiede la scena principale scegli `main.tscn`, poi prova i tasti A e D."
+ ],
+ "suggerimenti": [],
+ "verifiche": [
+  {
+   "tipo": "nodo",
+   "scena": "res://main.tscn",
+   "tipoNodo": "CharacterBody2D",
+   "nome": "Player",
+   "descrizione": "La scena main.tscn contiene un CharacterBody2D chiamato Player"
+  },
+  {
+   "tipo": "script_collegato",
+   "scena": "res://main.tscn",
+   "nodo": "Player",
+   "descrizione": "Il nodo Player ha uno script collegato"
+  },
+  {
+   "tipo": "azione_input",
+   "nome": "move_left",
+   "descrizione": "Nella Input Map esiste l'azione move_left"
+  },
+  {
+   "tipo": "azione_input",
+   "nome": "move_right",
+   "descrizione": "Nella Input Map esiste l'azione move_right"
+  },
+  {
+   "tipo": "script_godot",
+   "descrizione": "Tenendo premute le azioni il personaggio si sposta a destra e a sinistra",
+   "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve essere impostata e aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena serve un CharacterBody2D chiamato Player\"):\n\t\treturn\n\tvar start_x := player.position.x\n\tawait hold_action(\"move_right\", 30)\n\tcheck(\"right\", player.position.x > start_x + 10.0, \"Tenendo premuto move_right il personaggio deve andare a destra\")\n\tvar right_x := player.position.x\n\tawait hold_action(\"move_left\", 30)\n\tcheck(\"left\", player.position.x < right_x - 10.0, \"Tenendo premuto move_left il personaggio deve andare a sinistra\")\n"
+  }
+ ],
+ "domande": [],
+ "soluzione": {
+  "progetto": {
+   "nome": "MuoviPersonaggio",
+   "scenaPrincipale": "res://main.tscn",
+   "azioni": [
+    {
+     "nome": "move_left",
+     "tasti": [
+      "A"
+     ]
+    },
+    {
+     "nome": "move_right",
+     "tasti": [
+      "D"
+     ]
+    }
+   ]
+  },
+  "file": [
+   {
+    "percorso": "main.tscn",
+    "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(64, 64)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(400, 300)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_body\")\n"
+   },
+   {
+    "percorso": "player.gd",
+    "contenuto": "extends CharacterBody2D\n\nconst SPEED := 200.0\n\n\nfunc _physics_process(_delta: float) -> void:\n\t# -1 se è premuto move_left, 1 se è premuto move_right, 0 se nessuno dei due\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity = Vector2(direction * SPEED, 0.0)\n\tmove_and_slide()\n"
+   }
+  ],
+  "spiegazione": "`Input.get_axis(\"move_left\", \"move_right\")` restituisce -1, 0 o 1 a seconda dell'azione premuta. Moltiplicando per `SPEED` si ottiene la velocità orizzontale, che va scritta in `velocity`; `move_and_slide()` sposta il personaggio usando quella velocità. Il codice sta in `_physics_process` perché il movimento di un corpo fisico va calcolato lì."
+ }
+}

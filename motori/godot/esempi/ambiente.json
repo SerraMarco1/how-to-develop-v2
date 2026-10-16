@@ -1,0 +1,31 @@
+{
+ "titolo": "Cambia la dimensione del testo dell'editor",
+ "consegna": "Apri un progetto qualsiasi nell'editor di Godot. Vai in **Editor → Editor Settings**, cerca l'impostazione **Main Font Size** (sezione *Interface → Editor*) e portala a `16`. Lascia l'editor aperto, torna qui e premi **Verifica**.",
+ "modalita": "ambiente",
+ "passiGuida": [
+  "Dal Project Manager apri un tuo progetto con un doppio clic.",
+  "Nel menu in alto scegli **Editor → Editor Settings**.",
+  "Nella colonna di sinistra apri *Interface* e seleziona **Editor**.",
+  "Trova **Main Font Size** e scrivi `16`, poi premi Invio: il testo dell'editor diventa più grande.",
+  "Chiudi la finestra con **Close** e lascia l'editor aperto."
+ ],
+ "suggerimenti": [],
+ "verifiche": [
+  {
+   "tipo": "godot_aperto",
+   "finestra": "editor",
+   "descrizione": "Godot 4.7 è aperto sull'editor"
+  },
+  {
+   "tipo": "impostazione_editor",
+   "chiave": "interface/editor/fonts/main_font_size",
+   "contiene": "16",
+   "descrizione": "Main Font Size vale 16"
+  }
+ ],
+ "domande": [],
+ "soluzione": {
+  "file": [],
+  "spiegazione": "Le impostazioni dell'editor valgono per tutti i progetti e si trovano in **Editor → Editor Settings**. La dimensione del testo dell'interfaccia è *Interface → Editor → Main Font Size*: scrivi `16` e conferma con Invio."
+ }
+}

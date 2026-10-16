@@ -1,0 +1,22 @@
+# Dipendenze
+node_modules/
+
+# File prodotti dalla compilazione
+dist/
+aula/out/
+aula/rilascio/
+*.tsbuildinfo
+
+# Dati di lavoro locali (mai su GitHub): corso scaricato, prove, Godot di servizio
+/dati/
+/lavoro/
+.tmp/
+
+# Chiavi e impostazioni locali
+.env
+.env.*
+
+# Strumenti di sviluppo
+.claude/
+.vscode/
+*.log

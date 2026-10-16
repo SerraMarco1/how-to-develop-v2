@@ -1,0 +1,28 @@
+{
+ "genere": "prevedi",
+ "titolo": "Cosa restituisce?",
+ "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce `run()`, senza eseguirlo. Poi confronta con la risposta vera.",
+ "modalita": "previsioni",
+ "previsioni": [
+  {
+   "codice": "extends RefCounted\n\n\nfunc run():\n\tvar lives: int = 3\n\tlives -= 1\n\tlives -= 1\n\treturn lives\n",
+   "domanda": "Quanto vale `lives` alla fine?",
+   "spiegazione": "`lives` parte da 3. Ogni `lives -= 1` toglie 1: dopo la prima vale 2, dopo la seconda vale 1."
+  },
+  {
+   "codice": "extends RefCounted\n\n\nfunc run():\n\tvar apples: int = 7\n\tvar people: int = 2\n\treturn apples / people\n",
+   "domanda": "Che numero restituisce `run()`?",
+   "spiegazione": "Tutti e due i valori sono `int`, quindi anche la divisione è tra interi e la parte dopo la virgola viene buttata: 7 / 2 fa 3, non 3.5. Per avere 3.5 almeno uno dei due deve essere un `float`."
+  },
+  {
+   "codice": "extends RefCounted\n\n\nfunc run():\n\tvar score: int = 10\n\tif score > 10:\n\t\treturn \"record\"\n\telif score >= 10:\n\t\treturn \"pari\"\n\treturn \"sotto\"\n",
+   "domanda": "Che testo restituisce `run()`?",
+   "spiegazione": "`score > 10` è falso, perché 10 non è maggiore di 10. Si passa a `elif score >= 10`, che è vero: la funzione restituisce \"pari\" e finisce lì."
+  },
+  {
+   "codice": "extends RefCounted\n\n\nfunc run():\n\tvar position := Vector2(100, 50)\n\tvar speed := Vector2(20, 0)\n\tposition += speed * 2\n\treturn position\n",
+   "domanda": "Quanto vale `position` alla fine?",
+   "spiegazione": "`speed * 2` fa `Vector2(40, 0)`. Sommato a `(100, 50)` dà `(140, 50)`: la x cresce di 40, la y resta com'era."
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "file": "sprites/player.png",
+    "descrizione": "personaggio visto di fronte, 32x32 pixel, sfondo trasparente"
+  },
+  {
+    "file": "sprites/player_sheet.png",
+    "descrizione": "foglio di 4 fotogrammi 32x32 in riga (128x32): 0-1 fermo, 2-3 camminata"
+  },
+  {
+    "file": "sprites/enemy.png",
+    "descrizione": "nemico (blob rosso), 32x32 pixel, sfondo trasparente"
+  },
+  {
+    "file": "sprites/coin.png",
+    "descrizione": "moneta, 16x16 pixel"
+  },
+  {
+    "file": "sprites/bullet.png",
+    "descrizione": "proiettile, 8x8 pixel"
+  },
+  {
+    "file": "sprites/tiles.png",
+    "descrizione": "tessere 16x16 in griglia 4x2 (64x32): erba, terra, pietra, mattoni / acqua, sabbia, legno, roccia scura"
+  },
+  {
+    "file": "sprites/background.png",
+    "descrizione": "sfondo con cielo e colline, 320x180 pixel"
+  },
+  {
+    "file": "audio/jump.wav",
+    "descrizione": "effetto salto (0,2 s)"
+  },
+  {
+    "file": "audio/coin.wav",
+    "descrizione": "effetto moneta raccolta (0,2 s)"
+  },
+  {
+    "file": "audio/hit.wav",
+    "descrizione": "effetto colpo (0,25 s)"
+  },
+  {
+    "file": "audio/music_loop.wav",
+    "descrizione": "musica di sottofondo da ripetere in ciclo (4 s)"
+  }
+]

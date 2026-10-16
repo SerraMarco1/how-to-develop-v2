@@ -1,0 +1,96 @@
+# La fabbrica delle lezioni: un giro ogni 15 minuti, uno alla volta. Ogni giro fa un pezzo di lavoro, lo salva nel ramo
+# `corso` e si ferma. Il giro dopo riparte da lì. Vedi docs/architettura.md.
+
+name: Fabbrica
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+    inputs:
+      riprova:
+        description: "Il corso è fermo su una lezione: riapri il suo cantiere e riprova"
+        type: boolean
+        default: false
+
+# Un giro alla volta: se un giro è ancora in corso, il successivo aspetta (non lo interrompe).
+concurrency:
+  group: fabbrica
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  giro:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      # Spingere il ramo `corso` (il ramo `main` è protetto: lo può cambiare solo il proprietario).
+      contents: write
+      # Leggere le segnalazioni del proprietario, rispondere, avvisare quando il corso si ferma.
+      issues: write
+    steps:
+      - name: Codice (ramo main)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: codice
+          persist-credentials: false
+
+      - name: Lavoro della fabbrica (ramo corso)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: corso
+          path: corso
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: codice/package-lock.json
+
+      # Godot gira con un utente a parte: non può leggere i file né l'ambiente della fabbrica (dove stanno le chiavi).
+      - name: Utente separato per Godot, cartelle di lavoro
+        run: |
+          sudo useradd --create-home --shell /usr/sbin/nologin htdgodot
+          sudo mkdir -p /opt/htd-cache
+          sudo chown "$(id -u):$(id -g)" /opt/htd-cache
+          chmod 755 /opt/htd-cache
+
+      - name: Godot e documentazione già scaricati
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            /opt/htd-cache/strumenti
+            /opt/htd-cache/godot-docs-*
+            /opt/htd-cache/docs-*.sqlite
+          key: fabbrica-${{ hashFiles('codice/motori/godot/engine.json') }}
+
+      - name: Schermo finto e ffmpeg (per i video del risultato)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends xvfb ffmpeg libgl1-mesa-dri > /dev/null
+
+      - name: Dipendenze
+        working-directory: codice
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+        run: npm ci --no-audit --no-fund
+
+      - name: Compilazione
+        working-directory: codice
+        run: npm run compila --workspace fabbrica
+
+      - name: Giro
+        working-directory: codice
+        env:
+          HTD_DATI: ${{ github.workspace }}/corso
+          HTD_CACHE: /opt/htd-cache
+          HTD_GODOT_UTENTE: htdgodot
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RIPROVA: ${{ inputs.riprova && '--riprova' || '' }}
+        run: node fabbrica/dist/giro.mjs $RIPROVA

@@ -1,0 +1,29 @@
+name: Segnala un problema in una lezione
+description: Un errore nella spiegazione, in un esercizio o nel test. La fabbrica lo controlla e, se c'è, corregge la lezione.
+title: "Lezione: problema"
+labels: ["segnalazione"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        La fabbrica legge solo le segnalazioni scritte dal proprietario del repository.
+  - type: input
+    id: lezione
+    attributes:
+      label: Lezione
+      description: Numero e nome (l'aula lo scrive da sola)
+      placeholder: "1.7 casualita-e-distanze"
+    validations:
+      required: true
+  - type: input
+    id: dove
+    attributes:
+      label: Dove
+      description: Il blocco o l'esercizio (b4, es2, test…)
+  - type: textarea
+    id: problema
+    attributes:
+      label: Cosa non va
+      description: Cosa c'è di sbagliato o di poco chiaro
+    validations:
+      required: true

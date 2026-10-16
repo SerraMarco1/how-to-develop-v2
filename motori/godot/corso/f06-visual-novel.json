@@ -1,0 +1,438 @@
+{
+  "slug": "f06-visual-novel",
+  "titolo": "Visual novel: il primo gioco completo",
+  "descrizione": "Costruisci da zero il motore di una visual novel: la storia scritta come dati, un interprete che la esegue, scelte, variabili, salvataggi, impostazioni, più lingue. Poi lo usi per una storia tua, la esporti e la pubblichi. È il primo gioco che porti dall'idea a qualcosa che un'altra persona può scaricare.",
+  "gioco": "«Storie»: un motore per visual novel con una storia di esempio. Cresce di un sistema a ogni lezione, e ogni sistema resta separato dagli altri.",
+  "prova": "«La tua visual novel»: una storia tua di almeno dieci minuti, con almeno due finali che dipendono dalle scelte, asset trovati da te, salvataggi, impostazioni, e tre funzioni che aggiungi al motore da solo. Esportata per Windows e per il Web.",
+  "progetto": {"nome": "Storie", "cartella": "storie"},
+  "provaProgetto": {"nome": "La mia visual novel", "cartella": "la-mia-visual-novel", "continuaDa": "f06-visual-novel"},
+  "allaFine": [
+    "Scomponi un gioco in sistemi e li costruisci uno alla volta senza che si intralcino.",
+    "Scrivi un interprete: un programma che legge dei dati e li esegue.",
+    "Salvi e ricarichi lo stato completo di un gioco, su più salvataggi.",
+    "Esporti un gioco, lo fai provare e lo pubblichi.",
+    "Valuti un plugin e decidi se usarlo o farne a meno."
+  ],
+  "sezioniDocumentazione": ["tutorials/ui/bbcode_in_richtextlabel", "tutorials/ui", "tutorials/io/saving_games", "tutorials/io/runtime_file_loading_and_saving", "tutorials/i18n", "tutorials/shaders/your_first_shader", "tutorials/shaders/shader_reference/canvas_item_shader", "tutorials/export/exporting_projects", "tutorials/export/exporting_for_windows", "tutorials/export/exporting_for_web", "tutorials/plugins/editor/installing_plugins", "tutorials/audio/audio_buses", "tutorials/scripting/singletons_autoload", "tutorials/inputs/inputevent"],
+  "lezioni": [
+    {
+      "slug": "scomporre-una-visual-novel",
+      "titolo": "Com'è fatta una visual novel: scomporre un gioco in pezzi",
+      "tipo": "metodo",
+      "minuti": 45,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Guardare un gioco finito ed elencare i sistemi che lo compongono",
+        "Decidere cosa è dato (la storia) e cosa è programma (ciò che la esegue)",
+        "Stabilire l'ordine: cosa serve per primo, cosa può aspettare"
+      ],
+      "costruisci": "La mappa dei sistemi del motore, con per ognuno cosa fa, cosa gli serve dagli altri e in quale ordine lo costruirai; la struttura delle cartelle del progetto.",
+      "verifica": "La piattaforma controlla che la mappa nomini i sistemi indispensabili e che ogni dipendenza indicata esista; il progetto ha la struttura dichiarata.",
+      "parole": ["architecture", "project organization", "systems"]
+    },
+    {
+      "slug": "finestra-di-dialogo",
+      "titolo": "La finestra di dialogo",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "RichTextLabel e BBCode: grassetto, corsivo, colore dentro al testo",
+        "Una scena dell'interfaccia con una sola funzione pubblica per mostrare una battuta",
+        "Testo lungo: andare a capo, adattare, scorrere"
+      ],
+      "costruisci": "dialogue_box.tscn: nome di chi parla, testo, indicatore «continua». Una funzione show_line(speaker, text).",
+      "verifica": "La piattaforma chiama la funzione con battute corte, lunghe e con BBCode e legge cosa viene mostrato e se resta dentro al riquadro.",
+      "parole": ["RichTextLabel", "BBCode", "Control", "Theme"]
+    },
+    {
+      "slug": "macchina-da-scrivere",
+      "titolo": "Testo che compare lettera per lettera",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "prevedi"],
+      "impari": [
+        "visible_characters e visible_ratio: mostrare una parte del testo",
+        "Il clic ha due significati: completa la battuta, oppure passa alla prossima",
+        "_unhandled_input: leggere un tasto solo se l'interfaccia non l'ha già usato"
+      ],
+      "costruisci": "Le battute compaiono a una velocità regolabile; un clic durante la scrittura la completa, un clic a testo completo fa avanzare; un segnale avvisa quando la battuta è finita.",
+      "verifica": "La piattaforma legge i caratteri visibili nel tempo, clicca a metà e a fine battuta e controlla i due effetti e il segnale.",
+      "parole": ["visible_characters", "visible_ratio", "_unhandled_input", "Tween", "signal"]
+    },
+    {
+      "slug": "battute-come-dati",
+      "titolo": "La storia come dati",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "dati", "obiettivo"],
+      "impari": [
+        "Progettare un formato: cosa serve per descrivere una battuta",
+        "Caricare la storia da un file e scorrerla una voce alla volta",
+        "Tenere separato chi legge la storia da chi la mostra"
+      ],
+      "costruisci": "Il formato del file della storia e la classe StoryPlayer che lo carica e avanza. La finestra di dialogo non sa da dove arriva il testo. Scrivi una scena di venti battute nel formato.",
+      "verifica": "La piattaforma dà al motore una storia sua e la fa avanzare fino in fondo, controllando ordine e testo di ogni battuta; controlla che la tua scena rispetti il formato.",
+      "parole": ["JSON", "class", "FileAccess", "data-driven"]
+    },
+    {
+      "slug": "personaggi",
+      "titolo": "Personaggi: figure, espressioni, entrate e uscite",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Una Resource per ogni personaggio: nome, colore del nome, immagini delle espressioni",
+        "Mostrare, spostare e far uscire una figura con un'animazione",
+        "Mettere in evidenza chi parla"
+      ],
+      "costruisci": "Il sistema dei personaggi: entrano da un lato, cambiano espressione, si spostano tra sinistra, centro e destra, escono; chi non parla si scurisce.",
+      "verifica": "La piattaforma dà i comandi e legge posizione, immagine mostrata e colore di ogni figura dopo ogni passo.",
+      "parole": ["Resource", "TextureRect", "Tween", "modulate"]
+    },
+    {
+      "slug": "sfondi-e-transizioni",
+      "titolo": "Sfondi e transizioni",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Gli strati di una scena: sfondo, figure, interfaccia",
+        "Dissolvenza tra due immagini e passaggio dal nero",
+        "Aspettare che una transizione finisca prima di proseguire"
+      ],
+      "costruisci": "Cambio di sfondo in dissolvenza e chiusura a nero; la storia aspetta la fine della transizione.",
+      "verifica": "La piattaforma dà il comando e controlla immagine mostrata e trasparenze durante e dopo, e che la battuta successiva non parta prima.",
+      "parole": ["CanvasLayer", "TextureRect", "Tween", "await"]
+    },
+    {
+      "slug": "interprete-dei-comandi",
+      "titolo": "Un interprete: far eseguire la storia",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "estendi", "collauda"],
+      "impari": [
+        "Ogni voce della storia è un comando con un tipo e dei dati",
+        "Un punto solo che legge il tipo e passa il lavoro al sistema giusto, aspettando che finisca",
+        "Aggiungere un comando nuovo senza toccare quelli che ci sono"
+      ],
+      "costruisci": "L'interprete: battuta, sfondo, mostra, nascondi, espressione, attesa. Poi aggiungi da solo un comando (un tremolio dello schermo) e scrivi i controlli che lo provano.",
+      "verifica": "La piattaforma esegue una storia che usa tutti i comandi e controlla ordine ed effetti; esegue i tuoi controlli contro una versione giusta e due sbagliate del comando nuovo: devono promuovere solo la giusta.",
+      "parole": ["match", "await", "command pattern", "Callable"]
+    },
+    {
+      "slug": "scelte",
+      "titolo": "Scelte",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "dati"],
+      "impari": [
+        "Un menu creato dai dati: tanti pulsanti quante sono le opzioni",
+        "Etichette e salti: la storia non è più una fila, è una rete",
+        "Fermare tutto il resto mentre si aspetta la scelta"
+      ],
+      "costruisci": "Il comando di scelta: mostra le opzioni, aspetta, salta al punto giusto della storia. Una scena con tre bivi, due dei quali si ricongiungono.",
+      "verifica": "La piattaforma percorre la tua scena per ogni strada possibile e controlla le battute incontrate; dà scelte con due, tre e sei opzioni.",
+      "parole": ["Button", "VBoxContainer", "signal", "await", "branching"]
+    },
+    {
+      "slug": "variabili-e-condizioni",
+      "titolo": "Variabili della storia e condizioni",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "prevedi"],
+      "impari": [
+        "Lo stato della storia: un posto solo dove stanno le variabili",
+        "Comandi che cambiano una variabile e condizioni che la leggono",
+        "Descrivere una condizione come dato (variabile, confronto, valore) e valutarla"
+      ],
+      "costruisci": "Variabili, comandi «imposta» e «aggiungi», battute e opzioni che compaiono solo a certe condizioni. Una scena in cui una scelta fatta all'inizio cambia una battuta alla fine.",
+      "verifica": "La piattaforma valuta condizioni con stati noti; percorre la tua scena per due strade e controlla variabili e battute. Per cinque piccole storie devi scrivere il valore finale delle variabili prima di eseguirle.",
+      "parole": ["Dictionary", "state", "condition", "match"]
+    },
+    {
+      "slug": "capitoli-e-file",
+      "titolo": "Capitoli: la storia su più file",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Dividere una storia lunga in file e saltare da uno all'altro",
+        "Dare a ogni punto della storia un indirizzo che non cambia",
+        "Caricare un capitolo solo quando serve"
+      ],
+      "costruisci": "Tre capitoli in tre file, con salti tra capitoli e una struttura di cartelle per storia, immagini e audio.",
+      "verifica": "La piattaforma percorre una storia sua su tre file con salti avanti e indietro.",
+      "parole": ["JSON", "FileAccess", "DirAccess", "load"]
+    },
+    {
+      "slug": "controllare-la-storia",
+      "titolo": "Uno strumento per te: controllare la storia prima di giocarla",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "collauda"],
+      "impari": [
+        "Scrivere un programma che controlla dei dati e spiega cosa non va e dove",
+        "Gli errori tipici di una storia: salto verso un'etichetta che non c'è, personaggio sconosciuto, variabile mai impostata, punto mai raggiungibile",
+        "Percorrere una rete di collegamenti senza girare in tondo"
+      ],
+      "costruisci": "Un controllore che legge tutti i file della storia ed elenca gli errori con file e riga, e che si può lanciare dall'editor.",
+      "verifica": "La piattaforma gli dà una storia corretta (nessun errore) e storie con errori noti: deve trovarli tutti, senza segnalarne di falsi.",
+      "parole": ["validation", "EditorScript", "graph", "push_error"]
+    },
+    {
+      "slug": "musica-ed-effetti-nella-storia",
+      "titolo": "Musica, effetti e voci nella storia",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Un gestore dell'audio che vive sopra le scene",
+        "Passare da una musica all'altra in dissolvenza",
+        "Effetti che non si interrompono a vicenda"
+      ],
+      "costruisci": "Comandi per musica, effetto e silenzio; la musica continua tra una scena e l'altra e cambia in dissolvenza.",
+      "verifica": "La piattaforma dà i comandi e controlla cosa suona e a che volume durante e dopo la dissolvenza.",
+      "parole": ["AudioStreamPlayer", "Autoload", "Tween", "audio bus"]
+    },
+    {
+      "slug": "dare-vita-al-testo",
+      "titolo": "Dare vita al testo",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "Segni dentro al testo che cambiano il ritmo: una pausa, un rallentamento",
+        "Leggere un testo e separare ciò che va mostrato da ciò che va eseguito",
+        "Gli effetti di RichTextLabel, e come se ne scrive uno"
+      ],
+      "costruisci": "Pause e cambi di velocità scritti dentro alle battute; una parola che trema. Come si crea un effetto di testo tuo lo trovi nella documentazione.",
+      "verifica": "La piattaforma legge i caratteri visibili nel tempo per una battuta con pause, e controlla che i segni non compaiano nel testo mostrato.",
+      "parole": ["RichTextLabel", "RichTextEffect", "BBCode", "parsing"]
+    },
+    {
+      "slug": "primo-shader-dissolvenza",
+      "titolo": "Il primo shader: una dissolvenza con una maschera",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Cos'è uno shader: un piccolo programma eseguito per ogni punto dell'immagine",
+        "Leggere un'immagine e scegliere se mostrare un punto oppure no",
+        "Comandare uno shader dal codice con un parametro"
+      ],
+      "costruisci": "Una transizione in cui lo sfondo nuovo compare seguendo il disegno di un'immagine in bianco e nero, comandata da un parametro da 0 a 1.",
+      "verifica": "La piattaforma controlla che lo shader si compili, che il parametro esista e che la transizione lo porti da 0 a 1 nel tempo chiesto.",
+      "parole": ["shader", "canvas_item", "uniform", "ShaderMaterial", "set_shader_parameter"]
+    },
+    {
+      "slug": "menu-e-gestione-delle-scene",
+      "titolo": "Menu principale e gestione delle scene",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Un gestore delle scene con una dissolvenza tra l'una e l'altra",
+        "Riusare ciò che hai costruito: menu, tema, focus",
+        "«Continua» compare solo se c'è qualcosa da continuare"
+      ],
+      "costruisci": "Titolo, «Nuova partita», «Continua», «Carica», «Impostazioni», «Esci»; ritorno al titolo dal gioco con conferma.",
+      "verifica": "La piattaforma naviga tutti i percorsi tra le schermate, con il mouse e con la sola tastiera.",
+      "parole": ["Autoload", "change_scene_to_packed", "focus", "ConfirmationDialog"]
+    },
+    {
+      "slug": "salvare-lo-stato",
+      "titolo": "Salvare e caricare: lo stato del gioco",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "obiettivo", "ripara"],
+      "impari": [
+        "Elencare tutto ciò che serve per riprendere esattamente da qui",
+        "Ogni sistema dice il suo stato e lo sa ripristinare",
+        "Un numero di versione nel salvataggio, per quando il formato cambierà"
+      ],
+      "costruisci": "Salvataggio e caricamento completi: punto della storia, variabili, sfondo, figure con espressione e posizione, musica. Poi ricevi un motore in cui il caricamento dimentica due cose e le trovi.",
+      "verifica": "La piattaforma salva in dieci punti diversi di una storia, ricarica ognuno e confronta tutto lo stato con quello del momento del salvataggio.",
+      "parole": ["JSON", "user://", "state", "serialization"]
+    },
+    {
+      "slug": "piu-salvataggi",
+      "titolo": "Più salvataggi, con data e miniatura",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["obiettivo", "trova"],
+      "impari": [
+        "Una schermata dei salvataggi creata dai file che esistono",
+        "Catturare ciò che c'è sullo schermo e salvarlo come immagine",
+        "Sovrascrivere ed eliminare, con conferma"
+      ],
+      "costruisci": "Schermata con dodici posti: miniatura, capitolo, data. Salva, carica, sovrascrivi, elimina. Come si cattura lo schermo lo trovi nella documentazione.",
+      "verifica": "La piattaforma salva in più posti, controlla file e miniature, sovrascrive, elimina e ricarica.",
+      "parole": ["Viewport", "Image", "DirAccess", "Time", "GridContainer"]
+    },
+    {
+      "slug": "impostazioni-che-restano",
+      "titolo": "Impostazioni che restano",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "ConfigFile: un file di impostazioni con sezioni e valori",
+        "Applicare le impostazioni all'avvio, prima che si veda qualcosa",
+        "Valori predefiniti quando il file non c'è o è vecchio"
+      ],
+      "costruisci": "Velocità del testo, volumi, schermo intero: si regolano, si applicano subito, si ritrovano al prossimo avvio.",
+      "verifica": "La piattaforma cambia ogni impostazione, chiude, riapre e controlla; toglie il file e controlla i valori predefiniti.",
+      "parole": ["ConfigFile", "DisplayServer", "AudioServer", "user://"]
+    },
+    {
+      "slug": "storico-salto-automatico",
+      "titolo": "Storico, salto del testo già letto, avanzamento automatico",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["obiettivo", "estendi"],
+      "impari": [
+        "Tenere memoria di ciò che è stato mostrato",
+        "Ricordare tra una partita e l'altra quali battute sono già state lette",
+        "Tre modi di avanzare (a mano, automatico, veloce) come stati dello stesso sistema"
+      ],
+      "costruisci": "Storico scorrevole delle ultime cento battute; avanzamento automatico con attesa proporzionale alla lunghezza; salto veloce che si ferma al primo testo mai letto e alle scelte.",
+      "verifica": "La piattaforma legge lo storico dopo un percorso noto; attiva il salto su una storia letta a metà e controlla dove si ferma.",
+      "parole": ["ScrollContainer", "Array", "state", "Timer"]
+    },
+    {
+      "slug": "piu-lingue",
+      "titolo": "Più lingue",
+      "tipo": "lezione",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Chiavi al posto delle frasi, e una tabella con una colonna per lingua",
+        "tr() e il cambio di lingua mentre il gioco gira",
+        "Cosa tradurre nella storia e cosa no: i testi sì, i nomi dei comandi no"
+      ],
+      "costruisci": "Interfaccia e storia di esempio in italiano e in inglese, con la scelta nelle impostazioni; il cambio di lingua aggiorna subito anche la battuta sullo schermo.",
+      "verifica": "La piattaforma cambia lingua nel menu e a metà di una battuta e legge i testi mostrati; cerca nell'interfaccia frasi rimaste scritte a mano.",
+      "parole": ["TranslationServer", "tr", "CSV", "locale"]
+    },
+    {
+      "slug": "galleria-e-finali",
+      "titolo": "Galleria e finali sbloccati",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Dati che appartengono al giocatore e non a una partita",
+        "Sbloccare qualcosa quando succede un fatto nella storia",
+        "Una schermata che mostra il posseduto e nasconde il resto"
+      ],
+      "costruisci": "Elenco dei finali raggiunti e galleria delle immagini viste, che restano anche iniziando una nuova partita.",
+      "verifica": "La piattaforma raggiunge un finale, comincia una partita nuova e controlla che lo sblocco resti; controlla cosa mostra la galleria prima e dopo.",
+      "parole": ["ConfigFile", "user://", "GridContainer", "persistent data"]
+    },
+    {
+      "slug": "plugin-dialogic",
+      "titolo": "Usare il lavoro degli altri: i plugin",
+      "tipo": "metodo",
+      "minuti": 60,
+      "esercizi": ["guidato", "obiettivo"],
+      "impari": [
+        "Trovare un plugin, installarlo e attivarlo",
+        "Valutarlo: licenza, ultimo aggiornamento, documentazione, versione di Godot",
+        "Costruire o adottare: cosa guadagni e cosa perdi in ciascun caso"
+      ],
+      "costruisci": "In un progetto a parte installi Dialogic 2 e rifai con quello la prima scena della storia di esempio. Prima di fidarti controlli quattro cose (licenza, data dell'ultimo aggiornamento, versione di Godot richiesta, se è documentato ciò che ti serve) e le scrivi nel registro, come per qualsiasi asset.",
+      "verifica": "La piattaforma controlla che il plugin sia installato e attivo, esegue la scena e legge le battute mostrate; controlla le quattro voci nel registro.",
+      "parole": ["plugin", "addons", "Asset Library", "Dialogic"]
+    },
+    {
+      "slug": "esportare-windows-e-web",
+      "titolo": "Esportare: Windows e Web",
+      "tipo": "lezione",
+      "minuti": 75,
+      "esercizi": ["guidato", "ripara"],
+      "impari": [
+        "Modelli di esportazione e preimpostazioni",
+        "Quali file finiscono nel gioco esportato, e quali restano fuori se non lo dici",
+        "Le differenze tra editor e gioco esportato che fanno comparire errori nuovi"
+      ],
+      "costruisci": "Il gioco esportato per Windows e per il Web. Poi ricevi un progetto che nell'editor funziona e una volta esportato no (file della storia non inclusi, un percorso scritto con maiuscole diverse) e lo sistemi.",
+      "verifica": "La piattaforma controlla le preimpostazioni e i file prodotti, ed esegue il gioco esportato fino alla terza battuta.",
+      "parole": ["export", "export templates", "export presets", "pck", "feature tags"]
+    },
+    {
+      "slug": "pubblicare",
+      "titolo": "Pubblicare su itch.io",
+      "tipo": "lezione",
+      "minuti": 45,
+      "esercizi": ["obiettivo"],
+      "impari": [
+        "Preparare ciò che serve: archivio, versione per il browser, immagini, descrizione, crediti",
+        "Creare la pagina e caricare il gioco",
+        "Numerare le versioni"
+      ],
+      "costruisci": "La pagina del gioco con la versione per Windows e quella giocabile nel browser. Puoi tenerla privata.",
+      "verifica": "La piattaforma controlla il pacchetto pronto sul disco (archivio, immagini, descrizione, crediti completi). La pubblicazione in sé la confermi tu.",
+      "parole": ["itch.io", "release", "version", "credits"]
+    },
+    {
+      "slug": "collaudo",
+      "titolo": "Collaudo: far provare il gioco e correggere",
+      "tipo": "metodo",
+      "minuti": 45,
+      "esercizi": ["obiettivo", "collauda"],
+      "impari": [
+        "Provare il proprio gioco con un elenco, non a caso",
+        "Scrivere una segnalazione che permetta di rifare l'errore",
+        "Decidere cosa correggere subito e cosa lasciare"
+      ],
+      "costruisci": "L'elenco di collaudo del motore; lo esegui, scrivi le segnalazioni di ciò che trovi, correggi, e segni ogni correzione in Git.",
+      "verifica": "La piattaforma controlla l'elenco (deve coprire ogni sistema), il formato delle segnalazioni e la storia in Git.",
+      "parole": ["testing", "bug report", "Git", "checklist"]
+    },
+    {
+      "slug": "progetto-vn-1",
+      "titolo": "Progetto «La tua visual novel» – tappa 1: storia e materiali",
+      "tipo": "progetto",
+      "minuti": 120,
+      "esercizi": ["da-zero", "dati"],
+      "impari": ["Progettare una storia che sta nel tempo che hai, e raccogliere ciò che le serve"],
+      "costruisci": "Lo schema della storia (scene, bivi, variabili, almeno due finali), i personaggi, e tutti gli asset trovati e adattati con il registro.",
+      "verifica": "La piattaforma controlla lo schema (finali, variabili usate in almeno una condizione), gli asset e il registro.",
+      "parole": ["branching", "assets", "license"]
+    },
+    {
+      "slug": "progetto-vn-2",
+      "titolo": "Progetto «La tua visual novel» – tappa 2: scrivere la storia",
+      "tipo": "progetto",
+      "minuti": 150,
+      "esercizi": ["da-zero", "dati"],
+      "impari": ["Produrre contenuto con il proprio strumento, e correggerlo quando non basta"],
+      "costruisci": "La storia scritta per intero nel formato del motore, giocabile dall'inizio a ogni finale.",
+      "verifica": "Il tuo controllore non trova errori; la piattaforma percorre la storia per ogni strada: ogni finale è raggiungibile, nessun punto è irraggiungibile, la durata stimata supera i dieci minuti.",
+      "parole": ["JSON", "validation", "branching"]
+    },
+    {
+      "slug": "progetto-vn-3",
+      "titolo": "Progetto «La tua visual novel» – tappa 3: tre funzioni tue",
+      "tipo": "progetto",
+      "minuti": 150,
+      "esercizi": ["da-zero", "trova"],
+      "impari": ["Aggiungere a un sistema esistente qualcosa che nessuna lezione ha spiegato"],
+      "costruisci": "Tre funzioni scelte da un elenco e costruite da solo: per esempio un indicatore di affinità con un personaggio, il salvataggio rapido, un diario che si riempie, un minigioco dentro la storia, una mappa da cui scegliere la scena.",
+      "verifica": "Per ogni funzione dell'elenco la piattaforma ha i suoi controlli di comportamento; rifà poi tutti i controlli del motore, che deve funzionare come prima.",
+      "parole": ["class reference", "signal", "state"]
+    },
+    {
+      "slug": "progetto-vn-4",
+      "titolo": "Progetto «La tua visual novel» – tappa 4: finire",
+      "tipo": "progetto",
+      "minuti": 120,
+      "esercizi": ["da-zero"],
+      "impari": ["Portare un gioco fino in fondo: rifinire, collaudare, esportare, consegnare"],
+      "costruisci": "Audio e transizioni ovunque, salvataggi e impostazioni provati, due lingue per l'interfaccia, collaudo con l'elenco, esportazione per Windows e Web, pacchetto pronto per la pubblicazione.",
+      "verifica": "La piattaforma esegue il gioco esportato, salva e ricarica in tre punti, cambia impostazioni e lingua, e controlla il pacchetto.",
+      "parole": ["export", "testing", "release"]
+    }
+  ]
+}
