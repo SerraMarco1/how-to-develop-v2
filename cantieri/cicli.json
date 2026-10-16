@@ -51,7 +51,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — basket.gd riga 26: set_script non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
