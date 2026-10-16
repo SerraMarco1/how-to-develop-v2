@@ -71,3 +71,5 @@
 {"quando":1792189175393,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"difficolta-che-cresce","ok":true,"contata":true,"durataMs":35370,"tokenInput":13120,"tokenOutput":2739,"ragionamento":4675}
 {"quando":1792189212217,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"difficolta-che-cresce","ok":true,"contata":true,"durataMs":298934,"tokenInput":15558,"tokenOutput":9777,"ragionamento":25467}
 {"quando":1792189515586,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"difficolta-che-cresce","ok":true,"contata":true,"durataMs":17295,"tokenInput":13038,"tokenOutput":6475,"ragionamento":3286}
+{"quando":1792189537464,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"difficolta-che-cresce","ok":false,"contata":true,"durataMs":23938,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792189561405,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"difficolta-che-cresce","ok":true,"contata":true,"durataMs":95678,"tokenInput":12991,"tokenOutput":6492,"ragionamento":11868}
