@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T22:13:32.069Z",
+ "aggiornato": "2026-10-16T22:15:49.027Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "dictionary",
-  "numero": "1.11",
-  "titolo": "Dictionary: dati con un nome"
+  "slug": "stati-del-gioco",
+  "numero": "1.12",
+  "titolo": "Stati del gioco: enum e match"
  },
- "messaggio": "Sta scrivendo la lezione 1.11 «Dictionary: dati con un nome».",
+ "messaggio": "Sta scrivendo la lezione 1.12 «Stati del gioco: enum e match».",
  "riprende": null
 }
