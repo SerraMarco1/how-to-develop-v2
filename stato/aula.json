@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T22:33:03.040Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-16T22:33:48.823Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "difficolta-che-cresce",
-  "numero": "1.13",
-  "titolo": "Difficoltà che cresce nel tempo"
+  "slug": "ordinare-il-codice",
+  "numero": "1.14",
+  "titolo": "Ordinare il codice"
  },
- "messaggio": "Sta scrivendo la lezione 1.13 «Difficoltà che cresce nel tempo».",
- "riprende": null
+ "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 1.14 riprende quando si azzerano.",
+ "riprende": "2026-10-17T07:00:00.822Z"
 }
