@@ -30,7 +30,7 @@ export function Esercizio({ slug, e, onCompletata, onTutor }: { slug: string; e:
     if (r.completata) onCompletata();
     if (!r.errore && !r.superato && (e.modalita === "progetto" || e.modalita === "codice")) {
       setAnalisi({ stato: "in_corso" });
-      const a = await api.analisiCodice(slug, e.id, { ...consegna, cartella: r.cartellaUsata ?? cartella }, r.controlli);
+      const a = await api.analisiCodice(slug, e.id, { ...consegna, cartella: r.cartellaUsata ?? cartella }, r.controlli, r.indizi);
       setAnalisi({ stato: "fatta", ...a });
     }
   }
@@ -189,6 +189,11 @@ export function Esercizio({ slug, e, onCompletata, onTutor }: { slug: string; e:
       {esito && (
         <div className={`esito ${esito.superato ? "esito-ok" : "esito-no"}`}>
           {esito.errore ? <p>{esito.errore}</p> : <p className="esito-titolo">{esito.riepilogo}</p>}
+          {esito.indizi.map((indizio, i) => (
+            <p key={i} className="indizio">
+              <strong>Causa probabile:</strong> {indizio}
+            </p>
+          ))}
           {esito.controlli.length > 0 && (
             <ul className="controlli">
               {esito.controlli.map((c, i) => (

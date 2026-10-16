@@ -22,6 +22,8 @@ export type EsitoVerifica = {
   outputGodot?: string;
   /** Risultato della prova di avvio (solo se richiesta): ogni file si carica e la scena principale parte. */
   avvio?: Controllo[];
+  /** Le cause probabili che la base di verifica ha riconosciuto quando qualcosa non va (es. uno script non attaccato). */
+  indizi?: string[];
 };
 
 // ─────────────────────────── Impostazioni del verificatore ───────────────────────────
@@ -210,8 +212,9 @@ const SCRIPT_FUMO = 'extends "res://htd/htd_test.gd"\n\n\nfunc _run_tests() -> v
 type ScriptVerifica = { descrizione: string; codice: string };
 
 /** Esegue uno script di verifica già scritto nel progetto (htd/<nomeFile>) e traduce il risultato in controlli. */
-async function eseguiScriptVerifica(cartella: string, nomeFile: string, v: ScriptVerifica): Promise<{ controlli: Controllo[]; output: string }> {
+async function eseguiScriptVerifica(cartella: string, nomeFile: string, v: ScriptVerifica): Promise<{ controlli: Controllo[]; indizi: string[]; output: string }> {
   const controlli: Controllo[] = [];
+  const indizi: string[] = [];
   // La base di verifica si chiude da sola dopo 25 secondi: questo limite scatta solo se Godot stesso si blocca.
   const esito = await eseguiGodot(["--headless", "--path", cartella, "-s", `res://htd/${nomeFile}`], { timeoutMs: 45_000, cwd: cartella });
   const riga = esito.output.split(/\r?\n/).findLast((r) => r.startsWith("HTD_RESULT "));
@@ -223,10 +226,10 @@ async function eseguiScriptVerifica(cartella: string, nomeFile: string, v: Scrip
       origine: colpaVerifica ? "verifica" : undefined,
       dettaglio: esito.scadutoTempo ? "Godot non ha terminato entro 45 secondi" : `${colpaVerifica ? "Lo script di verifica non è GDScript valido" : "Il progetto non si è avviato correttamente"}:\n${erroriGodot(esito.output)}`,
     });
-    return { controlli, output: esito.output };
+    return { controlli, indizi, output: esito.output };
   }
   try {
-    const risultato = JSON.parse(riga.slice("HTD_RESULT ".length)) as { checks: { id: string; passed: boolean; message: string }[] };
+    const risultato = JSON.parse(riga.slice("HTD_RESULT ".length)) as { checks: { id: string; passed: boolean; message: string }[]; hints?: unknown };
     if (!Array.isArray(risultato.checks) || risultato.checks.length === 0) controlli.push({ descrizione: v.descrizione, superato: false, origine: "verifica", dettaglio: "La verifica non ha eseguito controlli (non chiama mai check())" });
     for (const c of risultato.checks ?? []) {
       const interno = c.id === "htd_script_error" || c.id === "htd_timeout";
@@ -234,14 +237,16 @@ async function eseguiScriptVerifica(cartella: string, nomeFile: string, v: Scrip
     }
     const erroriScript = esito.output.match(/SCRIPT ERROR[^\n]*(\n\s+at: [^\n]*)?/g);
     if (erroriScript && risultato.checks.every((c) => c.passed)) controlli.push({ descrizione: "Nessun errore durante l'esecuzione", superato: false, dettaglio: nascondiPercorsiPersonali(erroriScript.slice(0, 3).join("\n")) });
+    if (Array.isArray(risultato.hints)) indizi.push(...risultato.hints.filter((h): h is string => typeof h === "string").slice(0, 5).map((h) => h.slice(0, 1000)));
   } catch {
     controlli.push({ descrizione: v.descrizione, superato: false, dettaglio: "Risultato della verifica illeggibile" });
   }
-  return { controlli, output: esito.output };
+  return { controlli, indizi, output: esito.output };
 }
 
-async function controlliGodot(cartella: string, verifiche: ScriptVerifica[], fumo: boolean): Promise<{ controlli: Controllo[]; fumo?: Controllo[]; output: string }> {
+async function controlliGodot(cartella: string, verifiche: ScriptVerifica[], fumo: boolean): Promise<{ controlli: Controllo[]; fumo?: Controllo[]; indizi: string[]; output: string }> {
   const controlli: Controllo[] = [];
+  const indizi = new Set<string>();
   // Tutto ciò che serve alle esecuzioni si scrive PRIMA che Godot parta: da lì in poi la cartella è anche di Godot (nel
   // cloud gira come un altro utente) e la fabbrica non ci scrive più (vedi apriAGodot).
   fs.mkdirSync(path.join(cartella, "htd"), { recursive: true });
@@ -260,9 +265,10 @@ async function controlliGodot(cartella: string, verifiche: ScriptVerifica[], fum
     const nomeFile = `verifica_${indice + 1}.gd`;
     const esito = await eseguiScriptVerifica(cartella, nomeFile, v);
     controlli.push(...esito.controlli);
+    for (const i of esito.indizi) indizi.add(i);
     outputTotale += `\n--- ${nomeFile} ---\n${esito.output}`;
   }
-  return { controlli, fumo: controlliFumo, output: outputTotale };
+  return { controlli, fumo: controlliFumo, indizi: [...indizi], output: outputTotale };
 }
 
 // ─────────────────────────── Punto d'ingresso ───────────────────────────
@@ -328,15 +334,18 @@ export async function verifica(sorgente: SorgenteVerifica, verifiche: Verifica[]
     const scriptGodot = verifiche.filter((v): v is Extract<Verifica, { tipo: "script_godot" }> => v.tipo === "script_godot");
     let outputGodot: string | undefined;
     let avvio: Controllo[] | undefined;
+    let indizi: string[] = [];
     if ((scriptGodot.length > 0 || opzioni.provaAvvio) && fs.existsSync(path.join(temp, "project.godot"))) {
       const esito = await controlliGodot(temp, scriptGodot, Boolean(opzioni.provaAvvio));
       controlli.push(...esito.controlli);
       outputGodot = esito.output;
       avvio = esito.fumo;
+      indizi = esito.indizi;
     } else if (scriptGodot.length > 0) {
       controlli.push({ descrizione: "Esecuzione in Godot", superato: false, dettaglio: "Manca project.godot: non è un progetto Godot" });
     }
-    return { superato: controlli.length > 0 && controlli.every((c) => c.superato), controlli, outputGodot, avvio };
+    const superato = controlli.length > 0 && controlli.every((c) => c.superato);
+    return { superato, controlli, outputGodot, avvio, indizi: superato ? [] : indizi };
   } finally {
     togliCartella(temp);
   }

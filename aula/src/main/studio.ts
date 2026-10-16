@@ -9,8 +9,9 @@ import { descrizioneTipo, lezioniDelCorso } from "@htd/condiviso/piano.ts";
 import { previsioneGiusta } from "@htd/condiviso/previsioni.ts";
 import { FeedbackCodiceSchema, eVerificaAmbiente, type Esercizio } from "@htd/condiviso/schemi.ts";
 import type { BloccoVista, Consegna, EsercizioVista, EsitoConsegna, LezioneVista, MessaggioTutor } from "../comune/api.ts";
-import { chiedi, NessunModello } from "./ai.ts";
+import { chiedi, type Messaggio, NessunModello } from "./ai.ts";
 import { trovaCartellaProgetto } from "./ambiente.ts";
+import { diceCheSupera, verifichePerCorrettore } from "./correttore.ts";
 import { assicuraGodot } from "./godot.ts";
 import { apribile, cartellaDiLavoro, pacco, prossima, voci } from "./corso.ts";
 import { adesso, database, leggiImpostazione } from "./db.ts";
@@ -163,10 +164,11 @@ function trovaEsercizio(slug: string, pezzo: string): { p: PaccoLezione; e: Eser
 
 export async function consegna(slug: string, pezzo: string, input: Consegna): Promise<EsitoConsegna> {
   const trovato = trovaEsercizio(slug, pezzo);
-  if (!trovato) return { superato: false, controlli: [], previsioni: [], riepilogo: "", completata: false, errore: "Esercizio non trovato" };
+  if (!trovato) return { superato: false, controlli: [], indizi: [], previsioni: [], riepilogo: "", completata: false, errore: "Esercizio non trovato" };
   const { p, e } = trovato;
   segnaIniziata(slug);
   const controlli: Controllo[] = [];
+  const indizi: string[] = [];
   const previsioni: EsitoConsegna["previsioni"] = [];
   let cartellaUsata: string | undefined;
   try {
@@ -182,16 +184,20 @@ export async function consegna(slug: string, pezzo: string, input: Consegna): Pr
       if (trovata && trovata.come !== "indicata") {
         controlli.push({ descrizione: `Progetto letto da ${cartellaUsata}`, superato: true, dettaglio: trovata.come === "elenco" ? "Non era nella cartella indicata: l'ho trovato per nome nell'elenco del Project Manager." : "Era in una sottocartella di quella indicata." });
       }
-      controlli.push(...(await verifica({ tipo: "cartella", percorso: cartellaUsata }, e.verifiche)).controlli);
+      const esito = await verifica({ tipo: "cartella", percorso: cartellaUsata }, e.verifiche);
+      controlli.push(...esito.controlli);
+      indizi.push(...(esito.indizi ?? []));
     } else if (e.modalita === "codice") {
-      if (!input.codice?.trim()) return { superato: false, controlli: [], previsioni, riepilogo: "", completata: false, errore: "Incolla il tuo codice prima di verificare" };
+      if (!input.codice?.trim()) return { superato: false, controlli: [], indizi: [], previsioni, riepilogo: "", completata: false, errore: "Incolla il tuo codice prima di verificare" };
       const file = [...e.soluzione.file.filter((f) => f.percorso === "project.godot"), { percorso: e.fileCodice || "res://solution.gd", contenuto: input.codice }];
-      controlli.push(...(await verifica({ tipo: "file", file, daLezione: false }, e.verifiche)).controlli);
+      const esito = await verifica({ tipo: "file", file, daLezione: false }, e.verifiche);
+      controlli.push(...esito.controlli);
+      indizi.push(...(esito.indizi ?? []));
     } else if (e.modalita === "ambiente") {
       controlli.push(...(await verifica({ tipo: "ambiente" }, e.verifiche)).controlli);
     }
   } catch (errore) {
-    return { superato: false, controlli, previsioni, riepilogo: "", completata: false, errore: `Non è stato possibile completare la verifica: ${(errore as Error).message}` };
+    return { superato: false, controlli, indizi, previsioni, riepilogo: "", completata: false, errore: `Non è stato possibile completare la verifica: ${(errore as Error).message}` };
   }
   const previsioniOk = previsioni.length === 0 || previsioni.filter((d) => d.corretta).length / previsioni.length >= 0.75;
   const controlliOk = controlli.every((c) => c.superato) && (controlli.length > 0 || e.modalita === "previsioni");
@@ -203,7 +209,7 @@ export async function consegna(slug: string, pezzo: string, input: Consegna): Pr
     : e.modalita === "previsioni"
       ? `${previsioni.filter((d) => d.corretta).length} previsioni giuste su ${previsioni.length}: leggi perché le altre davano un risultato diverso, poi riprova.`
       : `Non ancora: ${controlli.filter((c) => !c.superato).length} controlli non superati.`;
-  database().prepare("INSERT INTO tentativi (slug, pezzo, consegna, esito, superato, quando) VALUES (?, ?, ?, ?, ?, ?)").run(slug, pezzo, JSON.stringify({ ...input, codice: input.codice?.slice(0, 50_000) }), JSON.stringify({ controlli, previsioni }), superato ? 1 : 0, adesso());
+  database().prepare("INSERT INTO tentativi (slug, pezzo, consegna, esito, superato, quando) VALUES (?, ?, ?, ?, ?, ?)").run(slug, pezzo, JSON.stringify({ ...input, codice: input.codice?.slice(0, 50_000) }), JSON.stringify({ controlli, indizi, previsioni }), superato ? 1 : 0, adesso());
   let completata = false;
   if (superato && pezzo === "test") {
     const pr = progresso(slug);
@@ -214,7 +220,7 @@ export async function consegna(slug: string, pezzo: string, input: Consegna): Pr
       database().prepare("INSERT INTO portfolio (slug, titolo, cartella, aiuto, quando) VALUES (?, ?, ?, ?, ?)").run(slug, p.contenuto.titolo, cartellaUsata ?? null, pr?.aiuto ?? 0, adesso());
     }
   }
-  return { superato, controlli, previsioni, riepilogo, completata, cartellaUsata };
+  return { superato, controlli, indizi: superato ? [] : indizi, previsioni, riepilogo, completata, cartellaUsata };
 }
 
 /**
@@ -290,7 +296,7 @@ function fileDelProgetto(cartella: string): string {
   return raccolti.join("\n\n") || "(nessun file di codice o scena)";
 }
 
-export async function analisiCodice(slug: string, pezzo: string, input: Consegna, controlli: Controllo[]) {
+export async function analisiCodice(slug: string, pezzo: string, input: Consegna, controlli: Controllo[], indizi: string[]) {
   const trovato = trovaEsercizio(slug, pezzo);
   if (!trovato) return { errore: "Esercizio non trovato" };
   const { p, e } = trovato;
@@ -298,26 +304,42 @@ export async function analisiCodice(slug: string, pezzo: string, input: Consegna
     e.modalita === "codice"
       ? `### ${e.fileCodice}\n${(input.codice ?? "").split(/\r?\n/).map((r, i) => `${String(i + 1).padStart(3)} | ${r}`).join("\n")}`
       : fileDelProgetto(input.cartella?.trim() || cartellaDiLavoro(p, e));
+  const verifiche = verifichePerCorrettore(controlli);
+  const falliti = controlli.filter((c) => !c.superato).length;
+  const messaggi: Messaggio[] = [
+    { role: "system", content: leggiFileMotore("prompts", "sistema.md") },
+    {
+      role: "user",
+      content: prompt("correttore", {
+        titolo_esercizio: e.titolo,
+        consegna: e.consegna,
+        conto: verifiche.conto,
+        controlli: verifiche.elenco,
+        indizi: indizi.map((i) => `- ${i}`).join("\n"),
+        file_studente: file,
+        stile: leggiFileMotore("stile-di-casa.md"),
+        documentazione: formattaDocumentazione(cercaDocumentazione(`${p.titolo} ${e.titolo}`, { guide: 2, classi: 2, maxCaratteri: 3000 })),
+      }),
+    },
+  ];
   try {
-    const { dati } = await chiedi({
-      ruolo: "correttore",
-      messaggi: [
-        { role: "system", content: leggiFileMotore("prompts", "sistema.md") },
-        {
-          role: "user",
-          content: prompt("correttore", {
-            titolo_esercizio: e.titolo,
-            consegna: e.consegna,
-            controlli: controlli.map((c) => `${c.superato ? "✓" : "✗"} ${c.descrizione}${c.dettaglio ? ` — ${c.dettaglio}` : ""}`).join("\n").slice(0, 4000),
-            file_studente: file,
-            stile: leggiFileMotore("stile-di-casa.md"),
-            documentazione: formattaDocumentazione(cercaDocumentazione(`${p.titolo} ${e.titolo}`, { guide: 2, classi: 2, maxCaratteri: 3000 })),
-          }),
-        },
-      ],
-      schema: FeedbackCodiceSchema,
-      maxTokens: 3000,
-    });
+    let risposta = await chiedi({ ruolo: "correttore", messaggi, schema: FeedbackCodiceSchema, maxTokens: 3000 });
+    // Una risposta che dà per superato un lavoro con controlli falliti confonderebbe più di quanto aiuta: il modello
+    // la riscrive una volta, e se insiste non si mostra.
+    if (falliti > 0 && diceCheSupera(risposta.dati.riepilogo)) {
+      risposta = await chiedi({
+        ruolo: "correttore",
+        messaggi: [
+          ...messaggi,
+          { role: "assistant", content: risposta.testo },
+          { role: "user", content: `La tua risposta dice che il lavoro supera le verifiche, ma ${falliti} controlli su ${controlli.length} sono ✗, cioè NON superati. Riscrivila: spiega perché quei controlli non passano. Rispondi con SOLO il JSON.` },
+        ],
+        schema: FeedbackCodiceSchema,
+        maxTokens: 3000,
+      });
+      if (diceCheSupera(risposta.dati.riepilogo)) return { errore: "L'analisi automatica questa volta si è contraddetta con le verifiche, quindi non te la mostro: guarda i controlli ✗ e la causa probabile qui sopra, oppure chiedi al tutor." };
+    }
+    const { dati } = risposta;
     return { html: await markdownHtml(dati.riepilogo), righe: dati.righe.map((r) => ({ file: r.file, riga: r.riga ?? null, problema: r.problema, suggerimento: r.suggerimento })) };
   } catch (errore) {
     return { errore: errore instanceof NessunModello ? errore.message : `Analisi non disponibile ora: ${(errore as Error).message}` };

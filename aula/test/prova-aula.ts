@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import type { BrowserWindow } from "electron";
+import { diceCheSupera } from "../src/main/correttore.ts";
 
 // La prova completa dell'aula, dentro l'aula vera (Electron, finestra vera, Godot vero). La lancia
 // aula/strumenti/prova.mjs, che prepara un finto GitHub con un ramo `corso` locale.
@@ -21,6 +22,33 @@ const attendi = async (condizione: () => Promise<boolean>, ms = 120_000, cosa = 
 
 let passi = 0;
 const ok = (messaggio: string) => console.log(`✓ ${++passi}. ${messaggio}`);
+
+type FileLezione = { percorso: string; contenuto: string };
+type EsercizioProva = { id: string; modalita: string; verifiche: { tipo: string; codice?: string }[]; soluzione: { file: FileLezione[] } };
+
+/**
+ * Un esercizio su progetto la cui verifica istanzia una scena che ha sul nodo principale lo script con lo stesso nome
+ * (rock.tscn e rock.gd): la sua soluzione, con quello script staccato dalla scena.
+ */
+function scriptStaccato(esercizi: EsercizioProva[]): { id: string; nodo: string; script: string; file: FileLezione[] } | null {
+  for (const e of esercizi) {
+    if (e.modalita !== "progetto" || e.verifiche.some((v) => ["godot_aperto", "progetto_in_elenco", "impostazione_editor"].includes(v.tipo))) continue;
+    for (const v of e.verifiche) {
+      for (const m of (v.codice ?? "").matchAll(/instantiate_scene\("res:\/\/([\w/-]+)\.tscn"\)/g)) {
+        const base = m[1];
+        const scena = e.soluzione.file.find((f) => f.percorso === `${base}.tscn`);
+        if (!scena || !e.soluzione.file.some((f) => f.percorso === `${base}.gd`)) continue;
+        const risorsa = scena.contenuto.match(new RegExp(`^\\[ext_resource [^\\]]*path="res://${base}\\.gd"[^\\]]*id="([^"]+)"\\]\\n`, "m"));
+        const radice = scena.contenuto.match(/^\[node name="([^"]+)"(?![^\]]*parent=)[^\]]*\]\n((?:[^[\n][^\n]*\n|\n)*)/m);
+        if (!risorsa || !radice || !radice[2].includes(`script = ExtResource("${risorsa[1]}")`)) continue;
+        if (scena.contenuto.split(`ExtResource("${risorsa[1]}")`).length !== 2) continue;
+        const senza = scena.contenuto.replace(risorsa[0], "").replace(`script = ExtResource("${risorsa[1]}")\n`, "");
+        return { id: e.id, nodo: radice[1], script: `${base}.gd`, file: e.soluzione.file.map((f) => (f === scena ? { ...f, contenuto: senza } : f)) };
+      }
+    }
+  }
+  return null;
+}
 
 export async function esegui(finestra: BrowserWindow): Promise<number> {
   // Ogni richiesta alla finestra ha un tempo massimo: una prova non deve mai restare appesa.
@@ -97,7 +125,7 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
     // 6. Una consegna verificata in Godot: prima del lavoro non passa, con la soluzione sì.
     const voce = catalogo.lezioni.find((l) => l.slug === aperta)!;
     const pacco = JSON.parse(fs.readFileSync(path.join(process.env.HTD_PROVA_CORSO!, voce.file), "utf8")) as {
-      contenuto: { esercizi: { id: string; modalita: string; dove: string; verifiche: { tipo: string }[]; soluzione: { file: { percorso: string; contenuto: string }[] }; partenza?: { file: { percorso: string; contenuto: string }[] } }[] };
+      contenuto: { esercizi: (EsercizioProva & { dove: string; partenza?: { file: FileLezione[] } })[]; test: Omit<EsercizioProva, "id"> };
     };
     const esercizio = pacco.contenuto.esercizi.find((e) => e.modalita === "progetto" && !e.verifiche.some((v) => ["godot_aperto", "progetto_in_elenco", "impostazione_editor"].includes(v.tipo)));
     if (esercizio) {
@@ -115,6 +143,33 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
       assert.equal(dopo.superato, true, `la soluzione supera l'esercizio: ${dopo.errore ?? ""} ${JSON.stringify(dopo.controlli.filter((c) => !c.superato))}`);
       ok(`esercizio ${esercizio.id} di «${aperta}» verificato in Godot: progetto vuoto rifiutato, soluzione accettata (${dopo.controlli.length} controlli)`);
     } else ok(`«${aperta}» non ha un esercizio su progetto senza verifiche di ambiente: consegna non provata qui`);
+
+    // 6b. Lo script giusto c'è ma non è attaccato al nodo (il caso del 16 ottobre): dalla finestra, la verifica mostra
+    // la causa e l'analisi del codice non dice che il lavoro supera le verifiche.
+    const staccato = scriptStaccato([...pacco.contenuto.esercizi, { ...pacco.contenuto.test, id: "test" }]);
+    if (staccato) {
+      const cartella = path.join(process.env.HTD_DATI_AULA!, "progetto-staccato");
+      for (const f of staccato.file) {
+        fs.mkdirSync(path.dirname(path.join(cartella, f.percorso)), { recursive: true });
+        fs.writeFileSync(path.join(cartella, f.percorso), f.contenuto);
+      }
+      const id = staccato.id;
+      await vai(`#/lezione/${aperta}`, "Test finale");
+      await js(`(() => { const campo = document.getElementById(${JSON.stringify(`cartella-${id}`)}); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set.call(campo, ${JSON.stringify(cartella)}); campo.dispatchEvent(new Event("input", { bubbles: true })); })()`);
+      await js(`[...document.querySelectorAll(${JSON.stringify(`#${id} .azioni button`)})].find((b) => b.textContent === "Verifica").click()`);
+      await attendi(() => js(`Boolean(document.querySelector(${JSON.stringify(`#${id} .esito`)}))`), 120_000, "esito della verifica");
+      const indizio = await js<string>(`document.querySelector(${JSON.stringify(`#${id} .indizio`)})?.innerText ?? ""`);
+      assert.ok(indizio.includes(staccato.nodo) && indizio.includes(staccato.script), `la causa (nodo ${staccato.nodo}, ${staccato.script}) è mostrata: «${indizio}» — ${await js<string>(`document.querySelector(${JSON.stringify(`#${id} .esito`)}).innerText`)}`);
+      await js(`document.querySelector(${JSON.stringify(`#${id} .esito`)}).scrollIntoView({ block: "start" })`);
+      await schermata("08-causa-probabile");
+      await attendi(() => js(`!document.querySelector(${JSON.stringify(`#${id}`)}).innerText.includes("Guardo il tuo codice")`), 300_000, "analisi del codice");
+      const analisi = await js<string>(`document.querySelector(${JSON.stringify(`#${id} .esito`)}).nextElementSibling?.innerText ?? ""`);
+      assert.ok(analisi.trim(), "l'analisi del codice risponde (o dice perché no)");
+      assert.equal(diceCheSupera(analisi), false, `l'analisi non dice che il lavoro supera le verifiche: «${analisi}»`);
+      await schermata("09-analisi-script-staccato");
+      console.log(`   causa mostrata: ${indizio.slice(0, 160)}…\n   analisi del codice: ${analisi.replace(/\s+/g, " ").slice(0, 600)}`);
+      ok(`${id} di «${aperta}» con ${staccato.script} non attaccato al nodo ${staccato.nodo}: causa mostrata, analisi coerente con le verifiche`);
+    } else ok(`«${aperta}» non ha un esercizio con uno script da staccare: caso dello script non attaccato non provato qui`);
 
     // 7. Le protezioni della finestra.
     assert.equal(await js("window.open('https://example.com') === null"), true);

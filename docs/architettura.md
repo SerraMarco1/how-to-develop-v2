@@ -123,6 +123,12 @@ precedente. L'aula mostra che il corso è fermo. Per ripartire: Actions → Fabb
 - Prima di eseguire qualunque codice di una lezione in Godot (soluzioni, verifiche, progetti di partenza) lo controlla
   con le stesse regole di sicurezza della fabbrica: niente comandi di sistema, niente rete, niente file fuori dal progetto.
 - Le verifiche girano su una copia del tuo progetto, con un Godot di servizio scaricato dal sito ufficiale e controllato.
+  Quando qualcosa non passa, la base di verifica cerca la causa più comune: lo script con il nome della scena
+  (`rock.gd` per `rock.tscn`) scritto ma non attaccato a nessun suo nodo. Se la trova, l'aula la mostra come «Causa
+  probabile» sopra i controlli.
+- Dopo una verifica non superata l'analisi del codice (il «correttore») riceve il conto dei controlli falliti e la
+  causa trovata. Se risponde che il lavoro supera le verifiche quando non è così, deve riscrivere; se insiste, la sua
+  risposta non viene mostrata.
 - La finestra non apre pagine esterne e non carica niente da internet: i link si aprono nel browser, solo verso siti noti.
 - I tuoi dati (progressi, tentativi, chat con il tutor) restano sul PC, con una copia di sicurezza al giorno (le ultime 14).
 - Si installa per il solo utente, senza permessi di amministratore, e si aggiorna da sola dalle release del repository.

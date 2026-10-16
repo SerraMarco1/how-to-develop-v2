@@ -15,6 +15,8 @@ extends SceneTree
 const _MAX_SECONDS := 25.0
 
 var _checks: Array = []
+## Le scene istanziate dalla verifica, con lo script del nodo principale: servono agli indizi (vedi _scene_hints).
+var _scenes: Array = []
 var _finished := false
 var _started_msec := 0
 var _logger: _HtdLogger = null
@@ -113,8 +115,33 @@ func finish() -> void:
 		if not c["passed"]:
 			all_passed = false
 	OS.remove_logger(_logger)
-	print("HTD_RESULT " + JSON.stringify({"passed": all_passed, "checks": _checks}))
+	var hints: Array = [] if all_passed else _scene_hints()
+	print("HTD_RESULT " + JSON.stringify({"passed": all_passed, "checks": _checks, "hints": hints}))
 	quit(0 if all_passed else 1)
+
+
+## Indizi sulla causa quando qualcosa non va. Il caso più comune: lo script della scena c'è (rock.gd accanto a
+## rock.tscn) ma non è attaccato a nessun nodo, così ogni controllo sulle sue variabili fallisce senza dire perché.
+func _scene_hints() -> Array:
+	var hints: Array = []
+	var seen := {}
+	for s in _scenes:
+		var scene_path: String = s["path"]
+		if seen.has(scene_path):
+			continue
+		seen[scene_path] = true
+		var expected := scene_path.get_basename() + ".gd"
+		if not FileAccess.file_exists(expected) or FileAccess.get_file_as_string(scene_path).contains('path="%s"' % expected):
+			continue
+		var scene_name := scene_path.trim_prefix("res://")
+		var script_name := expected.trim_prefix("res://")
+		var attached: String = s["script"]
+		if attached == "":
+			hints.append("Il nodo %s di %s non ha nessuno script attaccato, e %s non è attaccato a nessun nodo della scena: per questo Godot non trova le sue variabili e le sue funzioni. In Godot apri %s, trascina %s dal pannello FileSystem sul nodo %s nel pannello Scene e salva la scena (Ctrl+S)." % [s["node"], scene_name, script_name, scene_name, script_name, s["node"]])
+		else:
+			var other := "uno script interno alla scena" if attached.contains("::") else attached.trim_prefix("res://")
+			hints.append("Al nodo %s di %s è attaccato %s, non %s (che non è attaccato a nessun nodo della scena). Se il lavoro richiesto è in %s, trascinalo dal pannello FileSystem sul nodo %s nel pannello Scene e salva la scena (Ctrl+S)." % [s["node"], scene_name, other, script_name, script_name, s["node"]])
+	return hints
 
 
 ## Carica e istanzia una scena, la aggiunge all'albero e aspetta un frame. Restituisce null se non esiste o non si carica.
@@ -127,6 +154,8 @@ func instantiate_scene(path: String) -> Node:
 	var node: Node = packed.instantiate()
 	if node == null:
 		return null
+	var script: Script = node.get_script()
+	_scenes.append({"path": packed.resource_path if packed.resource_path != "" else path, "node": String(node.name), "script": script.resource_path if script != null else ""})
 	root.add_child(node)
 	if current_scene == null:
 		current_scene = node

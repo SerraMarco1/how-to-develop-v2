@@ -25,6 +25,7 @@ const ConsegnaSchema = z.object({
   risposte: z.record(z.string().max(40), z.string().max(300)).optional(),
 });
 const ControlliSchema = z.array(z.object({ descrizione: z.string().max(2000), superato: z.boolean(), dettaglio: z.string().max(4000).optional(), origine: z.enum(["verifica", "sicurezza"]).optional() })).max(100);
+const IndiziSchema = z.array(z.string().max(1000)).max(10);
 
 /** Siti che l'aula può aprire nel browser: la documentazione di Godot, le pagine delle chiavi e il repository del corso. */
 const SITI_AMMESSI = new Set(["docs.godotengine.org", "godotengine.org", "aistudio.google.com", "console.groq.com", "console.mistral.ai", "admin.mistral.ai"]);
@@ -92,7 +93,7 @@ export function registraCanali(versione: string): void {
   canale("consegna", z.tuple([slug, pezzo, ConsegnaSchema]), consegna);
   canale("preparaPartenza", z.tuple([slug, pezzo]), preparaPartenza);
   canale("soluzione", z.tuple([slug, pezzo]), soluzione);
-  canale("analisiCodice", z.tuple([slug, pezzo, ConsegnaSchema, ControlliSchema]), analisiCodice);
+  canale("analisiCodice", z.tuple([slug, pezzo, ConsegnaSchema, ControlliSchema, IndiziSchema]), analisiCodice);
   canale("tutor", z.tuple([slug, z.string().max(4000), z.number().int().min(0).max(5), pezzo.nullable(), z.string().max(100_000).nullable()]), tutor);
   canale("storiaTutor", z.tuple([slug]), storiaTutor);
   canale("spiegaAltrimenti", z.tuple([slug, z.string().regex(/^b\d{1,3}$/)]), spiegaAltrimenti);

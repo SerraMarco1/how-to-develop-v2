@@ -645,6 +645,16 @@ details.fase[open] > summary {
   margin: 4px 0;
 }
 
+.indizio {
+  margin: 4px 0 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--avviso-bordo);
+  border-radius: 6px;
+  background: var(--avviso-sfondo);
+  color: var(--testo);
+  font-size: 0.9rem;
+}
+
 .dettaglio {
   margin: 4px 0 0 18px;
   padding: 6px 8px;

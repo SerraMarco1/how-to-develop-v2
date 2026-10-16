@@ -75,6 +75,8 @@ export type Controllo = { descrizione: string; superato: boolean; dettaglio?: st
 export type EsitoConsegna = {
   superato: boolean;
   controlli: Controllo[];
+  /** Le cause probabili riconosciute dalla verifica in Godot (es. uno script non attaccato al nodo). */
+  indizi: string[];
   previsioni: { id: string; corretta: boolean; commentoHtml: string }[];
   riepilogo: string;
   completata: boolean;
@@ -110,7 +112,7 @@ export type Api = {
   consegna(slug: string, pezzo: string, consegna: Consegna): Promise<EsitoConsegna>;
   preparaPartenza(slug: string, pezzo: string): Promise<{ cartella?: string; spostata?: string; errore?: string }>;
   soluzione(slug: string, pezzo: string): Promise<{ html: string }>;
-  analisiCodice(slug: string, pezzo: string, consegna: Consegna, controlli: Controllo[]): Promise<{ html?: string; righe?: { file?: string; riga?: number | null; problema: string; suggerimento: string }[]; errore?: string }>;
+  analisiCodice(slug: string, pezzo: string, consegna: Consegna, controlli: Controllo[], indizi: string[]): Promise<{ html?: string; righe?: { file?: string; riga?: number | null; problema: string; suggerimento: string }[]; errore?: string }>;
   tutor(slug: string, testo: string, livello: number, pezzo: string | null, codice: string | null): Promise<{ html?: string; errore?: string }>;
   storiaTutor(slug: string): Promise<MessaggioTutor[]>;
   spiegaAltrimenti(slug: string, blocco: string): Promise<{ html?: string; errore?: string }>;
