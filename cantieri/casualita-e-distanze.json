@@ -2,7 +2,7 @@
  "creato": "2026-10-16T07:42:07.744Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -103,13 +103,115 @@
    "genere": "guidato",
    "correzioni": 1,
    "semplificato": false,
-   "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Le stelle nascono in punti casuali dentro lo schermo e is_caught rileva il contatto a distanze note: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:4)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:4)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 4: `var star := instantiate_scene(\"res://star.tscn\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest",
     "gemini/gemini-flash-lite-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "guidato",
+    "genere": "guidato",
+    "titolo": "Posizione casuale e raccolta della stella",
+    "consegna": "Nel gioco «Pioggia di stelle», la stella scende sempre dalla coordinata orizzontale fissa di 576 pixel e controlla il contatto con il cesto usando due verifiche separate sugli assi X e Y.\n\nModifica lo script `star.gd` per renderla imprevedibile e misurare la reale distanza circolare:\n1. Rimuovi la costante `START_POSITION` e dichiara al suo posto quattro costanti numeriche di tipo `float`:\n   - `START_Y = 80.0`\n   - `SPAWN_MIN_X = 64.0`\n   - `SPAWN_MAX_X = 1088.0`\n   - `CATCH_DISTANCE = 60.0`\n2. Nella funzione `_ready()`, assegna a `base_value` un valore intero casuale tra `10` e `30` (estremi inclusi) tramite `randi_range(10, 30)` prima di calcolare `points`.\n3. Nella funzione `reset_star()`:\n   - Genera una coordinata orizzontale casuale con `randf_range(SPAWN_MIN_X, SPAWN_MAX_X)`.\n   - Assegna a `position` il vettore `Vector2(random_x, START_Y)`.\n   - Imposta `is_collected = false`.\n4. Riscrivi la funzione `is_caught(basket_position: Vector2) -> bool`:\n   - Calcola la distanza in pixel tra la posizione della stella (`position`) e quella del cesto (`basket_position`) usando il metodo `distance_to()`.\n   - Restituisce `true` se la distanza è strettamente minore di `CATCH_DISTANCE`, altrimenti `false`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [
+     "Nel pannello *FileSystem* fai doppio clic su `star.gd` per aprirlo nell'editor di script.",
+     "All'inizio dello script, cancella la riga `const START_POSITION: Vector2 = Vector2(576, 80)` e scrivi le quattro nuove costanti: `const START_Y: float = 80.0`, `const SPAWN_MIN_X: float = 64.0`, `const SPAWN_MAX_X: float = 1088.0` e `const CATCH_DISTANCE: float = 60.0`.",
+     "Dentro `_ready()`, prima del calcolo di `points`, inserisci la riga `base_value = randi_range(10, 30)` per generare il valore base a caso.",
+     "Sostituisci il contenuto di `reset_star()` creando una variabile locale `var random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)`, assegna a `position` il vettore `Vector2(random_x, START_Y)` e mantieni `is_collected = false`.",
+     "Cancella le istruzioni dentro `is_caught(basket_position: Vector2) -> bool` e scrivi: `var distance: float = position.distance_to(basket_position)` seguito da `return distance < CATCH_DISTANCE`.",
+     "Salva il file con Ctrl+S ed esegui la scena con F6 per vedere la stella cadere da colonne orizzontali sempre diverse."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://star.gd",
+      "descrizione": "Il file star.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://star.gd",
+      "regex": "randf_range\\(",
+      "descrizione": "Lo script star.gd usa randf_range() per estrarre la coordinata orizzontale"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://star.gd",
+      "regex": "distance_to\\(",
+      "descrizione": "Lo script star.gd usa distance_to() per verificare la vicinanza al cesto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_exists\", star != null, \"La scena star.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar min_x: float = 9999.0\n\tvar max_x: float = -9999.0\n\tfor i in range(100):\n\t\tcall_if_exists(star, \"reset_star\")\n\t\tvar current_pos = get_prop(star, \"position\", Vector2.ZERO)\n\t\tif not check(\"y_at_start\", is_equal_approx(current_pos.y, 80.0), \"A ogni reset la stella deve tornare a Y = 80.0\"):\n\t\t\treturn\n\t\tif not check(\"x_in_bounds\", current_pos.x >= 64.0 and current_pos.x <= 1088.0, \"La coordinata X deve rimanere tra 64.0 e 1088.0\"):\n\t\t\treturn\n\t\tif current_pos.x < min_x:\n\t\t\tmin_x = current_pos.x\n\t\tif current_pos.x > max_x:\n\t\t\tmax_x = current_pos.x\n\tcheck(\"positions_vary\", (max_x - min_x) > 300.0, \"Su 100 tentativi le stelle non devono comparire tutte nella stessa colonna\")\n\tstar.set(\"position\", Vector2(500.0, 500.0))\n\tvar caught_close = call_if_exists(star, \"is_caught\", [Vector2(500.0, 540.0)], false)\n\tcheck(\"caught_close\", caught_close == true, \"A distanza di 40 pixel la stella deve risultare presa\")\n\tvar caught_edge = call_if_exists(star, \"is_caught\", [Vector2(500.0, 559.0)], false)\n\tcheck(\"caught_edge\", caught_edge == true, \"A distanza di 59 pixel la stella deve risultare presa\")\n\tvar caught_far = call_if_exists(star, \"is_caught\", [Vector2(500.0, 565.0)], true)\n\tcheck(\"caught_far\", caught_far == false, \"A distanza di 65 pixel la stella NON deve risultare presa\")\n",
+      "descrizione": "Le stelle nascono in punti casuali dentro lo schermo e is_caught rileva il contatto a distanze note"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "star.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+      },
+      {
+       "percorso": "rock.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+      },
+      {
+       "percorso": "basket.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+      },
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+      },
+      {
+       "percorso": "rock.gd",
+       "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i limiti ed aggiorna l'aspetto visivo\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia verso il basso e verso destra\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Riporta la roccia alle coordinate di partenza\n\tposition = START_POSITION\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+      },
+      {
+       "percorso": "star.gd",
+       "contenuto": "extends Sprite2D\n\n# Coordinate di riferimento e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Genera un valore base casuale tra 10 e 30 prima di calcolare i punti\n\tbase_value = randi_range(10, 30)\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Posiziona la stella in alto e imposta il colore\n\treset_star()\n\tmodulate = Color.YELLOW\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella scende solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto\n\tif position.y > RESET_Y:\n\t\treset_star()\n\t\n\t# Aggiorna il colore in base all'altezza raggiunta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Assegna una coordinata orizzontale casuale e riposiziona la stella in alto\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Misura la distanza in pixel dal cesto e verifica se rientra nella soglia\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "res://basket.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "Left",
+         "A"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "Right",
+         "D"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Sostituendo la coordinata fissa con `randf_range(SPAWN_MIN_X, SPAWN_MAX_X)` dentro `reset_star()`, ogni nuova stella compare in una colonna orizzontale imprevedibile ma sempre compresa nell'area visibile dello schermo. La funzione `randi_range(10, 30)` genera un punteggio base intero diverso per ogni partita. Infine, `position.distance_to(basket_position)` calcola la lunghezza in pixel del segmento in linea d'aria tra stella e cesto: confrontandola con `CATCH_DISTANCE` otteniamo un'area circolare precisa senza dover controllare separatamente gli assi X e Y.",
+     "cambiati": [
+      "star.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es1"
+   }
   },
   "es2": {
    "stato": "da_fare",
