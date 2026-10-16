@@ -97,3 +97,27 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           MODELLO: ${{ inputs.modello }}
         run: node fabbrica/dist/prova-scrittore.mjs "$MODELLO"
+
+  # Finita la prova, la fabbrica riparte (si rilancia da sola giro dopo giro: vedi fabbrica.yml).
+  rilancio:
+    needs: prova
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - name: La fabbrica riparte
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          altri_in_coda() {
+            for w in fabbrica.yml prova-scrittore.yml; do
+              n="$(gh run list --workflow "$w" --limit 10 --json status,databaseId --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID) | select(.status == \"queued\" or .status == \"pending\" or .status == \"waiting\" or .status == \"requested\")] | length" || echo 0)"
+              [ "${n:-0}" -gt 0 ] && return 0
+            done
+            return 1
+          }
+          if altri_in_coda; then echo "C'è già un giro in coda: continua lui."; exit 0; fi
+          gh workflow run fabbrica.yml --ref main

@@ -38,11 +38,13 @@ fabbrica controlla; se l'errore c'è, la lezione esce corretta e la risposta arr
 
 ## Tenere in piedi la fabbrica
 
-La fabbrica non chiede niente finché funziona. Lavora da sola ogni 15 minuti; lo stato si vede nell'aula (pagina Oggi)
+La fabbrica non chiede niente finché funziona. Lavora da sola, un giro dopo l'altro (alla fine di ogni giro avvia il
+successivo); lo stato si vede nell'aula (pagina Oggi)
 e, nel dettaglio, nella scheda **Actions** del repository.
 
-GitHub sospende i workflow a orario di un repository pubblico dopo 60 giorni senza attività: se nella scheda Actions,
-sotto «Fabbrica», compare «This scheduled workflow is disabled», basta premere **Enable workflow**.
+- **Fermarla**: nella scheda Actions apri il giro in corso della «Fabbrica» e premi **Cancel workflow**. Non si rilancia.
+- **Farla ripartire** (dopo averla fermata, o se per un guasto di GitHub si fosse interrotta): **Actions → Fabbrica →
+  Run workflow**. Da lì continua da sola.
 
 ### Le chiavi
 

@@ -9,7 +9,7 @@
 | | La **fabbrica** | L'**aula** |
 |---|---|---|
 | Cosa fa | Scrive le lezioni con i modelli AI gratuiti e le verifica in Godot | Ti fa studiare: lezioni, esercizi, tutor, ripasso, «Cosa so fare» |
-| Dove gira | Su GitHub Actions, ogni 15 minuti, anche a PC spento | Sul tuo PC, come programma Windows |
+| Dove gira | Su GitHub Actions, un giro dopo l'altro, anche a PC spento | Sul tuo PC, come programma Windows |
 | Cosa legge | Il piano del corso, la documentazione ufficiale di Godot, il proprio lavoro salvato | Le lezioni pubblicate dalla fabbrica |
 | Cosa scrive | Il ramo `corso` del repository: lezioni pronte, cantieri, tracce | Un database sul tuo PC con i tuoi progressi |
 | Chiavi AI | Nei segreti del repository | Cifrate sul tuo PC (Windows le protegge con il tuo account) |
@@ -30,7 +30,7 @@ main
   aula/              il programma Windows
   strumenti/         piano.ts: controlla il piano del corso e scrive docs/piano-del-corso.md
   docs/              questo documento, il piano del corso leggibile, la guida per chi studia
-  .github/workflows/ fabbrica (ogni 15 minuti), controlli (a ogni modifica), rilascio dell'aula, prova di uno scrittore
+  .github/workflows/ fabbrica (si rilancia da sola), controlli (a ogni modifica), rilascio dell'aula, prova di uno scrittore
 
 corso
   catalogo.json      le lezioni pubblicate, ciascuna con l'impronta SHA-256 del suo file
@@ -46,7 +46,15 @@ corso
 
 ## Come lavora la fabbrica
 
-A ogni giro (al massimo uno alla volta):
+Un giro alla volta. Alla fine di ogni giro la fabbrica **si rilancia da sola** (job «rilancio» di
+`.github/workflows/fabbrica.yml`): aspetta quanto serve (fino a quando un fornitore torna disponibile, al massimo
+15 minuti; 45 se il corso è fermo o finito, per leggere comunque le segnalazioni) e avvia il giro successivo.
+Il motivo: l'orario di GitHub (`schedule`) dalla pubblicazione del repository non ha mai avviato un giro, e GitHub
+stesso dice che può ritardarlo o saltarlo; resta nel file solo come riserva. Il rilancio non avvia un giro se ce n'è già
+uno in coda (un «Run workflow» fatto a mano, una prova di scrittore): continua quello. Annullare un giro (Cancel run)
+ferma la fabbrica; Run workflow la fa ripartire.
+
+A ogni giro:
 
 1. Scarica `main` e `corso`, prepara Godot 4.7.2 (impronta SHA-512 controllata) e l'indice della documentazione.
 2. Prende la prima lezione del piano non ancora pubblicata. Il corso va in ordine: una lezione parte solo dal gioco

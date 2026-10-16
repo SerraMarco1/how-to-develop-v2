@@ -3,7 +3,7 @@
 Un corso per imparare a fare videogiochi con **Godot 4.7** partendo da zero, scritto e verificato da una «fabbrica»
 automatica e studiato in un programma Windows, l'«aula».
 
-- **La fabbrica** gira su GitHub Actions ogni 15 minuti, anche a PC spento. Scrive le lezioni del
+- **La fabbrica** gira su GitHub Actions un giro dopo l'altro, anche a PC spento. Scrive le lezioni del
   [piano del corso](docs/piano-del-corso.md) con modelli AI gratuiti, esegue ogni esercizio in Godot (deve fallire prima
   del lavoro e passare dopo), le fa rivedere e le pubblica nel ramo `corso`.
 - **L'aula** è il programma per studiare: lezioni, esercizi controllati in Godot sul tuo progetto, tutor, ripasso,

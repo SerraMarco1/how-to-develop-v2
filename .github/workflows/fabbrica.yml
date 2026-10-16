@@ -1,5 +1,6 @@
-# La fabbrica delle lezioni: un giro ogni 15 minuti, uno alla volta. Ogni giro fa un pezzo di lavoro, lo salva nel ramo
-# `corso` e si ferma. Il giro dopo riparte da lì. Vedi docs/architettura.md.
+# La fabbrica delle lezioni: un giro alla volta, uno dopo l'altro. Ogni giro fa un pezzo di lavoro, lo salva nel ramo
+# `corso` e si ferma; poi la fabbrica si rilancia da sola (job «rilancio») e il giro dopo riparte da lì.
+# Vedi docs/architettura.md.
 
 name: Fabbrica
 
@@ -96,3 +97,49 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           RIPROVA: ${{ inputs.riprova && '--riprova' || '' }}
         run: node fabbrica/dist/giro.mjs $RIPROVA
+
+  # GitHub a volte non avvia i workflow a orario (dalla pubblicazione del repository, il 16 ottobre 2026, non l'ha mai
+  # fatto). La fabbrica allora si rilancia da sola: finito un giro, aspetta quanto serve (al massimo 15 minuti; 45 se il
+  # corso è fermo o finito, per leggere comunque le segnalazioni) e avvia il giro successivo. Il token del workflow può
+  # avviare un workflow (workflow_dispatch): è l'unico permesso di questo passo. L'orario sopra resta come riserva.
+  # Per fermare la fabbrica: annullare il giro in corso (Cancel run) o disattivare il workflow.
+  rilancio:
+    needs: giro
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Attesa e giro successivo
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          altri_in_coda() {
+            for w in fabbrica.yml prova-scrittore.yml; do
+              n="$(gh run list --workflow "$w" --limit 10 --json status,databaseId --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID) | select(.status == \"queued\" or .status == \"pending\" or .status == \"waiting\" or .status == \"requested\")] | length" || echo 0)"
+              [ "${n:-0}" -gt 0 ] && return 0
+            done
+            return 1
+          }
+          stato="$(gh api "repos/$GH_REPO/contents/stato/aula.json?ref=corso" --jq '.content' | base64 -d 2>/dev/null || echo '{}')"
+          fase="$(jq -r '.stato // "sconosciuto"' <<< "$stato" 2>/dev/null || echo sconosciuto)"
+          riprende="$(jq -r '.riprende // empty' <<< "$stato" 2>/dev/null || true)"
+          massimo=900
+          attesa=60
+          case "$fase" in ferma|finito) massimo=2700; attesa=2700 ;; esac
+          quando="$(date -d "$riprende" +%s 2>/dev/null || echo 0)"
+          [ -n "$riprende" ] && [ "$quando" -gt 0 ] && attesa=$(( quando - $(date +%s) + 30 ))
+          [ "$attesa" -lt 60 ] && attesa=60
+          [ "$attesa" -gt "$massimo" ] && attesa=$massimo
+          echo "Stato della fabbrica: $fase. Il prossimo giro parte tra $attesa secondi."
+          sleep "$attesa"
+          if altri_in_coda; then echo "C'è già un giro in coda: continua lui."; exit 0; fi
+          for tentativo in 1 2 3; do
+            gh workflow run fabbrica.yml --ref main && { echo "Giro successivo avviato."; exit 0; }
+            sleep 20
+          done
+          echo "Non sono riuscito ad avviare il giro successivo: riparte con l'orario o con Run workflow."
+          exit 1
