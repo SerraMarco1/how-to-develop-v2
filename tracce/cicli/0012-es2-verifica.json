@@ -1,0 +1,70 @@
+{
+ "n": 12,
+ "quando": "2026-10-16T20:07:50.474Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (prevedi): approvato",
+ "spiegazione": "«Prevedere i cicli for e while». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 6 · 3 · 420.0 · 14 · 32",
+ "richieste": 0,
+ "durataMs": 2240,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedere i cicli for e while",
+   "consegna": "Leggi ogni frammento di codice e prevedi con precisione il valore restituito da `run()`, senza eseguirlo nell'editor.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "func run() -> int:\n\tvar total: int = 0\n\tfor i in range(4):\n\t\ttotal += i\n\treturn total\n",
+     "domanda": "Quanto vale il numero intero restituito da run()?",
+     "risposta": "6",
+     "spiegazione": "`range(4)` produce la sequenza di indici 0, 1, 2, 3 (il valore limite 4 è escluso). Sommando i valori: 0 + 1 = 1; 1 + 2 = 3; 3 + 3 = 6.",
+     "id": "es2p1"
+    },
+    {
+     "codice": "func run() -> int:\n\tvar steps: int = 0\n\tfor i in range(2, 8, 2):\n\t\tsteps += 1\n\treturn steps\n",
+     "domanda": "Quanti passi compie il ciclo e quale numero restituisce run()?",
+     "risposta": "3",
+     "spiegazione": "La funzione `range(2, 8, 2)` parte da 2 e avanza con passo 2 fermandosi prima di 8: i valori generati sono 2, 4, 6. Il ciclo viene quindi eseguito esattamente 3 volte, incrementando `steps` fino a 3.",
+     "id": "es2p2"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar y: float = 100.0\n\twhile y < 350.0:\n\t\ty += 80.0\n\treturn y\n",
+     "domanda": "Quale valore decimale per la coordinata y viene restituito da run()?",
+     "risposta": "420.0",
+     "spiegazione": "All'inizio `y` è 100.0. Primo ciclo: 100 + 80 = 180.0 (< 350). Secondo ciclo: 180 + 80 = 260.0 (< 350). Terzo ciclo: 260 + 80 = 340.0 (< 350). Quarto ciclo: 340 + 80 = 420.0. Ora 420.0 non è minore di 350.0: il ciclo termina e restituisce 420.0.",
+     "id": "es2p3"
+    },
+    {
+     "codice": "func run() -> int:\n\tvar count: int = 0\n\tfor i in range(5, 1, -1):\n\t\tcount += i\n\treturn count\n",
+     "domanda": "Quanto vale il valore numerico restituito da run()?",
+     "risposta": "14",
+     "spiegazione": "`range(5, 1, -1)` conta all'indietro partendo da 5 fino a 2 compreso (il limite 1 è escluso). I valori sommati sono 5 + 4 + 3 + 2 = 14.",
+     "id": "es2p4"
+    },
+    {
+     "codice": "func run() -> int:\n\tvar power: int = 1\n\twhile power <= 16:\n\t\tpower *= 2\n\treturn power\n",
+     "domanda": "Qual è il valore finale della variabile power restituito da run()?",
+     "risposta": "32",
+     "spiegazione": "La condizione è `<= 16`. I passaggi sono: 1 * 2 = 2; 2 * 2 = 4; 4 * 2 = 8; 8 * 2 = 16. Poiché 16 <= 16 è ancora vero (`true`), il ciclo viene eseguito un'ulteriore volta: 16 * 2 = 32. A questo punto 32 <= 16 è falso e la funzione restituisce 32.",
+     "id": "es2p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "I cicli `for` iterano sempre su intervalli numerici in cui il limite destro non è mai compreso. Nei cicli `while`, il corpo viene rieseguito finché la condizione booleana restituisce `true`, terminando solo appena diventa `false`.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
