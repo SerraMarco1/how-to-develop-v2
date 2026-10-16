@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:38:39.578Z",
+ "aggiornato": "2026-10-16T07:39:01.660Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -29,6 +29,15 @@
    "file": "lezioni/f00-orientamento/trovare-le-risposte-nella-documentazione.json",
    "sha256": "2460cba0f0b50e2f9642fa8608ec3feb5c048d756f33659156ba5d1b1fb058f1",
    "byte": 18695
+  },
+  {
+   "slug": "il-primo-script",
+   "numero": "1.0",
+   "titolo": "Il primo script: dare ordini a un nodo",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/il-primo-script.json",
+   "sha256": "512b7bd16499ade178a31579aad8b52ff21dcafda7b75814383f43f2a072365c",
+   "byte": 27768
   }
  ],
  "documentazione": {

@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:38:26.518Z",
+ "aggiornato": "2026-10-16T07:38:42.323Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "trovare-le-risposte-nella-documentazione",
-  "numero": "0.2",
-  "titolo": "Trovare le risposte da soli: l'aiuto integrato"
+  "slug": "il-primo-script",
+  "numero": "1.0",
+  "titolo": "Il primo script: dare ordini a un nodo"
  },
- "messaggio": "Sta scrivendo la lezione 0.2 «Trovare le risposte da soli: l'aiuto integrato».",
+ "messaggio": "Sta scrivendo la lezione 1.0 «Il primo script: dare ordini a un nodo».",
  "riprende": null
 }
