@@ -21,3 +21,4 @@
 {"quando":1792177096914,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"punteggio-e-testo","ok":true,"contata":true,"durataMs":231172,"tokenInput":11848,"tokenOutput":2783,"ragionamento":10202}
 {"quando":1792177329370,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"punteggio-e-testo","ok":true,"contata":true,"durataMs":536943,"tokenInput":14621,"tokenOutput":5292,"ragionamento":48704}
 {"quando":1792177866314,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"punteggio-e-testo","ok":true,"contata":true,"durataMs":295760,"tokenInput":14621,"tokenOutput":5749,"ragionamento":23354}
+{"quando":1792178166300,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"punteggio-e-testo","ok":true,"contata":true,"durataMs":21712,"tokenInput":10818,"tokenOutput":4195,"ragionamento":5895}
