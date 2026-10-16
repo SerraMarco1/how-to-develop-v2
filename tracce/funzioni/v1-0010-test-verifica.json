@@ -1,0 +1,99 @@
+{
+ "passaggio": 153,
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (riordina): approvato",
+ "spiegazione": "«Riorganizzare l'ostacolo in funzioni». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: rock.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "riordina",
+   "titolo": "Riorganizzare l'ostacolo in funzioni",
+   "consegna": "Riorganizza il file `rock.gd` del gioco «Pioggia di stelle» suddividendo il codice di `_process(delta: float)` in funzioni dedicate, senza cambiare il comportamento a schermo dell'ostacolo.\n\nNello script `rock.gd`, crea tre funzioni con tipi statici espliciti:\n1. `move_rock(delta: float) -> void`: incrementa `position.y` di `fall_speed * delta` e `position.x` di `horizontal_speed * delta`.\n2. `reset_rock() -> void`: imposta `position = START_POSITION`.\n3. `update_modulate() -> void`: imposta `modulate = Color.DARK_RED` se `position.y > 400.0`, altrimenti imposta `modulate = Color.RED`.\n\nDentro `_process(delta: float)`, chiama queste funzioni:\n- Per prima cosa chiama `move_rock(delta)`.\n- Se `position.y > RESET_Y or position.x > RESET_X`, chiama `reset_rock()`.\n- Infine chiama `update_modulate()`.\n\nNessuna funzione dello script deve superare le 6 righe di codice.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "pioggia-di-stelle",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Dichiara le tre nuove funzioni in fondo allo script usando `func nome_funzione() -> void:` e chiama ciascuna per nome dentro `_process(delta)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://rock.gd",
+     "descrizione": "Il file rock.gd esiste nel progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar rock_scene := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_scene\", rock_scene != null, \"La scena rock.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tcheck(\"has_move_rock\", has_function(rock_scene, \"move_rock\"), \"rock.gd deve definire la funzione move_rock(delta: float) -> void\")\n\tcheck(\"has_reset_rock\", has_function(rock_scene, \"reset_rock\"), \"rock.gd deve definire la funzione reset_rock() -> void\")\n\tcheck(\"has_update_modulate\", has_function(rock_scene, \"update_modulate\"), \"rock.gd deve definire la funzione update_modulate() -> void\")\n\t\n\tvar max_lines: int = longest_function_lines(\"res://rock.gd\")\n\tcheck(\"function_lines\", max_lines <= 6, \"Nessuna funzione di rock.gd deve superare 6 righe di codice\")\n\t\n\tvar untyped: int = untyped_declarations(\"res://rock.gd\")\n\tcheck(\"types_rock\", untyped == 0, \"Tutte le funzioni dichiarate in rock.gd devono avere parametri e tipo di ritorno tipizzati\")\n\t\n\tif has_function(rock_scene, \"reset_rock\"):\n\t\trock_scene.position = Vector2(800.0, 700.0)\n\t\trock_scene.call(\"reset_rock\")\n\t\tcheck(\"reset_pos\", rock_scene.position == Vector2(200, 80), \"reset_rock() deve reimpostare la posizione a START_POSITION\")\n\t\n\tif has_function(rock_scene, \"update_modulate\"):\n\t\trock_scene.position.y = 450.0\n\t\trock_scene.call(\"update_modulate\")\n\t\tvar dark_red_ok: bool = rock_scene.modulate == Color.DARK_RED\n\t\trock_scene.position.y = 200.0\n\t\trock_scene.call(\"update_modulate\")\n\t\tvar red_ok: bool = rock_scene.modulate == Color.RED\n\t\tcheck(\"modulate_logic\", dark_red_ok and red_ok, \"update_modulate() deve impostare modulate a DARK_RED se position.y > 400.0, altrimenti a RED\")\n\t\n\tvar start_pos: Vector2 = rock_scene.position\n\tawait wait_frames(10)\n\tcheck(\"rock_moves\", rock_scene.position.y > start_pos.y and rock_scene.position.x > start_pos.x, \"La roccia deve continuare a muoversi su X e Y durante _process\")\n",
+     "descrizione": "rock.gd definisce move_rock, reset_rock e update_modulate e mantiene il comportamento originale"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Riporta la stella alla posizione di partenza e prepara il colore\n\treset_star()\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella si muove verso il basso solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto e torna raccoglibile\n\tif position.y > RESET_Y:\n\t\treset_star()\n\t\n\t# Aggiorna il colore a tre fasce per avvisare il giocatore della caduta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Riporta la stella alle coordinate iniziali e la rende di nuovo raccoglibile\n\tposition = START_POSITION\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Calcola la distanza tra la stella e il cesto su entrambi gli assi\n\tvar diff_x: float = abs(position.x - basket_position.x)\n\tvar diff_y: float = abs(position.y - basket_position.y)\n\t\n\t# Restituisce true se entrambe le distanze sono dentro la tolleranza\n\tif diff_x < 50.0 and diff_y < 40.0:\n\t\treturn true\n\treturn false\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i limiti ed aggiorna l'aspetto visivo\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia verso il basso e verso destra\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Riporta la roccia alle coordinate di partenza\n\tposition = START_POSITION\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "La funzione `_process(delta)` è ora un sommario chiaro di ciò che accade a ogni fotogramma: muove l'ostacolo (`move_rock`), controlla l'uscita dallo schermo per ripristinarlo (`reset_rock`) e aggiorna l'avviso visivo (`update_modulate`). Ciascuna funzione contiene solo le istruzioni relative a quel compito specifico, rendendo il codice facile da leggere, testare e manutenere.",
+    "cambiati": [
+     "rock.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ }
+}

@@ -1,0 +1,114 @@
+{
+ "passaggio": 122,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Muovi il cesto ed evita che esca dallo schermo». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: project.godot, basket.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Muovi il cesto ed evita che esca dallo schermo",
+   "consegna": "Nel progetto `Pioggia di stelle`, rendi il cesto controllabile da chi gioca associando i comandi da tastiera e impedendogli di uscire dalla finestra di gioco.\n\n1. Apri **Project → Project Settings** nella scheda **Input Map** e crea due azioni:\n   - `move_left`, assegnandole i tasti **Freccia Sinistra** e **A**.\n   - `move_right`, assegnandole i tasti **Freccia Destra** e **D**.\n2. Nello script `basket.gd`, aggiungi la funzione `_process(delta: float) -> void`:\n   - Calcola una variabile locale `direction` di tipo `float`: sottrai `1.0` se è attiva l'azione `move_left`, aggiungi `1.0` se è attiva l'azione `move_right`.\n   - Modifica `position.x` moltiplicando `direction * speed * delta`.\n   - Usa la funzione `clamp()` per mantenere `position.x` compresa tra `64.0` e `1088.0`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [
+    "Nella barra dei menu in alto a sinistra clicca su **Project → Project Settings** e seleziona la scheda **Input Map** in alto.",
+    "Nel campo **Add New Action**, scrivi `move_left` e clicca sul pulsante **Add**.",
+    "Sulla riga di `move_left` comparsa nella tabella, clicca sull'icona **+** a destra: premi il tasto **Freccia Sinistra** sulla tastiera e conferma con **OK**. Clicca di nuovo su **+**, premi la lettera **A** e dai conferma con **OK**.",
+    "Torna nel campo **Add New Action**, scrivi `move_right` e clicca su **Add**.",
+    "Sulla riga di `move_right`, clicca su **+**, premi il tasto **Freccia Destra** e conferma con **OK**. Clicca ancora su **+**, premi la lettera **D** e conferma con **OK**. Infine clicca su **Close** in basso a destra.",
+    "Nel pannello *FileSystem* fai doppio clic su `basket.gd` per aprirlo nell'area di lavoro dello Script.",
+    "In fondo allo script, dopo la funzione `_ready()`, scrivi la funzione `func _process(delta: float) -> void:` indentata correttamente.",
+    "All'interno di `_process`, crea la variabile di direzione: `var direction: float = 0.0`. Sotto, verifica le due azioni con `if Input.is_action_pressed(\"move_left\"): direction -= 1.0` e `if Input.is_action_pressed(\"move_right\"): direction += 1.0`.",
+    "Aggiorna la posizione orizzontale scrivendo `position.x += direction * speed * delta`.",
+    "Blocca la coordinata X dentro la finestra scrivendo subito sotto `position.x = clamp(position.x, 64.0, 1088.0)`, poi salva il file con **Ctrl+S**."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "azione_input",
+     "nome": "move_left",
+     "descrizione": "L'azione move_left è configurata nella Input Map"
+    },
+    {
+     "tipo": "azione_input",
+     "nome": "move_right",
+     "descrizione": "L'azione move_right è configurata nella Input Map"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar basket := find_by_name(main, \"Basket\") as Sprite2D\n\tif not check(\"basket\", basket != null, \"La scena deve contenere il nodo Basket\"):\n\t\treturn\n\tvar start_x: float = basket.position.x\n\tawait hold_action(\"move_right\", 20)\n\tcheck(\"move_right\", basket.position.x > start_x + 10.0, \"Tenendo premuto move_right il cesto deve muoversi verso destra\")\n\tvar right_x: float = basket.position.x\n\tawait hold_action(\"move_left\", 30)\n\tcheck(\"move_left\", basket.position.x < right_x - 10.0, \"Tenendo premuto move_left il cesto deve muoversi verso sinistra\")\n\tawait hold_action(\"move_left\", 120)\n\tcheck(\"clamp_left\", basket.position.x >= 63.9 and basket.position.x <= 64.1, \"Continuando a muoversi a sinistra il cesto deve fermarsi a 64 pixel\")\n\tawait hold_action(\"move_right\", 240)\n\tcheck(\"clamp_right\", basket.position.x >= 1087.9 and basket.position.x <= 1088.1, \"Continuando a muoversi a destra il cesto deve fermarsi a 1088 pixel\")\n",
+     "descrizione": "Il cesto si muove a sinistra e a destra con i comandi e non supera i bordi dello schermo"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Aggiorna la caduta verticale e lo spostamento orizzontale usando delta\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\t\n\t# Riporta la roccia alla posizione iniziale se supera il fondo o il lato destro\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\tposition = START_POSITION\n\t\n\t# Cambia colore per segnalare il pericolo quando si avvicina al fondo\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Posiziona la stella e imposta il colore iniziale giallo\n\tposition = START_POSITION\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella si muove verso il basso solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto e torna raccoglibile\n\tif position.y > RESET_Y:\n\t\tposition.y = START_POSITION.y\n\t\tis_collected = false\n\t\n\t# Aggiorna il colore a tre fasce per avvisare il giocatore della caduta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Nella Input Map abbiamo creato le azioni logiche `move_left` e `move_right`, collegando a ciascuna sia la freccia direzionale sia la lettera della tastiera (A e D). In `basket.gd`, abbiamo introdotto `_process(delta)` per leggere a ogni fotogramma lo stato dei tasti con `Input.is_action_pressed()`. La variabile `direction` accumula l'intenzione del giocatore (-1 per andare a sinistra, +1 per andare a destra). Moltiplicando per `speed` e per `delta`, il movimento risulta continuo e indipendente dalla frequenza dei fotogrammi. Infine, `clamp(position.x, 64.0, 1088.0)` impedisce alla coordinata orizzontale di oltrepassare i margini visibili della finestra.",
+    "cambiati": [
+     "project.godot",
+     "basket.gd"
+    ],
+    "rimossi": []
+   },
+   "cartella": "pioggia-di-stelle",
+   "id": "es1"
+  }
+ }
+}

@@ -1,0 +1,68 @@
+{
+ "passaggio": 76,
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (prevedi): approvato",
+ "spiegazione": "«Prevedi il risultato di calcoli e tipi». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 150.0 · 3 · 1.0 · (150.0, 80.0) · 2.5",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedi il risultato di calcoli e tipi",
+   "consegna": "Leggi ogni pezzo di codice GDScript e scrivi cosa restituisce la funzione `run()`, senza eseguirlo.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "domande": [],
+   "previsioni": [
+    {
+     "codice": "func run() -> float:\n\tvar base_speed: float = 100.0\n\tvar multiplier: float = 1.5\n\tvar final_speed: float = base_speed * multiplier\n\treturn final_speed\n",
+     "domanda": "Quale valore decimale restituisce la funzione?",
+     "risposta": "150.0",
+     "spiegazione": "Moltiplicando `100.0` per `1.5` otteniamo `150.0`. Il tipo `float` conserva la parte decimale e il risultato viene memorizzato nella variabile `final_speed`.",
+     "id": "es2p1"
+    },
+    {
+     "codice": "func run() -> int:\n\tvar total_stars: int = 7\n\tvar baskets: int = 2\n\tvar stars_per_basket: int = total_stars / baskets\n\treturn stars_per_basket\n",
+     "domanda": "Quale valore intero restituisce la funzione?",
+     "risposta": "3",
+     "spiegazione": "La divisione tra due numeri interi (`int`) elimina completamente la parte decimale senza arrotondare. Matematicamente `7 / 2` fa `3.5`, ma operando su interi il calcolo tronca la frazione e restituisce `3`.",
+     "id": "es2p2"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar ratio: float = 3 / 2\n\treturn ratio\n",
+     "domanda": "Quale valore decimale restituisce la funzione?",
+     "risposta": "1.0",
+     "spiegazione": "I numeri `3` e `2` sono entrambi interi, quindi l'operazione `3 / 2` calcola prima il valore intero `1`. Soltanto dopo il calcolo il valore `1` viene convertito in float per entrare nella variabile, diventando `1.0` invece di `1.5`.",
+     "id": "es2p3"
+    },
+    {
+     "codice": "func run() -> Vector2:\n\tvar pos: Vector2 = Vector2(100.0, 200.0)\n\tpos.x = pos.x + 50.0\n\tpos.y = 80.0\n\treturn pos\n",
+     "domanda": "Quale vettore Vector2 restituisce la funzione?",
+     "risposta": "(150.0, 80.0)",
+     "spiegazione": "Il vettore parte con coordinate `(100, 200)`. Aggiungendo `50.0` a `pos.x` la coordinata orizzontale diventa `150.0`, mentre assegnando `80.0` a `pos.y` la coordinata verticale viene sovrascritta. Il vettore risultante è `Vector2(150, 80)`.",
+     "id": "es2p4"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar total_points: int = 5\n\tvar divisor: int = 2\n\tvar average: float = float(total_points) / divisor\n\treturn average\n",
+     "domanda": "Quale valore decimale restituisce la funzione?",
+     "risposta": "2.5",
+     "spiegazione": "La conversione esplicita `float(total_points)` trasforma il `5` in `5.0`. Quando un calcolo matematico coinvolge un `float` e un `int`, Godot esegue una divisione decimale completa, producendo `2.5` invece di troncare a `2`.",
+     "id": "es2p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ }
+}

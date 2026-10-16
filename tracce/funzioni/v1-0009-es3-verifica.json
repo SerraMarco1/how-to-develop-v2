@@ -1,0 +1,68 @@
+{
+ "passaggio": 152,
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (prevedi): approvato",
+ "spiegazione": "«Prevedere l'esito delle funzioni». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 30 · 100.0 · 50 · 15 · 100.0",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedere l'esito delle funzioni",
+   "consegna": "Leggi con attenzione ciascuno spezzone di codice e scrivi cosa restituirà la funzione `run()`, senza eseguirlo nell'editor.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "domande": [],
+   "previsioni": [
+    {
+     "codice": "func double_value(amount: int) -> int:\n\treturn amount * 2\n\n\nfunc run() -> int:\n\tvar score: int = 15\n\tvar result: int = double_value(score)\n\treturn result\n",
+     "domanda": "Quale numero intero restituisce la funzione `run()`?",
+     "risposta": "30",
+     "spiegazione": "La funzione `double_value(15)` riceve il parametro `amount = 15`, calcola `15 * 2 = 30` e restituisce 30 con `return`. La funzione `run()` assegna 30 a `result` e lo restituisce.",
+     "id": "es3p1"
+    },
+    {
+     "codice": "var speed: float = 100.0\n\n\nfunc boost_speed() -> void:\n\tvar speed: float = 300.0\n\n\nfunc run() -> float:\n\tboost_speed()\n\treturn speed\n",
+     "domanda": "Quale valore decimale per `speed` restituisce la funzione `run()`?",
+     "risposta": "100.0",
+     "spiegazione": "All'interno di `boost_speed()`, la parola chiave `var` crea una nuova variabile locale con lo stesso nome, nascondendo (*shadowing*) la variabile dello script. Quella locale riceve 300.0 e scompare al termine della funzione. La variabile dello script non viene modificata e rimane a 100.0.",
+     "id": "es3p2"
+    },
+    {
+     "codice": "func calculate_points(collected: bool) -> int:\n\tif collected:\n\t\treturn 50\n\treturn 10\n\treturn 100\n\n\nfunc run() -> int:\n\tvar bonus: int = calculate_points(true)\n\treturn bonus\n",
+     "domanda": "Quale numero intero restituisce la funzione `run()`?",
+     "risposta": "50",
+     "spiegazione": "Dato che `collected` è `true`, il blocco `if` esegue subito `return 50`. Non appena viene eseguito un `return`, l'esecuzione della funzione si interrompe immediatamente: le righe successive non vengono mai raggiunte.",
+     "id": "es3p3"
+    },
+    {
+     "codice": "var total_energy: int = 50\n\n\nfunc consume_energy(amount: int) -> void:\n\ttotal_energy -= amount\n\n\nfunc run() -> int:\n\tconsume_energy(20)\n\tconsume_energy(15)\n\treturn total_energy\n",
+     "domanda": "Quale numero intero restituisce la funzione `run()`?",
+     "risposta": "15",
+     "spiegazione": "`consume_energy` non usa `var`, quindi modifica la variabile dello script `total_energy`. Con la prima chiamata scende da 50 a 30 (`50 - 20`), con la seconda scende da 30 a 15 (`30 - 15`).",
+     "id": "es3p4"
+    },
+    {
+     "codice": "func alter_coordinate(x: float) -> void:\n\tx += 40.0\n\n\nfunc run() -> float:\n\tvar player_x: float = 100.0\n\talter_coordinate(player_x)\n\treturn player_x\n",
+     "domanda": "Quale valore decimale restituisce la funzione `run()`?",
+     "risposta": "100.0",
+     "spiegazione": "I valori numerici primitivi come `float` vengono passati per valore. Il parametro `x` è una variabile locale interna ad `alter_coordinate`: aumentarlo modifica solo la copia locale. La variabile `player_x` definita in `run()` rimane a 100.0.",
+     "id": "es3p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ }
+}

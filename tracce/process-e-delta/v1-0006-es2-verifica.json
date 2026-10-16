@@ -1,0 +1,68 @@
+{
+ "passaggio": 86,
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (prevedi): approvato",
+ "spiegazione": "«Prevedere lo spostamento nel ciclo di gioco». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 200.0 · 80.0 · 270.0 · 54.0 · (125.0, 150.0)",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedere lo spostamento nel ciclo di gioco",
+   "consegna": "Leggi con attenzione ciascun frammento di codice ed esegui i calcoli mentalmente. Scrivi il valore finale restituito dalla funzione `run()`, senza eseguire il programma nell'editor.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "domande": [],
+   "previsioni": [
+    {
+     "codice": "func run() -> float:\n\tvar y: float = 100.0\n\tvar speed: float = 200.0\n\tvar delta: float = 0.5\n\ty += speed * delta\n\treturn y\n",
+     "domanda": "Quanto vale la coordinata y alla fine della funzione?",
+     "risposta": "200.0",
+     "spiegazione": "La funzione calcola lo spostamento moltiplicando la velocità per delta: `200.0 * 0.5 = 100.0`. Questo valore viene sommato a `y` (che partiva da 100.0) tramite l'operatore `+=`, ottenendo `100.0 + 100.0 = 200.0`.",
+     "id": "es2p1"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar position_x: float = 50.0\n\tvar speed: float = 100.0\n\t# Primo fotogramma (delta pari a 0.1 s)\n\tposition_x += speed * 0.1\n\t# Secondo fotogramma (delta pari a 0.2 s)\n\tposition_x += speed * 0.2\n\treturn position_x\n",
+     "domanda": "Quanto vale position_x dopo i due fotogrammi?",
+     "risposta": "80.0",
+     "spiegazione": "Al primo fotogramma lo spostamento è `100.0 * 0.1 = 10.0`, portando la posizione a `50.0 + 10.0 = 60.0`. Al secondo fotogramma lo spostamento è `100.0 * 0.2 = 20.0`, portando la posizione finale a `60.0 + 20.0 = 80.0`.",
+     "id": "es2p2"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar position_y: float = 300.0\n\tvar climb_speed: float = 120.0\n\tvar delta: float = 0.25\n\t# L'oggetto sale verso l'alto dello schermo\n\tposition_y -= climb_speed * delta\n\treturn position_y\n",
+     "domanda": "Quanto vale position_y al termine dell'operazione?",
+     "risposta": "270.0",
+     "spiegazione": "Nello spazio 2D di Godot l'asse Y punta verso il basso. Di conseguenza, per muovere un oggetto verso l'alto dello schermo si sottrae lo spostamento alla coordinata Y: `120.0 * 0.25 = 30.0`, quindi `300.0 - 30.0 = 270.0`.",
+     "id": "es2p3"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar correct_pos: float = 0.0\n\tvar buggy_pos: float = 0.0\n\tvar speed: float = 60.0\n\tvar delta: float = 0.1\n\t# Movimento corretto con delta\n\tcorrect_pos += speed * delta\n\t# Movimento errato senza delta\n\tbuggy_pos += speed\n\treturn buggy_pos - correct_pos\n",
+     "domanda": "Quale valore di differenza numerica restituisce la funzione?",
+     "risposta": "54.0",
+     "spiegazione": "L'aggiornamento corretto copre `60.0 * 0.1 = 6.0` pixel. L'istruzione errata senza delta somma direttamente l'intero valore di velocità `60.0` in un solo fotogramma. La differenza tra i due valori è `60.0 - 6.0 = 54.0`.",
+     "id": "es2p4"
+    },
+    {
+     "codice": "func run() -> Vector2:\n\tvar pos: Vector2 = Vector2(100.0, 200.0)\n\tvar velocity: Vector2 = Vector2(50.0, -100.0)\n\tvar delta: float = 0.5\n\tpos += velocity * delta\n\treturn pos\n",
+     "domanda": "Quale Vector2 restituisce la funzione?",
+     "risposta": "(125.0, 150.0)",
+     "spiegazione": "Moltiplicare un Vector2 per un numero float scala ciascun asse per quel valore: `velocity * 0.5` calcola `Vector2(25.0, -50.0)`. Sommando questo spostamento alla posizione di partenza si ottiene `Vector2(100.0 + 25.0, 200.0 - 50.0) = Vector2(125.0, 150.0)`.",
+     "id": "es2p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ }
+}

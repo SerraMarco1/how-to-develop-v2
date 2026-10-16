@@ -1,0 +1,93 @@
+{
+ "passaggio": 151,
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (riordina): approvato",
+ "spiegazione": "«Spezzare una funzione monolitica». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo una correzione.\nFile aggiunti o cambiati: collector.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "riordina",
+   "titolo": "Spezzare una funzione monolitica",
+   "consegna": "Nel progetto a parte `SondaSpaziale` (cartella `sonda-spaziale`) apri lo script `collector.gd`. Il codice funziona e fa avanzare la sonda verso una stazione ricaricando lo scudo, ma tutta la logica è ammassata dentro `_process(delta)` in un unico blocco disordinato.\n\nRiscrivi `collector.gd` senza alterare minimamente il comportamento a schermo, suddividendo il codice in tre funzioni dedicate e ben tipizzate:\n1. `move_toward_station(delta: float) -> void`: muove `position.x` verso `station_position.x` alla velocità `speed * delta`.\n2. `is_near_station(station_x: float) -> bool`: riceve la coordinata X della stazione e restituisce `true` se la distanza assoluta `abs(position.x - station_x)` è inferiore a `10.0` pixel, altrimenti restituisce `false`.\n3. `update_shield(delta: float) -> void`: aggiunge `shield_rate * delta` alla variabile `shield` e ne blocca il valore tra `0.0` e `100.0` usando `clamp()`.\n\nDentro `_process(delta: float)`, chiama le nuove funzioni in ordine: prima muovi la sonda, poi imposta `modulate` su `Color.GREEN` se `is_near_station(station_position.x)` è vera (altrimenti `Color.CYAN`), infine aggiorna lo scudo.\nNessuna funzione dello script deve superare le 6 righe di codice.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "sonda-spaziale",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Ciascuna funzione deve avere una freccia di ritorno esplicita: `-> void` per quelle che compiono un'azione e `-> bool` per quella che restituisce vero o falso.",
+    "In `is_near_station`, confronta `abs(position.x - station_x) < 10.0` e usa la parola chiave `return` per inviare indietro il risultato booleano.",
+    "Ricorda di non riscrivere `var shield` dentro `update_shield`: per modificare la variabile dello script, assegna direttamente il risultato a `shield`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://collector.gd",
+     "descrizione": "Il file collector.gd esiste nel progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_scene\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar collector := find_by_name(main, \"Collector\")\n\tif not check(\"collector_node\", collector != null, \"La scena deve contenere il nodo Collector\"):\n\t\treturn\n\t\n\tcheck(\"fn_move\", has_function(collector, \"move_toward_station\"), \"collector.gd deve definire la funzione move_toward_station(delta: float) -> void\")\n\tcheck(\"fn_is_near\", has_function(collector, \"is_near_station\"), \"collector.gd deve definire la funzione is_near_station(station_x: float) -> bool\")\n\tcheck(\"fn_shield\", has_function(collector, \"update_shield\"), \"collector.gd deve definire la funzione update_shield(delta: float) -> void\")\n\t\n\tvar max_lines: int = longest_function_lines(\"res://collector.gd\")\n\tcheck(\"function_length\", max_lines <= 6, \"Nessuna funzione in collector.gd deve superare 6 righe di codice\")\n\t\n\tvar untyped: int = untyped_declarations(\"res://collector.gd\")\n\tcheck(\"static_types\", untyped == 0, \"Tutte le funzioni e i parametri devono avere il tipo esplicito\")\n\t\n\tif has_function(collector, \"is_near_station\"):\n\t\tcollector.position.x = 600.0\n\t\tvar near_true = collector.call(\"is_near_station\", 605.0)\n\t\tvar near_false = collector.call(\"is_near_station\", 620.0)\n\t\tcheck(\"is_near_logic\", near_true == true and near_false == false, \"is_near_station deve restituire true solo se la distanza è inferiore a 10 pixel\")\n\t\n\tcollector.position.x = 100.0\n\tvar start_x: float = collector.position.x\n\tawait wait_frames(20)\n\tcheck(\"collector_moves\", collector.position.x > start_x, \"La sonda deve continuare ad avanzare verso la stazione\")\n",
+     "descrizione": "Lo script definisce le tre funzioni richieste, mantiene il comportamento e rispetta il limite di righe"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "SondaSpaziale",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SondaSpaziale\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://collector.gd\" id=\"1_collector\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Collector\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 300)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_collector\")\n"
+     },
+     {
+      "percorso": "collector.gd",
+      "contenuto": "extends Sprite2D\n\nvar station_position: Vector2 = Vector2(600, 300)\nvar speed: float = 120.0\nvar shield: float = 20.0\nvar shield_rate: float = 15.0\n\n\nfunc _ready() -> void:\n\tmodulate = Color.CYAN\n\n\nfunc _process(delta: float) -> void:\n\tif position.x < station_position.x:\n\t\tposition.x += speed * delta\n\telif position.x > station_position.x:\n\t\tposition.x -= speed * delta\n\tvar diff: float = abs(position.x - station_position.x)\n\tif diff < 10.0:\n\t\tmodulate = Color.GREEN\n\telse:\n\t\tmodulate = Color.CYAN\n\tshield += shield_rate * delta\n\tshield = clamp(shield, 0.0, 100.0)\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SondaSpaziale\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://collector.gd\" id=\"1_collector\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Collector\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 300)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_collector\")\n"
+     },
+     {
+      "percorso": "collector.gd",
+      "contenuto": "extends Sprite2D\n\nvar station_position: Vector2 = Vector2(600, 300)\nvar speed: float = 120.0\nvar shield: float = 20.0\nvar shield_rate: float = 15.0\n\n\nfunc _ready() -> void:\n\tmodulate = Color.CYAN\n\n\nfunc _process(delta: float) -> void:\n\tmove_toward_station(delta)\n\tif is_near_station(station_position.x):\n\t\tmodulate = Color.GREEN\n\telse:\n\t\tmodulate = Color.CYAN\n\tupdate_shield(delta)\n\n\nfunc move_toward_station(delta: float) -> void:\n\tif position.x < station_position.x:\n\t\tposition.x += speed * delta\n\telif position.x > station_position.x:\n\t\tposition.x -= speed * delta\n\n\nfunc is_near_station(station_x: float) -> bool:\n\tvar diff: float = abs(position.x - station_x)\n\treturn diff < 10.0\n\n\nfunc update_shield(delta: float) -> void:\n\tshield += shield_rate * delta\n\tshield = clamp(shield, 0.0, 100.0)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "SondaSpaziale",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Dividendo il ciclo di aggiornamento in tre funzioni distinte (`move_toward_station`, `is_near_station` e `update_shield`), ogni blocco di codice assume un compito univoco e circoscritto. In `is_near_station`, il confronto booleano `diff < 10.0` viene restituito direttamente con `return`. In `update_shield`, la modifica della variabile dello script `shield` avviene senza ricreare una variabile locale con `var`.",
+    "cambiati": [
+     "collector.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ }
+}

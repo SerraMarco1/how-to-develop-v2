@@ -1,0 +1,68 @@
+{
+ "passaggio": 33,
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2 (obiettivo): 1 problema",
+ "spiegazione": "«Rimuovi un progetto dall'elenco conservando i file sul disco», scritto da gemini/gemini-flash-latest. 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- le verifiche passano anche su un lavoro non fatto (progetto vuoto), quindi non controllano davvero ciò che chiede la consegna: rendile più precise\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2). Gli altri pezzi non vengono toccati.",
+ "chiamate": [],
+ "dati": {
+  "problemi": [
+   "le verifiche passano anche su un lavoro non fatto (progetto vuoto), quindi non controllano davvero ciò che chiede la consegna: rendile più precise"
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "Rimuovi un progetto dall'elenco conservando i file sul disco",
+   "consegna": "Crea un nuovo progetto chiamato `Progetto Archivio` nella cartella `progetto-archivio` rimanendo nel Project Manager (disattiva la casella **Edit Now** al momento della creazione).\n\nUna volta creato, rimuovi il progetto dall'elenco del Project Manager usando il comando **Remove** nella colonna di destra. Assicurati di confermare solo la rimozione dalla lista: i file del progetto sul disco (inclusi `project.godot` e `icon.svg`) devono rimanere intatti nella cartella `progetto-archivio`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "progetto-archivio",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Crea prima il progetto con il pulsante **Create**, togliendo la spunta da **Edit Now** per rimanere nel Project Manager.",
+    "Seleziona `Progetto Archivio` nell'elenco per visualizzare le azioni disponibili nella colonna a destra, quindi premi **Remove**.",
+    "Il comando **Remove** toglie la voce dall'elenco di Godot senza eliminare la cartella dal disco: non toccare i file dal gestore file del tuo sistema operativo."
+   ],
+   "verifiche": [
+    {
+     "tipo": "progetto_godot",
+     "descrizione": "La cartella progetto-archivio contiene ancora un progetto valido di Godot 4"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://icon.svg",
+     "descrizione": "Il file icon.svg è ancora presente sul disco"
+    },
+    {
+     "tipo": "progetto_in_elenco",
+     "presente": false,
+     "descrizione": "Il progetto non compare più nell'elenco del Project Manager"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Progetto Archivio\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Progetto Archivio",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Il comando **Remove** nella colonna destra del Project Manager serve a ripulire la lista dei progetti rimuovendo il riferimento visivo. A differenza di un'eliminazione manuale o distruttiva, questa operazione non tocca i file memorizzati sul computer: la cartella sul disco mantiene sia il file di configurazione `project.godot` sia l'immagine `icon.svg`.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ }
+}

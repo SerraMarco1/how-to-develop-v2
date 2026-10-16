@@ -1,0 +1,94 @@
+{
+ "passaggio": 66,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Creare il cesto e collegare il primo script». 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: project.godot, basket.tscn, basket.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Creare il cesto e collegare il primo script",
+   "consegna": "In questo esercizio crei il protagonista di «Pioggia di stelle»: il cesto che raccoglierà gli oggetti in caduta.\n\n1. Crea una nuova scena con un nodo **Sprite2D** come radice, rinominalo in `Basket` e assegna `res://icon.svg` alla sua proprietà **Texture**.\n2. Collega al nodo `Basket` un nuovo script chiamato `basket.gd`.\n3. Nello script, all'interno della funzione `_ready()`, imposta la proprietà `position` a `Vector2(576, 600)` e la proprietà `modulate` a `Color.GREEN`.\n4. Sempre dentro `_ready()`, usa `print()` per stampare nel pannello *Output* un messaggio che inizia con `Cesto pronto:` seguito dal valore di `position`.\n5. Salva la scena come `res://basket.tscn` e impostala come scena principale del progetto.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [
+    "Nel pannello *Scene*, premi il pulsante **+** (o fai clic su **Other Node**), cerca il tipo **Sprite2D**, selezionalo e premi **Create**.",
+    "Fai doppio clic sul nodo appena creato nella scheda *Scene* e rinominalo in `Basket`.",
+    "Con `Basket` selezionato, trascina il file `icon.svg` dal pannello *FileSystem* nella casella della proprietà **Texture** all'interno dell'*Inspector*.",
+    "Fai clic destro sul nodo `Basket` e scegli **Attach Script** (oppure premi il pulsante con l'icona del foglio con il piccolo più verde sopra l'albero della scena).",
+    "Nella finestra di creazione dello script, lascia il linguaggio GDScript, verifica che il percorso sia `res://basket.gd` e premi **Create**.",
+    "Nell'area di lavoro *Script*, cancella l'eventuale codice generato sotto `func _ready() -> void:` e aggiungi, rientrando di un Tab: `position = Vector2(576, 600)`.",
+    "Sotto la riga precedente, sempre rientrata con Tab, scrivi: `modulate = Color.GREEN`.",
+    "Aggiungi una terza riga rientrata con Tab: `print(\"Cesto pronto: \", position)`.",
+    "Salva la scena premendo **Ctrl+S**, assicurati che il nome sia `basket.tscn` e premi **Save**.",
+    "Apri il menu in alto **Project → Project Settings**, seleziona la scheda *General*, scorri fino alla voce **Application → Run**, imposta **Main Scene** selezionando `res://basket.tscn` e premi **Close**."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://basket.tscn",
+     "tipoNodo": "Sprite2D",
+     "nome": "Basket",
+     "descrizione": "La scena basket.tscn ha come radice uno Sprite2D chiamato Basket"
+    },
+    {
+     "tipo": "script_collegato",
+     "scena": "res://basket.tscn",
+     "nodo": "Basket",
+     "descrizione": "Il nodo Basket ha lo script basket.gd collegato"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "run/main_scene",
+     "contiene": "basket.tscn",
+     "descrizione": "La scena basket.tscn è impostata come scena principale del progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tclear_printed()\n\tvar scene := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket_loaded\", scene != null, \"La scena basket.tscn deve aprirsi senza errori\"):\n\t\treturn\n\tvar basket := scene as Sprite2D\n\tif not check(\"basket_type\", basket != null, \"La radice della scena basket.tscn deve essere uno Sprite2D\"):\n\t\treturn\n\tcheck(\"pos\", basket.position == Vector2(576, 600), \"Il cesto deve posizionarsi a Vector2(576, 600)\")\n\tcheck(\"modulate\", basket.modulate == Color.GREEN, \"Il cesto deve essere colorato con Color.GREEN\")\n\tcheck(\"output\", \"Cesto pronto:\" in printed_text(), \"Lo script deve stampare un testo contenente 'Cesto pronto:'\")\n",
+     "descrizione": "All'avvio il cesto si posiziona in basso al centro, diventa verde e stampa il messaggio"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto in basso al centro dello schermo\n\tposition = Vector2(576, 600)\n\t# Colora l'icona di verde\n\tmodulate = Color.GREEN\n\t# Mostra le coordinate iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", position)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Abbiamo creato una scena 2D con un singolo nodo `Sprite2D` chiamato `Basket`, assegnando `icon.svg` alla sua proprietà `texture`. Collegando lo script `basket.gd`, estendiamo la classe `Sprite2D`: dentro `_ready()`, che parte non appena il nodo entra in gioco, assegniamo direttamente a `position` il vettore `Vector2(576, 600)` per centrarlo in basso, cambiamo il colore visivo impostando `modulate = Color.GREEN` e stampiamo la conferma con `print()`. Infine impostiamo `basket.tscn` come scena principale così che venga eseguita all'avvio.",
+    "cambiati": [
+     "project.godot",
+     "basket.tscn",
+     "basket.gd"
+    ],
+    "rimossi": []
+   },
+   "cartella": "pioggia-di-stelle",
+   "id": "es1"
+  }
+ }
+}

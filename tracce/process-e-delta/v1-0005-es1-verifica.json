@@ -1,0 +1,95 @@
+{
+ "passaggio": 85,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Far cadere la stella». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: star.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Far cadere la stella",
+   "consegna": "Fai muovere la stella verso il basso a velocità costante aggiornando la sua posizione a ogni fotogramma.\n\n1. Nel pannello *FileSystem*, apri la scena `star.tscn` ed entra nell'area di lavoro *Script* per modificare lo script `star.gd`.\n2. Sotto la funzione `_ready()`, aggiungi la funzione virtuale `_process(delta: float) -> void:`.\n3. Nel corpo di `_process()`, incrementa la coordinata `position.y` sommando lo spostamento calcolato moltiplicando la velocità `fall_speed` per il tempo trascorso `delta`.\n4. Salva lo script con Ctrl+S ed esegui la scena aperta premendo F6 per osservare la stella scendere in modo continuo.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "pioggia-di-stelle",
+   "passiGuida": [
+    "Nel pannello *FileSystem* in basso a sinistra, fai doppio clic su `star.tscn` per aprire la scena della stella.",
+    "Clicca sulla voce *Script* in alto al centro per visualizzare il file `star.gd` nell'editor di testo.",
+    "Posizionati alla fine dello script, lascia una riga vuota dopo `_ready()` e scrivi l'intestazione della funzione: `func _process(delta: float) -> void:`.",
+    "Premi Invio per andare a capo con un rientro di tabulazione e scrivi l'istruzione di movimento: `position.y += fall_speed * delta`.",
+    "Premi Ctrl+S sulla tastiera per salvare le modifiche apportate allo script.",
+    "Premi il tasto F6 (oppure il pulsante con il ciak in alto a destra) per avviare `star.tscn` e verificare che la stella gialla cada verso il basso in modo uniforme."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://star.gd",
+     "descrizione": "Il file res://star.gd esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://star.gd",
+     "regex": "func _process\\(",
+     "descrizione": "Lo script star.gd definisce la funzione _process"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_exists\", star != null, \"La scena star.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar initial_y: float = star.position.y\n\tcheck(\"initial_pos\", abs(initial_y - 80.0) < 1.0, \"La stella deve iniziare dalla coordinata Y iniziale (80)\")\n\t\n\t# Test a 30 FPS\n\tEngine.max_fps = 30\n\tawait wait_seconds(0.5)\n\tvar y_after_30: float = star.position.y\n\tvar dist_30: float = y_after_30 - initial_y\n\t\n\tcheck(\"moves_down\", dist_30 > 30.0, \"La stella deve scendere verso il basso nel tempo\")\n\tcheck(\"speed_30\", dist_30 >= 70.0 and dist_30 <= 110.0, \"In 0.5 secondi a 30 FPS la stella deve percorrere circa 90 pixel (180 px/s * 0.5 s)\")\n\t\n\t# Riposiziona e testa a 60 FPS\n\tstar.position.y = initial_y\n\tEngine.max_fps = 60\n\tawait wait_seconds(0.5)\n\tvar y_after_60: float = star.position.y\n\tvar dist_60: float = y_after_60 - initial_y\n\tEngine.max_fps = 0\n\t\n\tcheck(\"speed_60\", dist_60 >= 70.0 and dist_60 <= 110.0, \"In 0.5 secondi a 60 FPS la stella deve percorrere circa 90 pixel\")\n\tcheck(\"frame_independence\", abs(dist_60 - dist_30) < 25.0, \"La distanza percorsa deve essere equivalente a 30 FPS e a 60 FPS grazie alla moltiplicazione per delta\")\n",
+     "descrizione": "La stella si muove verso il basso a velocità costante indipendentemente dalla frequenza dei fotogrammi"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella\nconst START_POSITION: Vector2 = Vector2(576, 80)\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Posiziona la stella e imposta il colore giallo\n\tposition = START_POSITION\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# Sposta la stella verso il basso in base alla velocità e al tempo trascorso\n\tposition.y += fall_speed * delta\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Aggiungendo la funzione `_process(delta: float) -> void:` allo script `star.gd`, Godot esegue quel blocco di codice a ogni fotogramma. L'istruzione `position.y += fall_speed * delta` incrementa la coordinata verticale della stella della distanza percorsa in quella specifica frazione di secondo (`180.0 * delta`), garantendo una discesa costante a 180 pixel al secondo su qualsiasi computer.",
+    "cambiati": [
+     "star.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ }
+}

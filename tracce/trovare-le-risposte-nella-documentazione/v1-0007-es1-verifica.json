@@ -1,0 +1,69 @@
+{
+ "passaggio": 58,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (trova): approvato",
+ "spiegazione": "«Specchiare e nascondere con l'aiuto integrato». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: node_2d.tscn",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "trova",
+   "titolo": "Specchiare e nascondere con l'aiuto integrato",
+   "consegna": "Nel tuo progetto `Prima scena`, apri la scena `res://node_2d.tscn`.\n\nUsa la guida integrata di Godot (tasto F1) per individuare le proprietà necessarie e applica queste due modifiche dall'Inspector:\n\n1. Seleziona il nodo `Sprite2D` (il primo a sinistra) e specchialo in orizzontale, in modo che l'icona guardi verso sinistra anziché verso destra.\n2. Seleziona il nodo `Sprite2D3` (quello verde a destra) e fai in modo che non venga mostrato a schermo quando esegui la scena: deve restare nell'albero dei nodi, ma non deve essere disegnato.\n\nSalva la scena premendo Ctrl+S.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "prima-scena",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Premi F1, scrivi `Sprite2D` nella barra di ricerca e apri la sua scheda. Scorri la sezione delle proprietà per individuare quella che controlla l'orientamento orizzontale dell'immagine.",
+    "Per nascondere il nodo verde, esamina la gerarchia: una funzione grafica comune a tutti gli elementi a due dimensioni non si trova tra le opzioni esclusive di `Sprite2D`. Guarda in cima alla pagina sotto la voce Inherits e clicca su `CanvasItem`.",
+    "Una volta letto il nome della proprietà nella documentazione, torna alla vista 2D, seleziona il nodo e cercala nella sezione corrispondente dell'Inspector (oppure scrivine il nome parziale nel campo Filter Properties in cima all'Inspector)."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://node_2d.tscn",
+     "descrizione": "Il file node_2d.tscn è presente nel progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar root := await instantiate_scene(\"res://node_2d.tscn\")\n\tif not check(\"scena\", root != null, \"La scena res://node_2d.tscn deve aprirsi senza errori\"):\n\t\treturn\n\tvar sprite1 := find_by_name(root, \"Sprite2D\") as Sprite2D\n\tif not check(\"sprite1\", sprite1 != null, \"La scena deve contenere il nodo Sprite2D\"):\n\t\treturn\n\tvar sprite3 := find_by_name(root, \"Sprite2D3\") as Sprite2D\n\tif not check(\"sprite3\", sprite3 != null, \"La scena deve contenere il nodo Sprite2D3\"):\n\t\treturn\n\tvar flipped = get_prop(sprite1, \"flip_h\", false)\n\tcheck(\"flip_orizzontale\", flipped == true, \"Il primo Sprite2D deve essere specchiato in orizzontale\")\n\tvar vis = get_prop(sprite3, \"visible\", true)\n\tcheck(\"sprite3_invisibile\", vis == false, \"Il nodo Sprite2D3 deve essere nascosto alla vista\")\n",
+     "descrizione": "Il primo Sprite2D è specchiato in orizzontale e Sprite2D3 è nascosto"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [
+    "flip_h",
+    "visible"
+   ],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Prima scena\"\nrun/main_scene=\"res://node_2d.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "node_2d.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[node name=\"Node2D\" type=\"Node2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 300)\ntexture = ExtResource(\"1_icon\")\nflip_h = true\n\n[node name=\"Sprite2D2\" type=\"Sprite2D\" parent=\".\"]\nmodulate = Color(1, 0, 0, 1)\nposition = Vector2(450, 300)\nscale = Vector2(1.5, 1.5)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"Sprite2D3\" type=\"Sprite2D\" parent=\".\"]\nvisible = false\nmodulate = Color(0, 1, 0, 1)\nposition = Vector2(700, 300)\nscale = Vector2(0.8, 0.8)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 350.0\noffset_top = 150.0\noffset_right = 512.0\noffset_bottom = 173.0\ntext = \"Benvenuto in Godot!\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Prima scena",
+     "scenaPrincipale": "res://node_2d.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "1. Per specchiare il primo `Sprite2D`, aprendo la guida con **F1** e cercando `Sprite2D` troviamo la proprietà `flip_h` descritta come *If true, texture is flipped horizontally*. Selezionando il nodo `Sprite2D`, nell'Inspector espandiamo la sezione **Sprite2D** (sotto-gruppo **Offset**) e attiviamo la casella **Flip H**.\n\n2. Per nascondere `Sprite2D3`, la proprietà non si trova nella pagina di `Sprite2D` perché la visibilità è condivisa da tutti gli elementi visivi 2D. Risalendo la riga **Inherits** in cima alla guida fino a `CanvasItem`, troviamo la proprietà `visible` (*If true, this CanvasItem is drawn*). Selezionando `Sprite2D3`, nell'Inspector andiamo nella sezione **CanvasItem -> Visibility** e disattiviamo la casella **Visible**.",
+    "cambiati": [
+     "node_2d.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ }
+}

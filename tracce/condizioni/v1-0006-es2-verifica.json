@@ -1,0 +1,68 @@
+{
+ "passaggio": 107,
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (prevedi): approvato",
+ "spiegazione": "«Prevedi il risultato dei confronti e delle condizioni». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: basso · true · false · true · false",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedi il risultato dei confronti e delle condizioni",
+   "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce la funzione `run()`, senza eseguirlo nell'editor.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "domande": [],
+   "previsioni": [
+    {
+     "codice": "func run() -> String:\n\tvar y: float = 520.0\n\tvar zone: String = \"\"\n\tif y > 600.0:\n\t\tzone = \"fondo\"\n\telif y > 400.0:\n\t\tzone = \"basso\"\n\telif y > 200.0:\n\t\tzone = \"centro\"\n\telse:\n\t\tzone = \"alto\"\n\treturn zone\n",
+     "domanda": "Quale testo restituisce la funzione?",
+     "risposta": "basso",
+     "spiegazione": "Godot esamina i rami dall'alto verso il basso. La prima condizione `y > 600.0` è falsa (520.0 non supera 600.0). Il controllo passa al primo `elif y > 400.0`, che risulta vero perché 520.0 è maggiore di 400.0. La variabile `zone` riceve \"basso\" e tutti i rami successivi (`elif y > 200.0` ed `else`) vengono saltati.",
+     "id": "es2p1"
+    },
+    {
+     "codice": "func run() -> bool:\n\tvar lives: int = 2\n\tvar is_game_over: bool = false\n\tvar can_play: bool = false\n\tif lives > 0 and not is_game_over:\n\t\tcan_play = true\n\telse:\n\t\tcan_play = false\n\treturn can_play\n",
+     "domanda": "Quale valore booleano restituisce la funzione (true o false)?",
+     "risposta": "true",
+     "spiegazione": "`lives > 0` è vero perché 2 è maggiore di 0. `not is_game_over` inverte il valore falso di `is_game_over` facendolo diventare vero. Poiché entrambe le parti collegate da `and` risultano vere, l'intera espressione è vera e viene eseguito il blocco `can_play = true`.",
+     "id": "es2p2"
+    },
+    {
+     "codice": "func run() -> bool:\n\tvar limit: float = 300.0\n\tvar pos_y: float = 300.0\n\tvar has_crossed: bool = false\n\tif pos_y > limit:\n\t\thas_crossed = true\n\telse:\n\t\thas_crossed = false\n\treturn has_crossed\n",
+     "domanda": "Quale valore booleano restituisce la funzione (true o false)?",
+     "risposta": "false",
+     "spiegazione": "Questo è il classico caso limite sul bordo esatto. L'operatore strettamente maggiore `>` richiede che il primo numero superi il secondo. Poiché 300.0 non è maggiore di 300.0 (sono uguali), la condizione è falsa e viene eseguito il blocco `else`, impostando `has_crossed = false`.",
+     "id": "es2p3"
+    },
+    {
+     "codice": "func run() -> bool:\n\tvar pos_x: float = 1050.0\n\tvar pos_y: float = 200.0\n\tvar max_x: float = 1000.0\n\tvar max_y: float = 680.0\n\tvar needs_reset: bool = false\n\tif pos_x > max_x or pos_y > max_y:\n\t\tneeds_reset = true\n\treturn needs_reset\n",
+     "domanda": "Quale valore booleano restituisce la funzione (true o false)?",
+     "risposta": "true",
+     "spiegazione": "L'operatore `or` restituisce vero quando almeno una delle condizioni è vera. `pos_y > max_y` (200.0 > 680.0) è falsa, ma `pos_x > max_x` (1050.0 > 1000.0) è vera. Bastando una sola condizione vera, il blocco `if` viene eseguito e imposta `needs_reset` a `true`.",
+     "id": "es2p4"
+    },
+    {
+     "codice": "func run() -> bool:\n\tvar pos_y: float = 678.5\n\tvar speed: float = 200.0\n\tvar delta: float = 0.016\n\tvar reached_target: bool = false\n\tpos_y += speed * delta\n\tif pos_y == 680.0:\n\t\treached_target = true\n\treturn reached_target\n",
+     "domanda": "Quale valore booleano restituisce la funzione (true o false)?",
+     "risposta": "false",
+     "spiegazione": "L'incremento `speed * delta` equivale a `200.0 * 0.016 = 3.2`. Sommando 3.2 a 678.5 otteniamo `681.7`. Il confronto esatto `pos_y == 680.0` è quindi falso, perché la posizione ha 'scavalcato' la soglia senza mai fermarsi esattamente su 680.0. Questo dimostra perché con `delta` bisogna sempre usare `>` e mai `==`.",
+     "id": "es2p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "I controlli condizionali richiedono di valutare l'ordine top-down delle verifiche, ricordare che `and` richiede entrambe le condizioni vere mentre a `or` ne basta una, e capire che valori decimali aggiornati con delta saltano quasi sempre l'uguaglianza esatta `==`.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ }
+}

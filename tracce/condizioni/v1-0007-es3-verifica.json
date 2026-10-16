@@ -1,0 +1,104 @@
+{
+ "passaggio": 108,
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (obiettivo): approvato",
+ "spiegazione": "«Fai ripartire la roccia quando esce dallo schermo». 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: rock.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "Fai ripartire la roccia quando esce dallo schermo",
+   "consegna": "Nello script `rock.gd`, la roccia si sposta sia in verticale che in orizzontale. Se lasci cadere l'ostacolo, finisce oltre i bordi della finestra e non si vede più.\n\nModifica `rock.gd` in modo che:\n1. Sotto la costante `START_POSITION`, definisci due nuove costanti di tipo `float`:\n   - `RESET_Y: float = 680.0` (il bordo inferiore dello schermo)\n   - `RESET_X: float = 1000.0` (il bordo destro dello schermo)\n2. All'interno della funzione `_process(delta: float)`, controlla se la roccia è uscita dalla finestra: se `position.y` supera `RESET_Y` **oppure** `position.x` supera `RESET_X`, riporta l'intera proprietà `position` al valore di `START_POSITION`.\n3. Sempre dentro `_process(delta: float)`, gestisci il colore del nodo in base alla sua quota Y:\n   - Se `position.y` supera `400.0`, imposta `modulate = Color.DARK_RED` per segnalare che la roccia è ormai vicina al fondo.\n   - Altrimenti, mantieni `modulate = Color.RED`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Usa la parola chiave logica `or` per unire le due condizioni del bordo all'interno dello stesso `if`: `if position.y > RESET_Y or position.x > RESET_X:`.",
+    "Per reimpostare contemporaneamente coordinate X e Y usa direttamente `position = START_POSITION`.",
+    "Scrivi la verifica del colore con `if position.y > 400.0:` e aggiungi il ramo `else:` per ripristinare `Color.RED` quando la roccia riparte dall'alto."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://rock.gd",
+     "descrizione": "Il file rock.gd esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://rock.gd",
+     "regex": "RESET_Y",
+     "descrizione": "Lo script rock.gd dichiara la costante RESET_Y"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://rock.gd",
+     "regex": "RESET_X",
+     "descrizione": "Lo script rock.gd dichiara la costante RESET_X"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://rock.gd",
+     "regex": "or",
+     "descrizione": "Lo script rock.gd combina le condizioni usando l'operatore or"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar rock := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_caricata\", rock != null, \"La scena rock.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\trock.position = Vector2(300.0, 200.0)\n\tawait wait_frames(2)\n\tcheck(\"colore_normale\", rock.modulate == Color.RED, \"Quando position.y <= 400.0 modulate deve essere Color.RED\")\n\trock.position = Vector2(300.0, 450.0)\n\tawait wait_frames(2)\n\tcheck(\"colore_pericolo\", rock.modulate == Color.DARK_RED, \"Quando position.y > 400.0 modulate deve essere Color.DARK_RED\")\n\trock.position = Vector2(300.0, 685.0)\n\tawait wait_frames(2)\n\tcheck(\"reset_basso\", rock.position.y < 200.0 and rock.position.x < 300.0, \"Quando position.y supera RESET_Y (680.0), la roccia deve tornare a START_POSITION\")\n\trock.position = Vector2(1010.0, 200.0)\n\tawait wait_frames(2)\n\tcheck(\"reset_destra\", rock.position.x < 300.0 and rock.position.y < 200.0, \"Quando position.x supera RESET_X (1000.0), la roccia deve tornare a START_POSITION\")\n",
+     "descrizione": "La roccia ricomincia da START_POSITION quando esce a destra o in basso e cambia colore a Y 400"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Posiziona la stella e imposta il colore iniziale giallo\n\tposition = START_POSITION\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# Sposta la stella verso il basso in base alla velocità e al tempo trascorso\n\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto\n\tif position.y > RESET_Y:\n\t\tposition.y = START_POSITION.y\n\t\n\t# Cambia colore in base alla posizione rispetto a metà schermo\n\tif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Aggiorna la caduta verticale e lo spostamento orizzontale usando delta\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\t\n\t# Riporta la roccia alla posizione iniziale se supera il fondo o il lato destro\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\tposition = START_POSITION\n\t\n\t# Cambia colore per segnalare il pericolo quando si avvicina al fondo\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+     }
+    ],
+    "spiegazione": "La roccia si sposta lungo entrambi gli assi, quindi può uscire sia dal fondo che dal bordo laterale destro. Combinando le due condizioni con `or` (`position.y > RESET_Y or position.x > RESET_X`), l'istruzione scatta non appena uno dei due limiti viene oltrepassato, reimpostando l'intero vettore `position` a `START_POSITION`. Il secondo blocco condizionale `if`/`else` regola invece la tonalità di rosso in base alla sola altezza verticale.",
+    "cambiati": [
+     "rock.gd"
+    ],
+    "rimossi": [],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    }
+   },
+   "cartella": "pioggia-di-stelle",
+   "id": "es3"
+  }
+ }
+}

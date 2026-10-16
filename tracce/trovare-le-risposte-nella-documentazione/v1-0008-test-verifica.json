@@ -1,0 +1,68 @@
+{
+ "passaggio": 59,
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (trova): approvato",
+ "spiegazione": "«Ruotare e trasformare il testo con la guida». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: node_2d.tscn",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "trova",
+   "titolo": "Ruotare e trasformare il testo con la guida",
+   "consegna": "Nel tuo progetto `Prima scena`, apri la scena `res://node_2d.tscn`.\n\nUsa la guida interna (tasto F1) per trovare i parametri corretti ed effettua queste due modifiche dall'Inspector:\n\n1. Seleziona il nodo `Sprite2D2` (quello rosso al centro) e ruotalo di 45 gradi in senso orario.\n2. Seleziona il nodo `Label` e fai in modo che la scritta compaia per intero con caratteri maiuscoli, senza riscrivere la frase originale nel campo del testo.\n\nSalva la scena premendo Ctrl+S.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "prima-scena",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Consulta la documentazione di `Node2D` per individuare quale parametro controlla l'inclinazione nello spazio bidimensionale, e consulta quella di `Label` per scoprire come forzare la visualizzazione a caratteri maiuscoli."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://node_2d.tscn",
+     "descrizione": "Il file node_2d.tscn è presente nel progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar root := await instantiate_scene(\"res://node_2d.tscn\")\n\tif not check(\"scena\", root != null, \"La scena res://node_2d.tscn deve aprirsi senza errori\"):\n\t\treturn\n\tvar sprite2 := find_by_name(root, \"Sprite2D2\") as Sprite2D\n\tif not check(\"sprite2\", sprite2 != null, \"La scena deve contenere il nodo Sprite2D2\"):\n\t\treturn\n\tvar label := find_by_name(root, \"Label\") as Label\n\tif not check(\"label\", label != null, \"La scena deve contenere il nodo Label\"):\n\t\treturn\n\tvar rot_deg = get_prop(sprite2, \"rotation_degrees\", 0.0)\n\tvar rot_rad = get_prop(sprite2, \"rotation\", 0.0)\n\tvar rot_ok: bool = abs(float(rot_deg) - 45.0) < 0.5 or is_equal_approx(float(rot_rad), deg_to_rad(45.0))\n\tcheck(\"rotazione_45\", rot_ok, \"Il nodo Sprite2D2 deve essere ruotato di 45 gradi\")\n\tvar is_upper = get_prop(label, \"uppercase\", false)\n\tcheck(\"testo_maiuscolo\", is_upper == true, \"Il nodo Label deve mostrare il testo a lettere maiuscole\")\n",
+     "descrizione": "Sprite2D2 è ruotato di 45 gradi e Label mostra il testo a lettere maiuscole"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [
+    "rotation",
+    "rotation_degrees",
+    "uppercase"
+   ],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Prima scena\"\nrun/main_scene=\"res://node_2d.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "node_2d.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[node name=\"Node2D\" type=\"Node2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 300)\ntexture = ExtResource(\"1_icon\")\nflip_h = true\n\n[node name=\"Sprite2D2\" type=\"Sprite2D\" parent=\".\"]\nmodulate = Color(1, 0, 0, 1)\nposition = Vector2(450, 300)\nrotation = 0.785398\nscale = Vector2(1.5, 1.5)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"Sprite2D3\" type=\"Sprite2D\" parent=\".\"]\nvisible = false\nmodulate = Color(0, 1, 0, 1)\nposition = Vector2(700, 300)\nscale = Vector2(0.8, 0.8)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 350.0\noffset_top = 150.0\noffset_right = 512.0\noffset_bottom = 173.0\ntext = \"Benvenuto in Godot!\"\nuppercase = true\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Prima scena",
+     "scenaPrincipale": "res://node_2d.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "1. Per ruotare `Sprite2D2`, cerchiamo con **F1** la classe madre `Node2D` (che gestisce la trasformazione degli oggetti 2D). Tra le proprietà troviamo `rotation_degrees` (*Rotation in degrees*). Selezionando `Sprite2D2`, nell'Inspector cerchiamo la sezione **Node2D -> Transform**, individuiamo il campo **Rotation** e inseriamo il valore `45`. Godot imposta l'inclinazione corretta e salva l'angolo equivalente in radianti nel file della scena.\n\n2. Per visualizzare la scritta in maiuscolo, cerchiamo con **F1** la classe `Label`. Tra le sue proprietà troviamo `uppercase` (*If true, all the text displays as UPPERCASE*). Selezionando `Label`, nell'Inspector individuiamo la sezione **Label** e attiviamo la casella **Uppercase**: a schermo la scritta diventa immediatamente maiuscola senza bisogno di modificare il testo originale.",
+    "cambiati": [
+     "node_2d.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ }
+}

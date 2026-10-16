@@ -1,0 +1,138 @@
+{
+ "passaggio": 164,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (ripara): approvato",
+ "spiegazione": "«Riparare il cesto in avaria». 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: basket.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Riparare il cesto in avaria",
+   "consegna": "Hai ricevuto un progetto di prova chiamato `CestoInAvaria`, posizionato nella cartella `cesto-in-avaria`, che contiene la scena del cesto (`res://basket.tscn`) e il relativo script `res://basket.gd`. Il cesto presenta tre problemi distinti che impediscono il corretto funzionamento del gioco:\n\n1. **Il gioco non parte**: premendo **F5**, la finestra non compare affatto e nel pannello **Output** in basso viene segnalato un errore di scrittura nel file `basket.gd`.\n2. **Blocco all'avvio (crash runtime)**: una volta corretta la scrittura e premuto di nuovo **F5**, la finestra si apre per una frazione di secondo ma si blocca immediatamente. L'editor apre la scheda **Debugger** e posiziona la freccia verde sulla funzione `_ready()` evidenziando un errore di operandi incompatibili durante l'impostazione del testo del nodo `Label`.\n3. **Comandi invertiti (errore di logica)**: superati i primi due blocchi, il gioco resta aperto, ma quando tieni premuta l'azione `move_left` (tasto A o Freccia Sinistra) il cesto si sposta verso destra, mentre tenendo premuta `move_right` (tasto D o Freccia Destra) si muove verso sinistra.\n\nEsamina i messaggi di errore dell'editor, correggi le righe difettose in `res://basket.gd` e rimetti il cesto in piena funzione.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "cesto-in-avaria",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per il primo problema, guarda l'ultima riga rossa nel pannello Output: fai doppio clic sul messaggio per raggiungere la riga incriminata e verifica se al termine della dichiarazione della funzione mancano i due punti `:`.",
+    "Per il blocco all'avvio, osserva la riga indicata dalla freccia verde nel Debugger dentro `_ready()`: in GDScript non puoi concatenare direttamente una stringa a un numero intero con il segno `+` senza aver prima convertito il valore con `str()`.",
+    "Per il movimento invertito, apri la funzione `move_basket()`: per spostarsi verso sinistra la coordinata orizzontale deve diminuire (`direction -= 1.0`), mentre per andare a destra deve aumentare (`direction += 1.0`)."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://basket.tscn",
+     "descrizione": "Il progetto contiene la scena basket.tscn"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://basket.gd",
+     "descrizione": "Il progetto contiene lo script basket.gd"
+    },
+    {
+     "tipo": "azione_input",
+     "nome": "move_left",
+     "descrizione": "Nella Input Map esiste l'azione move_left"
+    },
+    {
+     "tipo": "azione_input",
+     "nome": "move_right",
+     "descrizione": "Nella Input Map esiste l'azione move_right"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_loaded\", basket != null, \"La scena principale basket.tscn deve avviarsi senza errori di scrittura o di esecuzione\"):\n\t\treturn\n\tvar label := find_by_name(basket, \"Label\") as Label\n\tif check(\"label_exists\", label != null, \"Il nodo Basket deve contenere un nodo Label figlio\"):\n\t\tcheck(\"label_text\", \"Vite: 3\" in label.text, \"L'etichetta deve mostrare correttamente il numero di vite convertito in testo\")\n\tvar start_x: float = basket.position.x\n\tawait hold_action(\"move_left\", 20)\n\tcheck(\"move_left_ok\", basket.position.x < start_x - 10.0, \"Tenendo premuto move_left il cesto deve spostarsi verso sinistra\")\n\tvar left_x: float = basket.position.x\n\tawait hold_action(\"move_right\", 40)\n\tcheck(\"move_right_ok\", basket.position.x > left_x + 20.0, \"Tenendo premuto move_right il cesto deve spostarsi verso destra\")\n",
+     "descrizione": "La scena si avvia senza errori di compilazione o crash, il testo del Label è valido e il cesto si sposta coerentemente ai comandi"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "CestoInAvaria",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CestoInAvaria\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + lives + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection += 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection -= 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CestoInAvaria\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "CestoInAvaria",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "I tre problemi appartengono ciascuno a una categoria trattata nella lezione:\n\n1. **Errore di scrittura (sintassi)**: Alla riga 28 mancavano i due punti `:` alla fine dell'intestazione della funzione `func move_basket(delta: float) -> void`. Il compilatore non poteva comprendere l'inizio del blocco e bloccava l'esecuzione prima dell'apertura della finestra. Aggiungendo `:` la dichiarazione è corretta.\n2. **Errore di esecuzione (runtime)**: Dentro `_ready()`, l'istruzione `$Label.text = player_name + \" | Vite: \" + lives + ...` tentava di sommare con `+` una stringa a un numero intero (`lives`). In GDScript non esiste conversione automatica al volo: convertendo esplicitamente il numero con `str(lives)` il tipo diventa coerente e il gioco si avvia senza blocchi.\n3. **Errore di logica**: Dentro `move_basket()`, le assegnazioni di `direction` erano scambiate: per muoversi a sinistra sull'asse X si deve sottrarre (`direction -= 1.0`), mentre per muoversi a destra si deve aggiungere (`direction += 1.0`). Invertendo i segni, il cesto risponde correttamente alla tastiera.",
+    "cambiati": [
+     "basket.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ }
+}

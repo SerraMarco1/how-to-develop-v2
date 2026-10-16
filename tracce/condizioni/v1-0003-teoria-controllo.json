@@ -1,0 +1,13 @@
+{
+ "passaggio": 104,
+ "pezzo": "teoria",
+ "azione": "controllo",
+ "esito": "ok",
+ "titolo": "Teoria: controllo di qualità fatto dal codice",
+ "spiegazione": "Nessun difetto.",
+ "chiamate": [],
+ "dati": {
+  "problemi": [],
+  "ritocchi": []
+ }
+}

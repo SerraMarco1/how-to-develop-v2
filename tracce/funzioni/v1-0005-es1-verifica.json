@@ -1,0 +1,113 @@
+{
+ "passaggio": 148,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Organizzare il cesto e la stella in funzioni». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: basket.gd, star.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Organizzare il cesto e la stella in funzioni",
+   "consegna": "In questo esercizio riorganizzerai il codice di `basket.gd` e `star.gd` dividendo i compiti in funzioni dedicate, senza cambiare il comportamento del gioco.\n\n1. Nel file `basket.gd`, sposta la logica di lettura dei tasti e di spostamento orizzontale dentro una nuova funzione chiamata `move_basket(delta: float) -> void`. Dentro `_process(delta: float)`, sostituisci quel codice con la chiamata a `move_basket(delta)`.\n2. Nel file `star.gd`, crea una funzione `reset_star() -> void` che riporta la stella alle coordinate `START_POSITION` e rimette la variabile `is_collected` a `false`. Chiamala all'avvio dentro `_ready()` e ogni volta che la stella supera `RESET_Y` in `_process(delta: float)`.\n3. Sempre in `star.gd`, crea la funzione `is_caught(basket_position: Vector2) -> bool` che riceve la posizione del cesto. Calcola la differenza orizzontale e quella verticale tra la stella e il cesto usando `abs()`: se la distanza orizzontale è inferiore a `50.0` pixel e quella verticale è inferiore a `40.0` pixel, restituisci `true`, altrimenti restituisci `false`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "pioggia-di-stelle",
+   "passiGuida": [
+    "Nel pannello FileSystem fai doppio clic su `basket.gd` per aprirlo nell'editor di script.",
+    "In fondo a `basket.gd`, dichiara la funzione `func move_basket(delta: float) -> void:` e sposta al suo interno le righe che calcolano `direction`, aggiornano `position.x` e applicano `clamp()`.",
+    "Dentro la funzione `_process(delta: float)` di `basket.gd`, cancella il blocco appena spostato e scrivi solo: `move_basket(delta)`.",
+    "Nel pannello FileSystem fai doppio clic su `star.gd` per aprirlo.",
+    "In fondo a `star.gd`, scrivi la funzione `func reset_star() -> void:`: dentro imposta `position = START_POSITION` e `is_collected = false`.",
+    "Dentro `_ready()` di `star.gd`, sostituisci la riga `position = START_POSITION` chiamando `reset_star()`.",
+    "Dentro `_process(delta)` di `star.gd`, nel controllo `if position.y > RESET_Y:`, sostituisci le due righe interne con la chiamata a `reset_star()`.",
+    "In fondo a `star.gd`, aggiungi la funzione `func is_caught(basket_position: Vector2) -> bool:`. Calcola `var diff_x: float = abs(position.x - basket_position.x)` e `var diff_y: float = abs(position.y - basket_position.y)`. Se `diff_x < 50.0 and diff_y < 40.0`, scrivi `return true`, altrimenti scrivi `return false`.",
+    "Premi Ctrl+S per salvare entrambi gli script e premi F5 per verificare che il cesto si muova ancora con i tasti e che la stella continui a cadere e ripartire dall'alto."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://basket.gd",
+     "descrizione": "Il file basket.gd esiste nel progetto"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://star.gd",
+     "descrizione": "Il file star.gd esiste nel progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket_scene := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket_scene\", basket_scene != null, \"La scena basket.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar star_scene := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_scene\", star_scene != null, \"La scena star.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tcheck(\"has_move_basket\", has_function(basket_scene, \"move_basket\"), \"basket.gd deve definire la funzione move_basket(delta)\")\n\tcheck(\"has_reset_star\", has_function(star_scene, \"reset_star\"), \"star.gd deve definire la funzione reset_star()\")\n\tcheck(\"has_is_caught\", has_function(star_scene, \"is_caught\"), \"star.gd deve definire la funzione is_caught(basket_position)\")\n\t\n\tif has_function(star_scene, \"reset_star\"):\n\t\tstar_scene.position = Vector2(999.0, 999.0)\n\t\tstar_scene.set(\"is_collected\", true)\n\t\tstar_scene.call(\"reset_star\")\n\t\tvar pos_ok: bool = star_scene.position == Vector2(576, 80)\n\t\tvar collected_ok: bool = star_scene.get(\"is_collected\") == false\n\t\tcheck(\"reset_star_effect\", pos_ok and collected_ok, \"reset_star() deve riposizionare la stella a Vector2(576, 80) e impostare is_collected a false\")\n\t\n\tif has_function(star_scene, \"is_caught\"):\n\t\tstar_scene.position = Vector2(576, 600)\n\t\tvar caught_near = star_scene.call(\"is_caught\", Vector2(576, 600))\n\t\tvar caught_far = star_scene.call(\"is_caught\", Vector2(100, 100))\n\t\tcheck(\"is_caught_true\", caught_near == true, \"is_caught() deve restituire true quando il cesto è vicino alle coordinate della stella\")\n\t\tcheck(\"is_caught_false\", caught_far == false, \"is_caught() deve restituire false quando il cesto è lontano dalla stella\")\n\t\n\tvar basket_start_x: float = basket_scene.position.x\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"basket_moves\", basket_scene.position.x > basket_start_x, \"Il cesto deve continuare a muoversi verso destra quando si preme move_right\")\n",
+     "descrizione": "basket.gd e star.gd definiscono le funzioni richieste e mantengono il comportamento del gioco"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Aggiorna la caduta verticale e lo spostamento orizzontale usando delta\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\t\n\t# Riporta la roccia alla posizione iniziale se supera il fondo o il lato destro\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\tposition = START_POSITION\n\t\n\t# Cambia colore per segnalare il pericolo quando si avvicina al fondo\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Riporta la stella alla posizione di partenza e prepara il colore\n\treset_star()\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella si muove verso il basso solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto e torna raccoglibile\n\tif position.y > RESET_Y:\n\t\treset_star()\n\t\n\t# Aggiorna il colore a tre fasce per avvisare il giocatore della caduta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Riporta la stella alle coordinate iniziali e la rende di nuovo raccoglibile\n\tposition = START_POSITION\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Calcola la distanza tra la stella e il cesto su entrambi gli assi\n\tvar diff_x: float = abs(position.x - basket_position.x)\n\tvar diff_y: float = abs(position.y - basket_position.y)\n\t\n\t# Restituisce true se entrambe le distanze sono dentro la tolleranza\n\tif diff_x < 50.0 and diff_y < 40.0:\n\t\treturn true\n\treturn false\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Spostando il calcolo dello spostamento in `move_basket(delta: float)` abbiamo reso `_process()` pulito e leggibile a colpo d'occhio. In `star.gd`, la funzione `reset_star()` centralizza il ripristino delle coordinate e dello stato `is_collected`, evitando codice duplicato tra `_ready()` e `_process()`. Infine, la funzione `is_caught(basket_position: Vector2) -> bool` riceve le coordinate del cesto come parametro, confronta le distanze assolute su X e Y con le soglie massime e restituisce `true` o `false` tramite `return`.",
+    "cambiati": [
+     "basket.gd",
+     "star.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ }
+}

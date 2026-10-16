@@ -1,0 +1,91 @@
+{
+ "passaggio": 78,
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (obiettivo): approvato",
+ "spiegazione": "«Configura l'ostacolo roccia con indice di pericolo e spostamento». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: rock.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Configura l'ostacolo roccia con indice di pericolo e spostamento",
+   "consegna": "Nel gioco «Pioggia di stelle», la roccia rappresenta l'ostacolo da evitare. Configura `rock.gd` in modo che gestisca i suoi parametri tramite costanti e variabili con tipizzazione statica, calcoli la percentuale di pericolo evitando il troncamento intero e regoli la sua coordinata orizzontale.\n\nNello script `rock.gd`:\n1. Dichiara le seguenti costanti:\n   - `START_POSITION` di tipo `Vector2` con valore `Vector2(200, 80)`\n   - `MAX_DAMAGE` di tipo `int` con valore `3`\n2. Dichiara le seguenti variabili con il rispettivo tipo:\n   - `obstacle_name` di tipo `String` con valore `\"Roccia\"`\n   - `fall_speed` di tipo `float` con valore `240.0`\n   - `damage` di tipo `int` con valore `1`\n   - `is_active` di tipo `bool` con valore `true`\n   - `danger_ratio` di tipo `float` con valore iniziale `0.0`\n3. Nella funzione `_ready()`:\n   - assegna a `position` il valore di `START_POSITION`;\n   - aumenta la sola coordinata orizzontale `position.x` di `40.0` pixel (portando la coordinata orizzontale finale a `240.0`);\n   - mantieni il colore rosso assegnando `modulate = Color.RED`;\n   - calcola `danger_ratio` dividendo `damage` per `MAX_DAMAGE`, usando la conversione `float()` per evitare che la divisione tra interi tronchi il risultato a zero (il valore risultante deve essere circa `0.333...`);\n   - stampa i dati della roccia nel pannello Output con `print()`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per modificare un singolo asse di un `Vector2` usa l'accesso tramite punto: puoi scrivere `position.x += 40.0` oppure `position.x = START_POSITION.x + 40.0`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://rock.gd",
+     "regex": "const START_POSITION: Vector2",
+     "descrizione": "Lo script rock.gd dichiara la costante START_POSITION di tipo Vector2"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://rock.gd",
+     "regex": "const MAX_DAMAGE: int",
+     "descrizione": "Lo script rock.gd dichiara la costante MAX_DAMAGE di tipo int"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar rock := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_loaded\", rock != null, \"La scena rock.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tcheck(\"const_pos\", rock.get(\"START_POSITION\") == Vector2(200, 80), \"La costante START_POSITION deve valere Vector2(200, 80)\")\n\tcheck(\"const_dmg\", rock.get(\"MAX_DAMAGE\") == 3, \"La costante MAX_DAMAGE deve valere 3\")\n\tvar name_val = get_prop(rock, \"obstacle_name\")\n\tcheck(\"var_name\", name_val == \"Roccia\" and typeof(name_val) == TYPE_STRING, \"La variabile obstacle_name deve essere String con valore 'Roccia'\")\n\tvar speed_val = get_prop(rock, \"fall_speed\")\n\tcheck(\"var_speed\", speed_val == 240.0 and typeof(speed_val) == TYPE_FLOAT, \"La variabile fall_speed deve essere float con valore 240.0\")\n\tvar dmg_val = get_prop(rock, \"damage\")\n\tcheck(\"var_dmg\", dmg_val == 1 and typeof(dmg_val) == TYPE_INT, \"La variabile damage deve essere int con valore 1\")\n\tvar act_val = get_prop(rock, \"is_active\")\n\tcheck(\"var_act\", act_val == true and typeof(act_val) == TYPE_BOOL, \"La variabile is_active deve essere bool con valore true\")\n\tvar ratio_val = get_prop(rock, \"danger_ratio\")\n\tcheck(\"var_ratio\", typeof(ratio_val) == TYPE_FLOAT and absf(ratio_val - (1.0 / 3.0)) < 0.01, \"danger_ratio deve essere float calcolato con conversione decimale (circa 0.333)\")\n\tcheck(\"rock_pos\", rock.position == Vector2(240, 80), \"La posizione della roccia deve avere x incrementata di 40.0 (Vector2(240, 80))\")\n\tcheck(\"rock_color\", rock.modulate == Color.RED, \"Il modulate della roccia deve essere Color.RED\")\n",
+     "descrizione": "La roccia ha variabili tipizzate, posizione spostata su X e danger_ratio calcolato come float"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella\nconst START_POSITION: Vector2 = Vector2(576, 80)\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Posiziona la stella e imposta il colore giallo\n\tposition = START_POSITION\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Nello script `rock.gd` abbiamo dichiarato le costanti `START_POSITION` e `MAX_DAMAGE`, insieme alle variabili tipizzate per gestire lo stato dell'ostacolo. Per regolare la posizione abbiamo assegnato il vettore costante e poi modificato singolarmente la componente orizzontale con `position.x += 40.0`, dimostrando come accedere alle singole coordinate di un `Vector2`. Nel calcolo di `danger_ratio`, una divisione diretta `damage / MAX_DAMAGE` tra due numeri interi avrebbe prodotto `0`, troncando tutti i decimali; convertendo con `float(damage)` prima di dividere, Godot esegue invece una corretta divisione decimale producendo circa `0.333`.",
+    "cambiati": [
+     "rock.gd"
+    ],
+    "rimossi": []
+   },
+   "cartella": "pioggia-di-stelle",
+   "id": "test"
+  }
+ }
+}

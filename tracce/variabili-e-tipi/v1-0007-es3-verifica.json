@@ -1,0 +1,87 @@
+{
+ "passaggio": 77,
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (obiettivo): approvato",
+ "spiegazione": "«Configura la stella con variabili e calcolo del punteggio». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: star.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "Configura la stella con variabili e calcolo del punteggio",
+   "consegna": "Nel gioco «Pioggia di stelle», la stella deve definire i propri parametri tramite costanti e variabili tipizzate, calcolando all'avvio il punteggio assegnato al giocatore.\n\nModifica lo script `star.gd` in modo che:\n1. Dichiari la costante `START_POSITION` di tipo `Vector2` con valore `Vector2(576, 80)`.\n2. Dichiari le seguenti variabili con tipizzazione esplicita:\n   - `star_name` di tipo `String` con valore `\"Stella\"`\n   - `fall_speed` di tipo `float` con valore `180.0`\n   - `is_collected` di tipo `bool` con valore `false`\n   - `base_value` di tipo `int` con valore `10`\n   - `bonus_multiplier` di tipo `float` con valore `1.5`\n   - `points` di tipo `int` con valore iniziale `0`\n3. All'avvio dentro `_ready()`:\n   - assegna a `position` il valore della costante `START_POSITION`;\n   - mantieni il colore giallo con `modulate = Color.YELLOW`;\n   - calcola il valore di `points` moltiplicando `base_value` per `bonus_multiplier`, convertendo esplicitamente il risultato in intero con `int()` (il punteggio finale deve risultare `15`);\n   - stampa nel pannello Output il messaggio di conferma con `print()`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Dichiara costanti e variabili all'inizio dello script, prima delle funzioni, specificando sempre il tipo dopo i due punti (`: Tipo = Valore`).",
+    "Moltiplicare un `int` per un `float` produce un numero con la virgola (`float`). Poiché la variabile `points` è dichiarata come `int`, racchiudi il calcolo nella funzione `int(...)` per assegnarlo senza errori di tipo.",
+    "Nella funzione `_ready()`, imposta `position = START_POSITION` e calcola `points = int(base_value * bonus_multiplier)` prima della stampa."
+   ],
+   "verifiche": [
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://star.gd",
+     "regex": "const START_POSITION: Vector2",
+     "descrizione": "Lo script star.gd dichiara la costante START_POSITION di tipo Vector2"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_loaded\", star != null, \"La scena star.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tcheck(\"const_pos\", star.get(\"START_POSITION\") == Vector2(576, 80), \"La costante START_POSITION deve valere Vector2(576, 80)\")\n\tvar name_val = get_prop(star, \"star_name\")\n\tcheck(\"var_name\", name_val == \"Stella\" and typeof(name_val) == TYPE_STRING, \"La variabile star_name deve essere String con valore 'Stella'\")\n\tvar speed_val = get_prop(star, \"fall_speed\")\n\tcheck(\"var_speed\", speed_val == 180.0 and typeof(speed_val) == TYPE_FLOAT, \"La variabile fall_speed deve essere float con valore 180.0\")\n\tvar coll_val = get_prop(star, \"is_collected\")\n\tcheck(\"var_coll\", coll_val == false and typeof(coll_val) == TYPE_BOOL, \"La variabile is_collected deve essere bool con valore false\")\n\tvar base_val = get_prop(star, \"base_value\")\n\tcheck(\"var_base\", base_val == 10 and typeof(base_val) == TYPE_INT, \"La variabile base_value deve essere int con valore 10\")\n\tvar mult_val = get_prop(star, \"bonus_multiplier\")\n\tcheck(\"var_mult\", mult_val == 1.5 and typeof(mult_val) == TYPE_FLOAT, \"La variabile bonus_multiplier deve essere float con valore 1.5\")\n\tvar pts_val = get_prop(star, \"points\")\n\tcheck(\"var_points\", pts_val == 15 and typeof(pts_val) == TYPE_INT, \"La variabile points deve essere int e valere 15 dopo il calcolo in _ready()\")\n\tcheck(\"star_pos\", star.position == Vector2(576, 80), \"La posizione della stella deve corrispondere a START_POSITION\")\n\tcheck(\"star_color\", star.modulate == Color.YELLOW, \"Il modulate della stella deve essere Color.YELLOW\")\n",
+     "descrizione": "Le variabili della stella sono tipizzate e points viene calcolato correttamente all'avvio"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n\nfunc _ready() -> void:\n\t# Posiziona l'ostacolo in alto verso sinistra\n\tposition = Vector2(200, 80)\n\t# Colora l'icona di rosso per indicare il pericolo\n\tmodulate = Color.RED\n\t# Scrive la conferma di avvio nel pannello Output\n\tprint(\"Roccia pronta: \", position)\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella\nconst START_POSITION: Vector2 = Vector2(576, 80)\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Posiziona la stella e imposta il colore giallo\n\tposition = START_POSITION\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Abbiamo dichiarato la costante `START_POSITION` per bloccare le coordinate iniziali e le variabili necessarie con i loro tipi espliciti. La moltiplicazione `base_value * bonus_multiplier` coinvolge un `int` (10) e un `float` (1.5), generando un risultato in virgola mobile (`15.0`). Poiché la variabile `points` richiede obbligatoriamente un numero intero (`int`), abbiamo eseguito la conversione con `int(base_value * bonus_multiplier)`. In questo modo la stella possiede tutte le proprietà pronte per essere lette o modificate durante il gioco.",
+    "cambiati": [
+     "star.gd"
+    ],
+    "rimossi": []
+   },
+   "cartella": "pioggia-di-stelle",
+   "id": "es3"
+  }
+ }
+}

@@ -1,0 +1,103 @@
+{
+ "passaggio": 106,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Fai ripartire la stella e cambiale colore». 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: star.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Fai ripartire la stella e cambiale colore",
+   "consegna": "Finora la stella cade verso il basso all'infinito e si perde oltre il bordo della finestra. Inoltre il suo colore rimane sempre giallo, senza dare alcuna indicazione visiva della sua discesa.\n\nIn questo esercizio modificherai lo script `star.gd` per aggiungere due verifiche condizionali con `if`:\n1. Quando la coordinata Y della stella supera il limite inferiore dello schermo (oltre `680.0` pixel), deve riposizionarsi in cima alla coordinata Y iniziale definita in `START_POSITION.y` (`80.0` pixel).\n2. Se la coordinata Y della stella supera la metà dello schermo (`350.0` pixel), il colore del nodo (`modulate`) deve diventare arancione (`Color.ORANGE`). Altrimenti, deve restare giallo (`Color.YELLOW`).",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [
+    "Nel pannello *FileSystem* (in basso a sinistra), fai doppio clic su `star.gd` per aprirlo nell'area di lavoro *Script*.",
+    "In cima allo script, subito sotto `const START_POSITION: Vector2 = Vector2(576, 80)`, premi Invio e dichiara le due costanti di riferimento: `const RESET_Y: float = 680.0` e `const MID_SCREEN_Y: float = 350.0`.",
+    "Scorri verso il basso fino alla funzione `_process(delta: float)`. Posizionati subito dopo la riga `position.y += fall_speed * delta` e premi Invio.",
+    "Scrivi la condizione per controllare il superamento del fondo: `if position.y > RESET_Y:`. Premi Invio e indenta con Tab, poi scrivi l'istruzione di azzeramento: `position.y = START_POSITION.y`.",
+    "Premi Invio, togli l'indentazione con Backspace per tornare alla colonna principale di `_process`, e scrivi il controllo per la metà schermo: `if position.y > MID_SCREEN_Y:`.",
+    "Premi Invio, indenta con Tab e scrivi `modulate = Color.ORANGE`.",
+    "Premi Invio, togli l'indentazione con Backspace e scrivi `else:` seguito da Invio, un Tab e l'istruzione `modulate = Color.YELLOW`.",
+    "Salva lo script con la combinazione Ctrl+S, quindi premi F6 per avviare la scena `star.tscn` e osservare la stella che cambia colore e riparte dall'alto a ciclo continuo."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://star.gd",
+     "descrizione": "Il file star.gd esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://star.gd",
+     "regex": "RESET_Y",
+     "descrizione": "Lo script star.gd dichiara la costante RESET_Y"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://star.gd",
+     "regex": "MID_SCREEN_Y",
+     "descrizione": "Lo script star.gd dichiara la costante MID_SCREEN_Y"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_caricata\", star != null, \"La scena star.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tstar.position = Vector2(576, 200.0)\n\tawait wait_frames(2)\n\tcheck(\"colore_in_alto\", star.modulate == Color.YELLOW, \"Nella metà superiore dello schermo (Y <= MID_SCREEN_Y) modulate deve essere Color.YELLOW\")\n\tstar.position = Vector2(576, 400.0)\n\tawait wait_frames(2)\n\tcheck(\"colore_in_basso\", star.modulate == Color.ORANGE, \"Nella metà inferiore dello schermo (Y > MID_SCREEN_Y) modulate deve essere Color.ORANGE\")\n\tstar.position = Vector2(576, 685.0)\n\tawait wait_frames(2)\n\tcheck(\"reset_superato_fondo\", star.position.y < 200.0, \"Quando position.y supera RESET_Y (680.0), la stella deve tornare a START_POSITION.y (80.0)\")\n",
+     "descrizione": "La stella cambia colore a metà schermo e torna in cima quando oltrepassa RESET_Y"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Aggiorna la caduta verticale e lo spostamento orizzontale usando delta\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Posiziona la stella e imposta il colore iniziale giallo\n\tposition = START_POSITION\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# Sposta la stella verso il basso in base alla velocità e al tempo trascorso\n\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto\n\tif position.y > RESET_Y:\n\t\tposition.y = START_POSITION.y\n\t\n\t# Cambia colore in base alla posizione rispetto a metà schermo\n\tif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n"
+     }
+    ],
+    "spiegazione": "Abbiamo definito due costanti `float` in cima allo script per evitare numeri magici: `RESET_Y` a `680.0` e `MID_SCREEN_Y` a `350.0`. In `_process(delta)` usiamo l'operatore relazionale `>`: se `position.y` supera `RESET_Y`, riassegniamo la sola coordinata Y a `START_POSITION.y` per far ripartire la caduta dall'alto. Subito dopo, una struttura `if`/`else` valuta l'altezza corrente: quando `position.y > MID_SCREEN_Y` applichiamo `Color.ORANGE`, altrimenti ripristiniamo `Color.YELLOW`.",
+    "cambiati": [
+     "star.gd"
+    ],
+    "rimossi": [],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    }
+   },
+   "cartella": "pioggia-di-stelle",
+   "id": "es1"
+  }
+ }
+}

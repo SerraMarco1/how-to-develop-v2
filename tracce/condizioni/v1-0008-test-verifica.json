@@ -1,0 +1,90 @@
+{
+ "passaggio": 109,
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (obiettivo): approvato",
+ "spiegazione": "«Test: Stato di raccolta e tre fasce di colore per la stella». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: star.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Test: Stato di raccolta e tre fasce di colore per la stella",
+   "consegna": "Completa il comportamento della stella in `star.gd` gestendo lo stato booleano di raccolta e una scala a tre colori con `if`, `elif` ed `else`.\n\nRequisiti da realizzare:\n1. La stella deve muoversi verso il basso (`position.y += fall_speed * delta`) **solo se non è stata raccolta** (quando `is_collected` è falso). Se `is_collected` è `true`, il movimento deve rimanere fermo.\n2. Sostituisci il vecchio controllo del colore con una sequenza a tre fasce:\n   - Se `position.y` supera `520.0`, imposta `modulate = Color.RED` per indicare che la stella sta per essere persa sul fondo.\n   - Altrimenti se `position.y` supera `MID_SCREEN_Y` (350.0), imposta `modulate = Color.ORANGE`.\n   - Altrimenti, mantieni `modulate = Color.YELLOW`.\n3. Quando la stella supera `RESET_Y` (680.0), oltre a ripristinare `position.y = START_POSITION.y`, assicurati che la variabile `is_collected` venga reimpostata a `false`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per muovere la stella solo quando non è raccolta, puoi scrivere `if not is_collected:` prima di aggiornare `position.y`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://star.gd",
+     "descrizione": "Il file star.gd esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://star.gd",
+     "regex": "elif",
+     "descrizione": "Lo script star.gd usa l'istruzione elif per gestire più condizioni a cascata"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_caricata\", star != null, \"La scena star.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tstar.is_collected = true\n\tvar y_ferma: float = star.position.y\n\tawait wait_frames(4)\n\tcheck(\"ferma_se_raccolta\", star.position.y == y_ferma, \"Quando is_collected è true, la stella non deve muoversi verso il basso\")\n\tstar.is_collected = false\n\tawait wait_frames(4)\n\tcheck(\"cade_se_non_raccolta\", star.position.y > y_ferma, \"Quando is_collected è false, la stella deve cadere\")\n\tstar.position = Vector2(576, 200.0)\n\tawait wait_frames(2)\n\tcheck(\"colore_giallo\", star.modulate == Color.YELLOW, \"Nella fascia superiore (Y <= MID_SCREEN_Y) modulate deve essere Color.YELLOW\")\n\tstar.position = Vector2(576, 400.0)\n\tawait wait_frames(2)\n\tcheck(\"colore_arancione\", star.modulate == Color.ORANGE, \"Nella fascia centrale (tra MID_SCREEN_Y e 520.0) modulate deve essere Color.ORANGE\")\n\tstar.position = Vector2(576, 560.0)\n\tawait wait_frames(2)\n\tcheck(\"colore_rosso\", star.modulate == Color.RED, \"Oltre 520.0 pixel di altezza modulate deve essere Color.RED\")\n\tstar.is_collected = true\n\tstar.position = Vector2(576, 685.0)\n\tawait wait_frames(2)\n\tcheck(\"reset_coordinata_y\", star.position.y < 200.0, \"Oltre RESET_Y la stella deve tornare a START_POSITION.y\")\n\tcheck(\"reset_is_collected\", star.is_collected == false, \"Oltre RESET_Y la variabile is_collected deve tornare a false\")\n",
+     "descrizione": "La stella rispetta is_collected, cambia colore su tre fasce e si ripristina oltre il fondo"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Aggiorna la caduta verticale e lo spostamento orizzontale usando delta\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\t\n\t# Riporta la roccia alla posizione iniziale se supera il fondo o il lato destro\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\tposition = START_POSITION\n\t\n\t# Cambia colore per segnalare il pericolo quando si avvicina al fondo\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Posiziona la stella e imposta il colore iniziale giallo\n\tposition = START_POSITION\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella si muove verso il basso solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto e torna raccoglibile\n\tif position.y > RESET_Y:\n\t\tposition.y = START_POSITION.y\n\t\tis_collected = false\n\t\n\t# Aggiorna il colore a tre fasce per avvisare il giocatore della caduta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n"
+     }
+    ],
+    "spiegazione": "Abbiamo subordinato la caduta verticale alla condizione `if not is_collected:`, impedendo al nodo di scendere quando è già stato raccolto. Nel ramo di ripristino oltre `RESET_Y`, resettiamo sia la coordinata `position.y` che la variabile di stato `is_collected = false`. Infine, per gestire tre colori ordinati dall'altezza più critica a quella iniziale, usiamo la cascata `if position.y > 520.0:`, seguita da `elif position.y > MID_SCREEN_Y:` e dall'alternativa finale `else:`.",
+    "cambiati": [
+     "star.gd"
+    ],
+    "rimossi": [],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    }
+   },
+   "cartella": "pioggia-di-stelle",
+   "id": "test"
+  }
+ }
+}

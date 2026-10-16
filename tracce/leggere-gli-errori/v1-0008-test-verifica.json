@@ -1,0 +1,165 @@
+{
+ "passaggio": 165,
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (ripara): approvato",
+ "spiegazione": "«Rimettere in funzione «Pioggia di stelle»». 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: basket.gd, star.gd, rock.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Rimettere in funzione «Pioggia di stelle»",
+   "consegna": "Hai ricevuto una copia completa del gioco nella cartella `copia-pioggia-di-stelle`. All'interno del progetto sono presenti cinque errori (due errori di scrittura e tre errori di logica distribuiti tra i file) che causano i seguenti sintomi:\n\n1. **Il gioco principale non parte**: premendo **F5**, la scena principale `basket.tscn` non si avvia affatto e nel pannello **Output** compare un errore di scrittura relativo a una condizione in `basket.gd`.\n2. **La scena della stella non compila**: aprendo `res://star.tscn` e premendo **F6** per eseguirla da sola, Godot rifiuta l'avvio segnalando un errore di sintassi nella firma dei parametri di una funzione in `star.gd`.\n3. **Il cesto si blocca a metà schermo**: dopo aver consentito l'avvio della scena principale, il cesto si sposta regolarmente a sinistra ma, tenendo premuto a destra, si arresta bruscamente a metà schermo (a coordinata X = 576.0) senza poter proseguire verso il limite destro dello schermo.\n4. **La stella resta immobile in alto**: nella scena della stella, l'oggetto non scende lungo l'asse Y con lo scorrere dei fotogrammi ma rimane congelato in alto alla sua posizione iniziale.\n5. **La roccia scivola verso sinistra**: nella scena dell'ostacolo (`res://rock.tscn`), la roccia cade verso il basso ma scivola orizzontalmente verso sinistra anziché dirigersi verso destra.\n\nIndividua e risolvi tutti e cinque gli errori nei rispettivi script (`basket.gd`, `star.gd` e `rock.gd`) per rimettere in sesto il gioco.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "copia-pioggia-di-stelle",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Affronta i problemi con ordine: correggi prima i due errori di compilazione con l'aiuto dell'Output (cercando caratteri mancanti come `:` o `)`), poi esegui le scene per osservare i valori nelle condizioni matematiche e nei segni di spostamento."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://basket.tscn",
+     "descrizione": "Il progetto contiene la scena basket.tscn"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://star.tscn",
+     "descrizione": "Il progetto contiene la scena star.tscn"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://rock.tscn",
+     "descrizione": "Il progetto contiene la scena rock.tscn"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_loaded\", basket != null, \"La scena principale basket.tscn deve avviarsi senza errori di compilazione\"):\n\t\treturn\n\tawait hold_action(\"move_right\", 50)\n\tcheck(\"basket_clamp\", basket.position.x > 600.0, \"Il cesto deve potersi spostare oltre il centro dello schermo verso destra (oltre X = 576)\")\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_loaded\", star != null, \"La scena star.tscn deve caricarsi ed avviarsi senza errori\"):\n\t\treturn\n\tvar initial_star_y: float = star.position.y\n\tawait wait_frames(10)\n\tcheck(\"star_falls\", star.position.y > initial_star_y + 10.0, \"La stella deve cadere verso il basso con lo scorrere dei fotogrammi\")\n\tvar caught_result = call_if_exists(star, \"is_caught\", [star.position])\n\tcheck(\"star_is_caught\", caught_result == true, \"La funzione is_caught() deve restituire true quando il cesto e la stella si sovrappongono\")\n\tvar rock := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_loaded\", rock != null, \"La scena rock.tscn deve caricarsi ed avviarsi senza errori\"):\n\t\treturn\n\tvar initial_rock_x: float = rock.position.x\n\tawait wait_frames(10)\n\tcheck(\"rock_moves_right\", rock.position.x > initial_rock_x + 5.0, \"La roccia deve spostarsi verso destra mentre cade\")\n",
+     "descrizione": "Tutte le scene si avviano senza errori, il cesto copre l'intera larghezza consentita, la stella cade regolarmente e la roccia si muove verso destra"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "CopiaPioggiaDiStelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CopiaPioggiaDiStelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\")\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 576.0)\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Riporta la stella alla posizione di partenza e prepara il colore\n\treset_star()\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella si muove verso il basso solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto e torna raccoglibile\n\tif position.y < RESET_Y:\n\t\treset_star()\n\t\n\t# Aggiorna il colore a tre fasce per avvisare il giocatore della caduta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Riporta la stella alle coordinate iniziali e la rende di nuovo raccoglibile\n\tposition = START_POSITION\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2 -> bool:\n\t# Calcola la distanza tra la stella e il cesto su entrambi gli assi\n\tvar diff_x: float = abs(position.x - basket_position.x)\n\tvar diff_y: float = abs(position.y - basket_position.y)\n\t\n\t# Restituisce true se entrambe le distanze sono dentro la tolleranza\n\tif diff_x < 50.0 and diff_y < 40.0:\n\t\treturn true\n\treturn false\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i limiti ed aggiorna l'aspetto visivo\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia verso il basso e verso destra\n\tposition.y += fall_speed * delta\n\tposition.x -= horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Riporta la roccia alle coordinate di partenza\n\tposition = START_POSITION\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CopiaPioggiaDiStelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione di partenza fissa del cesto sullo schermo\nconst START_POSITION: Vector2 = Vector2(576, 600)\n\n# Variabili di stato del cesto\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = 3\nvar is_active: bool = true\n\n\nfunc _ready() -> void:\n\t# Posiziona il cesto usando la costante e imposta il colore\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\t\n\t# Compone il testo del Label unendo stringhe e variabili\n\t$Label.text = player_name + \" | Vite: \" + str(lives) + \" | Vel: \" + str(speed)\n\t\n\t# Mostra i valori iniziali nel pannello Output\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\t# Delega tutto il movimento alla funzione dedicata\n\tmove_basket(delta)\n\n\nfunc move_basket(delta: float) -> void:\n\t# Determina la direzione orizzontale leggendo le azioni di input\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muove il cesto lungo l'asse X in base a direzione, velocita' e delta\n\tposition.x += direction * speed * delta\n\t\n\t# Blocca la coordinata X dentro i confini visibili dello schermo\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n"
+     },
+     {
+      "percorso": "star.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://star.gd\" id=\"1_star\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_star\")\n"
+     },
+     {
+      "percorso": "star.gd",
+      "contenuto": "extends Sprite2D\n\n# Posizione iniziale fissa della stella e coordinate di riferimento\nconst START_POSITION: Vector2 = Vector2(576, 80)\nconst RESET_Y: float = 680.0\nconst MID_SCREEN_Y: float = 350.0\n\n# Variabili di stato e punteggio della stella\nvar star_name: String = \"Stella\"\nvar fall_speed: float = 180.0\nvar is_collected: bool = false\nvar base_value: int = 10\nvar bonus_multiplier: float = 1.5\nvar points: int = 0\n\n\nfunc _ready() -> void:\n\t# Riporta la stella alla posizione di partenza e prepara il colore\n\treset_star()\n\tmodulate = Color.YELLOW\n\t\n\t# Calcola il punteggio combinando intero e decimale con conversione esplicita\n\tpoints = int(base_value * bonus_multiplier)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(star_name, \" pronta: \", points, \" pt - Vel: \", fall_speed)\n\n\nfunc _process(delta: float) -> void:\n\t# La stella si muove verso il basso solo se non è ancora stata raccolta\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\t\n\t# Se supera il fondo dello schermo, ricomincia dall'alto e torna raccoglibile\n\tif position.y > RESET_Y:\n\t\treset_star()\n\t\n\t# Aggiorna il colore a tre fasce per avvisare il giocatore della caduta\n\tif position.y > 520.0:\n\t\tmodulate = Color.RED\n\telif position.y > MID_SCREEN_Y:\n\t\tmodulate = Color.ORANGE\n\telse:\n\t\tmodulate = Color.YELLOW\n\n\nfunc reset_star() -> void:\n\t# Riporta la stella alle coordinate iniziali e la rende di nuovo raccoglibile\n\tposition = START_POSITION\n\tis_collected = false\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\t# Calcola la distanza tra la stella e il cesto su entrambi gli assi\n\tvar diff_x: float = abs(position.x - basket_position.x)\n\tvar diff_y: float = abs(position.y - basket_position.y)\n\t\n\t# Restituisce true se entrambe le distanze sono dentro la tolleranza\n\tif diff_x < 50.0 and diff_y < 40.0:\n\t\treturn true\n\treturn false\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\n# Costanti per posizione di riferimento, limiti di ripristino e danno massimo\nconst START_POSITION: Vector2 = Vector2(200, 80)\nconst RESET_Y: float = 680.0\nconst RESET_X: float = 1000.0\nconst MAX_DAMAGE: int = 3\n\n# Variabili di stato dell'ostacolo\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\t# Posiziona la roccia partendo dalla costante e regola l'asse X\n\tposition = START_POSITION\n\tposition.x += 40.0\n\tmodulate = Color.RED\n\t\n\t# Calcola il rapporto di pericolo convertendo in float per non troncare a zero\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\t\n\t# Stampa le informazioni nel pannello Output\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\t# Esegue il movimento, controlla i limiti ed aggiorna l'aspetto visivo\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x > RESET_X:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\t# Sposta la roccia verso il basso e verso destra\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\t# Riporta la roccia alle coordinate di partenza\n\tposition = START_POSITION\n\n\nfunc update_modulate() -> void:\n\t# Segnala l'avvicinamento al fondo cambiando tonalità di rosso\n\tif position.y > 400.0:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n"
+     }
+    ],
+    "progetto": {
+     "nome": "CopiaPioggiaDiStelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Ecco come individuare e correggere i cinque errori:\n\n1. **Errore di scrittura in `basket.gd` (riga 32)**: l'istruzione `if Input.is_action_pressed(\"move_left\")` non terminava con i due punti `:`. Il compilatore si arrestava all'avvio segnalando `Expected \":\" after condition`. Aggiungendo `:` il file compila.\n2. **Errore di scrittura in `star.gd` (riga 53)**: nella dichiarazione `func is_caught(basket_position: Vector2 -> bool:` mancava la parentesi tonda di chiusura dei parametri prima della freccia `->`. Chiudendo la parentesi con `func is_caught(basket_position: Vector2) -> bool:` la funzione diventa valida.\n3. **Errore di logica in `basket.gd` (riga 41)**: la funzione `clamp(position.x, 64.0, 576.0)` bloccava il cesto a 576.0 (il centro dello schermo) impedendogli di raggiungere la metà destra. Ripristinando il limite a `1088.0`, il cesto può muoversi su tutto lo schermo.\n4. **Errore di logica in `star.gd` (riga 37)**: il controllo per far ricominciare la stella era impostato su `if position.y < RESET_Y:`. Poiché la stella parte da coordinata Y = 80, la condizione risultava vera a ogni singolo fotogramma (80 è minore di 680), costringendo `reset_star()` a riposizionarla continuamente in alto senza farla cadere. Cambiando l'operatore in `>` (`if position.y > RESET_Y:`), la stella cade liberamente e ricomincia solo quando tocca il fondo.\n5. **Errore di logica in `rock.gd` (riga 42)**: in `move_rock()`, la posizione orizzontale veniva decrementata con `position.x -= horizontal_speed * delta`. Sostituendo `-=` con `+=` (`position.x += horizontal_speed * delta`), la roccia si sposta verso destra come previsto.",
+    "cambiati": [
+     "basket.gd",
+     "star.gd",
+     "rock.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ }
+}

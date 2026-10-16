@@ -1,0 +1,102 @@
+{
+ "passaggio": 47,
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Crea la prima scena con uno sprite e un testo». 6 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: project.godot, node_2d.tscn",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Crea la prima scena con uno sprite e un testo",
+   "consegna": "Nel progetto `Prima scena`, crea la schermata iniziale composta da un nodo radice, un'immagine e una scritta, poi impostala come scena principale del progetto.\n\n1. Crea una nuova scena 2D: il nodo radice deve essere di tipo `Node2D` e chiamarsi `Node2D`.\n2. Aggiungi a `Node2D` un nodo di tipo `Sprite2D` chiamato `Sprite2D`: assegna alla sua proprietà **Texture** l'immagine `icon.svg` e imposta la sua **Position** con coordinate X: `200` e Y: `300`.\n3. Aggiungi a `Node2D` un nodo di tipo `Label` chiamato `Label`: scrivi nel campo **Text** la frase `Benvenuto in Godot!` e imposta la sua **Position** con coordinate X: `350` e Y: `150`.\n4. Salva la scena sul disco con il nome `node_2d.tscn` nella cartella radice `res://`.\n5. Imposta `node_2d.tscn` come scena principale ed esegui il progetto con **F5**.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "prima-scena",
+   "passiGuida": [
+    "Nel pannello *Scene* (in alto a sinistra), fai clic sul pulsante **2D Scene**: Godot creerà un nodo radice di tipo Node2D chiamato `Node2D`.",
+    "Con il nodo `Node2D` selezionato, fai clic sul pulsante **+** in cima al pannello *Scene* (oppure premi Ctrl+A) per aprire la finestra *Create New Node*. Cerca `Sprite2D`, selezionalo e premi **Create**.",
+    "Seleziona il nodo `Sprite2D` appena aggiunto. Nel pannello *FileSystem* (in basso a sinistra), individua il file `icon.svg` e trascinalo con il mouse dentro la casella della proprietà **Texture** nell'*Inspector* a destra.",
+    "Sempre nell'*Inspector* di `Sprite2D`, apri la sezione **Transform** sotto la categoria *Node2D* e imposta **Position** su X: `200` e Y: `300`.",
+    "Seleziona di nuovo il nodo radice `Node2D` nel pannello *Scene*, premi il pulsante **+**, cerca `Label` nell'elenco e premi **Create**.",
+    "Seleziona il nodo `Label`: nell'*Inspector*, fai clic dentro il campo **Text** e digita `Benvenuto in Godot!`. Poi apri la sezione **Transform** sotto *Control* e imposta **Position** su X: `350` e Y: `150`.",
+    "Salva la scena premendo **Ctrl+S** (oppure dal menu **Scene → Save Scene**): lascia il percorso proposto `res://node_2d.tscn` e conferma premendo **Save**.",
+    "Premi **F5** sulla tastiera per avviare il progetto. Nella finestra di dialogo che compare, premi **Select Current** per confermare `node_2d.tscn` come scena principale: si aprirà la finestra del gioco che mostra l'icona e il testo."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://node_2d.tscn",
+     "descrizione": "Il file di scena node_2d.tscn è stato salvato nella cartella principale res://"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://node_2d.tscn",
+     "tipoNodo": "Node2D",
+     "nome": "Node2D",
+     "descrizione": "La scena contiene un nodo radice Node2D chiamato Node2D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://node_2d.tscn",
+     "tipoNodo": "Sprite2D",
+     "nome": "Sprite2D",
+     "genitore": "Node2D",
+     "descrizione": "La scena contiene un nodo Sprite2D figlio di Node2D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://node_2d.tscn",
+     "tipoNodo": "Label",
+     "nome": "Label",
+     "genitore": "Node2D",
+     "descrizione": "La scena contiene un nodo Label figlio di Node2D"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "run/main_scene",
+     "contiene": "node_2d.tscn",
+     "descrizione": "La scena node_2d.tscn è impostata come scena principale del progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve essere impostata e avviarsi senza errori\"):\n\t\treturn\n\tvar sprite := find_by_name(main, \"Sprite2D\") as Sprite2D\n\tif not check(\"sprite\", sprite != null, \"Nella scena deve esserci un nodo Sprite2D\"):\n\t\treturn\n\tcheck(\"sprite_texture\", sprite.texture != null, \"Al nodo Sprite2D deve essere assegnata una texture\")\n\tcheck(\"sprite_pos\", abs(sprite.position.x - 200.0) < 5.0 and abs(sprite.position.y - 300.0) < 5.0, \"La posizione di Sprite2D deve essere vicina a (200, 300)\")\n\tvar label := find_by_name(main, \"Label\") as Label\n\tif not check(\"label\", label != null, \"Nella scena deve esserci un nodo Label\"):\n\t\treturn\n\tcheck(\"label_text\", label.text == \"Benvenuto in Godot!\", \"Il testo del nodo Label deve essere 'Benvenuto in Godot!'\")\n\tcheck(\"label_pos\", abs(label.position.x - 350.0) < 5.0 and abs(label.position.y - 150.0) < 5.0, \"La posizione del nodo Label deve essere vicina a (350, 150)\")\n",
+     "descrizione": "La scena si avvia e contiene Sprite2D e Label con posizione, texture e testo corretti"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Prima scena\"\nrun/main_scene=\"res://node_2d.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "node_2d.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[node name=\"Node2D\" type=\"Node2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 300)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 350.0\noffset_top = 150.0\noffset_right = 512.0\noffset_bottom = 173.0\ntext = \"Benvenuto in Godot!\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Prima scena",
+     "scenaPrincipale": "res://node_2d.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Nel pannello Scene, premendo **2D Scene** si crea la radice `Node2D`. Con il pulsante **+** si aggiungono come figli diretti uno `Sprite2D` e un `Label`. Trascinando `icon.svg` dal FileSystem nella casella **Texture** dello sprite, l'immagine viene assegnata al nodo. Nell'Inspector, modificando **Position** sotto **Transform** si posizionano gli elementi nello spazio 2D, e inserendo la stringa nel campo **Text** del Label si definisce il testo visibile. Il salvataggio con Ctrl+S crea `node_2d.tscn`, e premendo F5 Godot registra la scena come scena principale (`run/main_scene`).",
+    "cambiati": [
+     "project.godot",
+     "node_2d.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ }
+}

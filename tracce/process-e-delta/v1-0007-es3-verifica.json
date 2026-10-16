@@ -1,0 +1,86 @@
+{
+ "passaggio": 87,
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (obiettivo): approvato",
+ "spiegazione": "«La navicella nello spazio». 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: ship.tscn, ship.gd",
+ "chiamate": [],
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "La navicella nello spazio",
+   "consegna": "Crea un nuovo progetto chiamato `Navicella` nella cartella `navicella` per applicare il calcolo di movimento a entrambe le dimensioni dello schermo contemporaneamente.\n\n1. Crea la scena principale `ship.tscn` con una radice di tipo `Sprite2D` chiamata `Ship`.\n2. Assegna alla proprietà **Texture** di `Ship` l'immagine `res://icon.svg`.\n3. Collega al nodo `Ship` lo script `ship.gd`.\n4. Nello script `ship.gd`:\n   - Imposta la posizione iniziale in `_ready()` sulle coordinate `Vector2(150.0, 450.0)`.\n   - Dichiara una variabile di stato `velocity: Vector2` con valore iniziale `Vector2(200.0, -120.0)`, che rappresenta una velocità vettoriale costante espressa in pixel al secondo (200 pixel al secondo verso destra e 120 pixel al secondo verso l'alto).\n   - Definisci la funzione `_process(delta: float) -> void` per aggiornare a ogni fotogramma la proprietà `position`, sommandole l'intero vettore `velocity` moltiplicato per `delta`.\n5. Imposta `ship.tscn` come scena principale del progetto.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "navicella",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Nello spazio 2D puoi sommare direttamente un `Vector2` alla proprietà `position` usando l'operatore di incremento `+=`.",
+    "Moltiplicando un vettore per `delta` (`velocity * delta`), Godot applica la frazione di secondo sia alla componente X sia alla componente Y contemporaneamente.",
+    "Assicurati che la scena `ship.tscn` sia impostata come scena principale del progetto affinché venga avviata correttamente."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://ship.tscn",
+     "tipoNodo": "Sprite2D",
+     "nome": "Ship",
+     "descrizione": "La scena ship.tscn ha una radice Sprite2D chiamata Ship"
+    },
+    {
+     "tipo": "script_collegato",
+     "scena": "res://ship.tscn",
+     "nodo": "Ship",
+     "descrizione": "Il nodo Ship ha uno script collegato"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "run/main_scene",
+     "contiene": "ship.tscn",
+     "descrizione": "La scena ship.tscn è impostata come scena principale"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_loaded\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar ship := main as Sprite2D\n\tif not check(\"ship_node\", ship != null, \"La radice della scena deve essere uno Sprite2D\"):\n\t\treturn\n\tcheck(\"start_pos\", abs(ship.position.x - 150.0) < 1.0 and abs(ship.position.y - 450.0) < 1.0, \"La posizione iniziale deve essere Vector2(150.0, 450.0)\")\n\t\n\tvar initial_x := ship.position.x\n\tvar initial_y := ship.position.y\n\t\n\tawait wait_seconds(0.5)\n\t\n\tvar delta_x := ship.position.x - initial_x\n\tvar delta_y := ship.position.y - initial_y\n\t\n\tcheck(\"moves_right\", delta_x > 50.0, \"La navicella deve essersi spostata verso destra (X crescente)\")\n\tcheck(\"moves_up\", delta_y < -30.0, \"La navicella deve essersi spostata verso l'alto (Y decrescente)\")\n\tcheck(\"speed_x\", delta_x >= 80.0 and delta_x <= 120.0, \"In 0.5 secondi lo spostamento su X deve essere di circa 100 pixel (200 px/s * 0.5 s)\")\n\tcheck(\"speed_y\", delta_y <= -45.0 and delta_y >= -75.0, \"In 0.5 secondi lo spostamento su Y deve essere di circa -60 pixel (-120 px/s * 0.5 s)\")\n",
+     "descrizione": "La navicella si sposta verso l'alto e verso destra in base alla velocità vettoriale e al tempo trascorso"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Navicella\"\nrun/main_scene=\"res://ship.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "ship.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://ship.gd\" id=\"1_ship\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Ship\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_ship\")\n"
+     },
+     {
+      "percorso": "ship.gd",
+      "contenuto": "extends Sprite2D\n\nvar velocity: Vector2 = Vector2(200.0, -120.0)\n\n\nfunc _ready() -> void:\n\t# Posiziona la navicella alle coordinate di partenza\n\tposition = Vector2(150.0, 450.0)\n\n\nfunc _process(delta: float) -> void:\n\t# Sposta la navicella sommando la velocita vettoriale scalata per il tempo\n\tposition += velocity * delta\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Navicella",
+     "scenaPrincipale": "res://ship.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "La proprietà `position` di un nodo 2D è un `Vector2`. Dichiarando la velocità come vettore `velocity: Vector2 = Vector2(200.0, -120.0)`, possiamo calcolare lo spostamento completo moltiplicando l'intero vettore per `delta`: l'operazione distribuisce la moltiplicazione su X e su Y, permettendo di aggiornare la posizione 2D con la sola istruzione `position += velocity * delta` all'interno di `_process()`.",
+    "cambiati": [
+     "ship.tscn",
+     "ship.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ }
+}

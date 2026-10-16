@@ -1,0 +1,73 @@
+{
+ "passaggio": 36,
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (obiettivo): 1 problema",
+ "spiegazione": "«Reimporta e rinomina un progetto nel Project Manager», scritto da gemini/gemini-flash-latest. 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- una verifica controlla il file \"res://icon.svg\", ma la consegna non lo nomina\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2). Gli altri pezzi non vengono toccati.",
+ "chiamate": [],
+ "dati": {
+  "problemi": [
+   "una verifica controlla il file \"res://icon.svg\", ma la consegna non lo nomina"
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Reimporta e rinomina un progetto nel Project Manager",
+   "consegna": "Dimostra di saper gestire il ciclo di vita completo di un progetto nel Project Manager senza perdere dati:\n\n1. Crea un nuovo progetto chiamato `Bozza Recupero` nella cartella `progetto-recupero`, rimanendo nel Project Manager (disattivando **Edit Now**).\n2. Rimuovi `Bozza Recupero` dall'elenco del Project Manager usando il pulsante **Remove** (lasciando la cartella intatta sul disco).\n3. Reimporta subito il progetto nell'elenco del Project Manager facendo clic sul pulsante **Import** e selezionando il file `project.godot` che si trova nella cartella `progetto-recupero`.\n4. Rinomina il progetto reimportato in `Progetto Recuperato` tramite il pulsante **Rename** nella colonna di destra.\n\nLascia il progetto reimportato e rinominato nell'elenco del Project Manager prima di premere **Verifica**.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "progetto-recupero",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per reimportare il progetto dopo averlo rimosso con Remove, usa il pulsante **Import** in alto a sinistra del Project Manager e seleziona con **Browse** il file `project.godot` dentro la cartella `progetto-recupero`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "progetto_godot",
+     "descrizione": "Nella cartella progetto-recupero è presente un progetto valido di Godot 4"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://icon.svg",
+     "descrizione": "Il file icon.svg è presente nella cartella del progetto"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "config/name",
+     "contiene": "Progetto Recuperato",
+     "descrizione": "Il nome del progetto in project.godot è stato aggiornato in 'Progetto Recuperato'"
+    },
+    {
+     "tipo": "progetto_in_elenco",
+     "presente": true,
+     "descrizione": "Il progetto reimportato compare nell'elenco del Project Manager"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Progetto Recuperato\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Progetto Recuperato",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Quando un progetto viene rimosso dall'elenco o proviene da un'altra cartella, il Project Manager consente di registrarlo nuovamente con il pulsante **Import**. Selezionando con **Browse** il file `project.godot`, Godot riconosce la cartella come progetto valido e la reinserisce nella lista. Successivamente, il pulsante **Rename** permette di aggiornare il parametro `config/name` del progetto dentro `project.godot` e nell'interfaccia senza alterare i file sul disco.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ }
+}

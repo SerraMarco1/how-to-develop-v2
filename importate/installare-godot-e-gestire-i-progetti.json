@@ -1,0 +1,310 @@
+{
+ "slug": "installare-godot-e-gestire-i-progetti",
+ "contenuto": {
+  "titolo": "Installare Godot e gestire i progetti",
+  "sommario": "Questa lezione insegna a scaricare e avviare l'edizione corretta di Godot 4.7 senza bisogno di installazione. Imparerai a creare un progetto, a esplorare i file generati sul disco con il significato del percorso speciale res://, e a usare il Project Manager per rinominare, rimuovere e reimportare i progetti in sicurezza.",
+  "concetti": [
+   "Download e avvio di Godot (edizione Standard)",
+   "Project Manager",
+   "Creazione di un progetto e opzione Create Folder",
+   "File di configurazione project.godot e cartella .godot/",
+   "Prefisso speciale di percorso res://",
+   "Rinominare un progetto (Rename)",
+   "Rimuovere e reimportare un progetto (Remove e Import)"
+  ],
+  "obiettivi": [
+   "Scaricare l'edizione giusta di Godot 4.7 (standard, non .NET) e avviarla",
+   "Creare un progetto, capire cosa c'è nella sua cartella (project.godot, .godot, res://)",
+   "Rinominare un progetto, toglierlo dall'elenco senza cancellarlo, reimportarlo"
+  ],
+  "durataMinuti": 40,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Quando decidi di sviluppare un videogioco, la primissima cosa da padroneggiare è l'organizzazione dei tuoi file di lavoro. Se non sai con precisione dove finiscono i tuoi asset, come il motore organizza i progetti sul disco o come ritrovare un file spostato per errore, rischi di perdere ore di lavoro o cancellare risorse preziose. In questa lezione vedremo come ottenere l'edizione corretta di Godot 4.7, come creare il progetto di base «Prima scena» e come usare il **Project Manager** (il gestore dei progetti) per organizzare e recuperare i tuoi giochi.",
+    "id": "b1"
+   },
+   {
+    "tipo": "testo",
+    "md": "A differenza di ambienti come Unity o Unreal Engine, Godot **non richiede un programma di installazione**. È un unico file eseguibile autonomo che non modifica il registro di sistema né sparge file nascosti nel sistema operativo.\n\nSul sito ufficiale (`godotengine.org`) trovi due edizioni disponibili:\n- **Godot Engine** (l'edizione standard): include tutto l'ambiente di sviluppo e il supporto completo a **GDScript**, il linguaggio di programmazione snello e integrato di Godot che utilizzeremo in questo corso.\n- **Godot Engine - .NET**: è la versione dedicata a chi programma in C#, che richiede software di supporto aggiuntivo installato sul computer.\n\nPer tutto il nostro percorso useremo l'edizione **Standard**. Per iniziare basta scaricare il file compresso `.zip`, estrarlo in una cartella a tua scelta (ad esempio nei tuoi documenti o sul desktop) e fare doppio clic sull'eseguibile di Godot per avviarlo.",
+    "id": "b2"
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "project-manager-vuoto",
+    "didascalia": "Il Project Manager al primo avvio: l'elenco dei progetti è ancora vuoto.",
+    "id": "b3"
+   },
+   {
+    "tipo": "testo",
+    "md": "All'avvio, la prima finestra che si apre è il **Project Manager** (il gestore dei progetti). Da qui puoi creare nuovi giochi, aprire quelli esistenti, cambiare le impostazioni generali o scaricare progetti dimostrativi.\n\nIn alto al centro trovi due schede: **Projects** (l'elenco dei tuoi progetti locali) e **Asset Store** (un catalogo online di modelli e risorse condivisi dalla community). Quando apri Godot per la prima volta l'elenco è vuoto, e al centro compaiono i pulsanti di avvio rapido. In alto a sinistra trovi i pulsanti principali: **Create** (crea un nuovo progetto), **Import** (aggiunge all'elenco un progetto che esiste già sul disco) e **Scan** (cerca progetti all'interno di una cartella).",
+    "id": "b4"
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare il progetto «Prima scena»",
+    "passi": [
+     "Nel Project Manager fai clic sul pulsante **Create** in alto a sinistra (oppure su **Create New Project** al centro della finestra).",
+     "Nel campo **Project Name** digita `Prima Scena`.",
+     "Accanto alla voce **Project Path**, fai clic su **Browse** e scegli la cartella del tuo computer in cui raccoglierai i tuoi giochi.",
+     "Verifica che l'interruttore **Create Folder** sia attivo: vedrai una riga verde con un segno di spunta che conferma che Godot creerà una cartella dedicata con il nome del progetto.",
+     "Mantieni il renderer predefinito (**Forward+**) e togli la spunta dalla casella **Edit Now** in basso a sinistra, in modo da creare il progetto rimanendo nel Project Manager.",
+     "Fai clic sul pulsante **Create** in fondo a sinistra della finestra."
+    ],
+    "id": "b5"
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "project-manager-nuovo-progetto",
+    "didascalia": "La finestra Create New Project con il nome, la cartella di destinazione e l'opzione Create Folder.",
+    "id": "b6"
+   },
+   {
+    "tipo": "testo",
+    "md": "Se apri la cartella `Prima Scena` dal gestore file del tuo sistema operativo, troverai tre elementi creati automaticamente da Godot:\n\n1. **`project.godot`**: è il file di configurazione centrale. È un semplice file di testo che memorizza il nome del gioco, le dimensioni della finestra, i comandi di input e tutti i parametri del progetto. Per Godot, qualsiasi cartella che contiene un file `project.godot` è a tutti gli effetti un progetto valido.\n2. **`icon.svg`**: un'immagine vettoriale con il logo di Godot, inserita come icona predefinita da usare per test e prove grafiche.\n3. **`.godot/`**: una cartella nascosta gestita internamente dal motore. Contiene dati di cache e risorse ottimizzate per accelerare il caricamento del gioco. Non va toccata a mano né inclusa nei backup, perché Godot è in grado di ricrearla da solo in qualsiasi momento.\n\nInoltre, in Godot incontrerai sempre il percorso speciale **`res://`**. Si legge *Resource* (risorsa) ed è una scorciatoia interna che punta direttamente alla cartella in cui si trova `project.godot`. Nei giochi non si usano mai percorsi assoluti del computer (come `C:/Utenti/...`), perché se spostassi la cartella su un altro PC il gioco smetterebbe di funzionare. Usando invece percorsi come `res://icon.svg`, Godot trova il file partendo sempre dalla radice del progetto, ovunque la cartella si trovi.",
+    "id": "b7"
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando hai diversi giochi o prototipi sul computer, il Project Manager ti permette di organizzarli senza toccare i file a mano. Nella colonna a destra trovi gli strumenti che agiscono sul progetto selezionato:\n\n- **Rename** (rinomina): cambia il nome visibile del progetto nell'elenco e aggiorna la voce del nome dentro `project.godot`. Questo comando **non** rinomina la cartella sul disco, che mantiene il nome originale.\n- **Remove** (rimuovi): toglie la voce selezionata dall'elenco del Project Manager. Non elimina i tuoi file né cancella la cartella dal disco: cancella solo il riferimento visivo nella lista di Godot.\n- **Import** (importa): ti consente di reinserire nell'elenco un progetto precedentemente rimosso o scaricato da un'altra parte, selezionando il suo file `project.godot`.",
+    "id": "b8"
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Rinominare un progetto, rimuoverlo dall'elenco e reimportarlo",
+    "passi": [
+     "Nel Project Manager fai clic su **Create** e crea un secondo progetto chiamato `Progetto Temporaneo` (lascia attivo `Create Folder`, togli la spunta da `Edit Now` e clicca **Create**). Ora vedrai due progetti nell'elenco.",
+     "Fai clic su `Prima Scena` per selezionarlo, poi premi il pulsante **Rename** nella colonna di destra.",
+     "Nella finestra che compare scrivi `Prima Scena - Modificata` e premi il tasto Invio o fai clic su **Rename**: il nome nell'elenco cambierà subito, mentre sul disco la cartella rimarrà invariata.",
+     "Fai clic su `Progetto Temporaneo` per selezionarlo e premi il pulsante **Remove** nella colonna di destra.",
+     "Conferma l'operazione: il progetto scompare dall'elenco del Project Manager, ma la sua cartella sul disco è ancora intatta con tutti i suoi file.",
+     "Fai clic sul pulsante **Import** in alto a sinistra per aprire la finestra di importazione.",
+     "Fai clic su **Browse**, individua la cartella di `Progetto Temporaneo` sul tuo computer, seleziona il file `project.godot` e fai clic su **Import**: il progetto riapparirà immediatamente nell'elenco."
+    ],
+    "id": "b9"
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Fai attenzione a non confondere il pulsante **Remove** con l'eliminazione definitiva. **Remove** si limita a togliere il progetto dalla vista del Project Manager, lasciando la cartella intatta sul tuo disco. Se in futuro vorrai davvero cancellare un progetto per liberare spazio, dovrai eliminare la sua cartella a mano dal file manager del tuo sistema operativo.",
+    "id": "b10"
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "project-manager",
+    "didascalia": "Il Project Manager con due progetti nell'elenco e la colonna di comandi attiva sulla destra.",
+    "id": "b11"
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Godot non si installa: si scarica l'edizione standard in formato zip, si estrae e si esegue direttamente senza procedure di installazione.\n- Il Project Manager è la centrale di controllo per creare nuovi progetti con **Create**, gestirli o aprirli per lavorarci.\n- Una cartella sul computer diventa un progetto di Godot grazie alla presenza del file di configurazione `project.godot`. La cartella nascosta `.godot/` contiene solo cache e file temporanei di servizio.\n- La dicitura `res://` rappresenta la cartella radice del progetto: qualsiasi risorsa di gioco viene cercata a partire da questo percorso.\n- Il comando **Rename** cambia il nome del progetto nell'elenco ma non rinomina la cartella sul disco; il comando **Remove** toglie il progetto dalla lista senza eliminare i file, consentendoti di ripristinarlo in qualsiasi momento con **Import**.",
+    "id": "b12"
+   }
+  ],
+  "esercizi": [
+   {
+    "tipo": "guidato",
+    "genere": "guidato",
+    "titolo": "Crea e rinomina un progetto dal Project Manager",
+    "consegna": "Crea un nuovo progetto tramite il Project Manager di Godot e poi modificalo come segue:\n\n1. Crea un progetto chiamato `Primo Progetto` nella cartella `primo-progetto`.\n2. Disattiva l'opzione **Edit Now** prima di crearlo, in modo da rimanere nel Project Manager.\n3. Seleziona il progetto appena creato nell'elenco e usa il pulsante **Rename** per rinominarlo in `Primo Progetto - Esplorazione`.\n\nLascia il progetto selezionato e visibile nell'elenco del Project Manager prima di premere **Verifica**.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "primo-progetto",
+    "passiGuida": [
+     "Avvia l'eseguibile di Godot 4.7 per aprire la finestra del **Project Manager**.",
+     "Fai clic sul pulsante **Create** in alto a sinistra (oppure su **Create New Project** al centro della finestra).",
+     "Nel campo **Project Name**, scrivi `Primo Progetto`.",
+     "Accanto a **Project Path**, fai clic su **Browse** e seleziona la cartella `primo-progetto`, assicurandoti che l'opzione **Create Folder** sia attiva (segno di spunta verde).",
+     "Togli il segno di spunta dalla casella **Edit Now** in basso a sinistra della finestra.",
+     "Fai clic sul pulsante **Create** in fondo a sinistra per creare il progetto e rimanere nell'elenco dei progetti.",
+     "Fai clic su `Primo Progetto` nell'elenco per selezionarlo, quindi premi il pulsante **Rename** nella colonna a destra.",
+     "Nella finestra di dialogo digita `Primo Progetto - Esplorazione` e premi il tasto Invio (oppure fai clic sul pulsante **Rename**) per confermare."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "progetto_godot",
+      "descrizione": "Nella cartella primo-progetto è presente un progetto valido di Godot 4"
+     },
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "config/name",
+      "contiene": "Primo Progetto - Esplorazione",
+      "descrizione": "Il nome del progetto in project.godot è stato aggiornato in 'Primo Progetto - Esplorazione'"
+     },
+     {
+      "tipo": "progetto_in_elenco",
+      "presente": true,
+      "descrizione": "Il progetto compare nell'elenco dei progetti del Project Manager"
+     }
+    ],
+    "domande": [],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Primo Progetto - Esplorazione\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Primo Progetto - Esplorazione",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Nel Project Manager, il pulsante **Create** permette di definire il nome e la posizione su disco del nuovo progetto. Con **Create Folder** attivo, Godot genera una cartella dedicata che contiene subito `project.godot` e `icon.svg`. Disattivando **Edit Now**, rimaniamo nel Project Manager per gestire i progetti. Selezionando il progetto creato e premendo **Rename**, Godot aggiorna la voce del nome dentro `project.godot` (nella sezione `application`, chiave `config/name`) e nell'elenco visibile, senza modificare il nome della cartella sul disco.",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es1"
+   },
+   {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Rimuovi un progetto dall'elenco conservando i file sul disco",
+    "consegna": "Crea un nuovo progetto chiamato `Progetto Archivio` nella cartella `progetto-archivio` rimanendo nel Project Manager (disattiva la casella **Edit Now** al momento della creazione).\n\nUna volta creato, rimuovi il progetto dall'elenco del Project Manager usando il comando **Remove** nella colonna di destra. Assicurati di confermare solo la rimozione dalla lista: i file del progetto sul disco (inclusi `project.godot` e `icon.svg`) devono rimanere intatti nella cartella `progetto-archivio`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "progetto-archivio",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Crea prima il progetto con il pulsante **Create**, togliendo la spunta da **Edit Now** per rimanere nel Project Manager.",
+     "Seleziona `Progetto Archivio` nell'elenco per visualizzare le azioni disponibili nella colonna a destra, quindi premi **Remove**.",
+     "Il comando **Remove** toglie la voce dall'elenco di Godot senza eliminare la cartella dal disco: non toccare i file dal gestore file del tuo sistema operativo."
+    ],
+    "verifiche": [
+     {
+      "tipo": "progetto_godot",
+      "descrizione": "La cartella progetto-archivio contiene un progetto valido di Godot 4"
+     },
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "config/name",
+      "contiene": "Progetto Archivio",
+      "descrizione": "Il progetto ha il nome corretto 'Progetto Archivio'"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://icon.svg",
+      "descrizione": "Il file icon.svg è presente nella cartella del progetto"
+     },
+     {
+      "tipo": "progetto_in_elenco",
+      "presente": false,
+      "descrizione": "Il progetto non è presente nell'elenco del Project Manager"
+     }
+    ],
+    "domande": [],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Progetto Archivio\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Progetto Archivio",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Il comando **Remove** nella colonna destra del Project Manager serve a ripulire la lista dei progetti rimuovendo il riferimento visivo. A differenza di un'eliminazione manuale o distruttiva, questa operazione non tocca i file memorizzati sul computer: la cartella sul disco mantiene sia il file di configurazione `project.godot` sia l'immagine `icon.svg`.",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
+  ],
+  "test": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Reimporta e rinomina un progetto nel Project Manager",
+   "consegna": "Dimostra di saper gestire il ciclo di vita completo di un progetto nel Project Manager senza perdere dati:\n\n1. Crea un nuovo progetto chiamato `Bozza Recupero` nella cartella `progetto-recupero`, verificando che sia presente il file `icon.svg`, rimanendo nel Project Manager (disattivando **Edit Now**).\n2. Rimuovi `Bozza Recupero` dall'elenco del Project Manager usando il pulsante **Remove** (lasciando la cartella intatta sul disco).\n3. Reimporta subito il progetto nell'elenco del Project Manager facendo clic sul pulsante **Import** e selezionando il file `project.godot` che si trova nella cartella `progetto-recupero`.\n4. Rinomina il progetto reimportato in `Progetto Recuperato` tramite il pulsante **Rename** nella colonna di destra.\n\nLascia il progetto reimportato e rinominato nell'elenco del Project Manager prima di premere **Verifica**.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "progetto-recupero",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per reimportare il progetto dopo averlo rimosso con Remove, usa il pulsante **Import** in alto a sinistra del Project Manager e seleziona con **Browse** il file `project.godot` dentro la cartella `progetto-recupero`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "progetto_godot",
+     "descrizione": "Nella cartella progetto-recupero è presente un progetto valido di Godot 4"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://icon.svg",
+     "descrizione": "Il file icon.svg è presente nella cartella del progetto"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "config/name",
+     "contiene": "Progetto Recuperato",
+     "descrizione": "Il nome del progetto in project.godot è stato aggiornato in 'Progetto Recuperato'"
+    },
+    {
+     "tipo": "progetto_in_elenco",
+     "presente": true,
+     "descrizione": "Il progetto reimportato compare nell'elenco del Project Manager"
+    }
+   ],
+   "domande": [],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Progetto Recuperato\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Progetto Recuperato",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Quando un progetto viene rimosso dall'elenco o proviene da un'altra cartella, il Project Manager consente di registrarlo nuovamente con il pulsante **Import**. Selezionando con **Browse** il file `project.godot`, Godot riconosce la cartella come progetto valido e la reinserisce nella lista. Successivamente, il pulsante **Rename** permette di aggiornare il parametro `config/name` del progetto dentro `project.godot` e nell'interfaccia senza alterare i file sul disco.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "statoFinale": {
+  "nome": "Prima scena",
+  "cartella": "prima-scena",
+  "progetto": {
+   "nome": "Prima scena",
+   "scenaPrincipale": "",
+   "azioni": [],
+   "autoload": [],
+   "impostazioni": []
+  },
+  "file": [
+   {
+    "percorso": "project.godot",
+    "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Prima scena\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+   }
+  ]
+ },
+ "ripasso": [],
+ "media": {},
+ "pubblicata": "2026-10-13T06:59:16.590Z",
+ "modelli": [
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-flash-lite-latest",
+  "groq/openai/gpt-oss-120b"
+ ]
+}
