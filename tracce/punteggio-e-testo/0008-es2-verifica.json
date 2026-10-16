@@ -1,0 +1,70 @@
+{
+ "n": 8,
+ "quando": "2026-10-16T19:16:38.130Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (prevedi): approvato",
+ "spiegazione": "«Prevedi il testo formattato e il momento dell'aggiornamento». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: Stella vale 50 pt · Punti: 0042 · Velocità: 12.9 · Vite: 150 | Punti: 0003 · Punteggio: 0025",
+ "richieste": 0,
+ "durataMs": 2349,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedi il testo formattato e il momento dell'aggiornamento",
+   "consegna": "Leggi con attenzione ciascuno script GDScript e scrivi il valore o il testo esatto restituito dalla funzione `run()`, senza eseguire il codice nell'editor.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "func run() -> String:\n\tvar item_name: String = \"Stella\"\n\tvar points: int = 50\n\treturn \"%s vale %d pt\" % [item_name, points]\n",
+     "domanda": "Che testo restituisce la funzione?",
+     "risposta": "Stella vale 50 pt",
+     "spiegazione": "L'operatore `%` sostituisce in ordine il primo segnaposto `%s` con il valore della stringa `item_name` (\"Stella\") e il secondo segnaposto `%d` con il numero intero `points` (50), producendo la stringa finale 'Stella vale 50 pt'.",
+     "id": "es2p1"
+    },
+    {
+     "codice": "func run() -> String:\n\tvar score: int = 42\n\treturn \"Punti: %04d\" % score\n",
+     "domanda": "Che testo restituisce la funzione?",
+     "risposta": "Punti: 0042",
+     "spiegazione": "Il segnaposto `%04d` impone una larghezza minima di 4 cifre complessive, riempiendo gli spazi liberi a sinistra con zeri. Poiché il numero 42 occupa due cifre, vengono inseriti due zeri davanti, restituendo 'Punti: 0042'.",
+     "id": "es2p2"
+    },
+    {
+     "codice": "func run() -> String:\n\tvar current_speed: float = 12.86\n\treturn \"Velocità: %.1f\" % current_speed\n",
+     "domanda": "Che testo restituisce la funzione?",
+     "risposta": "Velocità: 12.9",
+     "spiegazione": "Il segnaposto `%.1f` limita la visualizzazione a una singola cifra decimale, arrotondando il valore al decimo più vicino. Poiché la seconda cifra dopo la virgola è 6, il numero 12.86 viene arrotondato a 12.9, restituendo 'Velocità: 12.9'.",
+     "id": "es2p3"
+    },
+    {
+     "codice": "func run() -> String:\n\tvar lives: int = 3\n\tvar score: int = 150\n\treturn \"Vite: %d | Punti: %04d\" % [score, lives]\n",
+     "domanda": "Che testo restituisce la funzione?",
+     "risposta": "Vite: 150 | Punti: 0003",
+     "spiegazione": "I valori tra parentesi quadre vengono assegnati rigorosamente nell'ordine in cui compaiono: il primo segnaposto `%d` riceve `score` (150), mentre il secondo `%04d` riceve `lives` (3, formattato su 4 cifre come 0003). Il risultato è 'Vite: 150 | Punti: 0003'. Questo mostra l'importanza di allineare l'ordine dei dati nell'array con quello dei segnaposto.",
+     "id": "es2p4"
+    },
+    {
+     "codice": "func run() -> String:\n\tvar label_text: String = \"In attesa\"\n\tvar score: int = 0\n\t\n\tscore += 10\n\tif score >= 20:\n\t\tlabel_text = \"Punteggio: %04d\" % score\n\t\n\tscore += 15\n\tif score >= 20:\n\t\tlabel_text = \"Punteggio: %04d\" % score\n\t\n\treturn label_text\n",
+     "domanda": "Che testo restituisce la funzione?",
+     "risposta": "Punteggio: 0025",
+     "spiegazione": "Dopo il primo incremento `score` vale 10; la condizione `score >= 20` è falsa, quindi `label_text` rimane invariato su 'In attesa'. Con il secondo incremento `score` sale a 25; ora la condizione è vera e `label_text` viene aggiornato con `%04d`, restituendo 'Punteggio: 0025'.",
+     "id": "es2p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
