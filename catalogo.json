@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-16T07:39:56.254Z",
+ "aggiornato": "2026-10-16T07:40:22.262Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -56,6 +56,15 @@
    "file": "lezioni/f01-programmare/process-e-delta.json",
    "sha256": "d4fbe6a3362dc967508076d6efd90cd243e6a4076d23131b95996d082cf7a849",
    "byte": 41145
+  },
+  {
+   "slug": "condizioni",
+   "numero": "1.3",
+   "titolo": "Condizioni: if, elif, else",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/condizioni.json",
+   "sha256": "3666e6b3a85ebae5f00bad92b58405f5a0273044a565ee3d6b7b231e01a39451",
+   "byte": 51476
   }
  ],
  "documentazione": {

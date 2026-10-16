@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T07:39:30.124Z",
+ "aggiornato": "2026-10-16T07:39:59.098Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "process-e-delta",
-  "numero": "1.2",
-  "titolo": "_process e delta: far muovere qualcosa"
+  "slug": "condizioni",
+  "numero": "1.3",
+  "titolo": "Condizioni: if, elif, else"
  },
- "messaggio": "Sta scrivendo la lezione 1.2 «_process e delta: far muovere qualcosa».",
+ "messaggio": "Sta scrivendo la lezione 1.3 «Condizioni: if, elif, else».",
  "riprende": null
 }
