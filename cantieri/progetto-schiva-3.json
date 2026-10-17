@@ -282,5 +282,18 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "La verifica accede direttamente tramite reflection alle variabili di `main.gd` chiamate `lives`, `score` e `meteors` (quest'ultima usata per provocare l'impatto e testare il Game Over). Tuttavia, la consegna non specifica i nomi di queste tre variabili (dice solo 'le vite', 'il tempo' e 'le meteoriti', specificando per nome solo `high_score`), mentre la premessa avvisa lo studente 'decidi tu scene, script e nomi, tranne quelli che la consegna fissa'. Uno studente che chiama la variabile `time`, `hp` o l'array `meteor_list` vedrà fallire il test senza capire il motivo.",
+    "correzione": "Nella consegna, al punto 3, specifica esplicitamente i nomi di tutte le variabili controllate dal test, ad esempio: 'Gestisci le variabili principali con i nomi convenzionali `lives` (vite), `score` (tempo accumulato), `high_score` (record) e `meteors` (l'array contenente i nodi dei meteoriti)'.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
