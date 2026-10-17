@@ -913,5 +913,18 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "spiegazione",
+    "dove": "blocco 8",
+    "problema": "Lo snippet di codice è troncato all'ultimo passaggio: il commento al punto 3 si interrompe con 'visibil' e manca la chiamata ad add_child(new_item) per agganciare l'istanza all'albero.",
+    "correzione": "```gdscript\n# All'inizio di basket.gd precarichiamo lo stampo della scena come costante\nconst FALLING_ITEM_SCENE: PackedScene = preload(\"res://falling_item.tscn\")\n\nfunc spawn_star() -> void:\n\t# 1. Creiamo una nuova istanza viva a partire dallo stampo\n\tvar new_item: FallingItem = FALLING_ITEM_SCENE.instantiate() as FallingItem\n\t\n\t# 2. Configuriamo le proprietà della nuova copia\n\tvar speed_boost: float = lerpf(0.0, MAX_SPEED_BOOST, get_difficulty_factor())\n\tnew_item.accelerate(speed_boost)\n\t\n\t# 3. Agganciamo il nodo all'albero per renderlo attivo e visibile\n\tadd_child(new_item)\n```",
+    "fonte": "It returns a tree of nodes that you can use as a child of your current node."
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
