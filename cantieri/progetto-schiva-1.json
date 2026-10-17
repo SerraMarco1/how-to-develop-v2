@@ -1,0 +1,161 @@
+{
+ "creato": "2026-10-17T07:28:05.316Z",
+ "pezzi": {
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "da-zero",
+    "titolo": "Progetto «Schiva!» – tappa 1: muoversi e nascere",
+    "consegna": "Inizia a costruire da zero il gioco **«Schiva!»** all'interno del progetto `Schiva`.\n\nIn questa prima tappa la navicella deve muoversi liberamente nelle quattro direzioni restando dentro i bordi della finestra, mentre una pioggia continua di meteoriti compare in alto e scende verso il basso.\n\n### Requisiti del progetto\n\n1. **Dimensioni della finestra**:\n   - Imposta la risoluzione della finestra nelle impostazioni del progetto (*Display* → *Window*) con larghezza (**Viewport Width**) a `800` pixel e altezza (**Viewport Height**) a `600` pixel.\n\n2. **Azioni di input**:\n   - Nella finestra delle impostazioni del progetto (*Input Map*), definisci le quattro azioni di movimento:\n     - `move_left` (assegna i tasti `A` e `Left`)\n     - `move_right` (assegna i tasti `D` e `Right`)\n     - `move_up` (assegna i tasti `W` e `Up`)\n     - `move_down` (assegna i tasti `S` e `Down`)\n\n3. **Scena principale**:\n   - Crea la scena `res://main.tscn` e impostala come scena principale del progetto.\n   - La radice della scena deve essere un `Node2D` chiamato `Main`, a cui collegherai lo script `res://main.gd`.\n\n4. **La navicella del giocatore**:\n   - All'interno di `Main`, aggiungi un nodo `Sprite2D` chiamato esattamente `Player` con la texture `res://icon.svg` (puoi scalarlo a piacere, ad esempio `Vector2(0.5, 0.5)`).\n   - Posiziona inizialmente la navicella all'interno dello schermo (ad esempio a coordinate `400, 500`).\n   - In `main.gd`, muovi `Player` nelle quattro direzioni quando le relative azioni sono premute, moltiplicando la direzione per una velocità costante e per `delta`.\n   - **Bordi dello schermo**: impedisci alla navicella di uscire dalla visuale: la sua posizione orizzontale $X$ deve restare compresa tra `0` e `800`, e la posizione verticale $Y$ deve restare tra `0` e `600`.\n\n5. **I meteoriti**:\n   - Crea lo script `res://meteor.gd` che dichiara la classe globale `Meteor` ed estende `Sprite2D` (`class_name Meteor extends Sprite2D`).\n   - Assegna al meteorite la texture `res://icon.svg` (ad esempio in `_ready()`, scalata a `0.35`).\n   - In `_process(delta)` di `meteor.gd`, fai avanzare il meteorite verso il basso (aumentando la sua coordinata $Y$ a velocità costante).\n   - In `main.gd`, fai nascere periodicamente nuovi meteoriti a intervalli regolari (accumulando `delta` in un timer): ogni meteorite deve nascere sopra lo schermo ($Y < 0$, ad esempio a `-30`) con una coordinata $X$ casuale compresa tra `0` e `800`, essere aggiunto alla scena con `add_child()` e tracciato in una lista `meteors: Array[Meteor]`.\n   - Quando un meteorite supera il fondo dello schermo ($Y > 600$), rimuovilo dalla lista ed eliminalo dalla scena con `queue_free()`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "schiva",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "run/main_scene",
+      "contiene": "main.tscn",
+      "descrizione": "La scena principale del progetto è res://main.tscn"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Sprite2D",
+      "nome": "Player",
+      "genitore": "Main",
+      "descrizione": "Nella scena principale è presente un nodo Sprite2D chiamato Player"
+     },
+     {
+      "tipo": "azione_input",
+      "nome": "move_left",
+      "descrizione": "L'azione move_left è configurata nella Input Map"
+     },
+     {
+      "tipo": "azione_input",
+      "nome": "move_right",
+      "descrizione": "L'azione move_right è configurata nella Input Map"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://meteor.gd",
+      "descrizione": "Esiste lo script res://meteor.gd per i meteoriti"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve aprirsi correttamente\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as Node2D\n\tif not check(\"player_ok\", player != null, \"La scena deve contenere un nodo chiamato Player\"):\n\t\treturn\n\n\tvar start_pos: Vector2 = player.position\n\tawait hold_action(\"move_right\", 12)\n\tcheck(\"move_right\", player.position.x > start_pos.x, \"Premendo move_right la navicella deve muoversi verso destra\")\n\n\tawait hold_action(\"move_left\", 24)\n\tcheck(\"move_left\", player.position.x < start_pos.x, \"Premendo move_left la navicella deve muoversi verso sinistra\")\n\n\tvar mid_y: float = player.position.y\n\tawait hold_action(\"move_down\", 12)\n\tcheck(\"move_down\", player.position.y > mid_y, \"Premendo move_down la navicella deve muoversi verso il basso\")\n\n\tawait hold_action(\"move_up\", 24)\n\tcheck(\"move_up\", player.position.y < mid_y, \"Premendo move_up la navicella deve muoversi verso l'alto\")\n\n\tawait hold_action(\"move_left\", 120)\n\tcheck(\"border_left\", player.position.x >= 0.0, \"La navicella non deve uscire oltre il bordo sinistro (x >= 0)\")\n\n\tawait hold_action(\"move_up\", 120)\n\tcheck(\"border_top\", player.position.y >= 0.0, \"La navicella non deve uscire oltre il bordo superiore (y >= 0)\")\n\n\tawait wait_seconds(1.5)\n\tvar meteors := find_all_by_class(main, \"Meteor\")\n\tif not check(\"spawn\", meteors.size() > 0, \"Nel tempo devono nascere meteoriti con class_name Meteor\"):\n\t\treturn\n\n\tvar first_meteor := meteors[0] as Node2D\n\tvar y_before: float = first_meteor.position.y\n\tawait wait_seconds(0.4)\n\tcheck(\"meteor_moves\", is_instance_valid(first_meteor) and first_meteor.position.y > y_before, \"I meteoriti devono muoversi verso il basso\")\n\n\tawait wait_seconds(3.0)\n\tvar current_meteors := find_all_by_class(main, \"Meteor\")\n\tvar all_inside := true\n\tfor m in current_meteors:\n\t\tvar node := m as Node2D\n\t\tif node.position.y > 660.0:\n\t\t\tall_inside = false\n\t\t\tbreak\n\tcheck(\"meteor_cleanup\", all_inside, \"I meteoriti usciti dallo schermo devono essere eliminati\")",
+      "descrizione": "La navicella si muove rispettando i bordi e i meteoriti nascono, scendono e vengono eliminati"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(400, 500)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\n"
+      },
+      {
+       "percorso": "meteor.gd",
+       "contenuto": "class_name Meteor\nextends Sprite2D\n\nconst SPEED: float = 250.0\n\n\nfunc _ready() -> void:\n\ttexture = preload(\"res://icon.svg\")\n\tscale = Vector2(0.35, 0.35)\n\n\nfunc _process(delta: float) -> void:\n\tposition.y += SPEED * delta\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\nconst SCREEN_WIDTH: float = 800.0\nconst SCREEN_HEIGHT: float = 600.0\nconst PLAYER_SPEED: float = 350.0\nconst SPAWN_INTERVAL: float = 0.6\n\nvar meteors: Array[Meteor] = []\nvar spawn_timer: float = 0.0\n\n@onready var player: Sprite2D = $Player\n\n\nfunc _process(delta: float) -> void:\n\t_move_player(delta)\n\t_handle_spawning(delta)\n\t_cleanup_meteors()\n\n\nfunc _move_player(delta: float) -> void:\n\tvar direction := Vector2.ZERO\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection.x -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection.x += 1.0\n\tif Input.is_action_pressed(\"move_up\"):\n\t\tdirection.y -= 1.0\n\tif Input.is_action_pressed(\"move_down\"):\n\t\tdirection.y += 1.0\n\n\tif direction != Vector2.ZERO:\n\t\tdirection = direction.normalized()\n\t\tplayer.position += direction * PLAYER_SPEED * delta\n\n\tplayer.position.x = clampf(player.position.x, 0.0, SCREEN_WIDTH)\n\tplayer.position.y = clampf(player.position.y, 0.0, SCREEN_HEIGHT)\n\n\nfunc _handle_spawning(delta: float) -> void:\n\tspawn_timer += delta\n\tif spawn_timer >= SPAWN_INTERVAL:\n\t\tspawn_timer = 0.0\n\t\t_spawn_meteor()\n\n\nfunc _spawn_meteor() -> void:\n\tvar meteor := Meteor.new()\n\tvar random_x := randf_range(20.0, SCREEN_WIDTH - 20.0)\n\tmeteor.position = Vector2(random_x, -30.0)\n\tadd_child(meteor)\n\tmeteors.append(meteor)\n\n\nfunc _cleanup_meteors() -> void:\n\tfor i in range(meteors.size() - 1, -1, -1):\n\t\tvar meteor := meteors[i]\n\t\tif meteor.position.y > SCREEN_HEIGHT + 40.0:\n\t\t\tmeteors.remove_at(i)\n\t\t\tmeteor.queue_free()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Schiva",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": [
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_width",
+        "valore": "800"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_height",
+        "valore": "600"
+       }
+      ]
+     },
+     "spiegazione": "Per completare questa prima tappa abbiamo impostato la base del gioco suddividendo i compiti tra due script:\n\n1. **Lo script del meteorite (`meteor.gd`)**: estende `Sprite2D` e registra il tipo con `class_name Meteor`. In `_ready()` imposta l'icona e una scala ridotta. Nel suo `_process(delta)` si occupa solo di scendere verso il basso a velocità costante, incapsulando il proprio movimento.\n2. **Lo script principale (`main.gd`)**:\n   - **Movimento del giocatore**: legge le quattro azioni tramite `Input.is_action_pressed()`, normalizza il vettore risultante se non è nullo per evitare che in diagonale si vada più veloci, e limita la posizione della navicella tra `0` e le dimensioni dello schermo con `clampf()`.\n   - **Generazione**: accumula `delta` in `spawn_timer`. Raggiunta la soglia `SPAWN_INTERVAL`, istanzia un nuovo `Meteor` con `.new()`, calcola una coordinata $X$ casuale con `randf_range()`, lo aggiunge all'albero con `add_child()` e ne tiene traccia nell'array tipizzato `meteors: Array[Meteor]`.\n   - **Rimozione**: scorre l'array `meteors` a ritroso con `range(meteors.size() - 1, -1, -1)`. Quando un meteorite scende oltre lo schermo, viene tolto dall'array con `remove_at(i)` e rimosso dalla memoria con `queue_free()`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "da-zero",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Progetto «Schiva!» – tappa 1: muoversi e nascere",
+  "sommario": "La navicella si muove in quattro direzioni dentro lo schermo; i meteoriti nascono fuori dallo schermo e lo attraversano.",
+  "concetti": [],
+  "obiettivi": [
+   "Partire da un progetto vuoto e decidere da soli scene, script e nomi"
+  ],
+  "durataMinuti": 90,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Questa è una tappa del progetto di fine fase: **«Schiva!», da un progetto vuoto: una navicella si muove in quattro direzioni, i meteoriti arrivano sempre più fitti, il punteggio è il tempo di sopravvivenza, con record della sessione e nuova partita.**\n\nNon c'è niente di nuovo da studiare. Parti dal progetto com'è adesso (alla prima tappa: da un progetto vuoto) e costruisci da solo ciò che chiede la consegna, usando quello che hai imparato in questa fase e la documentazione."
+   },
+   {
+    "tipo": "testo",
+    "md": "**In questa tappa:** La navicella si muove in quattro direzioni dentro lo schermo; i meteoriti nascono fuori dallo schermo e lo attraversano."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Nessun passo e nessun suggerimento: decidi tu scene, script e nomi, tranne quelli che la consegna fissa.\n- La piattaforma esegue il tuo progetto e controlla cosa succede.\n- Se ti blocchi, riapri la lezione della fase che tratta quel punto: non c'è fretta."
+   }
+  ]
+ },
+ "ordine": [
+  "test"
+ ]
+}
