@@ -149,7 +149,7 @@ export function registraCanali(versione: string): void {
   canale("installaAggiornamento", z.tuple([]), installaAggiornamento);
 }
 
-/** Avvisa la finestra che qualcosa è cambiato (la finestra poi chiede i dati nuovi). */
-export function avvisaFinestra(evento: "sincronizzato" | "aggiornamento"): void {
-  finestraAula?.webContents.send(`htd:evento:${evento}`);
+/** Avvisa la finestra che qualcosa è cambiato (la finestra poi chiede i dati nuovi). `cambiate`: le lezioni scaricate. */
+export function avvisaFinestra(evento: "sincronizzato" | "aggiornamento", cambiate: string[] = []): void {
+  finestraAula?.webContents.send(`htd:evento:${evento}`, cambiate);
 }

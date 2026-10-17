@@ -23,6 +23,9 @@ if (!fs.existsSync(path.join(corso, "catalogo.json"))) {
 // Un finto GitHub: l'API dice la revisione del ramo, «raw» serve i file a quella revisione.
 let revisione = crypto.randomBytes(20).toString("hex");
 let alterato = false;
+// Una versione nuova, valida, di una lezione: la frase in più in fondo alla teoria (come quando la fabbrica pubblica
+// una correzione o aggiunge il ripasso). { slug, file, testo } del pacco cambiato.
+let versioneNuova = null;
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, "http://x");
   if (req.method === "POST" && url.pathname === "/__altera") {
@@ -31,8 +34,21 @@ const server = http.createServer((req, res) => {
     res.writeHead(204).end();
     return;
   }
+  if (req.method === "POST" && url.pathname === "/__versione-nuova") {
+    const slug = url.searchParams.get("slug");
+    const voce = JSON.parse(fs.readFileSync(path.join(corso, "catalogo.json"), "utf8")).lezioni.find((l) => l.slug === slug);
+    const pacco = JSON.parse(fs.readFileSync(path.join(corso, voce.file), "utf8"));
+    const ultimo = pacco.contenuto.blocchi.findLast((b) => b.tipo === "testo");
+    ultimo.md += `\n\n${url.searchParams.get("frase")}`;
+    pacco.versione += 1;
+    versioneNuova = { slug, file: voce.file, testo: JSON.stringify(pacco), versione: pacco.versione };
+    revisione = crypto.randomBytes(20).toString("hex");
+    res.writeHead(204).end();
+    return;
+  }
   if (req.method === "POST" && url.pathname === "/__ripristina") {
     alterato = false;
+    versioneNuova = null;
     revisione = crypto.randomBytes(20).toString("hex");
     res.writeHead(204).end();
     return;
@@ -60,6 +76,12 @@ const server = http.createServer((req, res) => {
     dati = Buffer.from(JSON.stringify(c));
   }
   if (alterato && m[2].startsWith("lezioni/")) dati = Buffer.from(dati.toString("utf8").replace("Godot", "Godot!"));
+  if (versioneNuova && m[2] === "catalogo.json") {
+    const c = JSON.parse(dati.toString("utf8"));
+    c.lezioni = c.lezioni.map((l) => (l.slug === versioneNuova.slug ? { ...l, versione: versioneNuova.versione, sha256: crypto.createHash("sha256").update(versioneNuova.testo).digest("hex"), byte: Buffer.byteLength(versioneNuova.testo) } : l));
+    dati = Buffer.from(JSON.stringify(c));
+  }
+  if (versioneNuova && m[2] === versioneNuova.file) dati = Buffer.from(versioneNuova.testo);
   res.writeHead(200).end(dati);
 });
 await new Promise((ok) => server.listen(0, "127.0.0.1", ok));

@@ -155,7 +155,7 @@ if (!app.requestSingleInstanceLock()) {
     impostaFinestra(finestra);
     preparaAggiornamenti(() => avvisaFinestra("aggiornamento"));
     preparaGodot().catch((e) => console.error(`Godot di servizio non pronto: ${(e as Error).message}`));
-    const scarica = () => void sincronizza().then(() => avvisaFinestra("sincronizzato"));
+    const scarica = () => void sincronizza().then((s) => avvisaFinestra("sincronizzato", s.cambiate));
     scarica();
     setInterval(scarica, 30 * 60_000);
     // Solo durante lo sviluppo: la prova completa dell'aula guida la finestra vera (vedi aula/test/prova-aula.ts).

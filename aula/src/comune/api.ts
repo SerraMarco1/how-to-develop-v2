@@ -22,7 +22,8 @@ export type Oggi = {
   daImpostare: string[];
 };
 
-export type StatoSincronizzazione = { inCorso: boolean; ultima: string | null; errore: string | null; avvisi: string[] };
+/** `cambiate`: le lezioni scaricate dall'ultima sincronizzazione (nuove, o in una versione nuova). */
+export type StatoSincronizzazione = { inCorso: boolean; ultima: string | null; errore: string | null; avvisi: string[]; cambiate: string[] };
 
 export type BloccoVista =
   | { id: string; tipo: "testo" | "attenzione" | "riepilogo"; html: string }
@@ -132,6 +133,10 @@ export type Api = {
   apriLink(url: string): Promise<void>;
   aggiornamento(): Promise<Aggiornamento>;
   installaAggiornamento(): Promise<void>;
-  /** Avvisi dal programma (sincronizzazione finita, aggiornamento pronto). Restituisce la funzione per smettere di ascoltare. */
-  suEvento(evento: "sincronizzato" | "aggiornamento", funzione: () => void): () => void;
+  /**
+   * Avvisi dal programma (sincronizzazione finita, aggiornamento pronto). `cambiate`: per «sincronizzato», le lezioni
+   * appena scaricate (vuoto se non è arrivato niente); per «aggiornamento» sempre vuoto. Restituisce la funzione per
+   * smettere di ascoltare.
+   */
+  suEvento(evento: "sincronizzato" | "aggiornamento", funzione: (cambiate: string[]) => void): () => void;
 };

@@ -1,7 +1,7 @@
 {
   "name": "@htd/aula",
   "productName": "How to Develop",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "description": "How to Develop: il programma per studiare il corso di Godot.",
   "author": "Marco",

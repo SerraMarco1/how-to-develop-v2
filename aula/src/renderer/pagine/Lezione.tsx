@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BloccoVista, LezioneVista } from "../../comune/api.ts";
 import { api, vaiA } from "../api.ts";
 import { Esercizio } from "../componenti/Esercizio.tsx";
@@ -61,8 +61,12 @@ function Blocco({ b }: { b: BloccoVista }) {
   }
 }
 
-/** Una lezione: teoria, esercizi, test, voto; il tutor in un pannello a destra. */
-export function PaginaLezione({ slug, onCambia }: { slug: string; onCambia: () => void }) {
+/**
+ * Una lezione: teoria, esercizi, test, voto; il tutor in un pannello a destra.
+ * `versioneDati` cresce quando la sincronizzazione porta lezioni nuove o versioni nuove: la pagina si aggiorna sul posto,
+ * senza tornare in cima e senza perdere quello che stai facendo (esercizi, tutor, voto che stai scrivendo).
+ */
+export function PaginaLezione({ slug, versioneDati, onCambia }: { slug: string; versioneDati: number; onCambia: () => void }) {
   const [l, setL] = useState<LezioneVista | null | undefined>(undefined);
   const [tutor, setTutor] = useState<{ aperto: boolean; pezzo: string | null; codice: string | null }>({ aperto: false, pezzo: null, codice: null });
   const [alternative, setAlternative] = useState<Record<string, string[]>>({});
@@ -83,6 +87,17 @@ export function PaginaLezione({ slug, onCambia }: { slug: string; onCambia: () =
   useEffect(() => {
     carica();
   }, [slug]);
+  const versioneVista = useRef(versioneDati);
+  useEffect(() => {
+    if (versioneVista.current === versioneDati) return;
+    versioneVista.current = versioneDati;
+    // Solo la lezione e le spiegazioni alternative: il voto e la nota che stai scrivendo restano tuoi.
+    void api.lezione(slug).then((x) => {
+      if (!x) return;
+      setL(x);
+      setAlternative(x.alternative);
+    });
+  }, [versioneDati]);
 
   if (l === undefined) return <p className="tenue">Carico…</p>;
   if (l === null)

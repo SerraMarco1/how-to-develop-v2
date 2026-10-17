@@ -35,11 +35,13 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    const ricarica = () => {
+    // Una sincronizzazione finita: i numeri di Oggi si rileggono sempre; le pagine del corso e della lezione si
+    // aggiornano (sul posto) solo se sono arrivate lezioni nuove o versioni nuove.
+    const ricarica = (cambiate: string[]) => {
       void api.oggi().then(setOggi);
-      setVersioneDati((v) => v + 1);
+      if (cambiate.length > 0) setVersioneDati((v) => v + 1);
     };
-    ricarica();
+    void api.oggi().then(setOggi);
     const smetti = [api.suEvento("sincronizzato", ricarica), api.suEvento("aggiornamento", () => void api.aggiornamento().then(setAggiornamento))];
     void api.aggiornamento().then(setAggiornamento);
     return () => smetti.forEach((s) => s());
@@ -84,7 +86,7 @@ export function App() {
         <Rete chiave={window.location.hash}>
         {rotta.pagina === "oggi" && <PaginaOggi dati={oggi} onAggiorna={() => void api.oggi().then(setOggi)} />}
         {rotta.pagina === "corso" && <PaginaCorso chiave={versioneDati} />}
-        {rotta.pagina === "lezione" && rotta.slug && <PaginaLezione key={`${rotta.slug}-${versioneDati}`} slug={rotta.slug} onCambia={() => void api.oggi().then(setOggi)} />}
+        {rotta.pagina === "lezione" && rotta.slug && <PaginaLezione key={rotta.slug} slug={rotta.slug} versioneDati={versioneDati} onCambia={() => void api.oggi().then(setOggi)} />}
         {rotta.pagina === "ripasso" && <PaginaRipasso onCambia={() => void api.oggi().then(setOggi)} />}
         {rotta.pagina === "scheda" && <PaginaScheda />}
         {rotta.pagina === "impostazioni" && <PaginaImpostazioni onCambia={() => void api.oggi().then(setOggi)} />}

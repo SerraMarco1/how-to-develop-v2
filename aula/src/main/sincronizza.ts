@@ -17,7 +17,7 @@ import { cartellaDati, PERCORSI, REPOSITORY } from "./percorsi.ts";
 //    supera il controllo di sicurezza sul codice. Altrimenti viene scartato e se ne dà notizia.
 // Senza rete l'aula funziona con le lezioni già scaricate.
 
-const stato: StatoSincronizzazione = { inCorso: false, ultima: null, errore: null, avvisi: [] };
+const stato: StatoSincronizzazione = { inCorso: false, ultima: null, errore: null, avvisi: [], cambiate: [] };
 let inCorso: Promise<StatoSincronizzazione> | null = null;
 
 // Durante lo sviluppo (mai nel programma installato) le prove possono indicare un server locale al posto di GitHub.
@@ -94,6 +94,7 @@ async function esegui(): Promise<StatoSincronizzazione> {
   stato.inCorso = true;
   stato.errore = null;
   const avvisi: string[] = [];
+  const cambiate: string[] = [];
   try {
     const { sha } = JSON.parse((await scarica(`${API_GITHUB}/repos/${REPOSITORY}/commits/corso`, 30_000)).toString("utf8")) as { sha: string };
     if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error("Revisione del ramo corso non valida");
@@ -123,6 +124,7 @@ async function esegui(): Promise<StatoSincronizzazione> {
             db.prepare(
               "INSERT INTO lezioni (slug, numero, fase, titolo, versione, sha256, pacco, scaricata) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET numero = excluded.numero, fase = excluded.fase, titolo = excluded.titolo, versione = excluded.versione, sha256 = excluded.sha256, pacco = excluded.pacco, scaricata = excluded.scaricata",
             ).run(pacco.slug, pacco.numero, pacco.fase, pacco.titolo, pacco.versione, voce.sha256, dati.toString("utf8"), adesso());
+            cambiate.push(pacco.slug);
           } catch (errore) {
             // Impronta sbagliata o controllo di sicurezza: si dice perché. Un guasto di rete: si riprova più tardi.
             const motivo = (errore as Error).message;
@@ -154,6 +156,7 @@ async function esegui(): Promise<StatoSincronizzazione> {
   } finally {
     stato.inCorso = false;
     stato.avvisi = avvisi;
+    stato.cambiate = cambiate;
   }
   return statoSincronizzazione();
 }

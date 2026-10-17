@@ -20,9 +20,10 @@ const api = Object.fromEntries(nomi.map((n) => [n, chiama(n)])) as Omit<Api, "su
 
 contextBridge.exposeInMainWorld("htd", {
   ...api,
-  suEvento(evento: "sincronizzato" | "aggiornamento", funzione: () => void) {
+  suEvento(evento: "sincronizzato" | "aggiornamento", funzione: (cambiate: string[]) => void) {
     if (evento !== "sincronizzato" && evento !== "aggiornamento") return () => {};
-    const ascolta = () => funzione();
+    // Alla finestra arriva solo l'elenco dei nomi delle lezioni, mai l'oggetto dell'evento di Electron.
+    const ascolta = (_evento: unknown, cambiate: unknown) => funzione(Array.isArray(cambiate) ? cambiate.filter((s): s is string => typeof s === "string") : []);
     ipcRenderer.on(`htd:evento:${evento}`, ascolta);
     return () => ipcRenderer.removeListener(`htd:evento:${evento}`, ascolta);
   },

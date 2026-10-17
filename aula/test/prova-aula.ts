@@ -78,10 +78,12 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
 
     // 2. Le lezioni vengono scaricate e controllate.
     await attendi(async () => Boolean((await js<{ sincronizzazione: { ultima: string | null } }>("window.htd.oggi()")).sincronizzazione.ultima), 180_000, "prima sincronizzazione");
-    const oggi = await js<{ pubblicate: number; totali: number; daImpostare: string[]; sincronizzazione: { avvisi: string[] } }>("window.htd.oggi()");
+    const oggi = await js<{ pubblicate: number; totali: number; daImpostare: string[]; sincronizzazione: { avvisi: string[]; cambiate: string[] } }>("window.htd.oggi()");
     const catalogo = JSON.parse(fs.readFileSync(path.join(process.env.HTD_PROVA_CORSO!, "catalogo.json"), "utf8")) as { lezioni: { slug: string; file: string }[] };
     assert.equal(oggi.pubblicate, catalogo.lezioni.length, `scaricate ${oggi.pubblicate} lezioni, il catalogo ne ha ${catalogo.lezioni.length}`);
     assert.deepEqual(oggi.sincronizzazione.avvisi, []);
+    assert.deepEqual([...oggi.sincronizzazione.cambiate].sort(), catalogo.lezioni.map((l) => l.slug).sort(), "la prima sincronizzazione dice di aver scaricato tutte le lezioni");
+    assert.deepEqual((await js<{ cambiate: string[] }>("window.htd.sincronizza()")).cambiate, [], "una sincronizzazione senza novità non scarica niente");
     assert.ok(oggi.totali >= 170);
     ok(`${oggi.pubblicate} lezioni scaricate, ognuna con l'impronta controllata, su ${oggi.totali} del piano`);
     await schermata("01-oggi-prima-volta");
@@ -171,6 +173,45 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
       ok(`${id} di «${aperta}» con ${staccato.script} non attaccato al nodo ${staccato.nodo}: causa mostrata, analisi coerente con le verifiche`);
     } else ok(`«${aperta}» non ha un esercizio con uno script da staccare: caso dello script non attaccato non provato qui`);
 
+    // 6c. Una sincronizzazione mentre si studia (17 ottobre: a ogni sincronizzazione la pagina della lezione veniva
+    // ricostruita, tornava in cima e perdeva quello che si stava facendo). Senza novità non si muove niente; con una
+    // versione nuova della lezione aperta il testo nuovo compare sul posto: stessa pagina, stesso punto, campi intatti.
+    await vai(`#/lezione/${aperta}`, "Test finale");
+    const campo = await js<string | null>(`document.querySelector('.pagina-lezione input[id^="cartella-"]')?.id ?? null`);
+    const valoreCampo = "C:\\prova\\campo-che-resta";
+    if (campo) await js(`(() => { const c = document.getElementById(${JSON.stringify(campo)}); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set.call(c, ${JSON.stringify(valoreCampo)}); c.dispatchEvent(new Event("input", { bubbles: true })); })()`);
+    await js("document.querySelector('.pagina-lezione').dataset.prova = 'stessa-pagina'");
+    await js("window.scrollTo(0, document.documentElement.scrollHeight)");
+    await new Promise((r) => setTimeout(r, 500));
+    const fermo = await js<number>("window.scrollY");
+    assert.ok(fermo > 300, `la lezione è abbastanza lunga da scorrere: ${fermo}`);
+    const stato = () =>
+      js<{ segno: string | null; y: number; campo: string | null; testo: string }>(
+        `({ segno: document.querySelector('.pagina-lezione')?.dataset.prova ?? null, y: window.scrollY, campo: ${campo ? `document.getElementById(${JSON.stringify(campo)})?.value ?? null` : "null"}, testo: document.body.innerText })`,
+      );
+    // Senza novità (quasi ogni mezz'ora): l'avviso come lo manda il programma (avvisaFinestra), con l'elenco vuoto.
+    finestra.webContents.send("htd:evento:sincronizzato", []);
+    await new Promise((r) => setTimeout(r, 2000));
+    let adesso = await stato();
+    assert.equal(adesso.segno, "stessa-pagina", "senza novità la pagina non viene ricostruita");
+    assert.ok(Math.abs(adesso.y - fermo) <= 5, `senza novità la pagina resta dov'era (${fermo} → ${adesso.y})`);
+    if (campo) assert.equal(adesso.campo, valoreCampo, "senza novità il campo compilato resta");
+    // Una versione nuova della lezione aperta: una sincronizzazione vera, poi l'avviso come lo manda il programma.
+    const frase = "Frase aggiunta dalla versione nuova della lezione.";
+    assert.equal((await fetch(`${process.env.HTD_PROVA_SERVER}/__versione-nuova?slug=${encodeURIComponent(aperta)}&frase=${encodeURIComponent(frase)}`, { method: "POST" })).status, 204);
+    const nuova = await js<{ cambiate: string[]; avvisi: string[] }>("window.htd.sincronizza()");
+    assert.deepEqual(nuova.cambiate, [aperta], `scaricata solo la lezione cambiata: ${JSON.stringify(nuova)}`);
+    finestra.webContents.send("htd:evento:sincronizzato", nuova.cambiate);
+    await attendi(async () => (await stato()).testo.includes(frase), 15_000, "il testo nuovo nella pagina aperta");
+    adesso = await stato();
+    assert.equal(adesso.segno, "stessa-pagina", "la pagina si aggiorna sul posto, non viene ricostruita");
+    assert.ok(adesso.y >= fermo - 5, `la pagina non torna in cima (${fermo} → ${adesso.y})`);
+    if (campo) assert.equal(adesso.campo, valoreCampo, "il campo compilato resta");
+    await schermata("10-lezione-aggiornata-sul-posto");
+    await fetch(`${process.env.HTD_PROVA_SERVER}/__ripristina`, { method: "POST" });
+    assert.deepEqual((await js<{ cambiate: string[] }>("window.htd.sincronizza()")).cambiate, [aperta], "torna la versione di prima");
+    ok(`sincronizzazione durante lo studio: senza novità niente si muove; con una versione nuova di «${aperta}» il testo compare sul posto (scorrimento ${fermo} → ${adesso.y}${campo ? ", campo compilato intatto" : ""})`);
+
     // 7. Le protezioni della finestra.
     assert.equal(await js("window.open('https://example.com') === null"), true);
     await js("window.location.href = 'https://example.com'");
@@ -187,8 +228,9 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
     // 8. Un file alterato durante il download viene scartato.
     const r = await fetch(`${process.env.HTD_PROVA_SERVER}/__altera`, { method: "POST" });
     assert.equal(r.status, 204);
-    const s = await js<{ avvisi: string[] }>("window.htd.sincronizza()");
+    const s = await js<{ avvisi: string[]; cambiate: string[] }>("window.htd.sincronizza()");
     assert.ok(s.avvisi.some((a) => /impronta/.test(a)), `atteso un avviso sull'impronta: ${JSON.stringify(s.avvisi)}`);
+    assert.deepEqual(s.cambiate, [], "una lezione scartata non conta tra quelle scaricate");
     const primaLezione = catalogo.lezioni[0].slug;
     assert.ok(await js(`window.htd.lezione(${JSON.stringify(primaLezione)}).then((l) => l !== null && l.versione === 1)`), "la lezione già scaricata resta quella buona");
     ok(`lezione alterata scartata, quella buona resta: «${s.avvisi[0].slice(0, 110)}…»`);
