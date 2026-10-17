@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T07:56:19.432Z",
+ "aggiornato": "2026-10-17T08:01:56.311Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -209,6 +209,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/albero-dei-nodi.json",
    "sha256": "13852dce8d653a6840438ca5a648e1946697211a5070c41e3f22a6313ba66a94",
    "byte": 91016
+  },
+  {
+   "slug": "raggiungere-i-nodi",
+   "numero": "2.1",
+   "titolo": "Raggiungere i nodi dal codice",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/raggiungere-i-nodi.json",
+   "sha256": "5c9ebc12f191d688bafe2aa27080e902c099022cae9d9bbfbd3d4f8f1bfa4807",
+   "byte": 97163
   }
  ],
  "documentazione": {
