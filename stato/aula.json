@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-17T08:40:24.042Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-17T08:52:31.346Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "vita-di-un-nodo",
   "numero": "2.3",
   "titolo": "La vita di un nodo: dalla nascita a queue_free()"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 2.3 riprende da sola appena rispondono.",
- "riprende": "2026-10-17T08:50:24.041Z"
+ "messaggio": "Sta scrivendo la lezione 2.3 «La vita di un nodo: dalla nascita a queue_free()».",
+ "riprende": null
 }
