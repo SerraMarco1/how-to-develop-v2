@@ -39,7 +39,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve aprirsi\"):\n\t\treturn\n\n\tvar meteor := find_by_class(main, \"Meteor\") as Sprite2D\n\tif meteor == null:\n\t\tmeteor = find_by_name(main, \"Meteor1\") as Sprite2D\n\tif not check(\"meteor_ok\", meteor != null, \"Deve esistere un meteorite\"):\n\t\treturn\n\n\tvar v_iniziale = get_prop(meteor, \"speed\", 250.0)\n\tcheck(\"velocita_base\", v_iniziale == 250.0, \"La velocità iniziale del meteorite deve essere 250.0\")\n\n\t# Impostiamo il punteggio a 10 secondi per verificare l'aumento di velocità\n\tmain.set(\"score\", 10.0)\n\tawait wait_frames(2)\n\tvar v_dopo = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_cresciuta\", is_equal_approx(float(v_dopo), 400.0), \"Dopo 10 secondi la velocità deve essere 400.0 (250 + 10 * 15)\")\n\n\t# Impostiamo il punteggio a 50 secondi per verificare il limite massimo di 650.0\n\tmain.set(\"score\", 50.0)\n\tawait wait_frames(2)\n\tvar v_max = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_massima\", is_equal_approx(float(v_max), 650.0), \"La velocità non deve superare il valore massimo di 650.0\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve aprirsi\"):\n\t\treturn\n\n\tvar meteor := find_by_class(main, \"Meteor\") as Sprite2D\n\tif meteor == null:\n\t\tmeteor = find_by_name(main, \"Meteor1\") as Sprite2D\n\tif not check(\"meteor_ok\", meteor != null, \"Deve esistere un meteorite\"):\n\t\treturn\n\n\tvar v_iniziale = get_prop(meteor, \"speed\", 250.0)\n\tcheck(\"velocita_base\", v_iniziale == 250.0, \"La velocità iniziale del meteorite deve essere 250.0\")\n\n\tmeteor.call(\"update_speed\", 10.0)\n\tvar v_dopo = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_cresciuta\", is_equal_approx(float(v_dopo), 400.0), \"Con un punteggio di 10 secondi la velocità deve essere 400.0 (250 + 10 * 15)\")\n\n\tmeteor.call(\"update_speed\", 50.0)\n\tvar v_max = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_massima\", is_equal_approx(float(v_max), 650.0), \"La velocità non deve superare il valore massimo di 650.0\")",
       "descrizione": "La velocità dei meteoriti cresce nel tempo fino al massimo stabilito"
      }
     ],
@@ -94,27 +94,44 @@
        }
       ],
       "autoload": [],
-      "impostazioni": []
+      "impostazioni": [
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_width",
+        "valore": "800"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_height",
+        "valore": "600"
+       }
+      ]
      },
      "spiegazione": "In questa tappa abbiamo esteso il gioco integrando la logica di gioco principale:\n1. In `meteor.gd` abbiamo incapsulato la logica del movimento e dell'aggiornamento della velocità: la velocità aumenta con `minf(BASE_SPEED + elapsed_time * SPEED_INCREMENT, MAX_SPEED)`, rispettando il limite massimo di 650 pixel/s.\n2. In `main.gd` teniamo traccia delle vite (`lives`) e del tempo trascorso (`score`). Se le vite scendono a zero, `_process` esce subito con `return`, bloccando sia il movimento del giocatore che la caduta dei meteoriti.\n3. La distanza tra la navicella e ciascun meteorite viene controllata tramite `player.position.distance_to(meteor.position)`. Se è minore o uguale a 40 pixel, si perde una vita e il meteorite viene resettato in cima allo schermo.\n4. Due nodi `Label` aggiunti a `main.tscn` mostrano costantemente il tempo intero trascorso e le vite rimaste.",
-     "cambiati": [],
+     "cambiati": [
+      "meteor.gd",
+      "main.tscn",
+      "main.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "da-zero",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo 10 secondi la velocità deve essere 400.0 (250 + 10 * 15)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Progetto «Schiva!» – tappa 2: urti, vite e tempo",
