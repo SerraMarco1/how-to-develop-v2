@@ -81,3 +81,4 @@
 {"quando":1792232245801,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"vita-di-un-nodo","ok":false,"contata":true,"durataMs":13404,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792235941476,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"vita-di-un-nodo","ok":true,"contata":true,"durataMs":56579,"tokenInput":9238,"tokenOutput":2322,"ragionamento":11449}
 {"quando":1792236010572,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"vita-di-un-nodo","ok":true,"contata":true,"durataMs":18863,"tokenInput":13703,"tokenOutput":6740,"ragionamento":3398}
+{"quando":1792236040926,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"vita-di-un-nodo","ok":true,"contata":true,"durataMs":20564,"tokenInput":14272,"tokenOutput":7125,"ragionamento":3918}
