@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T07:28:04.097Z",
+ "aggiornato": "2026-10-17T07:33:07.345Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -173,6 +173,15 @@
    "file": "lezioni/f01-programmare/classi-e-oggetti.json",
    "sha256": "fdee21e38d9a8c204fd73517c5494cae2c0a932271610e023b7fae406c09c8d2",
    "byte": 100000
+  },
+  {
+   "slug": "progetto-schiva-1",
+   "numero": "1.16",
+   "titolo": "Progetto «Schiva!» – tappa 1: muoversi e nascere",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/progetto-schiva-1.json",
+   "sha256": "8bd504f82286a17c986928a142cf1edcca47885794f33d28c3b635e797aeabda",
+   "byte": 23133
   }
  ],
  "documentazione": {
