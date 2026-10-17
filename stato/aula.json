@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-16T22:33:48.823Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-17T07:01:39.488Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "ordinare-il-codice",
   "numero": "1.14",
   "titolo": "Ordinare il codice"
  },
- "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 1.14 riprende quando si azzerano.",
- "riprende": "2026-10-17T07:00:00.822Z"
+ "messaggio": "Sta scrivendo la lezione 1.14 «Ordinare il codice».",
+ "riprende": null
 }
