@@ -15,3 +15,4 @@
 {"quando":1792222085322,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-schiva-1","ok":true,"contata":true,"durataMs":103213,"tokenInput":10556,"tokenOutput":3733,"ragionamento":11641}
 {"quando":1792222203507,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-schiva-1","ok":true,"contata":true,"durataMs":25910,"tokenInput":9969,"tokenOutput":3794,"ragionamento":7897}
 {"quando":1792222246561,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-schiva-1","ok":true,"contata":true,"durataMs":18010,"tokenInput":3603,"tokenOutput":271,"ragionamento":2042}
+{"quando":1792222265862,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-schiva-1","ok":true,"contata":true,"durataMs":94630,"tokenInput":10132,"tokenOutput":3225,"ragionamento":11849}
