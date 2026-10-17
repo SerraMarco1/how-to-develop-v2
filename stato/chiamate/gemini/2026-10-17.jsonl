@@ -71,3 +71,4 @@
 {"quando":1792228339769,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"vita-di-un-nodo","ok":false,"contata":true,"durataMs":3036,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792229630573,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"variabili-e-tipi","ok":true,"contata":true,"durataMs":5591,"tokenInput":2772,"tokenOutput":820,"ragionamento":1609}
 {"quando":1792229641775,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"process-e-delta","ok":true,"contata":true,"durataMs":6409,"tokenInput":2860,"tokenOutput":827,"ragionamento":1822}
+{"quando":1792229652739,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"condizioni","ok":true,"contata":true,"durataMs":6436,"tokenInput":2900,"tokenOutput":838,"ragionamento":2158}
