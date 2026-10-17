@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T08:01:56.311Z",
+ "aggiornato": "2026-10-17T08:39:27.345Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -218,6 +218,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/raggiungere-i-nodi.json",
    "sha256": "5c9ebc12f191d688bafe2aa27080e902c099022cae9d9bbfbd3d4f8f1bfa4807",
    "byte": 97163
+  },
+  {
+   "slug": "scene-riutilizzabili",
+   "numero": "2.2",
+   "titolo": "Scene riutilizzabili: lo stampo e le copie",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/scene-riutilizzabili.json",
+   "sha256": "012f0861327622315754438297d1b85f912db2398811fb133dd49dc26ebda683",
+   "byte": 114828
   }
  ],
  "documentazione": {
