@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T07:39:06.055Z",
+ "aggiornato": "2026-10-17T07:46:49.081Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -191,6 +191,15 @@
    "file": "lezioni/f01-programmare/progetto-schiva-2.json",
    "sha256": "e39f59d0de547e234491e1465be8b3c9d83f312fef19f951ce19759cb5984b7d",
    "byte": 32999
+  },
+  {
+   "slug": "progetto-schiva-3",
+   "numero": "1.18",
+   "titolo": "Progetto «Schiva!» – tappa 3: fine partita, record e ordine",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/progetto-schiva-3.json",
+   "sha256": "698b8faf65db3a5c87fecc3b42e870984192f31147c7021beff7a2988594969d",
+   "byte": 39257
   }
  ],
  "documentazione": {
