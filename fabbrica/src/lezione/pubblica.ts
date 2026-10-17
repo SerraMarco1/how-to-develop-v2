@@ -7,15 +7,16 @@ import { togliCartella } from "@htd/condiviso/godot/esegui.ts";
 import { catalogoImmagini, elencoAssetCorso, percorsoMotore } from "@htd/condiviso/motore.ts";
 import { CatalogoSchema, FORMATO, PaccoLezioneSchema, percorsoLezione, percorsoMedia, sha256, type Media, type PaccoLezione } from "@htd/condiviso/pacchetto.ts";
 import type { LezioneNelCorso } from "@htd/condiviso/piano.ts";
-import { lezioniDelCorso } from "@htd/condiviso/piano.ts";
-import { EsercizioSchema, PrevisioneSchema, type Esercizio, type Previsione } from "@htd/condiviso/schemi.ts";
+import { lezioneDelCorso, lezioniDelCorso } from "@htd/condiviso/piano.ts";
+import { EsercizioSchema, PrevisioneSchema, type Esercizio, type Lezione, type Previsione, type StatoProgetto } from "@htd/condiviso/schemi.ts";
 import { fileDellaLezione, problemiDelPacco } from "@htd/condiviso/controllo-pacco.ts";
 import { messaggi } from "../ai/prompt.ts";
-import { AINonDisponibile, chiamaAI, RispostaAINonValida } from "../ai/router.ts";
+import { AINonDisponibile, candidati, chiamaAI, dimenticaRisposta, RispostaAINonValida } from "../ai/router.ts";
 import { esiste, percorsoDati, salva, scriviFile } from "../archivio.ts";
 import { CONFIG } from "../configurazione.ts";
-import { catalogo } from "../corso.ts";
-import { costoLezione, registra } from "../traccia.ts";
+import { catalogo, paccoPubblicato } from "../corso.ts";
+import { controllaTempo, GiroFinito } from "../tempo.ts";
+import { costoLezione, registra, registroDiLezione } from "../traccia.ts";
 import type { LezioneScritta } from "./catena.ts";
 import { chiudiCantiere } from "./catena.ts";
 import { istruzioniModalita, preparaEsercizio } from "./esercizio.ts";
@@ -36,38 +37,119 @@ export function salvaMedia(dati: Buffer, estensione: string): Media {
 
 const RipassoSchema = z.object({ previsioni: z.array(PrevisioneSchema).min(3).max(6) });
 
+/** Una lezione senza codice (né script nel progetto né blocchi di codice nella teoria) non ha niente da ripassare. */
+function haCodice(contenuto: Lezione, statoFinale: StatoProgetto | null): boolean {
+  return (statoFinale?.file ?? []).some((f) => f.percorso.endsWith(".gd")) || contenuto.blocchi.some((b) => b.tipo === "codice");
+}
+
 /**
  * Le voci di ripasso di una lezione: codice da leggere e risultato da prevedere. Le scrive un modello con molte
- * richieste al giorno (il ruolo «ripasso»), le risposte giuste le calcola Godot. Se non riesce, la lezione esce senza.
+ * richieste al giorno (il ruolo «ripasso»), le risposte giuste le calcola Godot. Vuoto se meno di tre voci si eseguono.
+ * Lancia AINonDisponibile o RispostaAINonValida se nessun modello risponde nel formato chiesto.
  */
+async function scriviRipasso(lezione: LezioneNelCorso, contenuto: Lezione, statoFinale: StatoProgetto | null): Promise<Previsione[]> {
+  const dalle = Date.now();
+  const script = (statoFinale?.file ?? []).filter((f) => f.percorso.endsWith(".gd"));
+  const richiesta = {
+    ruolo: "ripasso" as const,
+    slug: lezione.slug,
+    messaggi: messaggi("richiamo", {
+      titolo_competenza: lezione.titolo,
+      sommario: contenuto.sommario,
+      concetti: contenuto.concetti.join(", "),
+      obiettivi: lezione.impari.map((o) => `- ${o}`).join("\n"),
+      progetto: script.map((f) => `#### ${f.percorso}\n${f.contenuto}`).join("\n\n").slice(0, 2500) || "(nessuno script)",
+      istruzioni: istruzioniModalita("previsioni"),
+    }),
+    schema: RipassoSchema,
+    maxTokens: 3000,
+  };
+  const { dati } = await chiamaAI(richiesta);
+  const base = preparaEsercizio({ ...EsercizioSchema.parse({ titolo: "Ripasso", consegna: "Ripasso della lezione", modalita: "previsioni" }), previsioni: dati.previsioni } as Esercizio, "r", "autonomo");
+  const { esercizio } = await calcolaPrevisioni(base);
+  const voci = esercizio.previsioni.filter((v) => v.risposta && v.risposta !== "<null>" && v.risposta.length <= 80);
+  // Usata la risposta (Godot ha calcolato le risposte giuste), non serve più conservarla; e se non è servita, il
+  // tentativo successivo deve chiederne una nuova invece di ritrovare questa.
+  dimenticaRisposta(richiesta);
+  registra({ slug: lezione.slug, pezzo: "ripasso", azione: "scrittura", esito: voci.length >= 3 ? "ok" : "saltato", guasto: voci.length >= 3 ? undefined : "contenuto", dalle, titolo: "Ripasso: voci per il ripasso a intervalli", spiegazione: voci.length >= 3 ? `${voci.length} voci eseguite in Godot, con le risposte calcolate: ${voci.map((v) => v.risposta).join(" · ")}` : `Solo ${voci.length} voci su ${esercizio.previsioni.length} si eseguono in Godot: non bastano (ne servono almeno 3), il ripasso non viene usato.` });
+  return voci.length >= 3 ? voci.map((v, i) => ({ ...v, id: `r${i + 1}` })) : [];
+}
+
+/** `dalle`: quando è cominciato il tentativo, perché il registro conti le richieste rifiutate o scartate. */
+function ripassoNonScritto(slug: string, errore: AINonDisponibile | RispostaAINonValida, dalle: number, reazione: string): void {
+  registra({ slug, pezzo: "ripasso", azione: "scrittura", esito: "saltato", guasto: errore instanceof AINonDisponibile ? "fornitore" : "formato", dalle, titolo: "Ripasso non scritto", spiegazione: `${errore.message.slice(0, 400)}\nReazione: ${reazione}` });
+}
+
+/** Il ripasso di una lezione appena scritta. Se nessun modello risponde, la lezione esce senza: lo recupera completaRipassi. */
 async function preparaRipasso(lezione: LezioneNelCorso, scritta: LezioneScritta): Promise<Previsione[]> {
-  const script = scritta.statoFinale.file.filter((f) => f.percorso.endsWith(".gd"));
-  if (script.length === 0 && !scritta.lezione.blocchi.some((b) => b.tipo === "codice")) return [];
+  if (!haCodice(scritta.lezione, scritta.statoFinale)) return [];
+  const dalle = Date.now();
   try {
-    const { dati } = await chiamaAI({
-      ruolo: "ripasso",
-      slug: lezione.slug,
-      messaggi: messaggi("richiamo", {
-        titolo_competenza: lezione.titolo,
-        sommario: scritta.lezione.sommario,
-        concetti: scritta.lezione.concetti.join(", "),
-        obiettivi: lezione.impari.map((o) => `- ${o}`).join("\n"),
-        progetto: script.map((f) => `#### ${f.percorso}\n${f.contenuto}`).join("\n\n").slice(0, 2500) || "(nessuno script)",
-        istruzioni: istruzioniModalita("previsioni"),
-      }),
-      schema: RipassoSchema,
-      maxTokens: 3000,
-    });
-    const base = preparaEsercizio({ ...EsercizioSchema.parse({ titolo: "Ripasso", consegna: "Ripasso della lezione", modalita: "previsioni" }), previsioni: dati.previsioni } as Esercizio, "r", "autonomo");
-    const { esercizio } = await calcolaPrevisioni(base);
-    const voci = esercizio.previsioni.filter((v) => v.risposta && v.risposta !== "<null>" && v.risposta.length <= 80);
-    registra({ slug: lezione.slug, pezzo: "ripasso", azione: "scrittura", esito: voci.length >= 3 ? "ok" : "saltato", titolo: "Ripasso: voci per il ripasso a intervalli", spiegazione: voci.length >= 3 ? `${voci.length} voci eseguite in Godot, con le risposte calcolate: ${voci.map((v) => v.risposta).join(" · ")}` : `Solo ${voci.length} voci su ${esercizio.previsioni.length} si eseguono in Godot: la lezione esce senza ripasso proprio.` });
-    return voci.length >= 3 ? voci.map((v, i) => ({ ...v, id: `r${i + 1}` })) : [];
+    return await scriviRipasso(lezione, scritta.lezione, scritta.statoFinale);
   } catch (errore) {
     if (!(errore instanceof AINonDisponibile) && !(errore instanceof RispostaAINonValida)) throw errore;
-    registra({ slug: lezione.slug, pezzo: "ripasso", azione: "scrittura", esito: "saltato", guasto: errore instanceof AINonDisponibile ? "fornitore" : "formato", titolo: "Ripasso non scritto", spiegazione: `${(errore as Error).message.slice(0, 400)}\nReazione: la lezione esce senza voci di ripasso.` });
+    ripassoNonScritto(lezione.slug, errore, dalle, "la lezione esce senza voci di ripasso; si riprova a scriverle nei giri successivi.");
     return [];
   }
+}
+
+/** Dopo quanti tentativi andati male (risposta inutilizzabile, non un rifiuto del fornitore) si smette di chiedere. */
+const TENTATIVI_RIPASSO = 3;
+
+/**
+ * Le lezioni pubblicate senza ripasso perché in quel momento nessun modello poteva scriverlo (sovraccarico, chiave non
+ * ancora messa): a ogni giro, prima di scrivere lezioni nuove, si riprova. Se riesce, la lezione esce in una versione
+ * nuova in cui cambia solo il ripasso: teoria ed esercizi restano identici, e l'aula conserva i progressi (sono legati
+ * alla lezione, non alla versione). Dopo tre tentativi andati male per la stessa lezione si smette, per non spendere
+ * richieste all'infinito. Restituisce quante lezioni ha completato.
+ */
+export async function completaRipassi(): Promise<number> {
+  let completate = 0;
+  for (const voce of catalogo().lezioni) {
+    const pacco = paccoPubblicato(voce.slug);
+    const lezione = lezioneDelCorso(voce.slug);
+    if (!pacco || !lezione || pacco.ripasso.length > 0 || !haCodice(pacco.contenuto, pacco.statoFinale)) continue;
+    const andatiMale = registroDiLezione(voce.slug).filter((r) => r.pezzo === "ripasso" && r.esito !== "ok" && r.guasto !== "fornitore").length;
+    if (andatiMale >= TENTATIVI_RIPASSO) continue;
+    // Nessun modello libero per il ripasso: non si bussa e non si scrive niente, si riprova al giro dopo.
+    if (candidati("ripasso", { tokenStimati: 3000, escludi: [] }).disponibili.length === 0) return completate;
+    controllaTempo();
+    const ancora = andatiMale + 1 < TENTATIVI_RIPASSO ? "si riprova al prossimo giro." : `${TENTATIVI_RIPASSO} tentativi andati male: la lezione resta senza ripasso.`;
+    const dalle = Date.now();
+    let nuovo: PaccoLezione;
+    try {
+      const voci = await scriviRipasso(lezione, pacco.contenuto, pacco.statoFinale);
+      if (voci.length === 0) continue;
+      nuovo = PaccoLezioneSchema.parse({ ...pacco, versione: pacco.versione + 1, ripasso: voci, origine: { ...pacco.origine, richieste: costoLezione(voce.slug) } });
+      const sicurezza = problemiDelPacco(nuovo);
+      if (sicurezza.length) {
+        registra({ slug: voce.slug, pezzo: "ripasso", azione: "controllo", esito: "fallito", guasto: "contenuto", titolo: "Ripasso rifiutato dal controllo di sicurezza", spiegazione: `${sicurezza.slice(0, 5).join(" | ")}\nReazione: ${ancora}` });
+        continue;
+      }
+    } catch (errore) {
+      if (errore instanceof GiroFinito) throw errore;
+      if (errore instanceof AINonDisponibile) {
+        ripassoNonScritto(voce.slug, errore, dalle, "si riprova al prossimo giro.");
+        return completate;
+      }
+      if (errore instanceof RispostaAINonValida) {
+        ripassoNonScritto(voce.slug, errore, dalle, ancora);
+        continue;
+      }
+      // Un errore del programma qui non deve fermare la scrittura delle lezioni nuove: resta nel registro, e conta tra
+      // i tentativi andati male (così non si ripete all'infinito).
+      console.error(`Ripasso di ${voce.slug}: ${(errore as Error).stack ?? errore}`);
+      registra({ slug: voce.slug, pezzo: "ripasso", azione: "scrittura", esito: "fallito", guasto: "piattaforma", dalle, titolo: "Ripasso: errore del programma", spiegazione: `${(errore as Error).message.slice(0, 600)}\nReazione: ${ancora}`, dati: { errore: (errore as Error).stack } });
+      continue;
+    }
+    const testo = JSON.stringify(nuovo);
+    scriviFile(voce.file, testo);
+    aggiornaCatalogo({ ...voce, versione: nuovo.versione, sha256: sha256(testo), byte: Buffer.byteLength(testo) });
+    registra({ slug: voce.slug, pezzo: "lezione", azione: "ripasso aggiunto", esito: "ok", titolo: "Ripasso aggiunto alla lezione pubblicata", spiegazione: `${nuovo.ripasso.length} voci di ripasso aggiunte; teoria ed esercizi non cambiano. Versione ${nuovo.versione}. Costo totale della lezione: ${nuovo.origine.richieste} richieste.` });
+    await salva(`${voce.numero} ${voce.slug}: ripasso aggiunto (versione ${nuovo.versione})`, { subito: true });
+    completate++;
+  }
+  return completate;
 }
 
 // ─────────────────────────── Video ───────────────────────────

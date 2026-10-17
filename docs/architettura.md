@@ -72,7 +72,11 @@ Il lavoro di una lezione è quello della versione 1, che funzionava: teoria, pra
 controllato in Godot (deve fallire prima del lavoro e passare dopo), correzioni mirate, revisione, pubblicazione.
 
 Prima di scrivere lezioni nuove, a ogni giro la fabbrica: ricontrolla in Godot le lezioni arrivate dalla versione 1
-(`importate/`; quelle che non passano vengono riscritte), poi gestisce le segnalazioni aperte.
+(`importate/`; quelle che non passano vengono riscritte), gestisce le segnalazioni aperte, poi completa il ripasso delle
+lezioni pubblicate senza (in quel momento il modello del ripasso era sovraccarico, o mancava la sua chiave). Una lezione
+così esce in una versione nuova in cui cambia solo il ripasso; l'aula la scarica da sola e i tuoi progressi restano,
+perché sono legati alla lezione e non alla versione. Se il modello del ripasso è fermo non si chiede niente; dopo tre
+risposte inutilizzabili per la stessa lezione si smette, per non spendere richieste all'infinito.
 
 ### Chi scrive
 

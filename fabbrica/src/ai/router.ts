@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import type { z } from "zod";
-import { aggiungiRiga, leggiJson, leggiRighe, salva, scriviJson } from "../archivio.ts";
+import { aggiungiRiga, cancella, leggiJson, leggiRighe, salva, scriviJson } from "../archivio.ts";
 import { chiaveFornitore, nascondiSegreti } from "../configurazione.ts";
 import { aggiornaStato, statoFabbrica } from "../stato.ts";
 import { controllaTempo } from "../tempo.ts";
@@ -313,6 +313,11 @@ function chiaveRisposta(r: RichiestaAI<unknown>): string {
 }
 
 const fileRisposta = (r: RichiestaAI<unknown>) => `risposte/${r.slug}/${chiaveRisposta(r)}.json`;
+
+/** Toglie la risposta conservata per una richiesta: era nel formato giusto ma non è servita, la prossima volta si richiede. */
+export function dimenticaRisposta(richiesta: RichiestaAI<unknown>): void {
+  cancella(fileRisposta(richiesta));
+}
 
 // ─────────────────────────── Chiamata ───────────────────────────
 

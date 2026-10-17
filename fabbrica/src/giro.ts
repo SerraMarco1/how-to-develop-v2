@@ -12,7 +12,7 @@ import { prossimaLezione } from "./corso.ts";
 import { indiceCompresso, preparaDocumentazione } from "./documentazione.ts";
 import { apriSegnalazione, commenta } from "./github.ts";
 import { esisteCantiere, LezioneTrattenuta, riapriCantiere, scriviLezione } from "./lezione/catena.ts";
-import { pubblicaIndiceDocumentazione, pubblicaLezione } from "./lezione/pubblica.ts";
+import { completaRipassi, pubblicaIndiceDocumentazione, pubblicaLezione } from "./lezione/pubblica.ts";
 import { scriviStatoPubblico } from "./pubblico.ts";
 import { importataDa, ricontrollaImportata } from "./ricontrollo.ts";
 import { gestisciSegnalazioni } from "./segnalazioni.ts";
@@ -99,6 +99,14 @@ async function giro(): Promise<number> {
   }
 
   await gestisciSegnalazioni();
+  try {
+    const completate = await completaRipassi();
+    if (completate) log(`Ripasso aggiunto a ${completate} ${completate === 1 ? "lezione già pubblicata" : "lezioni già pubblicate"}`);
+  } catch (errore) {
+    if (!(errore instanceof GiroFinito)) throw errore;
+    log(errore.message);
+    return 0;
+  }
 
   for (;;) {
     const s = statoFabbrica();

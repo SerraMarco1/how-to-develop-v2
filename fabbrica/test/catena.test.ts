@@ -17,6 +17,8 @@ let guasto: "nessuno" | "rifiuta" | "formato" | "codice-pericoloso" = "nessuno";
 let correzioni = 0;
 // Nella prova di scrittura che deve riuscire, la pratica della terza lezione arriva già giusta (senza la stella rotta).
 let praticaGiusta = false;
+// Il ripasso della lezione 1.1 arriva con voci che non restituiscono niente (Godot non può calcolare le risposte).
+let ripassoRotto = false;
 
 const RIPASSO = {
   previsioni: [
@@ -25,12 +27,20 @@ const RIPASSO = {
     previsione("\tvar v := Vector2(1, 2)\n\treturn v * 3\n", "Che vettore restituisce `run()`?"),
   ],
 };
+const RIPASSO_ROTTO = {
+  previsioni: [
+    previsione("\tvar a: int = 5\n", "Che numero restituisce `run()`?"),
+    previsione('\tvar nome: String = "Ada"\n', "Che testo restituisce `run()`?"),
+    previsione("\tvar v := Vector2(1, 2)\n", "Che vettore restituisce `run()`?"),
+  ],
+};
 
 const finto = await fornitoreFinto(({ modello, testo }) => {
   if (guasto === "rifiuta" || (leggeroRifiuta && modello === LEGGERO)) return { stato: 503 };
   if (guasto === "formato") return { dati: { lezione: "non è il formato chiesto" } };
   const seconda = /^(Lezione|Competenza): Variabili e tipi/m.test(testo);
   const terza = /^(Lezione|Competenza): _process e delta/m.test(testo) || testo.includes('della lezione "_process e delta');
+  if (testo.startsWith("Scrivi il RIPASSO") && ripassoRotto && testo.includes('lezione "Variabili e tipi')) return { dati: RIPASSO_ROTTO };
   if (testo.startsWith("Scrivi il RIPASSO")) return { dati: RIPASSO };
   if (testo.startsWith("Scrivi la PARTE TEORICA")) return { dati: seconda ? teoria("Variabili e tipi: ricordare i valori", "dai un nome ai valori del cesto", CESTO_3) : teoria("Il primo script: dare ordini a un nodo", "scrivi il primo script del gioco", CESTO_1) };
   if (testo.startsWith("Scrivi per intero la PARTE PRATICA") && terza) return { dati: praticaGiusta ? PRATICA_3_GIUSTA : testo.includes("stai scrivendo solo la parte FINALE") ? RESTO_3 : PRATICA_3 };
@@ -162,6 +172,86 @@ test("lezione 1.2: un esercizio non riesce, il ritocco è sovraccarico, il resto
   assert.deepEqual(passi.filter((p) => p.pezzo === "es1" && p.azione === "correzione").map((p) => p.esito), ["saltato", "ok", "ok"]);
   await pubblicaLezione(l, scritta);
   pulisciFermi();
+});
+
+test("ripasso mancante: recuperato nei giri dopo senza toccare il resto della lezione, e mai chiesto all'infinito", { timeout: 10 * 60_000 }, async () => {
+  const { aggiornaCatalogo, completaRipassi } = await import("../src/lezione/pubblica.ts");
+  const { scriviFile } = await import("../src/archivio.ts");
+  const { sha256 } = await import("@htd/condiviso/pacchetto.ts");
+  const ripassi = () => finto.richieste.filter((r) => r.testo.startsWith("Scrivi il RIPASSO"));
+  const ripassiDi = (titolo: string) => ripassi().filter((r) => r.testo.includes(`lezione "${titolo}`));
+  const righe = (slug: string) => registroDiLezione(slug).length;
+
+  // La 1.2 è uscita senza ripasso perché il modello del ripasso era fermo (com'è successo alla 1.7 il 16 ottobre).
+  const delta = "process-e-delta";
+  const prima12 = paccoPubblicato(delta)!;
+  assert.equal(prima12.ripasso.length, 0, "la 1.2 è stata pubblicata senza ripasso");
+  assert.ok(registroDiLezione(delta).some((p) => p.pezzo === "ripasso" && p.esito === "saltato" && p.guasto === "fornitore"), "il registro dice perché");
+  // La 1.1 come le lezioni arrivate dalla versione 1 senza ripasso.
+  const variabili = "variabili-e-tipi";
+  const voce11 = catalogo().lezioni.find((v) => v.slug === variabili)!;
+  const testo11 = JSON.stringify({ ...paccoPubblicato(variabili)!, ripasso: [] });
+  scriviFile(voce11.file, testo11);
+  aggiornaCatalogo({ ...voce11, sha256: sha256(testo11), byte: Buffer.byteLength(testo11) });
+  const prima11 = paccoPubblicato(variabili)!;
+
+  // 1) Il modello del ripasso è fermo: non si bussa e non si scrive niente nel registro.
+  aggiornaStato((s) => void (s.fermi[`gemini/${LEGGERO}`] = { fino: Date.now() + 10 * 60_000, errore: "HTTP 503" }));
+  let richieste = finto.richieste.length;
+  const [r11, r12] = [righe(variabili), righe(delta)];
+  assert.equal(await completaRipassi(), 0);
+  assert.equal(finto.richieste.length, richieste, "nel fermo nessuna richiesta");
+  assert.deepEqual([righe(variabili), righe(delta)], [r11, r12], "e nessuna riga nel registro");
+  pulisciFermi();
+
+  // 2) Il modello rifiuta (503): una richiesta sola, poi si aspetta il giro dopo senza provare le altre lezioni.
+  leggeroRifiuta = true;
+  richieste = finto.richieste.length;
+  assert.equal(await completaRipassi(), 0);
+  leggeroRifiuta = false;
+  assert.equal(finto.richieste.length - richieste, 1, "una sola richiesta rifiutata");
+  assert.equal(registroDiLezione(variabili).at(-1)!.guasto, "fornitore");
+  assert.equal(registroDiLezione(variabili).at(-1)!.richieste, 1, "il rifiuto conta tra le richieste della lezione (Google lo conta)");
+  assert.equal(righe(delta), r12, "la 1.2 non è stata provata");
+  assert.deepEqual(paccoPubblicato(variabili), prima11);
+  pulisciFermi();
+
+  // 3) La 1.1 riceve voci che non si eseguono, la 1.2 voci buone: solo la 1.2 esce in una versione nuova.
+  ripassoRotto = true;
+  const chiesteAlla11 = ripassiDi("Variabili e tipi").length;
+  assert.equal(await completaRipassi(), 1);
+  const dopo12 = paccoPubblicato(delta)!;
+  assert.deepEqual(dopo12.ripasso.map((r) => r.risposta), ["10", "Ciao Ada", "(3.0, 6.0)"], "le risposte giuste le calcola Godot");
+  assert.equal(dopo12.versione, prima12.versione + 1);
+  const { ripasso: _a, versione: _b, origine: o1, ...resto1 } = prima12;
+  const { ripasso: _c, versione: _d, origine: o2, ...resto2 } = dopo12;
+  assert.deepEqual(resto2, resto1, "teoria, esercizi, progetto e media non cambiano");
+  assert.equal(o2.pubblicata, o1.pubblicata);
+  assert.ok(o2.richieste > o1.richieste, "il costo della lezione comprende la richiesta del ripasso");
+  const voce12 = catalogo().lezioni.find((v) => v.slug === delta)!;
+  assert.equal(voce12.versione, dopo12.versione);
+  assert.equal(voce12.sha256, sha256(fs.readFileSync(path.join(dati, voce12.file), "utf8")), "il catalogo ha l'impronta del file nuovo");
+  assert.ok(registroDiLezione(delta).some((p) => p.azione === "ripasso aggiunto" && p.esito === "ok"));
+  const conservate = (slug: string) => (fs.existsSync(path.join(dati, "risposte", slug)) ? fs.readdirSync(path.join(dati, "risposte", slug)) : []);
+  assert.deepEqual(conservate(delta), [], "nessuna risposta conservata resta in giro");
+  assert.equal(paccoPubblicato(variabili)!.ripasso.length, 0);
+  assert.equal(registroDiLezione(variabili).at(-1)!.guasto, "contenuto");
+
+  // 4) La 1.1 riprova con una richiesta NUOVA ogni volta (non la stessa risposta inutile conservata), poi smette.
+  assert.equal(await completaRipassi(), 0);
+  assert.equal(await completaRipassi(), 0);
+  assert.equal(ripassiDi("Variabili e tipi").length - chiesteAlla11, 3, "tre richieste vere, una per tentativo");
+  assert.deepEqual(conservate(variabili), [], "le risposte inutili non restano conservate");
+  richieste = finto.richieste.length;
+  const r11dopo = righe(variabili);
+  assert.equal(await completaRipassi(), 0);
+  assert.equal(finto.richieste.length, richieste, "dopo tre tentativi andati male non si chiede più");
+  assert.equal(righe(variabili), r11dopo);
+  assert.equal(paccoPubblicato(variabili)!.versione, prima11.versione, "la 1.1 resta com'era");
+  ripassoRotto = false;
+  // Niente più da completare: nessuna richiesta.
+  assert.equal(await completaRipassi(), 0);
+  assert.equal(finto.richieste.length, richieste);
 });
 
 test("sicurezza: una soluzione con un comando di sistema viene rifiutata e corretta", { timeout: 10 * 60_000 }, async () => {
