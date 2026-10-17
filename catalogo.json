@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T09:34:22.462Z",
+ "aggiornato": "2026-10-17T09:34:36.144Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -70,10 +70,10 @@
    "slug": "input-da-tastiera",
    "numero": "1.4",
    "titolo": "Input: leggere la tastiera",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/input-da-tastiera.json",
-   "sha256": "1a89a18c617f1f0f718cbcdee8cfca40b2e85c8045def5625ff87137a448edd0",
-   "byte": 51804
+   "sha256": "f0a0f7551523015a53d7d8ce01923e17bea0cbc4d0b4d2ad69cd963b39f2dabe",
+   "byte": 53985
   },
   {
    "slug": "funzioni",
