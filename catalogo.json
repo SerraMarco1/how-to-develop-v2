@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T09:34:36.144Z",
+ "aggiornato": "2026-10-17T09:34:46.503Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -79,10 +79,10 @@
    "slug": "funzioni",
    "numero": "1.5",
    "titolo": "Funzioni: dare un nome a un pezzo di lavoro",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/funzioni.json",
-   "sha256": "8149e6b86c7d70e4438d177df5c587376fe33bd1c70b7bcdb7ea38df7531f29c",
-   "byte": 65631
+   "sha256": "06a2b7da9258cc38e3f200f3ad7600a8a24cc9deb0ad82b085d3a512c9f18da8",
+   "byte": 68145
   },
   {
    "slug": "leggere-gli-errori",
