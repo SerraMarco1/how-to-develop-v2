@@ -2,7 +2,7 @@
  "creato": "2026-10-17T07:33:08.487Z",
  "pezzi": {
   "test": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "da-zero",
@@ -119,13 +119,129 @@
    "genere": "da-zero",
    "correzioni": 1,
    "semplificato": false,
-   "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo 10 secondi la velocità deve essere 400.0 (250 + 10 * 15)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest",
     "gemini/gemini-flash-lite-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "test",
+    "genere": "da-zero",
+    "titolo": "Tappa 2: Urti, vite e tempo",
+    "consegna": "In questa seconda tappa del progetto «Schiva!», arricchisci il gioco con la gestione delle collisioni, delle vite, del punteggio e della difficoltà crescente.\n\nModifica il progetto esistente (`res://main.gd` e la scena `res://main.tscn`) rispettando i seguenti requisiti:\n\n1. **Vite del giocatore**:\n   - Il giocatore parte con **3 vite**.\n   - Memorizza le vite in una variabile `lives: int` dentro `main.gd`.\n\n2. **Rilevamento urti (per vicinanza)**:\n   - Calcola la distanza tra la posizione del giocatore (`player.position`) e quella di ciascun meteorite (`meteor.position`).\n   - Considera avvenuto un urto se la distanza è inferiore o uguale a **40.0** pixel.\n   - Quando avviene un urto con un meteorite:\n     - Il giocatore perde 1 vita (la variabile `lives` diminuisce di 1).\n     - Il meteorite che ha colpito il giocatore viene riposizionato immediatamente fuori dallo schermo in alto (`position.y = -30.0`), con una coordinata X casuale compresa tra `20.0` e `780.0` (la stessa logica usata quando supera il fondo dello schermo).\n\n3. **Punteggio e tempo di sopravvivenza**:\n   - Finché il giocatore ha almeno una vita (`lives > 0`), misura il tempo trascorso accumulando `delta` in una variabile `score: float`.\n   - Quando `lives` scende a 0 (o meno), il gioco si ferma: il tempo non deve più accumularsi, la navicella non si deve più muovere e i meteoriti non devono più avanzare.\n\n4. **Difficoltà crescente**:\n   - La velocità di caduta dei meteoriti deve aumentare con il passare del tempo.\n   - All'inizio (`score == 0.0`), i meteoriti scendono a una velocità base di **250.0** pixel al secondo.\n   - Ogni secondo di gioco sopravvissuto, la velocità di tutti i meteoriti aumenta di **15.0** pixel al secondo (velocità = `250.0 + score * 15.0`), fino a un valore massimo di **650.0** pixel al secondo.\n\n5. **Interfaccia a schermo (HUD)**:\n   - Nella scena `res://main.tscn`, aggiungi sotto la radice `Main` due nodi di tipo `Label`:\n     - Un `Label` chiamato `ScoreLabel` posizionato in alto a sinistra (es. coordinate `Vector2(20, 20)`).\n     - Un `Label` chiamato `LivesLabel` posizionato accanto o subito sotto (es. coordinate `Vector2(20, 50)`).\n   - Ad ogni fotogramma, aggiorna il testo di queste etichette:\n     - `ScoreLabel`: visualizza `\"Tempo: \" + str(int(score)) + \"s\"`.\n     - `LivesLabel`: visualizza `\"Vite: \" + str(lives)` (oppure `\"GAME OVER\"` quando le vite si azzerano).",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "schiva",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Ricorda che in GDScript puoi ottenere la distanza tra due punti usando il metodo `distance_to()` di Vector2, ad esempio `player.position.distance_to(meteor.position)`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Label",
+      "nome": "ScoreLabel",
+      "genitore": "Main",
+      "descrizione": "Nella scena main.tscn è presente una Label chiamata ScoreLabel"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Label",
+      "nome": "LivesLabel",
+      "genitore": "Main",
+      "descrizione": "Nella scena main.tscn è presente una Label chiamata LivesLabel"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_caricato\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as Sprite2D\n\tif not check(\"player_trovato\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\n\tvar lives = get_prop(main, \"lives\")\n\tcheck(\"vite_iniziali\", lives == 3, \"La variabile 'lives' in main.gd deve iniziare a 3\")\n\n\tvar score_in_0 = get_prop(main, \"score\", 0.0)\n\tawait wait_seconds(0.5)\n\tvar score_in_05 = get_prop(main, \"score\", 0.0)\n\tcheck(\"tempo_avanza\", score_in_05 > score_in_0, \"La variabile 'score' deve accumulare il tempo trascorso finché si è vivi\")\n\n\t# Cerchiamo un meteorite\n\tvar meteor := find_by_class(main, \"Meteor\") as Sprite2D\n\tif meteor == null:\n\t\tmeteor = find_by_name(main, \"Meteor1\") as Sprite2D\n\tif not check(\"meteorite_trovato\", meteor != null, \"Deve essere presente almeno un meteorite\"):\n\t\treturn\n\n\t# Simuliamo una collisione spostando il meteorite sopra il giocatore\n\tmeteor.position = player.position\n\tawait wait_frames(2)\n\n\tvar lives_dopo = get_prop(main, \"lives\")\n\tcheck(\"urto_toglie_vita\", lives_dopo == 2, \"Un urto con un meteorite a distanza <= 40.0 deve togliere 1 vita\")\n\tcheck(\"meteorite_riposizionato\", meteor.position.y < 0.0, \"Dopo l'urto il meteorite deve essere riposizionato in alto\")\n\n\t# Azzeriamo le vite per verificare lo stato di game over\n\tmain.set(\"lives\", 0)\n\tvar score_fermo_1 = get_prop(main, \"score\")\n\tawait wait_seconds(0.3)\n\tvar score_fermo_2 = get_prop(main, \"score\")\n\tcheck(\"game_over_ferma_tempo\", score_fermo_1 == score_fermo_2, \"A vite esaurite (lives <= 0) il punteggio deve fermarsi\")\n",
+      "descrizione": "Gli urti riducono le vite e il tempo si accumula finché ci sono vite"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve aprirsi\"):\n\t\treturn\n\n\tvar meteor := find_by_class(main, \"Meteor\") as Sprite2D\n\tif meteor == null:\n\t\tmeteor = find_by_name(main, \"Meteor1\") as Sprite2D\n\tif not check(\"meteor_ok\", meteor != null, \"Deve esistere un meteorite\"):\n\t\treturn\n\n\tvar v_iniziale = get_prop(meteor, \"speed\", 250.0)\n\tcheck(\"velocita_base\", v_iniziale == 250.0, \"La velocità iniziale del meteorite deve essere 250.0\")\n\n\tmeteor.call(\"update_speed\", 10.0)\n\tvar v_dopo = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_cresciuta\", is_equal_approx(float(v_dopo), 400.0), \"Con un punteggio di 10 secondi la velocità deve essere 400.0 (250 + 10 * 15)\")\n\n\tmeteor.call(\"update_speed\", 50.0)\n\tvar v_max = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_massima\", is_equal_approx(float(v_max), 650.0), \"La velocità non deve superare il valore massimo di 650.0\")\n",
+      "descrizione": "La velocità dei meteoriti cresce nel tempo fino al massimo stabilito"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Schiva\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[display]\n\nwindow/size/viewport_width=800\nwindow/size/viewport_height=600\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "meteor.gd",
+       "contenuto": "class_name Meteor\nextends Sprite2D\n\nconst BASE_SPEED: float = 250.0\nconst MAX_SPEED: float = 650.0\nconst SPEED_INCREMENT: float = 15.0\n\nvar speed: float = BASE_SPEED\n\n\nfunc _ready() -> void:\n\ttexture = preload(\"res://icon.svg\")\n\tscale = Vector2(0.35, 0.35)\n\n\nfunc update_speed(elapsed_time: float) -> void:\n\tspeed = minf(BASE_SPEED + elapsed_time * SPEED_INCREMENT, MAX_SPEED)\n\n\nfunc move(delta: float) -> void:\n\tposition.y += speed * delta\n\tif position.y > 600.0:\n\t\treset_position()\n\n\nfunc reset_position() -> void:\n\tposition.y = -30.0\n\tposition.x = randf_range(20.0, 780.0)\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"Script\" path=\"res://meteor.gd\" id=\"3_meteor\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(400, 500)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Meteor1\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, -30)\nscript = ExtResource(\"3_meteor\")\n\n[node name=\"Meteor2\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(400, -200)\nscript = ExtResource(\"3_meteor\")\n\n[node name=\"Meteor3\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(600, -370)\nscript = ExtResource(\"3_meteor\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 200.0\noffset_bottom = 43.0\ntext = \"Tempo: 0s\"\n\n[node name=\"LivesLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 50.0\noffset_right = 200.0\noffset_bottom = 73.0\ntext = \"Vite: 3\"\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\nconst SCREEN_WIDTH: float = 800.0\nconst SCREEN_HEIGHT: float = 600.0\nconst PLAYER_SPEED: float = 350.0\nconst HIT_DISTANCE: float = 40.0\n\nvar lives: int = 3\nvar score: float = 0.0\n\n@onready var player: Sprite2D = $Player\n@onready var score_label: Label = $ScoreLabel\n@onready var lives_label: Label = $LivesLabel\n@onready var meteors: Array[Node] = [$Meteor1, $Meteor2, $Meteor3]\n\n\nfunc _process(delta: float) -> void:\n\tif lives <= 0:\n\t\treturn\n\n\tscore += delta\n\t_move_player(delta)\n\t_update_meteors(delta)\n\t_check_collisions()\n\t_update_ui()\n\n\nfunc _move_player(delta: float) -> void:\n\tvar direction := Vector2.ZERO\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection.x -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection.x += 1.0\n\tif Input.is_action_pressed(\"move_up\"):\n\t\tdirection.y -= 1.0\n\tif Input.is_action_pressed(\"move_down\"):\n\t\tdirection.y += 1.0\n\n\tif direction != Vector2.ZERO:\n\t\tdirection = direction.normalized()\n\t\tplayer.position += direction * PLAYER_SPEED * delta\n\n\tplayer.position.x = clampf(player.position.x, 0.0, SCREEN_WIDTH)\n\tplayer.position.y = clampf(player.position.y, 0.0, SCREEN_HEIGHT)\n\n\nfunc _update_meteors(delta: float) -> void:\n\tfor meteor in meteors:\n\t\tif meteor is Meteor:\n\t\t\tmeteor.update_speed(score)\n\t\t\tmeteor.move(delta)\n\n\nfunc _check_collisions() -> void:\n\tfor meteor in meteors:\n\t\tif meteor is Meteor:\n\t\t\tif player.position.distance_to(meteor.position) <= HIT_DISTANCE:\n\t\t\t\tlives -= 1\n\t\t\t\tmeteor.reset_position()\n\t\t\t\tif lives <= 0:\n\t\t\t\t\tlives_label.text = \"GAME OVER\"\n\t\t\t\t\tbreak\n\n\nfunc _update_ui() -> void:\n\tscore_label.text = \"Tempo: \" + str(int(score)) + \"s\"\n\tif lives > 0:\n\t\tlives_label.text = \"Vite: \" + str(lives)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Schiva",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": [
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_width",
+        "valore": "800"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_height",
+        "valore": "600"
+       }
+      ]
+     },
+     "spiegazione": "In questa tappa abbiamo esteso il gioco integrando la logica di gioco principale:\n1. In `meteor.gd` abbiamo incapsulato la logica del movimento e dell'aggiornamento della velocità: la velocità aumenta con `minf(BASE_SPEED + elapsed_time * SPEED_INCREMENT, MAX_SPEED)`, rispettando il limite massimo di 650 pixel/s.\n2. In `main.gd` teniamo traccia delle vite (`lives`) e del tempo trascorso (`score`). Se le vite scendono a zero, `_process` esce subito con `return`, bloccando sia il movimento del giocatore che la caduta dei meteoriti.\n3. La distanza tra la navicella e ciascun meteorite viene controllata tramite `player.position.distance_to(meteor.position)`. Se è minore o uguale a 40 pixel, si perde una vita e il meteorite viene resettato in cima allo schermo.\n4. Due nodi `Label` aggiunti a `main.tscn` mostrano costantemente il tempo intero trascorso e le vite rimaste.",
+     "cambiati": [
+      "meteor.gd",
+      "main.tscn",
+      "main.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "test"
+   }
   }
  },
  "avvisi": [],
