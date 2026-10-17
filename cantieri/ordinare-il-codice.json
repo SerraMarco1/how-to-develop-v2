@@ -2,5 +2,79 @@
  "creato": "2026-10-16T22:33:48.814Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Ordinare il codice",
+  "sommario": "In questa lezione imparerai a riordinare gli script del gioco seguendo le convenzioni ufficiali di GDScript senza alterarne il funzionamento. Scoprirai come eliminare i numeri sparsi sostituendoli con costanti esplicite e come scrivere commenti efficaci che spiegano il perché delle scelte logiche anziché descrivere l'ovvio.",
+  "concetti": [
+   "Convenzioni di stile di GDScript",
+   "Ordine degli elementi in uno script",
+   "Convenzioni sui nomi (snake_case e UPPER_SNAKE_CASE)",
+   "Numeri sparsi (magic numbers)",
+   "Costanti parlanti per i parametri di gioco",
+   "Spaziatura e righe vuote",
+   "Commenti efficaci (il perché contro il cosa)"
+  ],
+  "obiettivi": [
+   "Le convenzioni di GDScript: nomi, ordine dentro al file, righe vuote",
+   "Togliere i numeri sparsi nel codice dandogli un nome",
+   "Commenti che spiegano il perché, non il cosa"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Aggiungendo funzionalità a «Pioggia di stelle» — movimento, punteggio, stati di pausa, oggetti di tipi diversi — il codice degli script è cresciuto rapidamente. Quando uno script supera le cinquanta o cento righe, un'organizzazione disordinata rende faticoso trovare i bug e rischioso cambiare anche una sola regola di gioco.\n\nL'operazione di ripulire e riorganizzare il codice senza modificarne in alcun modo il funzionamento a schermo si chiama **refactoring** (ristrutturazione del codice). In questa lezione applichi a «Pioggia di stelle» le convenzioni ufficiali di Godot per rendere gli script chiari, eleganti e facili da mantenere."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per fare in modo che qualsiasi sviluppatore possa orientarsi subito nei tuoi file, GDScript raccomanda un ordine fisso dall'alto verso il basso di ogni script:\n\n1. **Estensione della classe**: l'istruzione `extends` (chiarisce a quale tipo di nodo appartiene lo script).\n2. **Costanti ed enumerazioni**: `const` ed `enum` (tutti i valori fissi e gli stati validi nel file).\n3. **Variabili di stato**: `var` (i dati che cambiano durante la partita, sempre con il loro tipo esplicito).\n4. **Funzioni del motore**: le funzioni predefinite di Godot come `_ready()` e `_process()`.\n5. **Funzioni personalizzate**: le funzioni create da te per suddividere il lavoro (come `move_basket()` o `check_stars()`).\n\nAnche la nomenclatura segue convenzioni precise: le variabili e le funzioni si scrivono in **snake_case** (tutto minuscolo con parole separate da trattino basso, es. `player_name`, `move_basket`), mentre le costanti e i valori delle enum si scrivono in **UPPER_SNAKE_CASE** (tutto maiuscolo con trattino basso, es. `START_POSITION`, `GameState.GAME_OVER`).\n\nInfine, la spaziatura: tra una funzione e l'altra si lasciano sempre **due righe vuote**. All'interno di una funzione, o per separare gruppi di variabili correlate, si usa **una sola riga vuota**."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "editor-script",
+    "didascalia": "L'area di lavoro Script: mantenere l'ordine standard delle sezioni e una spaziatura costante rende immediata la lettura di qualsiasi file."
+   },
+   {
+    "tipo": "testo",
+    "md": "Un difetto molto frequente quando si programma è inserire numeri grezzi direttamente nelle formule matematiche o nelle condizioni. Questi valori vengono chiamati in gergo **magic numbers** (numeri magici o numeri sparsi).\n\nGuarda questa riga presente nel movimento del cesto:\n`position.x = clamp(position.x, 64.0, 1088.0)`\n\nChi legge il codice deve indovinare cosa significhino `64.0` e `1088.0`. Se in seguito decidi di cambiare la larghezza della finestra, dovrai dare la caccia a quel `64.0` e quel `1088.0` in giro per tutto il file, con il rischio di dimenticarne qualcuno.\n\nLa soluzione consiste nel dare un nome a ciascun numero definendo una costante in cima allo script: `const MIN_X: float = 64.0` e `const MAX_X: float = 1088.0`. Il codice dentro la funzione diventa autoesplicativo e per cambiare i margini dell'area di gioco basterà modificare una sola riga in cima al file."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "# PRIMA: numeri sparsi dentro i controlli di movimento e fuoriuscita\nfunc move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, 64.0, 1088.0)\n\n\nfunc check_stars() -> void:\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: Sprite2D = stars[i]\n\t\tif current_star.position.y > 680.0:\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\n\n# DOPO: costanti definite in cima allo script con nomi espliciti\nconst MIN_X: float = 64.0\nconst MAX_X: float = 1088.0\nconst DESPAWN_Y: float = 680.0\n\n\nfunc move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, MIN_X, MAX_X)\n\n\nfunc check_stars() -> void:\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: Sprite2D = stars[i]\n\t\tif current_star.position.y > DESPAWN_Y:\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()",
+    "spiegazione": "Sostituendo i numeri `64.0`, `1088.0` e `680.0` con le costanti `MIN_X`, `MAX_X` e `DESPAWN_Y`, sia il blocco del movimento sia la rimozione delle stelle diventano subito comprensibili. Se domani vorrai cambiare l'altezza alla quale gli oggetti spariscono, toccherai solo la costante `DESPAWN_Y`."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando riordini il codice, non modificare contemporaneamente le formule matematiche o le regole di gioco. Se cambi il modo in cui il codice calcola un valore mentre sposti le righe, rischi di inserire un errore senza capire se deriva dallo spostamento o dalla nuova logica. Prima riordina e verifica con F5 che il gioco funzioni esattamente come prima; solo dopo passa ad aggiungere o modificare il comportamento."
+   },
+   {
+    "tipo": "testo",
+    "md": "Un codice ben scritto deve richiedere pochi commenti, perché i nomi delle variabili e delle funzioni spiegano già cosa sta accadendo. Quando un commento serve, deve spiegare il **perché** di una scelta, mai il **cosa** fa l'istruzione.\n\nUn commento del genere:\n`# Sottrae 1.0 alla direzione`\n`direction -= 1.0`\nè un commento inutile: ripete in italiano ciò che il codice dice già a chiunque legga GDScript.\n\nUn commento utile spiega invece la regola o la motivazione di fondo:\n`# Scorre a ritroso per evitare che la rimozione sballi gli indici degli elementi successivi`\n`for i in range(stars.size() - 1, -1, -1):`\nQui il commento serve davvero, perché chi legge potrebbe chiedersi il motivo di un ciclo che conta all'indietro anziché in avanti."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "# ESEMPIO SCORRETTO: commenti che descrivono l'ovvio\n# Assegna 3 alla variabile lives\nlives = 3\n# Chiama la funzione update_ui\nupdate_ui()\n\n\n# ESEMPIO CORRETTO: commento che chiarisce il motivo pratico di una scelta\n# La virgola finale sugli elementi su più righe facilita l'aggiunta di nuove voci\nconst ITEM_TYPES: Dictionary = {\n\t\"star\": {\n\t\t\"points\": 10,\n\t\t\"speed\": 180.0,\n\t\t\"color\": Color.YELLOW,\n\t},\n\t\"gold_star\": {\n\t\t\"points\": 50,\n\t\t\"speed\": 260.0,\n\t\t\"color\": Color.ORANGE,\n\t},\n\t\"rock\": {\n\t\t\"points\": -20,\n\t\t\"speed\": 220.0,\n\t\t\"color\": Color.GRAY,\n\t},\n}",
+    "spiegazione": "Nel primo caso i commenti appesantiscono la lettura senza dare informazioni nuove. Nel secondo caso il commento documenta una regola di stile utile (la virgola finale nell'ultimo elemento di collezioni su più righe, detta *trailing comma*), che evita modifiche superflue quando si aggiungono altri elementi."
+   },
+   {
+    "tipo": "testo",
+    "md": "Unendo tutte queste convenzioni, osserviamo come appare lo script `star.gd` riordinato da cima a fondo: costanti raggruppate in alto con nomi chiari in lettere maiuscole, variabili tipizzate, funzioni separate da due righe vuote e commenti presenti soltanto dove servono a chiarire l'intento logico."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Sprite2D\n\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst RESET_Y: float = 680.0\nconst CATCH_DISTANCE: float = 60.0\n\nconst ITEM_TYPES: Dictionary = {\n\t\"star\": {\n\t\t\"points\": 10,\n\t\t\"speed\": 180.0,\n\t\t\"color\": Color.YELLOW,\n\t},\n\t\"gold_star\": {\n\t\t\"points\": 50,\n\t\t\"speed\": 260.0,\n\t\t\"color\": Color.ORANGE,\n\t},\n\t\"rock\": {\n\t\t\"points\": -20,\n\t\t\"speed\": 220.0,\n\t\t\"color\": Color.GRAY,\n\t},\n}\n\nvar star_name: String = \"star\"\nvar fall_speed: float = 180.0\nvar points: int = 10\nvar is_collected: bool = false\n\n\nfunc _ready() -> void:\n\tvar initial_pos: Vector2 = position\n\treset_star()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\n\nfunc _process(delta: float) -> void:\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\n\nfunc reset_star() -> void:\n\t# Riposiziona l'oggetto in cima con una coordinata e un tipo casuali\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\t\n\tvar types: Array[String] = [\n\t\t\"star\",\n\t\t\"gold_star\",\n\t\t\"rock\",\n\t]\n\tvar random_index: int = randi_range(0, types.size() - 1)\n\tapply_item_type(types[random_index])\n\n\nfunc apply_item_type(type_name: String) -> void:\n\tif type_name in ITEM_TYPES:\n\t\tvar config: Dictionary = ITEM_TYPES[type_name]\n\t\tstar_name = type_name\n\t\tpoints = config[\"points\"]\n\t\tfall_speed = config[\"speed\"]\n\t\tmodulate = config[\"color\"]\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE",
+    "spiegazione": "Lo script è pulito e lineare: non ci sono numeri magici nascosti nelle formule, ogni funzione ha il tipo di ritorno indicato (`-> void` o `-> bool`), la spaziatura separa chiaramente ogni blocco e i commenti spiegano l'intento invece della sintassi."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Rispetta l'ordine standard nel file: `extends`, poi costanti ed `enum`, poi variabili di stato, poi `_ready()` e `_process()`, e infine le funzioni create da te.\n- Usa `snake_case` per variabili e funzioni, e `UPPER_SNAKE_CASE` per le costanti e i valori delle enumerazioni.\n- Separa sempre le funzioni tra loro con due righe vuote e le sezioni interne con una riga vuota.\n- Riconosci i numeri sparsi (*magic numbers*) ed estraili in costanti con nomi chiari in cima al file.\n- Scrivi commenti che spieghino il perché di una scelta o la regola di gioco, evitando di parafrasare ciò che il codice dice già."
+   }
+  ]
+ }
 }
