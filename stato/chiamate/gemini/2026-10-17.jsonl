@@ -57,3 +57,4 @@
 {"quando":1792226122914,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":145087,"tokenInput":13668,"tokenOutput":6195,"ragionamento":17686}
 {"quando":1792226277634,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":16172,"tokenInput":14403,"tokenOutput":7337,"ragionamento":1185}
 {"quando":1792226293809,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":18792,"tokenInput":19016,"tokenOutput":7298,"ragionamento":2824}
+{"quando":1792226319351,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":24239,"tokenInput":12910,"tokenOutput":354,"ragionamento":3491}
