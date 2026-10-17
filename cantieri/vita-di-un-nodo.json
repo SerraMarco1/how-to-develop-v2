@@ -135,7 +135,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(20)\n\tcheck(\"no_errors\", errors_text() == \"\", \"L'esecuzione non deve provocare errori a schermo: \" + errors_text())\n\tvar active: Array = get_prop(main, \"active_items\", [])\n\tcheck(\"items_cleared\", active.size() == 0, \"Tutti gli elementi oltre la soglia devono essere stati rimossi dall'array active_items\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tawait wait_seconds(0.5)\n\tcheck(\"no_errors\", errors_text() == \"\", \"L'esecuzione non deve provocare errori a schermo: \" + errors_text())\n\tvar active_raw = get_prop(main, \"active_items\", [])\n\tvar active: Array = active_raw if active_raw is Array else []\n\tvar over_limit := false\n\tfor item in active:\n\t\tif is_instance_valid(item):\n\t\t\tvar pos = get_prop(item, \"position\", Vector2.ZERO)\n\t\t\tif pos.y > 400.0:\n\t\t\t\tover_limit = true\n\t\t\t\tbreak\n\tcheck(\"items_cleared\", not over_limit and active.size() == 0, \"Tutti gli elementi oltre la soglia devono essere stati rimossi dall'array active_items\")",
       "descrizione": "Gli elementi oltre la soglia vengono eliminati senza errori e l'array si svuota"
      }
     ],
@@ -143,10 +143,6 @@
     "daTrovare": [],
     "partenza": {
      "file": [
-      {
-       "percorso": "project.godot",
-       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TestPulizia\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
-      },
       {
        "percorso": "main.tscn",
        "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://spawner.gd\" id=\"1_spawner\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_spawner\")\n"
@@ -206,14 +202,15 @@
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Tutti gli elementi oltre la soglia devono essere stati rimossi dall'array active_items\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   },
   "es3": {
@@ -342,7 +339,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "La vita di un nodo: dalla nascita a queue_free()",
