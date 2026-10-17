@@ -1,0 +1,122 @@
+{
+ "n": 13,
+ "quando": "2026-10-17T09:12:19.757Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2 (ripara): 1 problema",
+ "spiegazione": "«Rimuovere senza lasciare tracce», scritto da gemini/gemini-flash-lite-latest. 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Tutti gli elementi oltre la soglia devono essere stati rimossi dall'array active_items\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 6730,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Tutti gli elementi oltre la soglia devono essere stati rimossi dall'array active_items\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Rimuovere senza lasciare tracce",
+   "consegna": "Il progetto di prova `TestPulizia` genera un'ondata di oggetti che cadono. Quando un oggetto supera la coordinata Y di 400 pixel deve essere rimosso. Al momento però il gioco si blocca con un errore critico dopo pochi istanti e continua a tentare di leggere nodi che non sono più disponibili.\n\nCorreggi lo script `spawner.gd` in modo che:\n1. Gli oggetti che superano la soglia `LIMIT_Y` vengano rimossi sia dall'array `active_items` sia liberati correttamente con `queue_free()`.\n2. Il ciclo dentro `_process` non vada in errore e verifichi sempre che ciascun elemento sia valido con `is_instance_valid()` prima di usarlo.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "test-pulizia",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Quando rimuovi elementi da un array mentre lo scorri, scorrere dall'inizio alla fine salta degli indici. Parti invece dall'ultimo elemento con `range(items.size() - 1, -1, -1)`.",
+    "Prima di accedere a proprietà come `item.position`, verifica con `is_instance_valid(item)` che il nodo esista ancora.",
+    "Per eliminare il nodo usa `item.queue_free()` e rimuovilo dall'array con `active_items.remove_at(i)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://spawner.gd",
+     "regex": "queue_free\\(",
+     "descrizione": "Lo script spawner.gd usa queue_free() per rimuovere i nodi"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://spawner.gd",
+     "regex": "is_instance_valid\\(",
+     "descrizione": "Lo script verifica la validità delle istanze con is_instance_valid()"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(20)\n\tcheck(\"no_errors\", errors_text() == \"\", \"L'esecuzione non deve provocare errori a schermo: \" + errors_text())\n\tvar active: Array = get_prop(main, \"active_items\", [])\n\tcheck(\"items_cleared\", active.size() == 0, \"Tutti gli elementi oltre la soglia devono essere stati rimossi dall'array active_items\")\n",
+     "descrizione": "Gli elementi oltre la soglia vengono eliminati senza errori e l'array si svuota"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "TestPulizia",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TestPulizia\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://spawner.gd\" id=\"1_spawner\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_spawner\")\n"
+     },
+     {
+      "percorso": "item.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://item.gd\" id=\"1_item\"]\n\n[node name=\"Item\" type=\"Node2D\"]\nscript = ExtResource(\"1_item\")\n"
+     },
+     {
+      "percorso": "item.gd",
+      "contenuto": "extends Node2D\n\nvar speed: float = 300.0\n\n\nfunc _process(delta: float) -> void:\n\tposition.y += speed * delta\n"
+     },
+     {
+      "percorso": "spawner.gd",
+      "contenuto": "extends Node2D\n\nconst LIMIT_Y: float = 400.0\nconst ITEM_SCENE = preload(\"res://item.tscn\")\n\nvar active_items: Array[Node2D] = []\n\n\nfunc _ready() -> void:\n\tfor i in range(5):\n\t\tvar item := ITEM_SCENE.instantiate() as Node2D\n\t\titem.position = Vector2(100.0 * (i + 1), 350.0 + (i * 20.0))\n\t\tadd_child(item)\n\t\tactive_items.append(item)\n\n\nfunc _process(_delta: float) -> void:\n\t# ERRORE: il ciclo scorre in avanti e prova a usare nodi senza controllare se esistono\n\tfor i in range(active_items.size()):\n\t\tvar item: Node2D = active_items[i]\n\t\tif item.position.y > LIMIT_Y:\n\t\t\titem.free()\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TestPulizia\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://spawner.gd\" id=\"1_spawner\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_spawner\")\n"
+     },
+     {
+      "percorso": "item.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://item.gd\" id=\"1_item\"]\n\n[node name=\"Item\" type=\"Node2D\"]\nscript = ExtResource(\"1_item\")\n"
+     },
+     {
+      "percorso": "item.gd",
+      "contenuto": "extends Node2D\n\nvar speed: float = 300.0\n\n\nfunc _process(delta: float) -> void:\n\tposition.y += speed * delta\n"
+     },
+     {
+      "percorso": "spawner.gd",
+      "contenuto": "extends Node2D\n\nconst LIMIT_Y: float = 400.0\nconst ITEM_SCENE = preload(\"res://item.tscn\")\n\nvar active_items: Array[Node2D] = []\n\n\nfunc _ready() -> void:\n\tfor i in range(5):\n\t\tvar item := ITEM_SCENE.instantiate() as Node2D\n\t\titem.position = Vector2(100.0 * (i + 1), 350.0 + (i * 20.0))\n\t\tadd_child(item)\n\t\tactive_items.append(item)\n\n\nfunc _process(_delta: float) -> void:\n\tfor i in range(active_items.size() - 1, -1, -1):\n\t\tvar item: Node2D = active_items[i]\n\t\tif not is_instance_valid(item):\n\t\t\tactive_items.remove_at(i)\n\t\t\tcontinue\n\t\tif item.position.y > LIMIT_Y:\n\t\t\tactive_items.remove_at(i)\n\t\t\titem.queue_free()\n"
+     }
+    ],
+    "progetto": {
+     "nome": "TestPulizia",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Scorrere un array in avanti mentre si eliminano elementi porta a saltare indici o ad accedere fuori dai limiti consentiti. Inoltre `free()` distrugge l'oggetto istantaneamente lasciando riferimenti non validi. Scorrendo a ritroso con `range(size - 1, -1, -1)`, controllando la validità con `is_instance_valid()` e liberando con `queue_free()` insieme a `remove_at()`, la lista rimane coerente e Godot non va in crash.",
+    "cambiati": [
+     "spawner.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
