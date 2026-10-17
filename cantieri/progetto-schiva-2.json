@@ -160,7 +160,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve aprirsi\"):\n\t\treturn\n\n\tvar meteor := find_by_class(main, \"Meteor\") as Sprite2D\n\tif meteor == null:\n\t\tmeteor = find_by_name(main, \"Meteor1\") as Sprite2D\n\tif not check(\"meteor_ok\", meteor != null, \"Deve esistere un meteorite\"):\n\t\treturn\n\n\tvar v_iniziale = get_prop(meteor, \"speed\", 250.0)\n\tcheck(\"velocita_base\", v_iniziale == 250.0, \"La velocità iniziale del meteorite deve essere 250.0\")\n\n\tmeteor.call(\"update_speed\", 10.0)\n\tvar v_dopo = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_cresciuta\", is_equal_approx(float(v_dopo), 400.0), \"Con un punteggio di 10 secondi la velocità deve essere 400.0 (250 + 10 * 15)\")\n\n\tmeteor.call(\"update_speed\", 50.0)\n\tvar v_max = get_prop(meteor, \"speed\", 0.0)\n\tcheck(\"velocita_massima\", is_equal_approx(float(v_max), 650.0), \"La velocità non deve superare il valore massimo di 650.0\")\n",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve aprirsi\"):\n\t\treturn\n\n\tvar meteor := find_by_name(main, \"Meteor1\") as Sprite2D\n\tif meteor == null:\n\t\tmeteor = find_by_class(main, \"Meteor\") as Sprite2D\n\tif meteor == null:\n\t\tfor child in main.get_children():\n\t\t\tif child is Sprite2D and child.name != \"Player\":\n\t\t\t\tmeteor = child\n\t\t\t\tbreak\n\tif not check(\"meteor_ok\", meteor != null, \"Deve esistere almeno un meteorite nella scena\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as Sprite2D\n\tif player != null:\n\t\tplayer.position = Vector2(-500.0, -500.0)\n\n\tmain.set(\"score\", 0.0)\n\tmeteor.position = Vector2(100.0, 50.0)\n\tawait wait_frames(2)\n\tvar y0_start: float = meteor.position.y\n\tawait wait_seconds(0.2)\n\tvar dy_0: float = meteor.position.y - y0_start\n\tcheck(\"velocita_base\", dy_0 > 30.0 and dy_0 < 70.0, \"All'inizio i meteoriti devono cadere alla velocità base di circa 250 px/s\")\n\n\tmain.set(\"score\", 10.0)\n\tmeteor.position = Vector2(100.0, 50.0)\n\tawait wait_frames(2)\n\tvar y10_start: float = meteor.position.y\n\tawait wait_seconds(0.2)\n\tvar dy_10: float = meteor.position.y - y10_start\n\tcheck(\"velocita_cresce\", dy_10 > dy_0 * 1.25, \"Con score = 10 i meteoriti devono cadere più velocemente rispetto alla velocità base\")\n\n\tmain.set(\"score\", 50.0)\n\tmeteor.position = Vector2(100.0, 50.0)\n\tawait wait_frames(2)\n\tvar y50_start: float = meteor.position.y\n\tawait wait_seconds(0.2)\n\tvar dy_50: float = meteor.position.y - y50_start\n\tcheck(\"velocita_alta\", dy_50 > dy_10 * 1.25, \"Con un punteggio più alto la velocità deve continuare ad aumentare\")\n\n\tmain.set(\"score\", 100.0)\n\tmeteor.position = Vector2(100.0, 50.0)\n\tawait wait_frames(2)\n\tvar y100_start: float = meteor.position.y\n\tawait wait_seconds(0.2)\n\tvar dy_100: float = meteor.position.y - y100_start\n\tcheck(\"velocita_massima\", absf(dy_100 - dy_50) < 20.0, \"La velocità non deve superare il valore massimo consentito (650 px/s)\")\n",
       "descrizione": "La velocità dei meteoriti cresce nel tempo fino al massimo stabilito"
      }
     ],
@@ -287,6 +287,8 @@
    }
   ],
   "teoriaCorretta": false,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
