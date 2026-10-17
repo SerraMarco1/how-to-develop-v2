@@ -1,6 +1,269 @@
 {
  "creato": "2026-10-17T07:46:50.570Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Componi il cesto con ombra e manico",
+    "consegna": "Arricchisci la scena `basket.tscn` trasformando il cesto in una gerarchia di nodi:\n\n1. Sotto il nodo radice `Basket`, aggiungi due nodi figli di tipo `Sprite2D` chiamati `Shadow` e `Handle`.\n2. Assegna a entrambi la texture `res://icon.svg`.\n3. Per `Shadow`, imposta la posizione locale a `(0, 35)` e la scala a `(1.2, 0.2)`.\n4. Per `Handle`, imposta la posizione locale a `(0, -40)` e la scala a `(0.3, 0.6)`.\n5. Riordina i nodi nell'albero in modo che `Shadow` sia il primo figlio, seguito da `Handle`, e infine `Label` come ultimo nodo in fondo alla lista, così che il testo rimanga disegnato sopra tutto il resto.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [
+     "Nel pannello FileSystem fai doppio clic su `basket.tscn` per aprirla nell'editor 2D.",
+     "Nel pannello Scene seleziona la radice `Basket`, clicca sul pulsante + in alto a sinistra, cerca `Sprite2D` e premi Create.",
+     "Fai clic destro sul nuovo nodo, scegli Rename e rinominalo in `Shadow`.",
+     "Seleziona `Shadow` e, nell'Inspector, trascina `res://icon.svg` dal FileSystem nella proprietà Texture.",
+     "Sempre nell'Inspector per `Shadow`, apri Transform e imposta Position su `(0, 35)` e Scale su `(1.2, 0.2)`.",
+     "Seleziona nuovamente il nodo `Basket`, clicca sul pulsante + e crea un altro `Sprite2D`.",
+     "Rinomina questo secondo nodo in `Handle`, assegna `res://icon.svg` alla sua Texture, quindi imposta Position su `(0, -40)` e Scale su `(0.3, 0.6)`.",
+     "Nel pannello Scene, trascina con il mouse il nodo `Label` verso il basso per posizionarlo come ultimo figlio sotto `Handle`."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://basket.tscn",
+      "tipoNodo": "Sprite2D",
+      "nome": "Shadow",
+      "genitore": "Basket",
+      "descrizione": "La scena basket.tscn contiene un nodo Sprite2D chiamato Shadow come figlio di Basket"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://basket.tscn",
+      "tipoNodo": "Sprite2D",
+      "nome": "Handle",
+      "genitore": "Basket",
+      "descrizione": "La scena basket.tscn contiene un nodo Sprite2D chiamato Handle come figlio di Basket"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar shadow := basket.get_node_or_null(\"Shadow\") as Sprite2D\n\tvar handle := basket.get_node_or_null(\"Handle\") as Sprite2D\n\tvar label := basket.get_node_or_null(\"Label\") as Label\n\tif not check(\"nodes\", shadow != null and handle != null and label != null, \"Shadow, Handle e Label devono esistere come figli di Basket\"):\n\t\treturn\n\tcheck(\"order\", label.get_index() > handle.get_index() and handle.get_index() > shadow.get_index(), \"Label deve essere in fondo all'albero (dopo Handle e Shadow)\")\n\tcheck(\"shadow_pos\", shadow.position == Vector2(0, 35), \"La posizione locale di Shadow deve essere (0, 35)\")\n\tcheck(\"handle_pos\", handle.position == Vector2(0, -40), \"La posizione locale di Handle deve essere (0, -40)\")\n\tvar start_handle_global := handle.global_position\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"moved\", handle.global_position.x > start_handle_global.x, \"Quando Basket si sposta a destra, Handle deve spostarsi globalmente insieme a lui\")",
+      "descrizione": "I nodi figli si muovono e mantengono il corretto scostamento rispetto al genitore durante il movimento"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "basket.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Shadow\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, 35)\nscale = Vector2(1.2, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Handle\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, -40)\nscale = Vector2(0.3, 0.6)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Aggiungendo i nodi `Shadow` e `Handle` sotto la radice `Basket`, entrambi diventano suoi figli subordinati. La loro proprietà `position` è ora espressa in coordinate locali relative al cesto: ad esempio `Vector2(0, -40)` mantiene il manico costantemente 40 pixel sopra il centro del genitore, senza richiedere alcuna linea di codice aggiuntiva per seguirne il movimento. Inoltre, posizionando `Label` in fondo all'elenco dei nodi, Godot lo disegna per ultimo, garantendo che le informazioni a schermo rimangano sempre leggibili sopra gli sprite.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedi il calcolo delle coordinate locali e globali",
+    "consegna": "Leggi attentamente ciascun frammento di codice ed esamina come la gerarchia dei nodi modifica le proprietà `position` e `global_position`. Scrivi il valore finale restituito da `run()` senza eseguire il progetto.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tparent.position = Vector2(100, 200)\n\tvar child := Node2D.new()\n\tchild.position = Vector2(50, 30)\n\tparent.add_child(child)\n\treturn child.position",
+      "domanda": "Quanto vale child.position alla fine?",
+      "risposta": "",
+      "spiegazione": "La proprietà position rappresenta le coordinate locali del nodo rispetto al proprio genitore. Anche se il genitore è a (100, 200), la posizione locale di child rimane (50, 30)."
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tadd_child(parent)\n\tparent.position = Vector2(100, 200)\n\tvar child := Node2D.new()\n\tchild.position = Vector2(50, 30)\n\tparent.add_child(child)\n\treturn child.global_position",
+      "domanda": "Quanto vale child.global_position alla fine?",
+      "risposta": "",
+      "spiegazione": "La proprietà global_position è la posizione assoluta nel mondo. Godot la calcola sommando la posizione globale del genitore (100, 200) alla posizione locale del figlio (50, 30), ottenendo Vector2(150, 230)."
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tadd_child(parent)\n\tparent.position = Vector2(200, 300)\n\tvar child := Node2D.new()\n\tparent.add_child(child)\n\tchild.global_position = Vector2(500, 400)\n\treturn child.position",
+      "domanda": "Quanto vale child.position dopo aver impostato child.global_position a (500, 400)?",
+      "risposta": "",
+      "spiegazione": "Impostando global_position su un figlio, Godot ricalcola automaticamente la sua position locale sottraendo la coordinata globale del genitore: (500 - 200, 400 - 300) = Vector2(300, 100)."
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> bool:\n\tvar parent := Node2D.new()\n\tvar child := Node2D.new()\n\tparent.add_child(child)\n\tparent.visible = false\n\treturn child.visible",
+      "domanda": "Quanto vale child.visible dopo aver impostato parent.visible su false?",
+      "risposta": "",
+      "spiegazione": "Anche se child scompare dallo schermo perché il genitore è nascosto, la sua proprietà locale visible rimane true. La visibilità effettiva a schermo dipende da tutta la catena dei genitori, ma le singole variabili non vengono riscritte."
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tadd_child(parent)\n\tparent.position = Vector2(100, 100)\n\tvar child := Node2D.new()\n\tchild.position = Vector2(20, 20)\n\tparent.add_child(child)\n\tparent.position.x += 80\n\treturn child.global_position",
+      "domanda": "Quanto vale child.global_position dopo che parent si è spostato?",
+      "risposta": "",
+      "spiegazione": "Quando parent si sposta a Vector2(180, 100), il figlio eredita la trasformazione. La sua global_position diventa (180 + 20, 100 + 20) = Vector2(200, 120)."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Gli esercizi hanno illustrato la relazione algebrica tra spazio locale e spazio globale: la coordinata globale di un nodo figlio è sempre la somma tra la coordinata globale del genitore e la posizione locale del figlio (`global_position = parent.global_position + position`). Inoltre, la proprietà `visible` descrive lo stato proprio del singolo nodo, anche se a livello visivo l'occultamento del genitore nasconde l'intero ramo.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Usa la posizione globale per raccogliere gli oggetti",
+    "consegna": "Modifica `check_stars` in `basket.gd`: ora che `Basket` è una gerarchia e gli oggetti possono trovarsi in coordinate proprie, usa `global_position` sia per il cesto che per il controllo di raccolta.\n\nIn `check_stars()` in `basket.gd`, sostituisci la verifica `current_star.is_caught(position)` passando `global_position` al posto di `position`.\n\nInoltre, aggiungi dentro `basket.gd` una funzione con tipo di ritorno `get_catch_point() -> Vector2` che restituisca la posizione globale del cesto (`global_position`).",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `basket.gd`, cerca la funzione `check_stars()`: la condizione dell'urto richiama `is_caught(position)`.",
+     "Sostituisci `position` con `global_position` come argomento passato a `is_caught`.",
+     "Scrivi la funzione `func get_catch_point() -> Vector2:` in fondo allo script e fai in modo che restituisca `global_position`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://basket.gd",
+      "regex": "is_caught\\(global_position\\)",
+      "descrizione": "In basket.gd il metodo is_caught riceve global_position anziché position"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tcheck(\"has_func\", has_function(basket, \"get_catch_point\"), \"basket.gd deve dichiarare la funzione get_catch_point()\")\n\tvar catch_pt = call_if_exists(basket, \"get_catch_point\")\n\tcheck(\"catch_val\", catch_pt is Vector2 and catch_pt == basket.global_position, \"get_catch_point deve restituire esattamente global_position\")\n\tbasket.position = Vector2(400, 300)\n\tvar updated_pt = call_if_exists(basket, \"get_catch_point\")\n\tcheck(\"updated_val\", updated_pt == Vector2(400, 300), \"get_catch_point deve aggiornarsi quando il nodo si muove\")",
+      "descrizione": "La funzione get_catch_point restituisce la global_position del cesto e la raccolta continua a funzionare"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\nconst START_POSITION: Vector2 = Vector2(576, 600)\nconst MIN_X: float = 64.0\nconst MAX_X: float = 1088.0\nconst INITIAL_LIVES: int = 3\nconst INITIAL_STARS_COUNT: int = 5\nconst DIFFICULTY_RAMP_SECONDS: float = 60.0\nconst SPAWN_INTERVAL_MAX: float = 2.0\nconst SPAWN_INTERVAL_MIN: float = 0.5\nconst MAX_SPEED_BOOST: float = 150.0\nconst SCORE_SPEED_BOOST: float = 10.0\nconst WIN_SCORE: int = 100\nconst ROCK_START_X: float = 160.0\nconst ROCK_END_X: float = 960.0\nconst ROCK_ROW_Y: float = 200.0\nconst ROCK_SPACING: float = 200.0\n\nenum GameState { PLAYING, GAME_OVER, PAUSED, WIN }\n\nvar current_state: GameState = GameState.PLAYING\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = INITIAL_LIVES\nvar score: int = 0\nvar is_active: bool = true\n\nvar game_time: float = 0.0\nvar spawn_timer: float = 0.0\n\nvar stars: Array[FallingItem] = []\n\nvar collected_counts: Dictionary = {\n\t\"star\": 0,\n\t\"gold_star\": 0,\n\t\"rock\": 0,\n\t\"diamond\": 0,\n}\n\n\nfunc _ready() -> void:\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\tupdate_ui()\n\tspawn_initial_stars(INITIAL_STARS_COUNT)\n\tspawn_rock_row()\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\tmatch current_state:\n\t\tGameState.PLAYING:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PAUSED\n\t\t\t\t$Label.text = \"Gioco in pausa. Premi Esc per riprendere\"\n\t\t\telse:\n\t\t\t\tprocess_playing(delta)\n\t\tGameState.GAME_OVER:\n\t\t\tcheck_restart()\n\t\tGameState.PAUSED:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PLAYING\n\t\t\t\tupdate_ui()\n\t\tGameState.WIN:\n\t\t\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\t\t\treset_game()\n\n\nfunc process_playing(delta: float) -> void:\n\tgame_time += delta\n\tspawn_timer += delta\n\t\n\tvar interval: float = get_spawn_interval()\n\tif spawn_timer >= interval:\n\t\tspawn_timer -= interval\n\t\tspawn_star()\n\t\n\tmove_basket(delta)\n\tcheck_stars()\n\tcheck_win()\n\tcheck_game_over()\n\n\nfunc move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, MIN_X, MAX_X)\n\n\nfunc get_difficulty_factor() -> float:\n\treturn min(game_time / DIFFICULTY_RAMP_SECONDS, 1.0)\n\n\nfunc get_spawn_interval() -> float:\n\tvar interval: float = lerpf(SPAWN_INTERVAL_MAX, SPAWN_INTERVAL_MIN, get_difficulty_factor())\n\treturn max(interval, SPAWN_INTERVAL_MIN)\n\n\nfunc spawn_star() -> void:\n\tvar star_scene: PackedScene = load(\"res://star.tscn\")\n\tvar new_star: FallingItem = star_scene.instantiate() as FallingItem\n\t\n\tvar speed_boost: float = lerpf(0.0, MAX_SPEED_BOOST, get_difficulty_factor())\n\tnew_star.accelerate(speed_boost)\n\t\n\tadd_child(new_star)\n\tstars.append(new_star)\n\n\nfunc spawn_initial_stars(count: int) -> void:\n\tfor i in range(count):\n\t\tspawn_star()\n\n\nfunc check_stars() -> void:\n\t# Scorre a ritroso per evitare che la rimozione sballi gli indici degli elementi successivi\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: FallingItem = stars[i]\n\t\tif current_star.is_caught(global_position):\n\t\t\tif current_star.is_penalty():\n\t\t\t\ttake_damage(1)\n\t\t\telse:\n\t\t\t\tadd_score(current_star.points)\n\t\t\t\n\t\tif current_star.item_name in collected_counts:\n\t\t\tcollected_counts[current_star.item_name] += 1\n\t\t\t\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\telif current_star.is_out_of_bounds():\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\n\nfunc get_collected_count(type_name: String) -> int:\n\treturn collected_counts.get(type_name, 0)\n\n\nfunc boost_all_stars(extra_speed: float) -> void:\n\tfor star in stars:\n\t\tstar.accelerate(extra_speed)\n\n\nfunc spawn_rock_row() -> void:\n\tvar rock_scene: PackedScene = load(\"res://rock.tscn\")\n\tvar current_x: float = ROCK_START_X\n\twhile current_x <= ROCK_END_X:\n\t\tvar rock: Sprite2D = rock_scene.instantiate() as Sprite2D\n\t\trock.position = Vector2(current_x, ROCK_ROW_Y)\n\t\tadd_child(rock)\n\t\tcurrent_x += ROCK_SPACING\n\n\nfunc update_ui() -> void:\n\t$Label.text = \"Punti: %04d | Vite: %d\" % [score, lives]\n\n\nfunc set_speed(new_speed: float) -> void:\n\tspeed = new_speed\n\n\nfunc add_score(amount: int) -> void:\n\tscore += amount\n\tboost_all_stars(SCORE_SPEED_BOOST)\n\tupdate_ui()\n\tcheck_win()\n\n\nfunc take_damage(amount: int) -> void:\n\tlives -= amount\n\tif lives <= 0:\n\t\tlives = 0\n\t\tis_active = false\n\tupdate_ui()\n\tcheck_game_over()\n\n\nfunc check_win() -> void:\n\tif score >= WIN_SCORE:\n\t\tcurrent_state = GameState.WIN\n\t\t$Label.text = \"Vittoria! Punti: %d | Premi Invio per giocare ancora\" % score\n\n\nfunc check_game_over() -> void:\n\tif lives <= 0:\n\t\tcurrent_state = GameState.GAME_OVER\n\t\t$Label.text = \"Partita finita! Premi Invio per ricominciare\"\n\n\nfunc check_restart() -> void:\n\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\treset_game()\n\n\nfunc reset_game() -> void:\n\tlives = INITIAL_LIVES\n\tscore = 0\n\tgame_time = 0.0\n\tspawn_timer = 0.0\n\tposition = START_POSITION\n\tcurrent_state = GameState.PLAYING\n\tis_active = true\n\tupdate_ui()\n\n\nfunc get_catch_point() -> Vector2:\n\treturn global_position\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Utilizzare `global_position` è fondamentale quando si confrontano elementi o si verificano distanze e collisioni tra nodi. Se il cesto o gli oggetti cadenti vengono inclusi come figli all'interno di altri rami dell'albero scenico, `position` indicherebbe solo l'offset locale rispetto al genitore immediato, mentre `global_position` fornisce la coordinata assoluta all'interno della finestra di gioco, garantendo calcoli precisi.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Aggiungi l'indicatore di pericolo sul manico del cesto",
+    "consegna": "Aggiungi al cesto un indicatore visivo che stia sopra il manico e segnali visivamente quando il giocatore è in pericolo critico (1 sola vita rimasta).\n\n1. Nella scena `basket.tscn`, aggiungi come figlio del nodo `Handle` un nuovo `Sprite2D` chiamato `Indicator`.\n2. Assegna a `Indicator` la texture `res://icon.svg`, imposta la sua posizione locale su `(0, -50)` e la scala su `(0.2, 0.2)`.\n3. In `basket.gd`, aggiorna la funzione `update_ui()`: se `lives == 1`, rendi visibile `Indicator` (assegnando `true` alla proprietà `visible` del nodo `$Handle/Indicator`) e coloralo di rosso (`Color.RED`); se invece `lives > 1`, rendi `Indicator` non visibile (`visible = false`). All'avvio del gioco (quando `lives` è 3), l'indicatore deve quindi risultare nascosto.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `basket.tscn`, assicurati che `Indicator` sia un figlio di `Handle` (non direttamente di `Basket`).",
+     "Puoi accedere a `Indicator` da `basket.gd` usando il percorso `$Handle/Indicator`.",
+     "In `update_ui()` in `basket.gd`, usa una condizione su `lives == 1` per impostare `visible` e `modulate` su `$Handle/Indicator`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://basket.tscn",
+      "tipoNodo": "Sprite2D",
+      "nome": "Indicator",
+      "genitore": "Handle",
+      "descrizione": "La scena basket.tscn contiene un nodo Sprite2D chiamato Indicator come figlio di Handle"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar indicator := basket.get_node_or_null(\"Handle/Indicator\") as Sprite2D\n\tif not check(\"indicator\", indicator != null, \"Il nodo Indicator deve trovarsi sotto Handle\"):\n\t\treturn\n\tcheck(\"initial_vis\", indicator.visible == false, \"All'inizio con 3 vite l'indicatore deve essere invisibile\")\n\tbasket.lives = 1\n\tbasket.update_ui()\n\tcheck(\"danger_vis\", indicator.visible == true, \"Con 1 sola vita rimasta Indicator deve essere visibile\")\n\tcheck(\"color_red\", indicator.modulate == Color.RED, \"Quando visibile, Indicator deve avere colore Color.RED\")\n\tvar start_ind_global := indicator.global_position\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"hierarchy_move\", indicator.global_position.x > start_ind_global.x, \"Muovendo il cesto, l'indicatore segue la gerarchia attraverso il nodo genitore Handle\")",
+      "descrizione": "L'indicatore è nascosto all'inizio, compare in rosso a 1 vita e si muove solidale con Handle"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "basket.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Shadow\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, 35)\nscale = Vector2(1.2, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Handle\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, -40)\nscale = Vector2(0.3, 0.6)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Indicator\" type=\"Sprite2D\" parent=\"Handle\"]\nvisible = false\nposition = Vector2(0, -50)\nscale = Vector2(0.2, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+      },
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\nconst START_POSITION: Vector2 = Vector2(576, 600)\nconst MIN_X: float = 64.0\nconst MAX_X: float = 1088.0\nconst INITIAL_LIVES: int = 3\nconst INITIAL_STARS_COUNT: int = 5\nconst DIFFICULTY_RAMP_SECONDS: float = 60.0\nconst SPAWN_INTERVAL_MAX: float = 2.0\nconst SPAWN_INTERVAL_MIN: float = 0.5\nconst MAX_SPEED_BOOST: float = 150.0\nconst SCORE_SPEED_BOOST: float = 10.0\nconst WIN_SCORE: int = 100\nconst ROCK_START_X: float = 160.0\nconst ROCK_END_X: float = 960.0\nconst ROCK_ROW_Y: float = 200.0\nconst ROCK_SPACING: float = 200.0\n\nenum GameState { PLAYING, GAME_OVER, PAUSED, WIN }\n\nvar current_state: GameState = GameState.PLAYING\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = INITIAL_LIVES\nvar score: int = 0\nvar is_active: bool = true\n\nvar game_time: float = 0.0\nvar spawn_timer: float = 0.0\n\nvar stars: Array[FallingItem] = []\n\nvar collected_counts: Dictionary = {\n\t\"star\": 0,\n\t\"gold_star\": 0,\n\t\"rock\": 0,\n\t\"diamond\": 0,\n}\n\n\nfunc _ready() -> void:\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\tupdate_ui()\n\tspawn_initial_stars(INITIAL_STARS_COUNT)\n\tspawn_rock_row()\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\tmatch current_state:\n\t\tGameState.PLAYING:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PAUSED\n\t\t\t\t$Label.text = \"Gioco in pausa. Premi Esc per riprendere\"\n\t\t\telse:\n\t\t\t\tprocess_playing(delta)\n\t\tGameState.GAME_OVER:\n\t\t\tcheck_restart()\n\t\tGameState.PAUSED:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PLAYING\n\t\t\t\tupdate_ui()\n\t\tGameState.WIN:\n\t\t\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\t\t\treset_game()\n\n\nfunc process_playing(delta: float) -> void:\n\tgame_time += delta\n\tspawn_timer += delta\n\t\n\tvar interval: float = get_spawn_interval()\n\tif spawn_timer >= interval:\n\t\tspawn_timer -= interval\n\t\tspawn_star()\n\t\n\tmove_basket(delta)\n\tcheck_stars()\n\tcheck_win()\n\tcheck_game_over()\n\n\nfunc move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, MIN_X, MAX_X)\n\n\nfunc get_difficulty_factor() -> float:\n\treturn min(game_time / DIFFICULTY_RAMP_SECONDS, 1.0)\n\n\nfunc get_spawn_interval() -> float:\n\tvar interval: float = lerpf(SPAWN_INTERVAL_MAX, SPAWN_INTERVAL_MIN, get_difficulty_factor())\n\treturn max(interval, SPAWN_INTERVAL_MIN)\n\n\nfunc spawn_star() -> void:\n\tvar star_scene: PackedScene = load(\"res://star.tscn\")\n\tvar new_star: FallingItem = star_scene.instantiate() as FallingItem\n\t\n\tvar speed_boost: float = lerpf(0.0, MAX_SPEED_BOOST, get_difficulty_factor())\n\tnew_star.accelerate(speed_boost)\n\t\n\tadd_child(new_star)\n\tstars.append(new_star)\n\n\nfunc spawn_initial_stars(count: int) -> void:\n\tfor i in range(count):\n\t\tspawn_star()\n\n\nfunc check_stars() -> void:\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: FallingItem = stars[i]\n\t\tif current_star.is_caught(global_position):\n\t\t\tif current_star.is_penalty():\n\t\t\t\ttake_damage(1)\n\t\t\telse:\n\t\t\t\tadd_score(current_star.points)\n\t\t\t\n\t\tif current_star.item_name in collected_counts:\n\t\t\tcollected_counts[current_star.item_name] += 1\n\t\t\t\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\t\telif current_star.is_out_of_bounds():\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\n\nfunc get_collected_count(type_name: String) -> int:\n\treturn collected_counts.get(type_name, 0)\n\n\nfunc boost_all_stars(extra_speed: float) -> void:\n\tfor star in stars:\n\t\tstar.accelerate(extra_speed)\n\n\nfunc spawn_rock_row() -> void:\n\tvar rock_scene: PackedScene = load(\"res://rock.tscn\")\n\tvar current_x: float = ROCK_START_X\n\twhile current_x <= ROCK_END_X:\n\t\tvar rock: Sprite2D = rock_scene.instantiate() as Sprite2D\n\t\trock.position = Vector2(current_x, ROCK_ROW_Y)\n\t\tadd_child(rock)\n\t\tcurrent_x += ROCK_SPACING\n\n\nfunc update_ui() -> void:\n\t$Label.text = \"Punti: %04d | Vite: %d\" % [score, lives]\n\tif lives == 1:\n\t\t$Handle/Indicator.visible = true\n\t\t$Handle/Indicator.modulate = Color.RED\n\telse:\n\t\t$Handle/Indicator.visible = false\n\n\nfunc set_speed(new_speed: float) -> void:\n\tspeed = new_speed\n\n\nfunc add_score(amount: int) -> void:\n\tscore += amount\n\tboost_all_stars(SCORE_SPEED_BOOST)\n\tupdate_ui()\n\tcheck_win()\n\n\nfunc take_damage(amount: int) -> void:\n\tlives -= amount\n\tif lives <= 0:\n\t\tlives = 0\n\t\tis_active = false\n\tupdate_ui()\n\tcheck_game_over()\n\n\nfunc check_win() -> void:\n\tif score >= WIN_SCORE:\n\t\tcurrent_state = GameState.WIN\n\t\t$Label.text = \"Vittoria! Punti: %d | Premi Invio per giocare ancora\" % score\n\n\nfunc check_game_over() -> void:\n\tif lives <= 0:\n\t\tcurrent_state = GameState.GAME_OVER\n\t\t$Label.text = \"Partita finita! Premi Invio per ricominciare\"\n\n\nfunc check_restart() -> void:\n\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\treset_game()\n\n\nfunc reset_game() -> void:\n\tlives = INITIAL_LIVES\n\tscore = 0\n\tgame_time = 0.0\n\tspawn_timer = 0.0\n\tposition = START_POSITION\n\tcurrent_state = GameState.PLAYING\n\tis_active = true\n\tupdate_ui()\n\n\nfunc get_catch_point() -> Vector2:\n\treturn global_position\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Creando `Indicator` come figlio di `Handle`, esso eredita sia la trasformazione di `Basket` (il nonno) sia quella di `Handle` (il padre): la sua coordinata locale `Vector2(0, -50)` lo posiziona esattamente sopra la sommità del manico e lo fa traslare assieme all'intera navetta. In `update_ui()`, controllando se `lives == 1`, attiviamo la visibilità dell'indicatore colorandolo di rosso con `Color.RED`, avvisando istantaneamente il giocatore dello stato di pericolo imminente.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -95,5 +358,11 @@
     "md": "- Un nodo figlio eredita trasformazioni (posizione, rotazione, scala) e visibilità dal proprio genitore.\n- La proprietà `position` è la posizione locale del nodo rispetto al centro del suo genitore.\n- La proprietà `global_position` è la coordinata assoluta del nodo rispetto all'origine della finestra di gioco `Vector2(0, 0)`.\n- Negli elementi 2D, Godot disegna dall'alto verso il basso seguendo l'ordine dell'albero (*tree order*): i nodi posti più in basso coprono quelli più in alto.\n- Posizionare i nodi dell'interfaccia (come `Label`) in fondo alla lista garantisce che vengano disegnati sopra gli elementi di gioco."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
