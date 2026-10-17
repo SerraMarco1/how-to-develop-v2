@@ -545,12 +545,12 @@
      {
       "tipo": "testo_in_file",
       "percorso": "res://basket.gd",
-      "regex": "func check_rubies\\(\\)format",
+      "regex": "func check_rubies\\(",
       "descrizione": "Il file basket.gd dichiara la funzione check_rubies()"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_ok\", basket != null, \"La scena basket.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tcheck(\"has_check_rubies\", has_function(basket, \"check_rubies\"), \"basket.gd deve avere la funzione check_rubies\")\n\tvar ruby = call_if_exists(basket, \"spawn_ruby\", [Vector2(0, 700.0)]) as Sprite2D\n\tif not check(\"ruby_spawn\", ruby != null, \"spawn_ruby deve restituire il rubino generato\"):\n\t\treturn\n\tawait wait_frames(2)\n\tcheck(\"ruby_freed\", not is_instance_valid(ruby), \"Il rubino oltre la soglia deve essere eliminato con queue_free()\")\n\tvar rubies_arr: Array = get_prop(basket, \"rubies\", [])\n\tcheck(\"ruby_removed\", not rubies_arr.has(ruby), \"Il rubino eliminato deve essere rimosso dall'array rubies\")\n\tcall_if_exists(basket, \"reset_game\")\n\tawait wait_frames(2)\n\tvar stars_after: Array = get_prop(basket, \"stars\", [])\n\tvar rubies_after: Array = get_prop(basket, \"rubies\", [])\n\tcheck(\"reset_stars_clean\", stars_after.size() == 0, \"reset_game deve svuotare l'array stars\")\n\tcheck(\"reset_rubies_clean\", rubies_after.size() == 0, \"reset_game deve svuotare l'array rubies\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_ok\", basket != null, \"La scena basket.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tcheck(\"has_check_rubies\", has_function(basket, \"check_rubies\"), \"basket.gd deve avere la funzione check_rubies\")\n\tvar initial_rubies: Array = get_prop(basket, \"rubies\", [])\n\tvar initial_count: int = initial_rubies.size()\n\tvar ruby = call_if_exists(basket, \"spawn_ruby\", [Vector2(0, 700.0)]) as Sprite2D\n\tif not check(\"ruby_spawn\", ruby != null, \"spawn_ruby deve restituire il rubino generato\"):\n\t\treturn\n\tawait wait_frames(2)\n\tcheck(\"ruby_freed\", not is_instance_valid(ruby), \"Il rubino oltre la soglia deve essere eliminato con queue_free()\")\n\tvar rubies_arr: Array = get_prop(basket, \"rubies\", [])\n\tcheck(\"ruby_removed\", rubies_arr.size() == initial_count, \"Il rubino eliminato deve essere rimosso dall'array rubies\")\n\tcall_if_exists(basket, \"reset_game\")\n\tawait wait_frames(2)\n\tvar stars_after: Array = get_prop(basket, \"stars\", [])\n\tvar rubies_after: Array = get_prop(basket, \"rubies\", [])\n\tcheck(\"reset_stars_clean\", stars_after.size() == 0, \"reset_game deve svuotare l'array stars\")\n\tcheck(\"reset_rubies_clean\", rubies_after.size() == 0, \"reset_game deve svuotare l'array rubies\")",
       "descrizione": "I rubini raccolti o usciti vengono eliminati con queue_free e reset_game pulisce tutti i nodi rimasti"
      }
     ],
@@ -613,20 +613,23 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "La funzione `check_rubies()` replica la strategia di verifica e pulizia usata per le stelle: scorrimento inverso, controllo di validità, rilevamento dell'urto con `ruby.hits_basket()` e rimozione sia dalla lista che dall'albero di gioco tramite `queue_free()`. In `reset_game()`, iterando su entrambi gli array prima di svuotarli, garantiamo che nessun nodo rimanga attivo in scena alla ripartenza della partita.",
-     "cambiati": [],
+     "spiegazione": "La funzione `check_rubies()` replica la strategia di verifica e pulizia usata per le stelle: scorrimento inverso, controllo di validità con `is_instance_valid()`, rilevamento dell'urto con `ruby.hits_basket()` e rimozione sia dall'array che dall'albero di gioco tramite `queue_free()`. In `reset_game()`, iterando su entrambi gli array prima di svuotarli, garantiamo che nessun nodo rimanga attivo in scena alla ripartenza della partita.",
+     "cambiati": [
+      "basket.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il file basket.gd dichiara la funzione check_rubies()\nOutput di Godot:\nERROR: Attempted to use 'has' an invalid (previously freed?) object instance into a 'TypedArray'.\n   at: _internal_validate_object (./core/variant/container_type_validate.h:97)\nERROR: Condition \"!_p->typed.validate(value, \"use 'has'\")\" is true. Returning: false\n   at: has (core/variant/array.cpp:499)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
