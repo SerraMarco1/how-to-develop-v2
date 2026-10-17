@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T09:34:46.503Z",
+ "aggiornato": "2026-10-17T09:34:56.849Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -88,10 +88,10 @@
    "slug": "leggere-gli-errori",
    "numero": "1.6",
    "titolo": "Leggere gli errori e usare il Debugger",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/leggere-gli-errori.json",
-   "sha256": "3af9f4ae8472f1c28679a578e09ed22a4c841d95645ac6cd8f1cb34e5bfa23b8",
-   "byte": 53286
+   "sha256": "473d8366f320fe04ef4de774283422a9790b141f1c5f294549b677abb7597a2e",
+   "byte": 55437
   },
   {
    "slug": "casualita-e-distanze",
