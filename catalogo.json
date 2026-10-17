@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T07:05:55.254Z",
+ "aggiornato": "2026-10-17T07:28:04.097Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -164,6 +164,15 @@
    "file": "lezioni/f01-programmare/ordinare-il-codice.json",
    "sha256": "acaf261e4ee9e4e368601d144e79e9afae5d0a83e243466b41470b1fbfae1cfd",
    "byte": 75055
+  },
+  {
+   "slug": "classi-e-oggetti",
+   "numero": "1.15",
+   "titolo": "Classi e oggetti: ogni cosa pensa a sé",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/classi-e-oggetti.json",
+   "sha256": "fdee21e38d9a8c204fd73517c5494cae2c0a932271610e023b7fae406c09c8d2",
+   "byte": 100000
   }
  ],
  "documentazione": {
