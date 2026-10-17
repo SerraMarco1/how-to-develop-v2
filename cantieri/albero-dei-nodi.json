@@ -645,7 +645,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "L'albero dei nodi: genitori e figli",
@@ -743,5 +744,18 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test richiede di accedere a un nodo figlio da codice (`$Handle/Indicator`) per modificarne la visibilità e il colore, ma l'argomento 'Raggiungere i nodi dal codice' è elencato tra gli argomenti che il corso tratterà DOPO e non deve essere anticipato né richiesto negli esercizi.",
+    "correzione": "Semplificare l'esercizio 'test' evitando di richiedere la manipolazione da script di nodi figli non ancora spiegata, oppure limitare la consegna a modifiche strutturali nell'editor e a proprietà del nodo radice.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
