@@ -2,5 +2,87 @@
  "creato": "2026-10-17T08:39:28.922Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-3.7-flash"
+ ],
+ "teoria": {
+  "titolo": "La vita di un nodo: dalla nascita a queue_free()",
+  "sommario": "Scopri il ciclo di vita completo di un nodo, comprendendo l'ordine esatto con cui Godot esegue _init, _enter_tree, _ready e _process. Impara a eliminare definitivamente gli oggetti dalla memoria con queue_free() evitando sprechi di risorse e a gestire i riferimenti rimasti con is_instance_valid().",
+  "concetti": [
+   "Ciclo di vita di un nodo (_init, _enter_tree, _ready, _process)",
+   "Ordine di attraversamento dell'albero (pre-order e post-order)",
+   "Distruzione differita con queue_free()",
+   "Differenza tra queue_free() e free()",
+   "Controllo di validità dei riferimenti con is_instance_valid()",
+   "Rimozione sicura di nodi liberati da un array"
+  ],
+  "obiettivi": [
+   "L'ordine in cui il motore chiama _init, _enter_tree, _ready, _process",
+   "queue_free(): togliere un nodo nel modo giusto",
+   "Riconoscere un riferimento a un nodo che non esiste più"
+  ],
+  "durataMinuti": 40,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "In «Pioggia di stelle», quando un oggetto usciva dal fondo dello schermo o veniva raccolto dal cesto, lo riposizionavamo in cima con una funzione di ripristino come `reset_item()`. Nei giochi completi, però, la maggior parte degli elementi ha una vita limitata: nemici sconfitti, colpi sparati o stelle generate a ondate.\n\nSe crei nuovi nodi durante la partita con `instantiate()` e `add_child()`, ma ti limiti a nasconderli o a lasciarli cadere oltre lo schermo, quegli oggetti rimangono vivi nel computer. Continuano a occupare memoria RAM e a eseguire il loro `_process()` ogni singolo fotogramma, calcolando coordinate invisibili a migliaia di pixel di distanza. Dopo pochi minuti di gioco, il processore si troverà a gestire una quantità enorme di nodi inutili e il gioco comincerà a scattare. Per evitare questo problema, devi comprendere il ciclo di vita di un nodo e imparare a distruggerlo nel modo corretto quando ha finito il suo compito."
+   },
+   {
+    "tipo": "testo",
+    "md": "Dal momento in cui viene creato a quello in cui viene cancellato, ogni nodo attraversa quattro fasi fondamentali. Il motore di Godot chiama automaticamente quattro funzioni specifiche, sempre con lo stesso ordine prestabilito:\n\n1. `_init()`: **la nascita in memoria**. Si attiva nell'istante in cui l'oggetto viene istanziato (quando scrivi `new()` o `instantiate()`). In questo momento il nodo esiste nella memoria del computer ma **non fa ancora parte dell'albero della scena**: non ha un genitore, non riceve input e non può raggiungere altri nodi con `$`.\n2. `_enter_tree()`: **l'ingresso nell'albero**. Si attiva nel momento esatto in cui colleghi il nodo alla gerarchia attiva tramite `add_child()`. Godot esegue questo passaggio procedendo **dall'alto verso il basso**: prima entra il nodo genitore, poi entrano i suoi figli.\n3. `_ready()`: **la prontezza operativa**. Si attiva quando il nodo e tutti i suoi figli sono completamente inseriti nell'albero. Godot chiama `_ready()` procedendo **dal basso verso l'alto**: prima scatta nei figli più profondi della gerarchia, poi risale fino al genitore. Grazie a questo ordine, quando il genitore esegue il suo `_ready()`, ha la certezza matematica che tutti i suoi figli sono già configurati e accessibili.\n4. `_process(delta)`: **la vita attiva**. Viene chiamata a ogni fotogramma per tutta la durata del gioco, dall'alto verso il basso della gerarchia, consentendo al nodo di muoversi e reagire finché resta nell'albero."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Sprite2D\n\n\nfunc _init() -> void:\n\tprint(\"1. _init: L'oggetto esiste in memoria, ma non è ancora nell'albero.\")\n\n\nfunc _enter_tree() -> void:\n\tprint(\"2. _enter_tree: Il nodo è appena entrato nell'albero della scena.\")\n\n\nfunc _ready() -> void:\n\tprint(\"3. _ready: Il nodo e tutti i suoi figli sono pronti. Possiamo usare $ e %.\")\n\n\nfunc _process(delta: float) -> void:\n\tposition.y += 100.0 * delta",
+    "spiegazione": "Questa sequenza mostra come `_init()` prepari l'istanza isolata, `_enter_tree()` segnali l'aggancio alla gerarchia e `_ready()` dia il via libera all'interazione tra nodi. Solo dopo queste tre fasi preparatorie il motore comincia a chiamare ripetutamente `_process()` a ogni fotogramma."
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando una stella tocca il cesto o supera il limite inferiore dello schermo, non dobbiamo più riposizionarla: dobbiamo eliminarla davvero. Il metodo di Godot per rimuovere ed eliminare un nodo è `queue_free()`.\n\nIl nome `queue_free` significa letteralmente «metti in coda la liberazione». Quando richiami questa funzione su un nodo, Godot non lo distrugge nel microsecondo esatto dell'istruzione. Lo contrassegna invece come pronto per la cancellazione e attende la fine del fotogramma corrente, quando tutti gli altri nodi hanno terminato le loro operazioni in `_process()`.\n\nAlla fine del fotogramma, il motore svolge automaticamente due compiti:\n1. Rimuove il nodo dall'albero della scena.\n2. Cancella l'oggetto dalla memoria RAM.\n\nUn grande vantaggio di questa struttura è che liberare un nodo genitore con `queue_free()` elimina automaticamente anche tutti i nodi figli contenuti al suo interno, liberando l'intero ramo in un colpo solo."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "In Godot esiste anche un metodo chiamato `free()`, che distrugge immediatamente l'oggetto all'istante. Non usarlo sui nodi: se distruggi un nodo a metà fotogramma mentre un altro script sta leggendo una sua proprietà o eseguendo un ciclo, il gioco andrà incontro a un arresto anomalo immediato (crash). Usa sempre `queue_free()`, che attende la fine sicura del fotogramma."
+   },
+   {
+    "tipo": "testo",
+    "md": "Cosa accade a una variabile o a un array che conteneva un nodo dopo che hai chiamato `queue_free()`?\n\nLa variabile continua a memorizzare l'indirizzo di memoria in cui si trovava l'oggetto. Tuttavia, appena il fotogramma si conclude e l'oggetto viene cancellato, quell'indirizzo punta a un vuoto: in GDScript prende il nome di «istanza precedentemente liberata» (*freed instance*). Se provi ad accedere a una proprietà come `star.position` su un nodo che è già stato liberato, Godot bloccherà l'esecuzione con un errore.\n\nPer evitare riferimenti rotti devi seguire due regole pratiche:\n1. **Aggiornare le collezioni**: quando distruggi un oggetto salvato dentro un array, togli subito il suo elemento dall'array usando `remove_at()` o `erase()`.\n2. **Controllare la validità**: se hai il dubbio che un nodo memorizzato in una variabile sia ancora vivo, puoi usare la funzione globale `is_instance_valid(nodo)`. Questa funzione restituisce `true` se l'oggetto esiste ed è utilizzabile, oppure `false` se vale `null` o se è già stato distrutto."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "func check_stars() -> void:\n\t# Scorriamo l'array a ritroso, dall'ultimo elemento fino al primo (indice 0)\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar star: FallingItem = stars[i]\n\t\t\n\t\t# Verifichiamo che l'oggetto esista ancora prima di usarlo\n\t\tif not is_instance_valid(star):\n\t\t\tstars.remove_at(i)\n\t\t\tcontinue\n\t\t\n\t\tif star.is_caught(position):\n\t\t\tscore += star.points\n\t\t\tupdate_ui()\n\t\t\tstars.remove_at(i)\n\t\t\tstar.queue_free()\n\t\telif star.is_out_of_bounds():\n\t\t\tstars.remove_at(i)\n\t\t\tstar.queue_free()",
+    "spiegazione": "Scrivere `range(stars.size() - 1, -1, -1)` permette di esaminare l'array partendo dal fondo. Se scorressi dal primo all'ultimo elemento in avanti, rimuovere una voce con `stars.remove_at(i)` farebbe slittare tutti gli elementi successivi verso sinistra, facendoti saltare il controllo dell'elemento successivo. Con il ciclo all'indietro, `remove_at(i)` altera solo gli indici che hai già controllato. Quando una stella viene presa o supera il bordo, la rimuoviamo dall'array e ne chiediamo la distruzione sicura con `star.queue_free()`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Puoi verificare con i tuoi occhi che i nodi vengano davvero distrutti senza accumularsi. Mentre esegui il gioco premendo F5, guarda la parte superiore del pannello *Scene* a sinistra nell'editor: noterai due schede, **Local** e **Remote**.\n\n- **Local** mostra la scena salvata sul file del disco, così come la modifichi prima di giocare.\n- **Remote** mostra la gerarchia viva dei nodi che stanno girando in questo preciso istante nella finestra di gioco.\n\nCliccando sulla scheda **Remote** durante la partita, vedrai i nodi `FallingItem` comparire sotto il cesto nel momento in cui vengono istanziati. Non appena il cesto li tocca o raggiungono il fondo, li vedrai sparire immediatamente dall'albero. Anche lasciando il gioco aperto per dieci minuti consecutivi, il numero totale di nodi rimarrà costante ed equilibrato."
+   },
+   {
+    "tipo": "video",
+    "titolo": "Le stelle raccolte o uscite dallo schermo vengono distrutte",
+    "esercizio": "es1",
+    "durata": 6,
+    "azioni": [
+     {
+      "azione": "move_right",
+      "inizio": 0.5,
+      "fine": 2,
+      "tasto": "D"
+     },
+     {
+      "azione": "move_left",
+      "inizio": 2.5,
+      "fine": 4.5,
+      "tasto": "A"
+     }
+    ]
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Il ciclo di vita di un nodo segue un ordine fisso: `_init()` crea l'oggetto in memoria, `_enter_tree()` lo collega all'albero (dall'alto in basso), `_ready()` scatta quando tutti i figli sono pronti (dal basso in alto) e `_process()` si ripete a ogni fotogramma.\n- `queue_free()` rimuove il nodo dall'albero e libera la sua memoria al termine del fotogramma corrente, garantendo un'uscita sicura senza crash.\n- Eliminare un nodo genitore con `queue_free()` distrugge automaticamente anche tutti i suoi nodi figli.\n- Non usare mai `free()` sui nodi della scena: l'eliminazione immediata a metà fotogramma causa errori gravi se altri nodi stanno leggendo quell'oggetto.\n- Le variabili che contenevano un nodo distrutto diventano riferimenti non validi: usa `is_instance_valid(nodo)` per verificarli e rimuovili sempre dagli array con `remove_at()` o `erase()`."
+   }
+  ]
+ }
 }
