@@ -36,3 +36,4 @@
 {"quando":1792223324229,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":176535,"tokenInput":15748,"tokenOutput":1038,"ragionamento":24958}
 {"quando":1792223500765,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":65543,"tokenInput":15748,"tokenOutput":10062}
 {"quando":1792223566314,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":55107,"tokenInput":19824,"tokenOutput":10027}
+{"quando":1792223635742,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":16066,"tokenInput":12873,"tokenOutput":5666,"ragionamento":2925}
