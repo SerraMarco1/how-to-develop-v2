@@ -648,7 +648,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://basket.gd deve caricarsi senza errori: Parse Error: Identifier \"SPAWN_MIN_X\" not declared in the current scope. (res://basket.gd:132 in GDScript::reload)\nParse Error: Identifier \"SPAWN_MAX_X\" not declared in the current scope. (res://basket.gd:132 in GDScript::reload)\nParse Error: Identifier \"START_Y\" not declared in the current scope. (res://basket.gd:136 in GDScript::reload)\nFailed to load script \"res://basket.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  basket.gd, riga 132: `var random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)`\n  basket.gd, riga 136: `var new_star: FallingItem = spawn_item_at(Vector2(random_x, START_Y), chosen_type)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
