@@ -33,3 +33,6 @@
 {"quando":1792223153996,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":34512,"tokenInput":12469,"tokenOutput":4912,"ragionamento":1383}
 {"quando":1792223197289,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":7610,"tokenInput":2841,"tokenOutput":900,"ragionamento":2447}
 {"quando":1792223210576,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":112507,"tokenInput":16063,"tokenOutput":2330,"ragionamento":12722}
+{"quando":1792223324229,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":176535,"tokenInput":15748,"tokenOutput":1038,"ragionamento":24958}
+{"quando":1792223500765,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":65543,"tokenInput":15748,"tokenOutput":10062}
+{"quando":1792223566314,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":55107,"tokenInput":19824,"tokenOutput":10027}
