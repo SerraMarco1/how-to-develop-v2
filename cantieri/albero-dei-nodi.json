@@ -1,0 +1,99 @@
+{
+ "creato": "2026-10-17T07:46:50.570Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "L'albero dei nodi: genitori e figli",
+  "sommario": "Scopri come strutturare gli oggetti del gioco combinando più nodi in una gerarchia genitore-figlio. Impara come i nodi figli ereditano movimento e visibilità, comprendi la differenza fondamentale tra coordinate locali e globali e scopri come l'ordine nell'albero determina chi viene disegnato sopra.",
+  "concetti": [
+   "Gerarchia genitore-figlio (parent-child)",
+   "Ereditarietà delle trasformazioni (posizione, rotazione, scala)",
+   "Ereditarietà della visibilità",
+   "Posizione locale (position)",
+   "Posizione globale (global_position)",
+   "Ordine di disegno nell'albero (tree order)"
+  ],
+  "obiettivi": [
+   "Un figlio si muove, ruota e si nasconde insieme al genitore",
+   "Posizione locale e posizione globale",
+   "L'ordine dei nodi decide chi viene disegnato sopra"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nei videogiochi, un elemento di gioco non è quasi mai una singola immagine isolata. Un personaggio ha spesso accessori, un'ombra proiettata a terra, armi o indicatori; allo stesso modo, il nostro cesto in *Pioggia di stelle* può essere arricchito con un manico e un'ombra alla base. Se dovessi calcolare via codice la posizione di ogni singolo elemento a ogni fotogramma per tenerli allineati, il codice diventerebbe presto ingestibile. Godot risolve questo problema alla radice con l'albero dei nodi e la relazione **genitore-figlio** (*parent-child*)."
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando colleghi un nodo sotto un altro nel pannello *Scene*, il nodo superiore diventa il **genitore** (*parent*) e quello subordinato diventa il **figlio** (*child*). Nei nodi 2D (tutti quelli che derivano da `Node2D` o `CanvasItem`), il figlio eredita automaticamente la **trasformazione** (*transform*) del genitore: se sposti, ruoti o scali il genitore, tutti i suoi figli si spostano, ruotano e scalano insieme a lui. Inoltre, se imposti la proprietà `visible` del genitore su `false`, tutti i nodi figli scompaiono all'istante dallo schermo senza dover modificare le loro singole proprietà."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "pannello-scene",
+    "didascalia": "Nel pannello Scene, i nodi figli compaiono leggermente rientrati verso destra sotto al loro genitore."
+   },
+   {
+    "tipo": "testo",
+    "md": "Questa dipendenza introduce una distinzione essenziale tra due proprietà: `position` e `global_position`.\n\n- `position` (**posizione locale**): rappresenta la distanza del nodo rispetto all'origine del proprio genitore. Il punto `Vector2(0, 0)` per un figlio corrisponde esattamente al centro del genitore. Se assegni al manico una `position` pari a `Vector2(0, -40)`, significa che il manico rimarrà sempre 40 pixel sopra il cesto, ovunque il cesto si trovi nello schermo.\n- `global_position` (**posizione globale**): rappresenta la coordinata assoluta del nodo nella finestra di gioco, misurata a partire dall'angolo in alto a sinistra dello schermo `Vector2(0, 0)`.\n\nPer il nodo radice della scena, che non ha alcun genitore sopra di sé, `position` e `global_position` coincidono. Per qualsiasi nodo figlio, invece, Godot calcola la posizione globale sommando la posizione locale del figlio alla posizione globale del genitore."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando verifichi la distanza tra due oggetti che appartengono a rami diversi dell'albero (come la distanza tra il cesto e una stella), usa sempre `global_position`. Se usassi `position` su un nodo figlio, otterresti solo il suo scostamento relativo rispetto al genitore, portando a collisioni fantasma o calcoli completamente sballati."
+   },
+   {
+    "tipo": "testo",
+    "md": "Oltre al movimento, l'albero stabilisce anche l'ordine visivo: chi viene disegnato sopra e chi sotto. In Godot, il motore di rendering 2D disegna i nodi seguendo l'**ordine dell'albero** (*tree order*), cioè dall'alto verso il basso come appaiono nel pannello *Scene*:\n\n1. I nodi situati più in alto nell'elenco vengono disegnati per primi (sullo sfondo).\n2. I nodi situati più in basso vengono disegnati successivamente, sovrapponendosi a ciò che è già presente a schermo.\n3. Un nodo genitore viene disegnato prima dei propri figli: i figli appaiono quindi davanti al genitore.\n4. Tra nodi fratelli (nodi con lo stesso genitore), quello più in basso nella lista copre quello più in alto.\n\nPer questo motivo, se vuoi che l'interfaccia (`Label`) con il punteggio e le vite sia sempre leggibile e non venga mai coperta dagli sprite di gioco, deve trovarsi in fondo all'elenco dei nodi della scena."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Comporre il cesto con corpo, manico e ombra",
+    "passi": [
+     "Nel pannello *FileSystem*, fai doppio clic su `basket.tscn` per aprire la scena nell'area di lavoro 2D.",
+     "Nel pannello *Scene*, seleziona il nodo radice `Basket`.",
+     "Premi il pulsante **+** in alto a sinistra nel pannello *Scene* per aprire la finestra *Create New Node*.",
+     "Scrivi `Sprite2D` nel campo *Search*, seleziona `Sprite2D` nell'albero e premi **Create**.",
+     "Fai clic con il tasto destro sul nuovo nodo, scegli *Rename* e rinominalo in `Shadow`.",
+     "Trascina il file `icon.svg` dal pannello *FileSystem* al campo *Texture* nel pannello *Inspector* del nodo `Shadow`.",
+     "Nel pannello *Inspector*, apri la sezione *Node2D → Transform* e imposta `Position` su `(0, 35)` e `Scale` su `(1.2, 0.2)`. Poi apri *CanvasItem → Visibility* e modifica `Modulate` su un colore scuro semitrasparente.",
+     "Seleziona nuovamente il nodo `Basket`, premi di nuovo **+** e aggiungi un secondo `Sprite2D`.",
+     "Rinomina questo secondo nodo in `Handle`, assegna `icon.svg` alla sua proprietà *Texture*, e nel pannello *Inspector* imposta `Position` su `(0, -40)` e `Scale` su `(0.3, 0.6)`.",
+     "Nel pannello *Scene*, trascina il nodo `Label` in fondo alla lista dei figli sotto `Handle`, assicurandoti che rimanga l'ultimo nodo dell'albero per essere disegnato davanti a tutte le parti del cesto."
+    ]
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "func move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\t# Muovendo Basket, tutti i suoi nodi figli (Shadow, Handle, Label) si muovono insieme\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, MIN_X, MAX_X)",
+    "spiegazione": "La funzione `move_basket()` in `basket.gd` modifica unicamente la proprietà `position.x` del nodo radice `Basket`. Non serve scrivere alcuna riga di codice per aggiornare la posizione di `Shadow` o `Handle`: essendo nodi figli, Godot applica automaticamente lo spostamento del genitore all'intera gerarchia."
+   },
+   {
+    "tipo": "video",
+    "titolo": "Il cesto si muove con tutte le sue parti",
+    "esercizio": "es1",
+    "durata": 4,
+    "azioni": [
+     {
+      "azione": "move_right",
+      "inizio": 0.5,
+      "fine": 1.8,
+      "tasto": "D"
+     },
+     {
+      "azione": "move_left",
+      "inizio": 2.2,
+      "fine": 3.5,
+      "tasto": "A"
+     }
+    ]
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Un nodo figlio eredita trasformazioni (posizione, rotazione, scala) e visibilità dal proprio genitore.\n- La proprietà `position` è la posizione locale del nodo rispetto al centro del suo genitore.\n- La proprietà `global_position` è la coordinata assoluta del nodo rispetto all'origine della finestra di gioco `Vector2(0, 0)`.\n- Negli elementi 2D, Godot disegna dall'alto verso il basso seguendo l'ordine dell'albero (*tree order*): i nodi posti più in basso coprono quelli più in alto.\n- Posizionare i nodi dell'interfaccia (come `Label`) in fondo alla lista garantisce che vengano disegnati sopra gli elementi di gioco."
+   }
+  ]
+ }
+}
