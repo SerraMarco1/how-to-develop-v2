@@ -28,3 +28,5 @@
 {"quando":1792222834496,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":31781,"tokenInput":12140,"tokenOutput":5054,"ragionamento":10908}
 {"quando":1792222866280,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":11406,"tokenInput":16499,"tokenOutput":5025,"ragionamento":858}
 {"quando":1792222883647,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":237593,"tokenInput":12140,"tokenOutput":4851,"ragionamento":32824}
+{"quando":1792223130059,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-schiva-3","ok":false,"contata":true,"durataMs":2136,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792223132199,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":20181,"tokenInput":3771,"tokenOutput":274,"ragionamento":2279}
