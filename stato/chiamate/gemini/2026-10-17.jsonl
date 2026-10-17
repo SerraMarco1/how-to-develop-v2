@@ -59,3 +59,5 @@
 {"quando":1792226293809,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":18792,"tokenInput":19016,"tokenOutput":7298,"ragionamento":2824}
 {"quando":1792226319351,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":24239,"tokenInput":12910,"tokenOutput":354,"ragionamento":3491}
 {"quando":1792226353806,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":9890,"tokenInput":3021,"tokenOutput":868,"ragionamento":3237}
+{"quando":1792226368925,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"vita-di-un-nodo","ok":false,"contata":true,"durataMs":500,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792226423465,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"vita-di-un-nodo","ok":false,"contata":true,"durataMs":572,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
