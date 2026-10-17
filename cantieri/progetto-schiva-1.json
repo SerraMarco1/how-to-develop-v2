@@ -262,7 +262,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Progetto «Schiva!» – tappa 1: muoversi e nascere",
@@ -289,5 +290,18 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "La consegna e il codice di verifica richiedono la creazione dinamica di nodi, l'inserimento nell'albero della scena con `add_child()` e l'eliminazione con `queue_free()`. Questi argomenti appartengono esplicitamente alla fase successiva («L'albero dei nodi: genitori e figli» e «La vita di un nodo: dalla nascita a queue_free()») e lo studente non li ha ancora studiati in questa fase.",
+    "correzione": "Evita di richiedere `add_child()` e `queue_free()` da codice in questa tappa. Fai preparare nella scena `Main` un numero fisso di nodi meteorite preesistenti (oppure riutilizza un pool di meteoriti posizionati nella scena e gestiti tramite array) che vengono riposizionati in alto quando oltrepassano il fondo dello schermo (`position.y = -30`), evitando la creazione e distruzione a runtime dei nodi fino alla fase dedicata al ciclo di vita dei nodi.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
