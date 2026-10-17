@@ -8,3 +8,4 @@
 {"quando":1792220880968,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"classi-e-oggetti","ok":true,"contata":true,"durataMs":159414,"tokenInput":15953,"tokenOutput":10500,"ragionamento":15496}
 {"quando":1792221040383,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"classi-e-oggetti","ok":false,"contata":true,"durataMs":1688,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792221042074,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"classi-e-oggetti","ok":false,"contata":true,"durataMs":3368,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792221750356,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"classi-e-oggetti","ok":true,"contata":true,"durataMs":237088,"tokenInput":15953,"tokenOutput":14618,"ragionamento":26400}
