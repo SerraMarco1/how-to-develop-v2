@@ -227,7 +227,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -300,7 +300,84 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.7-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Risolvere gli errori di istanza nulla (null instance)",
+    "consegna": "Il progetto `RiparazioneNodi` contiene una scena chiamata `status_panel.tscn`. Quando provi ad avviare il progetto premendo **F5**, l'esecuzione si interrompe all'istante con un errore nel Debugger: segnala che stai tentando di modificare una proprietà su un'istanza nulla (`Nil` o `null`).\n\nDi conseguenza, il pannello informativo non compare correttamente: il messaggio di stato non viene mostrato, il nome del comandante non compare e la barra dell'energia non si colora di verde.\n\nApri il progetto nella cartella `ripara-istanza-nulla`. Esamina `status_panel.gd` e la gerarchia della scena `status_panel.tscn`. Trova e correggi i riferimenti ai nodi nello script in modo che:\n- `message_label` punti al nodo `MessageLabel` usando `@onready`;\n- `health_bar` punti al nodo `HealthBar` (che si trova dentro il contenitore `InfoBox`) usando il percorso corretto;\n- `title_label` punti al nodo `PlayerTitle` (dentro `InfoBox`) rispettando l'uso esatto di maiuscole e minuscole.\n\nAll'avvio, la funzione `setup_display()` deve completarsi senza blocchi: `message_label.text` deve mostrare `\"Sistema pronto\"`, `title_label.text` deve mostrare `\"Comandante\"` e `health_bar.modulate` deve diventare verde (`Color.GREEN`).",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "ripara-istanza-nulla",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://status_panel.gd",
+      "descrizione": "Il file status_panel.gd esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena status_panel.tscn deve avviarsi senza errori di istanza nulla\"):\n\t\treturn\n\tvar msg_label = get_prop(main, \"message_label\") as Label\n\tif check(\"msg_label_exists\", msg_label != null, \"La variabile message_label non deve essere null\"):\n\t\tcheck(\"msg_text\", msg_label.text == \"Sistema pronto\", \"Il testo di message_label deve essere 'Sistema pronto'\")\n\tvar title_label = get_prop(main, \"title_label\") as Label\n\tif check(\"title_label_exists\", title_label != null, \"La variabile title_label non deve essere null\"):\n\t\tcheck(\"title_text\", title_label.text == \"Comandante\", \"Il testo di title_label deve essere 'Comandante'\")\n\tvar bar = get_prop(main, \"health_bar\") as Sprite2D\n\tif check(\"bar_exists\", bar != null, \"La variabile health_bar non deve essere null\"):\n\t\tcheck(\"bar_color\", bar.modulate == Color.GREEN, \"Il colore modulate di health_bar deve essere Color.GREEN\")\n",
+      "descrizione": "Il progetto si avvia senza errori di istanza nulla e aggiorna testi e colori"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "RiparazioneNodi",
+      "scenaPrincipale": "res://status_panel.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RiparazioneNodi\"\nrun/main_scene=\"res://status_panel.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "status_panel.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://status_panel.gd\" id=\"1_panel\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"StatusPanel\" type=\"Node2D\"]\nscript = ExtResource(\"1_panel\")\n\n[node name=\"InfoBox\" type=\"Node2D\" parent=\".\"]\nposition = Vector2(100, 100)\n\n[node name=\"PlayerTitle\" type=\"Label\" parent=\"InfoBox\"]\noffset_right = 120.0\noffset_bottom = 23.0\ntext = \"Sconosciuto\"\n\n[node name=\"HealthBar\" type=\"Sprite2D\" parent=\"InfoBox\"]\nposition = Vector2(60, 50)\nscale = Vector2(1.0, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"MessageLabel\" type=\"Label\" parent=\".\"]\noffset_left = 100.0\noffset_top = 180.0\noffset_right = 300.0\noffset_bottom = 203.0\ntext = \"In attesa...\"\n"
+      },
+      {
+       "percorso": "status_panel.gd",
+       "contenuto": "extends Node2D\n\nvar message_label: Label = $MessageLabel\n@onready var health_bar: Sprite2D = $HealthBar\n@onready var title_label: Label = $InfoBox/playertitle\n\n\nfunc _ready() -> void:\n\tsetup_display()\n\n\nfunc setup_display() -> void:\n\tmessage_label.text = \"Sistema pronto\"\n\ttitle_label.text = \"Comandante\"\n\thealth_bar.modulate = Color.GREEN\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RiparazioneNodi\"\nrun/main_scene=\"res://status_panel.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "status_panel.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://status_panel.gd\" id=\"1_panel\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"StatusPanel\" type=\"Node2D\"]\nscript = ExtResource(\"1_panel\")\n\n[node name=\"InfoBox\" type=\"Node2D\" parent=\".\"]\nposition = Vector2(100, 100)\n\n[node name=\"PlayerTitle\" type=\"Label\" parent=\"InfoBox\"]\noffset_right = 120.0\noffset_bottom = 23.0\ntext = \"Sconosciuto\"\n\n[node name=\"HealthBar\" type=\"Sprite2D\" parent=\"InfoBox\"]\nposition = Vector2(60, 50)\nscale = Vector2(1.0, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"MessageLabel\" type=\"Label\" parent=\".\"]\noffset_left = 100.0\noffset_top = 180.0\noffset_right = 300.0\noffset_bottom = 203.0\ntext = \"In attesa...\"\n"
+      },
+      {
+       "percorso": "status_panel.gd",
+       "contenuto": "extends Node2D\n\n@onready var message_label: Label = $MessageLabel\n@onready var health_bar: Sprite2D = $InfoBox/HealthBar\n@onready var title_label: Label = $InfoBox/PlayerTitle\n\n\nfunc _ready() -> void:\n\tsetup_display()\n\n\nfunc setup_display() -> void:\n\tmessage_label.text = \"Sistema pronto\"\n\ttitle_label.text = \"Comandante\"\n\thealth_bar.modulate = Color.GREEN\n"
+      }
+     ],
+     "progetto": {
+      "nome": "RiparazioneNodi",
+      "scenaPrincipale": "res://status_panel.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Nel codice di partenza c'erano tre errori che causavano riferimenti nulli:\n1. `var message_label: Label = $MessageLabel` mancava dell'annotazione `@onready`. Senza di essa, Godot prova a cercare il nodo prima ancora che i figli siano inseriti nell'albero, assegnando `null` alla variabile.\n2. `$HealthBar` cercava il nodo come figlio diretto di `StatusPanel`, mentre nella scena si trova dentro il nodo `InfoBox`. Il percorso relativo corretto è `$InfoBox/HealthBar`.\n3. `$InfoBox/playertitle` conteneva un errore di maiuscole/minuscole: i nomi dei nodi in Godot sono case-sensitive, quindi andava scritto `$InfoBox/PlayerTitle`.",
+     "cambiati": [
+      "status_panel.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "es3": {
    "stato": "da_fare",
