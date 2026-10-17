@@ -209,9 +209,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "controllo di sicurezza — spawner.gd riga 12: set_script non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo",
-    "controllo di sicurezza — progetto di partenza, spawner.gd riga 12: set_script non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo",
-    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Tutti gli elementi oltre la soglia devono essere stati rimossi dall'array active_items\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
