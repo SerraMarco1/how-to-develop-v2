@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-17T07:05:56.537Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-17T07:10:45.447Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "classi-e-oggetti",
   "numero": "1.15",
   "titolo": "Classi e oggetti: ogni cosa pensa a sé"
  },
- "messaggio": "Sta scrivendo la lezione 1.15 «Classi e oggetti: ogni cosa pensa a sé».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 1.15 riprende da sola appena rispondono.",
+ "riprende": "2026-10-17T07:20:45.447Z"
 }
