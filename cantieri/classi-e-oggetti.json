@@ -196,7 +196,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "riordina",
@@ -280,7 +280,95 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.7-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "riordina",
+    "titolo": "Riordinare le gemme magiche",
+    "consegna": "Il progetto `Gemme magiche` funziona già: la gemma scende lungo lo schermo e ritorna in cima quando supera il fondo. Il file `res://gem.gd`, però, è disordinato: non dichiara una classe, contiene dichiarazioni senza tipo, usa numeri sparsi nel codice e non incapsula la verifica dei propri limiti.\n\nRiorganizza `res://gem.gd` rispettando queste regole, senza alterare il funzionamento:\n1. In cima allo script registra la classe con `class_name Gem` prima di `extends Sprite2D`.\n2. Sostituisci i numeri sparsi con costanti tipizzate: `START_X: float = 300.0`, `START_Y: float = 50.0` e `DESPAWN_Y: float = 600.0`.\n3. Specifica il tipo statico per tutte le variabili (`gem_type: String = \"ruby\"`, `fall_speed: float = 120.0`, `score_value: int = 25`), per tutti i parametri (`delta: float`) e per i valori di ritorno delle funzioni (`-> void`, `-> bool`).\n4. Crea il metodo `is_out_of_bounds() -> bool` che restituisce `position.y > DESPAWN_Y`, e usalo in `_process(delta: float)` per resettare la gemma con una funzione dedicata `reset_gem() -> void`.\n5. Mantieni ogni funzione breve (nessuna funzione deve superare 8 righe di codice).",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "gemme-magiche",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_loaded\", main != null, \"La scena principale deve avviarsi senza errori\"):\n\t\treturn\n\tvar gem := find_by_class(main, \"Sprite2D\") as Sprite2D\n\tif not check(\"gem_found\", gem != null, \"La scena deve contenere la gemma\"):\n\t\treturn\n\tvar initial_y: float = gem.position.y\n\tawait wait_physics_frames(10)\n\tcheck(\"falls\", gem.position.y > initial_y, \"La gemma deve scendere verso il basso nel tempo\")\n\tgem.position.y = 650.0\n\tawait wait_physics_frames(2)\n\tcheck(\"resets\", gem.position.y < 100.0, \"Oltre il limite DESPAWN_Y la gemma deve tornare in cima\")\n\tcheck(\"class_name_present\", count_in_code(\"res://gem.gd\", \"class_name\") == 1, \"gem.gd deve registrare la classe con class_name Gem\")\n\tcheck(\"all_typed\", untyped_declarations(\"res://gem.gd\") == 0, \"Tutte le variabili, i parametri e le funzioni devono avere il tipo statico\")\n\tvar magics := magic_numbers(\"res://gem.gd\")\n\tcheck(\"no_magics\", magics.size() == 0, \"Non devono esserci numeri sparsi nelle funzioni: usa le costanti\")\n\tcheck(\"has_method\", has_function(gem, \"is_out_of_bounds\"), \"La gemma deve possedere il metodo is_out_of_bounds()\")\n\tcheck(\"short_functions\", longest_function_lines(\"res://gem.gd\") <= 8, \"Nessuna funzione deve superare 8 righe\")\n",
+      "descrizione": "La gemma continua a cadere e a resettarsi, mentre il codice rispetta le regole di ordine e tipizzazione"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "Gemme magiche",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Gemme magiche\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "gem.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://gem.gd\" id=\"1_gem\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Gem\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_gem\")\n"
+      },
+      {
+       "percorso": "gem.gd",
+       "contenuto": "extends Sprite2D\n\nvar gem_type = \"ruby\"\nvar fall_speed = 120.0\nvar score_value = 25\n\n\nfunc _ready():\n\tmodulate = Color.RED\n\n\nfunc _process(delta):\n\tposition.y += fall_speed * delta\n\tif position.y > 600.0:\n\t\tposition.y = 50.0\n\t\tposition.x = 300.0\n\t\tmodulate = Color.RED\n\n\nfunc check_limits():\n\tif position.y > 600.0:\n\t\treturn true\n\treturn false\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://gem.tscn\" id=\"2_gem\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Gem\" parent=\".\" instance=ExtResource(\"2_gem\")]\nposition = Vector2(300, 50)\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tpass\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Gemme magiche\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "gem.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://gem.gd\" id=\"1_gem\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Gem\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_gem\")\n"
+      },
+      {
+       "percorso": "gem.gd",
+       "contenuto": "class_name Gem\nextends Sprite2D\n\nconst START_X: float = 300.0\nconst START_Y: float = 50.0\nconst DESPAWN_Y: float = 600.0\n\nvar gem_type: String = \"ruby\"\nvar fall_speed: float = 120.0\nvar score_value: int = 25\n\n\nfunc _ready() -> void:\n\tmodulate = Color.RED\n\n\nfunc _process(delta: float) -> void:\n\tposition.y += fall_speed * delta\n\tif is_out_of_bounds():\n\t\treset_gem()\n\n\nfunc reset_gem() -> void:\n\tposition = Vector2(START_X, START_Y)\n\tmodulate = Color.RED\n\n\nfunc is_out_of_bounds() -> bool:\n\treturn position.y > DESPAWN_Y\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://gem.tscn\" id=\"2_gem\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Gem\" parent=\".\" instance=ExtResource(\"2_gem\")]\nposition = Vector2(300, 50)\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tpass\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Gemme magiche",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Abbiamo dichiarato `class_name Gem` in cima al file, tipizzato ogni variabile, parametro e valore restituito, e sostituito i numeri sparsi con costanti esplicite. Il controllo dell'uscita dallo schermo è stato incapsulato in `is_out_of_bounds()`, mantenendo ogni funzione al di sotto delle 8 righe senza alterare in alcun modo il comportamento del gioco.",
+     "cambiati": [
+      "gem.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "es3": {
    "stato": "da_fare",
