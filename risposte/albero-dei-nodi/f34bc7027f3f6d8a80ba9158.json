@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test richiede di accedere a un nodo figlio da codice (`$Handle/Indicator`) per modificarne la visibilità e il colore, ma l'argomento 'Raggiungere i nodi dal codice' è elencato tra gli argomenti che il corso tratterà DOPO e non deve essere anticipato né richiesto negli esercizi.\", \"correzione\": \"Semplificare l'esercizio 'test' evitando di richiedere la manipolazione da script di nodi figli non ancora spiegata, oppure limitare la consegna a modifiche strutturali nell'editor e a proprietà del nodo radice.\", \"fonte\": \"\"}]}",
+ "ragionamento": 4932,
+ "quando": "2026-10-17T07:54:50.289Z",
+ "ruolo": "revisore"
+}
