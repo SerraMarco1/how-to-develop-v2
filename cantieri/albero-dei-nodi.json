@@ -180,7 +180,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "prevedi",
@@ -244,7 +244,63 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedi il calcolo delle coordinate locali e globali",
+    "consegna": "Leggi attentamente ciascun frammento di codice ed esamina come la gerarchia dei nodi modifica le proprietà `position` e `global_position`. Scrivi il valore finale restituito da `run()` senza eseguire il progetto.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tparent.position = Vector2(100, 200)\n\tvar child := Node2D.new()\n\tchild.position = Vector2(50, 30)\n\tparent.add_child(child)\n\treturn child.position\n",
+      "domanda": "Quanto vale child.position alla fine?",
+      "risposta": "(50.0, 30.0)",
+      "spiegazione": "La proprietà position rappresenta le coordinate locali del nodo rispetto al proprio genitore. Anche se il genitore è a (100, 200), la posizione locale di child rimane (50, 30).",
+      "id": "es2p1"
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tadd_child(parent)\n\tparent.position = Vector2(100, 200)\n\tvar child := Node2D.new()\n\tchild.position = Vector2(50, 30)\n\tparent.add_child(child)\n\treturn child.global_position\n",
+      "domanda": "Quanto vale child.global_position alla fine?",
+      "risposta": "(150.0, 230.0)",
+      "spiegazione": "La proprietà global_position è la posizione assoluta nel mondo. Godot la calcola sommando la posizione globale del genitore (100, 200) alla posizione locale del figlio (50, 30), ottenendo Vector2(150, 230).",
+      "id": "es2p2"
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tadd_child(parent)\n\tparent.position = Vector2(200, 300)\n\tvar child := Node2D.new()\n\tparent.add_child(child)\n\tchild.global_position = Vector2(500, 400)\n\treturn child.position\n",
+      "domanda": "Quanto vale child.position dopo aver impostato child.global_position a (500, 400)?",
+      "risposta": "(300.0, 100.0)",
+      "spiegazione": "Impostando global_position su un figlio, Godot ricalcola automaticamente la sua position locale sottraendo la coordinata globale del genitore: (500 - 200, 400 - 300) = Vector2(300, 100).",
+      "id": "es2p3"
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> bool:\n\tvar parent := Node2D.new()\n\tvar child := Node2D.new()\n\tparent.add_child(child)\n\tparent.visible = false\n\treturn child.visible\n",
+      "domanda": "Quanto vale child.visible dopo aver impostato parent.visible su false?",
+      "risposta": "true",
+      "spiegazione": "Anche se child scompare dallo schermo perché il genitore è nascosto, la sua proprietà locale visible rimane true. La visibilità effettiva a schermo dipende da tutta la catena dei genitori, ma le singole variabili non vengono riscritte.",
+      "id": "es2p4"
+     },
+     {
+      "codice": "extends Node\n\nfunc run() -> Vector2:\n\tvar parent := Node2D.new()\n\tadd_child(parent)\n\tparent.position = Vector2(100, 100)\n\tvar child := Node2D.new()\n\tchild.position = Vector2(20, 20)\n\tparent.add_child(child)\n\tparent.position.x += 80\n\treturn child.global_position\n",
+      "domanda": "Quanto vale child.global_position dopo che parent si è spostato?",
+      "risposta": "(200.0, 120.0)",
+      "spiegazione": "Quando parent si sposta a Vector2(180, 100), il figlio eredita la trasformazione. La sua global_position diventa (180 + 20, 100 + 20) = Vector2(200, 120).",
+      "id": "es2p5"
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "Gli esercizi hanno illustrato la relazione algebrica tra spazio locale e spazio globale: la coordinata globale di un nodo figlio è sempre la somma tra la coordinata globale del genitore e la posizione locale del figlio (`global_position = parent.global_position + position`). Inoltre, la proprietà `visible` descrive lo stato proprio del singolo nodo, anche se a livello visivo l'occultamento del genitore nasconde l'intero ramo.",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "es3": {
    "stato": "da_fare",
