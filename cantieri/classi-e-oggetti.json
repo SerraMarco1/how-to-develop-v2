@@ -2,7 +2,7 @@
  "creato": "2026-10-17T07:05:56.551Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -83,7 +83,117 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.7-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "guidato",
+    "genere": "guidato",
+    "titolo": "Nasce la classe FallingItem",
+    "consegna": "In questo esercizio trasformiamo lo script `star.gd` in una vera classe riutilizzabile chiamata `FallingItem`, assegnandole la responsabilità di gestire la propria identità e di sapere quando esce dal fondo dello schermo.\n\n1. Rinomina lo script `star.gd` in `falling_item.gd`.\n2. Registra la classe in cima al file con la parola chiave `class_name FallingItem`.\n3. Aggiorna la variabile `star_name` in `item_name` e la funzione `reset_star()` in `reset_item()`.\n4. Sposta la costante del limite inferiore dello schermo dentro la classe con `const DESPAWN_Y: float = 680.0` e aggiungi il metodo `is_out_of_bounds() -> bool` che restituisce `true` quando `position.y > DESPAWN_Y`.\n5. Aggiorna `star.tscn` per usare il nuovo script e modifica `basket.gd` per sfruttare la classe tipizzata `FallingItem` e il nuovo metodo.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "pioggia-di-stelle",
+    "passiGuida": [
+     "Nel pannello *FileSystem* (in basso a sinistra), fai clic destro su `star.gd`, scegli **Rename...**, scrivi `falling_item.gd` e premi **Rename**.",
+     "Fai doppio clic su `falling_item.gd` per aprirlo. In cima allo script, come primissima riga prima di `extends Sprite2D`, aggiungi `class_name FallingItem`.",
+     "In `falling_item.gd`, rimuovi la costante `RESET_Y` e inserisci `const DESPAWN_Y: float = 680.0`. Poco più sotto, rinomina la variabile `var star_name: String = \"star\"` in `var item_name: String = \"star\"`.",
+     "Rinomina la funzione `reset_star()` in `reset_item()`. Ricordati di aggiornare anche la chiamata dentro `_ready()`, che ora deve chiamare `reset_item()`.",
+     "In fondo a `falling_item.gd`, aggiungi la funzione di verifica dei confini:\n```gdscript\nfunc is_out_of_bounds() -> bool:\n\treturn position.y > DESPAWN_Y\n```",
+     "Nel pannello *FileSystem*, fai doppio clic su `star.tscn`. Seleziona il nodo radice `Star` e, nel pannello *Inspector*, controlla che nello slot **Script** ci sia `res://falling_item.gd` (se compare ancora il vecchio percorso, trascina `falling_item.gd` dal FileSystem nello slot). Salva la scena con Ctrl+S.",
+     "Apri `basket.gd`. Rimuovi la costante `const DESPAWN_Y: float = 680.0` (ora appartiene all'oggetto) e aggiorna il tipo dell'Array sostituendo `var stars: Array[Sprite2D] = []` con `var stars: Array[FallingItem] = []`.",
+     "Sempre in `basket.gd`, aggiorna `spawn_star()` tipizzando `var new_star: FallingItem = star_scene.instantiate() as FallingItem`. In `check_stars()`, dichiara `var current_star: FallingItem = stars[i]`, usa `current_star.item_name` invece di `star_name`, e sostituisci la condizione `current_star.position.y > DESPAWN_Y` con `current_star.is_out_of_bounds()`. Salva e premi F5 per verificare che il gioco funzioni come prima."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://falling_item.gd",
+      "descrizione": "Il file falling_item.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://falling_item.gd",
+      "regex": "class_name FallingItem",
+      "descrizione": "Lo script falling_item.gd registra la classe FallingItem"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://falling_item.gd",
+      "regex": "func is_out_of_bounds\\(\\)",
+      "descrizione": "FallingItem definisce il metodo is_out_of_bounds()"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar item_scene: PackedScene = load(\"res://star.tscn\")\n\tif not check(\"scene_load\", item_scene != null, \"La scena star.tscn deve caricarsi regolarmente\"):\n\t\treturn\n\tvar item: FallingItem = item_scene.instantiate() as FallingItem\n\tif not check(\"is_falling_item\", item != null, \"L'istanza di star.tscn deve essere di classe FallingItem\"):\n\t\treturn\n\tif not check(\"has_bounds\", has_function(item, \"is_out_of_bounds\"), \"FallingItem deve avere la funzione is_out_of_bounds()\"):\n\t\treturn\n\titem.position.y = 100.0\n\tcheck(\"in_bounds\", item.is_out_of_bounds() == false, \"A Y=100 is_out_of_bounds() deve restituire false\")\n\titem.position.y = 700.0\n\tcheck(\"out_of_bounds\", item.is_out_of_bounds() == true, \"A Y=700 is_out_of_bounds() deve restituire true\")\n\titem.apply_item_type(\"gold_star\")\n\tcheck(\"item_name_set\", item.item_name == \"gold_star\", \"apply_item_type deve aggiornare la variabile item_name\")\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_run\", basket != null, \"La scena principale del cesto deve avviarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(5)\n",
+      "descrizione": "Gli oggetti FallingItem gestiscono correttamente confini e tipi e il cesto usa la nuova classe"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "rock.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+      },
+      {
+       "percorso": "basket.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+      },
+      {
+       "percorso": "rock.gd",
+       "contenuto": "extends Sprite2D\n\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 120.0\nconst SPAWN_MAX_X: float = 960.0\nconst RESET_Y: float = 680.0\nconst MIN_X: float = 50.0\nconst MAX_X: float = 1050.0\nconst DANGER_Y: float = 400.0\nconst MIN_FALL_SPEED: float = 200.0\nconst MAX_FALL_SPEED: float = 320.0\nconst MAX_HORIZONTAL_SPEED: float = 100.0\nconst MIN_DAMAGE: int = 1\nconst MAX_DAMAGE: int = 3\nconst HIT_DISTANCE: float = 50.0\n\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\tvar initial_pos: Vector2 = position\n\treset_rock()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\tmodulate = Color.RED\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x < MIN_X or position.x > MAX_X:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tfall_speed = randf_range(MIN_FALL_SPEED, MAX_FALL_SPEED)\n\thorizontal_speed = randf_range(-MAX_HORIZONTAL_SPEED, MAX_HORIZONTAL_SPEED)\n\tdamage = randi_range(MIN_DAMAGE, MAX_DAMAGE)\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\n\nfunc update_modulate() -> void:\n\tif position.y > DANGER_Y:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n\n\nfunc hits_basket(basket_position: Vector2) -> bool:\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < HIT_DISTANCE\n\n\nfunc check_hit(basket_position: Vector2) -> int:\n\tif hits_basket(basket_position):\n\t\tvar dealt_damage: int = damage\n\t\treset_rock()\n\t\treturn dealt_damage\n\treturn 0\n"
+      },
+      {
+       "percorso": "falling_item.gd",
+       "contenuto": "class_name FallingItem\nextends Sprite2D\n\n# Coordinate di riferimento, uscita dallo schermo e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst DESPAWN_Y: float = 680.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Tabella dei tipi di oggetto configurati come dati\nconst ITEM_TYPES: Dictionary = {\n\t\"star\": {\n\t\t\"points\": 10,\n\t\t\"speed\": 180.0,\n\t\t\"color\": Color.YELLOW\n\t},\n\t\"gold_star\": {\n\t\t\"points\": 50,\n\t\t\"speed\": 260.0,\n\t\t\"color\": Color.ORANGE\n\t},\n\t\"rock\": {\n\t\t\"points\": -20,\n\t\t\"speed\": 220.0,\n\t\t\"color\": Color.GRAY\n\t}\n}\n\n# Dati specifici di questa singola istanza\nvar item_name: String = \"star\"\nvar fall_speed: float = 180.0\nvar points: int = 10\nvar is_collected: bool = false\n\n\nfunc _ready() -> void:\n\tvar initial_pos: Vector2 = position\n\treset_item()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\n\nfunc _process(delta: float) -> void:\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\n\nfunc reset_item() -> void:\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\t\n\tvar types: Array[String] = [\"star\", \"gold_star\", \"rock\"]\n\tvar random_index: int = randi_range(0, types.size() - 1)\n\tapply_item_type(types[random_index])\n\n\nfunc apply_item_type(type_name: String) -> void:\n\tif type_name in ITEM_TYPES:\n\t\tvar config: Dictionary = ITEM_TYPES[type_name]\n\t\titem_name = type_name\n\t\tpoints = config[\"points\"]\n\t\tfall_speed = config[\"speed\"]\n\t\tmodulate = config[\"color\"]\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n\n\nfunc is_out_of_bounds() -> bool:\n\treturn position.y > DESPAWN_Y\n"
+      },
+      {
+       "percorso": "star.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://falling_item.gd\" id=\"1_item\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Star\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_item\")\n"
+      },
+      {
+       "percorso": "basket.gd",
+       "contenuto": "extends Sprite2D\n\nconst START_POSITION: Vector2 = Vector2(576, 600)\nconst MIN_X: float = 64.0\nconst MAX_X: float = 1088.0\nconst INITIAL_LIVES: int = 3\nconst INITIAL_STARS_COUNT: int = 5\nconst DIFFICULTY_RAMP_SECONDS: float = 60.0\nconst SPAWN_INTERVAL_MAX: float = 2.0\nconst SPAWN_INTERVAL_MIN: float = 0.5\nconst MAX_SPEED_BOOST: float = 150.0\nconst SCORE_SPEED_BOOST: float = 10.0\nconst WIN_SCORE: int = 100\nconst ROCK_START_X: float = 160.0\nconst ROCK_END_X: float = 960.0\nconst ROCK_ROW_Y: float = 200.0\nconst ROCK_SPACING: float = 200.0\n\nenum GameState { PLAYING, GAME_OVER, PAUSED, WIN }\n\nvar current_state: GameState = GameState.PLAYING\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = INITIAL_LIVES\nvar score: int = 0\nvar is_active: bool = true\n\nvar game_time: float = 0.0\nvar spawn_timer: float = 0.0\n\nvar stars: Array[FallingItem] = []\n\nvar collected_counts: Dictionary = {\n\t\"star\": 0,\n\t\"gold_star\": 0,\n\t\"rock\": 0,\n}\n\n\nfunc _ready() -> void:\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\tupdate_ui()\n\tspawn_initial_stars(INITIAL_STARS_COUNT)\n\tspawn_rock_row()\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\tmatch current_state:\n\t\tGameState.PLAYING:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PAUSED\n\t\t\t\t$Label.text = \"Gioco in pausa. Premi Esc per riprendere\"\n\t\t\telse:\n\t\t\t\tprocess_playing(delta)\n\t\tGameState.GAME_OVER:\n\t\t\tcheck_restart()\n\t\tGameState.PAUSED:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PLAYING\n\t\t\t\tupdate_ui()\n\t\tGameState.WIN:\n\t\t\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\t\t\treset_game()\n\n\nfunc process_playing(delta: float) -> void:\n\tgame_time += delta\n\tspawn_timer += delta\n\t\n\tvar interval: float = get_spawn_interval()\n\tif spawn_timer >= interval:\n\t\tspawn_timer -= interval\n\t\tspawn_star()\n\t\n\tmove_basket(delta)\n\tcheck_stars()\n\tcheck_win()\n\tcheck_game_over()\n\n\nfunc move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, MIN_X, MAX_X)\n\n\nfunc get_difficulty_factor() -> float:\n\treturn min(game_time / DIFFICULTY_RAMP_SECONDS, 1.0)\n\n\nfunc get_spawn_interval() -> float:\n\tvar interval: float = lerpf(SPAWN_INTERVAL_MAX, SPAWN_INTERVAL_MIN, get_difficulty_factor())\n\treturn max(interval, SPAWN_INTERVAL_MIN)\n\n\nfunc spawn_star() -> void:\n\tvar star_scene: PackedScene = load(\"res://star.tscn\")\n\tvar new_star: FallingItem = star_scene.instantiate() as FallingItem\n\t\n\tvar speed_boost: float = lerpf(0.0, MAX_SPEED_BOOST, get_difficulty_factor())\n\tnew_star.fall_speed += speed_boost\n\t\n\tadd_child(new_star)\n\tstars.append(new_star)\n\n\nfunc spawn_initial_stars(count: int) -> void:\n\tfor i in range(count):\n\t\tspawn_star()\n\n\nfunc check_stars() -> void:\n\t# Scorre a ritroso per evitare che la rimozione sballi gli indici degli elementi successivi\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: FallingItem = stars[i]\n\t\tif current_star.is_caught(position):\n\t\t\tif current_star.points >= 0:\n\t\t\t\tadd_score(current_star.points)\n\t\t\telse:\n\t\t\t\ttake_damage(1)\n\t\t\t\n\t\t\tif current_star.item_name in collected_counts:\n\t\t\t\tcollected_counts[current_star.item_name] += 1\n\t\t\t\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\t\telif current_star.is_out_of_bounds():\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\n\nfunc get_collected_count(type_name: String) -> int:\n\treturn collected_counts.get(type_name, 0)\n\n\nfunc boost_all_stars(extra_speed: float) -> void:\n\tfor star in stars:\n\t\tstar.fall_speed += extra_speed\n\n\nfunc spawn_rock_row() -> void:\n\tvar rock_scene: PackedScene = load(\"res://rock.tscn\")\n\tvar current_x: float = ROCK_START_X\n\twhile current_x <= ROCK_END_X:\n\t\tvar rock: Sprite2D = rock_scene.instantiate() as Sprite2D\n\t\trock.position = Vector2(current_x, ROCK_ROW_Y)\n\t\tadd_child(rock)\n\t\tcurrent_x += ROCK_SPACING\n\n\nfunc update_ui() -> void:\n\t$Label.text = \"Punti: %04d | Vite: %d\" % [score, lives]\n\n\nfunc set_speed(new_speed: float) -> void:\n\tspeed = new_speed\n\n\nfunc add_score(amount: int) -> void:\n\tscore += amount\n\tboost_all_stars(SCORE_SPEED_BOOST)\n\tupdate_ui()\n\tcheck_win()\n\n\nfunc take_damage(amount: int) -> void:\n\tlives -= amount\n\tif lives <= 0:\n\t\tlives = 0\n\t\tis_active = false\n\tupdate_ui()\n\tcheck_game_over()\n\n\nfunc check_win() -> void:\n\tif score >= WIN_SCORE:\n\t\tcurrent_state = GameState.WIN\n\t\t$Label.text = \"Vittoria! Punti: %d | Premi Invio per giocare ancora\" % score\n\n\nfunc check_game_over() -> void:\n\tif lives <= 0:\n\t\tcurrent_state = GameState.GAME_OVER\n\t\t$Label.text = \"Partita finita! Premi Invio per ricominciare\"\n\n\nfunc check_restart() -> void:\n\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\treset_game()\n\n\nfunc reset_game() -> void:\n\tlives = INITIAL_LIVES\n\tscore = 0\n\tgame_time = 0.0\n\tspawn_timer = 0.0\n\tposition = START_POSITION\n\tcurrent_state = GameState.PLAYING\n\tis_active = true\n\tupdate_ui()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "res://basket.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "Left",
+         "A"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "Right",
+         "D"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Con `class_name FallingItem` abbiamo registrato la classe nel motore, consentendo a `basket.gd` di usare `Array[FallingItem]` invece di un generico `Array[Sprite2D]`. Inoltre, assegnando la costante `DESPAWN_Y` e il metodo `is_out_of_bounds()` all'oggetto stesso, abbiamo applicato il principio di responsabilità: ora è la stella a sapere quando è uscita dallo schermo, e il cesto si limita a interrogarla.",
+     "cambiati": [
+      "falling_item.gd",
+      "star.tscn",
+      "basket.gd"
+     ],
+     "rimossi": [
+      "star.gd"
+     ]
+    },
+    "id": "es1"
+   }
   },
   "es2": {
    "stato": "da_fare",
