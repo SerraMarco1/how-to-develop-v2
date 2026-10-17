@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T07:33:07.345Z",
+ "aggiornato": "2026-10-17T07:39:06.055Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -182,6 +182,15 @@
    "file": "lezioni/f01-programmare/progetto-schiva-1.json",
    "sha256": "8bd504f82286a17c986928a142cf1edcca47885794f33d28c3b635e797aeabda",
    "byte": 23133
+  },
+  {
+   "slug": "progetto-schiva-2",
+   "numero": "1.17",
+   "titolo": "Progetto «Schiva!» – tappa 2: urti, vite e tempo",
+   "versione": 1,
+   "file": "lezioni/f01-programmare/progetto-schiva-2.json",
+   "sha256": "e39f59d0de547e234491e1465be8b3c9d83f312fef19f951ce19759cb5984b7d",
+   "byte": 32999
   }
  ],
  "documentazione": {
