@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T09:35:21.976Z",
+ "aggiornato": "2026-10-17T11:47:26.231Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -227,6 +227,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/scene-riutilizzabili.json",
    "sha256": "012f0861327622315754438297d1b85f912db2398811fb133dd49dc26ebda683",
    "byte": 114828
+  },
+  {
+   "slug": "vita-di-un-nodo",
+   "numero": "2.3",
+   "titolo": "La vita di un nodo: dalla nascita a queue_free()",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/vita-di-un-nodo.json",
+   "sha256": "edadae170f3ca30cd07bd83b09f0d8622021a60ae85202d516d3c7f526a5fe8f",
+   "byte": 91978
   }
  ],
  "documentazione": {
