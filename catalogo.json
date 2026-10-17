@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T07:46:49.081Z",
+ "aggiornato": "2026-10-17T07:56:19.432Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -200,6 +200,15 @@
    "file": "lezioni/f01-programmare/progetto-schiva-3.json",
    "sha256": "698b8faf65db3a5c87fecc3b42e870984192f31147c7021beff7a2988594969d",
    "byte": 39257
+  },
+  {
+   "slug": "albero-dei-nodi",
+   "numero": "2.0",
+   "titolo": "L'albero dei nodi: genitori e figli",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/albero-dei-nodi.json",
+   "sha256": "13852dce8d653a6840438ca5a648e1946697211a5070c41e3f22a6313ba66a94",
+   "byte": 91016
   }
  ],
  "documentazione": {
