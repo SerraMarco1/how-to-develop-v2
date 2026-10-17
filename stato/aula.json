@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-17T07:46:50.557Z",
+ "aggiornato": "2026-10-17T07:56:20.686Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "albero-dei-nodi",
-  "numero": "2.0",
-  "titolo": "L'albero dei nodi: genitori e figli"
+  "slug": "raggiungere-i-nodi",
+  "numero": "2.1",
+  "titolo": "Raggiungere i nodi dal codice"
  },
- "messaggio": "Sta scrivendo la lezione 2.0 «L'albero dei nodi: genitori e figli».",
+ "messaggio": "Sta scrivendo la lezione 2.1 «Raggiungere i nodi dal codice».",
  "riprende": null
 }
