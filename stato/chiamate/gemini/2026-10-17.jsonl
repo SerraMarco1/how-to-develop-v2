@@ -53,3 +53,5 @@
 {"quando":1792225383315,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":556644,"tokenInput":16176,"tokenOutput":2157,"ragionamento":51836}
 {"quando":1792225939961,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":142590,"tokenInput":16176,"tokenOutput":16297,"ragionamento":7506}
 {"quando":1792226098441,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":17351,"tokenInput":13760,"tokenOutput":6398,"ragionamento":2373}
+{"quando":1792226120194,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"scene-riutilizzabili","ok":false,"contata":true,"durataMs":2718,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792226122914,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":145087,"tokenInput":13668,"tokenOutput":6195,"ragionamento":17686}
