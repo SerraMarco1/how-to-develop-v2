@@ -1,0 +1,139 @@
+{
+ "n": 15,
+ "quando": "2026-10-17T08:37:57.630Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (obiettivo): 1 problema",
+ "spiegazione": "«Una nuova scena collezionabile: il rubino prezioso», scritto da gemini/gemini-3.7-flash. 6 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://basket.gd deve caricarsi senza errori: Parse Error: Identifier \"SPAWN_MIN_X\" not declared in the current scope. (res://basket.gd:132 in GDScript::reload)\nParse Error: Identifier \"SPAWN_MAX_X\" not declared in the current scope. (res://basket.gd:132 in GDScript::reload)\nParse Error: Identifier \"START_Y\" not declared in the current scope. (res://basket.gd:136 in GDScript::reload)\nFailed to load script \"res://basket.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  basket.gd, riga 132: `var random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)`\n  basket.gd, riga 136: `var new_star: FallingItem = spawn_item_at(Vector2(random_x, START_Y), chosen_type)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 3078,
+ "dati": {
+  "problemi": [
+   "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://basket.gd deve caricarsi senza errori: Parse Error: Identifier \"SPAWN_MIN_X\" not declared in the current scope. (res://basket.gd:132 in GDScript::reload)\nParse Error: Identifier \"SPAWN_MAX_X\" not declared in the current scope. (res://basket.gd:132 in GDScript::reload)\nParse Error: Identifier \"START_Y\" not declared in the current scope. (res://basket.gd:136 in GDScript::reload)\nFailed to load script \"res://basket.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  basket.gd, riga 132: `var random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)`\n  basket.gd, riga 136: `var new_star: FallingItem = spawn_item_at(Vector2(random_x, START_Y), chosen_type)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Una nuova scena collezionabile: il rubino prezioso",
+   "consegna": "Arricchisci il gioco creando una nuova scena riutilizzabile indipendente per un collezionabile raro e prezioso: un rubino che cade lentamente.\n\n1. Crea la scena autonoma `res://ruby.tscn`:\n   - Il nodo radice deve essere uno `Sprite2D` chiamato `Ruby`.\n   - Usa `res://icon.svg` come texture visiva.\n   - Imposta la scala (`scale`) su `Vector2(0.6, 0.6)`.\n   - Imposta il colore (`modulate`) su `Color.MAGENTA`.\n   - Collega alla radice lo script `res://ruby.gd`.\n2. Nello script `res://ruby.gd`:\n   - Estendi `Sprite2D`.\n   - Dichiara le variabili `var fall_speed: float = 120.0` e `var points: int = 150`.\n   - In `_process(delta: float)`, sposta il nodo verso il basso incrementando `position.y` di `fall_speed * delta`.\n   - Aggiungi la funzione `hits_basket(basket_pos: Vector2) -> bool` che restituisce `true` se la distanza tra `position` e `basket_pos` è minore di `60.0`, altrimenti `false`.\n3. In `basket.gd`:\n   - Precarica la scena con `const RUBY_SCENE: PackedScene = preload(\"res://ruby.tscn\")`.\n   - Dichiara la variabile `var rubies: Array[Sprite2D] = []`.\n   - Crea la funzione `spawn_ruby(spawn_pos: Vector2) -> Sprite2D` che istanzia `RUBY_SCENE`, ne imposta la `position` a `spawn_pos`, la aggiunge come figlia con `add_child()`, la registra nell'array `rubies` e restituisce il nodo creato.\n   - All'interno di `_ready()` di `basket.gd`, chiama `spawn_ruby(Vector2(500.0, 100.0))` per far apparire un rubino di prova all'inizio della partita.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "pioggia-di-stelle",
+   "passiGuida": [],
+   "suggerimenti": [
+    "In `res://ruby.gd`, usa `position.distance_to(basket_pos) < 60.0` all'interno di `hits_basket`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://ruby.tscn",
+     "descrizione": "La scena ruby.tscn esiste nel progetto"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://ruby.gd",
+     "descrizione": "Lo script ruby.gd esiste nel progetto"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://ruby.tscn",
+     "tipoNodo": "Sprite2D",
+     "nome": "Ruby",
+     "descrizione": "La radice di ruby.tscn è uno Sprite2D chiamato Ruby"
+    },
+    {
+     "tipo": "script_collegato",
+     "scena": "res://ruby.tscn",
+     "nodo": "Ruby",
+     "descrizione": "Lo script ruby.gd è collegato alla radice di ruby.tscn"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://basket.gd",
+     "regex": "preload\\(\"res://ruby\\.tscn\"\\)",
+     "descrizione": "basket.gd precarica ruby.tscn con preload()"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar ruby_instance := await instantiate_scene(\"res://ruby.tscn\")\n\tif not check(\"ruby_scene\", ruby_instance != null, \"La scena ruby.tscn deve potersi aprire in modo autonomo\"):\n\t\treturn\n\tvar start_y: float = ruby_instance.position.y\n\tawait wait_frames(5)\n\tcheck(\"ruby_moves\", ruby_instance.position.y > start_y, \"Il rubino deve muoversi verso il basso durante _process\")\n\tcheck(\"has_hit_func\", has_function(ruby_instance, \"hits_basket\"), \"ruby.gd deve contenere la funzione hits_basket\")\n\t\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena basket.tscn deve avviarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(2)\n\tcheck(\"has_spawn_ruby\", has_function(main, \"spawn_ruby\"), \"basket.gd deve contenere la funzione spawn_ruby\")\n\tvar rubies_array = get_prop(main, \"rubies\", null)\n\tcheck(\"rubies_var\", rubies_array is Array, \"In basket.gd deve esistere l'array rubies\")\n\tif rubies_array is Array:\n\t\tcheck(\"initial_ruby\", rubies_array.size() >= 1, \"In _ready() deve essere generato il rubino iniziale in posizione (500, 100)\")\n\tvar new_ruby = call_if_exists(main, \"spawn_ruby\", [Vector2(200.0, 80.0)])\n\tif check(\"spawn_works\", new_ruby != null and new_ruby is Sprite2D, \"spawn_ruby deve restituire una nuova istanza di Ruby\"):\n\t\tcheck(\"ruby_parent\", new_ruby.get_parent() == main, \"La copia di Ruby deve essere figlia del cesto con add_child\")\n\t\tcheck(\"ruby_tracked\", new_ruby in rubies_array, \"La nuova copia deve essere aggiunta all'array rubies\")\n",
+     "descrizione": "ruby.tscn funziona da sola e basket genera e traccia le copie con spawn_ruby"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Pioggia di stelle\"\nrun/main_scene=\"res://basket.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "rock.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://rock.gd\" id=\"1_rock\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Rock\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_rock\")\n"
+     },
+     {
+      "percorso": "rock.gd",
+      "contenuto": "extends Sprite2D\n\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 120.0\nconst SPAWN_MAX_X: float = 960.0\nconst RESET_Y: float = 680.0\nconst MIN_X: float = 50.0\nconst MAX_X: float = 1050.0\nconst DANGER_Y: float = 400.0\nconst MIN_FALL_SPEED: float = 200.0\nconst MAX_FALL_SPEED: float = 320.0\nconst MAX_HORIZONTAL_SPEED: float = 100.0\nconst MIN_DAMAGE: int = 1\nconst MAX_DAMAGE: int = 3\nconst HIT_DISTANCE: float = 50.0\n\nvar obstacle_name: String = \"Roccia\"\nvar fall_speed: float = 240.0\nvar horizontal_speed: float = 80.0\nvar damage: int = 1\nvar is_active: bool = true\nvar danger_ratio: float = 0.0\n\n\nfunc _ready() -> void:\n\tvar initial_pos: Vector2 = position\n\treset_rock()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\tmodulate = Color.RED\n\tprint(obstacle_name, \" pronta in \", position, \" - Pericolo: \", danger_ratio)\n\n\nfunc _process(delta: float) -> void:\n\tmove_rock(delta)\n\tif position.y > RESET_Y or position.x < MIN_X or position.x > MAX_X:\n\t\treset_rock()\n\tupdate_modulate()\n\n\nfunc move_rock(delta: float) -> void:\n\tposition.y += fall_speed * delta\n\tposition.x += horizontal_speed * delta\n\n\nfunc reset_rock() -> void:\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tfall_speed = randf_range(MIN_FALL_SPEED, MAX_FALL_SPEED)\n\thorizontal_speed = randf_range(-MAX_HORIZONTAL_SPEED, MAX_HORIZONTAL_SPEED)\n\tdamage = randi_range(MIN_DAMAGE, MAX_DAMAGE)\n\tdanger_ratio = float(damage) / float(MAX_DAMAGE)\n\n\nfunc update_modulate() -> void:\n\tif position.y > DANGER_Y:\n\t\tmodulate = Color.DARK_RED\n\telse:\n\t\tmodulate = Color.RED\n\n\nfunc hits_basket(basket_position: Vector2) -> bool:\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < HIT_DISTANCE\n\n\nfunc check_hit(basket_position: Vector2) -> int:\n\tif hits_basket(basket_position):\n\t\tvar dealt_damage: int = damage\n\t\treset_rock()\n\t\treturn dealt_damage\n\treturn 0\n"
+     },
+     {
+      "percorso": "falling_item.gd",
+      "contenuto": "class_name FallingItem\nextends Sprite2D\n\n# Coordinate di riferimento, uscita dallo schermo e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst DESPAWN_Y: float = 680.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Tabella dei tipi di oggetto configurati come dati\nconst ITEM_TYPES: Dictionary = {\n\t\"star\": {\n\t\t\"points\": 10,\n\t\t\"speed\": 180.0,\n\t\t\"color\": Color.YELLOW\n\t},\n\t\"gold_star\": {\n\t\t\"points\": 50,\n\t\t\"speed\": 260.0,\n\t\t\"color\": Color.ORANGE\n\t},\n\t\"rock\": {\n\t\t\"points\": -20,\n\t\t\"speed\": 220.0,\n\t\t\"color\": Color.GRAY\n\t},\n\t\"diamond\": {\n\t\t\"points\": 100,\n\t\t\"speed\": 300.0,\n\t\t\"color\": Color.CYAN\n\t}\n}\n\n# Dati specifici di questa singola istanza\nvar item_name: String = \"star\"\nvar fall_speed: float = 180.0\nvar points: int = 10\nvar is_collected: bool = false\n\n\nfunc _ready() -> void:\n\tpass\n\n\nfunc _process(delta: float) -> void:\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\n\nfunc reset_item() -> void:\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\t\n\tvar types: Array[String] = [\"star\", \"gold_star\", \"rock\", \"diamond\"]\n\tvar random_index: int = randi_range(0, types.size() - 1)\n\tapply_item_type(types[random_index])\n\n\nfunc apply_item_type(type_name: String) -> void:\n\tif type_name in ITEM_TYPES:\n\t\tvar config: Dictionary = ITEM_TYPES[type_name]\n\t\titem_name = type_name\n\t\tpoints = config[\"points\"]\n\t\tfall_speed = config[\"speed\"]\n\t\tmodulate = config[\"color\"]\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n\n\nfunc is_out_of_bounds() -> bool:\n\treturn position.y > DESPAWN_Y\n\n\nfunc accelerate(amount: float) -> void:\n\tfall_speed += amount\n\n\nfunc is_penalty() -> bool:\n\treturn points < 0\n\n\nfunc is_bonus() -> bool:\n\treturn points >= 50\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"Shadow\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, 35)\nscale = Vector2(1.2, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Handle\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, -40)\nscale = Vector2(0.3, 0.6)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Indicator\" type=\"Sprite2D\" parent=\"Handle\"]\nunique_name_in_owner = true\nposition = Vector2(0, -50)\nscale = Vector2(0.2, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\nunique_name_in_owner = true\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n"
+     },
+     {
+      "percorso": "falling_item.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://falling_item.gd\" id=\"1_item\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"FallingItem\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_item\")\n"
+     },
+     {
+      "percorso": "ruby.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://ruby.gd\" id=\"1_ruby\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Ruby\" type=\"Sprite2D\"]\nmodulate = Color(1, 0, 1, 1)\nscale = Vector2(0.6, 0.6)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_ruby\")\n"
+     },
+     {
+      "percorso": "ruby.gd",
+      "contenuto": "extends Sprite2D\n\nvar fall_speed: float = 120.0\nvar points: int = 150\n\n\nfunc _process(delta: float) -> void:\n\tposition.y += fall_speed * delta\n\n\nfunc hits_basket(basket_pos: Vector2) -> bool:\n\treturn position.distance_to(basket_pos) < 60.0\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\n@onready var ui_label: Label = %Label\n@onready var shadow: Sprite2D = $Shadow\n@onready var indicator: Sprite2D = %Indicator\n\nconst FALLING_ITEM_SCENE: PackedScene = preload(\"res://falling_item.tscn\")\nconst ROCK_SCENE: PackedScene = preload(\"res://rock.tscn\")\nconst RUBY_SCENE: PackedScene = preload(\"res://ruby.tscn\")\n\nconst START_POSITION: Vector2 = Vector2(576, 600)\nconst MIN_X: float = 64.0\nconst MAX_X: float = 1088.0\nconst INITIAL_LIVES: int = 3\nconst INITIAL_STARS_COUNT: int = 5\nconst DIFFICULTY_RAMP_SECONDS: float = 60.0\nconst SPAWN_INTERVAL_MAX: float = 2.0\nconst SPAWN_INTERVAL_MIN: float = 0.5\nconst MAX_SPEED_BOOST: float = 150.0\nconst SCORE_SPEED_BOOST: float = 10.0\nconst WIN_SCORE: int = 100\nconst ROCK_START_X: float = 160.0\nconst ROCK_END_X: float = 960.0\nconst ROCK_ROW_Y: float = 200.0\nconst ROCK_SPACING: float = 200.0\n\nenum GameState { PLAYING, GAME_OVER, PAUSED, WIN }\n\nvar current_state: GameState = GameState.PLAYING\nvar player_name: String = \"Cesto\"\nvar speed: float = 350.0\nvar lives: int = INITIAL_LIVES\nvar score: int = 0\nvar is_active: bool = true\n\nvar game_time: float = 0.0\nvar spawn_timer: float = 0.0\n\nvar stars: Array[FallingItem] = []\nvar rubies: Array[Sprite2D] = []\n\nvar collected_counts: Dictionary = {\n\t\"star\": 0,\n\t\"gold_star\": 0,\n\t\"rock\": 0,\n\t\"diamond\": 0,\n}\n\n\nfunc _ready() -> void:\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\tupdate_ui()\n\tspawn_initial_stars(INITIAL_STARS_COUNT)\n\tspawn_rock_row()\n\tspawn_ruby(Vector2(500.0, 100.0))\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\nfunc _process(delta: float) -> void:\n\tmatch current_state:\n\t\tGameState.PLAYING:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PAUSED\n\t\t\t\tui_label.text = \"Gioco in pausa. Premi Esc per riprendere\"\n\t\t\telse:\n\t\t\t\tprocess_playing(delta)\n\t\tGameState.GAME_OVER:\n\t\t\tcheck_restart()\n\t\tGameState.PAUSED:\n\t\t\tif Input.is_action_just_pressed(\"ui_cancel\"):\n\t\t\t\tcurrent_state = GameState.PLAYING\n\t\t\t\tupdate_ui()\n\t\tGameState.WIN:\n\t\t\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\t\t\treset_game()\n\n\nfunc process_playing(delta: float) -> void:\n\tgame_time += delta\n\tspawn_timer += delta\n\t\n\tvar interval: float = get_spawn_interval()\n\tif spawn_timer >= interval:\n\t\tspawn_timer -= interval\n\t\tspawn_star()\n\t\n\tmove_basket(delta)\n\tcheck_stars()\n\tcheck_win()\n\tcheck_game_over()\n\n\nfunc move_basket(delta: float) -> void:\n\tvar direction: float = 0.0\n\tif Input.is_action_pressed(\"move_left\"):\n\t\tdirection -= 1.0\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tdirection += 1.0\n\t\n\tposition.x += direction * speed * delta\n\tposition.x = clamp(position.x, MIN_X, MAX_X)\n\n\nfunc get_difficulty_factor() -> float:\n\treturn min(game_time / DIFFICULTY_RAMP_SECONDS, 1.0)\n\n\nfunc get_spawn_interval() -> float:\n\tvar interval: float = lerpf(SPAWN_INTERVAL_MAX, SPAWN_INTERVAL_MIN, get_difficulty_factor())\n\treturn max(interval, SPAWN_INTERVAL_MIN)\n\n\nfunc spawn_item_at(spawn_pos: Vector2, item_type: String) -> FallingItem:\n\tvar new_item: FallingItem = FALLING_ITEM_SCENE.instantiate() as FallingItem\n\tnew_item.apply_item_type(item_type)\n\tnew_item.position = spawn_pos\n\tadd_child(new_item)\n\tstars.append(new_item)\n\treturn new_item\n\n\nfunc spawn_ruby(spawn_pos: Vector2) -> Sprite2D:\n\tvar ruby: Sprite2D = RUBY_SCENE.instantiate() as Sprite2D\n\truby.position = spawn_pos\n\tadd_child(ruby)\n\trubies.append(ruby)\n\treturn ruby\n\n\nfunc spawn_star() -> void:\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tvar types: Array[String] = [\"star\", \"gold_star\", \"rock\", \"diamond\"]\n\tvar chosen_type: String = types[randi_range(0, types.size() - 1)]\n\t\n\tvar new_star: FallingItem = spawn_item_at(Vector2(random_x, START_Y), chosen_type)\n\tvar speed_boost: float = lerpf(0.0, MAX_SPEED_BOOST, get_difficulty_factor())\n\tnew_star.accelerate(speed_boost)\n\n\nfunc spawn_initial_stars(count: int) -> void:\n\tfor i in range(count):\n\t\tspawn_star()\n\n\nfunc check_stars() -> void:\n\tfor i in range(stars.size() - 1, -1, -1):\n\t\tvar current_star: FallingItem = stars[i]\n\t\tif current_star.is_caught(global_position):\n\t\t\tif current_star.is_penalty():\n\t\t\t\ttake_damage(1)\n\t\t\telse:\n\t\t\t\tadd_score(current_star.points)\n\t\t\n\t\tif current_star.item_name in collected_counts:\n\t\t\tcollected_counts[current_star.item_name] += 1\n\t\t\t\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\t\telif current_star.is_out_of_bounds():\n\t\t\tremove_child(current_star)\n\t\t\tstars.remove_at(i)\n\t\t\tspawn_star()\n\n\nfunc get_collected_count(type_name: String) -> int:\n\treturn collected_counts.get(type_name, 0)\n\n\nfunc boost_all_stars(extra_speed: float) -> void:\n\tfor star in stars:\n\t\tstar.accelerate(extra_speed)\n\n\nfunc spawn_rock_row() -> void:\n\tvar current_x: float = ROCK_START_X\n\twhile current_x <= ROCK_END_X:\n\t\tvar rock: Sprite2D = ROCK_SCENE.instantiate() as Sprite2D\n\t\trock.position = Vector2(current_x, ROCK_ROW_Y)\n\t\tadd_child(rock)\n\t\tcurrent_x += ROCK_SPACING\n\n\nfunc update_ui() -> void:\n\tui_label.text = \"Punti: %04d | Vite: %d\" % [score, lives]\n\tif lives >= 3:\n\t\tindicator.modulate = Color.GREEN\n\telif lives == 2:\n\t\tindicator.modulate = Color.YELLOW\n\telse:\n\t\tindicator.modulate = Color.RED\n\n\nfunc set_speed(new_speed: float) -> void:\n\tspeed = new_speed\n\n\nfunc add_score(amount: int) -> void:\n\tscore += amount\n\tboost_all_stars(SCORE_SPEED_BOOST)\n\tupdate_ui()\n\tcheck_win()\n\n\nfunc take_damage(amount: int) -> void:\n\tlives -= amount\n\tif lives <= 0:\n\t\tlives = 0\n\t\tis_active = false\n\tupdate_ui()\n\tcheck_game_over()\n\n\nfunc check_win() -> void:\n\tif score >= WIN_SCORE:\n\t\tcurrent_state = GameState.WIN\n\t\tui_label.text = \"Vittoria! Punti: %d | Premi Invio per giocare ancora\" % score\n\n\nfunc check_game_over() -> void:\n\tif lives <= 0:\n\t\tcurrent_state = GameState.GAME_OVER\n\t\tindicator.modulate = Color.DARK_RED\n\t\tui_label.text = \"Partita finita! Premi Invio per ricominciare\"\n\n\nfunc check_restart() -> void:\n\tif Input.is_action_just_pressed(\"ui_accept\"):\n\t\treset_game()\n\n\nfunc reset_game() -> void:\n\tlives = INITIAL_LIVES\n\tscore = 0\n\tgame_time = 0.0\n\tspawn_timer = 0.0\n\tposition = START_POSITION\n\tcurrent_state = GameState.PLAYING\n\tis_active = true\n\tupdate_ui()\n\n\nfunc get_catch_point() -> Vector2:\n\treturn global_position\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://basket.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Abbiamo creato lo stampo `ruby.tscn` con le sue caratteristiche visive (`Color.MAGENTA` e scala ridotta) e il suo script autonomo `ruby.gd`. La logica di movimento e la verifica della distanza risiedono dentro `Ruby`, rendendo la scena indipendente dal resto del gioco. In `basket.gd` abbiamo precaricato `RUBY_SCENE` e implementato `spawn_ruby()`, che istanzia il rubino, lo colloca alle coordinate specificate, lo aggiunge all'albero di nodi con `add_child()` e lo tiene tracciato nell'array `rubies`.",
+    "cambiati": [
+     "ruby.tscn",
+     "ruby.gd",
+     "basket.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
