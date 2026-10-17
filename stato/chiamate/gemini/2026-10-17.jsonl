@@ -77,3 +77,4 @@
 {"quando":1792229687693,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"leggere-gli-errori","ok":true,"contata":true,"durataMs":5855,"tokenInput":2919,"tokenOutput":790,"ragionamento":1440}
 {"quando":1792229698017,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":6224,"tokenInput":2924,"tokenOutput":798,"ragionamento":1718}
 {"quando":1792229709327,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"raggiungere-i-nodi","ok":true,"contata":true,"durataMs":9173,"tokenInput":3001,"tokenOutput":702,"ragionamento":2425}
+{"quando":1792229726063,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"vita-di-un-nodo","ok":false,"contata":true,"durataMs":2292,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
