@@ -144,8 +144,16 @@
     "partenza": {
      "file": [
       {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TestPulizia\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
        "percorso": "main.tscn",
        "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://spawner.gd\" id=\"1_spawner\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_spawner\")\n"
+      },
+      {
+       "percorso": "item.tscn",
+       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://item.gd\" id=\"1_item\"]\n\n[node name=\"Item\" type=\"Node2D\"]\nscript = ExtResource(\"1_item\")\n"
       },
       {
        "percorso": "item.gd",
@@ -153,7 +161,7 @@
       },
       {
        "percorso": "spawner.gd",
-       "contenuto": "extends Node2D\n\nconst LIMIT_Y: float = 400.0\n\nvar active_items: Array[Node2D] = []\n\n\nfunc _ready() -> void:\n\tfor i in range(5):\n\t\tvar item := Node2D.new()\n\t\tvar script_resource: Script = load(\"res://item.gd\")\n\t\titem.set_script(script_resource)\n\t\titem.position = Vector2(100.0 * (i + 1), 350.0 + (i * 20.0))\n\t\tadd_child(item)\n\t\tactive_items.append(item)\n\n\nfunc _process(_delta: float) -> void:\n\t# ERRORE: il ciclo scorre in avanti e prova a usare nodi senza controllare se esistono\n\tfor i in range(active_items.size()):\n\t\tvar item: Node2D = active_items[i]\n\t\tif item.position.y > LIMIT_Y:\n\t\t\titem.free()\n"
+       "contenuto": "extends Node2D\n\nconst LIMIT_Y: float = 400.0\nconst ITEM_SCENE = preload(\"res://item.tscn\")\n\nvar active_items: Array[Node2D] = []\n\n\nfunc _ready() -> void:\n\tfor i in range(5):\n\t\tvar item := ITEM_SCENE.instantiate() as Node2D\n\t\titem.position = Vector2(100.0 * (i + 1), 350.0 + (i * 20.0))\n\t\tadd_child(item)\n\t\tactive_items.append(item)\n\n\nfunc _process(_delta: float) -> void:\n\t# ERRORE: il ciclo scorre in avanti e prova a usare nodi senza controllare se esistono\n\tfor i in range(active_items.size()):\n\t\tvar item: Node2D = active_items[i]\n\t\tif item.position.y > LIMIT_Y:\n\t\t\titem.free()\n"
       }
      ],
      "progetto": {
@@ -167,8 +175,20 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://spawner.gd\" id=\"1_spawner\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_spawner\")\n"
+      },
+      {
+       "percorso": "item.tscn",
+       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://item.gd\" id=\"1_item\"]\n\n[node name=\"Item\" type=\"Node2D\"]\nscript = ExtResource(\"1_item\")\n"
+      },
+      {
+       "percorso": "item.gd",
+       "contenuto": "extends Node2D\n\nvar speed: float = 300.0\n\n\nfunc _process(delta: float) -> void:\n\tposition.y += speed * delta\n"
+      },
+      {
        "percorso": "spawner.gd",
-       "contenuto": "extends Node2D\n\nconst LIMIT_Y: float = 400.0\n\nvar active_items: Array[Node2D] = []\n\n\nfunc _ready() -> void:\n\tfor i in range(5):\n\t\tvar item := Node2D.new()\n\t\tvar script_resource: Script = load(\"res://item.gd\")\n\t\titem.set_script(script_resource)\n\t\titem.position = Vector2(100.0 * (i + 1), 350.0 + (i * 20.0))\n\t\tadd_child(item)\n\t\tactive_items.append(item)\n\n\nfunc _process(_delta: float) -> void:\n\tfor i in range(active_items.size() - 1, -1, -1):\n\t\tvar item: Node2D = active_items[i]\n\t\tif not is_instance_valid(item):\n\t\t\tactive_items.remove_at(i)\n\t\t\tcontinue\n\t\tif item.position.y > LIMIT_Y:\n\t\t\tactive_items.remove_at(i)\n\t\t\titem.queue_free()\n"
+       "contenuto": "extends Node2D\n\nconst LIMIT_Y: float = 400.0\nconst ITEM_SCENE = preload(\"res://item.tscn\")\n\nvar active_items: Array[Node2D] = []\n\n\nfunc _ready() -> void:\n\tfor i in range(5):\n\t\tvar item := ITEM_SCENE.instantiate() as Node2D\n\t\titem.position = Vector2(100.0 * (i + 1), 350.0 + (i * 20.0))\n\t\tadd_child(item)\n\t\tactive_items.append(item)\n\n\nfunc _process(_delta: float) -> void:\n\tfor i in range(active_items.size() - 1, -1, -1):\n\t\tvar item: Node2D = active_items[i]\n\t\tif not is_instance_valid(item):\n\t\t\tactive_items.remove_at(i)\n\t\t\tcontinue\n\t\tif item.position.y > LIMIT_Y:\n\t\t\tactive_items.remove_at(i)\n\t\t\titem.queue_free()\n"
       }
      ],
      "progetto": {
@@ -179,12 +199,14 @@
       "impostazioni": []
      },
      "spiegazione": "Scorrere un array in avanti mentre si eliminano elementi porta a saltare indici o ad accedere fuori dai limiti consentiti. Inoltre `free()` distrugge l'oggetto istantaneamente lasciando riferimenti non validi. Scorrendo a ritroso con `range(size - 1, -1, -1)`, controllando la validità con `is_instance_valid()` e liberando con `queue_free()` insieme a `remove_at()`, la lista rimane coerente e Godot non va in crash.",
-     "cambiati": [],
+     "cambiati": [
+      "spawner.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "controllo di sicurezza — spawner.gd riga 12: set_script non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo",
@@ -192,7 +214,8 @@
     "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es3": {
@@ -320,7 +343,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "La vita di un nodo: dalla nascita a queue_free()",
