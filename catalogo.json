@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T09:35:07.640Z",
+ "aggiornato": "2026-10-17T09:35:21.976Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -214,10 +214,10 @@
    "slug": "raggiungere-i-nodi",
    "numero": "2.1",
    "titolo": "Raggiungere i nodi dal codice",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f02-nodi-scene-segnali/raggiungere-i-nodi.json",
-   "sha256": "5c9ebc12f191d688bafe2aa27080e902c099022cae9d9bbfbd3d4f8f1bfa4807",
-   "byte": 97163
+   "sha256": "c9334b82d44e078a096506bdd3251a56dd5fbc985ca55728b8e7f946b059e4bf",
+   "byte": 99083
   },
   {
    "slug": "scene-riutilizzabili",
