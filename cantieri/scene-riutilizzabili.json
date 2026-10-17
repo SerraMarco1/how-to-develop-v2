@@ -385,6 +385,17 @@
     ],
     "verifiche": [
      {
+      "tipo": "file_esiste",
+      "percorso": "res://falling_item.tscn",
+      "descrizione": "La scena falling_item.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://basket.tscn",
+      "nodo": "Basket",
+      "descrizione": "Il nodo Basket ha lo script basket.gd collegato"
+     },
+     {
       "tipo": "script_godot",
       "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve avviarsi senza errori\"):\n\t\treturn\n\tcheck(\"has_func\", has_function(main, \"spawn_item_at\"), \"In basket.gd deve esistere la funzione spawn_item_at\")\n\tcheck(\"arg_count\", function_argument_count(main, \"spawn_item_at\") == 2, \"spawn_item_at deve accettare due parametri: spawn_pos e item_type\")\n\tvar test_pos := Vector2(320.0, 140.0)\n\tvar created = call_if_exists(main, \"spawn_item_at\", [test_pos, \"diamond\"])\n\tif not check(\"created_item\", created is FallingItem, \"spawn_item_at deve restituire un'istanza di FallingItem\"):\n\t\treturn\n\tcheck(\"parented\", created.get_parent() == main, \"L'oggetto creato deve essere aggiunto come figlio con add_child\")\n\tcheck(\"pos_ok\", created.position == test_pos, \"La posizione dell'oggetto deve corrispondere al parametro passato\")\n\tcheck(\"type_ok\", created.item_name == \"diamond\", \"L'oggetto deve avere il tipo passato tramite apply_item_type\")\n\tvar stars_array = get_prop(main, \"stars\", [])\n\tcheck(\"in_array\", created in stars_array, \"L'oggetto creato deve essere inserito nell'array stars\")",
       "descrizione": "spawn_item_at() istanzia, configura, aggiunge all'albero e all'array stars"
@@ -404,7 +415,7 @@
       },
       {
        "percorso": "falling_item.gd",
-       "contenuto": "class_name FallingItem\nextends Sprite2D\n\n# Coordinate di riferimento, uscita dallo schermo e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst DESPAWN_Y: float = 680.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Tabella dei tipi di oggetto configurati come dati\nconst ITEM_TYPES: Dictionary = {\n\t\"star\": {\n\t\t\"points\": 10,\n\t\t\"speed\": 180.0,\n\t\t\"color\": Color.YELLOW\n\t},\n\t\"gold_star\": {\n\t\t\"points\": 50,\n\t\t\"speed\": 260.0,\n\t\t\"color\": Color.ORANGE\n\t},\n\t\"rock\": {\n\t\t\"points\": -20,\n\t\t\"speed\": 220.0,\n\t\t\"color\": Color.GRAY\n\t},\n\t\"diamond\": {\n\t\t\"points\": 100,\n\t\t\"speed\": 300.0,\n\t\t\"color\": Color.CYAN\n\t}\n}\n\n# Dati specifici di questa singola istanza\nvar item_name: String = \"star\"\nvar fall_speed: float = 180.0\nvar points: int = 10\nvar is_collected: bool = false\n\n\nfunc _ready() -> void:\n\tvar initial_pos: Vector2 = position\n\treset_item()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n\n\nfunc _process(delta: float) -> void:\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\n\nfunc reset_item() -> void:\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\t\n\tvar types: Array[String] = [\"star\", \"gold_star\", \"rock\", \"diamond\"]\n\tvar random_index: int = randi_range(0, types.size() - 1)\n\tapply_item_type(types[random_index])\n\n\nfunc apply_item_type(type_name: String) -> void:\n\tif type_name in ITEM_TYPES:\n\t\tvar config: Dictionary = ITEM_TYPES[type_name]\n\t\titem_name = type_name\n\t\tpoints = config[\"points\"]\n\t\tfall_speed = config[\"speed\"]\n\t\tmodulate = config[\"color\"]\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n\n\nfunc is_out_of_bounds() -> bool:\n\treturn position.y > DESPAWN_Y\n\n\nfunc accelerate(amount: float) -> void:\n\tfall_speed += amount\n\n\nfunc is_penalty() -> bool:\n\treturn points < 0\n\n\nfunc is_bonus() -> bool:\n\treturn points >= 50\n"
+       "contenuto": "class_name FallingItem\nextends Sprite2D\n\n# Coordinate di riferimento, uscita dallo schermo e raggio di raccolta\nconst START_Y: float = 80.0\nconst SPAWN_MIN_X: float = 64.0\nconst SPAWN_MAX_X: float = 1088.0\nconst DESPAWN_Y: float = 680.0\nconst CATCH_DISTANCE: float = 60.0\n\n# Tabella dei tipi di oggetto configurati come dati\nconst ITEM_TYPES: Dictionary = {\n\t\"star\": {\n\t\t\"points\": 10,\n\t\t\"speed\": 180.0,\n\t\t\"color\": Color.YELLOW\n\t},\n\t\"gold_star\": {\n\t\t\"points\": 50,\n\t\t\"speed\": 260.0,\n\t\t\"color\": Color.ORANGE\n\t},\n\t\"rock\": {\n\t\t\"points\": -20,\n\t\t\"speed\": 220.0,\n\t\t\"color\": Color.GRAY\n\t},\n\t\"diamond\": {\n\t\t\"points\": 100,\n\t\t\"speed\": 300.0,\n\t\t\"color\": Color.CYAN\n\t}\n}\n\n# Dati specifici di questa singola istanza\nvar item_name: String = \"star\"\nvar fall_speed: float = 180.0\nvar points: int = 10\nvar is_collected: bool = false\n\n\nfunc _ready() -> void:\n\tpass\n\n\nfunc _process(delta: float) -> void:\n\tif not is_collected:\n\t\tposition.y += fall_speed * delta\n\n\nfunc reset_item() -> void:\n\tvar random_x: float = randf_range(SPAWN_MIN_X, SPAWN_MAX_X)\n\tposition = Vector2(random_x, START_Y)\n\tis_collected = false\n\t\n\tvar types: Array[String] = [\"star\", \"gold_star\", \"rock\", \"diamond\"]\n\tvar random_index: int = randi_range(0, types.size() - 1)\n\tapply_item_type(types[random_index])\n\n\nfunc apply_item_type(type_name: String) -> void:\n\tif type_name in ITEM_TYPES:\n\t\tvar config: Dictionary = ITEM_TYPES[type_name]\n\t\titem_name = type_name\n\t\tpoints = config[\"points\"]\n\t\tfall_speed = config[\"speed\"]\n\t\tmodulate = config[\"color\"]\n\n\nfunc is_caught(basket_position: Vector2) -> bool:\n\tvar distance: float = position.distance_to(basket_position)\n\treturn distance < CATCH_DISTANCE\n\n\nfunc is_out_of_bounds() -> bool:\n\treturn position.y > DESPAWN_Y\n\n\nfunc accelerate(amount: float) -> void:\n\tfall_speed += amount\n\n\nfunc is_penalty() -> bool:\n\treturn points < 0\n\n\nfunc is_bonus() -> bool:\n\treturn points >= 50\n"
       },
       {
        "percorso": "basket.tscn",
@@ -442,19 +453,22 @@
       "impostazioni": []
      },
      "spiegazione": "La funzione `spawn_item_at()` centralizza i passaggi chiave per creare una copia: istanziazione da `FALLING_ITEM_SCENE`, configurazione del tipo con `apply_item_type()`, assegnazione delle coordinate con `position`, inserimento nell'albero dei nodi con `add_child()` e tracciamento nella lista `stars`. In questo modo `spawn_star()` diventa più chiara ed è facilissimo far comparire oggetti in qualsiasi punto dello schermo.",
-     "cambiati": [],
+     "cambiati": [
+      "basket.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - L'oggetto deve avere il tipo passato tramite apply_item_type\nOutput di Godot:\n   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)\n   at: cleanup (core/object/object.cpp:2536)\nERROR: 2 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)\nERROR: 1 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "test": {
