@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.7-flash",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"La quarta verifica esegue `meteor.call(\\\"update_speed\\\", 10.0)` e controlla la proprietà `speed` del meteorite (`get_prop(meteor, \\\"speed\\\")`), ma la consegna non specifica né impone che il meteorite debba possedere una proprietà `speed` o una funzione chiamata `update_speed`. Uno studente che aggiorna la velocità direttamente nel `_process` (del meteorite o di `Main`) farà fallire il test senza alcuna colpa.\",\n      \"correzione\": \"Riscrivere la verifica per testare il comportamento reale senza pretendere funzioni o proprietà private non documentate: impostare `main.set(\\\"score\\\", ...)` e verificare lo spostamento verticale del meteorite (`position.y`) in un intervallo di tempo (ad es. con `await wait_seconds(0.2)`), confrontando lo spostamento a `score = 0.0` rispetto a `score = 10.0` e `score = 50.0` per confermare che la velocità aumenti fino al limite massimo.\"\n    }\n  ]\n}",
+ "ragionamento": 1861,
+ "quando": "2026-10-17T07:37:27.587Z",
+ "ruolo": "revisore"
+}
