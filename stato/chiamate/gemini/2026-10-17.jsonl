@@ -74,3 +74,4 @@
 {"quando":1792229652739,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"condizioni","ok":true,"contata":true,"durataMs":6436,"tokenInput":2900,"tokenOutput":838,"ragionamento":2158}
 {"quando":1792229663638,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"input-da-tastiera","ok":true,"contata":true,"durataMs":9123,"tokenInput":2868,"tokenOutput":939,"ragionamento":2670}
 {"quando":1792229677308,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"funzioni","ok":true,"contata":true,"durataMs":5841,"tokenInput":2863,"tokenOutput":872,"ragionamento":1478}
+{"quando":1792229687693,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"leggere-gli-errori","ok":true,"contata":true,"durataMs":5855,"tokenInput":2919,"tokenOutput":790,"ragionamento":1440}
