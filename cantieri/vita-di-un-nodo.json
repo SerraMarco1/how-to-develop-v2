@@ -186,7 +186,11 @@
    "genere": "ripara",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — spawner.gd riga 12: set_script non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo",
+    "controllo di sicurezza — progetto di partenza, spawner.gd riga 12: set_script non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo",
+    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]

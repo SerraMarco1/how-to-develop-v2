@@ -1,0 +1,63 @@
+{
+ "n": 7,
+ "quando": "2026-10-17T08:58:30.344Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (prevedi): approvato",
+ "spiegazione": "«Cosa accade ai nodi nel tempo». 4 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 10 · entered-still_here · 2 · 100",
+ "richieste": 0,
+ "durataMs": 4531,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Cosa accade ai nodi nel tempo",
+   "consegna": "Leggi ogni frammento di codice e deduci cosa restituisce la funzione `run()`, senza eseguirla nell'editor.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "class_name LifecyclePredict1\nextends RefCounted\n\nfunc run() -> int:\n\tvar item := Node.new()\n\tvar is_valid_before := is_instance_valid(item)\n\titem.free()\n\tvar is_valid_after := is_instance_valid(item)\n\tvar count := 0\n\tif is_valid_before:\n\t\tcount += 10\n\tif is_valid_after:\n\t\tcount += 5\n\treturn count\n",
+     "domanda": "Quale valore intero restituisce la funzione `run()`?",
+     "risposta": "10",
+     "spiegazione": "All'inizio il nodo viene allocato in memoria con `Node.new()`, quindi `is_instance_valid(item)` restituisce `true` e `count` aumenta di 10. Subito dopo, `item.free()` distrugge immediatamente l'istanza. A quel punto `is_instance_valid(item)` restituisce `false`, il secondo blocco condizionale viene ignorato e il risultato finale è 10.",
+     "id": "es1p1"
+    },
+    {
+     "codice": "class_name LifecyclePredict2\nextends RefCounted\n\nfunc run() -> String:\n\tvar log: Array[String] = []\n\tvar parent := Node2D.new()\n\tvar child := Node2D.new()\n\tparent.add_child(child)\n\tlog.append(\"entered\")\n\tparent.queue_free()\n\tif is_instance_valid(parent):\n\t\tlog.append(\"still_here\")\n\treturn \"-\".join(log)\n",
+     "domanda": "Quale testo restituisce la funzione `run()`?",
+     "risposta": "entered-still_here",
+     "spiegazione": "Il metodo `queue_free()` non distrugge l'oggetto istantaneamente: si limita a contrassegnarlo per l'eliminazione al termine del fotogramma. Di conseguenza, nello stesso blocco di codice successivo alla chiamata, `is_instance_valid(parent)` è ancora `true`. Vengono aggiunte entrambe le stringhe, producendo `\"entered-still_here\"`.",
+     "id": "es1p2"
+    },
+    {
+     "codice": "class_name LifecyclePredict3\nextends RefCounted\n\nfunc run() -> int:\n\tvar items: Array[Node] = []\n\tfor i in range(3):\n\t\titems.append(Node.new())\n\t\n\tvar target: Node = items[1]\n\ttarget.free()\n\t\n\tvar alive_count: int = 0\n\tfor node in items:\n\t\tif is_instance_valid(node):\n\t\t\talive_count += 1\n\treturn alive_count\n",
+     "domanda": "Quale numero intero restituisce la funzione `run()`?",
+     "risposta": "2",
+     "spiegazione": "L'array contiene tre nodi distinti creati nel ciclo. Il nodo all'indice 1 viene distrutto direttamente con `free()`. Nel ciclo di verifica, gli elementi agli indici 0 e 2 risultano ancora validi, mentre quello all'indice 1 non lo è più. La variabile `alive_count` viene incrementata due volte, restituendo 2.",
+     "id": "es1p3"
+    },
+    {
+     "codice": "class_name LifecyclePredict4\nextends RefCounted\n\nfunc run() -> int:\n\tvar root := Node.new()\n\tvar child := Node.new()\n\troot.add_child(child)\n\t\n\tvar was_child_valid := is_instance_valid(child)\n\troot.free()\n\tvar is_child_valid_now := is_instance_valid(child)\n\t\n\tif was_child_valid and not is_child_valid_now:\n\t\treturn 100\n\treturn 0\n",
+     "domanda": "Quale numero intero restituisce la funzione `run()`?",
+     "risposta": "100",
+     "spiegazione": "Quando un nodo genitore viene liberato dalla memoria, Godot distrugge automaticamente anche tutti i nodi figli contenuti nel suo ramo. `child` era valido prima della distruzione di `root`, ma non lo è più subito dopo. La condizione risulta vera e restituisce 100.",
+     "id": "es1p4"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
