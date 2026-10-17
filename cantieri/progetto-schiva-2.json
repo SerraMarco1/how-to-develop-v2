@@ -104,7 +104,9 @@
    "genere": "da-zero",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo 10 secondi la velocità deve essere 400.0 (250 + 10 * 15)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
