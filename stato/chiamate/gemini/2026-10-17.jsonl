@@ -43,3 +43,5 @@
 {"quando":1792223780705,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"raggiungere-i-nodi","ok":true,"contata":true,"durataMs":52326,"tokenInput":15872,"tokenOutput":2633,"ragionamento":3852}
 {"quando":1792223834385,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"raggiungere-i-nodi","ok":true,"contata":true,"durataMs":193516,"tokenInput":16125,"tokenOutput":14130,"ragionamento":20024}
 {"quando":1792224032798,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"raggiungere-i-nodi","ok":true,"contata":true,"durataMs":27204,"tokenInput":13399,"tokenOutput":6280,"ragionamento":9049}
+{"quando":1792224088220,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"raggiungere-i-nodi","ok":false,"contata":true,"durataMs":5426,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792224093650,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"raggiungere-i-nodi","ok":true,"contata":true,"durataMs":11158,"tokenInput":12655,"tokenOutput":12,"ragionamento":1560}
