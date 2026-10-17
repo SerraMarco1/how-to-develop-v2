@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-17T07:01:39.488Z",
+ "aggiornato": "2026-10-17T07:05:56.537Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "ordinare-il-codice",
-  "numero": "1.14",
-  "titolo": "Ordinare il codice"
+  "slug": "classi-e-oggetti",
+  "numero": "1.15",
+  "titolo": "Classi e oggetti: ogni cosa pensa a sé"
  },
- "messaggio": "Sta scrivendo la lezione 1.14 «Ordinare il codice».",
+ "messaggio": "Sta scrivendo la lezione 1.15 «Classi e oggetti: ogni cosa pensa a sé».",
  "riprende": null
 }
