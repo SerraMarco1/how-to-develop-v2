@@ -73,7 +73,7 @@
     }
    },
    "genere": "da-zero",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo restart le vite devono tornare a 3\n  - Dopo restart il tempo della partita deve ripartire da 0\n  - Dopo restart GameOverLabel deve tornare invisibile\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
