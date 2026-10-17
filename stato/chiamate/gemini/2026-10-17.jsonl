@@ -32,3 +32,4 @@
 {"quando":1792223132199,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":20181,"tokenInput":3771,"tokenOutput":274,"ragionamento":2279}
 {"quando":1792223153996,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":34512,"tokenInput":12469,"tokenOutput":4912,"ragionamento":1383}
 {"quando":1792223197289,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-schiva-3","ok":true,"contata":true,"durataMs":7610,"tokenInput":2841,"tokenOutput":900,"ragionamento":2447}
+{"quando":1792223210576,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":112507,"tokenInput":16063,"tokenOutput":2330,"ragionamento":12722}
