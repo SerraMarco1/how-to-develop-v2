@@ -71,7 +71,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://basket.gd deve caricarsi senza errori: Parse Error: Unindent doesn't match the previous indentation level. (res://basket.gd:188 in GDScript::reload)\nFailed to load script \"res://basket.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  basket.gd, riga 188: `elif current_star.is_out_of_bounds():`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
