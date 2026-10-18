@@ -197,7 +197,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "estendi",
@@ -311,13 +311,122 @@
    "genere": "estendi",
    "correzioni": 1,
    "semplificato": false,
-   "problemi": [
-    "il progetto di partenza (`partenza`) deve aprirsi e partire senza errori, invece:\n  - Codice della lezione rifiutato dal controllo di sicurezza: main.tscn riga 28: uno script scritto dentro la scena: nel corso gli script stanno nei loro file .gd\n  - Codice della lezione rifiutato dal controllo di sicurezza: main.tscn riga 29: codice scritto dentro una risorsa: nel corso gli script stanno nei loro file .gd"
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest",
     "gemini/gemini-flash-lite-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "estendi",
+    "titolo": "La torre di guardia e le lanterne",
+    "consegna": "Ricevi un progetto chiamato `TorreLanterne` in cui ci sono diverse lanterne disposte sullo schermo (`Lantern`), ciascuna con una luce accesa (colore giallo) o spenta (colore grigio scuro). La scena principale `main.tscn` contiene una torre (`WatchTower`) con il suo script `watch_tower.gd`.\n\nIl codice attuale funziona: le lanterne appartengono già al gruppo `lanterne` e hanno un metodo `accendi()` e uno `spegni()`.\n\nIl tuo compito è aggiungere a `watch_tower.gd` due nuove funzioni senza modificare il resto:\n1. `conta_lanterne_accese() -> int`: ottiene tutti i nodi del gruppo `lanterne` usando `get_tree().get_nodes_in_group(\"lanterne\")`, conta quante di esse hanno la proprietà booleana `accesa` uguale a `true` e restituisce il numero totale trovato.\n2. `spegni_tutte() -> void`: usa `get_tree().call_group(\"lanterne\", \"spegni\")` per inviare l'ordine di spegnimento a tutte le lanterne in una riga sola.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "torre-lanterne",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `conta_lanterne_accese()`, ottieni la lista dei nodi con `var lista: Array[Node] = get_tree().get_nodes_in_group(\"lanterne\")` e usa un contatore all'interno di un ciclo `for`.",
+     "In `spegni_tutte()`, basta chiamare direttamente `get_tree().call_group(\"lanterne\", \"spegni\")`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://watch_tower.gd",
+      "regex": "get_nodes_in_group\\(\"lanterne\"\\)",
+      "descrizione": "watch_tower.gd usa get_nodes_in_group(\"lanterne\")"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://watch_tower.gd",
+      "regex": "call_group\\(\"lanterne\",\\s*\"spegni\"\\)",
+      "descrizione": "watch_tower.gd usa call_group(\"lanterne\", \"spegni\")"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\n\tvar tower := find_by_name(main, \"WatchTower\")\n\tif not check(\"tower\", tower != null, \"Deve esistere il nodo WatchTower\"):\n\t\treturn\n\n\tcheck(\"has_count\", has_function(tower, \"conta_lanterne_accese\"), \"WatchTower deve possedere la funzione conta_lanterne_accese()\")\n\tcheck(\"has_off\", has_function(tower, \"spegni_tutte\"), \"WatchTower deve possedere la funzione spegni_tutte()\")\n\n\tvar conteggio = call_if_exists(tower, \"conta_lanterne_accese\")\n\tcheck(\"initial_count\", conteggio == 2, \"All'inizio ci sono esattamente 2 lanterne accese, conta_lanterne_accese deve restituire 2\")\n\n\tcall_if_exists(tower, \"spegni_tutte\")\n\tawait wait_frames(2)\n\n\tvar conteggio_dopo = call_if_exists(tower, \"conta_lanterne_accese\")\n\tcheck(\"after_off\", conteggio_dopo == 0, \"Dopo spegni_tutte(), conta_lanterne_accese deve restituire 0\")\n",
+      "descrizione": "conta_lanterne_accese conta correttamente e spegni_tutte spegne tutte le lanterne del gruppo"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "TorreLanterne",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TorreLanterne\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tawait get_tree().process_frame\n\tvar lanterne := get_tree().get_nodes_in_group(\"lanterne\")\n\tif lanterne.size() >= 2:\n\t\tlanterne[0].accendi()\n\t\tlanterne[1].accendi()\n"
+      },
+      {
+       "percorso": "lantern.gd",
+       "contenuto": "extends Sprite2D\n\nvar accesa: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"lanterne\")\n\taggiorna_grafica()\n\n\nfunc accendi() -> void:\n\taccesa = true\n\taggiorna_grafica()\n\n\nfunc spegni() -> void:\n\taccesa = false\n\taggiorna_grafica()\n\n\nfunc aggiorna_grafica() -> void:\n\tif accesa:\n\t\tmodulate = Color(1.0, 0.9, 0.2, 1.0)\n\telse:\n\t\tmodulate = Color(0.2, 0.2, 0.2, 1.0)\n"
+      },
+      {
+       "percorso": "lantern.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://lantern.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Lantern\" type=\"Sprite2D\"]\nscale = Vector2(0.4, 0.4)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_script\")\n"
+      },
+      {
+       "percorso": "watch_tower.gd",
+       "contenuto": "extends Node2D\n\n# Codice base della torre di guardia\n\n\nfunc _ready() -> void:\n\tprint(\"Torre di guardia pronta.\")\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene load_steps=5 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Script\" path=\"res://watch_tower.gd\" id=\"2_tower\"]\n[ext_resource type=\"PackedScene\" path=\"res://lantern.tscn\" id=\"3_lantern\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"4_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"WatchTower\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"2_tower\")\n\n[node name=\"TowerGraphic\" type=\"Sprite2D\" parent=\"WatchTower\"]\nposition = Vector2(200, 200)\ntexture = ExtResource(\"4_icon\")\n\n[node name=\"Lantern1\" parent=\".\" instance=ExtResource(\"3_lantern\")]\nposition = Vector2(400, 150)\n\n[node name=\"Lantern2\" parent=\".\" instance=ExtResource(\"3_lantern\")]\nposition = Vector2(400, 300)\n\n[node name=\"Lantern3\" parent=\".\" instance=ExtResource(\"3_lantern\")]\nposition = Vector2(550, 150)\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TorreLanterne\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tawait get_tree().process_frame\n\tvar lanterne := get_tree().get_nodes_in_group(\"lanterne\")\n\tif lanterne.size() >= 2:\n\t\tlanterne[0].accendi()\n\t\tlanterne[1].accendi()\n"
+      },
+      {
+       "percorso": "lantern.gd",
+       "contenuto": "extends Sprite2D\n\nvar accesa: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"lanterne\")\n\taggiorna_grafica()\n\n\nfunc accendi() -> void:\n\taccesa = true\n\taggiorna_grafica()\n\n\nfunc spegni() -> void:\n\taccesa = false\n\taggiorna_grafica()\n\n\nfunc aggiorna_grafica() -> void:\n\tif accesa:\n\t\tmodulate = Color(1.0, 0.9, 0.2, 1.0)\n\telse:\n\t\tmodulate = Color(0.2, 0.2, 0.2, 1.0)\n"
+      },
+      {
+       "percorso": "lantern.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://lantern.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Lantern\" type=\"Sprite2D\"]\nscale = Vector2(0.4, 0.4)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_script\")\n"
+      },
+      {
+       "percorso": "watch_tower.gd",
+       "contenuto": "extends Node2D\n\n# Codice base della torre di guardia\n\n\nfunc _ready() -> void:\n\tprint(\"Torre di guardia pronta.\")\n\n\nfunc conta_lanterne_accese() -> int:\n\tvar count: int = 0\n\tvar lanterne: Array[Node] = get_tree().get_nodes_in_group(\"lanterne\")\n\tfor lanterna in lanterne:\n\t\tif \"accesa\" in lanterna and lanterna.accesa == true:\n\t\t\tcount += 1\n\treturn count\n\n\nfunc spegni_tutte() -> void:\n\tget_tree().call_group(\"lanterne\", \"spegni\")\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene load_steps=5 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Script\" path=\"res://watch_tower.gd\" id=\"2_tower\"]\n[ext_resource type=\"PackedScene\" path=\"res://lantern.tscn\" id=\"3_lantern\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"4_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"WatchTower\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"2_tower\")\n\n[node name=\"TowerGraphic\" type=\"Sprite2D\" parent=\"WatchTower\"]\nposition = Vector2(200, 200)\ntexture = ExtResource(\"4_icon\")\n\n[node name=\"Lantern1\" parent=\".\" instance=ExtResource(\"3_lantern\")]\nposition = Vector2(400, 150)\n\n[node name=\"Lantern2\" parent=\".\" instance=ExtResource(\"3_lantern\")]\nposition = Vector2(400, 300)\n\n[node name=\"Lantern3\" parent=\".\" instance=ExtResource(\"3_lantern\")]\nposition = Vector2(550, 150)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "TorreLanterne",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "In `watch_tower.gd` abbiamo aggiunto `conta_lanterne_accese()`, che chiama `get_tree().get_nodes_in_group(\"lanterne\")` e conta quante lanterne hanno `accesa == true`. In `spegni_tutte()` abbiamo usato `get_tree().call_group(\"lanterne\", \"spegni\")`, che invoca il metodo `spegni()` su tutti i nodi iscritti al gruppo in una sola istruzione.",
+     "cambiati": [
+      "watch_tower.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "test": {
    "stato": "da_fare",
