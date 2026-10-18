@@ -191,6 +191,7 @@
     "consegna": "Nel progetto ricevuto, una moneta (`Coin`) interagisce con il personaggio cercandolo direttamente nell'albero della scena con un percorso rigido (`get_parent().get_node(\"Player\")`) e modificandone a forza le variabili interne.\n\nRiscrivi `coin.gd` e `main.gd` per disaccoppiare i nodi seguendo la regola di Godot:\n1. In `coin.gd`, dichiara il segnale `collected(amount: int)`.\n2. In `coin.gd`, sostituisci la modifica diretta al giocatore con l'emissione del segnale `collected.emit(coin_value)` e libera la moneta con `queue_free()`.\n3. In `main.gd`, connetti il segnale della moneta a una funzione ricevente che aggiunga il valore alle monete del giocatore e aggiorni il testo a schermo.\n4. Mantieni inalterati i nomi delle variabili e il funzionamento del gioco, senza lasciare riferimenti a `get_parent()` in `coin.gd`.",
     "modalita": "progetto",
     "dove": "a-parte",
+    "cartella": "rimuovi-l-accoppiamento-rigido-dalla-mon",
     "passiGuida": [],
     "suggerimenti": [
      "In `coin.gd` non serve più che il codice cerchi nodi esterni o conosca `Player`. Quando la moneta tocca il bersaglio, deve solo emettere `collected` e chiamare `queue_free()`.",
@@ -218,6 +219,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"DisaccoppiaMoneta\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
       {
        "percorso": "main.tscn",
        "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Script\" path=\"res://coin.gd\" id=\"2_coin\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"3_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"3_icon\")\n\n[node name=\"Coin\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(300, 300)\nscale = Vector2(0.3, 0.3)\ntexture = ExtResource(\"3_icon\")\nscript = ExtResource(\"2_coin\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 150.0\noffset_bottom = 50.0\ntext = \"Monete: 0\"\n"
@@ -248,6 +253,10 @@
       {
        "percorso": "main.gd",
        "contenuto": "extends Node2D\n\nvar score: int = 0\n@onready var ui_label: Label = $Label\n@onready var player: Sprite2D = $Player\n@onready var coin: Sprite2D = $Coin\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tif coin != null:\n\t\tcoin.collected.connect(_on_coin_collected)\n\n\nfunc _process(_delta: float) -> void:\n\tif is_instance_valid(coin):\n\t\tcoin.check_pickup(player.position)\n\n\nfunc _on_coin_collected(amount: int) -> void:\n\tscore += amount\n\tupdate_ui()\n\n\nfunc update_ui() -> void:\n\tui_label.text = \"Monete: %d\" % score\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Script\" path=\"res://coin.gd\" id=\"2_coin\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"3_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"3_icon\")\n\n[node name=\"Coin\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(300, 300)\nscale = Vector2(0.3, 0.3)\ntexture = ExtResource(\"3_icon\")\nscript = ExtResource(\"2_coin\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 150.0\noffset_bottom = 50.0\ntext = \"Monete: 0\"\n"
       }
      ],
      "progetto": {
@@ -258,18 +267,22 @@
       "impostazioni": []
      },
      "spiegazione": "Nel codice di partenza `coin.gd` usava `get_parent().get_node(\"Player\")` e modificava direttamente `main_node.score`. Se avessimo spostato la moneta o provato a eseguirla da sola, Godot avrebbe generato un crash. Con il segnale `signal collected(amount: int)`, `Coin` si limita a notificare quando viene presa e quanto vale. È il genitore `Main` che ascolta il segnale e si occupa di incrementare il proprio punteggio.",
-     "cambiati": [],
+     "cambiati": [
+      "coin.gd",
+      "main.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "riordina",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es3": {
@@ -392,7 +405,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Segnali tuoi, con parametri",
