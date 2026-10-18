@@ -748,5 +748,7 @@
    "es2",
    "test"
   ]
- }
+ },
+ "teoriaRivista": true,
+ "praticaRivista": true
 }
