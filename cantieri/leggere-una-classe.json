@@ -1,0 +1,102 @@
+{
+ "creato": "2026-10-18T09:16:32.675Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.7-flash"
+ ],
+ "teoria": {
+  "titolo": "Leggere la pagina di una classe che non conosci",
+  "sommario": "Impara a esplorare la documentazione integrata di Godot per scoprire in autonomia nuovi nodi, proprietà e metodi. Scopri come interpretare la firma delle funzioni e come collaudare una funzionalità in una scena di prova isolata prima di inserirla nel gioco.",
+  "concetti": [
+   "Finestra Search Help (F1)",
+   "Struttura di una classe (descrizione, proprietà, metodi, segnali, costanti)",
+   "Firma di un metodo (parametri, valori predefiniti e valore di ritorno)",
+   "Ereditarietà tra classi nella documentazione",
+   "Scena di prova per l'esplorazione",
+   "Nodo ProgressBar e classe Range",
+   "Proprietà Timer.time_left"
+  ],
+  "obiettivi": [
+   "Come è fatta una pagina della documentazione: descrizione, proprietà, metodi, segnali, costanti",
+   "Leggere la firma di un metodo: cosa vuole e cosa restituisce",
+   "Provare una cosa nuova in una scena di prova prima di metterla nel gioco"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Quando sviluppi un videogioco, la maggior parte delle funzionalità nasce come una richiesta visiva o di logica, non come una riga di codice già pronta. In «Pioggia di stelle», per esempio, vogliamo ottenere tre risultati concreti: mostrare a schermo una barra orizzontale che indica quanto tempo manca alla fine dell'ondata, disegnare una scia dietro alle stelle dorate mentre cadono, e bloccare temporaneamente il gioco se l'utente clicca fuori dalla finestra. Nessuno conosce a memoria tutte le centinaia di nodi disponibili in Godot: lo sviluppatore autonomo sa come cercare la classe giusta nella documentazione ufficiale e come capirne il funzionamento senza dipendere da guide esterne."
+   },
+   {
+    "tipo": "testo",
+    "md": "Godot include l'intero manuale di riferimento direttamente dentro l'editor, consultabile anche senza connessione a internet. Puoi aprire la ricerca in qualsiasi momento premendo il tasto **F1** oppure selezionando il menu **Help → Search Help**. Ogni pagina descrive una classe ed è organizzata sempre nelle stesse sezioni: in cima compare l'ereditarietà (la catena di classi genitore da cui il nodo eredita proprietà e comportamenti); segue la **Description**, che spiega lo scopo del nodo in linguaggio naturale; la sezione **Properties** elenca le variabili interne con il loro tipo e valore predefinito; la sezione **Methods** mostra tutte le funzioni chiamabili su quell'oggetto; infine le sezioni **Signals** e **Constants** elencano gli eventi che il nodo può emettere e i valori costanti utilizzabili."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "ricerca-aiuto",
+    "didascalia": "La finestra Search Help, aperta con F1: consente di cercare per nome classi, proprietà, metodi e segnali."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per usare un metodo sconosciuto devi saperne leggere la **firma** (*signature*), cioè la riga di dichiarazione che specifica come va chiamato. Una firma tipica ha questa struttura:\n\n`start(time_sec: float = -1.0) -> void`\n\nQuesta riga ti dice tre cose fondamentali. Il nome del metodo è `start`. Tra parentesi ci sono i parametri richiesti: `time_sec` deve essere un numero decimale (`float`), ma la presenza di `= -1.0` indica che è un parametro facoltativo; se non passi alcun valore, Godot userà `-1.0`. Infine, la freccia `-> void` indica il valore di ritorno: `void` significa che la funzione esegue un lavoro ma non restituisce alcun dato. Se invece leggessi `is_stopped() -> bool`, sapresti subito che quel metodo non vuole argomenti tra le parentesi e ti restituisce un valore booleano (`true` o `false`)."
+   },
+   {
+    "tipo": "testo",
+    "md": "Mettiamo in pratica il metodo partendo dal primo obiettivo: mostrare quanto manca alla fine dell'ondata scandita da `WaveTimer`. Invece di scrivere codice a caso in `basket.gd`, cerchiamo prima gli strumenti adatti. Premendo **F1** e digitando parole come `progress` o `bar`, troviamo la classe `ProgressBar`. Leggendo la sua pagina scopriamo che eredita da `Range`. Nella sezione proprietà di `Range` troviamo `max_value: float` (il valore massimo della barra) e `value: float` (il valore corrente). Per sapere quanto manca alla fine del timer, apriamo la pagina di `Timer` e nella sezione *Properties* troviamo `time_left: float`, descritta come il tempo rimanente in secondi. Abbiamo tutti gli elementi: una barra con un valore massimo e un timer con un tempo rimanente."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare una scena di prova isolata",
+    "passi": [
+     "Nel menu in alto a sinistra clicca su **Scene → New Scene** per aprire una scheda vuota.",
+     "Nel pannello *Scene*, sotto la voce \"Create Root Node:\", clicca su **Other Node** (oppure premi la scorciatoia **Ctrl+A**).",
+     "Nel campo di ricerca della finestra *Create New Node* scrivi `Node2D`, selezionalo e premi **Create**.",
+     "Nel pannello *Scene*, fai doppio clic sul nodo appena creato e rinominalo in `TestWaveBar`.",
+     "Con `TestWaveBar` selezionato, premi il pulsante **+** in cima al pannello *Scene*, cerca il tipo `ProgressBar` e clicca su **Create**.",
+     "Seleziona nuovamente `TestWaveBar`, premi **+**, cerca il tipo `Timer` e clicca su **Create**.",
+     "Nel pannello *Inspector* del nodo `Timer`, imposta `Wait Time` su `10.0` e attiva la casella `Autostart`.",
+     "Salva la scena premendo **Ctrl+S** con il percorso `res://test_wave_bar.tscn`."
+    ]
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Node2D\n\n@onready var wave_bar: ProgressBar = $ProgressBar\n@onready var test_timer: Timer = $Timer\n\n\nfunc _ready() -> void:\n\t# Il massimo della barra corrisponde alla durata totale impostata sul timer\n\twave_bar.max_value = test_timer.wait_time\n\n\nfunc _process(_delta: float) -> void:\n\t# A ogni fotogramma aggiorniamo il riempimento con i secondi che restano\n\twave_bar.value = test_timer.time_left",
+    "spiegazione": "In `_ready()` leggiamo `wait_time` dal `Timer` e lo assegniamo a `max_value` della `ProgressBar`, configurando la scala massima. In `_process()` aggiorniamo la proprietà `value` della barra assegnandole `time_left`. Premendo **F6** per eseguire solo questa scena di prova, vedrai la barra ridursi progressivamente da 10 a 0 lungo i dieci secondi di esecuzione, verificando che la combinazione delle due classi funziona esattamente come previsto."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Presta sempre attenzione a se una proprietà nella documentazione possiede sia un lettore (*getter*) che una scrittura (*setter*). Per esempio, su `Timer` la proprietà `time_left` è in sola lettura: se provi a scrivere `test_timer.time_left = 5.0` riceverai un errore. Per modificare il tempo rimanente devi usare il metodo `start(5.0)`, come indicato nella descrizione del metodo stesso."
+   },
+   {
+    "tipo": "testo",
+    "md": "Una volta che il meccanismo è verificato nella scena di prova, integrarlo nella scena principale `basket.tscn` richiede soltanto di aggiungere il nodo `ProgressBar` come figlio e riportare le due righe collaudate dentro `basket.gd`. Con lo stesso identico metodo si affrontano gli altri due problemi: per la scia visiva delle stelle dorate cercherai nell'aiuto parole come `particle` o `trail` scoprendo nodi dedicati agli effetti (come `CPUParticles2D`), mentre per la perdita di fuoco della finestra cercherai `Window` per esaminare i suoi segnali di stato (`focus_entered` e `focus_exited`). Ricercare, verificare la firma, collaudare in una scena isolata ed esportare nel gioco: questo è il flusso di lavoro di ogni sviluppatore Godot."
+   },
+   {
+    "tipo": "video",
+    "titolo": "La barra dell'ondata che si svuota durante la partita",
+    "esercizio": "es1",
+    "durata": 6,
+    "azioni": [
+     {
+      "azione": "move_right",
+      "inizio": 0.5,
+      "fine": 2,
+      "tasto": "D"
+     },
+     {
+      "azione": "move_left",
+      "inizio": 2.5,
+      "fine": 4.5,
+      "tasto": "A"
+     }
+    ]
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- La finestra Search Help (**F1**) consente di cercare qualunque classe, proprietà, metodo o segnale direttamente dentro l'editor senza uscire dal progetto.\n- Una pagina della documentazione si divide in ereditarietà, descrizione generale, elenco proprietà, metodi con firma, segnali ed enumerazioni.\n- La firma di un metodo chiarisce quali parametri sono obbligatori, quali hanno un valore predefinito e quale tipo di dato viene restituito (`void` se non restituisce nulla).\n- Creare una scena di prova temporanea permette di sperimentare nodi e logiche sconosciute in isolamento, evitando di sporcare la scena principale del gioco finché il funzionamento non è chiaro."
+   }
+  ]
+ }
+}
