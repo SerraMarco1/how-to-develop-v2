@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-18T09:06:16.490Z",
+ "aggiornato": "2026-10-18T09:10:59.111Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -272,6 +272,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/gruppi.json",
    "sha256": "1dd03e821ba1dce46b0f22aacd98e063875dd75ebb2d3cf1131c69e8ab032002",
    "byte": 96726
+  },
+  {
+   "slug": "export",
+   "numero": "2.8",
+   "titolo": "@export: regolare il gioco dall'Inspector",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/export.json",
+   "sha256": "10cffaa74180f6ef9e036a02f2167c1878bf98253ef19878ee7d68290fcabc20",
+   "byte": 131919
   }
  ],
  "documentazione": {
