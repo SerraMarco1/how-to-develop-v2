@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T07:31:04.980Z",
+ "aggiornato": "2026-10-18T07:48:05.070Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "timer",
-  "numero": "2.5",
-  "titolo": "Timer: far succedere le cose nel tempo"
+  "slug": "segnali-propri",
+  "numero": "2.6",
+  "titolo": "Segnali tuoi, con parametri"
  },
- "messaggio": "Sta scrivendo la lezione 2.5 «Timer: far succedere le cose nel tempo».",
+ "messaggio": "Sta scrivendo la lezione 2.6 «Segnali tuoi, con parametri».",
  "riprende": null
 }
