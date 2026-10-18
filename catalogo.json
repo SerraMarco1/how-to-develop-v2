@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-18T07:55:29.026Z",
+ "aggiornato": "2026-10-18T09:06:16.490Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -263,6 +263,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/segnali-propri.json",
    "sha256": "23e8873c1ab861790ca12e22e4b7834fc38bf34313f8911b71ac3bb788aa49ac",
    "byte": 126212
+  },
+  {
+   "slug": "gruppi",
+   "numero": "2.7",
+   "titolo": "Gruppi: parlare a tanti nodi insieme",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/gruppi.json",
+   "sha256": "1dd03e821ba1dce46b0f22aacd98e063875dd75ebb2d3cf1131c69e8ab032002",
+   "byte": 96726
   }
  ],
  "documentazione": {
