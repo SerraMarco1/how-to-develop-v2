@@ -2,5 +2,95 @@
  "creato": "2026-10-17T11:47:27.501Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-3.7-flash"
+ ],
+ "teoria": {
+  "titolo": "Segnali: collegare ciò che esiste già",
+  "sommario": "Scopri il funzionamento dei segnali in Godot come strumento per disaccoppiare la logica dei nodi. Imparerai a connettere eventi sia dall'interfaccia grafica dell'editor sia tramite codice GDScript, gestendo il clic di un pulsante Button e la cadenza temporale di un nodo Timer.",
+  "concetti": [
+   "Segnale (Signal)",
+   "Emissione e ascolto (Emission and Connection)",
+   "Disaccoppiamento (Decoupling)",
+   "Scheda Signals",
+   "Metodo connect()",
+   "Callable",
+   "Segnale pressed (Button)",
+   "Segnale timeout (Timer)",
+   "Convenzione callback (_on_node_signal)"
+  ],
+  "obiettivi": [
+   "Un segnale è un avviso: chi lo manda non sa chi ascolta",
+   "Collegare un segnale dall'editor e dal codice con connect()",
+   "I segnali che userai sempre: pressed, timeout"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Finora, per far comparire gli oggetti a intervalli regolari nel cesto, hai dovuto gestire il tempo a mano: aggiungere `delta` a una variabile `spawn_timer` a ogni fotogramma dentro `_process()` e verificare con un `if` se il valore avesse superato la soglia. Allo stesso modo, per riavviare la partita dopo la sconfitta, hai dovuto verificare continuamente la pressione di un tasto da tastiera.\n\nQuesto approccio costringe i nodi a controllare ogni singolo istante lo stato del mondo, riempiendo il ciclo principale di verifiche continue. Inoltre, se un nodo per funzionare deve cercare e modificare direttamente le proprietà interne di un altro nodo, i due elementi diventano strettamente dipendenti: cambiare uno rischia di rompere l'altro. In informatica questo problema si chiama **accoppiamento stretto** (*tight coupling*).\n\nPer risolvere questo problema, Godot usa i **segnali** (*signals*). Un segnale è un messaggio che un nodo lancia quando accade un evento specifico, come la pressione di un tasto o lo scadere di un conto alla rovescia."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il principio fondamentale dei segnali è semplice: **chi manda l'avviso non sa chi lo ascolta**. \n\nIl nodo che emette il segnale (l'emittente) si limita a gridare al motore: «È successo questo!». Non sa se ci sia qualcuno in ascolto, né quanti nodi stiano prestando attenzione. Altri nodi possono decidere di collegarsi a quel segnale per eseguire una propria funzione ogni volta che l'avviso si attiva. Questa funzione ricevente prende il nome di **callback** o **metodo ricevente**.\n\nQuesto garantisce il **disaccoppiamento** (*decoupling*): ogni componente fa esclusivamente il proprio lavoro. Un pulsante sullo schermo si occupa solo di rilevare il tocco del giocatore; non ha bisogno di conoscere le vite rimaste, il punteggio o come riavviare la scena. Sarà lo script del cesto a collegarsi al pulsante e a decidere cosa fare quando arriva l'avviso."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il primo segnale che incontrerai in quasi ogni gioco è **`pressed`** (premuto), emesso dai nodi di tipo `Button` quando vengono cliccati con il mouse o premuti tramite tocco. \n\nNel nostro gioco «Pioggia di stelle», aggiungeremo un pulsante per consentire al giocatore di riavviare la partita dopo la sconfitta. Quando la partita termina (`GameState.GAME_OVER`), mostreremo il pulsante sullo schermo; premendolo, il cesto riceverà l'avviso e farà ripartire il gioco tramite la funzione `reset_game()`.\n\nIn Godot puoi effettuare questo collegamento in due modi: visivamente attraverso l'editor, oppure scrivendo una riga di codice. Vediamo prima come collegare il segnale dall'editor usando la scheda **Signals** (segnali)."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "pannello-signals",
+    "didascalia": "La scheda Signals, posta accanto all'Inspector, raccoglie tutti i segnali disponibili per il nodo correntemente selezionato."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Aggiungere un pulsante e collegare il segnale pressed dall'editor",
+    "passi": [
+     "Nel pannello *Scene*, seleziona il nodo radice `Basket` e premi il pulsante **+** (oppure la scorciatoia Ctrl+A) per aprire la finestra *Create New Node*.",
+     "Scrivi `Button` nel campo di ricerca in alto, seleziona il nodo **Button** e premi **Create**.",
+     "Nel pannello *Scene*, fai doppio clic sul nuovo nodo e rinominalo in `RestartButton`.",
+     "Nel pannello *Inspector*, imposta la proprietà **Text** su `Ricomincia`. Nella sezione *CanvasItem → Visibility*, disattiva la casella **Visible** per fare in modo che il pulsante sia nascosto all'avvio della partita.",
+     "Sposta il pulsante al centro della vista 2D regolando le sue proprietà di posizione o trascinandolo con il mouse.",
+     "Con `RestartButton` selezionato, fai clic sulla scheda **Signals** situata a destra, proprio accanto a *Inspector*.",
+     "Nell'elenco dei segnali, sotto la voce `BaseButton`, individua **pressed()** e fai doppio clic su di esso (oppure selezionalo e clicca sul pulsante **Connect…** in basso a destra).",
+     "Nella finestra di collegamento che compare, seleziona il nodo `Basket` (che contiene lo script a cui inviare l'avviso) e premi **Connect**."
+    ]
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "@onready var restart_button: Button = $RestartButton\n\n\n# Funzione generata automaticamente dal collegamento del segnale nell'editor\nfunc _on_restart_button_pressed() -> void:\n\trestart_button.visible = false\n\treset_game()",
+    "spiegazione": "Quando confermi il collegamento nell'editor, Godot genera automaticamente una nuova funzione nello script del cesto. Per convenzione, il motore assegna a queste funzioni il nome predefinito `_on_<nome_nodo>_<nome_segnale>`, in questo caso `_on_restart_button_pressed()`. Nell'area di lavoro *Script*, noterai una piccola icona verde a sinistra della riga: indica che la funzione è connessa a un segnale attivo. Dentro la funzione nascondiamo il pulsante e richiamiamo `reset_game()`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Oltre ai pulsanti dell'interfaccia, un altro segnale fondamentale è **`timeout`** (tempo scaduto), emesso dal nodo **`Timer`** (temporizzatore). Il nodo `Timer` gestisce un conto alla rovescia espresso in secondi attraverso la proprietà `wait_time`. Quando il tempo scade, emette il segnale `timeout`. Se la proprietà `autostart` è attiva, il timer riparte automaticamente all'infinito.\n\nSpesso è preferibile collegare i segnali direttamente da codice, specialmente per elementi di logica interna come i timer. In GDScript 2.0, ogni segnale è trattato come un oggetto di prima classe e possiede il metodo **`connect()`**. La sintassi generale è:\n\n`nodo_sorgente.nome_segnale.connect(funzione_da_chiamare)`"
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando colleghi un segnale tramite codice, **non inserire le parentesi tonde `()`** dopo il nome della funzione ricevente. Se scrivessi `timer.timeout.connect(_on_timer_timeout())`, GDScript eseguirebbe immediatamente la funzione durante l'avvio della scena e passerebbe il suo valore restituito a `connect()`, provocando un errore. Senza parentesi, stai passando la funzione stessa come riferimento (un tipo di dato chiamato **`Callable`**)."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Aggiungere il nodo Timer alla scena",
+    "passi": [
+     "Nel pannello *Scene*, seleziona il nodo `Basket` e premi **+**.",
+     "Cerca `Timer` nella finestra *Create New Node*, selezionalo e premi **Create**.",
+     "Rinomina il nodo appena creato in `SpawnTimer`.",
+     "Nel pannello *Inspector*, imposta la proprietà **Wait Time** a `1.0` (il tempo in secondi tra una stella e la successiva) e attiva l'interruttore **Autostart**."
+    ]
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "@onready var spawn_timer_node: Timer = $SpawnTimer\n\n\nfunc _ready() -> void:\n\tposition = START_POSITION\n\tmodulate = Color.GREEN\n\tupdate_ui()\n\tspawn_initial_stars(INITIAL_STARS_COUNT)\n\tspawn_rock_row()\n\tspawn_ruby(Vector2(500.0, 100.0))\n\t\n\t# Colleghiamo il segnale timeout del Timer alla funzione locale\n\tspawn_timer_node.timeout.connect(_on_spawn_timer_timeout)\n\tprint(\"Cesto pronto: \", player_name, \" in \", position)\n\n\n# Metodo chiamato automaticamente a ogni scadenza del Timer\nfunc _on_spawn_timer_timeout() -> void:\n\tif current_state == GameState.PLAYING:\n\t\tspawn_star()",
+    "spiegazione": "In `_ready()`, otteniamo il riferimento al nodo `$SpawnTimer` e usiamo `spawn_timer_node.timeout.connect(_on_spawn_timer_timeout)`. Da questo momento, non dobbiamo più conteggiare `spawn_timer += delta` dentro `_process()`: ogni secondo, il nodo `Timer` emette il segnale `timeout`, e Godot richiama immediatamente `_on_spawn_timer_timeout()`, che genera una nuova stella."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Un segnale è una notifica inviata da un nodo quando accade un evento; chi invia il segnale non ha bisogno di sapere chi lo riceverà, evitando l'accoppiamento stretto tra i nodi.\n- Nella scheda *Signals* (accanto all'Inspector) puoi collegare visivamente un segnale facendo doppio clic sul suo nome e selezionando il nodo destinatario.\n- Dal codice puoi connettere qualsiasi segnale usando il metodo `connect()` nella forma `nodo.segnale.connect(nome_funzione)`, specificando la funzione senza parentesi tonde.\n- La convenzione ufficiale di Godot per i metodi riceventi è `_on_<nome_nodo>_<nome_segnale>`.\n- I segnali `pressed` (emesso da nodi basati su pulsanti come `Button`) e `timeout` (emesso dal nodo `Timer`) sono tra i più utilizzati per gestire interazioni del giocatore e intervalli temporali."
+   }
+  ]
+ }
 }
