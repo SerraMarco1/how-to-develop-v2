@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T09:06:17.892Z",
+ "aggiornato": "2026-10-18T09:11:00.570Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "export",
-  "numero": "2.8",
-  "titolo": "@export: regolare il gioco dall'Inspector"
+  "slug": "tween",
+  "numero": "2.9",
+  "titolo": "Tween: animare con il codice"
  },
- "messaggio": "Sta scrivendo la lezione 2.8 «@export: regolare il gioco dall'Inspector».",
+ "messaggio": "Sta scrivendo la lezione 2.9 «Tween: animare con il codice».",
  "riprende": null
 }
