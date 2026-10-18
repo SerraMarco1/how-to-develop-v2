@@ -265,7 +265,9 @@
    "genere": "riordina",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
