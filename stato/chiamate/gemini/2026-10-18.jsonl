@@ -30,3 +30,4 @@
 {"quando":1792309685080,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"segnali-propri","ok":true,"contata":true,"durataMs":81068,"tokenInput":16200,"tokenOutput":2062,"ragionamento":7184}
 {"quando":1792309767625,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"segnali-propri","ok":true,"contata":true,"durataMs":162760,"tokenInput":17542,"tokenOutput":1035,"ragionamento":24961}
 {"quando":1792309930385,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"segnali-propri","ok":true,"contata":true,"durataMs":106576,"tokenInput":17542,"tokenOutput":18179}
+{"quando":1792310046419,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"segnali-propri","ok":true,"contata":true,"durataMs":12548,"tokenInput":9457,"tokenOutput":2774,"ragionamento":3082}

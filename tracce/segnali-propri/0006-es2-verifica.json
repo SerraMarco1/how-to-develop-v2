@@ -1,0 +1,109 @@
+{
+ "n": 6,
+ "quando": "2026-10-18T07:54:06.415Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2 (riordina): 1 problema",
+ "spiegazione": "«Rimuovi l'accoppiamento rigido dalla moneta», scritto da gemini/gemini-flash-latest. 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- `soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 2809,
+ "dati": {
+  "problemi": [
+   "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "riordina",
+   "titolo": "Rimuovi l'accoppiamento rigido dalla moneta",
+   "consegna": "Nel progetto ricevuto, una moneta (`Coin`) interagisce con il personaggio cercandolo direttamente nell'albero della scena con un percorso rigido (`get_parent().get_node(\"Player\")`) e modificandone a forza le variabili interne.\n\nRiscrivi `coin.gd` e `main.gd` per disaccoppiare i nodi seguendo la regola di Godot:\n1. In `coin.gd`, dichiara il segnale `collected(amount: int)`.\n2. In `coin.gd`, sostituisci la modifica diretta al giocatore con l'emissione del segnale `collected.emit(coin_value)` e libera la moneta con `queue_free()`.\n3. In `main.gd`, connetti il segnale della moneta a una funzione ricevente che aggiunga il valore alle monete del giocatore e aggiorni il testo a schermo.\n4. Mantieni inalterati i nomi delle variabili e il funzionamento del gioco, senza lasciare riferimenti a `get_parent()` in `coin.gd`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [
+    "In `coin.gd` non serve più che il codice cerchi nodi esterni o conosca `Player`. Quando la moneta tocca il bersaglio, deve solo emettere `collected` e chiamare `queue_free()`.",
+    "In `main.gd`, quando istanzi o configuri la moneta in `_ready()`, usa `.collected.connect(_on_coin_collected)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://coin.gd",
+     "regex": "signal collected\\(amount: int\\)",
+     "descrizione": "In coin.gd è dichiarato il segnale collected con parametro amount"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar code: String = source_of(\"res://coin.gd\")\n\tcheck(\"no_parent\", not code.contains(\"get_parent\"), \"coin.gd non deve usare get_parent()\")\n\tcheck(\"has_signal\", code.contains(\"signal collected\"), \"coin.gd deve dichiarare il segnale collected\")\n",
+     "descrizione": "coin.gd non contiene get_parent() né riferimenti rigidi all'albero"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"main.tscn deve avviarsi senza errori\"):\n\t\treturn\n\tvar coin := find_by_name(main, \"Coin\")\n\tif not check(\"coin_found\", coin != null, \"La scena deve contenere il nodo Coin\"):\n\t\treturn\n\tawait wait_frames(5)\n\t# Muoviamo il giocatore sopra la moneta per toccarla\n\tvar player := find_by_name(main, \"Player\") as Node2D\n\tplayer.position = coin.position\n\tawait wait_frames(3)\n\tvar score: int = int(get_prop(main, \"score\", 0))\n\tcheck(\"score_increased\", score == 10, \"Toccando la moneta il punteggio deve salire a 10 tramite il segnale\")\n",
+     "descrizione": "Raccogliendo la moneta, il punteggio aumenta e la moneta scompare"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "DisaccoppiaMoneta",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"DisaccoppiaMoneta\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Script\" path=\"res://coin.gd\" id=\"2_coin\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"3_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"3_icon\")\n\n[node name=\"Coin\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(300, 300)\nscale = Vector2(0.3, 0.3)\ntexture = ExtResource(\"3_icon\")\nscript = ExtResource(\"2_coin\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 150.0\noffset_bottom = 50.0\ntext = \"Monete: 0\"\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node2D\n\nvar score: int = 0\n@onready var ui_label: Label = $Label\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\n\nfunc update_ui() -> void:\n\tui_label.text = \"Monete: %d\" % score\n"
+     },
+     {
+      "percorso": "coin.gd",
+      "contenuto": "extends Sprite2D\n\nvar coin_value: int = 10\n\n\nfunc _process(_delta: float) -> void:\n\tvar player: Node2D = get_parent().get_node(\"Player\") as Node2D\n\tif player != null and position.distance_to(player.position) < 40.0:\n\t\tvar main_node = get_parent()\n\t\tmain_node.score += coin_value\n\t\tmain_node.update_ui()\n\t\tqueue_free()\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"DisaccoppiaMoneta\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "coin.gd",
+      "contenuto": "extends Sprite2D\n\nsignal collected(amount: int)\n\nvar coin_value: int = 10\n\n\nfunc _process(_delta: float) -> void:\n\t# Controlla solo la distanza se il bersaglio esiste, senza accedere ai nodi superiori\n\tpass\n\n\nfunc check_pickup(target_position: Vector2) -> void:\n\tif position.distance_to(target_position) < 40.0:\n\t\tcollected.emit(coin_value)\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node2D\n\nvar score: int = 0\n@onready var ui_label: Label = $Label\n@onready var player: Sprite2D = $Player\n@onready var coin: Sprite2D = $Coin\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tif coin != null:\n\t\tcoin.collected.connect(_on_coin_collected)\n\n\nfunc _process(_delta: float) -> void:\n\tif is_instance_valid(coin):\n\t\tcoin.check_pickup(player.position)\n\n\nfunc _on_coin_collected(amount: int) -> void:\n\tscore += amount\n\tupdate_ui()\n\n\nfunc update_ui() -> void:\n\tui_label.text = \"Monete: %d\" % score\n"
+     }
+    ],
+    "progetto": {
+     "nome": "DisaccoppiaMoneta",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Nel codice di partenza `coin.gd` usava `get_parent().get_node(\"Player\")` e modificava direttamente `main_node.score`. Se avessimo spostato la moneta o provato a eseguirla da sola, Godot avrebbe generato un crash. Con il segnale `signal collected(amount: int)`, `Coin` si limita a notificare quando viene presa e quanto vale. È il genitore `Main` che ascolta il segnale e si occupa di incrementare il proprio punteggio.",
+    "cambiati": [
+     "coin.gd",
+     "main.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es2",
+   "cartella": "rimuovi-l-accoppiamento-rigido-dalla-mon"
+  }
+ },
+ "chiamate": []
+}
