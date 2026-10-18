@@ -636,7 +636,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Gruppi: parlare a tanti nodi insieme",
@@ -724,5 +725,25 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "es2",
+    "problema": "L'esercizio usa nomi di funzioni, variabili e gruppi interamente in italiano (`lanterne`, `conta_lanterne_accese`, `spegni_tutte`, `accesa`, `spegni`), violando la regola del corso secondo cui codice e nomi devono essere sempre in inglese.",
+    "correzione": "Rinominare il gruppo e gli identificatori in inglese nella consegna e nei test: gruppo `lanterns`, metodi `turn_on()` e `turn_off()`, proprietà `is_lit`, e le due funzioni richieste `count_lit_lanterns() -> int` e `turn_off_all() -> void`.",
+    "fonte": ""
+   },
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "L'esercizio richiede di passare argomenti aggiuntivi a `call_group()` (`call_group(\"nemici\", \"allerta\", livello)`), ma la firma con parametri aggiuntivi non è stata introdotta nella teoria della lezione (che spiega solo `call_group(\"nome_gruppo\", \"nome_funzione\")`). Inoltre, tutti gli identificatori sono scritti in italiano (`nemici`, `allerta`, `suona_allarme`, `trova_nemico_piu_vicino`), violando la regola dei nomi in inglese.",
+    "correzione": "Richiedere una chiamata senza parametri (o introdurre il passaggio di parametri nella teoria) e convertire tutti i nomi in inglese: gruppo `enemies`, metodo `alert()`, funzioni `sound_alarm()` e `find_closest_enemy(point: Vector2) -> Node2D`.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
