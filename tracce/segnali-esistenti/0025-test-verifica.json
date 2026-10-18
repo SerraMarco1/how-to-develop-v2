@@ -1,0 +1,16 @@
+{
+ "n": 25,
+ "quando": "2026-10-18T07:30:52.024Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "titolo": "Test: correzione del revisore scartata",
+ "spiegazione": "La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n- le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
+  ]
+ },
+ "chiamate": []
+}
