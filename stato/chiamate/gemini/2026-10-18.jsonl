@@ -1,0 +1,2 @@
+{"quando":1792306927334,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"segnali-esistenti","ok":false,"contata":true,"durataMs":2120,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792306929458,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"segnali-esistenti","ok":true,"contata":true,"durataMs":61176,"tokenInput":16120,"tokenOutput":2515,"ragionamento":6225}
