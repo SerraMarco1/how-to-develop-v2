@@ -637,7 +637,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Timer: far succedere le cose nel tempo",
@@ -729,5 +730,10 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
