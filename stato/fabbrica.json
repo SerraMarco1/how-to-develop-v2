@@ -32,6 +32,10 @@
   "gemini/gemini-3.7-flash:14000": {
    "volte": 2,
    "quando": 1792225939961
+  },
+  "gemini/gemini-flash-latest:9000": {
+   "volte": 1,
+   "quando": 1792309320664
   }
  },
  "scrittoriApprovati": [],

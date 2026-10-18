@@ -19,3 +19,6 @@
 {"quando":1792308722987,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"timer","ok":true,"contata":true,"durataMs":158407,"tokenInput":17535,"tokenOutput":9190,"ragionamento":16806}
 {"quando":1792308881395,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"timer","ok":true,"contata":true,"durataMs":87017,"tokenInput":17535,"tokenOutput":16559}
 {"quando":1792308976196,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"timer","ok":true,"contata":true,"durataMs":19236,"tokenInput":15316,"tokenOutput":8145,"ragionamento":1746}
+{"quando":1792309002944,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"timer","ok":true,"contata":true,"durataMs":317719,"tokenInput":15248,"tokenOutput":1954,"ragionamento":47041}
+{"quando":1792309320665,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"timer","ok":true,"contata":true,"durataMs":158957,"tokenInput":15248,"tokenOutput":940,"ragionamento":22753}
+{"quando":1792309479622,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"timer","ok":true,"contata":true,"durataMs":47805,"tokenInput":15248,"tokenOutput":8202}
