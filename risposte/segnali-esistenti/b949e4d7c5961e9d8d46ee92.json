@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-latest",
+ "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test richiede di usare i metodi `start()` e `stop()` del nodo `Timer`, ma questi metodi non sono mai stati spiegati nella lezione né in quelle precedenti (il nodo Timer e il suo controllo avanzato sono l'argomento della lezione successiva). Inoltre, le verifiche `testo_in_file` cercano le stringhe esatte `spawn_timer_node.stop()` e `spawn_timer_node.start()`, fallendo ingiustamente se lo studente usa una sintassi altrettanto valida come `$SpawnTimer.stop()` o un nome di variabile diverso.\", \"correzione\": \"Riformula il test in modo che verifichi gli obiettivi della lezione corrente (connessione e gestione dei segnali `pressed` e `timeout`) senza anticipare i metodi del Timer di lezioni future, ed elimina le verifiche `testo_in_file` vincolate al nome della variabile `spawn_timer_node` affidando il controllo allo stato del nodo nel test di scena.\", \"fonte\": \"\"}]}",
+ "ragionamento": 8400,
+ "quando": "2026-10-18T07:28:30.526Z",
+ "ruolo": "revisore"
+}
