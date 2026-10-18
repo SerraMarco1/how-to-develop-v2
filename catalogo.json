@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-18T07:31:03.622Z",
+ "aggiornato": "2026-10-18T07:48:03.784Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -245,6 +245,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/segnali-esistenti.json",
    "sha256": "9578b912b308718731e36c3cc6410d06ca3ecabe53f1144788b19877acc4ba0d",
    "byte": 105931
+  },
+  {
+   "slug": "timer",
+   "numero": "2.5",
+   "titolo": "Timer: far succedere le cose nel tempo",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/timer.json",
+   "sha256": "b8682f61f8c90085c00c1589219be47deb8a30d1b87817df2a479a4a5c416aa0",
+   "byte": 114011
   }
  ],
  "documentazione": {
