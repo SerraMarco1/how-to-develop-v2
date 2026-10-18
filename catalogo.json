@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-18T07:48:03.784Z",
+ "aggiornato": "2026-10-18T07:55:29.026Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -254,6 +254,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/timer.json",
    "sha256": "b8682f61f8c90085c00c1589219be47deb8a30d1b87817df2a479a4a5c416aa0",
    "byte": 114011
+  },
+  {
+   "slug": "segnali-propri",
+   "numero": "2.6",
+   "titolo": "Segnali tuoi, con parametri",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/segnali-propri.json",
+   "sha256": "23e8873c1ab861790ca12e22e4b7834fc38bf34313f8911b71ac3bb788aa49ac",
+   "byte": 126212
   }
  ],
  "documentazione": {
