@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T07:02:07.302Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-18T07:14:21.002Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "segnali-esistenti",
   "numero": "2.4",
   "titolo": "Segnali: collegare ciò che esiste già"
  },
- "messaggio": "Sta scrivendo la lezione 2.4 «Segnali: collegare ciò che esiste già».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 2.4 riprende da sola appena rispondono.",
+ "riprende": "2026-10-18T07:24:21.002Z"
 }
