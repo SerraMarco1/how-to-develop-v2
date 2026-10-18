@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T09:16:32.666Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-18T09:24:23.984Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "leggere-una-classe",
-  "numero": "2.10",
-  "titolo": "Leggere la pagina di una classe che non conosci"
+  "slug": "progetto-memory-1",
+  "numero": "2.11",
+  "titolo": "Progetto «Memory» – tappa 1: la griglia"
  },
- "messaggio": "Sta scrivendo la lezione 2.10 «Leggere la pagina di una classe che non conosci».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 2.11 riprende da sola appena rispondono.",
+ "riprende": "2026-10-18T09:34:23.984Z"
 }

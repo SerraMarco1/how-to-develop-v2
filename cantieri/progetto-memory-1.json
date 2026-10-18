@@ -1,0 +1,29 @@
+{
+ "creato": "2026-10-18T09:24:20.346Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [],
+ "teoria": {
+  "titolo": "Progetto «Memory» – tappa 1: la griglia",
+  "sommario": "La scena della carta (coperta o scoperta, con il suo valore) e la griglia creata dal codice, con le coppie mescolate.",
+  "concetti": [],
+  "obiettivi": [
+   "Progettare da soli una scena riutilizzabile e crearne tante copie in ordine"
+  ],
+  "durataMinuti": 90,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Questa è una tappa del progetto di fine fase: **«Memory», da un progetto vuoto: una griglia di carte coperte create dal codice, due alla volta si girano, le coppie restano scoperte, le altre si ricoprono dopo un attimo. Contatore delle mosse, vittoria, nuova partita, tre grandezze di griglia.**\n\nNon c'è niente di nuovo da studiare. Parti dal progetto com'è adesso (alla prima tappa: da un progetto vuoto) e costruisci da solo ciò che chiede la consegna, usando quello che hai imparato in questa fase e la documentazione."
+   },
+   {
+    "tipo": "testo",
+    "md": "**In questa tappa:** La scena della carta (coperta o scoperta, con il suo valore) e la griglia creata dal codice, con le coppie mescolate."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Nessun passo e nessun suggerimento: decidi tu scene, script e nomi, tranne quelli che la consegna fissa.\n- La piattaforma esegue il tuo progetto e controlla cosa succede.\n- Se ti blocchi, riapri la lezione della fase che tratta quel punto: non c'è fretta."
+   }
+  ]
+ }
+}

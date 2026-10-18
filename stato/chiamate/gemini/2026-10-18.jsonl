@@ -71,3 +71,4 @@
 {"quando":1792315374327,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"leggere-una-classe","ok":true,"contata":true,"durataMs":50528,"tokenInput":16812,"tokenOutput":10189,"ragionamento":4104}
 {"quando":1792315431514,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"leggere-una-classe","ok":true,"contata":true,"durataMs":9772,"tokenInput":10013,"tokenOutput":12,"ragionamento":2177}
 {"quando":1792315447116,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"leggere-una-classe","ok":true,"contata":true,"durataMs":8058,"tokenInput":3021,"tokenOutput":691,"ragionamento":2466}
+{"quando":1792315460350,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-memory-1","ok":false,"contata":true,"durataMs":3630,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
