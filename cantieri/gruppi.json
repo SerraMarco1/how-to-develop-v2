@@ -293,7 +293,9 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "il progetto di partenza (`partenza`) deve aprirsi e partire senza errori, invece:\n  - Codice della lezione rifiutato dal controllo di sicurezza: main.tscn riga 28: uno script scritto dentro la scena: nel corso gli script stanno nei loro file .gd\n  - Codice della lezione rifiutato dal controllo di sicurezza: main.tscn riga 29: codice scritto dentro una risorsa: nel corso gli script stanno nei loro file .gd"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
