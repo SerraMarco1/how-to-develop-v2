@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T09:11:00.570Z",
+ "aggiornato": "2026-10-18T09:16:32.666Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "tween",
-  "numero": "2.9",
-  "titolo": "Tween: animare con il codice"
+  "slug": "leggere-una-classe",
+  "numero": "2.10",
+  "titolo": "Leggere la pagina di una classe che non conosci"
  },
- "messaggio": "Sta scrivendo la lezione 2.9 «Tween: animare con il codice».",
+ "messaggio": "Sta scrivendo la lezione 2.10 «Leggere la pagina di una classe che non conosci».",
  "riprende": null
 }
