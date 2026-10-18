@@ -34,3 +34,4 @@
 {"quando":1792310080442,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"segnali-propri","ok":false,"contata":true,"durataMs":3573,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792310084018,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"segnali-propri","ok":true,"contata":true,"durataMs":26626,"tokenInput":13230,"tokenOutput":12,"ragionamento":2634}
 {"quando":1792310116629,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"segnali-propri","ok":true,"contata":true,"durataMs":8751,"tokenInput":2972,"tokenOutput":1170,"ragionamento":2068}
+{"quando":1792310130452,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"gruppi","ok":true,"contata":true,"durataMs":120532,"tokenInput":13773,"tokenOutput":3106,"ragionamento":9719}
