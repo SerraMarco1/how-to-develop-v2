@@ -39,7 +39,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene() as Sprite2D\n\tif not check(\"basket_exists\", basket != null, \"La scena principale Basket si istanzia correttamente\"):\n\t\treturn\n\tvar wave_timer := basket.get_node_or_null(\"WaveTimer\") as Timer\n\tif not check(\"wave_timer_exists\", wave_timer != null, \"Il nodo WaveTimer esiste\"):\n\t\treturn\n\tcheck(\"one_shot\", wave_timer.one_shot, \"WaveTimer deve essere a colpo singolo (one_shot = true)\")\n\tvar spawn_timer := basket.get_node_or_null(\"SpawnTimer\") as Timer\n\tif not check(\"spawn_timer_exists\", spawn_timer != null, \"Il nodo SpawnTimer esiste\"):\n\t\treturn\n\t\n\t# Forziamo la fine della prima ondata simulando il timeout del timer\n\twave_timer.timeout.emit()\n\tawait wait_frames(2)\n\t\n\tcheck(\"spawn_stopped\", spawn_timer.is_stopped(), \"Durante i 3 secondi di pausa SpawnTimer deve essere fermato\")\n\tvar wave_val = get_prop(basket, \"current_wave\", 1)\n\tcheck(\"wave_incremented\", wave_val == 2, \"L'ondata current_wave deve essere incrementata a 2\")\n\t\n\t# Attendiamo che si concludano i 3 secondi di pausa\n\tawait wait_seconds(3.1)\n\tcheck(\"spawn_resumed\", not spawn_timer.is_stopped(), \"Al termine della pausa SpawnTimer deve ripartire\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene() as Sprite2D\n\tif not check(\"basket_exists\", basket != null, \"La scena principale Basket si istanzia correttamente\"):\n\t\treturn\n\tvar wave_timer := basket.get_node_or_null(\"WaveTimer\") as Timer\n\tif not check(\"wave_timer_exists\", wave_timer != null, \"Il nodo WaveTimer esiste\"):\n\t\treturn\n\tcheck(\"one_shot\", wave_timer.one_shot, \"WaveTimer deve essere a colpo singolo (one_shot = true)\")\n\tvar spawn_timer := basket.get_node_or_null(\"SpawnTimer\") as Timer\n\tif not check(\"spawn_timer_exists\", spawn_timer != null, \"Il nodo SpawnTimer esiste\"):\n\t\treturn\n\t\n\t# Disattiviamo le rocce che potrebbero colpire il cesto causando game over durante il test\n\tbasket.set_process(false)\n\t\n\t# Forziamo la fine della prima ondata simulando il timeout del timer\n\twave_timer.timeout.emit()\n\tawait wait_frames(2)\n\t\n\tcheck(\"spawn_stopped\", spawn_timer.is_stopped(), \"Durante i 3 secondi di pausa SpawnTimer deve essere fermato\")\n\tvar wave_val = get_prop(basket, \"current_wave\", 1)\n\tcheck(\"wave_incremented\", wave_val == 2, \"L'ondata current_wave deve essere incrementata a 2\")\n\t\n\t# Attendiamo che si concludano i 3 secondi di pausa\n\tawait wait_seconds(3.1)\n\tcheck(\"spawn_resumed\", not spawn_timer.is_stopped(), \"Al termine della pausa SpawnTimer deve ripartire\")",
       "descrizione": "Lo spawn si ferma allo scadere del WaveTimer durante la pausa di 3 secondi"
      }
     ],
@@ -103,19 +103,23 @@
       "impostazioni": []
      },
      "spiegazione": "Abbiamo aggiunto `WaveTimer` come figlio di `Basket` impostandolo su 10 secondi a colpo singolo (`one_shot = true`). Quando scade, la funzione `_on_wave_timer_timeout` ferma lo `SpawnTimer` e blocca l'esecuzione su `await get_tree().create_timer(3.0).timeout`. Trascorsi i 3 secondi, lo script incrementa il ritmo dello spawn e riavvia sia `SpawnTimer` che `WaveTimer`.",
-     "cambiati": [],
+     "cambiati": [
+      "basket.tscn",
+      "basket.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "guidato",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Al termine della pausa SpawnTimer deve ripartire\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   },
   "es2": {
