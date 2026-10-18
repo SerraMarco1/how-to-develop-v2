@@ -64,7 +64,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "nome dell'editor sbagliato — \"scheda Node\": in Godot 4.7 non c'è un pannello Node: i segnali del nodo selezionato stanno nella scheda **Signals**, accanto a **Inspector**"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
