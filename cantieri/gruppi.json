@@ -320,32 +320,32 @@
     "tipo": "autonomo",
     "genere": "estendi",
     "titolo": "La torre di guardia e le lanterne",
-    "consegna": "Ricevi un progetto chiamato `TorreLanterne` in cui ci sono diverse lanterne disposte sullo schermo (`Lantern`), ciascuna con una luce accesa (colore giallo) o spenta (colore grigio scuro). La scena principale `main.tscn` contiene una torre (`WatchTower`) con il suo script `watch_tower.gd`.\n\nIl codice attuale funziona: le lanterne appartengono già al gruppo `lanterne` e hanno un metodo `accendi()` e uno `spegni()`.\n\nIl tuo compito è aggiungere a `watch_tower.gd` due nuove funzioni senza modificare il resto:\n1. `conta_lanterne_accese() -> int`: ottiene tutti i nodi del gruppo `lanterne` usando `get_tree().get_nodes_in_group(\"lanterne\")`, conta quante di esse hanno la proprietà booleana `accesa` uguale a `true` e restituisce il numero totale trovato.\n2. `spegni_tutte() -> void`: usa `get_tree().call_group(\"lanterne\", \"spegni\")` per inviare l'ordine di spegnimento a tutte le lanterne in una riga sola.",
+    "consegna": "Ricevi un progetto chiamato `TorreLanterne` in cui ci sono diverse lanterne disposte sullo schermo (`Lantern`), ciascuna con una luce accesa (colore giallo) o spenta (colore grigio scuro). La scena principale `main.tscn` contiene una torre (`WatchTower`) con il suo script `watch_tower.gd`.\n\nIl codice attuale funziona: le lanterne appartengono già al gruppo `lanterns` e hanno un metodo `turn_on()` e uno `turn_off()`.\n\nIl tuo compito è aggiungere a `watch_tower.gd` due nuove funzioni senza modificare il resto:\n1. `count_lit_lanterns() -> int`: ottiene tutti i nodi del gruppo `lanterns` usando `get_tree().get_nodes_in_group(\"lanterns\")`, conta quante di esse hanno la proprietà booleana `is_lit` uguale a `true` e restituisce il numero totale trovato.\n2. `turn_off_all() -> void`: usa `get_tree().call_group(\"lanterns\", \"turn_off\")` per inviare l'ordine di spegnimento a tutte le lanterne in una riga sola.",
     "modalita": "progetto",
     "dove": "a-parte",
     "cartella": "torre-lanterne",
     "passiGuida": [],
     "suggerimenti": [
-     "In `conta_lanterne_accese()`, ottieni la lista dei nodi con `var lista: Array[Node] = get_tree().get_nodes_in_group(\"lanterne\")` e usa un contatore all'interno di un ciclo `for`.",
-     "In `spegni_tutte()`, basta chiamare direttamente `get_tree().call_group(\"lanterne\", \"spegni\")`."
+     "In `count_lit_lanterns()`, ottieni la lista dei nodi con `var lanterns: Array[Node] = get_tree().get_nodes_in_group(\"lanterns\")` e usa un contatore all'interno di un ciclo `for`.",
+     "In `turn_off_all()`, basta chiamare direttamente `get_tree().call_group(\"lanterns\", \"turn_off\")`."
     ],
     "verifiche": [
      {
       "tipo": "testo_in_file",
       "percorso": "res://watch_tower.gd",
-      "regex": "get_nodes_in_group\\(\"lanterne\"\\)",
-      "descrizione": "watch_tower.gd usa get_nodes_in_group(\"lanterne\")"
+      "regex": "get_nodes_in_group\\(\"lanterns\"\\)",
+      "descrizione": "watch_tower.gd usa get_nodes_in_group(\"lanterns\")"
      },
      {
       "tipo": "testo_in_file",
       "percorso": "res://watch_tower.gd",
-      "regex": "call_group\\(\"lanterne\",\\s*\"spegni\"\\)",
-      "descrizione": "watch_tower.gd usa call_group(\"lanterne\", \"spegni\")"
+      "regex": "call_group\\(\"lanterns\",\\s*\"turn_off\"\\)",
+      "descrizione": "watch_tower.gd usa call_group(\"lanterns\", \"turn_off\")"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\n\tvar tower := find_by_name(main, \"WatchTower\")\n\tif not check(\"tower\", tower != null, \"Deve esistere il nodo WatchTower\"):\n\t\treturn\n\n\tcheck(\"has_count\", has_function(tower, \"conta_lanterne_accese\"), \"WatchTower deve possedere la funzione conta_lanterne_accese()\")\n\tcheck(\"has_off\", has_function(tower, \"spegni_tutte\"), \"WatchTower deve possedere la funzione spegni_tutte()\")\n\n\tvar conteggio = call_if_exists(tower, \"conta_lanterne_accese\")\n\tcheck(\"initial_count\", conteggio == 2, \"All'inizio ci sono esattamente 2 lanterne accese, conta_lanterne_accese deve restituire 2\")\n\n\tcall_if_exists(tower, \"spegni_tutte\")\n\tawait wait_frames(2)\n\n\tvar conteggio_dopo = call_if_exists(tower, \"conta_lanterne_accese\")\n\tcheck(\"after_off\", conteggio_dopo == 0, \"Dopo spegni_tutte(), conta_lanterne_accese deve restituire 0\")\n",
-      "descrizione": "conta_lanterne_accese conta correttamente e spegni_tutte spegne tutte le lanterne del gruppo"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\n\tvar tower := find_by_name(main, \"WatchTower\")\n\tif not check(\"tower\", tower != null, \"Deve esistere il nodo WatchTower\"):\n\t\treturn\n\n\tcheck(\"has_count\", has_function(tower, \"count_lit_lanterns\"), \"WatchTower deve possedere la funzione count_lit_lanterns()\")\n\tcheck(\"has_off\", has_function(tower, \"turn_off_all\"), \"WatchTower deve possedere la funzione turn_off_all()\")\n\n\tvar count = call_if_exists(tower, \"count_lit_lanterns\")\n\tcheck(\"initial_count\", count == 2, \"All'inizio ci sono esattamente 2 lanterne accese, count_lit_lanterns deve restituire 2\")\n\n\tcall_if_exists(tower, \"turn_off_all\")\n\tawait wait_frames(2)\n\n\tvar count_after = call_if_exists(tower, \"count_lit_lanterns\")\n\tcheck(\"after_off\", count_after == 0, \"Dopo turn_off_all(), count_lit_lanterns deve restituire 0\")\n",
+      "descrizione": "count_lit_lanterns conta correttamente e turn_off_all spegne tutte le lanterne del gruppo"
      }
     ],
     "previsioni": [],
@@ -365,11 +365,11 @@
       },
       {
        "percorso": "main.gd",
-       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tawait get_tree().process_frame\n\tvar lanterne := get_tree().get_nodes_in_group(\"lanterne\")\n\tif lanterne.size() >= 2:\n\t\tlanterne[0].accendi()\n\t\tlanterne[1].accendi()\n"
+       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tawait get_tree().process_frame\n\tvar lanterns := get_tree().get_nodes_in_group(\"lanterns\")\n\tif lanterns.size() >= 2:\n\t\tlanterns[0].turn_on()\n\t\tlanterns[1].turn_on()\n"
       },
       {
        "percorso": "lantern.gd",
-       "contenuto": "extends Sprite2D\n\nvar accesa: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"lanterne\")\n\taggiorna_grafica()\n\n\nfunc accendi() -> void:\n\taccesa = true\n\taggiorna_grafica()\n\n\nfunc spegni() -> void:\n\taccesa = false\n\taggiorna_grafica()\n\n\nfunc aggiorna_grafica() -> void:\n\tif accesa:\n\t\tmodulate = Color(1.0, 0.9, 0.2, 1.0)\n\telse:\n\t\tmodulate = Color(0.2, 0.2, 0.2, 1.0)\n"
+       "contenuto": "extends Sprite2D\n\nvar is_lit: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"lanterns\")\n\tupdate_visuals()\n\n\nfunc turn_on() -> void:\n\tis_lit = true\n\tupdate_visuals()\n\n\nfunc turn_off() -> void:\n\tis_lit = false\n\tupdate_visuals()\n\n\nfunc update_visuals() -> void:\n\tif is_lit:\n\t\tmodulate = Color(1.0, 0.9, 0.2, 1.0)\n\telse:\n\t\tmodulate = Color(0.2, 0.2, 0.2, 1.0)\n"
       },
       {
        "percorso": "lantern.tscn",
@@ -393,11 +393,11 @@
       },
       {
        "percorso": "main.gd",
-       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tawait get_tree().process_frame\n\tvar lanterne := get_tree().get_nodes_in_group(\"lanterne\")\n\tif lanterne.size() >= 2:\n\t\tlanterne[0].accendi()\n\t\tlanterne[1].accendi()\n"
+       "contenuto": "extends Node2D\n\n\nfunc _ready() -> void:\n\tawait get_tree().process_frame\n\tvar lanterns := get_tree().get_nodes_in_group(\"lanterns\")\n\tif lanterns.size() >= 2:\n\t\tlanterns[0].turn_on()\n\t\tlanterns[1].turn_on()\n"
       },
       {
        "percorso": "lantern.gd",
-       "contenuto": "extends Sprite2D\n\nvar accesa: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"lanterne\")\n\taggiorna_grafica()\n\n\nfunc accendi() -> void:\n\taccesa = true\n\taggiorna_grafica()\n\n\nfunc spegni() -> void:\n\taccesa = false\n\taggiorna_grafica()\n\n\nfunc aggiorna_grafica() -> void:\n\tif accesa:\n\t\tmodulate = Color(1.0, 0.9, 0.2, 1.0)\n\telse:\n\t\tmodulate = Color(0.2, 0.2, 0.2, 1.0)\n"
+       "contenuto": "extends Sprite2D\n\nvar is_lit: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"lanterns\")\n\tupdate_visuals()\n\n\nfunc turn_on() -> void:\n\tis_lit = true\n\tupdate_visuals()\n\n\nfunc turn_off() -> void:\n\tis_lit = false\n\tupdate_visuals()\n\n\nfunc update_visuals() -> void:\n\tif is_lit:\n\t\tmodulate = Color(1.0, 0.9, 0.2, 1.0)\n\telse:\n\t\tmodulate = Color(0.2, 0.2, 0.2, 1.0)\n"
       },
       {
        "percorso": "lantern.tscn",
@@ -405,7 +405,7 @@
       },
       {
        "percorso": "watch_tower.gd",
-       "contenuto": "extends Node2D\n\n# Codice base della torre di guardia\n\n\nfunc _ready() -> void:\n\tprint(\"Torre di guardia pronta.\")\n\n\nfunc conta_lanterne_accese() -> int:\n\tvar count: int = 0\n\tvar lanterne: Array[Node] = get_tree().get_nodes_in_group(\"lanterne\")\n\tfor lanterna in lanterne:\n\t\tif \"accesa\" in lanterna and lanterna.accesa == true:\n\t\t\tcount += 1\n\treturn count\n\n\nfunc spegni_tutte() -> void:\n\tget_tree().call_group(\"lanterne\", \"spegni\")\n"
+       "contenuto": "extends Node2D\n\n# Codice base della torre di guardia\n\n\nfunc _ready() -> void:\n\tprint(\"Torre di guardia pronta.\")\n\n\nfunc count_lit_lanterns() -> int:\n\tvar count: int = 0\n\tvar lanterns: Array[Node] = get_tree().get_nodes_in_group(\"lanterns\")\n\tfor lantern in lanterns:\n\t\tif \"is_lit\" in lantern and lantern.is_lit == true:\n\t\t\tcount += 1\n\treturn count\n\n\nfunc turn_off_all() -> void:\n\tget_tree().call_group(\"lanterns\", \"turn_off\")\n"
       },
       {
        "percorso": "main.tscn",
@@ -419,7 +419,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "In `watch_tower.gd` abbiamo aggiunto `conta_lanterne_accese()`, che chiama `get_tree().get_nodes_in_group(\"lanterne\")` e conta quante lanterne hanno `accesa == true`. In `spegni_tutte()` abbiamo usato `get_tree().call_group(\"lanterne\", \"spegni\")`, che invoca il metodo `spegni()` su tutti i nodi iscritti al gruppo in una sola istruzione.",
+     "spiegazione": "In `watch_tower.gd` abbiamo aggiunto `count_lit_lanterns()`, che chiama `get_tree().get_nodes_in_group(\"lanterns\")` e conta quante lanterne hanno `is_lit == true`. In `turn_off_all()` abbiamo usato `get_tree().call_group(\"lanterns\", \"turn_off\")`, che invoca il metodo `turn_off()` su tutti i nodi iscritti al gruppo in una sola istruzione.",
      "cambiati": [
       "watch_tower.gd"
      ],
@@ -744,6 +744,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "es2"
+  ]
  }
 }
