@@ -1,0 +1,116 @@
+{
+ "n": 15,
+ "quando": "2026-10-18T08:51:53.372Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (estendi): approvato",
+ "spiegazione": "«Allarme di sicurezza e nemici furtivi». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: main.gd",
+ "richieste": 0,
+ "durataMs": 8712,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "estendi",
+   "titolo": "Allarme di sicurezza e nemici furtivi",
+   "consegna": "Ricevi il progetto `SistemaSicurezza`. Nella scena principale `main.tscn` c'è un nodo radice `Main` con lo script `res://main.gd` e una serie di nemici istanziati (`Enemy`).\nOgni nemico appartiene al gruppo `nemici` e possiede una funzione `allerta(livello: int)` che ne imposta il livello di allerta (`alert_level`) e ne cambia il colore.\n\nIl tuo compito è completare lo script `res://main.gd` aggiungendo due funzioni:\n1. `suona_allarme(livello: int) -> void`: usa `call_group()` per chiamare la funzione `allerta` con il parametro `livello` su tutti i nodi del gruppo `\"nemici\"`.\n2. `trova_nemico_piu_vicino(punto: Vector2) -> Node2D`: cerca tra tutti i nodi del gruppo `\"nemici\"` ottenuti con `get_nodes_in_group(\"nemici\")`. Restituisce il nodo `Node2D` che si trova alla distanza minima rispetto a `punto` (usando `position.distance_to(punto)`). Se il gruppo è vuoto, restituisce `null`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "sistema-sicurezza",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Ricorda che `call_group()` accetta argomenti aggiuntivi dopo il nome della funzione: `get_tree().call_group(\"nemici\", \"allerta\", livello)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://main.gd",
+     "regex": "call_group\\(\"nemici\",\\s*\"allerta\",\\s*livello\\)",
+     "descrizione": "main.gd usa call_group con parametro livello"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://main.gd",
+     "regex": "get_nodes_in_group\\(\"nemici\"\\)",
+     "descrizione": "main.gd usa get_nodes_in_group(\"nemici\")"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tcheck(\"has_alarm\", has_function(main, \"suona_allarme\"), \"main.gd deve contenere suona_allarme(livello)\")\n\tcheck(\"has_closest\", has_function(main, \"trova_nemico_piu_vicino\"), \"main.gd deve contenere trova_nemico_piu_vicino(punto)\")\n\n\tcall_if_exists(main, \"suona_allarme\", [2])\n\tawait wait_frames(2)\n\n\tvar enemies := get_tree().get_nodes_in_group(\"nemici\")\n\tvar all_alerted := true\n\tfor enemy in enemies:\n\t\tvar alert = get_prop(enemy, \"alert_level\")\n\t\tif alert != 2:\n\t\t\tall_alerted = false\n\t\t\tbreak\n\tcheck(\"alarm_called\", all_alerted, \"suona_allarme(2) deve impostare alert_level a 2 su tutti i nodi del gruppo nemici\")\n\n\tvar closest_enemy = call_if_exists(main, \"trova_nemico_piu_vicino\", [Vector2(110, 100)])\n\tvar enemy_1 := find_by_name(main, \"Enemy1\")\n\tcheck(\"finds_correct_closest\", closest_enemy == enemy_1, \"Il nemico più vicino al punto (110, 100) deve essere Enemy1\")\n",
+     "descrizione": "suona_allarme imposta il livello di allerta di tutti i nemici e trova_nemico_piu_vicino restituisce il nodo corretto"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "SistemaSicurezza",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SistemaSicurezza\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "enemy.gd",
+      "contenuto": "extends Sprite2D\n\nvar alert_level: int = 0\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"nemici\")\n\n\nfunc allerta(livello: int) -> void:\n\talert_level = livello\n\tif alert_level == 1:\n\t\tmodulate = Color.YELLOW\n\telif alert_level >= 2:\n\t\tmodulate = Color.RED\n\telse:\n\t\tmodulate = Color.WHITE\n"
+     },
+     {
+      "percorso": "enemy.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Enemy\" type=\"Sprite2D\"]\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_enemy\")\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node2D\n\n# Sistema di sorveglianza centrale\n\n\nfunc _ready() -> void:\n\tprint(\"Centrale di sicurezza attiva.\")\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://enemy.tscn\" id=\"2_enemy\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Enemy1\" parent=\".\" instance=ExtResource(\"2_enemy\")]\nposition = Vector2(100, 100)\n\n[node name=\"Enemy2\" parent=\".\" instance=ExtResource(\"2_enemy\")]\nposition = Vector2(500, 300)\n\n[node name=\"Enemy3\" parent=\".\" instance=ExtResource(\"2_enemy\")]\nposition = Vector2(800, 200)\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SistemaSicurezza\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "enemy.gd",
+      "contenuto": "extends Sprite2D\n\nvar alert_level: int = 0\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"nemici\")\n\n\nfunc allerta(livello: int) -> void:\n\talert_level = livello\n\tif alert_level == 1:\n\t\tmodulate = Color.YELLOW\n\telif alert_level >= 2:\n\t\tmodulate = Color.RED\n\telse:\n\t\tmodulate = Color.WHITE\n"
+     },
+     {
+      "percorso": "enemy.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Enemy\" type=\"Sprite2D\"]\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_enemy\")\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node2D\n\n# Sistema di sorveglianza centrale\n\n\nfunc _ready() -> void:\n\tprint(\"Centrale di sicurezza attiva.\")\n\n\nfunc suona_allarme(livello: int) -> void:\n\tget_tree().call_group(\"nemici\", \"allerta\", livello)\n\n\nfunc trova_nemico_piu_vicino(punto: Vector2) -> Node2D:\n\tvar nemici: Array[Node] = get_tree().get_nodes_in_group(\"nemici\")\n\tvar piu_vicino: Node2D = null\n\tvar distanza_minima: float = 999999.0\n\t\n\tfor nodo in nemici:\n\t\tvar nemico := nodo as Node2D\n\t\tif nemico == null:\n\t\t\tcontinue\n\t\tvar dist: float = nemico.position.distance_to(punto)\n\t\tif dist < distanza_minima:\n\t\t\tdistanza_minima = dist\n\t\t\tpiu_vicino = nemico\n\t\t\t\n\treturn piu_vicino\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://enemy.tscn\" id=\"2_enemy\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Enemy1\" parent=\".\" instance=ExtResource(\"2_enemy\")]\nposition = Vector2(100, 100)\n\n[node name=\"Enemy2\" parent=\".\" instance=ExtResource(\"2_enemy\")]\nposition = Vector2(500, 300)\n\n[node name=\"Enemy3\" parent=\".\" instance=ExtResource(\"2_enemy\")]\nposition = Vector2(800, 200)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "SistemaSicurezza",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "In `main.gd` abbiamo implementato `suona_allarme(livello)` passando il valore dell'allerta come argomento a `get_tree().call_group(\"nemici\", \"allerta\", livello)`. In `trova_nemico_piu_vicino(punto)` abbiamo prelevato la lista dei nodi del gruppo con `get_nodes_in_group(\"nemici\")` e calcolato la distanza minima con `distance_to(punto)`, restituendo il riferimento al nodo più vicino.",
+    "cambiati": [
+     "main.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
