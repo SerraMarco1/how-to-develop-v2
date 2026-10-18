@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T08:36:14.476Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-18T08:47:30.181Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "gruppi",
   "numero": "2.7",
   "titolo": "Gruppi: parlare a tanti nodi insieme"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 2.7 riprende da sola appena rispondono.",
- "riprende": "2026-10-18T08:46:14.476Z"
+ "messaggio": "Sta scrivendo la lezione 2.7 «Gruppi: parlare a tanti nodi insieme».",
+ "riprende": null
 }
