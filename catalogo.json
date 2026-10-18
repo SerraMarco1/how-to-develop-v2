@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-18T09:16:31.292Z",
+ "aggiornato": "2026-10-18T09:24:18.897Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -290,6 +290,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/tween.json",
    "sha256": "418d662cdcfd284e19c9d5986a791174ec4c01ad00ac6804c8ac20f00f5dd79a",
    "byte": 135009
+  },
+  {
+   "slug": "leggere-una-classe",
+   "numero": "2.10",
+   "titolo": "Leggere la pagina di una classe che non conosci",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/leggere-una-classe.json",
+   "sha256": "a3e6c89b17c1fa1ed818f4c4e105d514fdebacfb64318e732dc1cebe7e7fce00",
+   "byte": 113290
   }
  ],
  "documentazione": {
