@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-17T11:47:26.231Z",
+ "aggiornato": "2026-10-18T07:31:03.622Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -236,6 +236,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/vita-di-un-nodo.json",
    "sha256": "edadae170f3ca30cd07bd83b09f0d8622021a60ae85202d516d3c7f526a5fe8f",
    "byte": 91978
+  },
+  {
+   "slug": "segnali-esistenti",
+   "numero": "2.4",
+   "titolo": "Segnali: collegare ciò che esiste già",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/segnali-esistenti.json",
+   "sha256": "9578b912b308718731e36c3cc6410d06ca3ecabe53f1144788b19877acc4ba0d",
+   "byte": 105931
   }
  ],
  "documentazione": {
