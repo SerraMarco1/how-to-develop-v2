@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T09:59:36.686Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-18T10:00:19.397Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-memory-1",
   "numero": "2.11",
   "titolo": "Progetto «Memory» – tappa 1: la griglia"
  },
- "messaggio": "Sta scrivendo la lezione 2.11 «Progetto «Memory» – tappa 1: la griglia».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 2.11 riprende da sola appena rispondono.",
+ "riprende": "2026-10-18T10:10:19.397Z"
 }
