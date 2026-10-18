@@ -5,3 +5,4 @@
 {"quando":1792307263488,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"segnali-esistenti","ok":true,"contata":true,"durataMs":124314,"tokenInput":17083,"tokenOutput":14231}
 {"quando":1792307389001,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"segnali-esistenti","ok":true,"contata":true,"durataMs":27835,"tokenInput":14483,"tokenOutput":7391,"ragionamento":7998}
 {"quando":1792307427310,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"segnali-esistenti","ok":true,"contata":true,"durataMs":22756,"tokenInput":14370,"tokenOutput":7200,"ragionamento":4634}
+{"quando":1792307454466,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"segnali-esistenti","ok":true,"contata":true,"durataMs":142298,"tokenInput":14304,"tokenOutput":6941,"ragionamento":12057}
