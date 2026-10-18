@@ -228,7 +228,9 @@
    "genere": "trova",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la consegna o i suggerimenti dicono già \"get_window\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
