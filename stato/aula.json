@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T09:03:20.766Z",
+ "aggiornato": "2026-10-18T09:06:17.892Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "gruppi",
-  "numero": "2.7",
-  "titolo": "Gruppi: parlare a tanti nodi insieme"
+  "slug": "export",
+  "numero": "2.8",
+  "titolo": "@export: regolare il gioco dall'Inspector"
  },
- "messaggio": "Sta scrivendo la lezione 2.7 «Gruppi: parlare a tanti nodi insieme».",
+ "messaggio": "Sta scrivendo la lezione 2.8 «@export: regolare il gioco dall'Inspector».",
  "riprende": null
 }
