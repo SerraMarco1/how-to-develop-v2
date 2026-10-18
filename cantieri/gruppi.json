@@ -533,31 +533,31 @@
     "tipo": "test",
     "genere": "estendi",
     "titolo": "Allarme di sicurezza e nemici furtivi",
-    "consegna": "Ricevi il progetto `SistemaSicurezza`. Nella scena principale `main.tscn` c'è un nodo radice `Main` con lo script `res://main.gd` e una serie di nemici istanziati (`Enemy`).\nOgni nemico appartiene al gruppo `nemici` e possiede una funzione `allerta(livello: int)` che ne imposta il livello di allerta (`alert_level`) e ne cambia il colore.\n\nIl tuo compito è completare lo script `res://main.gd` aggiungendo due funzioni:\n1. `suona_allarme(livello: int) -> void`: usa `call_group()` per chiamare la funzione `allerta` con il parametro `livello` su tutti i nodi del gruppo `\"nemici\"`.\n2. `trova_nemico_piu_vicino(punto: Vector2) -> Node2D`: cerca tra tutti i nodi del gruppo `\"nemici\"` ottenuti con `get_nodes_in_group(\"nemici\")`. Restituisce il nodo `Node2D` che si trova alla distanza minima rispetto a `punto` (usando `position.distance_to(punto)`). Se il gruppo è vuoto, restituisce `null`.",
+    "consegna": "Ricevi il progetto `SistemaSicurezza`. Nella scena principale `main.tscn` c'è un nodo radice `Main` con lo script `res://main.gd` e una serie di nemici istanziati (`Enemy`).\nOgni nemico appartiene al gruppo `enemies` e possiede un metodo `alert()` che imposta la variabile `is_alerted` a `true` e colora lo sprite di rosso.\n\nIl tuo compito è completare lo script `res://main.gd` aggiungendo due funzioni:\n1. `sound_alarm() -> void`: usa `call_group()` per chiamare la funzione `alert` su tutti i nodi del gruppo `\"enemies\"`.\n2. `find_closest_enemy(point: Vector2) -> Node2D`: cerca tra tutti i nodi del gruppo `\"enemies\"` ottenuti con `get_nodes_in_group(\"enemies\")`. Restituisce il nodo `Node2D` che si trova alla distanza minima rispetto a `point` (usando `position.distance_to(point)`). Se il gruppo è vuoto, restituisce `null`.",
     "modalita": "progetto",
     "dove": "a-parte",
     "cartella": "sistema-sicurezza",
     "passiGuida": [],
     "suggerimenti": [
-     "Ricorda che `call_group()` accetta argomenti aggiuntivi dopo il nome della funzione: `get_tree().call_group(\"nemici\", \"allerta\", livello)`."
+     "Ricorda che `get_tree().call_group(\"enemies\", \"alert\")` chiama il metodo `alert()` su tutti i nodi del gruppo specificato senza bisogno di cicli `for`."
     ],
     "verifiche": [
      {
       "tipo": "testo_in_file",
       "percorso": "res://main.gd",
-      "regex": "call_group\\(\"nemici\",\\s*\"allerta\",\\s*livello\\)",
-      "descrizione": "main.gd usa call_group con parametro livello"
+      "regex": "call_group\\(\"enemies\",\\s*\"alert\"\\)",
+      "descrizione": "main.gd usa call_group con il gruppo enemies e il metodo alert"
      },
      {
       "tipo": "testo_in_file",
       "percorso": "res://main.gd",
-      "regex": "get_nodes_in_group\\(\"nemici\"\\)",
-      "descrizione": "main.gd usa get_nodes_in_group(\"nemici\")"
+      "regex": "get_nodes_in_group\\(\"enemies\"\\)",
+      "descrizione": "main.gd usa get_nodes_in_group(\"enemies\")"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tcheck(\"has_alarm\", has_function(main, \"suona_allarme\"), \"main.gd deve contenere suona_allarme(livello)\")\n\tcheck(\"has_closest\", has_function(main, \"trova_nemico_piu_vicino\"), \"main.gd deve contenere trova_nemico_piu_vicino(punto)\")\n\n\tcall_if_exists(main, \"suona_allarme\", [2])\n\tawait wait_frames(2)\n\n\tvar enemies := get_tree().get_nodes_in_group(\"nemici\")\n\tvar all_alerted := true\n\tfor enemy in enemies:\n\t\tvar alert = get_prop(enemy, \"alert_level\")\n\t\tif alert != 2:\n\t\t\tall_alerted = false\n\t\t\tbreak\n\tcheck(\"alarm_called\", all_alerted, \"suona_allarme(2) deve impostare alert_level a 2 su tutti i nodi del gruppo nemici\")\n\n\tvar closest_enemy = call_if_exists(main, \"trova_nemico_piu_vicino\", [Vector2(110, 100)])\n\tvar enemy_1 := find_by_name(main, \"Enemy1\")\n\tcheck(\"finds_correct_closest\", closest_enemy == enemy_1, \"Il nemico più vicino al punto (110, 100) deve essere Enemy1\")\n",
-      "descrizione": "suona_allarme imposta il livello di allerta di tutti i nemici e trova_nemico_piu_vicino restituisce il nodo corretto"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tcheck(\"has_alarm\", has_function(main, \"sound_alarm\"), \"main.gd deve contenere la funzione sound_alarm()\")\n\tcheck(\"has_closest\", has_function(main, \"find_closest_enemy\"), \"main.gd deve contenere la funzione find_closest_enemy(point: Vector2)\")\n\n\tcall_if_exists(main, \"sound_alarm\")\n\tawait wait_frames(2)\n\n\tvar enemies := get_tree().get_nodes_in_group(\"enemies\")\n\tvar all_alerted := true\n\tfor enemy in enemies:\n\t\tvar alerted = get_prop(enemy, \"is_alerted\")\n\t\tif alerted != true:\n\t\t\tall_alerted = false\n\t\t\tbreak\n\tcheck(\"alarm_called\", all_alerted, \"sound_alarm() deve impostare is_alerted a true su tutti i nodi del gruppo enemies\")\n\n\tvar closest_enemy = call_if_exists(main, \"find_closest_enemy\", [Vector2(110.0, 100.0)])\n\tvar enemy_1 := find_by_name(main, \"Enemy1\")\n\tcheck(\"finds_correct_closest\", closest_enemy == enemy_1, \"Il nemico più vicino al punto (110, 100) deve essere Enemy1\")\n",
+      "descrizione": "sound_alarm allerta tutti i nemici e find_closest_enemy restituisce il nodo più vicino"
      }
     ],
     "previsioni": [],
@@ -577,7 +577,7 @@
       },
       {
        "percorso": "enemy.gd",
-       "contenuto": "extends Sprite2D\n\nvar alert_level: int = 0\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"nemici\")\n\n\nfunc allerta(livello: int) -> void:\n\talert_level = livello\n\tif alert_level == 1:\n\t\tmodulate = Color.YELLOW\n\telif alert_level >= 2:\n\t\tmodulate = Color.RED\n\telse:\n\t\tmodulate = Color.WHITE\n"
+       "contenuto": "extends Sprite2D\n\nvar is_alerted: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"enemies\")\n\n\nfunc alert() -> void:\n\tis_alerted = true\n\tmodulate = Color.RED\n"
       },
       {
        "percorso": "enemy.tscn",
@@ -601,7 +601,7 @@
       },
       {
        "percorso": "enemy.gd",
-       "contenuto": "extends Sprite2D\n\nvar alert_level: int = 0\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"nemici\")\n\n\nfunc allerta(livello: int) -> void:\n\talert_level = livello\n\tif alert_level == 1:\n\t\tmodulate = Color.YELLOW\n\telif alert_level >= 2:\n\t\tmodulate = Color.RED\n\telse:\n\t\tmodulate = Color.WHITE\n"
+       "contenuto": "extends Sprite2D\n\nvar is_alerted: bool = false\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"enemies\")\n\n\nfunc alert() -> void:\n\tis_alerted = true\n\tmodulate = Color.RED\n"
       },
       {
        "percorso": "enemy.tscn",
@@ -609,7 +609,7 @@
       },
       {
        "percorso": "main.gd",
-       "contenuto": "extends Node2D\n\n# Sistema di sorveglianza centrale\n\n\nfunc _ready() -> void:\n\tprint(\"Centrale di sicurezza attiva.\")\n\n\nfunc suona_allarme(livello: int) -> void:\n\tget_tree().call_group(\"nemici\", \"allerta\", livello)\n\n\nfunc trova_nemico_piu_vicino(punto: Vector2) -> Node2D:\n\tvar nemici: Array[Node] = get_tree().get_nodes_in_group(\"nemici\")\n\tvar piu_vicino: Node2D = null\n\tvar distanza_minima: float = 999999.0\n\t\n\tfor nodo in nemici:\n\t\tvar nemico := nodo as Node2D\n\t\tif nemico == null:\n\t\t\tcontinue\n\t\tvar dist: float = nemico.position.distance_to(punto)\n\t\tif dist < distanza_minima:\n\t\t\tdistanza_minima = dist\n\t\t\tpiu_vicino = nemico\n\t\t\t\n\treturn piu_vicino\n"
+       "contenuto": "extends Node2D\n\n# Sistema di sorveglianza centrale\n\n\nfunc _ready() -> void:\n\tprint(\"Centrale di sicurezza attiva.\")\n\n\nfunc sound_alarm() -> void:\n\tget_tree().call_group(\"enemies\", \"alert\")\n\n\nfunc find_closest_enemy(point: Vector2) -> Node2D:\n\tvar enemies: Array[Node] = get_tree().get_nodes_in_group(\"enemies\")\n\tvar closest: Node2D = null\n\tvar min_distance: float = INF\n\t\n\tfor node in enemies:\n\t\tvar enemy := node as Node2D\n\t\tif enemy == null:\n\t\t\tcontinue\n\t\tvar dist: float = enemy.position.distance_to(point)\n\t\tif dist < min_distance:\n\t\t\tmin_distance = dist\n\t\t\tclosest = enemy\n\t\t\t\n\treturn closest\n"
       },
       {
        "percorso": "main.tscn",
@@ -623,7 +623,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "In `main.gd` abbiamo implementato `suona_allarme(livello)` passando il valore dell'allerta come argomento a `get_tree().call_group(\"nemici\", \"allerta\", livello)`. In `trova_nemico_piu_vicino(punto)` abbiamo prelevato la lista dei nodi del gruppo con `get_nodes_in_group(\"nemici\")` e calcolato la distanza minima con `distance_to(punto)`, restituendo il riferimento al nodo più vicino.",
+     "spiegazione": "`sound_alarm()` usa `get_tree().call_group(\"enemies\", \"alert\")` per chiamare direttamente il metodo `alert()` su tutti i nodi assegnati al gruppo `enemies`. In `find_closest_enemy(point)` recuperiamo tutti i membri del gruppo con `get_tree().get_nodes_in_group(\"enemies\")`, calcoliamo la distanza di ciascuno con `position.distance_to(point)` e teniamo traccia del nodo con la distanza minore per poi restituirlo.",
      "cambiati": [
       "main.gd"
      ],
@@ -745,7 +745,8 @@
   ],
   "teoriaCorretta": true,
   "corretti": [
-   "es2"
+   "es2",
+   "test"
   ]
  }
 }
