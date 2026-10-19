@@ -5,5 +5,12 @@
    "tentativi": 1,
    "esito": "fatto"
   }
+ },
+ "il-primo-script": {
+  "es1": {
+   "impronta": "880a8096901a07ebf3d5f33e06d751fe0d5cfff26ae33fd498a2141dbd22a2e1",
+   "tentativi": 1,
+   "esito": "fatto"
+  }
  }
 }

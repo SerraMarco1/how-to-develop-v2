@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T15:59:29.335Z",
+ "aggiornato": "2026-10-19T15:59:46.008Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -34,10 +34,10 @@
    "slug": "il-primo-script",
    "numero": "1.0",
    "titolo": "Il primo script: dare ordini a un nodo",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/il-primo-script.json",
-   "sha256": "512b7bd16499ade178a31579aad8b52ff21dcafda7b75814383f43f2a072365c",
-   "byte": 27768
+   "sha256": "953d74020ef78b7734135b100677e3c5b4679638a9f9de6de7c8dab672151708",
+   "byte": 28293
   },
   {
    "slug": "variabili-e-tipi",

@@ -1,0 +1,48 @@
+{
+ "n": 13,
+ "quando": "2026-10-19T15:59:46.004Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 6 s. Soggetti: «Cesto» (esserci). Scritte: «Il cesto verde appare in basso al centro dello schermo». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 15 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15261,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "cesto",
+     "cerca": {
+      "scena": "res://basket.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 6,
+     "deve": "esserci",
+     "etichetta": "Cesto"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il cesto verde appare in basso al centro dello schermo",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "cesto"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "f9a1de9b2b1345bd895c92ad8041f4de9030a23df947ad12c3089c1418cde163",
+   "estensione": "mp4",
+   "byte": 15123
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (2469 → 202 token)"
+ ]
+}
