@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-19T07:10:07.437Z",
+ "aggiornato": "2026-10-19T07:16:56.132Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "control-ancore-e-dimensioni",
-  "numero": "3.0",
-  "titolo": "Control: ancore e dimensioni"
+  "slug": "contenitori",
+  "numero": "3.1",
+  "titolo": "Contenitori: l'interfaccia che si dispone da sola"
  },
- "messaggio": "Sta scrivendo la lezione 3.0 «Control: ancore e dimensioni».",
+ "messaggio": "Sta scrivendo la lezione 3.1 «Contenitori: l'interfaccia che si dispone da sola».",
  "riprende": null
 }
