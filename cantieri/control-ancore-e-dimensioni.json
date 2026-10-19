@@ -644,7 +644,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Control: ancore e dimensioni",
@@ -722,5 +723,10 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
