@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://basket.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"etichetta\", \"cerca\": {\"nome\": \"Label\"}, \"quanti\": 1, \"da\": 3.0, \"a\": 7.5, \"deve\": \"mostrare testo\", \"testo\": \"Partita finita\", \"etichetta\": \"Messaggio\"}], \"scritte\": [{\"testo\": \"Quando le vite finiscono, il gioco mostra la fine partita\", \"da\": 3.0, \"a\": 7.5, \"soggetto\": \"etichetta\"}]}",
+ "ragionamento": 2682,
+ "quando": "2026-10-19T19:42:29.242Z",
+ "ruolo": "ritocco"
+}
