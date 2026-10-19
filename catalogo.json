@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:46:25.093Z",
+ "aggiornato": "2026-10-19T07:51:19.197Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -371,6 +371,15 @@
    "file": "lezioni/f03-interfaccia/interfaccia-in-partita.json",
    "sha256": "1b3d6d3b77789d19d61d92a0f689c2ec53f5b397fd089748aad7181bfbd060d6",
    "byte": 186818
+  },
+  {
+   "slug": "cambiare-scena",
+   "numero": "3.5",
+   "titolo": "Più scene: dal menu alla partita e ritorno",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/cambiare-scena.json",
+   "sha256": "bfe9f8a00b2a3092c9f322bc7bf109a532ea2220e093935f682799da917f77eb",
+   "byte": 208646
   }
  ],
  "documentazione": {
