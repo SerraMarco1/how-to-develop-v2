@@ -80,5 +80,44 @@
    "esito": "niente",
    "motivo": "L'esercizio riorganizza il codice in funzioni senza modificare il comportamento visivo del gioco."
   }
+ },
+ "casualita-e-distanze": {
+  "es1": {
+   "impronta": "3d20f4ec4c7a8f9bbc3f7518d050f2e1f26e28d867f14bd0420e5f0420581197",
+   "tentativi": 2,
+   "esito": "niente",
+   "ultimo": {
+    "copione": {
+     "scena": "res://star.tscn",
+     "durata": 8,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "stella",
+       "cerca": {
+        "scena": "res://star.tscn"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "muoversi",
+       "etichetta": "Stella"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "La stella cade da una posizione orizzontale casuale",
+       "da": 0.5,
+       "a": 7.5,
+       "soggetto": "stella"
+      }
+     ]
+    },
+    "problemi": [
+     "La scena res://star.tscn non è la principale (res://basket.tscn) e la consegna non la nomina: chi studia non saprebbe di doverla avviare con F6. Usa la scena che la consegna fa avviare."
+    ]
+   },
+   "motivo": "La consegna non nomina esplicitamente il file della scena da avviare con F6."
+  }
  }
 }

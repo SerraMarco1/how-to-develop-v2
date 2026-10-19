@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"La consegna non nomina esplicitamente il file della scena da avviare con F6.\"\n}",
- "ragionamento": 1356,
- "quando": "2026-10-19T16:03:07.634Z",
- "ruolo": "ritocco"
-}
