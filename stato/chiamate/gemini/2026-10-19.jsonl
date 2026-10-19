@@ -9,3 +9,4 @@
 {"quando":1792393747282,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-memory-3","ok":true,"contata":true,"durataMs":45187,"tokenInput":4248,"tokenOutput":18,"ragionamento":3094}
 {"quando":1792393793901,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-memory-3","ok":true,"contata":true,"durataMs":8171,"tokenInput":2888,"tokenOutput":896,"ragionamento":2251}
 {"quando":1792393807455,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":70955,"tokenInput":14014,"tokenOutput":3093,"ragionamento":3261}
+{"quando":1792393879830,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":198835,"tokenInput":19814,"tokenOutput":11390,"ragionamento":13407}
