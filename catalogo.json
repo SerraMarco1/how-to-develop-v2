@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:21:57.254Z",
+ "aggiornato": "2026-10-19T07:28:07.321Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -344,6 +344,15 @@
    "file": "lezioni/f03-interfaccia/contenitori.json",
    "sha256": "2dfa329da59ec4a2858d4a23274d7eb4a800a385f2655ea30154d51155f72595",
    "byte": 169438
+  },
+  {
+   "slug": "controlli-di-uso-comune",
+   "numero": "3.2",
+   "titolo": "I controlli che userai sempre",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/controlli-di-uso-comune.json",
+   "sha256": "f7f2d56bbe6d46ab84b8d869cf765b10f6a93ace0561671ef390a29403f1cf7f",
+   "byte": 200633
   }
  ],
  "documentazione": {
