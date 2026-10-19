@@ -1,0 +1,49 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T16:14:22.432Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 2: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri mode_menu.tscn e premi F6, 6 s. Soggetti: «Titolo» (mostrare testo). Scritte: «Il titolo della schermata di selezione modalità». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 17 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 17179,
+ "dati": {
+  "copione": {
+   "scena": "res://mode_menu.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "header",
+     "cerca": {
+      "nome": "HeaderLabel"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 6,
+     "deve": "mostrare testo",
+     "testo": "SCEGLI LA MODALITÀ",
+     "etichetta": "Titolo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il titolo della schermata di selezione modalità",
+     "da": 0,
+     "a": 6,
+     "soggetto": "header"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "f7d5b1d8168489ae989de276d98002cb1119010e3e0818198cb40eb4519dfa73",
+   "estensione": "mp4",
+   "byte": 17399
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (8131 → 205 token)"
+ ]
+}

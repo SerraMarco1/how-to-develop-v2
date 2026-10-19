@@ -634,6 +634,43 @@
    "tentativi": 1,
    "esito": "niente",
    "motivo": "La scena del menu principale viene creata e salvata ma non viene avviata durante l'esecuzione del gioco principale."
+  },
+  "es2": {
+   "impronta": "6c29aa6bf4ed997e6b45402494f955191091d36e15faf75c9ecf187b372ba356",
+   "tentativi": 2,
+   "esito": "fatto",
+   "ultimo": {
+    "copione": {
+     "scena": "res://mode_menu.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "header",
+       "cerca": {
+        "nome": "HeaderLabel"
+       },
+       "quanti": 1,
+       "da": 0,
+       "a": 6,
+       "deve": "mostrare testo",
+       "etichetta": "Titolo"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il titolo della schermata di selezione modalità",
+       "da": 0,
+       "a": 6,
+       "soggetto": "header"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «header»: per \"mostrare testo\" serve il campo testo."
+    ]
+   },
+   "motivo": "Soggetto «header»: per \"mostrare testo\" serve il campo testo."
   }
  }
 }
