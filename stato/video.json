@@ -407,7 +407,8 @@
    "impronta": "5981c3e0b2d7a6cb8a3caa759d2e089a4249c42f718e7475cd23ce0c7570e83e",
    "tentativi": 1,
    "esito": "niente",
-   "motivo": "L'esercizio rifattorizza la logica di raccolta usando i segnali, ma il comportamento visivo del gioco e la raccolta delle stelle sono identici a prima."
+   "regole": 2,
+   "motivo": "L'esercizio riorganizza il codice usando i segnali ma il comportamento visivo del gioco rimane lo stesso di prima."
   }
  },
  "export": {
