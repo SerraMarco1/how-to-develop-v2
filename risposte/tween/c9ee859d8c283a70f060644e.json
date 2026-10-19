@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 6,\n  \"azioni\": [\n    {\n      \"azione\": \"move_left\",\n      \"inizio\": 0.2,\n      \"fine\": 0.7,\n      \"tasto\": \"A\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"testo_volante\",\n      \"cerca\": {\n        \"classe\": \"Label\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.8,\n      \"a\": 1.3,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"+150\",\n      \"etichetta\": \"Punteggio\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"La raccolta del rubino mostra il punteggio +150 che sale\",\n      \"da\": 0.8,\n      \"a\": 1.3,\n      \"soggetto\": \"testo_volante\"\n    }\n  ]\n}",
- "ragionamento": 2057,
- "quando": "2026-10-19T19:46:37.647Z",
- "ruolo": "ritocco"
-}

@@ -429,48 +429,49 @@
   },
   "es2": {
    "impronta": "86bf5656db609099acb0d51a8bd6dbe4061fd1411eba72c7c7102c6a92efcfd1",
-   "tentativi": 2,
-   "esito": "niente",
+   "tentativi": 3,
+   "esito": "rinuncia",
+   "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://basket.tscn",
-     "durata": 5.8,
+     "durata": 4,
      "azioni": [
       {
        "azione": "move_left",
-       "inizio": 0.5,
-       "fine": 1.5,
+       "inizio": 0.2,
+       "fine": 0.7,
        "tasto": "A"
       }
      ],
      "soggetti": [
       {
-       "id": "punteggio",
+       "id": "testo_volante",
        "cerca": {
         "classe": "Label"
        },
        "quanti": 1,
-       "da": 4,
-       "a": 4.8,
+       "da": 0.8,
+       "a": 1.3,
        "deve": "mostrare testo",
-       "testo": "+",
+       "testo": "+150",
        "etichetta": "Punteggio"
       }
      ],
      "scritte": [
       {
-       "testo": "Il punteggio guadagnato sale e scompare",
-       "da": 4,
-       "a": 4.8,
-       "soggetto": "punteggio"
+       "testo": "La raccolta del rubino mostra il punteggio +150 che sale",
+       "da": 0.8,
+       "a": 1.3,
+       "soggetto": "testo_volante"
       }
      ]
     },
     "problemi": [
-     "Soggetto «punteggio»: l'intervallo (da 4 a 4.8 s) deve durare almeno 1 secondo."
+     "Soggetto «testo_volante» (classe = Label; almeno 1 da 0.8 a 1.3 s; deve mostrare il testo «+150»): il testo «+150» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 1 s: «Label» a (341, 550) 151×23, si vede, testo «Punti: 0000 | Vite: 3». Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "La scritta fluttuante viene eliminata dopo 0.5 secondi dall'animazione, rendendo impossibile coprire l'intervallo minimo di 1 secondo richiesto per il soggetto nel copione."
+   "motivo": "Soggetto «testo_volante» (classe = Label; almeno 1 da 0.8 a 1.3 s; deve mostrare il testo «+150»): il testo «+150» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 1 s: «Label» a (341, 550) 151×23, si vede, testo «Punti: 0000 | Vite: 3». Lo schermo va da (0, 0) a (1152, 648)."
   },
   "test": {
    "impronta": "caff358e197abc6a60a653ce1de6ac1467cf7d1e387ffb95376b5b753b659e87",
