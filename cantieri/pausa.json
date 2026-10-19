@@ -239,7 +239,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Nella scena deve esserci la pallina Ball\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
