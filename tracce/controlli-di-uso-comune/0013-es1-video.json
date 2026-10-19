@@ -1,0 +1,48 @@
+{
+ "n": 13,
+ "quando": "2026-10-19T16:15:03.262Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri new_game.tscn e premi F6, 8 s. Soggetti: «Menu Nuova Partita» (esserci). Scritte: «La schermata raccoglie le impostazioni iniziali della partita». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 24 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 27660,
+ "dati": {
+  "copione": {
+   "scena": "res://new_game.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "menu",
+     "cerca": {
+      "scena": "res://new_game.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Menu Nuova Partita"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La schermata raccoglie le impostazioni iniziali della partita",
+     "da": 1,
+     "a": 7,
+     "soggetto": "menu"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "3cad1843e3de13aeeca5e65a9ea1fce95390036f4010d57aababda27716faa19",
+   "estensione": "mp4",
+   "byte": 24863
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 15 s (8302 → 150 token)"
+ ]
+}

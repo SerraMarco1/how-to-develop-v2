@@ -678,5 +678,12 @@
    "esito": "niente",
    "motivo": "L'esercizio modifica solo le proprietà di dimensione minima e allineamento di nodi già esistenti nella scena, senza aggiungere nuovi elementi visivi."
   }
+ },
+ "controlli-di-uso-comune": {
+  "es1": {
+   "impronta": "671cee617f852aa20d57958a959a99155f54a07bbf3cb85b0e5c8aafb242abb5",
+   "tentativi": 1,
+   "esito": "fatto"
+  }
  }
 }

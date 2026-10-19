@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T16:14:33.982Z",
+ "aggiornato": "2026-10-19T16:15:03.276Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -349,10 +349,10 @@
    "slug": "controlli-di-uso-comune",
    "numero": "3.2",
    "titolo": "I controlli che userai sempre",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f03-interfaccia/controlli-di-uso-comune.json",
-   "sha256": "21225423da7c78480651930c2dcf7620787748b6e80250060d5a7b452abac9ef",
-   "byte": 200764
+   "sha256": "a2bcef8f9350e0afa7b425191d4d96675bde48a2334655769ccc46e50a0a01a6",
+   "byte": 201309
   },
   {
    "slug": "temi-e-font",
