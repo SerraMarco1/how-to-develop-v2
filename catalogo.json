@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:14:31.947Z",
+ "aggiornato": "2026-10-19T09:16:40.497Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -205,10 +205,10 @@
    "slug": "albero-dei-nodi",
    "numero": "2.0",
    "titolo": "L'albero dei nodi: genitori e figli",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f02-nodi-scene-segnali/albero-dei-nodi.json",
-   "sha256": "13852dce8d653a6840438ca5a648e1946697211a5070c41e3f22a6313ba66a94",
-   "byte": 91016
+   "sha256": "c8b85860a72b4fdba6a55eabab22199e9f6fa9db8fb03b484079e96a0e44ce7b",
+   "byte": 91147
   },
   {
    "slug": "raggiungere-i-nodi",

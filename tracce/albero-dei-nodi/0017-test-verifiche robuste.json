@@ -1,0 +1,34 @@
+{
+ "n": 17,
+ "quando": "2026-10-19T09:16:40.491Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 37797,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://basket.tscn",
+    "tipoNodo": "Sprite2D",
+    "nome": "Indicator",
+    "genitore": "Handle",
+    "descrizione": "La scena basket.tscn contiene un nodo Sprite2D chiamato Indicator come figlio di Handle"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar indicator := basket.get_node_or_null(\"Handle/Indicator\") as Sprite2D\n\tif not check(\"indicator\", indicator != null, \"Il nodo Indicator deve trovarsi sotto Handle\"):\n\t\treturn\n\tcheck(\"texture\", indicator.texture != null, \"Il nodo Indicator deve avere una texture assegnata\")\n\tcheck(\"position\", indicator.position == Vector2(0, -50), \"La posizione locale di Indicator deve essere (0, -50)\")\n\tcheck(\"scale\", indicator.scale == Vector2(0.2, 0.2), \"La scala di Indicator deve essere (0.2, 0.2)\")\n\tbasket.position = Vector2(400, 300)\n\tvar start_ind_global := indicator.global_position\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"hierarchy_move\", indicator.global_position.x > start_ind_global.x, \"Muovendo il cesto, l'indicatore segue la gerarchia attraverso il nodo genitore Handle (global_x: %.1f -> %.1f)\" % [start_ind_global.x, indicator.global_position.x])\n",
+    "descrizione": "L'indicatore è posizionato correttamente sul manico e ne segue il movimento"
+   }
+  ],
+  "consegna": "Nel gioco del cesto, arricchisci la struttura grafica posizionando un indicatore decorativo in cima al manico, sfruttando la gerarchia dell'albero dei nodi.\n\nNella scena `basket.tscn`, aggiungi un nodo `Sprite2D` chiamato `Indicator` come figlio diretto di `Handle`:\n- Assegna come texture `res://icon.svg`.\n- Imposta la sua posizione locale a `(0, -50)`.\n- Imposta la sua scala locale a `(0.2, 0.2)`.\n\nIn questo modo l'indicatore diventa parte dell'albero gerarchico e segue automaticamente i movimenti del manico e del cesto."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 20 s (13488 → 5788 token)"
+ ]
+}
