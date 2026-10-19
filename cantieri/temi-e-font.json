@@ -1,6 +1,198 @@
 {
  "creato": "2026-10-19T07:28:08.817Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Creare il tema di gioco e stilizzare i pulsanti",
+    "consegna": "Crea una risorsa `Theme` centralizzata per dare ai pulsanti del gioco un aspetto coordinato e moderno, eliminando il grigio generico predefinito.\n\n1. Crea il file `res://game_theme.tres` di tipo `Theme`.\n2. Nel tema, imposta la proprietà generale **Default Font Size** a `18`.\n3. Per la classe `Button`, configura uno `StyleBoxFlat` per ciascuno dei quattro stati principali:\n   - **normal**: colore di sfondo `Color(0.15, 0.2, 0.35, 1.0)` e raggio degli angoli di `6` pixel su tutti e quattro i lati.\n   - **hover**: colore di sfondo `Color(0.25, 0.35, 0.55, 1.0)` e raggio degli angoli di `6` pixel.\n   - **pressed**: colore di sfondo `Color(0.1, 0.12, 0.22, 1.0)` e raggio degli angoli di `6` pixel.\n   - **disabled**: colore di sfondo `Color(0.15, 0.15, 0.15, 0.6)` e raggio degli angoli di `6` pixel.\n4. Apri la scena `res://basket.tscn` e assegna `res://game_theme.tres` alla proprietà **Theme** del nodo `RestartButton`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello *FileSystem*, fai clic destro su uno spazio vuoto e seleziona **Create New → Resource...**.",
+     "Scrivi `Theme` nella barra di ricerca della finestra di creazione, seleziona la voce **Theme**, premi **Create** e salva con il percorso `res://game_theme.tres`.",
+     "Fai doppio clic su `game_theme.tres` nel *FileSystem*: nel pannello laterale destro dell'editor del tema, premi il pulsante **+** accanto all'elenco dei tipi e aggiungi **Button**.",
+     "Nella scheda **Styles** del tipo `Button`, fai clic sulle quattro voci `normal`, `hover`, `pressed` e `disabled`, assegnando a ciascuna un **New StyleBoxFlat**.",
+     "Seleziona ciascuno `StyleBoxFlat` per aprirlo nell'*Inspector*: inserisci il colore richiesto nella casella **Bg Color** e assegna il valore `6` a tutte le quattro caselle di **Corner Radius** (top left, top right, bottom right, bottom left).",
+     "Seleziona nuovamente la radice del tema nell'*Inspector* e imposta il valore numerico **Default Font Size** a `18`, poi salva la risorsa con Ctrl+S.",
+     "Apri la scena `res://basket.tscn`, seleziona il nodo `RestartButton`, individua la proprietà **Theme** nell'*Inspector* e trascina `res://game_theme.tres` dal pannello *FileSystem* nella casella del tema."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://game_theme.tres",
+      "descrizione": "Il file del tema res://game_theme.tres esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar theme_res := load(\"res://game_theme.tres\") as Theme\n\tif not check(\"theme_valid\", theme_res != null, \"Il file game_theme.tres deve essere una risorsa Theme valida\"):\n\t\treturn\n\t\n\tcheck(\"default_font_size\", theme_res.default_font_size == 18, \"La proprietà default_font_size del tema deve essere impostata a 18\")\n\t\n\tvar states: Array[String] = [\"normal\", \"hover\", \"pressed\", \"disabled\"]\n\tfor state_name in states:\n\t\tvar style_box = theme_res.get_stylebox(state_name, \"Button\") as StyleBoxFlat\n\t\tif not check(\"has_\" + state_name, style_box != null, \"Il tema deve contenere uno StyleBoxFlat per lo stato '\" + state_name + \"' di Button\"):\n\t\t\treturn\n\t\tcheck(\"radius_\" + state_name, style_box.corner_radius_top_left == 6 and style_box.corner_radius_bottom_right == 6, \"Lo stile '\" + state_name + \"' deve avere il raggio degli angoli impostato a 6 pixel\")\n\t\n\tvar basket_root := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket_loaded\", basket_root != null, \"La scena basket.tscn deve potersi istanziare\"):\n\t\treturn\n\tvar restart_btn := find_by_name(basket_root, \"RestartButton\") as Button\n\tif not check(\"btn_found\", restart_btn != null, \"La scena basket.tscn deve contenere il nodo RestartButton\"):\n\t\treturn\n\tcheck(\"btn_has_theme\", restart_btn.theme == theme_res, \"RestartButton deve avere game_theme.tres associato alla proprietà Theme\")",
+      "descrizione": "Il tema definisce la dimensione del font e i quattro stati StyleBoxFlat per i pulsanti, e RestartButton lo usa"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "game_theme.tres",
+       "contenuto": "[gd_resource type=\"Theme\" load_steps=5 format=3]\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_disabled\"]\nbg_color = Color(0.15, 0.15, 0.15, 0.6)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_hover\"]\nbg_color = Color(0.25, 0.35, 0.55, 1)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_normal\"]\nbg_color = Color(0.15, 0.2, 0.35, 1)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_pressed\"]\nbg_color = Color(0.1, 0.12, 0.22, 1)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[resource]\ndefault_font_size = 18\nButton/styles/disabled = SubResource(\"StyleBoxFlat_disabled\")\nButton/styles/hover = SubResource(\"StyleBoxFlat_hover\")\nButton/styles/normal = SubResource(\"StyleBoxFlat_normal\")\nButton/styles/pressed = SubResource(\"StyleBoxFlat_pressed\")\n"
+      },
+      {
+       "percorso": "basket.tscn",
+       "contenuto": "[gd_scene load_steps=7 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://falling_item.tscn\" id=\"3_item\"]\n[ext_resource type=\"PackedScene\" path=\"res://rock.tscn\" id=\"4_rock\"]\n[ext_resource type=\"PackedScene\" path=\"res://ruby.tscn\" id=\"5_ruby\"]\n[ext_resource type=\"Theme\" path=\"res://game_theme.tres\" id=\"6_theme\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\nitem_scene = ExtResource(\"3_item\")\nrock_scene = ExtResource(\"4_rock\")\nruby_scene = ExtResource(\"5_ruby\")\n\n[node name=\"Shadow\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, 35)\nscale = Vector2(1.2, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Handle\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(0, -40)\nscale = Vector2(0.3, 0.6)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Indicator\" type=\"Sprite2D\" parent=\"Handle\"]\nunique_name_in_owner = true\nposition = Vector2(0, -50)\nscale = Vector2(0.2, 0.2)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\nunique_name_in_owner = true\noffset_left = -60.0\noffset_top = -50.0\noffset_right = 60.0\noffset_bottom = -27.0\n\n[node name=\"RestartButton\" type=\"Button\" parent=\".\"]\nvisible = false\noffset_left = -50.0\noffset_top = 20.0\noffset_right = 50.0\noffset_bottom = 51.0\ntheme = ExtResource(\"6_theme\")\ntext = \"Ricomincia\"\n\n[node name=\"SpawnTimer\" type=\"Timer\" parent=\".\"]\nautostart = true\n\n[node name=\"WaveTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 10.0\none_shot = true\nautostart = true\n\n[node name=\"FlashTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 0.1\n\n[connection signal=\"pressed\" from=\"RestartButton\" to=\".\" method=\"_on_restart_button_pressed\"]\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Abbiamo creato una risorsa `Theme` indipendente (`game_theme.tres`). All'interno abbiamo configurato il tipo `Button` assegnando uno `StyleBoxFlat` a ciascuno dei quattro stati: a riposo (`normal`), evidenziato dal cursore (`hover`), premuto (`pressed`) e disattivato (`disabled`). Impostando un raggio degli angoli uniforme di 6 pixel e una tonalità blu coerente, tutti i pulsanti del gioco possono condividere le stesse proprietà grafiche semplicemente collegando questa risorsa.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "imita",
+    "titolo": "Ereditare il tema nei menu e applicare eccezioni locali",
+    "consegna": "Applica il tema creato alle schermate del gioco sfruttando la propagazione gerarchica, riservando le modifiche locali solo ai testi di risalto:\n\n1. Nella scena `res://mode_menu.tscn`:\n   - Assegna `res://game_theme.tres` alla proprietà **Theme** del nodo radice `ModeMenu`.\n   - Lascia privi di modifiche locali tutti i pulsanti della scena (`ClassicButton`, `TimeAttackButton`, `HardcoreButton`, `ZenButton`, `BackButton`, `HelpButton`): erediteranno lo stile del pulsante dal nodo genitore.\n   - Seleziona il nodo `HeaderLabel` e attiva una modifica locale: nella sezione **Theme Overrides → Font Sizes** imposta **Font Size** a `28`.\n\n2. Nella scena `res://hud.tscn`:\n   - Assegna `res://game_theme.tres` alla proprietà **Theme** della radice `HUD`.\n   - Nel nodo `MessageLabel`, imposta la sovrascrittura locale **Theme Overrides → Font Sizes → Font Size** a `24`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Quando assegni la proprietà Theme a un nodo radice di tipo Control, tutti i controlli sottostanti nell'albero dei nodi prendono le regole di quel tema senza dover toccare ciascun pulsante singolarmente.",
+     "Per modificare la dimensione di una singola scritta senza toccare le altre, apri la sezione Theme Overrides nell'Inspector della Label e spunta la casella Font Size sotto Font Sizes."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar theme_res := load(\"res://game_theme.tres\") as Theme\n\tif not check(\"theme_exists\", theme_res != null, \"Il file game_theme.tres deve esistere\"):\n\t\treturn\n\t\n\tvar menu_root := await instantiate_scene(\"res://mode_menu.tscn\")\n\tif not check(\"menu_loaded\", menu_root != null, \"La scena mode_menu.tscn deve potersi istanziare\"):\n\t\treturn\n\tvar menu_control := menu_root as Control\n\tcheck(\"menu_theme\", menu_control.theme == theme_res, \"La radice ModeMenu deve avere game_theme.tres assegnato come Theme\")\n\t\n\tvar header_label := find_by_name(menu_root, \"HeaderLabel\") as Label\n\tif check(\"header_exists\", header_label != null, \"HeaderLabel deve esistere in mode_menu.tscn\"):\n\t\tcheck(\"header_override\", header_label.get_theme_font_size(\"font_size\") == 28, \"HeaderLabel deve avere una dimensione del font di 28 pixel\")\n\t\n\tvar classic_btn := find_by_name(menu_root, \"ClassicButton\") as Button\n\tif check(\"btn_exists\", classic_btn != null, \"ClassicButton deve esistere nel menu\"):\n\t\tcheck(\"btn_no_local_theme\", classic_btn.theme == null, \"I singoli pulsanti non devono avere un tema locale ma ereditarlo\")\n\t\tvar inherited_box = classic_btn.get_theme_stylebox(\"normal\") as StyleBoxFlat\n\t\tcheck(\"btn_inherited_style\", inherited_box != null and inherited_box.corner_radius_top_left == 6, \"I pulsanti devono ereditare lo stile del tema generale\")\n\t\n\tvar hud_root := await instantiate_scene(\"res://hud.tscn\")\n\tif not check(\"hud_loaded\", hud_root != null, \"La scena hud.tscn deve potersi istanziare\"):\n\t\treturn\n\tvar hud_control := hud_root as Control\n\tcheck(\"hud_theme\", hud_control.theme == theme_res, \"La radice HUD deve avere game_theme.tres assegnato come Theme\")\n\t\n\tvar message_label := find_by_name(hud_root, \"MessageLabel\") as Label\n\tif check(\"msg_label_exists\", message_label != null, \"MessageLabel deve esistere in hud.tscn\"):\n\t\tcheck(\"msg_override\", message_label.get_theme_font_size(\"font_size\") == 24, \"MessageLabel deve avere una dimensione del font di 24 pixel\")",
+      "descrizione": "ModeMenu e HUD ereditano il tema senza stili locali sui pulsanti e con le corrette dimensioni dei titoli"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "mode_menu.tscn",
+       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Theme\" path=\"res://game_theme.tres\" id=\"1_theme\"]\n\n[node name=\"ModeMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = ExtResource(\"1_theme\")\n\n[node name=\"Margin\" type=\"MarginContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 30\ntheme_override_constants/margin_top = 30\ntheme_override_constants/margin_right = 30\ntheme_override_constants/margin_bottom = 30\n\n[node name=\"Layout\" type=\"VBoxContainer\" parent=\"Margin\"]\nlayout_mode = 2\n\n[node name=\"HeaderLabel\" type=\"Label\" parent=\"Margin/Layout\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 28\ntext = \"SCEGLI LA MODALITÀ\"\nhorizontal_alignment = 1\n\n[node name=\"GridCenter\" type=\"CenterContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"ModesGrid\" type=\"GridContainer\" parent=\"Margin/Layout/GridCenter\"]\nlayout_mode = 2\ncolumns = 2\n\n[node name=\"ClassicButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Classica\"\n\n[node name=\"TimeAttackButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Corsa contro il tempo\"\n\n[node name=\"HardcoreButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Difficile\"\n\n[node name=\"ZenButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Rilassata\"\n\n[node name=\"BottomBar\" type=\"HBoxContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"BackButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\ntext = \"Indietro\"\n\n[node name=\"HelpButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\ntext = \"Guida\"\n"
+      },
+      {
+       "percorso": "hud.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://hud.gd\" id=\"1_hud\"]\n[ext_resource type=\"Theme\" path=\"res://game_theme.tres\" id=\"2_theme\"]\n\n[node name=\"HUD\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = ExtResource(\"2_theme\")\nscript = ExtResource(\"1_hud\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 50.0\ncustom_minimum_size = Vector2(140, 30)\ntext = \"Punti: 0\"\n\n[node name=\"LivesLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 1\nanchor_left = 1.0\nanchor_right = 1.0\noffset_left = -160.0\noffset_top = 20.0\noffset_right = -20.0\noffset_bottom = 50.0\ngrow_horizontal = 0\ncustom_minimum_size = Vector2(140, 30)\ntext = \"Vite: 3\"\nhorizontal_alignment = 2\n\n[node name=\"MessageLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -150.0\noffset_top = -25.0\noffset_right = 150.0\noffset_bottom = 25.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_font_sizes/font_size = 24\ncustom_minimum_size = Vector2(300, 50)\ntext = \"Pronti?\"\nhorizontal_alignment = 1\nvertical_alignment = 1\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Assegnando `game_theme.tres` direttamente ai nodi radice `ModeMenu` e `HUD`, tutti i controlli discendenti ereditano lo stile grafico senza dover impostare alcuna proprietà sui singoli nodi. Per i titoli principali (`HeaderLabel` e `MessageLabel`), invece, abbiamo utilizzato una Theme Override per ingrandire la dimensione del testo a 28 e 24 pixel senza alterare la dimensione standard del tema.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "imita",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "imita",
+    "titolo": "Stile dei pannelli e cornice per i messaggi",
+    "consegna": "Rifinisci l'aspetto grafico aggiungendo al tema lo stile per i riquadri e crea una cornice coordinata per il messaggio al centro dello schermo:\n\n1. Nel tema `res://game_theme.tres`, aggiungi il tipo **Panel**:\n   - Configura la voce di stile `panel` con un nuovo **StyleBoxFlat**.\n   - Imposta **Bg Color** su `Color(0.08, 0.1, 0.18, 0.85)` (sfondo scuro semitrasparente).\n   - Imposta **Border Width** a `2` pixel su tutti e 4 i lati (`border_width_left`, `border_width_top`, `border_width_right`, `border_width_bottom`).\n   - Imposta **Border Color** su `Color(0.3, 0.5, 0.8, 1.0)` (bordo azzurro coordinato).\n   - Imposta **Corner Radius** a `8` pixel su tutti e 4 gli angoli.\n\n2. Nella scena `res://hud.tscn`:\n   - Aggiungi un nodo di tipo **Panel** come figlio diretto di `HUD`, rinominandolo `MessagePanel`.\n   - Posizionalo con il preset Centrato (ancore a 0.5 su tutti i lati) e con offset: `offset_left = -160.0`, `offset_top = -35.0`, `offset_right = 160.0`, `offset_bottom = 35.0` (dimensioni 320x70 pixel).\n   - Sposta il nodo `MessageLabel` all'interno di `MessagePanel` (come suo figlio diretto), impostandolo su Full Rect (ancore a 0 su sinistra e cima, a 1 su destra e fondo; offset a 0 su tutti i lati).\n   - Non inserire modifiche di stile locali su `MessagePanel`: deve ereditare lo stile del pannello da `HUD`.\n\n3. Nello script `res://hud.gd`, aggiorna la variabile `@onready var message_label` con il nuovo percorso del nodo (`$MessagePanel/MessageLabel`) in modo che il metodo `show_message()` continui a funzionare senza interruzioni.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Aggiungi il tipo Panel all'elenco dei tipi nel tema con il tasto +, quindi assegna un nuovo StyleBoxFlat allo stile chiamato 'panel'."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://hud.tscn",
+      "tipoNodo": "Panel",
+      "nome": "MessagePanel",
+      "genitore": "HUD",
+      "descrizione": "La scena hud.tscn ha un nodo Panel chiamato MessagePanel sotto la radice HUD"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://hud.tscn",
+      "tipoNodo": "Label",
+      "nome": "MessageLabel",
+      "genitore": "MessagePanel",
+      "descrizione": "Il nodo MessageLabel è figlio di MessagePanel"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar theme_res := load(\"res://game_theme.tres\") as Theme\n\tif not check(\"theme_ok\", theme_res != null, \"Il tema game_theme.tres deve esistere\"):\n\t\treturn\n\t\n\tvar panel_box = theme_res.get_stylebox(\"panel\", \"Panel\") as StyleBoxFlat\n\tif not check(\"panel_box\", panel_box != null, \"Il tema deve contenere uno StyleBoxFlat per lo stile 'panel' di Panel\"):\n\t\treturn\n\tcheck(\"panel_border\", panel_box.border_width_left == 2 and panel_box.border_width_top == 2, \"Lo stile Panel deve avere un bordo di 2 pixel\")\n\tcheck(\"panel_radius\", panel_box.corner_radius_top_left == 8, \"Lo stile Panel deve avere angoli arrotondati a 8 pixel\")\n\t\n\tvar hud_node := await instantiate_scene(\"res://hud.tscn\")\n\tif not check(\"hud_instantiated\", hud_node != null, \"hud.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tvar message_panel := find_by_name(hud_node, \"MessagePanel\") as Panel\n\tif not check(\"panel_exists\", message_panel != null, \"MessagePanel deve esistere\"):\n\t\treturn\n\tcheck(\"panel_no_local_theme\", message_panel.theme == null, \"MessagePanel non deve avere un tema locale ma ereditare da HUD\")\n\t\n\tvar hud_script = hud_node\n\tif check(\"hud_has_method\", has_function(hud_script, \"show_message\"), \"hud.gd deve contenere il metodo show_message\"):\n\t\tcall_if_exists(hud_script, \"show_message\", [\"TestCornice\"])\n\t\tvar msg_label := find_by_name(hud_node, \"MessageLabel\") as Label\n\t\tif check(\"label_exists\", msg_label != null, \"MessageLabel deve esistere dentro MessagePanel\"):\n\t\t\tcheck(\"label_updated\", msg_label.text == \"TestCornice\", \"Il metodo show_message() deve aggiornare correttamente il testo di MessageLabel\")",
+      "descrizione": "Il tema definisce lo stile Panel coerente e MessagePanel lo eredita aggiornando i messaggi dell'HUD"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "game_theme.tres",
+       "contenuto": "[gd_resource type=\"Theme\" load_steps=6 format=3]\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_disabled\"]\nbg_color = Color(0.15, 0.15, 0.15, 0.6)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_hover\"]\nbg_color = Color(0.25, 0.35, 0.55, 1)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_normal\"]\nbg_color = Color(0.15, 0.2, 0.35, 1)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_panel\"]\nbg_color = Color(0.08, 0.1, 0.18, 0.85)\nborder_width_left = 2\nborder_width_top = 2\nborder_width_right = 2\nborder_width_bottom = 2\nborder_color = Color(0.3, 0.5, 0.8, 1)\ncorner_radius_top_left = 8\ncorner_radius_top_right = 8\ncorner_radius_bottom_right = 8\ncorner_radius_bottom_left = 8\n\n[sub_resource type=\"StyleBoxFlat\" id=\"StyleBoxFlat_pressed\"]\nbg_color = Color(0.1, 0.12, 0.22, 1)\ncorner_radius_top_left = 6\ncorner_radius_top_right = 6\ncorner_radius_bottom_right = 6\ncorner_radius_bottom_left = 6\n\n[resource]\ndefault_font_size = 18\nButton/styles/disabled = SubResource(\"StyleBoxFlat_disabled\")\nButton/styles/hover = SubResource(\"StyleBoxFlat_hover\")\nButton/styles/normal = SubResource(\"StyleBoxFlat_normal\")\nButton/styles/pressed = SubResource(\"StyleBoxFlat_pressed\")\nPanel/styles/panel = SubResource(\"StyleBoxFlat_panel\")\n"
+      },
+      {
+       "percorso": "hud.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://hud.gd\" id=\"1_hud\"]\n[ext_resource type=\"Theme\" path=\"res://game_theme.tres\" id=\"2_theme\"]\n\n[node name=\"HUD\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = ExtResource(\"2_theme\")\nscript = ExtResource(\"1_hud\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 50.0\ncustom_minimum_size = Vector2(140, 30)\ntext = \"Punti: 0\"\n\n[node name=\"LivesLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 1\nanchor_left = 1.0\nanchor_right = 1.0\noffset_left = -160.0\noffset_top = 20.0\noffset_right = -20.0\noffset_bottom = 50.0\ngrow_horizontal = 0\ncustom_minimum_size = Vector2(140, 30)\ntext = \"Vite: 3\"\nhorizontal_alignment = 2\n\n[node name=\"MessagePanel\" type=\"Panel\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -160.0\noffset_top = -35.0\noffset_right = 160.0\noffset_bottom = 35.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"MessageLabel\" type=\"Label\" parent=\"MessagePanel\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_font_sizes/font_size = 24\ntext = \"Pronti?\"\nhorizontal_alignment = 1\nvertical_alignment = 1\n"
+      },
+      {
+       "percorso": "hud.gd",
+       "contenuto": "extends Control\n\n@onready var score_label: Label = $ScoreLabel\n@onready var lives_label: Label = $LivesLabel\n@onready var message_label: Label = $MessagePanel/MessageLabel\n\n\nfunc update_score(new_score: int) -> void:\n\tscore_label.text = \"Punti: %d\" % new_score\n\n\nfunc update_lives(new_lives: int) -> void:\n\tlives_label.text = \"Vite: %d\" % new_lives\n\n\nfunc show_message(text: String) -> void:\n\tmessage_label.text = text\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Aggiungendo la regola grafica per la classe `Panel` direttamente all'interno di `game_theme.tres`, qualsiasi nodo `Panel` istanziato nella gerarchia dell'interfaccia adotta automaticamente la cornice semitrasparente e gli angoli arrotondati definiti. Racchiudendo `MessageLabel` dentro `MessagePanel` abbiamo creato un riquadro di notifica elegante, e aggiornato il percorso `$MessagePanel/MessageLabel` in `hud.gd` per mantenere perfetto il collegamento con lo script.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "imita",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -80,5 +272,10 @@
     "md": "- Un **Theme** raggruppa stili, colori e font; associato a un nodo `Control`, si propaga a tutti i nodi di interfaccia sottostanti lungo la gerarchia.\n- **StyleBoxFlat** disegna sfondi vettoriali personalizzabili tramite colore di riempimento, spessore e colore del bordo, raggio degli angoli e margini interni.\n- I nodi `Button` gestiscono stati distinti (`normal`, `hover`, `pressed`, `disabled`, `focus`), ciascuno configurabile con il proprio stile nel tema.\n- I font dinamici (.ttf, .otf) si impostano a livello globale nel tema; le dimensioni sono valori numerici separati e non dipendono dal file del font.\n- Le **Theme Overrides** permettono modifiche puntuali sul singolo nodo (come un titolo gigante), ma vanno usate con parsimonia per preservare la coerenza del progetto."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
