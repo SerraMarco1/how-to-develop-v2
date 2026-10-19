@@ -14,3 +14,4 @@
 {"quando":1792394110209,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":91433,"tokenInput":15451,"tokenOutput":12,"ragionamento":8424}
 {"quando":1792394203061,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":7622,"tokenInput":3047,"tokenOutput":811,"ragionamento":2466}
 {"quando":1792394216145,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"contenitori","ok":true,"contata":true,"durataMs":81027,"tokenInput":12768,"tokenOutput":2462,"ragionamento":5815}
+{"quando":1792394298444,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"contenitori","ok":true,"contata":true,"durataMs":138034,"tokenInput":20151,"tokenOutput":7625,"ragionamento":8826}
