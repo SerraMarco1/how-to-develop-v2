@@ -63,5 +63,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "array": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
