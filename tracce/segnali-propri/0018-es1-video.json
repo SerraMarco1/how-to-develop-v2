@@ -1,0 +1,16 @@
+{
+ "n": 18,
+ "quando": "2026-10-19T16:10:56.224Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Segnale di raccolta per le stelle» non si vede sullo schermo: L'esercizio rifattorizza la logica di raccolta usando i segnali, ma il comportamento visivo del gioco e la raccolta delle stelle sono identici a prima.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 10887,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 10 s (8009 → 52 token)"
+ ]
+}

@@ -432,5 +432,13 @@
    },
    "motivo": "La partita raggiunge la condizione di vittoria prima dei 10 secondi, impedendo la visualizzazione della pausa dell'ondata."
   }
+ },
+ "segnali-propri": {
+  "es1": {
+   "impronta": "5981c3e0b2d7a6cb8a3caa759d2e089a4249c42f718e7475cd23ce0c7570e83e",
+   "tentativi": 1,
+   "esito": "niente",
+   "motivo": "L'esercizio rifattorizza la logica di raccolta usando i segnali, ma il comportamento visivo del gioco e la raccolta delle stelle sono identici a prima."
+  }
  }
 }
