@@ -23,5 +23,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "process-e-delta": {
+  "versione": 3,
+  "fragili": [],
+  "tentativi": {}
  }
 }

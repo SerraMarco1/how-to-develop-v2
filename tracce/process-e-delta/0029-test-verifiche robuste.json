@@ -1,0 +1,37 @@
+{
+ "n": 29,
+ "quando": "2026-10-19T08:56:51.264Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 35961,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://rock.gd",
+    "descrizione": "Il file res://rock.gd esiste nel progetto"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://rock.gd",
+    "regex": "func _process\\(",
+    "descrizione": "Lo script rock.gd definisce la funzione _process"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar rock := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_exists\", rock != null, \"La scena rock.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\trock.position = Vector2(400.0, 300.0)\n\tvar initial_x: float = rock.position.x\n\tvar initial_y: float = rock.position.y\n\t\n\tvar fall_speed = get_prop(rock, \"fall_speed\", 240.0)\n\tvar horizontal_speed = get_prop(rock, \"horizontal_speed\", 80.0)\n\t\n\tawait wait_seconds(0.5)\n\t\n\tvar delta_x: float = rock.position.x - initial_x\n\tvar delta_y: float = rock.position.y - initial_y\n\t\n\tvar expected_y: float = fall_speed * 0.5\n\tvar expected_x: float = horizontal_speed * 0.5\n\t\n\tcheck(\"moves_down\", delta_y > 0.0, \"La roccia deve scendere verso il basso nel tempo\")\n\tcheck(\"moves_right\", delta_x > 0.0, \"La roccia deve spostarsi verso destra nel tempo\")\n\tcheck(\"speed_y\", abs(delta_y - expected_y) < 5.0, \"La roccia deve scendere verticalmente in base a fall_speed (spostamento misurato: %.1f, atteso: %.1f)\" % [delta_y, expected_y])\n\tcheck(\"speed_x\", abs(delta_x - expected_x) < 5.0, \"La roccia deve spostarsi a destra in base a horizontal_speed (spostamento misurato: %.1f, atteso: %.1f)\" % [delta_x, expected_x])\n",
+    "descrizione": "La roccia cade verso il basso e si sposta contemporaneamente a destra a velocita costante con delta"
+   }
+  ],
+  "consegna": "Nel gioco «Pioggia di stelle», la stella scende dritta verticalmente. Per rendere gli ostacoli più dinamici, la roccia deve cadere verso il basso e contemporaneamente spostarsi verso destra con una traiettoria obliqua.\n\nApri la scena `rock.tscn` e modifica lo script `rock.gd`:\n1. Tra le variabili di stato dell'ostacolo, dichiara una nuova variabile `horizontal_speed: float = 80.0` con tipizzazione statica esplicita, che rappresenta la velocità orizzontale in pixel al secondo verso destra.\n2. Sotto la funzione `_ready()`, definisci la funzione virtuale `_process(delta: float) -> void:`.\n3. All'interno di `_process()`, aggiorna entrambe le coordinate della roccia usando i rispettivi valori di velocità:\n   - Incrementa `position.y` sommando lo spostamento verticale dato da `fall_speed * delta`.\n   - Incrementa `position.x` sommando lo spostamento orizzontale dato da `horizontal_speed * delta`.\n4. Salva lo script ed esegui la scena `rock.tscn` premendo F6 per verificare visivamente che la roccia rossa cada muovendosi in diagonale."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 21 s (9707 → 2759 token)"
+ ]
+}
