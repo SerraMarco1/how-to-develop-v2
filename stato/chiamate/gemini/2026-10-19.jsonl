@@ -33,3 +33,4 @@
 {"quando":1792395489586,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"interfaccia-in-partita","ok":true,"contata":true,"durataMs":89381,"tokenInput":20972,"tokenOutput":13374}
 {"quando":1792395594319,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"interfaccia-in-partita","ok":true,"contata":true,"durataMs":17732,"tokenInput":10097,"tokenOutput":3096,"ragionamento":5169}
 {"quando":1792395630198,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"interfaccia-in-partita","ok":true,"contata":true,"durataMs":26652,"tokenInput":12840,"tokenOutput":171,"ragionamento":5256}
+{"quando":1792395658396,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"interfaccia-in-partita","ok":true,"contata":true,"durataMs":156473,"tokenInput":10153,"tokenOutput":2769,"ragionamento":5262}
