@@ -531,6 +531,51 @@
     ]
    },
    "motivo": "L'esercizio aggiunge un'animazione di scala al cesto che non può essere verificata dai criteri consentiti, e il cesto si muoveva già prima dell'esercizio."
+  },
+  "es2": {
+   "impronta": "86bf5656db609099acb0d51a8bd6dbe4061fd1411eba72c7c7102c6a92efcfd1",
+   "tentativi": 2,
+   "esito": "niente",
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 5.8,
+     "azioni": [
+      {
+       "azione": "move_left",
+       "inizio": 0.5,
+       "fine": 1.5,
+       "tasto": "A"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "punteggio",
+       "cerca": {
+        "classe": "Label"
+       },
+       "quanti": 1,
+       "da": 4,
+       "a": 4.8,
+       "deve": "mostrare testo",
+       "testo": "+",
+       "etichetta": "Punteggio"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il punteggio guadagnato sale e scompare",
+       "da": 4,
+       "a": 4.8,
+       "soggetto": "punteggio"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «punteggio»: l'intervallo (da 4 a 4.8 s) deve durare almeno 1 secondo."
+    ]
+   },
+   "motivo": "La scritta fluttuante viene eliminata dopo 0.5 secondi dall'animazione, rendendo impossibile coprire l'intervallo minimo di 1 secondo richiesto per il soggetto nel copione."
   }
  }
 }
