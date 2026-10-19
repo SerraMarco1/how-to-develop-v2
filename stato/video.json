@@ -685,5 +685,44 @@
    "tentativi": 1,
    "esito": "fatto"
   }
+ },
+ "temi-e-font": {
+  "es1": {
+   "impronta": "ffda5ab8d36fbf67675be89daba5e3c149e2a2afd459abdf8735786438623356",
+   "tentativi": 2,
+   "esito": "niente",
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "pulsante",
+       "cerca": {
+        "nome": "RestartButton"
+       },
+       "quanti": 1,
+       "da": 0,
+       "a": 6,
+       "deve": "esserci",
+       "etichetta": "Pulsante"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il pulsante ora usa il tema personalizzato con angoli arrotondati",
+       "da": 0,
+       "a": 6,
+       "soggetto": "pulsante"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "Il pulsante di riavvio è nascosto durante lo stato di gioco iniziale e non è visibile all'avvio della scena principale."
+  }
  }
 }
