@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": true, \"scena\": \"res://basket.tscn\", \"durata\": 12, \"azioni\": [], \"soggetti\": [{\"id\": \"etichetta\", \"cerca\": {\"nome\": \"Label\"}, \"quanti\": 1, \"da\": 10.0, \"a\": 12.0, \"deve\": \"mostrare testo\", \"testo\": \"Pausa! In arrivo ondata 2\", \"etichetta\": \"Etichetta di stato\"}], \"scritte\": [{\"testo\": \"Dopo 10 secondi parte la pausa dell'ondata 2\", \"da\": 10.0, \"a\": 12.0, \"soggetto\": \"etichetta\"}]}",
- "ragionamento": 1476,
- "quando": "2026-10-19T20:08:35.648Z",
- "ruolo": "ritocco"
-}
