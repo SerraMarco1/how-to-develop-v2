@@ -1,0 +1,37 @@
+{
+ "n": 41,
+ "quando": "2026-10-19T09:04:14.926Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 43574,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://rock.gd",
+    "descrizione": "Il file rock.gd esiste nel progetto"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://rock.gd",
+    "regex": "distance_to\\(",
+    "descrizione": "Lo script rock.gd usa distance_to() per misurare la distanza di collisione"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar rock := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_exists\", rock != null, \"La scena rock.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"has_hits\", has_function(rock, \"hits_basket\"), \"In rock.gd deve esistere la funzione hits_basket\"):\n\t\treturn\n\tif not check(\"has_check\", has_function(rock, \"check_hit\"), \"In rock.gd deve esistere la funzione check_hit\"):\n\t\treturn\n\tvar hit_dist: float = float(get_prop(rock, \"HIT_DISTANCE\", 50.0))\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar hit_close = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 500.0 + hit_dist - 20.0)], false)\n\tcheck(\"hit_within_distance\", hit_close == true, \"A distanza inferiore a HIT_DISTANCE hits_basket deve restituire true\")\n\tvar hit_far = call_if_exists(rock, \"hits_basket\", [Vector2(500.0, 500.0 + hit_dist + 10.0)], true)\n\tcheck(\"miss_outside_distance\", hit_far == false, \"A distanza superiore o uguale a HIT_DISTANCE hits_basket deve restituire false\")\n\trock.set(\"position\", Vector2(400.0, 400.0))\n\tvar miss_dmg = call_if_exists(rock, \"check_hit\", [Vector2(800.0, 800.0)], -1)\n\tcheck(\"dmg_zero_on_miss\", miss_dmg == 0, \"Senza collisione check_hit deve restituire 0\")\n\tvar pos_after_miss = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"no_reset_on_miss\", is_equal_approx(pos_after_miss.y, 400.0), \"Senza collisione la roccia non deve ripristinarsi\")\n\trock.set(\"position\", Vector2(500.0, 500.0))\n\tvar current_dmg = get_prop(rock, \"damage\", 1)\n\tvar dealt_dmg = call_if_exists(rock, \"check_hit\", [Vector2(500.0, 500.0 + hit_dist - 10.0)], 0)\n\tcheck(\"dmg_returned\", dealt_dmg == current_dmg, \"In caso di urto check_hit deve restituire il danno inflitto dall'ostacolo\")\n\tvar expected_y = float(get_prop(rock, \"START_Y\", 80.0))\n\tvar pos_after_hit = get_prop(rock, \"position\", Vector2.ZERO)\n\tcheck(\"reset_on_hit\", is_equal_approx(pos_after_hit.y, expected_y), \"In caso di urto check_hit deve chiamare reset_rock() riportando la roccia a Y = %.1f\" % expected_y)\n",
+    "descrizione": "hits_basket rileva il contatto e check_hit restituisce il danno ripristinando la roccia in alto"
+   }
+  ],
+  "consegna": "Ora che la roccia scende in punti casuali dello schermo, il gioco deve determinare con precisione quando urta il cesto del giocatore. In caso di collisione, la roccia deve infliggere il suo danno e riposizionarsi subito in alto per ricominciare la caduta.\n\nModifica lo script `rock.gd`:\n1. Dichiara in cima allo script una costante `HIT_DISTANCE: float = 50.0` per definire la soglia circolare di impatto in pixel.\n2. Aggiungi la funzione `hits_basket(basket_position: Vector2) -> bool`:\n   - Calcola la distanza tra la posizione attuale della roccia (`position`) e quella del cesto (`basket_position`) tramite `distance_to()`.\n   - Restituisce `true` se la distanza è strettamente inferiore a `HIT_DISTANCE`, altrimenti `false`.\n3. Aggiungi la funzione `check_hit(basket_position: Vector2) -> int`:\n   - Verifica se la roccia colpisce il cesto richiamando `hits_basket(basket_position)`.\n   - Se si verifica il contatto (`true`), salva il danno corrente dell'ostacolo (`damage`), chiama immediatamente `reset_rock()` per far ripartire la roccia dall'alto e restituisce il danno salvato.\n   - Se non si verifica alcun contatto (`false`), lascia la roccia dov'è e restituisce `0`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 30 s (11539 → 4357 token)"
+ ]
+}
