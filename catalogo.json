@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T19:49:01.392Z",
+ "aggiornato": "2026-10-19T19:50:27.522Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -358,10 +358,10 @@
    "slug": "temi-e-font",
    "numero": "3.3",
    "titolo": "Temi e font: un aspetto coerente",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f03-interfaccia/temi-e-font.json",
-   "sha256": "3e50bf9a04a344266e9bf43c552e5bc17c2ee9ff4139754d049bd88cd8c4f276",
-   "byte": 213213
+   "sha256": "c2943dd17290ab47b55e5efcd207a33b62c2ce2022816df3069b58b46c8df097",
+   "byte": 213964
   },
   {
    "slug": "interfaccia-in-partita",

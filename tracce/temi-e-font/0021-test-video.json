@@ -1,0 +1,65 @@
+{
+ "n": 21,
+ "quando": "2026-10-19T19:50:27.507Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Test: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri hud.tscn e premi F6, 8 s. Soggetti: «Pannello» (esserci), «Etichetta» (esserci). Scritte: «Il pannello centrale mostra la cornice personalizzata» · «La cornice contiene il testo dei messaggi di gioco». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 22 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 20936,
+ "dati": {
+  "copione": {
+   "scena": "res://hud.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "pannello",
+     "cerca": {
+      "nome": "MessagePanel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Pannello"
+    },
+    {
+     "id": "etichetta",
+     "cerca": {
+      "nome": "MessageLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Etichetta"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il pannello centrale mostra la cornice personalizzata",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "pannello"
+    },
+    {
+     "testo": "La cornice contiene il testo dei messaggi di gioco",
+     "da": 4.5,
+     "a": 7.5,
+     "soggetto": "etichetta"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "c89f1bc2691661906660a5df7f9c3ede6d19375b8fb86dd5090806e542aedb76",
+   "estensione": "mp4",
+   "byte": 22897
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (8562 → 339 token)"
+ ]
+}

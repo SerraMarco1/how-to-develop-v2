@@ -696,39 +696,8 @@
   "test": {
    "impronta": "59fcc21c475fe6ac19c5ba1fa63e5968d8bb5b8f8b9ab001c48a4656b1cd61c0",
    "tentativi": 2,
-   "esito": "niente",
-   "ultimo": {
-    "copione": {
-     "scena": "res://basket.tscn",
-     "durata": 8,
-     "azioni": [],
-     "soggetti": [
-      {
-       "id": "panel",
-       "cerca": {
-        "nome": "MessagePanel"
-       },
-       "quanti": 1,
-       "da": 0,
-       "a": 8,
-       "deve": "esserci",
-       "etichetta": "Riquadro messaggi"
-      }
-     ],
-     "scritte": [
-      {
-       "testo": "Il riquadro dei messaggi ora ha uno stile con bordo azzurro",
-       "da": 0.5,
-       "a": 7.5,
-       "soggetto": "panel"
-      }
-     ]
-    },
-    "problemi": [
-     "Soggetto «panel» (nome = MessagePanel; almeno 1 da 0 a 8 s; deve esserci): nessun nodo della scena in esecuzione corrisponde a nome = MessagePanel."
-    ]
-   },
-   "motivo": "Il nodo MessagePanel è stato aggiunto alla scena hud.tscn, ma la scena principale basket.tscn avviata con F5 non include hud.tscn, quindi il pannello non viene visualizzato a schermo."
+   "esito": "fatto",
+   "regole": 2
   }
  },
  "cambiare-scena": {
