@@ -25,7 +25,7 @@ const SCHEMA = `
   CREATE INDEX IF NOT EXISTS tentativi_slug ON tentativi(slug, pezzo);
   CREATE TABLE IF NOT EXISTS tutor (
     id INTEGER PRIMARY KEY AUTOINCREMENT, slug TEXT NOT NULL, ruolo TEXT NOT NULL, testo TEXT NOT NULL,
-    livello INTEGER NOT NULL DEFAULT 0, modello TEXT, quando TEXT NOT NULL
+    livello INTEGER NOT NULL DEFAULT 0, modello TEXT, quando TEXT NOT NULL, pezzo TEXT
   );
   CREATE INDEX IF NOT EXISTS tutor_slug ON tutor(slug);
   CREATE TABLE IF NOT EXISTS spiegazioni (id INTEGER PRIMARY KEY AUTOINCREMENT, slug TEXT NOT NULL, blocco TEXT NOT NULL, testo TEXT NOT NULL, quando TEXT NOT NULL);
@@ -49,6 +49,9 @@ export function apriDatabase(file = PERCORSI.database): DatabaseSync {
   db = new DatabaseSync(file);
   db.exec("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;");
   db.exec(SCHEMA);
+  // Aula 2.0.3: la chat del tutor è divisa per esercizio (il 17 ottobre, con un'unica chat per lezione, il tutor
+  // rispose sul sottomarino a una domanda sul rover). I messaggi di prima restano nella «lezione in generale».
+  if (!(db.prepare("PRAGMA table_info(tutor)").all() as { name: string }[]).some((c) => c.name === "pezzo")) db.exec("ALTER TABLE tutor ADD COLUMN pezzo TEXT");
   return db;
 }
 

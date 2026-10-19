@@ -717,6 +717,13 @@ details.fase[open] > summary {
   border-bottom: 1px solid var(--bordo);
 }
 
+.tutor-argomento {
+  margin: 0;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--bordo);
+  background: var(--superficie-2);
+}
+
 .tutor-storia {
   flex: 1;
   overflow-y: auto;

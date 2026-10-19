@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { diceCheSupera, verifichePerCorrettore } from "../src/main/correttore.ts";
+import { codiceDelleVerifiche, diceCheSupera, differenzeDallaSoluzione, verifichePerCorrettore } from "../src/main/correttore.ts";
 
 // Il controllo sulle risposte del correttore. Il primo caso è la risposta vera di ministral-14b del 16 ottobre, data
 // con 9 controlli falliti su 12.
@@ -38,4 +38,38 @@ test("correttore: il conto dei controlli arriva esplicito, prima i falliti", () 
   assert.equal(verifichePerCorrettore([{ descrizione: "a", superato: true }]).conto, "L'unico controllo è superato.");
   assert.equal(verifichePerCorrettore([{ descrizione: "a", superato: true }, { descrizione: "b", superato: true }]).conto, "Tutti i 2 controlli sono superati.");
   assert.equal(verifichePerCorrettore([]).conto, "Nessun controllo eseguito.");
+});
+
+test("correttore: può dire che il codice fa ciò che chiede la consegna senza dire che supera i controlli", () => {
+  // La frase che le istruzioni gli chiedono quando la verifica dipende da un valore che la consegna non fissa.
+  assert.equal(diceCheSupera("Il tuo codice fa ciò che chiede la consegna: questo controllo dipende da un valore che la consegna non fissa."), false);
+});
+
+test("correttore e tutor: ricevono il codice delle verifiche che girano in Godot", () => {
+  const testo = codiceDelleVerifiche([
+    { tipo: "azione_input", descrizione: "Esiste l'azione dive" },
+    { tipo: "script_godot", descrizione: "Il sottomarino scende", codice: 'extends "res://htd/htd_test.gd"\n\nfunc _run_tests() -> void:\n\tawait hold_action("dive", 180)\n' },
+  ]);
+  assert.match(testo, /^### Verifica 1: Il sottomarino scende\n```gdscript\nextends "res:\/\/htd\/htd_test\.gd"/);
+  assert.match(testo, /hold_action\("dive", 180\)/);
+  assert.doesNotMatch(testo, /azione dive/, "le verifiche sui file non hanno codice da mostrare");
+  assert.match(codiceDelleVerifiche([{ tipo: "nodo", descrizione: "c'è il nodo" }]), /^\(nessuno/);
+  assert.ok(codiceDelleVerifiche([{ tipo: "script_godot", codice: "x".repeat(10_000) }]).length <= 6000, "non riempie le istruzioni");
+});
+
+test("correttore e tutor: le differenze dalla soluzione, prima gli script che l'esercizio cambia", () => {
+  // Il caso del 18 ottobre (lezione 1.9): basket.gd identico alla soluzione, la differenza che conta è in rock.gd.
+  const soluzione = [
+    { percorso: "project.godot", contenuto: "config_version=5\n" },
+    { percorso: "basket.gd", contenuto: "extends Sprite2D\n\n\nfunc _ready() -> void:\n\tspawn_rock_row()\n" },
+    { percorso: "rock.gd", contenuto: "extends Sprite2D\n\n\nfunc _ready() -> void:\n\tvar initial_pos: Vector2 = position\n\treset_rock()\n\tif initial_pos != Vector2.ZERO:\n\t\tposition = initial_pos\n" },
+    { percorso: "star.gd", contenuto: "extends Sprite2D\n" },
+  ];
+  const progetto: Record<string, string> = {
+    "basket.gd": "extends Sprite2D\n\n# le rocce\nfunc _ready() -> void:\n\tspawn_rock_row()\n",
+    "rock.gd": "extends Sprite2D\n\n\nfunc _ready() -> void:\n\treset_rock()\n",
+  };
+  const testo = differenzeDallaSoluzione(soluzione, (p) => progetto[p] ?? null, ["rock.gd", "basket.gd"]);
+  assert.equal(testo, "### rock.gd\n+ riga 5:   var initial_pos: Vector2 = position\n+ riga 7:   if initial_pos != Vector2.ZERO:\n+ riga 8:     position = initial_pos\n\n### star.gd\n(nel progetto di chi studia questo file non c'è)");
+  assert.match(differenzeDallaSoluzione(soluzione.slice(0, 2), (p) => progetto[p] ?? null), /^\(nessuna/);
 });

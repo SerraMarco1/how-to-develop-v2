@@ -83,6 +83,8 @@ export type EsitoConsegna = {
   completata: boolean;
   cartellaUsata?: string;
   errore?: string;
+  /** Superato alla seconda esecuzione: la verifica dà esiti diversi da una volta all'altra (vedi consegna in studio.ts). */
+  nota?: string;
 };
 
 export type Consegna = { cartella?: string; codice?: string; risposte?: Record<string, string> };
@@ -115,7 +117,7 @@ export type Api = {
   soluzione(slug: string, pezzo: string): Promise<{ html: string }>;
   analisiCodice(slug: string, pezzo: string, consegna: Consegna, controlli: Controllo[], indizi: string[]): Promise<{ html?: string; righe?: { file?: string; riga?: number | null; problema: string; suggerimento: string }[]; errore?: string }>;
   tutor(slug: string, testo: string, livello: number, pezzo: string | null, codice: string | null): Promise<{ html?: string; errore?: string }>;
-  storiaTutor(slug: string): Promise<MessaggioTutor[]>;
+  storiaTutor(slug: string, pezzo: string | null): Promise<MessaggioTutor[]>;
   spiegaAltrimenti(slug: string, blocco: string): Promise<{ html?: string; errore?: string }>;
   segnala(slug: string, dove: string): Promise<void>;
   vota(slug: string, voto: number, nota: string): Promise<void>;

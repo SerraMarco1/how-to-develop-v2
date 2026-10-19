@@ -24,7 +24,7 @@ let passi = 0;
 const ok = (messaggio: string) => console.log(`✓ ${++passi}. ${messaggio}`);
 
 type FileLezione = { percorso: string; contenuto: string };
-type EsercizioProva = { id: string; modalita: string; verifiche: { tipo: string; codice?: string }[]; soluzione: { file: FileLezione[] } };
+type EsercizioProva = { id: string; titolo: string; modalita: string; verifiche: { tipo: string; codice?: string }[]; soluzione: { file: FileLezione[] } };
 
 /**
  * Un esercizio su progetto la cui verifica istanzia una scena che ha sul nodo principale lo script con lo stesso nome
@@ -171,6 +171,15 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
       await schermata("09-analisi-script-staccato");
       console.log(`   causa mostrata: ${indizio.slice(0, 160)}…\n   analisi del codice: ${analisi.replace(/\s+/g, " ").slice(0, 600)}`);
       ok(`${id} di «${aperta}» con ${staccato.script} non attaccato al nodo ${staccato.nodo}: causa mostrata, analisi coerente con le verifiche`);
+
+      // 6b bis. Il tutor aperto da un esercizio parla di quello, con la sua conversazione (il 17 ottobre una sola chat per
+      // lezione fece rispondere il tutor sull'esercizio sbagliato).
+      const titoloEsercizio = id === "test" ? pacco.contenuto.test.titolo : pacco.contenuto.esercizi.find((x) => x.id === id)!.titolo;
+      await js(`[...document.querySelectorAll(${JSON.stringify(`#${id} .azioni button`)})].find((b) => b.textContent === "Chiedi al tutor").click()`);
+      await attendi(() => js(`(document.querySelector(".tutor-aperto .tutor-argomento")?.innerText ?? "").includes(${JSON.stringify(titoloEsercizio)})`), 10_000, `il pannello del tutor su «${titoloEsercizio}»`);
+      assert.deepEqual(await js(`window.htd.storiaTutor(${JSON.stringify(aperta)}, ${JSON.stringify(id)})`), [], "ogni esercizio ha la sua conversazione: questa è ancora vuota");
+      await schermata("09b-tutor-per-esercizio");
+      ok(`tutor aperto da ${id}: il pannello dice «${titoloEsercizio}», con la sua conversazione`);
     } else ok(`«${aperta}» non ha un esercizio con uno script da staccare: caso dello script non attaccato non provato qui`);
 
     // 6c. Una sincronizzazione mentre si studia (17 ottobre: a ogni sincronizzazione la pagina della lezione veniva

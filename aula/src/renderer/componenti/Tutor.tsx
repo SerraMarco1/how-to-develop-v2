@@ -5,7 +5,10 @@ import { Html } from "./Html.tsx";
 
 const LIVELLI = ["Domanda libera", "Domanda guida", "Indizio", "Spiegazione", "Esempio simile", "Soluzione"];
 
-/** Il tutor: un pannello a destra. Il livello di aiuto lo scegli tu, dalla domanda guida alla soluzione. */
+/**
+ * Il tutor: un pannello a destra. Il livello di aiuto lo scegli tu, dalla domanda guida alla soluzione. Ogni esercizio
+ * ha la sua conversazione (e la lezione in generale la sua): cambiando esercizio si vede quella giusta.
+ */
 export function Tutor({ slug, pezzi, aperto, pezzoIniziale, codiceIniziale, onChiudi }: { slug: string; pezzi: { id: string; titolo: string }[]; aperto: boolean; pezzoIniziale: string | null; codiceIniziale: string | null; onChiudi: () => void }) {
   const [storia, setStoria] = useState<MessaggioTutor[]>([]);
   const [testo, setTesto] = useState("");
@@ -16,8 +19,8 @@ export function Tutor({ slug, pezzi, aperto, pezzoIniziale, codiceIniziale, onCh
   const fondo = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    void api.storiaTutor(slug).then(setStoria);
-  }, [slug]);
+    void api.storiaTutor(slug, pezzo).then(setStoria);
+  }, [slug, pezzo]);
   useEffect(() => {
     setPezzo(pezzoIniziale);
   }, [pezzoIniziale]);
@@ -38,7 +41,7 @@ export function Tutor({ slug, pezzi, aperto, pezzoIniziale, codiceIniziale, onCh
       return;
     }
     setTesto("");
-    setStoria(await api.storiaTutor(slug));
+    setStoria(await api.storiaTutor(slug, pezzo));
   }
 
   return (
@@ -49,8 +52,11 @@ export function Tutor({ slug, pezzi, aperto, pezzoIniziale, codiceIniziale, onCh
           Chiudi
         </button>
       </header>
+      <p className="piccolo tutor-argomento">
+        Conversazione su: <strong>{pezzi.find((x) => x.id === pezzo)?.titolo ?? "la lezione in generale"}</strong>. Per un altro esercizio sceglilo qui sotto: ognuno ha la sua conversazione.
+      </p>
       <div className="tutor-storia">
-        {storia.length === 0 && <p className="tenue piccolo">Chiedi quello che vuoi su questa lezione. Se sei bloccato su un esercizio, sceglilo qui sotto: il tutor vedrà la consegna, l'ultima verifica e il tuo progetto.</p>}
+        {storia.length === 0 && <p className="tenue piccolo">Chiedi quello che vuoi. Se sei bloccato su un esercizio, sceglilo qui sotto: il tutor vedrà la consegna, l'ultima verifica, le verifiche e il tuo progetto.</p>}
         {storia.map((m) => (m.ruolo === "utente" ? <p key={m.id} className="fumetto fumetto-tu">{m.testo}</p> : <Html key={m.id} html={m.html} classe="md fumetto fumetto-tutor" />))}
         {attesa && <p className="tenue piccolo">Il tutor sta scrivendo…</p>}
         {errore && <p className="piccolo testo-errore">{errore}</p>}

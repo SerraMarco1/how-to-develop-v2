@@ -189,6 +189,7 @@ export function Esercizio({ slug, e, onCompletata, onTutor }: { slug: string; e:
       {esito && (
         <div className={`esito ${esito.superato ? "esito-ok" : "esito-no"}`}>
           {esito.errore ? <p>{esito.errore}</p> : <p className="esito-titolo">{esito.riepilogo}</p>}
+          {esito.nota && <p className="piccolo">{esito.nota}</p>}
           {esito.indizi.map((indizio, i) => (
             <p key={i} className="indizio">
               <strong>Causa probabile:</strong> {indizio}

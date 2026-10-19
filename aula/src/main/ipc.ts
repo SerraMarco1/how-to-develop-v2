@@ -95,7 +95,7 @@ export function registraCanali(versione: string): void {
   canale("soluzione", z.tuple([slug, pezzo]), soluzione);
   canale("analisiCodice", z.tuple([slug, pezzo, ConsegnaSchema, ControlliSchema, IndiziSchema]), analisiCodice);
   canale("tutor", z.tuple([slug, z.string().max(4000), z.number().int().min(0).max(5), pezzo.nullable(), z.string().max(100_000).nullable()]), tutor);
-  canale("storiaTutor", z.tuple([slug]), storiaTutor);
+  canale("storiaTutor", z.tuple([slug, pezzo.nullable()]), storiaTutor);
   canale("spiegaAltrimenti", z.tuple([slug, z.string().regex(/^b\d{1,3}$/)]), spiegaAltrimenti);
   canale("segnala", z.tuple([slug, z.string().max(60)]), segnala);
   canale("vota", z.tuple([slug, z.number().int().min(1).max(5), z.string().max(2000)]), vota);

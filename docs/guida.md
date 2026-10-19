@@ -23,8 +23,11 @@ repository).
   sblocca quando completi quella prima.
 - In una **lezione**: la teoria, poi gli esercizi e il test finale. Per ogni esercizio:
   - prepara il progetto di partenza (se serve) e lavora in Godot;
-  - premi **Verifica**: l'aula esegue il tuo progetto in un Godot di servizio e controlla il risultato;
-  - se sei bloccato: **Un suggerimento**, poi **Chiedi al tutor**, e solo alla fine **Soluzione**.
+  - premi **Verifica**: l'aula esegue il tuo progetto in un Godot di servizio e controlla il risultato (se fallisce,
+    lo riprova una volta da sola: alcune verifiche davano esiti diversi da una volta all'altra);
+  - se sei bloccato: **Un suggerimento**, poi **Chiedi al tutor**, e solo alla fine **Soluzione**. Il tutor ha una
+    conversazione per ogni esercizio: in cima al pannello c'è scritto di quale state parlando, e sotto la chat lo cambi.
+    Vede la consegna, l'ultima verifica, il codice delle verifiche e i tuoi file.
 - **Ripasso** ti ripropone le lezioni già fatte a intervalli crescenti, con domande di previsione (leggi il codice,
   scrivi il risultato).
 - **Cosa so fare** elenca le cose che il corso promette di insegnare, con quello che l'aula ha misurato e la tua

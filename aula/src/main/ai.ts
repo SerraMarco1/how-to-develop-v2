@@ -2,6 +2,7 @@ import type { z } from "zod";
 import { estraiJson } from "@htd/condiviso/json.ts";
 import { adesso, database } from "./db.ts";
 import { leggiChiave, type FornitoreAula } from "./impostazioni.ts";
+import { spazioRisposta, stimaToken } from "./token.ts";
 
 // I modelli che usa l'aula: tutor, analisi del codice, spiegazioni alternative. Qui passano le tue domande e il tuo
 // codice, quindi si preferiscono i fornitori che non addestrano sui dati (Groq per contratto, Mistral con
@@ -21,10 +22,6 @@ export type Messaggio = { role: "system" | "user" | "assistant"; content: string
 /** Modelli fermi per un po' dopo un rifiuto (in memoria: basta per la durata del programma). */
 const fermi = new Map<string, number>();
 
-function stimaToken(messaggi: Messaggio[]): number {
-  return Math.ceil(messaggi.reduce((t, m) => t + m.content.length, 0) / 3.2);
-}
-
 function registra(m: Modello, ruolo: string, ok: boolean, errore?: string): void {
   try {
     database().prepare("INSERT INTO chiamate_ai (quando, fornitore, modello, ruolo, ok, errore) VALUES (?, ?, ?, ?, ?, ?)").run(adesso(), m.fornitore, m.modello, ruolo, ok ? 1 : 0, errore?.slice(0, 300) ?? null);
@@ -39,8 +36,8 @@ export class NessunModello extends Error {}
  * Chiede una risposta al primo modello disponibile. Con `schema`, la risposta deve essere JSON valido secondo lo schema.
  * Restituisce il testo (o i dati) e il nome del modello che ha risposto.
  */
-export async function chiedi<T = string>(opzioni: { ruolo: string; messaggi: Messaggio[]; maxTokens: number; temperatura?: number; schema?: z.ZodType<T> }): Promise<{ dati: T; testo: string; modello: string }> {
-  const stimati = stimaToken(opzioni.messaggi) + opzioni.maxTokens;
+export async function chiedi<T = string>(opzioni: { ruolo: string; messaggi: Messaggio[]; maxTokens: number; temperatura?: number; schema?: z.ZodType<T>; ragionamento?: "low" | "medium" }): Promise<{ dati: T; testo: string; modello: string }> {
+  const domanda = stimaToken(opzioni.messaggi);
   const errori: string[] = [];
   let configurati = 0;
   for (const m of MODELLI) {
@@ -48,14 +45,16 @@ export async function chiedi<T = string>(opzioni: { ruolo: string; messaggi: Mes
     if (!chiave) continue;
     configurati++;
     const nome = `${m.fornitore}/${m.modello}`;
-    if ((fermi.get(nome) ?? 0) > Date.now() || stimati > m.maxToken) continue;
+    // Groq conta nel limite anche i token di risposta chiesti: se ne chiedono meno, purché bastino.
+    const spazio = spazioRisposta(m.maxToken, domanda, opzioni.maxTokens);
+    if ((fermi.get(nome) ?? 0) > Date.now() || spazio === null) continue;
     try {
-      const corpo: Record<string, unknown> = { model: m.modello, messages: opzioni.messaggi, max_tokens: opzioni.maxTokens, temperature: opzioni.temperatura ?? 0.4 };
+      const corpo: Record<string, unknown> = { model: m.modello, messages: opzioni.messaggi, max_tokens: spazio, temperature: opzioni.temperatura ?? 0.4 };
       if (opzioni.schema && m.json) corpo.response_format = { type: "json_object" };
-      if (m.modello.includes("gpt-oss")) corpo.reasoning_effort = "low";
+      if (m.modello.includes("gpt-oss")) corpo.reasoning_effort = opzioni.ragionamento ?? "low";
       if (m.fornitore === "gemini") {
-        corpo.reasoning_effort = "low";
-        corpo.max_tokens = opzioni.maxTokens + 1500;
+        corpo.reasoning_effort = opzioni.ragionamento ?? "low";
+        corpo.max_tokens = spazio + 1500;
       }
       const risposta = await fetch(`${m.baseUrl}/chat/completions`, {
         method: "POST",
