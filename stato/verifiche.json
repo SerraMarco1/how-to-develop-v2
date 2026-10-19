@@ -118,5 +118,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "scene-riutilizzabili": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }

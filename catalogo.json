@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:16:40.497Z",
+ "aggiornato": "2026-10-19T09:18:25.700Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -223,10 +223,10 @@
    "slug": "scene-riutilizzabili",
    "numero": "2.2",
    "titolo": "Scene riutilizzabili: lo stampo e le copie",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f02-nodi-scene-segnali/scene-riutilizzabili.json",
-   "sha256": "012f0861327622315754438297d1b85f912db2398811fb133dd49dc26ebda683",
-   "byte": 114828
+   "sha256": "9676ccfd6dc0b68ea214820ebc843e8d2c0e5d5cc30f43323d1b9cded2b41ac7",
+   "byte": 115196
   },
   {
    "slug": "vita-di-un-nodo",

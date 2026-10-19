@@ -1,0 +1,37 @@
+{
+ "n": 21,
+ "quando": "2026-10-19T09:18:17.014Z",
+ "pezzo": "es3",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 3: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 33306,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://falling_item.tscn",
+    "descrizione": "La scena falling_item.tscn esiste nel progetto"
+   },
+   {
+    "tipo": "script_collegato",
+    "scena": "res://basket.tscn",
+    "nodo": "Basket",
+    "descrizione": "Il nodo Basket ha lo script basket.gd collegato"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve avviarsi senza errori\"):\n\t\treturn\n\tcheck(\"has_func\", has_function(main, \"spawn_item_at\"), \"In basket.gd deve esistere la funzione spawn_item_at\")\n\tcheck(\"arg_count\", function_argument_count(main, \"spawn_item_at\") == 2, \"spawn_item_at deve accettare due parametri: spawn_pos e item_type\")\n\tvar test_pos := Vector2(320.0, 140.0)\n\tvar created = call_if_exists(main, \"spawn_item_at\", [test_pos, \"diamond\"])\n\tif not check(\"created_item\", created is FallingItem, \"spawn_item_at deve restituire un'istanza di FallingItem\"):\n\t\treturn\n\tcheck(\"parented\", created.get_parent() == main, \"L'oggetto creato deve essere aggiunto come figlio con add_child\")\n\tcheck(\"pos_ok\", created.position == test_pos, \"La posizione dell'oggetto deve corrispondere al parametro passato\")\n\tcheck(\"type_ok\", created.item_name == \"diamond\", \"L'oggetto deve avere il tipo passato tramite apply_item_type\")\n\tvar stars_array = get_prop(main, \"stars\", [])\n\tcheck(\"in_array\", created in stars_array, \"L'oggetto creato deve essere inserito nell'array stars\")\n",
+    "descrizione": "spawn_item_at() istanzia, configura, aggiunge all'albero e all'array stars"
+   }
+  ],
+  "consegna": "Prima di procedere, apri `falling_item.gd` e aggiorna la funzione `_ready()` affinché memorizzi la posizione iniziale con `var initial_pos: Vector2 = position`, chiami `reset_item()`, e se `initial_pos` è diversa da `Vector2.ZERO` la ripristini su `position`. Questo permette agli oggetti creati da codice di mantenere la posizione assegnata senza sovrascriverla con il reset casuale.\n\nSuccessivamente, rendi la generazione degli oggetti cadenti flessibile creando in `basket.gd` una funzione helper che istanzia, configura e registra una nuova copia di `FallingItem` in qualsiasi coordinata.\n\nIn `basket.gd`:\n1. Aggiungi la funzione `spawn_item_at(spawn_pos: Vector2, item_type: String) -> FallingItem`.\n   La funzione deve:\n   - Istanziare una nuova copia da `FALLING_ITEM_SCENE` e tipizzarla come `FallingItem`.\n   - Chiamare `apply_item_type(item_type)` sull'oggetto per assegnargli il tipo desiderato.\n   - Impostare la sua `position` a `spawn_pos`.\n   - Aggiungere il nuovo oggetto come figlio con `add_child()`.\n   - Inserire l'oggetto nell'array `stars`.\n   - Restituire il nuovo `FallingItem`.\n2. Riscrivi `spawn_star()` affinché scelga una coordinata X casuale tra `SPAWN_MIN_X` e `SPAWN_MAX_X`, selezioni casualmente un tipo tra i quattro disponibili (`\"star\"`, `\"gold_star\"`, `\"rock\"`, `\"diamond\"`), chiami `spawn_item_at(Vector2(random_x, START_Y), random_type)` e infine applichi la spinta di accelerazione all'oggetto restituito con `accelerate(speed_boost)`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 20 s (14184 → 6624 token)"
+ ]
+}
