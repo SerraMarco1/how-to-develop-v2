@@ -1,0 +1,43 @@
+{
+ "n": 25,
+ "quando": "2026-10-19T09:08:38.556Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 38270,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://basket.gd",
+    "descrizione": "Il file basket.gd esiste nel progetto"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "collected_counts",
+    "descrizione": "basket.gd contiene la variabile collected_counts"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "get_collected_count",
+    "descrizione": "basket.gd dichiara la funzione get_collected_count"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\") as Sprite2D\n\tif not check(\"basket_inst\", basket != null, \"La scena basket.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar counts = basket.get(\"collected_counts\")\n\tif not check(\"dict_exists\", typeof(counts) == TYPE_DICTIONARY, \"collected_counts deve essere un Dictionary in basket.gd\"):\n\t\treturn\n\t\n\tcheck(\"has_star_key\", \"star\" in counts, \"collected_counts deve contenere la chiave 'star'\")\n\tcheck(\"has_rock_key\", \"rock\" in counts, \"collected_counts deve contenere la chiave 'rock'\")\n\tcheck(\"has_func\", has_function(basket, \"get_collected_count\"), \"basket.gd deve definire la funzione get_collected_count\")\n\t\n\tvar initial_stars = call_if_exists(basket, \"get_collected_count\", [\"star\"])\n\tcheck(\"initial_count\", initial_stars == 0, \"All'avvio get_collected_count('star') deve restituire 0\")\n\tvar unknown_count = call_if_exists(basket, \"get_collected_count\", [\"inesistente\"])\n\tcheck(\"unknown_count\", unknown_count == 0, \"get_collected_count con chiave inesistente deve restituire 0\")\n\t\n\tvar star_scene := load(\"res://star.tscn\") as PackedScene\n\tvar test_star := star_scene.instantiate() as Sprite2D\n\tbasket.stars.clear()\n\tbasket.add_child(test_star)\n\tbasket.stars.append(test_star)\n\ttest_star.position = basket.position\n\tcall_if_exists(test_star, \"apply_item_type\", [\"star\"])\n\t\n\tvar score_before: int = basket.score\n\tvar lives_before: int = basket.lives\n\tbasket.check_stars()\n\tcheck(\"star_score\", basket.score > score_before, \"Raccogliere una stella deve aumentare il punteggio\")\n\tcheck(\"star_lives\", basket.lives == lives_before, \"Raccogliere una stella non deve ridurre le vite\")\n\tvar collected_star = call_if_exists(basket, \"get_collected_count\", [\"star\"])\n\tcheck(\"counted_star\", collected_star == 1, \"Raccogliere una stella deve incrementare il contatore 'star'\")\n\t\n\tvar test_rock := star_scene.instantiate() as Sprite2D\n\tbasket.stars.clear()\n\tbasket.add_child(test_rock)\n\tbasket.stars.append(test_rock)\n\ttest_rock.position = basket.position\n\tcall_if_exists(test_rock, \"apply_item_type\", [\"rock\"])\n\t\n\tvar lives_before_rock: int = basket.lives\n\tvar score_before_rock: int = basket.score\n\tbasket.check_stars()\n\tcheck(\"rock_damage\", basket.lives == lives_before_rock - 1, \"Raccogliere un sasso deve togliere 1 vita con take_damage(1)\")\n\tcheck(\"rock_score_preserved\", basket.score == score_before_rock, \"Raccogliere un sasso non deve modificare il punteggio\")\n\tvar collected_rock = call_if_exists(basket, \"get_collected_count\", [\"rock\"])\n\tcheck(\"counted_rock\", collected_rock == 1, \"Raccogliere un sasso deve incrementare il contatore 'rock'\")\n",
+    "descrizione": "Le stelle aumentano il punteggio, i sassi tolgono vite e le raccolte vengono registrate nel dizionario"
+   }
+  ],
+  "consegna": "Nel cesto (`basket.gd`) dobbiamo ora gestire i diversi effetti degli oggetti raccolti e tenere traccia di quante volte ogni tipologia è stata presa usando un `Dictionary`.\n\n1. In `basket.gd`, aggiungi una variabile di script chiamata `collected_counts` di tipo `Dictionary`, inizializzata con le tre categorie a zero:\n   `{\"star\": 0, \"gold_star\": 0, \"rock\": 0}`\n2. Crea la funzione `get_collected_count(type_name: String) -> int`: deve restituire quante volte l'oggetto richiesto è stato raccolto, leggendo da `collected_counts` con `get(type_name, 0)` per garantire che chiavi non registrate restituiscano `0` senza bloccare il gioco.\n3. Modifica la funzione `check_stars()` in `basket.gd`: quando un oggetto tocca il cesto (`current_star.is_caught(position)`):\n   - Se i punti dell'oggetto sono maggiori o uguali a zero (`current_star.points >= 0`), chiama `add_score(current_star.points)` per premiare il giocatore.\n   - Se i punti sono negativi (`current_star.points < 0`), significa che hai preso un sasso: chiama `take_damage(1)` per togliere una vita, senza chiamare `add_score`.\n   - Se la chiave `current_star.star_name` è presente in `collected_counts` (verificalo con l'operatore `in`), incrementa di `1` il valore corrispondente nel dizionario.\n   - Rimuovi e sostituisci l'oggetto con `remove_child()`, `stars.remove_at()` e `spawn_star()` esattamente come prima."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 25 s (13592 → 6053 token)"
+ ]
+}
