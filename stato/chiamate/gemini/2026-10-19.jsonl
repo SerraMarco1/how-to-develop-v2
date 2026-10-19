@@ -119,3 +119,4 @@
 {"quando":1792425602510,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"variabili-e-tipi","ok":true,"contata":true,"durataMs":12271,"tokenInput":3536,"tokenOutput":194,"ragionamento":3625}
 {"quando":1792425626117,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"variabili-e-tipi","ok":true,"contata":true,"durataMs":11827,"tokenInput":3460,"tokenOutput":202,"ragionamento":1224}
 {"quando":1792425650509,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"process-e-delta","ok":true,"contata":true,"durataMs":21340,"tokenInput":3158,"tokenOutput":205,"ragionamento":818}
+{"quando":1792425683254,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"condizioni","ok":true,"contata":true,"durataMs":4268,"tokenInput":3529,"tokenOutput":203,"ragionamento":1284}
