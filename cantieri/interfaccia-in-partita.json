@@ -1,0 +1,86 @@
+{
+ "creato": "2026-10-19T07:33:36.280Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "L'interfaccia durante la partita: CanvasLayer",
+  "sommario": "In questa lezione crei la scena hud.tscn per mostrare punteggio, vite e avanzamento dell'ondata in sovrimpressione durante la partita. Impari a usare il nodo CanvasLayer per mantenere l'interfaccia fissa sullo schermo indipendentemente dal mondo di gioco. Infine, colleghi l'interfaccia al carrello attraverso i segnali, mantenendo la grafica completamente separata dalla logica.",
+  "concetti": [
+   "CanvasLayer",
+   "Livelli di rendering (layer numerici)",
+   "Disaccoppiamento della UI (HUD)",
+   "ProgressBar con Range (min_value, max_value, value)",
+   "Aggiornamento dei nodi Control tramite segnali"
+  ],
+  "obiettivi": [
+   "CanvasLayer: un piano che non si muove con il gioco",
+   "L'interfaccia come scena a parte, che ascolta i segnali del gioco",
+   "Una barra che mostra un valore"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nei giochi arcade come «Pioggia di stelle», il giocatore deve sempre tenere d'occhio parametri cruciali: quanti punti ha accumulato, quante vite gli rimangono e quanto tempo manca alla fine dell'ondata. Questa interfaccia visibile durante la partita si chiama comunemente **HUD** (*Head-Up Display*, visualizzazione a testa alta).\n\nFinora abbiamo posizionato scritte direttamente all'interno della scena di gioco. Questo approccio crea subito un problema: se un nodo grafico si trova dentro un oggetto che si sposta (come il nostro carrello), la scritta si muove con esso. Anche se posizionassi i nodi direttamente nella scena principale, l'aggiunta futura di una telecamera che scorre o vibra trascinerebbe via l'intera interfaccia. Per risolvere questo problema, Godot mette a disposizione un nodo speciale: **CanvasLayer**."
+   },
+   {
+    "tipo": "testo",
+    "md": "Tutti i normali nodi 2D (come `Sprite2D` o i nodi `Control`) sono figli del Viewport di gioco e vengono disegnati per impostazione predefinita su un piano di visualizzazione chiamato livello 0 (*layer 0*). Se il genitore si sposta o la vista scorre, tutto ciò che sta sul livello 0 si sposta insieme.\n\nUn **CanvasLayer** crea un piano di disegno 2D completamente separato e indipendente. I nodi inseriti come figli di un `CanvasLayer` non subiscono il movimento degli altri nodi della scena e non seguono le trasformazioni del mondo di gioco: rimangono agganciati alle coordinate reali della finestra dello schermo. Inoltre, ogni `CanvasLayer` possiede una proprietà numerica chiamata `layer`: i livelli con un numero più alto vengono disegnati sopra quelli con un numero più basso. Assegnando all'HUD un `CanvasLayer` con `layer = 1`, garantiamo che l'interfaccia resti sempre fissa e visibile sopra stelle, rocce e carrello."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "finestra-nuovo-nodo",
+    "didascalia": "La finestra Create New Node: scrivendo CanvasLayer nel campo Search puoi trovare e aggiungere il nodo radice per l'interfaccia."
+   },
+   {
+    "tipo": "testo",
+    "md": "Un errore molto frequente nei primi progetti è mescolare la grafica dell'interfaccia con la logica del personaggio, inserendo i controlli visivi dentro lo script `basket.gd`. In questo modo il carrello si ritrova a calcolare il movimento, controllare le collisioni e al tempo stesso formattare testi, colorare barre e manipolare immagini.\n\nLa soluzione migliore è il **disaccoppiamento**: l'interfaccia vive in un file a parte (`hud.tscn`) con il proprio script (`hud.gd`). Questo script non deve sapere chi fa punti, da dove cadono le rocce o come si muove il cesto. Il carrello si limita a emettere segnali (come `score_changed` o `lives_changed`), e la scena HUD si limita a riceverli e ad aggiornare i propri elementi visivi. Se un giorno decidi di cambiare la grafica dei cuori o la forma della barra, la logica del gioco rimarrà intatta."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creazione della scena hud.tscn",
+    "passi": [
+     "Nel menu in alto a sinistra seleziona **Scene → New Scene**.",
+     "Nel pannello *Scene* premi su **Other Node**, cerca `CanvasLayer` nella finestra *Create New Node* e premi **Create**.",
+     "Rinomina il nodo radice da `CanvasLayer` a `HUD`.",
+     "Con il nodo `HUD` selezionato, premi **+** e aggiungi un `MarginContainer`. Nel menu *Layout* in alto imposta il preset **Top Wide** per farlo estendere su tutta la larghezza in alto, lasciando un po' di margine con i parametri di Margin.",
+     "Come figlio di `MarginContainer`, aggiungi un `HBoxContainer` per disporre gli elementi in riga.",
+     "Come figli di `HBoxContainer`, aggiungi: una `Label` rinominata `ScoreLabel` (testo iniziale \"Punti: 0\"), un `HBoxContainer` rinominato `LivesContainer` e una `ProgressBar` rinominata `WaveProgressBar`.",
+     "Dentro `LivesContainer`, aggiungi tre nodi `TextureRect` (chiamati `Life1`, `Life2`, `Life3`), trascinando `res://icon.svg` nella loro proprietà **Texture**.",
+     "Salva la nuova scena premendo **Ctrl+S** con il nome `res://hud.tscn`."
+    ]
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Le icone `TextureRect` prendono per impostazione predefinita la dimensione originale dell'immagine (`icon.svg` misura 128x128 pixel). Per renderle piccole icone di gioco, attiva la proprietà **Expand Mode** su *Ignore Size* oppure *Keep Centered*, e imposta la voce **Custom Minimum Size** nel pannello *Inspector* a `(24, 24)`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per mostrare l'avanzamento dell'ondata utilizziamo il nodo **ProgressBar**. Come abbiamo visto nei nodi di tipo `Range`, la barra gestisce internamente un valore minimo (`min_value`, solitamente 0) e un valore massimo (`max_value`).\n\nQuando l'ondata comincia, possiamo impostare `max_value` pari alla durata totale dell'ondata (la variabile `wave_duration`). Man mano che il tempo scorre, assegniamo alla proprietà `value` della barra il tempo trascorso: la barra si riempirà automaticamente da sinistra verso destra in modo proporzionale, senza dover calcolare percentuali o pixel a mano."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends CanvasLayer\n\n@onready var score_label: Label = $MarginContainer/HBoxContainer/ScoreLabel\n@onready var lives_container: HBoxContainer = $MarginContainer/HBoxContainer/LivesContainer\n@onready var wave_progress_bar: ProgressBar = $MarginContainer/HBoxContainer/WaveProgressBar\n\n\nfunc _on_score_changed(new_score: int) -> void:\n\t# Aggiorna il testo con il nuovo valore numerico\n\tscore_label.text = \"Punti: \" + str(new_score)\n\n\nfunc _on_lives_changed(current_lives: int) -> void:\n\t# Controlla tutti i nodi icona dentro il contenitore delle vite\n\tvar icons: Array[Node] = lives_container.get_children()\n\tfor i in range(icons.size()):\n\t\tvar icon: CanvasItem = icons[i] as CanvasItem\n\t\tif icon != null:\n\t\t\t# Mostra l'icona solo se il suo indice e' inferiore alle vite rimaste\n\t\t\ticon.visible = i < current_lives\n\n\nfunc _on_wave_time_updated(current_time: float, max_duration: float) -> void:\n\t# Regola il limite massimo della barra e il valore attuale\n\twave_progress_bar.max_value = max_duration\n\twave_progress_bar.value = current_time",
+    "spiegazione": "Lo script `hud.gd` viene collegato al nodo radice `CanvasLayer`. I suoi metodi non chiamano mai direttamente variabili esterne: attendono che qualcuno li invochi con i nuovi valori. Il metodo `_on_lives_changed` cicla tra le tre icone presenti in `LivesContainer` e rende visibili solo quelle per cui l'indice `i` è minore delle vite attuali: ad esempio, con 2 vite rimaste, le icone all'indice 0 e 1 restano visibili, mentre l'icona all'indice 2 diventa invisibile."
+   },
+   {
+    "tipo": "testo",
+    "md": "Ora che l'interfaccia ha le sue funzioni pronte, è la scena di gioco a dover inviare le informazioni. In `basket.gd`, dichiariamo tre segnali dedicati alla comunicazione con l'esterno:\n\n```gdscript\nsignal score_changed(new_score: int)\nsignal lives_changed(new_lives: int)\nsignal wave_time_updated(current_time: float, max_duration: float)\n```\n\nQuando istanziamo `hud.tscn` come figlia dentro `basket.tscn`, possiamo collegare questi segnali ai metodi di `HUD` all'interno di `_ready()`, ed emetterli non appena i valori cambiano."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "@onready var hud: CanvasLayer = $HUD\n\n\nfunc _ready() -> void:\n\tlives = max_lives\n\tposition = START_POSITION\n\tmodulate = basket_color\n\t\n\t# Colleghiamo i segnali del gioco ai metodi visivi dell'HUD\n\tif hud != null:\n\t\tscore_changed.connect(hud._on_score_changed)\n\t\tlives_changed.connect(hud._on_lives_changed)\n\t\twave_time_updated.connect(hud._on_wave_time_updated)\n\t\t\n\t\t# Inizializziamo l'interfaccia con i valori di partenza\n\t\tscore_changed.emit(score)\n\t\tlives_changed.emit(lives)\n\t\n\tspawn_initial_stars(INITIAL_STARS_COUNT)\n\tspawn_rock_row()\n\tspawn_ruby(Vector2(500.0, 100.0))\n\tspawn_timer_node.timeout.connect(_on_spawn_timer_timeout)\n\twave_timer.wait_time = wave_duration\n\twave_timer.timeout.connect(_on_wave_timer_timeout)\n\twave_timer.start()\n\n\nfunc _process(delta: float) -> void:\n\t# Invia all'HUD quanto tempo e' trascorso nell'ondata attuale\n\tif wave_timer != null and not wave_timer.is_stopped():\n\t\tvar elapsed: float = wave_duration - wave_timer.time_left\n\t\twave_time_updated.emit(elapsed, wave_duration)",
+    "spiegazione": "In `_ready()`, `basket.gd` connette i propri segnali alle funzioni corrispondenti del nodo `HUD`. Subito dopo l'avvio invia i valori iniziali tramite `emit()` in modo che le etichette non restino con i testi provvisori dell'editor. Durante `_process()`, calcola il tempo trascorso sottraendo `wave_timer.time_left` alla durata totale e segnala la progressione alla barra dell'HUD."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Un `CanvasLayer` crea un piano di disegno separato che non si muove con i nodi 2D né con la telecamera, ideale per fissare a schermo l'interfaccia (HUD).\n- I livelli con un valore di `layer` più alto vengono sempre disegnati sopra quelli con un valore più basso.\n- Mantenere l'interfaccia in una scena a parte (`hud.tscn`) disaccoppia la grafica dalla logica: il gioco emette segnali, l'HUD li ascolta e si aggiorna.\n- `ProgressBar` sfrutta le proprietà `min_value`, `max_value` e `value` ereditate da `Range` per rappresentare visivamente l'avanzamento temporale dell'ondata.\n- Le vite possono essere rappresentate come icone impostando la proprietà `visible` dei nodi `TextureRect` in base alle vite rimanenti."
+   }
+  ]
+ }
+}
