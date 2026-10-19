@@ -319,10 +319,11 @@
    "impronta": "270a70da0b0de8725675cc6950855654d6518ad0b9232fe80fbffa87ebcc120d",
    "tentativi": 2,
    "esito": "niente",
+   "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://basket.tscn",
-     "durata": 6,
+     "durata": 5,
      "azioni": [],
      "soggetti": [
       {
@@ -332,25 +333,25 @@
        },
        "quanti": 1,
        "da": 0.5,
-       "a": 5,
+       "a": 4,
        "deve": "muoversi",
        "etichetta": "Oggetto"
       }
      ],
      "scritte": [
       {
-       "testo": "Lo stampo falling_item.tscn genera gli oggetti in caduta",
+       "testo": "Il nuovo stampo genera oggetti in caduta",
        "da": 0.5,
-       "a": 5,
+       "a": 4,
        "soggetto": "item"
       }
      ]
     },
     "problemi": [
-     "Soggetto «item» (classe = FallingItem; almeno 1 da 0.5 a 5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 7, visibili al massimo 0. A 1 s: «FallingItem» a (589.8, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@129» a (989.7, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@130» a (1041.9, 616) 128×128, fuori dallo schermo (dentro per il 22%); «@Sprite2D@131» a (1196, 616) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
+     "Soggetto «item» (classe = FallingItem; almeno 1 da 0.5 a 4 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 7, visibili al massimo 0. A 1 s: «FallingItem» a (589.8, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@129» a (989.7, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@130» a (1041.9, 616) 128×128, fuori dallo schermo (dentro per il 22%); «@Sprite2D@131» a (1196, 616) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "Gli oggetti in caduta istanziati come figli del Cesto partono a una coordinata Y globale di 680 (sotto il bordo inferiore dello schermo a 648) e si muovono ulteriormente verso il basso, risultando completamente fuori dallo schermo."
+   "motivo": "Gli oggetti istanziati come figli del cesto vengono posizionati fuori dallo schermo in basso."
   }
  },
  "segnali-esistenti": {
