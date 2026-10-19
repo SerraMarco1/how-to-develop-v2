@@ -71,12 +71,43 @@ A ogni giro:
 Il lavoro di una lezione è quello della versione 1, che funzionava: teoria, pratica in una richiesta, ogni esercizio
 controllato in Godot (deve fallire prima del lavoro e passare dopo), correzioni mirate, revisione, pubblicazione.
 
+Dal 17-19 ottobre ogni esercizio passa anche da quattro controlli nati da lavori giusti che risultavano sbagliati:
+
+| Controllo | Cosa fa | Il caso vero |
+|---|---|---|
+| **Variante lecita** | Le verifiche girano su una copia della soluzione con dimezzati i valori iniziali (variabili e costanti numeriche) che il testo dell'esercizio non dice: devono passare anche lì | 1.4: la verifica teneva premuto «giù» per tre secondi; a 150 pixel al secondo, la velocità scelta da chi studiava, il sottomarino non arrivava al fondale |
+| **Stabilità** | Le verifiche girano due volte sulla soluzione: devono passare entrambe | 1.11: la stessa soluzione passava o no a caso (il gioco mette le stelle in punti casuali) |
+| **Variante letterale** | Gli script che la soluzione cambia ma che il testo non nomina tornano com'erano prima del lavoro: le verifiche devono passare anche così | 1.9: la soluzione cambiava anche `rock.gd` senza dirlo; il `rock.gd` di chi studiava rimetteva la roccia in un punto a caso e nessun lavoro fatto come diceva la consegna passava, nemmeno incollando lo script della soluzione |
+| **Cose non spiegate** | Le funzioni che le righe nuove della soluzione chiamano devono comparire nella teoria di questa lezione, nelle lezioni prima, nella consegna o nel progetto di partenza (passi e suggerimenti non contano: una riga da ricopiare non è una spiegazione) | 1.9: la teoria creava le stelle con `Sprite2D.new()`, un passo faceva scrivere `instantiate()` senza spiegarlo |
+
+Un problema trovato torna al modello con i dati precisi (i valori cambiati, le righe nascoste, i controlli falliti).
+La variante letterale è un problema vero: la consegna deve dire tutto ciò che serve. Gli altri sono «minori»: se dopo
+le correzioni previste resta solo uno di quelli, l'esercizio esce lo stesso, con un avviso nella lezione, perché è
+giusto e toglierlo farebbe più danno.
+
+Le istruzioni per i modelli chiedono anche verifiche scritte per reggere: mettere il nodo in un punto noto prima di
+misurare un movimento, portarlo oltre un limite invece di aspettare che ci arrivi, scrivere nel messaggio il valore
+misurato («deve fermarsi a y = 560 (è a y = 530.0)»).
+
+Dal 19 ottobre le lezioni non hanno più video: quelli registrati fino ad allora riprendevano la scena principale così
+com'era (nella fase 1 il cesto, mezzo fuori dallo schermo) e non mostravano ciò di cui parlava la lezione. La teoria non
+li chiede e la fabbrica li toglie anche se un modello li scrive; l'aula non mostra quelli già pubblicati.
+
 Prima di scrivere lezioni nuove, a ogni giro la fabbrica: ricontrolla in Godot le lezioni arrivate dalla versione 1
 (`importate/`; quelle che non passano vengono riscritte), gestisce le segnalazioni aperte, poi completa il ripasso delle
 lezioni pubblicate senza (in quel momento il modello del ripasso era sovraccarico, o mancava la sua chiave). Una lezione
 così esce in una versione nuova in cui cambia solo il ripasso; l'aula la scarica da sola e i tuoi progressi restano,
 perché sono legati alla lezione e non alla versione. Se il modello del ripasso è fermo non si chiede niente; dopo tre
 risposte inutilizzabili per la stessa lezione si smette, per non spendere richieste all'infinito.
+
+Poi ricontrolla gli **esercizi delle lezioni pubblicate** con quei quattro controlli (`robustezza.ts`; le lezioni uscite
+prima non ci erano passate: il 17-19 ottobre 12 verifiche su 55 bocciavano la variante lecita, 1 la propria soluzione a
+caso, 3 esercizi avevano modifiche nascoste che facevano fallire le verifiche e 8 usavano funzioni mai spiegate). Un
+esercizio con problemi torna a un modello che corregge **verifiche e testi** (consegna, passi, suggerimenti): la
+soluzione resta identica, perché le lezioni successive partono da lì; se il problema è solo nelle verifiche, cambia
+solo quello. La correzione deve ripassare tutti i controlli in Godot; allora la lezione esce in una versione nuova e
+l'avviso sull'esercizio sparisce. Ogni esercizio ha al massimo tre tentativi (i primi due con il modello del ritocco, il
+terzo con uno scrittore); se il modello che serve è fermo si riprova al giro dopo. Il registro è in `stato/verifiche.json`.
 
 ### Chi scrive
 
@@ -133,6 +164,20 @@ precedente. L'aula mostra che il corso è fermo. Per ripartire: Actions → Fabb
 - Dopo una verifica non superata l'analisi del codice (il «correttore») riceve il conto dei controlli falliti e la
   causa trovata. Se risponde che il lavoro supera le verifiche quando non è così, deve riscrivere; se insiste, la sua
   risposta non viene mostrata.
+- Una verifica che controlla il gioco in esecuzione e fallisce si **ripete una volta** (aula 2.0.3): se la seconda passa,
+  il lavoro è superato e l'aula dice che quella verifica dà esiti diversi da una volta all'altra; se fallisce in un
+  altro modo, lo dice, perché quei controlli non sono una guida sicura.
+- Correttore e tutor ricevono (dall'aula 2.0.3) il **codice delle verifiche** e le **differenze fra i tuoi script e
+  quelli della soluzione**, che non mostrano: servono a trovare la causa vera di un controllo fallito (un `+` che manca,
+  una variabile al posto di un'altra, un altro file che la soluzione cambia) e a spiegarla con file e riga. Con
+  controlli falliti ragionano di più e il tutor ha un promemoria accanto alla domanda: il 18 ottobre, senza, rispose con
+  un elenco di cause generiche; con, trovò la roccia che si rimetteva in un punto a caso. La richiesta è tenuta corta
+  perché ci stia gpt-oss-120b su Groq (8.000 token al minuto), l'unico dei modelli dell'aula che quel giorno trovò la
+  causa: solo i file che l'esercizio cambia, niente stile né documentazione (`token.ts` chiede meno token di risposta
+  quando la domanda è lunga).
+- Il tutor ha una **conversazione per esercizio** (e una per la lezione in generale), e in cima al pannello dice di
+  quale si sta parlando: il 17 ottobre, con un'unica chat per lezione, rispose sul sottomarino a una domanda sul rover.
+  Vede la cartella dell'ultima verifica, non solo quella proposta.
 - La finestra non apre pagine esterne e non carica niente da internet: i link si aprono nel browser, solo verso siti noti.
 - I tuoi dati (progressi, tentativi, chat con il tutor) restano sul PC, con una copia di sicurezza al giorno (le ultime 14).
 - Si installa per il solo utente, senza permessi di amministratore, e si aggiorna da sola dalle release del repository.

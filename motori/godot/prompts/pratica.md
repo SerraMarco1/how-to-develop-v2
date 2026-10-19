@@ -77,6 +77,7 @@ Ricorda: le istruzioni qui sopra descrivono un progetto scritto per intero. Per 
 - Le verifiche devono FALLIRE prima che il lavoro sia fatto e PASSARE dopo. La piattaforma le esegue sul progetto di partenza (devono fallire) e sulla soluzione (devono passare): se passano anche prima, l'esercizio viene rifiutato.
 - Le verifiche controllano il COMPORTAMENTO (cosa succede eseguendo il gioco, tenendo premuti i tasti, facendo passare il tempo), non come è scritto il codice. Ogni esercizio che riguarda qualcosa che si muove, reagisce o calcola ha una verifica `script_godot`. Le verifiche sul testo del codice (`testo_in_file`) si usano solo se la lezione insegna proprio quella parola chiave.
 - Niente valori esatti fragili: per un movimento confronta prima e dopo; per un tempo usa una tolleranza.
+- Le verifiche devono accettare OGNI soluzione giusta, non solo la tua. Chi studia sceglie liberamente tutto ciò che la consegna non fissa (velocità, posizione di partenza, durate, quantità), e spesso parte da un progetto suo. La piattaforma esegue le verifiche anche su una copia della tua soluzione con quei valori dimezzati: se lì falliscono, l'esercizio torna indietro. Come scriverle è spiegato nelle istruzioni della modalità.
 - La consegna dà del tu a chi fa l'esercizio e parla solo del lavoro da fare: non nomina altri esercizi, non parla di correzioni o versioni precedenti, non chiede screenshot.
 - `soluzione.spiegazione` (markdown): spiega passo passo come si arriva alla soluzione e perché.
 - Testi in italiano; codice e nomi in inglese.

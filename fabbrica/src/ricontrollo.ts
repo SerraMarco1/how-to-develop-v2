@@ -4,6 +4,7 @@ import { lezioniDelCorso, type LezioneNelCorso } from "@htd/condiviso/piano.ts";
 import type { Lezione, Previsione, StatoProgetto } from "@htd/condiviso/schemi.ts";
 import { cancella, elenco, leggiJson, percorsoDati, salva } from "./archivio.ts";
 import { statoDiPartenza } from "./corso.ts";
+import { soloProblemiMinori } from "./lezione/esercizio.ts";
 import { controllaPezzo, statoDopo } from "./lezione/pratica.ts";
 import { pubblicaLezione } from "./lezione/pubblica.ts";
 import { controllaTempo } from "./tempo.ts";
@@ -66,7 +67,8 @@ export async function ricontrollaImportata(lezione: LezioneNelCorso): Promise<bo
     for (const e of esercizi) {
       controllaTempo();
       const { esercizio, problemi: suoi } = await controllaPezzo(e, stato);
-      if (suoi.length) problemi.push(...suoi.map((p) => `${e.id}: ${p}`));
+      // Verifiche fragili non sono un motivo per riscrivere la lezione: le corregge il ricontrollo delle pubblicate.
+      if (suoi.length && !soloProblemiMinori(suoi)) problemi.push(...suoi.map((p) => `${e.id}: ${p}`));
       if (e.modalita === "previsioni") {
         const diverse = esercizio.previsioni.filter((p, i) => p.risposta !== e.previsioni[i]?.risposta);
         if (diverse.length) problemi.push(`${e.id}: Godot calcola risposte diverse da quelle salvate (${diverse.map((p) => p.id).join(", ")})`);

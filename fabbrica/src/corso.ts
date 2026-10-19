@@ -8,7 +8,7 @@ import type { StatoProgetto } from "@htd/condiviso/schemi.ts";
 import { documentazioneHarness, stileDiCasa } from "./ai/prompt.ts";
 import { leggiJson } from "./archivio.ts";
 import { CONFIG } from "./configurazione.ts";
-import { assetPerPrompt, impostazioniEditorPerPrompt } from "./lezione/esercizio.ts";
+import { assetPerPrompt, impostazioniEditorPerPrompt, paroleDi } from "./lezione/esercizio.ts";
 import { progettoVuoto } from "./lezione/pratica.ts";
 
 // Il corso visto dalla fabbrica: il piano (l'ordine delle lezioni) e il catalogo (le lezioni già pubblicate).
@@ -23,6 +23,38 @@ export function paccoPubblicato(slug: string): PaccoLezione | null {
   const voce = catalogo().lezioni.find((l) => l.slug === slug);
   if (!voce) return null;
   return PaccoLezioneSchema.parse(leggiJson<unknown>(voce.file, null));
+}
+
+/** Tutti i testi dentro un valore (stringhe di oggetti e liste, a qualunque profondità). */
+function testiDentro(valore: unknown, uscita: string[] = []): string[] {
+  if (typeof valore === "string") uscita.push(valore);
+  else if (Array.isArray(valore)) for (const v of valore) testiDentro(v, uscita);
+  else if (valore && typeof valore === "object") for (const v of Object.values(valore)) testiDentro(v, uscita);
+  return uscita;
+}
+
+/** I testi della teoria di una lezione (testo, codice, didascalie). */
+export function testiDellaTeoria(blocchi: unknown[]): string[] {
+  return testiDentro(blocchi);
+}
+
+/** I testi che chi studia ha visto in una lezione finita: teoria, consegne, passi e codice delle soluzioni. */
+export function testiVisti(contenuto: Pick<PaccoLezione["contenuto"], "blocchi" | "esercizi" | "test">): string[] {
+  return [...testiDentro(contenuto.blocchi), ...[...contenuto.esercizi, contenuto.test].flatMap((e) => [e.consegna, ...e.passiGuida, ...e.soluzione.file.map((f) => f.contenuto)])];
+}
+
+/**
+ * Le parole che chi studia ha già visto prima di una lezione: teoria, consegne, passi e soluzioni delle lezioni
+ * pubblicate che la precedono nel corso (vedi problemaNonSpiegato in lezione/esercizio.ts).
+ */
+export function paroleDelleLezioniPrima(lezione: LezioneNelCorso): Set<string> {
+  const testi: string[] = [];
+  for (const l of lezioniDelCorso()) {
+    if (l.indice >= lezione.indice) break;
+    const p = paccoPubblicato(l.slug);
+    if (p) testi.push(...testiVisti(p.contenuto));
+  }
+  return paroleDi(...testi);
 }
 
 /** La prima lezione del piano non ancora pubblicata. */

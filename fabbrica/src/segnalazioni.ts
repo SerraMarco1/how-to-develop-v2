@@ -8,6 +8,7 @@ import { leggiJson, salva, scriviJson } from "./archivio.ts";
 import { paccoPubblicato, valoriLezione } from "./corso.ts";
 import { aggiungiEtichetta, commenta, segnalazioniAperte, type Segnalazione } from "./github.ts";
 import { correggiEsercizio, normalizzaLezione } from "./lezione/catena.ts";
+import { soloProblemiMinori } from "./lezione/esercizio.ts";
 import { controllaPezzo, statoDopo } from "./lezione/pratica.ts";
 import { pubblicaLezione } from "./lezione/pubblica.ts";
 import { controllaTeoria } from "./lezione/qualita.ts";
@@ -105,7 +106,8 @@ async function gestisci(s: Segnalazione): Promise<string> {
     else if (suoi.length) {
       const { esercizio } = await correggiEsercizio(voce.slug, valori, e, suoi);
       const controllo = await controllaPezzo({ ...esercizio, genere: e.genere, dove: e.dove }, base);
-      if (controllo.problemi.length === 0) {
+      // Verifiche fragili non fermano la correzione: le riprende il ricontrollo delle lezioni pubblicate.
+      if (controllo.problemi.length === 0 || soloProblemiMinori(controllo.problemi)) {
         finale = controllo.esercizio;
         fatte.push(`${e.id} corretto`);
       }

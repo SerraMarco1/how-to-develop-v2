@@ -49,6 +49,11 @@ Regole delle verifiche:
 - Con `get_prop` e `call_if_exists` scrivi `var valore = get_prop(...)` con `=`, MAI con `:=`: restituiscono un valore senza tipo e `:=` non compila.
 - Per controllare il tipo di un valore usa `typeof(valore) == TYPE_INT` (oppure `TYPE_FLOAT`, `TYPE_STRING`, `TYPE_BOOL`, `TYPE_ARRAY`, `TYPE_DICTIONARY`). Non esiste una funzione `type()`.
 - Niente confronti fragili: per un movimento confronta la posizione prima e dopo con `>` o `<`, non con valori esatti.
+- Le verifiche girano anche su una copia della soluzione in cui i valori che la consegna non fissa (velocità, durate, quantità) sono dimezzati, e devono passare anche lì: chi fa l'esercizio può averli scelti diversi. Quindi:
+  - Prima di misurare un movimento metti il nodo in un punto noto, lontano dai limiti (`player.position = Vector2(400, 300)`): da dove parte lo decide chi fa l'esercizio.
+  - Per un limite (`clamp`, il bordo dello schermo) porta il nodo OLTRE il limite e tieni premuta l'azione per pochi frame, poi controlla che sia sul limite: `sub.position.y = 2000.0`, `await hold_action("dive", 5)`, `check("fondale", absf(sub.position.y - 560.0) < 0.5, "…")`. Non aspettare che ci arrivi da solo in un tempo fisso: con una velocità più bassa non ci arriva.
+  - Non scrivere nella verifica numeri che la consegna non dice: se ti serve un valore del gioco, leggilo dal nodo con `get_prop`.
+- Quando un controllo misura un numero, scrivi nel messaggio anche il valore misurato: `"Scendendo il sottomarino deve fermarsi a y = 560 (è a y = %.1f)" % sub.position.y`. Chi studia vede subito cosa non va.
 - Non usare `assert`, `quit()`, `get_tree().quit()`.
 
 Funzioni disponibili:

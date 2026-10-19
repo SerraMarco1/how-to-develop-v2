@@ -17,6 +17,8 @@ Regole dello script di verifica:
 - Crea lo script dello studente con `var obj := await instantiate_script("res://solution.gd")` e controlla subito che esista: `if not check("script", obj != null, "Lo script deve caricarsi senza errori"): return`.
 - Chiama le funzioni dello studente SEMPRE con `call_if_exists(obj, "nome_funzione", [argomenti], null)`: se la funzione manca restituisce null invece di bloccare la verifica. Leggi le variabili con `get_prop(obj, "nome", null)`.
 - Ogni controllo è `check("id", condizione, "messaggio in italiano: cosa ci si aspetta")`. Prova più casi (valori normali e casi limite).
+- Ogni risultato che un controllo si aspetta deve discendere dalla consegna. Le verifiche girano anche su una copia della soluzione in cui i valori iniziali che la consegna non fissa sono dimezzati, e devono passare anche lì: se ti serve uno di quei valori, leggilo con `get_prop` invece di scriverlo nella verifica.
+- Quando un controllo confronta un numero o un testo, scrivi nel messaggio anche ciò che è uscito: `"somma(2, 3) deve restituire 5 (restituisce %s)" % str(valore)`.
 - Con `get_prop` e `call_if_exists` scrivi `var valore = get_prop(...)` con `=`, MAI con `:=`: restituiscono un valore senza tipo e `:=` non compila.
 - Per controllare il tipo di un valore usa `typeof(valore) == TYPE_INT` (oppure `TYPE_FLOAT`, `TYPE_STRING`, `TYPE_BOOL`, `TYPE_ARRAY`, `TYPE_DICTIONARY`). Non esiste una funzione `type()`.
 - Per controllare che una funzione ESISTA usa `has_function(obj, "nome_funzione")`. Non usare "il risultato è diverso da null": una funzione che non restituisce niente (`-> void`, per esempio una che stampa soltanto) restituisce sempre null anche se esiste.

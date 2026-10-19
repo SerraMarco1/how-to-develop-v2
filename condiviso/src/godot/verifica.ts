@@ -16,6 +16,16 @@ import { riparaScriptVerifica } from "./ripara.ts";
 
 /** `origine: "verifica"` = il problema è nello script di verifica; "sicurezza" = codice rifiutato dal controllo di sicurezza. */
 export type Controllo = { descrizione: string; superato: boolean; dettaglio?: string; origine?: "verifica" | "sicurezza" };
+
+/**
+ * Vero se due esecuzioni hanno fallito gli stessi controlli, senza contare i numeri misurati (cambiano un po' a ogni
+ * esecuzione). Falso vuol dire che le verifiche danno esiti diversi sullo stesso progetto: dipendono dal caso o dal tempo.
+ */
+export function stessiFallimenti(a: Controllo[], b: Controllo[]): boolean {
+  const falliti = (c: Controllo[]) => c.filter((x) => !x.superato).map((x) => x.descrizione.replace(/-?\d+(?:\.\d+)?/g, "#")).join("\n");
+  return falliti(a) === falliti(b);
+}
+
 export type EsitoVerifica = {
   superato: boolean;
   controlli: Controllo[];

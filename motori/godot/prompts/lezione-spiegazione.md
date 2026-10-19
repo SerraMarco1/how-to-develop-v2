@@ -57,7 +57,6 @@ Regole:
 - Per ogni blocco `codice` spiega le righe importanti nel campo `spiegazione`. Il codice deve essere completo e funzionante in Godot 4.7: verrà copiato.
 - Se serve un'immagine di prova dentro un progetto usa `res://icon.svg`, che c'è in ogni progetto.
 - Blocchi `immagine`: al massimo 3, solo tra quelle elencate sopra (campo `immagine` = il suo id) e solo dove il testo parla proprio di ciò che l'immagine mostra. Mettila subito dopo il blocco che la introduce. `didascalia`: una frase che dice cosa guardare.
-- Se la lezione produce qualcosa di visibile che si muove o cambia nel tempo, puoi inserire UN blocco `video` che mostrerà il risultato atteso: `esercizio` è "es1" (il primo esercizio della parte pratica, che verrà scritta dopo e ripercorrerà l'esempio principale della teoria), con `azioni` di input simulate (i nomi delle azioni usate nell'esempio) e `tasto` da mostrare a schermo. Niente video per lezioni senza movimento.
 - Niente domande o quiz: in questo corso non esistono domande a crocette.
 - Spiega il PERCHÉ, non solo il come. Per ogni idea nuova: a cosa serve, cosa succederebbe senza, qual è l'errore che si fa di solito. Chi legge vuole basi solide, non una ricetta da ricopiare.
 - La teoria mostra l'idea su UN esempio, quello che il primo esercizio (guidato) ripercorrerà. Non risolvere in anticipo le varianti e i casi limite: sono il lavoro degli esercizi successivi, e devono restare da pensare.
@@ -71,7 +70,6 @@ Regole:
 - {"tipo": "codice", "linguaggio": "gdscript", "codice": "...", "spiegazione": "markdown"}
 - {"tipo": "attenzione", "md": "markdown: l'errore tipico e come evitarlo"}
 - {"tipo": "immagine", "immagine": "id-del-catalogo", "didascalia": "..."}
-- {"tipo": "video", "titolo": "Il risultato che otterrai", "esercizio": "es1", "durata": 6, "azioni": [{"azione": "move_right", "inizio": 0.5, "fine": 2, "tasto": "D"}]}
 - {"tipo": "riepilogo", "md": "- primo punto\n- secondo punto\n- terzo punto"}
 
 ## Formato della risposta (JSON)

@@ -7,7 +7,7 @@ import { percorsoMotore } from "@htd/condiviso/motore.ts";
 import { percorsoRelativo } from "@htd/condiviso/percorsi.ts";
 import type { Esercizio, Progetto, StatoProgetto, TipoEsercizio } from "@htd/condiviso/schemi.ts";
 import { controllaGDScript, descriviViolazioni } from "@htd/condiviso/sicurezza.ts";
-import { preparaEsercizio, validaEsercizio } from "./esercizio.ts";
+import { preparaEsercizio, validaEsercizio, type OpzioniValidazione } from "./esercizio.ts";
 
 // La pratica di una lezione nel corso a fasi.
 //
@@ -71,7 +71,7 @@ export function statoDopo(base: StatoProgetto, e: Esercizio): StatoProgetto {
 }
 
 /** Tutti i controlli su un esercizio preparato: problemi trovati (vuoto = accettato) ed esercizio con le previsioni calcolate. */
-export async function controllaPezzo(e: Esercizio, base: StatoProgetto): Promise<{ esercizio: Esercizio; problemi: string[] }> {
+export async function controllaPezzo(e: Esercizio, base: StatoProgetto, opzioni: Omit<OpzioniValidazione, "nonFatto"> = {}): Promise<{ esercizio: Esercizio; problemi: string[] }> {
   const problemi: string[] = [];
   const genere = e.genere ?? "obiettivo";
   if (genere === "guidato" && e.modalita !== "previsioni" && (e.passiGuida.length < 3 || e.passiGuida.length > 12)) {
@@ -98,7 +98,7 @@ export async function controllaPezzo(e: Esercizio, base: StatoProgetto): Promise
     return calcolaPrevisioni(e);
   }
   const nonFatto = e.modalita !== "progetto" ? undefined : e.dove === "gioco" ? base.file : e.partenza?.file;
-  return { esercizio: e, problemi: await validaEsercizio(e, { nonFatto }) };
+  return { esercizio: e, problemi: await validaEsercizio(e, { ...opzioni, nonFatto }) };
 }
 
 /**

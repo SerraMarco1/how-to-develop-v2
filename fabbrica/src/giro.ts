@@ -15,6 +15,7 @@ import { esisteCantiere, LezioneTrattenuta, riapriCantiere, scriviLezione } from
 import { completaRipassi, pubblicaIndiceDocumentazione, pubblicaLezione } from "./lezione/pubblica.ts";
 import { scriviStatoPubblico } from "./pubblico.ts";
 import { importataDa, ricontrollaImportata } from "./ricontrollo.ts";
+import { rendiRobusteLeVerifiche } from "./robustezza.ts";
 import { gestisciSegnalazioni } from "./segnalazioni.ts";
 import { aggiornaStato, statoFabbrica } from "./stato.ts";
 import { cominciaGiro, GiroFinito } from "./tempo.ts";
@@ -102,6 +103,8 @@ async function giro(): Promise<number> {
   try {
     const completate = await completaRipassi();
     if (completate) log(`Ripasso aggiunto a ${completate} ${completate === 1 ? "lezione già pubblicata" : "lezioni già pubblicate"}`);
+    const robuste = await rendiRobusteLeVerifiche();
+    if (robuste) log(`Verifiche corrette in ${robuste} ${robuste === 1 ? "lezione già pubblicata" : "lezioni già pubblicate"}`);
   } catch (errore) {
     if (!(errore instanceof GiroFinito)) throw errore;
     log(errore.message);

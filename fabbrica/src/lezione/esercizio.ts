@@ -1,6 +1,7 @@
 import { costruisciProjectGodot, leggiProjectGodot, percorsoRes, TASTI_VALIDI, type ProgettoGodot } from "@htd/condiviso/godot/progetto.ts";
 import { controllaFormaGDScript, controllaScena, pulisciContenuto, riparaGDScript, riparaScena, riparaScriptVerifica } from "@htd/condiviso/godot/ripara.ts";
-import { erroriGodot, verifica, type Controllo } from "@htd/condiviso/godot/verifica.ts";
+import { differenzeRighe } from "@htd/condiviso/differenze.ts";
+import { erroriGodot, stessiFallimenti, verifica, type Controllo } from "@htd/condiviso/godot/verifica.ts";
 import { elencoAssetCorso, leggiFileMotore, percorsiSempreDisponibili } from "@htd/condiviso/motore.ts";
 import { percorsoRelativo } from "@htd/condiviso/percorsi.ts";
 import { eVerificaAmbiente, type Esercizio, type FileProgetto, type Progetto } from "@htd/condiviso/schemi.ts";
@@ -191,6 +192,136 @@ export function mettiInFormaProgetto(grezzi: FileProgetto[], dichiarato: Progett
   return { progetto, file: [{ percorso: "project.godot", contenuto: costruisciProjectGodot(progetto).testo }, ...[...file].map(([percorso, contenuto]) => ({ percorso, contenuto }))] };
 }
 
+// ─────────────────────────── Valori liberi ───────────────────────────
+//
+// Chi studia può scrivere una soluzione giusta con valori diversi da quelli della soluzione di riferimento, dovunque
+// il testo dell'esercizio non li imponga: una velocità, una durata, un numero di vite. Il 17 ottobre la verifica del
+// sottomarino (lezione 1.4) teneva premuto «giù» per tre secondi e poi voleva il sottomarino sul fondale: con la
+// velocità della soluzione (250) ci arrivava, con quella scelta da chi studiava (150) no, e un lavoro giusto risultava
+// sbagliato. Per accorgersene prima di pubblicare, le verifiche girano anche su una VARIANTE della soluzione con quei
+// valori dimezzati: devono passare anche lì.
+// Lo stesso giorno la verifica della lezione 1.11 risultò bocciare a caso la sua stessa soluzione (il gioco mette le
+// stelle in punti casuali): per questo le verifiche girano anche una seconda volta sulla soluzione, che deve passare
+// di nuovo. Un esito che cambia da un'esecuzione all'altra boccerebbe a caso anche il lavoro di chi studia.
+
+/** L'inizio dei problemi di verifiche fragili. */
+export const VERIFICHE_FRAGILI = "VERIFICHE FRAGILI";
+/** L'inizio dei problemi di esercizi che usano funzioni che il corso non ha ancora spiegato (vedi problemaNonSpiegato). */
+export const NON_SPIEGATO = "NON SPIEGATO";
+
+/**
+ * Vero se restano solo problemi «minori»: verifiche fragili o funzioni non spiegate. Sono gli unici che non fermano un
+ * pezzo quando le correzioni finiscono: il pezzo è giusto, esce con un avviso, e toglierlo farebbe più danno.
+ */
+export function soloProblemiMinori(problemi: string[]): boolean {
+  return problemi.length > 0 && problemi.every((p) => p.startsWith(VERIFICHE_FRAGILI) || p.startsWith(NON_SPIEGATO));
+}
+
+const AVVISO_FRAGILE = "Le verifiche dell'esercizio";
+const AVVISO_NON_SPIEGATO = "Attenzione: l'esercizio";
+
+/** L'avviso nella lezione per un esercizio uscito con verifiche fragili (lo toglie chi poi le corregge). */
+export function avvisoFragile(titolo: string): string {
+  return `${AVVISO_FRAGILE} "${titolo}" possono bocciare un lavoro giusto (se scegli valori diversi da quelli della soluzione dove la consegna non li fissa, o per caso): se ti succede, usa «Segnala un errore».`;
+}
+
+/** Gli avvisi nella lezione per un esercizio uscito con problemi minori. */
+export function avvisiMinori(titolo: string, problemi: string[]): string[] {
+  const avvisi: string[] = [];
+  if (problemi.some((p) => p.startsWith(VERIFICHE_FRAGILI))) avvisi.push(avvisoFragile(titolo));
+  const nonSpiegato = problemi.find((p) => p.startsWith(NON_SPIEGATO));
+  if (nonSpiegato) {
+    const nomi = [...nonSpiegato.split("\n")[0].matchAll(/`[\w.]+\(\)`/g)].map((m) => m[0]);
+    avvisi.push(`${AVVISO_NON_SPIEGATO} "${titolo}" usa ${nomi.join(", ")}, che le lezioni fin qui non hanno spiegato: prima di cominciare cercalo nella documentazione o chiedi al tutor.`);
+  }
+  return avvisi;
+}
+
+/** Vero se l'avviso riguarda i problemi minori dell'esercizio con quel titolo (per toglierlo quando sono corretti). */
+export function eAvvisoMinoreDi(titolo: string, avviso: string): boolean {
+  return (avviso.startsWith(AVVISO_FRAGILE) || avviso.startsWith(AVVISO_NON_SPIEGATO)) && avviso.includes(`"${titolo}"`);
+}
+
+/** Il problema da correggere quando la stessa soluzione, eseguita un'altra volta, non supera più le verifiche. */
+export function problemaInstabili(controlli: Controllo[]): string {
+  return [
+    `${VERIFICHE_FRAGILI}: le verifiche danno esiti diversi sulla stessa soluzione. Eseguita un'altra volta, non le supera più: dipendono dal caso (numeri casuali, posizioni di partenza casuali) o dal tempo, e boccerebbero a caso anche un lavoro giusto. Controlli falliti in quell'esecuzione:`,
+    elencoControlli(controlli),
+    "Correggi le VERIFICHE, non la soluzione: metti i nodi nello stato che ti serve DOPO averli aggiunti alla scena (`_ready()` può spostarli in un punto casuale), non contare su valori casuali e lascia margini sui tempi.",
+  ].join("\n");
+}
+
+/**
+ * Le verifiche di un esercizio la cui soluzione le ha appena superate: rieseguite sulla stessa soluzione (devono
+ * passare di nuovo) e poi sulla variante lecita (vedi problemaValoriLiberi). Il problema da correggere, o null.
+ */
+export async function problemaVerificheFragili(e: Esercizio, opzioni: { soloVerifiche?: boolean } = {}): Promise<string | null> {
+  if ((e.modalita === "progetto" || e.modalita === "codice") && e.verifiche.some((v) => v.tipo === "script_godot")) {
+    const ancora = await verifica({ tipo: "file", file: e.soluzione.file, daLezione: true }, e.verifiche);
+    if (!ancora.superato) return problemaInstabili(ancora.controlli);
+  }
+  return problemaValoriLiberi(e, opzioni);
+}
+
+/** Una variabile o costante di uno script con un numero come valore iniziale: `var speed: float = 250.0`, `const LIVES := 3`. */
+const DICHIARAZIONE_NUMERICA = /^((?:@export\w*(?:\([^)]*\))?\s+)?(?:static\s+)?(?:var|const)\s+(\w+)\s*(?::\s*(?:int|float)\s*)?:?=\s*)(-?\d+(?:\.\d+)?)(\s*(?:#.*)?)$/;
+
+/** I numeri scritti nel testo dell'esercizio (titolo, consegna, passi, suggerimenti), senza segno. */
+function numeriNelTesto(e: Esercizio): Set<number> {
+  const testo = [e.titolo, e.consegna, ...e.passiGuida, ...e.suggerimenti].join("\n");
+  return new Set([...testo.matchAll(/\d+(?:[.,]\d+)?/g)].map((m) => Math.abs(Number(m[0].replace(",", ".")))));
+}
+
+/** La metà di un numero scritto in GDScript, nello stesso tipo: "250.0" → "125.0", "3" → "2". */
+function dimezza(testo: string): string {
+  const valore = Number(testo);
+  if (!testo.includes(".")) return String(Math.round(valore / 2) || Math.sign(valore));
+  const meta = Number((valore / 2).toPrecision(6));
+  return Number.isInteger(meta) ? meta.toFixed(1) : String(meta);
+}
+
+/**
+ * La soluzione con dimezzati i valori iniziali delle variabili e costanti numeriche degli script che il testo
+ * dell'esercizio non nomina (0 e 1 restano: di solito sono un punto di partenza, non una scelta). Null se non ce ne sono.
+ */
+export function varianteLecita(e: Esercizio): { file: FileProgetto[]; cambi: string[] } | null {
+  const nelTesto = numeriNelTesto(e);
+  const cambi: string[] = [];
+  const file = e.soluzione.file.map((f) => {
+    if (!f.percorso.endsWith(".gd")) return f;
+    const righe = f.contenuto.split("\n").map((riga) => {
+      const m = riga.replace(/\r$/, "").match(DICHIARAZIONE_NUMERICA);
+      const valore = m ? Math.abs(Number(m[3])) : 0;
+      if (!m || valore === 0 || valore === 1 || nelTesto.has(valore)) return riga;
+      const nuovo = dimezza(m[3]);
+      cambi.push(`${f.percorso}: \`${m[2]}\` da ${m[3]} a ${nuovo}`);
+      return `${m[1]}${nuovo}${m[4]}`;
+    });
+    return { ...f, contenuto: righe.join("\n") };
+  });
+  return cambi.length ? { file, cambi } : null;
+}
+
+/**
+ * Le verifiche eseguite sulla variante lecita della soluzione: il problema da correggere se la bocciano, null se la
+ * accettano o se non c'è niente da cambiare. Le verifiche che non leggono valori (nodi, azioni, file) non si rieseguono.
+ */
+export async function problemaValoriLiberi(e: Esercizio, opzioni: { soloVerifiche?: boolean } = {}): Promise<string | null> {
+  if ((e.modalita !== "progetto" && e.modalita !== "codice") || !e.verifiche.some((v) => v.tipo === "script_godot" || v.tipo === "testo_in_file")) return null;
+  const variante = varianteLecita(e);
+  if (!variante) return null;
+  const esito = await verifica({ tipo: "file", file: variante.file, daLezione: true }, e.verifiche);
+  if (esito.superato) return null;
+  return [
+    `${VERIFICHE_FRAGILI}: le verifiche bocciano una soluzione giusta. Nella soluzione sono cambiati solo valori che il testo dell'esercizio non impone, quindi chi lo fa può sceglierli diversi:`,
+    ...variante.cambi.slice(0, 8).map((c) => `  - ${c}`),
+    "Con questi valori non passano più:",
+    elencoControlli(esito.controlli),
+    "Correggi le VERIFICHE, non la soluzione: devono accettare qualunque valore che la consegna lascia libero. Per esempio: prima di misurare un movimento metti il nodo in un punto noto (`nodo.position = Vector2(400, 300)`); per controllare un limite porta il nodo oltre il limite e tieni premuta l'azione per pochi frame, invece di aspettare che ci arrivi da solo in un tempo fisso; confronta con valori letti dal gioco (`get_prop` legge anche le costanti) invece che scritti nella verifica." +
+      (opzioni.soloVerifiche ? "" : " Se invece uno di quei valori fa davvero parte del compito, scrivilo in cifre nella consegna."),
+  ].join("\n");
+}
+
 // ─────────────────────────── Validazione ───────────────────────────
 
 const VERIFICHE_DI_CONTENUTO = new Set(["file_esiste", "nodo", "script_collegato", "testo_in_file", "script_godot", "azione_input"]);
@@ -345,6 +476,10 @@ function suggerimenti(problemi: string[]): string {
 export type OpzioniValidazione = {
   /** Il progetto PRIMA del lavoro richiesto: le verifiche devono fallire lì. Se manca, vale un progetto vuoto. */
   nonFatto?: FileProgetto[];
+  /** Le parole che chi studia ha già visto (vedi problemaNonSpiegato). Se manca, quel controllo non si fa. */
+  conosciute?: Set<string>;
+  /** La lezione è già pubblicata: la soluzione non si può cambiare (cambia il consiglio dato al modello). */
+  pubblicata?: boolean;
 };
 
 /** Problemi dell'esercizio (vuoto = valido), scritti per un modello che li corregge. */
@@ -386,5 +521,110 @@ async function problemiEsercizio(e: Esercizio, opzioni: OpzioniValidazione): Pro
       ];
     }
   }
-  return [];
+  if (opzioni.nonFatto) {
+    const nascoste = await problemaModificheNascoste(e, opzioni.nonFatto, Boolean(opzioni.pubblicata));
+    if (nascoste) return [nascoste];
+  }
+  // I problemi minori tutti insieme, perché una correzione li sistemi in un colpo solo.
+  const nonSpiegato = opzioni.conosciute ? problemaNonSpiegato(e, opzioni.conosciute, opzioni.nonFatto ?? [], Boolean(opzioni.pubblicata)) : null;
+  const fragili = await problemaVerificheFragili(e, { soloVerifiche: opzioni.pubblicata });
+  return [nonSpiegato, fragili].filter((p): p is string => p !== null);
 }
+
+// ─────────────────────────── Modifiche nascoste e cose non spiegate ───────────────────────────
+//
+// Il 18 ottobre, nella lezione 1.9, la soluzione di un esercizio cambiava anche rock.gd (la roccia teneva la posizione
+// data invece di sceglierne una a caso), ma la consegna non lo diceva. Chi studiava aveva il suo rock.gd, giusto per le
+// lezioni prima: le verifiche lo bocciavano anche dopo aver incollato tutto il basket.gd della soluzione. E la stessa
+// soluzione creava le rocce con `instantiate()`, che nessuna lezione aveva ancora spiegato.
+
+const PAROLA = /[A-Za-z_][A-Za-z0-9_]*/g;
+
+/** Le parole (nomi di funzioni, proprietà, classi) di un testo: per sapere che cosa chi studia ha già visto. */
+export function paroleDi(...testi: string[]): Set<string> {
+  const parole = new Set<string>();
+  for (const t of testi) for (const m of t.matchAll(PAROLA)) parole.add(m[0]);
+  return parole;
+}
+
+const righeUguali = (a: string, b: string) => a.replace(/\r/g, "").trimEnd() === b.replace(/\r/g, "").trimEnd();
+
+/**
+ * La soluzione come la scriverebbe chi segue la consegna alla lettera: gli script che la soluzione cambia ma che il
+ * testo dell'esercizio (titolo, consegna, passi) non nomina tornano com'erano prima del lavoro. Null se non ce ne sono.
+ */
+export function varianteLetterale(e: Esercizio, prima: FileProgetto[]): { file: FileProgetto[]; tornati: { percorso: string; differenze: string[] }[] } | null {
+  const testo = [e.titolo, e.consegna, ...e.passiGuida].join("\n");
+  const base = new Map(prima.map((f) => [f.percorso, f.contenuto]));
+  const tornati: { percorso: string; differenze: string[] }[] = [];
+  const file = e.soluzione.file.map((f) => {
+    const vecchio = base.get(f.percorso);
+    if (!f.percorso.endsWith(".gd") || vecchio === undefined || righeUguali(vecchio, f.contenuto) || testo.includes(f.percorso.split("/").pop()!)) return f;
+    tornati.push({ percorso: f.percorso, differenze: differenzeRighe(vecchio, f.contenuto, 30) });
+    return { ...f, contenuto: vecchio };
+  });
+  return tornati.length ? { file, tornati } : null;
+}
+
+/** Le verifiche sulla variante letterale: il problema se la bocciano (la consegna non dice tutto ciò che serve), o null. */
+export async function problemaModificheNascoste(e: Esercizio, prima: FileProgetto[], pubblicata: boolean): Promise<string | null> {
+  if (e.modalita !== "progetto") return null;
+  const variante = varianteLetterale(e, prima);
+  if (!variante) return null;
+  const esito = await verifica({ tipo: "file", file: variante.file, daLezione: true }, e.verifiche);
+  if (esito.superato) return null;
+  return [
+    `la soluzione cambia anche ${variante.tornati.map((t) => t.percorso).join(", ")}, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:`,
+    ...variante.tornati.map((t) => `  ${t.percorso}:\n${t.differenze.map((d) => `    ${d}`).join("\n")}`),
+    "Con quei file com'erano prima falliscono:",
+    elencoControlli(esito.controlli),
+    pubblicata
+      ? "La soluzione non si può cambiare (le lezioni successive partono da lì): scrivi nella consegna, con il nome del file, cosa cambiare e perché."
+      : "Se quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione.",
+  ].join("\n");
+}
+
+/** Le chiamate che non hanno bisogno di essere spiegate: costruttori dei tipi di base e print. */
+const CHIAMATE_DI_BASE = new Set(["print", "str", "int", "float", "bool", "range", "len", "Vector2", "Vector2i", "Vector3", "Color", "Array", "Dictionary", "String", "super", "preload", "load"]);
+const PAROLE_CHIAVE = new Set(["if", "elif", "else", "for", "while", "match", "return", "and", "or", "not", "in", "is", "as", "func", "var", "const", "await", "assert"]);
+
+/**
+ * Le funzioni e i metodi che le righe nuove della soluzione chiamano e che chi studia non ha mai visto: né nelle
+ * lezioni precedenti (teoria, consegne, soluzioni), né nella teoria di questa, né nella consegna dell'esercizio, né nel
+ * progetto da cui parte. Passi e suggerimenti non contano: una riga di codice da ricopiare non è una spiegazione (nella
+ * 1.9 un passo faceva scrivere `instantiate()`, che la teoria non spiegava). Gli esercizi «trova» sono fatti apposta per
+ * cercare nella documentazione ciò che non è stato spiegato.
+ */
+export function chiamateNonSpiegate(e: Esercizio, conosciute: Set<string>, prima: FileProgetto[]): string[] {
+  if (e.modalita !== "progetto" && e.modalita !== "codice") return [];
+  const daTrovare = new Set(e.daTrovare.map((n) => n.replace(/\W/g, "")));
+  const base = new Map(prima.map((f) => [f.percorso, new Set(f.contenuto.split("\n").map((r) => r.trim()))]));
+  const definite = new Set(e.soluzione.file.flatMap((f) => [...f.contenuto.matchAll(/func\s+([A-Za-z_]\w*)/g)].map((m) => m[1])));
+  const viste = new Set([...conosciute, ...paroleDi(e.titolo, e.consegna, ...prima.map((f) => f.contenuto))]);
+  const nuove = new Set<string>();
+  for (const f of e.soluzione.file) {
+    if (!f.percorso.endsWith(".gd")) continue;
+    const vecchie = base.get(f.percorso);
+    for (const riga of f.contenuto.split("\n")) {
+      const codice = riga.split("#")[0].trim();
+      if (!codice || vecchie?.has(riga.trim())) continue;
+      for (const m of codice.replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, '""').matchAll(/([A-Za-z_]\w*)\s*\(/g)) {
+        const nome = m[1];
+        if (!CHIAMATE_DI_BASE.has(nome) && !PAROLE_CHIAVE.has(nome) && !definite.has(nome) && !viste.has(nome) && !daTrovare.has(nome)) nuove.add(nome);
+      }
+    }
+  }
+  return [...nuove];
+}
+
+export function problemaNonSpiegato(e: Esercizio, conosciute: Set<string>, prima: FileProgetto[], pubblicata: boolean): string | null {
+  const nomi = chiamateNonSpiegate(e, conosciute, prima);
+  if (nomi.length === 0) return null;
+  return [
+    `${NON_SPIEGATO}: la soluzione usa ${nomi.map((n) => `\`${n}()\``).join(", ")}, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.`,
+    pubblicata
+      ? "La soluzione non si può cambiare: spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
+      : "Usa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa.",
+  ].join("\n");
+}
+export { stessiFallimenti };

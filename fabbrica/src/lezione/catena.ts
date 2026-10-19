@@ -5,10 +5,10 @@ import { fornitore } from "../ai/catalogo.ts";
 import { fattiCerti, messaggi } from "../ai/prompt.ts";
 import { AINonDisponibile, candidati, chiamaAI, finestraGiornaliera, RispostaAINonValida, risposteOggiPerLezione, stimaToken, type RichiestaAI, type RispostaAI } from "../ai/router.ts";
 import { cancella, leggiJson, salva, scriviJson } from "../archivio.ts";
-import { statoDiPartenza, valoriLezione } from "../corso.ts";
+import { paroleDelleLezioniPrima, statoDiPartenza, testiDellaTeoria, valoriLezione } from "../corso.ts";
 import { controllaTempo, GiroFinito } from "../tempo.ts";
 import { registra, type Pezzo } from "../traccia.ts";
-import { esercizioPerPrompt, istruzioniModalita, preparaEsercizio } from "./esercizio.ts";
+import { avvisiMinori, esercizioPerPrompt, istruzioniModalita, paroleDi, preparaEsercizio, soloProblemiMinori } from "./esercizio.ts";
 import { controllaPezzo, preparaPezzo, progettoPerPrompt, statoDopo } from "./pratica.ts";
 import { controllaTeoria, togliRiquadriDifettosi } from "./qualita.ts";
 
@@ -105,7 +105,13 @@ export function chiudiCantiere(slug: string): void {
   cancella(`risposte/${slug}`);
 }
 
-type Contesto = { slug: string; lezione: LezioneNelCorso; valori: Record<string, string>; base: StatoProgetto; cantiere: Cantiere };
+type Contesto = { slug: string; lezione: LezioneNelCorso; valori: Record<string, string>; base: StatoProgetto; cantiere: Cantiere; conosciute?: Set<string> };
+
+/** Le parole che chi studia ha già visto quando fa gli esercizi: le lezioni prima e la teoria di questa (calcolate una volta). */
+function conosciute(ctx: Contesto): Set<string> {
+  ctx.conosciute ??= new Set([...paroleDelleLezioniPrima(ctx.lezione), ...paroleDi(...testiDellaTeoria(ctx.cantiere.teoria?.blocchi ?? []))]);
+  return ctx.conosciute;
+}
 
 async function salvaCantiere(ctx: Contesto, perche: string): Promise<void> {
   scriviJson(fileCantiere(ctx.slug), ctx.cantiere);
@@ -190,20 +196,15 @@ async function chiedi<T>(ctx: Contesto, pezzo: Pezzo, azione: string, titolo: st
 
 // ─────────────────────────── Normalizzazione ───────────────────────────
 
-/** Assegna id stabili ai blocchi; toglie i video che puntano a esercizi inesistenti o non eseguibili. */
+/**
+ * Assegna id stabili ai blocchi e toglie i video. Il 18 ottobre i video registrati fino allora risultarono tutti
+ * inutili: riprendevano la scena principale del gioco così com'era (nella fase 1 il cesto, mezzo fuori dallo schermo),
+ * senza mostrare ciò di cui parlava la lezione. Finché non c'è un modo di farli che mostri davvero il punto (e di
+ * controllarlo), la teoria non li chiede e qui si tolgono anche se un modello li scrive.
+ */
 export function normalizzaLezione(spiegazione: Spiegazione, pratica: Pratica, avvisi: string[] = []): Lezione {
   const { esercizi, test } = pratica;
-  const filmabile = (id: string) => esercizi.find((e) => e.id === id && e.modalita === "progetto" && e.soluzione.progetto?.scenaPrincipale && e.soluzione.file.some((f) => f.percorso.endsWith(".gd")));
-  const blocchi = spiegazione.blocchi
-    .filter((b) => b.tipo !== "video" || filmabile(b.esercizio))
-    .map((b, i) => {
-      const id = `b${i + 1}`;
-      if (b.tipo === "video") {
-        const azioni = new Set((filmabile(b.esercizio)?.soluzione.progetto?.azioni ?? []).map((a) => a.nome));
-        return { ...b, id, azioni: b.azioni.filter((a) => azioni.has(a.azione)) };
-      }
-      return { ...b, id };
-    }) as Blocco[];
+  const blocchi = spiegazione.blocchi.filter((b) => b.tipo !== "video").map((b, i) => ({ ...b, id: `b${i + 1}` })) as Blocco[];
   return { ...spiegazione, blocchi, esercizi, test, ...(avvisi.length ? { avvisi } : {}) };
 }
 
@@ -507,7 +508,7 @@ async function riscriviRestoDellaPratica(ctx: Contesto, tolto: string, stato: St
   }
 }
 
-function richiestaCorrezione(valori: Record<string, string>, esercizio: Esercizio, problemi: string[]): Omit<RichiestaAI<Esercizio>, "slug"> {
+export function richiestaCorrezione(valori: Record<string, string>, esercizio: Esercizio, problemi: string[]): Omit<RichiestaAI<Esercizio>, "slug"> {
   return {
     ruolo: "scrittore",
     messaggi: messaggi("correzione-esercizio", {
@@ -544,7 +545,7 @@ async function ritocco(ctx: Contesto, pezzo: Pezzo, titolo: string, richiesta: O
   }
 }
 
-function promemoriaGenere(e: Esercizio): string {
+export function promemoriaGenere(e: Esercizio): string {
   const t = descrizioneTipo(e.genere ?? "obiettivo");
   const dove = e.modalita !== "progetto" ? "" : e.dove === "gioco" ? ' L\'esercizio prosegue il gioco della fase (`dove: "gioco"`): non cambiare i nomi di ciò che esisteva già.' : " È un progetto a parte.";
   return `Questo esercizio è di genere "${e.genere}" (${t?.nome ?? ""}: ${t?.cosa ?? ""}) e deve restarlo.${dove}`;
@@ -561,7 +562,7 @@ async function completaPezzo(ctx: Contesto, id: string, base: StatoProgetto): Pr
     let problemi: string[];
     try {
       preparato = preparaPezzo(pezzo.grezzo, id, ruolo, pezzo.genere, base);
-      ({ esercizio: preparato, problemi } = await controllaPezzo(preparato, base));
+      ({ esercizio: preparato, problemi } = await controllaPezzo(preparato, base, { conosciute: conosciute(ctx) }));
     } catch (errore) {
       registra({ slug: ctx.slug, pezzo: id as Pezzo, azione: "verifica", esito: "fallito", guasto: "piattaforma", titolo: `${nomePezzo(id)}: errore del programma durante il controllo`, spiegazione: `Il controllo dell'esercizio si è interrotto per un errore della piattaforma, non dell'esercizio: ${(errore as Error).message}\nReazione: ci si ferma, perché riprovare darebbe lo stesso errore.`, dalle, dati: { errore: (errore as Error).stack, grezzo: pezzo.grezzo } });
       throw errore;
@@ -592,17 +593,28 @@ async function completaPezzo(ctx: Contesto, id: string, base: StatoProgetto): Pr
     pezzo.problemi = problemi;
     await salvaCantiere(ctx, `${nomePezzo(id).toLowerCase()}: problemi trovati`);
     const ancora = pezzo.correzioni < MAX_CORREZIONI;
+    // Solo problemi minori anche dopo le correzioni (verifiche fragili, funzioni non spiegate): il pezzo è giusto (la
+    // soluzione supera le verifiche, il lavoro non fatto no), e toglierlo farebbe più danno. Esce con un avviso nella
+    // lezione; il ricontrollo delle lezioni pubblicate riprova a correggerlo.
+    const esceFragile = !ancora && soloProblemiMinori(problemi);
     registra({
       slug: ctx.slug,
       pezzo: id as Pezzo,
       azione: "verifica",
-      esito: "fallito",
+      esito: esceFragile ? "saltato" : "fallito",
       guasto: "contenuto",
       titolo: `${nomePezzo(id)} (${pezzo.genere}): ${problemi.length === 1 ? "1 problema" : `${problemi.length} problemi`}`,
-      spiegazione: `«${preparato.titolo}», scritto da ${pezzo.modelli.at(-1)}. ${cosaControllato}.\n${elenco(problemi, 1200)}\nReazione: ${ancora ? `i problemi tornano a un modello per correggere solo questo pezzo (correzione ${pezzo.correzioni + 1} di ${MAX_CORREZIONI})${pezzo.correzioni >= 1 ? ", questa volta un modello diverso" : ""}.` : "le correzioni previste sono finite."}`,
+      spiegazione: `«${preparato.titolo}», scritto da ${pezzo.modelli.at(-1)}. ${cosaControllato}.\n${elenco(problemi, 1200)}\nReazione: ${ancora ? `i problemi tornano a un modello per correggere solo questo pezzo (correzione ${pezzo.correzioni + 1} di ${MAX_CORREZIONI})${pezzo.correzioni >= 1 ? ", questa volta un modello diverso" : ""}.` : esceFragile ? "le correzioni previste sono finite e restano solo problemi minori: il pezzo esce lo stesso, con un avviso nella lezione; il ricontrollo delle lezioni pubblicate riproverà a correggerlo." : "le correzioni previste sono finite."}`,
       dalle,
       dati: { problemi, esercizio: preparato },
     });
+    if (esceFragile) {
+      pezzo.stato = "ok";
+      pezzo.esercizio = preparato;
+      ctx.cantiere.avvisi.push(...avvisiMinori(preparato.titolo, problemi));
+      await salvaCantiere(ctx, `${nomePezzo(id).toLowerCase()} approvato con verifiche fragili`);
+      return true;
+    }
     if (!ancora) return false;
     nota(ctx, `${nomePezzo(id)}: correzione ${pezzo.correzioni + 1}…`);
     try {
@@ -692,7 +704,7 @@ async function correggiPraticaSegnalata(ctx: Contesto, esercizi: Esercizio[], st
       const corretto = await chiedi(ctx, e.id as Pezzo, "correzione", `${nomePezzo(e.id!)}: correzione chiesta dal revisore`, richiestaCorrezione(ctx.valori, e, [promemoriaGenere(e), `Il revisore del corso segnala (la soluzione attuale supera già le verifiche: deve continuare a farlo):\n${suoi.join("\n")}`]));
       controllaTempo();
       const preparato = preparaPezzo({ ...corretto.dati, dove: e.dove }, e.id!, e.tipo, e.genere ?? "obiettivo", base);
-      const controllo = await controllaPezzo(preparato, base);
+      const controllo = await controllaPezzo(preparato, base, { conosciute: conosciute(ctx) });
       registra({ slug: ctx.slug, pezzo: e.id as Pezzo, azione: "verifica", esito: controllo.problemi.length ? "saltato" : "ok", titolo: `${nomePezzo(e.id!)}: correzione del revisore ${controllo.problemi.length ? "scartata" : "accettata"}`, spiegazione: controllo.problemi.length ? `La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n${elenco(controllo.problemi, 500)}` : "La versione corretta supera tutti i controlli e sostituisce la precedente.", dati: { problemi: controllo.problemi } });
       await concluso(controllo.problemi.length ? e : controllo.esercizio);
     } catch (errore) {
