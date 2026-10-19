@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://hud.tscn\",\n  \"durata\": 8,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"pannello\",\n      \"cerca\": {\n        \"nome\": \"MessagePanel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Pannello\"\n    },\n    {\n      \"id\": \"etichetta\",\n      \"cerca\": {\n        \"nome\": \"MessageLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Etichetta\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il pannello centrale mostra la cornice personalizzata\",\n      \"da\": 0.5,\n      \"a\": 3.5,\n      \"soggetto\": \"pannello\"\n    },\n    {\n      \"testo\": \"La cornice contiene il testo dei messaggi di gioco\",\n      \"da\": 4.5,\n      \"a\": 7.5,\n      \"soggetto\": \"etichetta\"\n    }\n  ]\n}",
+ "ragionamento": 2592,
+ "quando": "2026-10-19T19:50:14.925Z",
+ "ruolo": "ritocco"
+}
