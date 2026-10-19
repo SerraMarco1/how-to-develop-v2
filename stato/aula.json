@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-19T07:46:01.320Z",
+ "aggiornato": "2026-10-19T07:46:26.622Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "interfaccia-in-partita",
-  "numero": "3.4",
-  "titolo": "L'interfaccia durante la partita: CanvasLayer"
+  "slug": "cambiare-scena",
+  "numero": "3.5",
+  "titolo": "Più scene: dal menu alla partita e ritorno"
  },
- "messaggio": "Sta scrivendo la lezione 3.4 «L'interfaccia durante la partita: CanvasLayer».",
+ "messaggio": "Sta scrivendo la lezione 3.5 «Più scene: dal menu alla partita e ritorno».",
  "riprende": null
 }
