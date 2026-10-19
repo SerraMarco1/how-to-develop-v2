@@ -47,7 +47,7 @@ const GENERI_CON_VIDEO = new Set(["guidato", "imita"]);
  * "niente": il modello dice che il risultato non si vede sullo schermo; "invisibile": i nodi dell'esercizio ci sono ma
  * fuori dallo schermo (o nascosti); "rinuncia": tentativi finiti per altri motivi. Con l'impronta cambiata si riprova.
  */
-type StatoVideo = { impronta: string; tentativi: number; esito: "in corso" | "fatto" | "niente" | "invisibile" | "rinuncia"; motivo?: string; ultimo?: { copione: unknown; problemi: string[] }; regole?: number };
+type StatoVideo = { impronta: string; tentativi: number; esito: "in corso" | "fatto" | "niente" | "invisibile" | "rinuncia"; motivo?: string; ultimo?: { copione: unknown; problemi: string[] }; regole?: number; ritaglioFallito?: string };
 type Registro = Record<string, Record<string, StatoVideo>>;
 
 const RispostaCopioneSchema = z
@@ -267,6 +267,32 @@ async function unTentativo(slug: string, e: Esercizio, base: StatoProgetto, impr
   }
 }
 
+/**
+ * Registra di nuovo il copione di un video già pubblicato, con tutti i controlli, e lo taglia all'inizio: il video da
+ * pubblicare, o null se qualcosa non va (resta nella traccia, e il video di prima resta pubblicato).
+ */
+async function ritaglia(slug: string, e: Esercizio, base: StatoProgetto, copione: Copione, impronta: string): Promise<{ video: VideoEsercizio; media: Media } | null> {
+  const dalle = Date.now();
+  const inizio = inizioDelVideo(copione);
+  const uscita = nuovaCartellaTemporanea("video-mp4");
+  try {
+    const esito = await provaCopione(e, base, copione, path.join(uscita, "risultato.mp4"));
+    if (esito.problemi.length || !esito.file) {
+      registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "fallito", guasto: "contenuto", dalle, titolo: `${nomePezzo(e)}: taglio dell'inizio del video non riuscito`, spiegazione: `Registrando di nuovo lo stesso copione i controlli non passano più:\n${esito.problemi.map((p) => `- ${p.slice(0, 600)}`).join("\n")}\nReazione: resta pubblicato il video di prima, non si riprova.` });
+      return null;
+    }
+    const media = salvaMedia(fs.readFileSync(esito.file), "mp4");
+    registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "ok", dalle, titolo: `${nomePezzo(e)}: video tagliato all'inizio`, spiegazione: `Lo stesso copione, registrato di nuovo e ricontrollato, senza i primi ${inizio} secondi in cui non si spiegava niente. Nessuna richiesta ai modelli. Video ${Math.round(media.byte / 1024)} KB.` });
+    return { video: { copione, impronta, inizio }, media };
+  } catch (errore) {
+    if (errore instanceof GiroFinito) throw errore;
+    registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "fallito", guasto: "piattaforma", dalle, titolo: `${nomePezzo(e)}: taglio dell'inizio del video non riuscito`, spiegazione: `Errore del programma: ${(errore as Error).message.slice(0, 600)}\nReazione: resta pubblicato il video di prima, non si riprova.` });
+    return null;
+  } finally {
+    togliCartella(uscita);
+  }
+}
+
 // ─────────────────────────── Le lezioni pubblicate ───────────────────────────
 
 /** Scrive la versione nuova di una lezione in cui cambiano solo i video. */
@@ -316,8 +342,20 @@ export async function completaVideo(): Promise<number> {
         // stesso momento se ne vedeva una sola) e l'inizio vuoto tagliato (il primo video della 2.5 aveva 10 secondi di
         // attesa). Altrimenti si rifà.
         const esistente = pacco.video[id];
-        if (esistente?.impronta === impronta && pacco.media[`video:${id}`] && problemiDelCopione(esistente.copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) }).length === 0 && esistente.inizio === inizioDelVideo(esistente.copione)) continue;
+        const giusto = esistente?.impronta === impronta && pacco.media[`video:${id}`] && problemiDelCopione(esistente.copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) }).length === 0;
+        if (giusto && esistente.inizio === inizioDelVideo(esistente.copione)) continue;
         const prima = registro[voce.slug]?.[id];
+        // Un video giusto a cui manca solo il taglio dell'inizio: si registra di nuovo lo stesso copione (la registrazione
+        // è la stessa a ogni volta) e si taglia, senza chiedere niente al modello. Il 19 ottobre, chiedendo un copione
+        // nuovo per la 2.5, il modello non fece più tenere premuto A: nel gioco si vinceva prima della pausa, e dopo tre
+        // tentativi restava solo il video vecchio.
+        if (giusto && prima?.ritaglioFallito !== impronta) {
+          const ritagliato = await ritaglia(voce.slug, e, base, esistente.copione, impronta);
+          (registro[voce.slug] ??= {})[id] = ritagliato ? { impronta, tentativi: prima?.impronta === impronta ? prima.tentativi : 0, esito: "fatto", regole: REGOLE } : { ...(prima ?? { impronta, tentativi: 0, esito: "fatto" }), ritaglioFallito: impronta };
+          if (ritagliato) nuovi[id] = ritagliato;
+          scriviJson(FILE, registro);
+          continue;
+        }
         // Deciso per questa soluzione: risultato fuori dallo schermo, oppure niente da mostrare o tentativi esauriti con le
         // regole di oggi. Non si richiede. "fatto" senza un video valido nella lezione si rifà.
         const deciso = prima?.impronta === impronta && (prima.esito === "invisibile" || ((prima.esito === "niente" || prima.esito === "rinuncia") && prima.regole === REGOLE));

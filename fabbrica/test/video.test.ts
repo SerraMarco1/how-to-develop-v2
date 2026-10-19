@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
@@ -43,13 +44,13 @@ const { impostaCartellaTemporanea } = await import("@htd/condiviso/godot/verific
 const { lezioneDelCorso } = await import("@htd/condiviso/piano.ts");
 const { costruisciProjectGodot } = await import("@htd/condiviso/godot/progetto.ts");
 const { FORMATO, PaccoLezioneSchema, percorsoLezione, percorsoMedia, sha256 } = await import("@htd/condiviso/pacchetto.ts");
-const { EsercizioSchema } = await import("@htd/condiviso/schemi.ts");
+const { CopioneSchema, EsercizioSchema } = await import("@htd/condiviso/schemi.ts");
 const { CONFIG } = await import("../src/configurazione.ts");
 const { FORNITORI } = await import("../src/ai/catalogo.ts");
 const { salva, scriviFile, scriviJson, leggiJson } = await import("../src/archivio.ts");
 const { aggiornaCatalogo } = await import("../src/lezione/pubblica.ts");
 const { catalogo: catalogoAttuale, paccoPubblicato } = await import("../src/corso.ts");
-const { completaVideo, videoAncoraValidi } = await import("../src/lezione/video.ts");
+const { completaVideo, eserciziDaFilmare, videoAncoraValidi } = await import("../src/lezione/video.ts");
 const { registroDiLezione } = await import("../src/traccia.ts");
 const { cominciaGiro } = await import("../src/tempo.ts");
 
@@ -174,6 +175,30 @@ test("regole nuove: un video con due scritte insieme si rifà, un «niente» dec
   assert.equal(ora.test.esito, "invisibile");
   assert.equal(await completaVideo(), 0);
   assert.equal(copioni().length, primaDi + 3);
+});
+
+test("un video giusto che comincia tardi si registra di nuovo e si taglia, senza chiedere un copione nuovo", { timeout: 15 * 60_000 }, async () => {
+  cominciaGiro();
+  // Una stella lenta, che a 4-6 secondi è ancora sullo schermo; il video pubblicato prima del taglio, con inizio 0.
+  pubblica(STAR_CADE.replace("180.0", "60.0"));
+  const pacco = paccoPubblicato(l.slug)!;
+  const { impronta } = eserciziDaFilmare(pacco.contenuto).find((x) => x.e.id === "es1")!;
+  const copione = CopioneSchema.parse({ ...COPIONE_STELLA, durata: 7, soggetti: [{ ...COPIONE_STELLA.soggetti[0], da: 4, a: 6 }], scritte: [{ testo: "Dopo quattro secondi la stella scende ancora", da: 4, a: 6, soggetto: "stella" }] });
+  const vecchio = PaccoLezioneSchema.parse({ ...pacco, versione: pacco.versione + 1, video: { es1: { copione, impronta, inizio: 0 } } });
+  const voce = catalogoAttuale().lezioni.find((x) => x.slug === l.slug)!;
+  const testo = JSON.stringify(vecchio);
+  scriviFile(voce.file, testo);
+  aggiornaCatalogo({ ...voce, versione: vecchio.versione, sha256: sha256(testo), byte: Buffer.byteLength(testo) });
+  const primaDi = copioni().length;
+
+  await completaVideo();
+  assert.ok(!copioni().slice(primaDi).some((r) => r.testo.includes("Titolo: Fai cadere la stella")), "nessun copione nuovo per es1");
+  const dopo = paccoPubblicato(l.slug)!;
+  assert.deepEqual([dopo.video.es1.inizio, dopo.video.es1.copione], [2.5, copione]);
+  const durata = Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path.join(dati, percorsoMedia(dopo.media["video:es1"]))]).toString());
+  assert.ok(Math.abs(durata - 4.5) < 0.2, `il video pubblicato dura 7 - 2,5 = 4,5 secondi (${durata})`);
+  assert.equal(leggiJson<Record<string, Record<string, { esito: string }>>>("stato/video.json", {})[l.slug].es1.esito, "fatto");
+  assert.ok(registroDiLezione(l.slug).some((r) => r.pezzo === "es1" && r.titolo === "Esercizio 1: video tagliato all'inizio"));
 });
 
 test("video: con il modello del copione sovraccarico non si conta nessun tentativo, si riprova al giro dopo", { timeout: 10 * 60_000 }, async () => {
