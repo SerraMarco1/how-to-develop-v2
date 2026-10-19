@@ -23,3 +23,4 @@
 {"quando":1792394833712,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"controlli-di-uso-comune","ok":true,"contata":true,"durataMs":35464,"tokenInput":13653,"tokenOutput":223,"ragionamento":3393}
 {"quando":1792394870709,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"controlli-di-uso-comune","ok":true,"contata":true,"durataMs":6489,"tokenInput":2999,"tokenOutput":690,"ragionamento":1740}
 {"quando":1792394877200,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"controlli-di-uso-comune","ok":true,"contata":true,"durataMs":5707,"tokenInput":3753,"tokenOutput":689,"ragionamento":1896}
+{"quando":1792394888823,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"temi-e-font","ok":true,"contata":true,"durataMs":83476,"tokenInput":16115,"tokenOutput":2731,"ragionamento":6277}
