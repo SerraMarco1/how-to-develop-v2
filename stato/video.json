@@ -310,7 +310,8 @@
    "impronta": "0ed8fcac78e8ea4803430b33b3d306feff940f473306a812670741e44bfeb1b4",
    "tentativi": 1,
    "esito": "niente",
-   "motivo": "L'esercizio introduce @onready e nomi unici nel codice, ma l'aspetto visivo del gioco resta identico a prima."
+   "regole": 2,
+   "motivo": "Il gioco si comporta come prima e mostra lo stesso testo a schermo; l'esercizio ottimizza il codice usando un nome unico e l'annotazione onready senza cambiare l'aspetto visivo."
   }
  },
  "scene-riutilizzabili": {
