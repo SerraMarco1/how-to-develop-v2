@@ -352,5 +352,44 @@
    },
    "motivo": "Gli oggetti in caduta istanziati come figli del Cesto partono a una coordinata Y globale di 680 (sotto il bordo inferiore dello schermo a 648) e si muovono ulteriormente verso il basso, risultando completamente fuori dallo schermo."
   }
+ },
+ "segnali-esistenti": {
+  "es1": {
+   "impronta": "cc5a34b3706379615c4e04b55db444e373e74221e7e8f29542570050fcbc6f94",
+   "tentativi": 2,
+   "esito": "niente",
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 8,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "pulsante",
+       "cerca": {
+        "nome": "RestartButton"
+       },
+       "quanti": 1,
+       "da": 4,
+       "a": 8,
+       "deve": "comparire",
+       "etichetta": "Pulsante Ricomincia"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il pulsante Ricomincia compare quando finiscono le vite",
+       "da": 4,
+       "a": 8,
+       "soggetto": "pulsante"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 4 a 8 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 4 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "Il pulsante di riavvio compare solo quando il giocatore esaurisce le vite, un evento casuale che non puo essere garantito in un video di durata fissa."
+  }
  }
 }
