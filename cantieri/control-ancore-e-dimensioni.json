@@ -483,7 +483,7 @@
    }
   },
   "test": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -559,7 +559,87 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "test",
+    "genere": "ripara",
+    "titolo": "Ripara la schermata di dialogo",
+    "consegna": "Nel progetto `SchermataDialogo`, la scena `dialog_box.tscn` viene usata per mostrare le battute dei personaggi. Quando la finestra viene allargata o rimpicciolita, l'interfaccia si disfa:\n- Il nome del personaggio `NameLabel` si trova al centro dello schermo e copre il testo, invece di stare agganciato all'angolo in alto a sinistra a 20 pixel dal margine sinistro e 20 pixel dall'alto, con dimensione minima di 160 per 36 pixel.\n- Il testo del dialogo `DialogLabel` rimane bloccato a una larghezza rigida invece di estendersi per tutta la larghezza dello schermo (da 30 pixel dal bordo sinistro fino a 30 pixel dal bordo destro, con altezza di 100 pixel a 20 pixel dal fondo dello schermo).\n- Il pulsante `NextButton` si sovrappone al testo invece di restare agganciato all'angolo in basso a destra (a 30 pixel dal bordo destro e 20 pixel dal fondo) con dimensione minima di 100 per 40 pixel.\n\nCorreggi ancore, offset e dimensioni minime nella scena `dialog_box.tscn` affinché la finestra di dialogo si adatti proporzionalmente a qualsiasi risoluzione.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "schermata-dialogo",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per fare in modo che DialogLabel si estenda su tutta la larghezza, imposta anchor_left = 0.0 e anchor_right = 1.0 con offset_left = 30.0 e offset_right = -30.0."
+    ],
+    "verifiche": [
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "run/main_scene",
+      "contiene": "dialog_box.tscn",
+      "descrizione": "La scena principale è impostata su res://dialog_box.tscn"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://dialog_box.tscn",
+      "tipoNodo": "Control",
+      "nome": "DialogBox",
+      "descrizione": "La radice è un Control chiamato DialogBox"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar root := await instantiate_main_scene() as Control\n\tif not check(\"dialog_load\", root != null, \"dialog_box.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar name_lbl := find_by_name(root, \"NameLabel\") as Label\n\tvar dialog_lbl := find_by_name(root, \"DialogLabel\") as Label\n\tvar next_btn := find_by_name(root, \"NextButton\") as Button\n\t\n\tif not check(\"nodes\", name_lbl != null and dialog_lbl != null and next_btn != null, \"Servono NameLabel, DialogLabel e NextButton\"):\n\t\treturn\n\t\n\tcheck(\"name_anchors\", name_lbl.anchor_left == 0.0 and name_lbl.anchor_top == 0.0, \"NameLabel deve essere ancorato in alto a sinistra (0.0)\")\n\tcheck(\"dialog_anchors\", dialog_lbl.anchor_left == 0.0 and dialog_lbl.anchor_right == 1.0 and dialog_lbl.anchor_bottom == 1.0, \"DialogLabel deve estendersi orizzontalmente da 0.0 a 1.0 ed essere ancorato sul fondo (1.0)\")\n\tcheck(\"btn_anchors\", next_btn.anchor_left == 1.0 and next_btn.anchor_bottom == 1.0, \"NextButton deve essere ancorato in basso a destra (1.0)\")\n\t\n\tcheck(\"name_min\", name_lbl.custom_minimum_size.x >= 160.0 and name_lbl.custom_minimum_size.y >= 36.0, \"NameLabel deve avere custom_minimum_size di almeno 160x36\")\n\tcheck(\"btn_min\", next_btn.custom_minimum_size.x >= 100.0 and next_btn.custom_minimum_size.y >= 40.0, \"NextButton deve avere custom_minimum_size di almeno 100x40\")\n\t\n\tvar sizes: Array[Vector2] = [Vector2(800.0, 600.0), Vector2(1152.0, 648.0), Vector2(1440.0, 900.0)]\n\tfor s in sizes:\n\t\troot.size = s\n\t\tawait wait_frames(2)\n\t\t\n\t\tvar name_x := name_lbl.position.x\n\t\tvar name_y := name_lbl.position.y\n\t\tvar d_left := dialog_lbl.position.x\n\t\tvar d_right_dist := s.x - (dialog_lbl.position.x + dialog_lbl.size.x)\n\t\tvar btn_right_dist := s.x - (next_btn.position.x + next_btn.size.x)\n\t\tvar btn_bottom_dist := s.y - (next_btn.position.y + next_btn.size.y)\n\t\t\n\t\tcheck(\"name_pos_\" + str(int(s.x)), absf(name_x - 20.0) <= 5.0 and absf(name_y - 20.0) <= 5.0, \"NameLabel deve restare a 20px dall'angolo in alto a sinistra\")\n\t\tcheck(\"d_stretch_\" + str(int(s.x)), absf(d_left - 30.0) <= 6.0 and absf(d_right_dist - 30.0) <= 6.0, \"DialogLabel deve allargarsi con la finestra restando a 30px dai due bordi\")\n\t\tcheck(\"btn_pos_\" + str(int(s.x)), absf(btn_right_dist - 30.0) <= 6.0 and absf(btn_bottom_dist - 20.0) <= 6.0, \"NextButton deve restare a 30px dal bordo destro e 20px dal fondo\")\n",
+      "descrizione": "NameLabel in alto a sinistra, DialogLabel esteso sul fondo e NextButton in basso a destra a qualsiasi risoluzione"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "SchermataDialogo",
+      "scenaPrincipale": "res://dialog_box.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SchermataDialogo\"\nrun/main_scene=\"res://dialog_box.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "dialog_box.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"DialogBox\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"NameLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -80.0\noffset_top = -18.0\noffset_right = 80.0\noffset_bottom = 18.0\ntext = \"Personaggio\"\n\n[node name=\"DialogLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 30.0\noffset_top = 520.0\noffset_right = 600.0\noffset_bottom = 620.0\ntext = \"Benvenuto nell'avventura! Questo testo deve adattarsi a tutta la larghezza disponibile.\"\nautowrap_mode = 2\n\n[node name=\"NextButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 400.0\noffset_top = 550.0\noffset_right = 490.0\noffset_bottom = 585.0\ntext = \"Avanti\"\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SchermataDialogo\"\nrun/main_scene=\"res://dialog_box.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "dialog_box.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"DialogBox\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"NameLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 180.0\noffset_bottom = 56.0\ncustom_minimum_size = Vector2(160, 36)\ntext = \"Personaggio\"\n\n[node name=\"DialogLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 12\nanchor_top = 1.0\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_left = 30.0\noffset_top = -120.0\noffset_right = -30.0\noffset_bottom = -20.0\ngrow_horizontal = 2\ngrow_vertical = 0\ntext = \"Benvenuto nell'avventura! Questo testo deve adattarsi a tutta la larghezza disponibile.\"\nautowrap_mode = 2\n\n[node name=\"NextButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 3\nanchor_left = 1.0\nanchor_top = 1.0\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_left = -130.0\noffset_top = -60.0\noffset_right = -30.0\noffset_bottom = -20.0\ngrow_horizontal = 0\ngrow_vertical = 0\ncustom_minimum_size = Vector2(100, 40)\ntext = \"Avanti\"\n"
+      }
+     ],
+     "progetto": {
+      "nome": "SchermataDialogo",
+      "scenaPrincipale": "res://dialog_box.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Per permettere a `DialogLabel` di riempire la parte inferiore mantenendo i margini laterali, si usano `anchor_left = 0.0` e `anchor_right = 1.0` abbinate a `anchor_top = 1.0` e `anchor_bottom = 1.0` (preset Bottom Wide). Con `offset_left = 30.0` e `offset_right = -30.0` il testo si allarga e si restringe automaticamente con la finestra. `NameLabel` resta saldamente in alto a sinistra con ancore a 0.0, mentre `NextButton` usa ancore a 1.0 per restare nell'angolo inferiore destro a 30 pixel dal bordo.",
+     "cambiati": [
+      "dialog_box.tscn"
+     ],
+     "rimossi": []
+    },
+    "id": "test"
+   }
   }
  },
  "avvisi": [],

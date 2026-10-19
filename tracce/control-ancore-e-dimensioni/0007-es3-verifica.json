@@ -1,0 +1,89 @@
+{
+ "n": 7,
+ "quando": "2026-10-19T07:14:59.098Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (ripara): approvato",
+ "spiegazione": "«Ripara il menu di pausa». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: pause_menu.tscn",
+ "richieste": 0,
+ "durataMs": 6317,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Ripara il menu di pausa",
+   "consegna": "Il menu di pausa del progetto `MenuPausa` presenta diversi difetti di posizionamento quando viene eseguito a grandezze di finestra diverse da quella iniziale:\n- Il titolo `TitleLabel` si sposta verso destra quando la finestra viene allargata, invece di restare orizzontalmente centrato a 40 pixel dal bordo superiore.\n- Il pulsante `ResumeButton` perde la posizione centrale e si deforma quando il testo cambia, perché non ha una dimensione minima garantita di 200 per 40 pixel.\n- Il pulsante `QuitButton` finisce fuori schermo nelle finestre più strette, invece di rimanere agganciato all'angolo in basso a destra (a 30 pixel dal bordo destro e 30 pixel dal bordo inferiore) con dimensione minima di 120 per 40 pixel.\n\nCorreggi le ancore, gli offset e le dimensioni minime nella scena `pause_menu.tscn` per far sì che ogni elemento rimanga al posto corretto a qualsiasi risoluzione.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "menu-pausa",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Controlla le ancore orizzontali di TitleLabel: per centrare orizzontalmente devono valere entrambe 0.5.",
+    "Per ResumeButton sia le ancore orizzontali che quelle verticali devono valere 0.5; imposta custom_minimum_size a Vector2(200, 40) e distribuisci gli offset a metà (-100, -20, 100, 20).",
+    "Per QuitButton imposta tutte le ancore a 1.0 (in basso a destra) e usa offset negativi per creare il margine di 30 pixel."
+   ],
+   "verifiche": [
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "run/main_scene",
+     "contiene": "pause_menu.tscn",
+     "descrizione": "La scena principale è res://pause_menu.tscn"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar menu := await instantiate_main_scene() as Control\n\tif not check(\"menu_load\", menu != null, \"pause_menu.tscn deve istanziarsi come Control\"):\n\t\treturn\n\t\n\tvar title := find_by_name(menu, \"TitleLabel\") as Label\n\tvar resume := find_by_name(menu, \"ResumeButton\") as Button\n\tvar quit := find_by_name(menu, \"QuitButton\") as Button\n\t\n\tif not check(\"nodes\", title != null and resume != null and quit != null, \"Servono TitleLabel, ResumeButton e QuitButton\"):\n\t\treturn\n\t\n\tcheck(\"title_anchor\", title.anchor_left == 0.5 and title.anchor_right == 0.5, \"TitleLabel deve essere centrato orizzontalmente (ancore a 0.5)\")\n\tcheck(\"resume_anchor\", resume.anchor_left == 0.5 and resume.anchor_top == 0.5, \"ResumeButton deve essere centrato a metà schermo (ancore a 0.5)\")\n\tcheck(\"quit_anchor\", quit.anchor_left == 1.0 and quit.anchor_top == 1.0, \"QuitButton deve essere ancorato all'angolo in basso a destra (ancore a 1.0)\")\n\tcheck(\"resume_min\", resume.custom_minimum_size.x >= 200.0 and resume.custom_minimum_size.y >= 40.0, \"ResumeButton deve avere custom_minimum_size di almeno 200x40\")\n\tcheck(\"quit_min\", quit.custom_minimum_size.x >= 120.0 and quit.custom_minimum_size.y >= 40.0, \"QuitButton deve avere custom_minimum_size di almeno 120x40\")\n\t\n\tvar sizes: Array[Vector2] = [Vector2(800.0, 600.0), Vector2(1152.0, 648.0), Vector2(1600.0, 900.0)]\n\tfor s in sizes:\n\t\tmenu.size = s\n\t\tawait wait_frames(2)\n\t\tvar title_center_x := title.position.x + title.size.x * 0.5\n\t\tvar resume_center_x := resume.position.x + resume.size.x * 0.5\n\t\tvar resume_center_y := resume.position.y + resume.size.y * 0.5\n\t\tvar quit_right_dist := s.x - (quit.position.x + quit.size.x)\n\t\tvar quit_bottom_dist := s.y - (quit.position.y + quit.size.y)\n\t\t\n\t\tcheck(\"title_x_\" + str(int(s.x)), absf(title_center_x - s.x * 0.5) <= 15.0, \"TitleLabel deve restare al centro orizzontale\")\n\t\tcheck(\"res_c_\" + str(int(s.x)), absf(resume_center_x - s.x * 0.5) <= 15.0 and absf(resume_center_y - s.y * 0.5) <= 15.0, \"ResumeButton deve restare esattamente al centro\")\n\t\tcheck(\"quit_dist_\" + str(int(s.x)), absf(quit_right_dist - 30.0) <= 8.0 and absf(quit_bottom_dist - 30.0) <= 8.0, \"QuitButton deve restare a 30px dai bordi destro e inferiore\")\n",
+     "descrizione": "Titolo in alto al centro, pulsante Riprendi al centro e pulsante Esci in basso a destra a diverse grandezze"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "MenuPausa",
+     "scenaPrincipale": "res://pause_menu.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"MenuPausa\"\nrun/main_scene=\"res://pause_menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "pause_menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 450.0\noffset_top = 40.0\noffset_right = 702.0\noffset_bottom = 80.0\ntext = \"GIOCO IN PAUSA\"\nhorizontal_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 480.0\noffset_top = 280.0\noffset_right = 672.0\noffset_bottom = 311.0\ntext = \"Riprendi\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 980.0\noffset_top = 580.0\noffset_right = 1100.0\noffset_bottom = 620.0\ntext = \"Esci\"\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"MenuPausa\"\nrun/main_scene=\"res://pause_menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "pause_menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 5\nanchor_left = 0.5\nanchor_right = 0.5\noffset_left = -150.0\noffset_top = 40.0\noffset_right = 150.0\noffset_bottom = 80.0\ngrow_horizontal = 2\ncustom_minimum_size = Vector2(300, 40)\ntext = \"GIOCO IN PAUSA\"\nhorizontal_alignment = 1\nvertical_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -100.0\noffset_top = -20.0\noffset_right = 100.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ncustom_minimum_size = Vector2(200, 40)\ntext = \"Riprendi\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 3\nanchor_left = 1.0\nanchor_top = 1.0\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_left = -150.0\noffset_top = -70.0\noffset_right = -30.0\noffset_bottom = -30.0\ngrow_horizontal = 0\ngrow_vertical = 0\ncustom_minimum_size = Vector2(120, 40)\ntext = \"Esci\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "MenuPausa",
+     "scenaPrincipale": "res://pause_menu.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Nel progetto di partenza i nodi avevano tutte le ancore impostate a 0.0 con coordinate in pixel fisse, adatte solo alla risoluzione iniziale. Impostando per TitleLabel le ancore a 0.5 in orizzontale, per ResumeButton tutte le ancore a 0.5 e per QuitButton tutte le ancore a 1.0, gli elementi calcolano la loro posizione relativamente alla dimensione corrente della finestra. L'aggiunta di `custom_minimum_size` garantisce che i pulsanti non collassino se il testo viene ridotto.",
+    "cambiati": [
+     "pause_menu.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
