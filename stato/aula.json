@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-19T07:46:26.622Z",
+ "aggiornato": "2026-10-19T07:51:20.677Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "cambiare-scena",
-  "numero": "3.5",
-  "titolo": "Più scene: dal menu alla partita e ritorno"
+  "slug": "autoload",
+  "numero": "3.6",
+  "titolo": "Autoload: i dati che restano"
  },
- "messaggio": "Sta scrivendo la lezione 3.5 «Più scene: dal menu alla partita e ritorno».",
+ "messaggio": "Sta scrivendo la lezione 3.6 «Autoload: i dati che restano».",
  "riprende": null
 }
