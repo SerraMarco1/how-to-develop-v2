@@ -1,6 +1,209 @@
 {
  "creato": "2026-10-19T08:33:22.469Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Focus iniziale e navigazione circolare nel menu principale",
+    "consegna": "Rendi navigabile il menu principale (`main_menu.tscn`) tramite tastiera e controller, senza obbligare all'uso del mouse.\n\n1. In `main_menu.gd`, fai in modo che all'apertura della scena il pulsante `PlayButton` riceva automaticamente il focus in modo differito al termine del frame corrente.\n2. Nella scena `main_menu.tscn`, configura i vicini di focus (*Focus Neighbors*) per creare un anello verticale completo tra i tre pulsanti del menu (`PlayButton`, `OptionsButton`, `QuitButton`):\n   - Da `PlayButton`, premendo verso l'alto il focus deve scendere su `QuitButton`.\n   - Da `QuitButton`, premendo verso il basso il focus deve risalire su `PlayButton`.\n3. Sempre in `main_menu.gd`, gestisci gli input non gestiti (`_unhandled_input`): se viene premuta l'azione `ui_cancel`, il gioco deve chiudersi immediatamente richiamando l'uscita pulita dall'albero di scena.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Ricorda di usare il metodo `grab_focus.call_deferred()` dentro `_ready()` sul nodo del pulsante per garantire che Godot abbia già completato la disposizione iniziale.",
+     "Per impostare i vicini direttamente nel file `.tscn`, puoi assegnare alle proprietà `focus_neighbor_top` e `focus_neighbor_bottom` del nodo NodePath relativi come `NodePath(\"../QuitButton\")` o `NodePath(\"../PlayButton\")`.",
+     "Per intercettare l'azione `ui_cancel`, usa `event.is_action_pressed(\"ui_cancel\")` all'interno della funzione `_unhandled_input(event: InputEvent)`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://main_menu.gd",
+      "regex": "grab_focus\\.call_deferred\\(\\)",
+      "descrizione": "Lo script assegna il focus al pulsante in modo differito"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://main_menu.gd",
+      "regex": "ui_cancel",
+      "descrizione": "Lo script gestisce l'azione predefinita ui_cancel per uscire"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://main_menu.tscn\")\n\tif not check(\"scene\", scene != null, \"La scena main_menu.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tawait wait_frames(2)\n\tvar play_btn := find_by_name(scene, \"PlayButton\") as Button\n\tvar quit_btn := find_by_name(scene, \"QuitButton\") as Button\n\tvar opt_btn := find_by_name(scene, \"OptionsButton\") as Button\n\tif not check(\"buttons\", play_btn != null and quit_btn != null and opt_btn != null, \"Tutti i pulsanti devono esistere nella scena\"):\n\t\treturn\n\tcheck(\"play_focused\", play_btn.has_focus(), \"All'apertura il pulsante Gioca (PlayButton) deve possedere il focus\")\n\tawait tap_action(\"ui_up\")\n\tawait wait_frames(2)\n\tcheck(\"wrap_top\", quit_btn.has_focus(), \"Premendo Su da PlayButton il focus deve andare a QuitButton\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"wrap_bottom\", play_btn.has_focus(), \"Premendo Giù da QuitButton il focus deve tornare a PlayButton\")",
+      "descrizione": "All'avvio PlayButton ha il focus e premendo Su o Giù si naviga ad anello tra i pulsanti"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main_menu.tscn",
+       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main_menu.gd\" id=\"1_menu\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"Margin\" type=\"MarginContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 40\ntheme_override_constants/margin_top = 40\ntheme_override_constants/margin_right = 40\ntheme_override_constants/margin_bottom = 40\n\n[node name=\"MainLayout\" type=\"VBoxContainer\" parent=\"Margin\"]\nlayout_mode = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"Margin/MainLayout\"]\nlayout_mode = 2\ntext = \"PIOGGIA DI STELLE\"\nhorizontal_alignment = 1\n\n[node name=\"MenuCenter\" type=\"CenterContainer\" parent=\"Margin/MainLayout\"]\nlayout_mode = 2\n\n[node name=\"ButtonBox\" type=\"VBoxContainer\" parent=\"Margin/MainLayout/MenuCenter\"]\nlayout_mode = 2\n\n[node name=\"PlayButton\" type=\"Button\" parent=\"Margin/MainLayout/MenuCenter/ButtonBox\"]\ncustom_minimum_size = Vector2(240, 45)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../QuitButton\")\ntext = \"Gioca\"\n\n[node name=\"OptionsButton\" type=\"Button\" parent=\"Margin/MainLayout/MenuCenter/ButtonBox\"]\ncustom_minimum_size = Vector2(240, 45)\nlayout_mode = 2\ntext = \"Opzioni\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\"Margin/MainLayout/MenuCenter/ButtonBox\"]\ncustom_minimum_size = Vector2(240, 45)\nlayout_mode = 2\nfocus_neighbor_bottom = NodePath(\"../PlayButton\")\ntext = \"Esci\"\n\n[node name=\"VersionLabel\" type=\"Label\" parent=\"Margin/MainLayout\"]\nlayout_mode = 2\ntext = \"v1.0\"\nhorizontal_alignment = 2\n"
+      },
+      {
+       "percorso": "main_menu.gd",
+       "contenuto": "extends Control\n\n@onready var play_button: Button = $Margin/MainLayout/MenuCenter/ButtonBox/PlayButton\n@onready var quit_button: Button = $Margin/MainLayout/MenuCenter/ButtonBox/QuitButton\n\n\nfunc _ready() -> void:\n\tplay_button.pressed.connect(_on_play_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\tplay_button.grab_focus.call_deferred()\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"ui_cancel\"):\n\t\tget_tree().quit()\n\n\nfunc _on_play_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://basket.tscn\")\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().quit()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "All'avvio della schermata, `play_button.grab_focus.call_deferred()` assicura che il primo pulsante sia selezionato non appena Godot conclude il frame di calcolo del layout. Impostando `focus_neighbor_top` su `PlayButton` verso `QuitButton` e `focus_neighbor_bottom` su `QuitButton` verso `PlayButton`, creiamo una navigazione ad anello che non si arresta ai bordi. Infine, `_unhandled_input()` intercetta l'azione `ui_cancel` (il tasto Esc o il tasto B del gamepad) per permettere la chiusura rapida del gioco.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "trova",
+    "titolo": "Rientro rapido e navigazione bidirezionale nella selezione modalità",
+    "consegna": "Nella scena di selezione della modalità (`mode_menu.tscn`), dobbiamo collegare la schermata al sistema di navigazione da tastiera e gamepad.\n\n1. Crea uno script `mode_menu.gd` e collegalo alla radice `ModeMenu`.\n2. All'avvio della scena, assegna il focus in modo differito al primo pulsante della griglia, `ClassicButton`.\n3. Quando il giocatore preme l'azione `ui_cancel`, la scena deve ritornare al menu principale (`res://main_menu.tscn`). La stessa cosa deve succedere quando si clicca o attiva il pulsante `BackButton`.\n4. Nella griglia dei pulsanti (`ModesGrid`) e nella barra inferiore (`BottomBar`), Godot sa già muoversi orizzontalmente e verticalmente. Tuttavia, muovendosi verso l'alto da `ClassicButton` o `TimeAttackButton`, l'utente rimane bloccato.\n   Cerca nella documentazione la proprietà di `Control` che permette di specificare a mano il vicino di focus in alto. Imposta tale proprietà su `ClassicButton` in modo che puntando in alto selezioni `BackButton`, e su `TimeAttackButton` in modo che puntando in alto selezioni `HelpButton`.\n5. Fai l'opposto per la barra inferiore: cerca la proprietà del vicino di focus in basso e imposta su `BackButton` il salto verso `ClassicButton`, e su `HelpButton` il salto verso `TimeAttackButton`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Esamina la sezione delle proprietà di `Control` dedicate a dove si sposta il cursore direzionale.",
+     "I percorsi verso i nodi vicini possono essere espressi tramite `NodePath` relativo rispetto al nodo corrente nella gerarchia dell'albero delle scene."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://mode_menu.gd",
+      "descrizione": "Il file mode_menu.gd esiste"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://mode_menu.tscn",
+      "nodo": "ModeMenu",
+      "descrizione": "Il nodo radice di mode_menu.tscn ha il suo script collegato"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://mode_menu.tscn\")\n\tif not check(\"scene\", scene != null, \"La scena mode_menu.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(2)\n\tvar classic_btn := find_by_name(scene, \"ClassicButton\") as Button\n\tvar back_btn := find_by_name(scene, \"BackButton\") as Button\n\tvar help_btn := find_by_name(scene, \"HelpButton\") as Button\n\tvar time_btn := find_by_name(scene, \"TimeAttackButton\") as Button\n\tif not check(\"buttons\", classic_btn != null and back_btn != null and help_btn != null and time_btn != null, \"Tutti i pulsanti del menu modalità devono esistere\"):\n\t\treturn\n\tcheck(\"initial_focus\", classic_btn.has_focus(), \"ClassicButton deve avere il focus iniziale\")\n\tawait tap_action(\"ui_up\")\n\tawait wait_frames(2)\n\tcheck(\"focus_up\", back_btn.has_focus(), \"Premendo Su da ClassicButton il focus deve andare a BackButton\")\n\tawait tap_action(\"ui_right\")\n\tawait wait_frames(2)\n\tcheck(\"focus_right\", help_btn.has_focus(), \"Spostandosi a destra da BackButton si deve raggiungere HelpButton\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"focus_down\", time_btn.has_focus(), \"Premendo Giù da HelpButton il focus deve raggiungere TimeAttackButton\")",
+      "descrizione": "ClassicButton ottiene il focus all'avvio e la navigazione tra griglia e barra inferiore è collegata"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [
+     "focus_neighbor_top",
+     "focus_neighbor_bottom"
+    ],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "mode_menu.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Theme\" path=\"res://game_theme.tres\" id=\"1_theme\"]\n[ext_resource type=\"Script\" path=\"res://mode_menu.gd\" id=\"2_script\"]\n\n[node name=\"ModeMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = ExtResource(\"1_theme\")\nscript = ExtResource(\"2_script\")\n\n[node name=\"Margin\" type=\"MarginContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 30\ntheme_override_constants/margin_top = 30\ntheme_override_constants/margin_right = 30\ntheme_override_constants/margin_bottom = 30\n\n[node name=\"Layout\" type=\"VBoxContainer\" parent=\"Margin\"]\nlayout_mode = 2\n\n[node name=\"HeaderLabel\" type=\"Label\" parent=\"Margin/Layout\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 28\ntext = \"SCEGLI LA MODALITÀ\"\nhorizontal_alignment = 1\n\n[node name=\"GridCenter\" type=\"CenterContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"ModesGrid\" type=\"GridContainer\" parent=\"Margin/Layout/GridCenter\"]\nlayout_mode = 2\ncolumns = 2\n\n[node name=\"ClassicButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../../../BottomBar/BackButton\")\ntext = \"Classica\"\n\n[node name=\"TimeAttackButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../../../BottomBar/HelpButton\")\ntext = \"Corsa contro il tempo\"\n\n[node name=\"HardcoreButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Difficile\"\n\n[node name=\"ZenButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Rilassata\"\n\n[node name=\"BottomBar\" type=\"HBoxContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"BackButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\nfocus_neighbor_bottom = NodePath(\"../../GridCenter/ModesGrid/ClassicButton\")\ntext = \"Indietro\"\n\n[node name=\"HelpButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\nfocus_neighbor_bottom = NodePath(\"../../GridCenter/ModesGrid/TimeAttackButton\")\ntext = \"Guida\"\n"
+      },
+      {
+       "percorso": "mode_menu.gd",
+       "contenuto": "extends Control\n\n@onready var classic_button: Button = $Margin/Layout/GridCenter/ModesGrid/ClassicButton\n@onready var back_button: Button = $Margin/Layout/BottomBar/BackButton\n\n\nfunc _ready() -> void:\n\tclassic_button.grab_focus.call_deferred()\n\tback_button.pressed.connect(_on_back_button_pressed)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"ui_cancel\"):\n\t\t_go_to_main_menu()\n\n\nfunc _on_back_button_pressed() -> void:\n\t_go_to_main_menu()\n\n\nfunc _go_to_main_menu() -> void:\n\tget_tree().change_scene_to_file(\"res://main_menu.tscn\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Le proprietà `focus_neighbor_top` e `focus_neighbor_bottom` consentono di superare i limiti della gerarchia: collegando direttamente i percorsi tra la riga superiore della griglia (`ModesGrid`) e la barra inferiore (`BottomBar`), il giocatore può scorrere tutti i comandi in modo intuitivo con il D-pad o le frecce senza incontrare vicoli ciechi.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "trova",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "trova",
+    "titolo": "Navigazione e riavvio da tastiera nella schermata di fine partita",
+    "consegna": "Rendi completamente navigabile con tastiera o controller la schermata di game over (`game_over.tscn`).\n\n1. In `game_over.tscn`, all'interno del nodo `ButtonBox`, assicurati che siano presenti i seguenti controlli nell'ordine:\n   - `TitleLabel` (`Label`, testo: `PARTITA FINITA`)\n   - `ScoreLabel` (`Label`, testo: `Punti: 0`)\n   - `RestartButton` (`Button`, testo: `Rigioca`)\n   - `MainMenuButton` (`Button`, testo: `Menu Principale`)\n2. Crea lo script `game_over.gd` collegato al nodo radice `GameOver`:\n   - In `_ready()`, aggiorna il testo di `ScoreLabel` mostrando il punteggio finale con il formato `Punti: X`, leggendo la variabile `current_score` dall'Autoload `Game`.\n   - Assegna il focus in modo differito al pulsante `RestartButton`.\n   - Collega il segnale `pressed` di `RestartButton` per ricaricare la scena di gioco (`res://basket.tscn`).\n   - Collega il segnale `pressed` di `MainMenuButton` per tornare al menu (`res://main_menu.tscn`).\n   - Gestisci `_unhandled_input(event)`: se viene premuta l'azione `ui_cancel`, torna al menu principale.\n3. Esplora la documentazione delle proprietà di navigazione di `Control` e configura i vicini di focus tra i due pulsanti in modo che premendo Giù da `MainMenuButton` il focus passi a `RestartButton`, e premendo Su da `RestartButton` il focus passi a `MainMenuButton`.\n4. Cerca nella documentazione la proprietà di `Control` che permette di impedire in modo assoluto che un elemento riceva il focus da tastiera o gamepad (la modalità di fuoco). Assicurati che i due nodi di testo (`TitleLabel` e `ScoreLabel`) abbiano questa modalità impostata sul valore che esclude qualunque ricezione del focus.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Cerca nella classe Control la proprietà relativa alla modalità di focus (Focus Mode) e i suoi tre valori possibili.",
+     "Il valore appropriato per le scritte disattiva completamente la possibilità di ricevere il fuoco."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://game_over.tscn",
+      "descrizione": "Il file game_over.tscn esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://game_over.gd",
+      "descrizione": "Il file game_over.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tGame.current_score = 450\n\tvar scene := await instantiate_scene(\"res://game_over.tscn\")\n\tif not check(\"scene\", scene != null, \"La scena game_over.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(2)\n\tvar restart_btn := find_by_name(scene, \"RestartButton\") as Button\n\tvar menu_btn := find_by_name(scene, \"MainMenuButton\") as Button\n\tvar score_lbl := find_by_name(scene, \"ScoreLabel\") as Label\n\tvar title_lbl := find_by_name(scene, \"TitleLabel\") as Label\n\tif not check(\"nodes\", restart_btn != null and menu_btn != null and score_lbl != null and title_lbl != null, \"Tutti i nodi richiesti devono essere presenti nella scena\"):\n\t\treturn\n\tcheck(\"score_text\", score_lbl.text == \"Punti: 450\", \"ScoreLabel deve mostrare il punteggio salvato in Game.current_score\")\n\tcheck(\"labels_no_focus\", score_lbl.focus_mode == Control.FOCUS_NONE and title_lbl.focus_mode == Control.FOCUS_NONE, \"Le etichette devono avere focus_mode impostato a None (0)\")\n\tcheck(\"restart_focused\", restart_btn.has_focus(), \"All'avvio RestartButton deve possedere il focus\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"down_to_menu\", menu_btn.has_focus(), \"Premendo Giù il focus deve passare su MainMenuButton\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"down_wrap_restart\", restart_btn.has_focus(), \"Premendo Giù da MainMenuButton il focus deve tornare a RestartButton\")\n\tawait tap_action(\"ui_up\")\n\tawait wait_frames(2)\n\tcheck(\"up_wrap_menu\", menu_btn.has_focus(), \"Premendo Su da RestartButton il focus deve andare a MainMenuButton\")",
+      "descrizione": "RestartButton ottiene il focus all'avvio, i label non sono selezionabili e i pulsanti ciclano correttamente"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [
+     "focus_mode",
+     "FOCUS_NONE"
+    ],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "game_over.tscn",
+       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://game_over.gd\" id=\"1_game_over\"]\n\n[node name=\"GameOver\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_game_over\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"ButtonBox\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 16\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/ButtonBox\"]\nfocus_mode = 0\nlayout_mode = 2\ntext = \"PARTITA FINITA\"\nhorizontal_alignment = 1\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/ButtonBox\"]\nfocus_mode = 0\nlayout_mode = 2\ntext = \"Punti: 0\"\nhorizontal_alignment = 1\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/ButtonBox\"]\ncustom_minimum_size = Vector2(220, 45)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../MainMenuButton\")\nfocus_neighbor_bottom = NodePath(\"../MainMenuButton\")\ntext = \"Rigioca\"\n\n[node name=\"MainMenuButton\" type=\"Button\" parent=\"CenterContainer/ButtonBox\"]\ncustom_minimum_size = Vector2(220, 45)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../RestartButton\")\nfocus_neighbor_bottom = NodePath(\"../RestartButton\")\ntext = \"Menu Principale\"\n"
+      },
+      {
+       "percorso": "game_over.gd",
+       "contenuto": "extends Control\n\n@onready var score_label: Label = $CenterContainer/ButtonBox/ScoreLabel\n@onready var restart_button: Button = $CenterContainer/ButtonBox/RestartButton\n@onready var main_menu_button: Button = $CenterContainer/ButtonBox/MainMenuButton\n\n\nfunc _ready() -> void:\n\tscore_label.text = \"Punti: \" + str(Game.current_score)\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmain_menu_button.pressed.connect(_on_main_menu_button_pressed)\n\trestart_button.grab_focus.call_deferred()\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"ui_cancel\"):\n\t\t_go_to_main_menu()\n\n\nfunc _on_restart_button_pressed() -> void:\n\tGame.reset_session()\n\tget_tree().change_scene_to_file(\"res://basket.tscn\")\n\n\nfunc _on_main_menu_button_pressed() -> void:\n\t_go_to_main_menu()\n\n\nfunc _go_to_main_menu() -> void:\n\tget_tree().change_scene_to_file(\"res://main_menu.tscn\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Pioggia di stelle",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Nella schermata finale, `RestartButton` riceve il focus differito in `_ready()` consentendo al giocatore di rigiocare immediatamente con il gamepad premendo solo il tasto di conferma (`ui_accept`). La proprietà `focus_mode = 0` (`Control.FOCUS_NONE`) sulle etichette garantisce che nessun elemento non interattivo possa essere selezionato, mentre `focus_neighbor_top` e `focus_neighbor_bottom` sui pulsanti creano un ciclo bidirezionale perfetto tra le due opzioni disponibili.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "trova",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.7-flash"
@@ -70,5 +273,10 @@
     "md": "- Il **focus** determina quale controllo dell'interfaccia riceve l'input di tastiera e gamepad; per navigare deve avere `focus_mode` impostato su `All`.\n- Quando una schermata compare, nessun nodo ha il focus: si usa `nodo.grab_focus.call_deferred()` dentro `_ready()` per attivare il primo elemento in modo affidabile.\n- I tasti freccia e le levette usano le azioni built-in `ui_up`, `ui_down`, `ui_left` e `ui_right` per spostare la selezione.\n- Nell'*Inspector*, sotto `Control -> Focus`, le proprietà `Neighbor Top`, `Neighbor Bottom`, `Neighbor Left` e `Neighbor Right` permettono di forzare a mano il percorso tra i nodi, creando percorsi personalizzati o cicli continui.\n- L'azione built-in `ui_cancel` (Esc o tasto B) permette di gestire l'uscita o il ritorno al menu precedente con una sola condizione in `_unhandled_input()`."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
