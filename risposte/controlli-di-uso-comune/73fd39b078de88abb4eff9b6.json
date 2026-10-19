@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://new_game.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"menu\", \"cerca\": {\"scena\": \"res://new_game.tscn\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 7.5, \"deve\": \"esserci\", \"etichetta\": \"Menu Nuova Partita\"}], \"scritte\": [{\"testo\": \"La schermata raccoglie le impostazioni iniziali della partita\", \"da\": 1.0, \"a\": 7.0, \"soggetto\": \"menu\"}]}",
+ "ragionamento": 1430,
+ "quando": "2026-10-19T16:14:50.716Z",
+ "ruolo": "ritocco"
+}
