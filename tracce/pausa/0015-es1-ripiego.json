@@ -1,0 +1,148 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T08:20:06.681Z",
+ "pezzo": "es1",
+ "azione": "ripiego",
+ "esito": "saltato",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: tolto dalla lezione",
+ "spiegazione": "Dopo le correzioni e la riscrittura semplificata l'esercizio non supera i controlli:\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo l'azione pause get_tree().paused deve diventare true\n  - In pausa il menu di pausa deve essere visibile\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: l'esercizio viene tolto e la cosa è dichiarata tra gli avvisi della lezione.",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo l'azione pause get_tree().paused deve diventare true\n  - In pausa il menu di pausa deve essere visibile\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "ultimo": {
+   "tipo": "autonomo",
+   "titolo": "Il menu di pausa di Pioggia di stelle",
+   "consegna": "Aggiungi al gioco la schermata di pausa controllabile con il tasto Escape.\n\n1. Nelle impostazioni di progetto (**Input Map**), crea l'azione `pause` assegnandole il tasto **Escape**.\n2. Crea la scena `pause_menu.tscn` con nodo radice `PauseMenu` di tipo `Control`.\n3. Configura la modalità di elaborazione della radice `PauseMenu` su **Always** (`Node.PROCESS_MODE_ALWAYS`), in modo che riceva gli eventi anche quando l'albero delle scene è congelato.\n4. La schermata deve contenere tre nodi `Button` con nome unico (`%`):\n   - `%ResumeButton` con testo `Riprendi`\n   - `%RestartButton` con testo `Ricomincia`\n   - `%MenuButton` con testo `Menu`\n5. Collega a `PauseMenu` lo script `pause_menu.gd`:\n   - All'avvio nascondi il menu con `hide()`.\n   - In `_input(event)`, quando viene premuta l'azione `pause`:\n     - Se il gioco non è in pausa, imposta `get_tree().paused = true` e mostra il menu con `show()`.\n     - Se il gioco è già in pausa, togli la pausa con `get_tree().paused = false` e nascondi il menu con `hide()`.\n   - Alla pressione di `ResumeButton`: togli la pausa e nascondi il menu.\n   - Alla pressione di `RestartButton`: imposta `get_tree().paused = false` e ricarica `res://basket.tscn` con `change_scene_to_file`.\n   - Alla pressione di `MenuButton`: imposta `get_tree().paused = false` e carica `res://main_menu.tscn` con `change_scene_to_file`.\n6. Istanzia `pause_menu.tscn` dentro `hud.tscn` come nodo figlio `PauseMenu`, così che appaia sul livello dell'interfaccia durante la partita.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "pioggia-di-stelle",
+   "passiGuida": [
+    "In Project Settings -> Input Map aggiungi l'azione `pause` con il tasto Escape.",
+    "Crea la scena `pause_menu.tscn` con un nodo `Control` come radice, rinominalo `PauseMenu`.",
+    "Nell'Inspector di `PauseMenu` imposta **Process Mode** su **Always**.",
+    "Aggiungi tre pulsanti `Button` chiamati `ResumeButton` (testo 'Riprendi'), `RestartButton` (testo 'Ricomincia') e `MenuButton` (testo 'Menu'), attivando **Access as Unique Name** (`%`) per ciascuno.",
+    "Crea lo script `pause_menu.gd` su `PauseMenu`. In `_ready()` nascondi il menu con `hide()` e collega i segnali `pressed` dei tre pulsanti.",
+    "In `_input(event)` controlla `event.is_action_pressed(\"pause\")`: gestisci l'attivazione e disattivazione di `get_tree().paused` e la visibilità del menu.",
+    "Istanzia `pause_menu.tscn` dentro `hud.tscn` come nodo figlio `PauseMenu`."
+   ],
+   "suggerimenti": [
+    "Ricorda di impostare la proprietà Process Mode della radice Control su Always sia nell'Inspector sia in _ready con process_mode = Node.PROCESS_MODE_ALWAYS.",
+    "Per rilevare la pressione del tasto Escape usa _input e controlla event.is_action_pressed(\"pause\").",
+    "Prima di cambiare scena verso il menu principale o la partita, azzera sempre get_tree().paused = false."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://pause_menu.tscn",
+     "descrizione": "La scena pause_menu.tscn esiste nel progetto"
+    },
+    {
+     "tipo": "azione_input",
+     "nome": "pause",
+     "descrizione": "Nella Input Map del progetto è presente l'azione pause"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://pause_menu.tscn",
+     "tipoNodo": "Button",
+     "nome": "ResumeButton",
+     "descrizione": "La scena pause_menu.tscn contiene il pulsante %ResumeButton"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://hud.tscn",
+     "tipoNodo": "Control",
+     "nome": "PauseMenu",
+     "descrizione": "La scena hud.tscn contiene un'istanza di PauseMenu"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tget_tree().paused = false\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve potersi avviare senza errori\"):\n\t\treturn\n\tvar pause_menu := find_by_name(basket, \"PauseMenu\")\n\tvar resume_btn := find_by_name(basket, \"ResumeButton\") as Button\n\tif not check(\"nodes\", pause_menu != null and resume_btn != null, \"In gioco devono essere presenti PauseMenu e ResumeButton\"):\n\t\treturn\n\tcheck(\"initial_hidden\", not pause_menu.is_visible_in_tree(), \"All'avvio della partita il menu di pausa deve essere nascosto\")\n\tcheck(\"initial_not_paused\", not get_tree().paused, \"All'avvio della partita il gioco non deve essere in pausa\")\n\tawait tap_action(\"pause\")\n\tawait wait_frames(2)\n\tcheck(\"is_paused\", get_tree().paused, \"Premendo l'azione pause get_tree().paused deve diventare true\")\n\tcheck(\"menu_visible\", pause_menu.is_visible_in_tree(), \"In pausa il menu di pausa deve essere visibile\")\n\tawait click_button(resume_btn)\n\tawait wait_frames(2)\n\tcheck(\"unpaused\", not get_tree().paused, \"Cliccando Riprendi la pausa deve disattivarsi\")\n\tcheck(\"menu_hidden\", not pause_menu.is_visible_in_tree(), \"Dopo aver ripreso il gioco il menu di pausa deve nascondersi\")\n\tget_tree().paused = false",
+     "descrizione": "Premendo il tasto di pausa il gioco va in pausa e mostra il menu; il pulsante Riprendi ripristina il gioco"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "game.gd",
+      "contenuto": "extends Node\n\nvar current_score: int = 0\n"
+     },
+     {
+      "percorso": "main_menu.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main_menu.gd\" id=\"1_menu\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"Margin\" type=\"MarginContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"MainLayout\" type=\"VBoxContainer\" parent=\"Margin\"]\nlayout_mode = 2\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"Margin/MainLayout\"]\nlayout_mode = 2\ntext = \"PIOGGIA DI STELLE\"\nhorizontal_alignment = 1\n\n[node name=\"PlayButton\" type=\"Button\" parent=\"Margin/MainLayout\"]\ncustom_minimum_size = Vector2(200, 40)\nlayout_mode = 2\nsize_flags_horizontal = 4\ntext = \"Gioca\"\n"
+     },
+     {
+      "percorso": "main_menu.gd",
+      "contenuto": "extends Control\n\n@onready var play_button: Button = $Margin/MainLayout/PlayButton\n\n\nfunc _ready() -> void:\n\tplay_button.pressed.connect(_on_play_button_pressed)\n\n\nfunc _on_play_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://basket.tscn\")\n"
+     },
+     {
+      "percorso": "hud.gd",
+      "contenuto": "extends CanvasLayer\n\n@onready var score_label: Label = $MarginContainer/HBoxContainer/ScoreLabel\n@onready var lives_container: HBoxContainer = $MarginContainer/HBoxContainer/LivesContainer\n\n\nfunc update_score(new_score: int) -> void:\n\tif score_label != null:\n\t\tscore_label.text = \"Punti: \" + str(new_score)\n\n\nfunc update_lives(current_lives: int) -> void:\n\tif lives_container != null:\n\t\tvar icons: Array[Node] = lives_container.get_children()\n\t\tfor i in range(icons.size()):\n\t\t\tvar icon := icons[i] as CanvasItem\n\t\t\tif icon != null:\n\t\t\t\ticon.visible = (i < current_lives)\n"
+     },
+     {
+      "percorso": "hud.tscn",
+      "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://hud.gd\" id=\"1_hud\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://pause_menu.tscn\" id=\"3_pause\"]\n\n[node name=\"HUD\" type=\"CanvasLayer\"]\nlayer = 1\nscript = ExtResource(\"1_hud\")\n\n[node name=\"MarginContainer\" type=\"MarginContainer\" parent=\".\"]\nanchors_preset = 10\nanchor_right = 1.0\noffset_bottom = 56.0\ngrow_horizontal = 2\ntheme_override_constants/margin_left = 16\ntheme_override_constants/margin_top = 16\ntheme_override_constants/margin_right = 16\ntheme_override_constants/margin_bottom = 16\n\n[node name=\"HBoxContainer\" type=\"HBoxContainer\" parent=\"MarginContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"MarginContainer/HBoxContainer\"]\nlayout_mode = 2\ntext = \"Punti: 0\"\n\n[node name=\"LivesContainer\" type=\"HBoxContainer\" parent=\"MarginContainer/HBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 6\n\n[node name=\"Life1\" type=\"TextureRect\" parent=\"MarginContainer/HBoxContainer/LivesContainer\"]\ncustom_minimum_size = Vector2(24, 24)\nlayout_mode = 2\ntexture = ExtResource(\"2_icon\")\nexpand_mode = 1\nstretch_mode = 5\n\n[node name=\"Life2\" type=\"TextureRect\" parent=\"MarginContainer/HBoxContainer/LivesContainer\"]\ncustom_minimum_size = Vector2(24, 24)\nlayout_mode = 2\ntexture = ExtResource(\"2_icon\")\nexpand_mode = 1\nstretch_mode = 5\n\n[node name=\"Life3\" type=\"TextureRect\" parent=\"MarginContainer/HBoxContainer/LivesContainer\"]\ncustom_minimum_size = Vector2(24, 24)\nlayout_mode = 2\ntexture = ExtResource(\"2_icon\")\nexpand_mode = 1\nstretch_mode = 5\n\n[node name=\"PauseMenu\" parent=\".\" instance=ExtResource(\"3_pause\")]\n"
+     },
+     {
+      "percorso": "pause_menu.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://pause_menu.gd\" id=\"1_menu\"]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"PanelContainer\" type=\"PanelContainer\" parent=\"CenterContainer\"]\ncustom_minimum_size = Vector2(240, 180)\nlayout_mode = 2\n\n[node name=\"ButtonBox\" type=\"VBoxContainer\" parent=\"CenterContainer/PanelContainer\"]\nlayout_mode = 2\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/PanelContainer/ButtonBox\"]\nlayout_mode = 2\ntext = \"PAUSA\"\nhorizontal_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"CenterContainer/PanelContainer/ButtonBox\"]\nunique_name_in_owner = true\nlayout_mode = 2\ntext = \"Riprendi\"\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/PanelContainer/ButtonBox\"]\nunique_name_in_owner = true\nlayout_mode = 2\ntext = \"Ricomincia\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/PanelContainer/ButtonBox\"]\nunique_name_in_owner = true\nlayout_mode = 2\ntext = \"Menu\"\n"
+     },
+     {
+      "percorso": "pause_menu.gd",
+      "contenuto": "extends Control\n\n@onready var resume_button: Button = %ResumeButton\n@onready var restart_button: Button = %RestartButton\n@onready var menu_button: Button = %MenuButton\n\n\nfunc _ready() -> void:\n\tprocess_mode = Node.PROCESS_MODE_ALWAYS\n\thide()\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"pause\") and not event.is_echo():\n\t\tget_viewport().set_input_as_handled()\n\t\tif get_tree().paused:\n\t\t\tresume_game()\n\t\telse:\n\t\t\tpause_game()\n\n\nfunc pause_game() -> void:\n\tget_tree().paused = true\n\tshow()\n\n\nfunc resume_game() -> void:\n\tget_tree().paused = false\n\thide()\n\n\nfunc _on_resume_button_pressed() -> void:\n\tresume_game()\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://basket.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://main_menu.tscn\")\n"
+     },
+     {
+      "percorso": "basket.tscn",
+      "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://basket.gd\" id=\"1_basket\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://hud.tscn\" id=\"3_hud\"]\n\n[node name=\"Basket\" type=\"Sprite2D\"]\nposition = Vector2(576, 600)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_basket\")\n\n[node name=\"HUD\" parent=\".\" instance=ExtResource(\"3_hud\")]\n"
+     },
+     {
+      "percorso": "basket.gd",
+      "contenuto": "extends Sprite2D\n\nsignal lives_changed(current_lives: int)\nsignal score_changed(new_score: int)\n\n@export var speed: float = 300.0\n@export var max_lives: int = 3\n\nvar score: int = 0\nvar lives: int = 3\n\n@onready var hud: CanvasLayer = $HUD\n\n\nfunc _ready() -> void:\n\tlives = max_lives\n\tif hud != null:\n\t\tlives_changed.connect(hud.update_lives)\n\t\tscore_changed.connect(hud.update_score)\n\t\thud.update_lives(lives)\n\t\thud.update_score(score)\n\n\nfunc _process(delta: float) -> void:\n\tvar direction: float = Input.get_axis(\"move_left\", \"move_right\")\n\tposition.x += direction * speed * delta\n\tposition.x = clampf(position.x, 64.0, 1088.0)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Pioggia di stelle",
+     "scenaPrincipale": "res://main_menu.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "Left",
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "Right",
+        "D"
+       ]
+      },
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "Game",
+       "percorso": "*res://game.gd"
+      }
+     ],
+     "impostazioni": []
+    },
+    "spiegazione": "Il menu di pausa richiede due elementi fondamentali: la proprietà `process_mode` impostata su `Node.PROCESS_MODE_ALWAYS` (in modo che lo script continui a elaborare gli eventi di input anche quando l'albero delle scene è congelato) e la gestione di `get_tree().paused` sia alla pressione del tasto di pausa sia quando si cliccano i pulsanti del menu. Ricordati sempre di impostare `get_tree().paused = false` prima di cambiare scena, per evitare che la nuova scena parta congelata.",
+    "cambiati": [],
+    "rimossi": []
+   }
+  }
+ },
+ "chiamate": []
+}
