@@ -1,0 +1,32 @@
+{
+ "n": 41,
+ "quando": "2026-10-19T09:19:40.602Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 46043,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "func check_rubies\\(",
+    "descrizione": "Il file basket.gd dichiara la funzione check_rubies()"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_ok\", basket != null, \"La scena basket.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tcheck(\"has_check_rubies\", has_function(basket, \"check_rubies\"), \"basket.gd deve avere la funzione check_rubies\")\n\tvar initial_rubies: Array = get_prop(basket, \"rubies\", [])\n\tvar initial_count: int = initial_rubies.size()\n\tvar ruby = call_if_exists(basket, \"spawn_ruby\", [Vector2(0, 700.0)]) as Sprite2D\n\tif not check(\"ruby_spawn\", ruby != null, \"spawn_ruby deve restituire il rubino generato\"):\n\t\treturn\n\tawait wait_frames(2)\n\tcheck(\"ruby_freed\", not is_instance_valid(ruby), \"Il rubino oltre la soglia deve essere eliminato con queue_free()\")\n\tvar rubies_arr: Array = get_prop(basket, \"rubies\", [])\n\tcheck(\"ruby_removed\", rubies_arr.size() == initial_count, \"Il rubino eliminato deve essere rimosso dall'array rubies\")\n\tcall_if_exists(basket, \"reset_game\")\n\tawait wait_frames(2)\n\tvar stars_after: Array = get_prop(basket, \"stars\", [])\n\tvar rubies_after: Array = get_prop(basket, \"rubies\", [])\n\tcheck(\"reset_stars_clean\", stars_after.size() == 0, \"reset_game deve svuotare l'array stars\")\n\tcheck(\"reset_rubies_clean\", rubies_after.size() == 0, \"reset_game deve svuotare l'array rubies\")\n",
+    "descrizione": "I rubini raccolti o usciti vengono eliminati con queue_free e reset_game pulisce tutti i nodi rimasti"
+   }
+  ],
+  "consegna": "In `Pioggia di stelle`, estendi la gestione della partita in `basket.gd` aggiungendo il controllo sui rubini (`rubies`), che ora devono poter essere raccolti ed eliminati con `queue_free()`.\n\n1. In `basket.gd` scrivi una nuova funzione `check_rubies() -> void` che scorre l'array `rubies` a ritroso (dall'ultimo indice verso lo zero):\n   - Controlla se il rubino corrente è valido con `is_instance_valid()`. Se non lo è, rimuovilo da `rubies` con `remove_at(i)` e passa oltre con `continue`.\n   - Se il rubino tocca il cesto (`ruby.hits_basket(global_position)`), aggiungi i suoi punti allo score tramite `add_score(ruby.points)`, rimuovilo dall'array `rubies` con `remove_at(i)` ed eliminalo con `ruby.queue_free()`.\n   - Se il rubino supera la coordinata Y di 680 pixel (`ruby.position.y > 680.0`), rimuovilo dall'array `rubies` ed eliminalo con `ruby.queue_free()`.\n2. Chiama `check_rubies()` dentro `process_playing(delta)` subito dopo la chiamata a `check_stars()`.\n3. In `reset_game()`, svuota sia `stars` che `rubies` eliminando con `queue_free()` tutti i nodi ancora validi rimasti in entrambi gli array prima di svuotare le liste con il metodo `clear()`. Il metodo `clear()` rimuove tutti gli elementi da un array in un solo colpo lasciandolo vuoto (ad esempio, `nomelist.clear()` azzera l'array `nomelist`)."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 32 s (14768 → 7231 token)"
+ ]
+}

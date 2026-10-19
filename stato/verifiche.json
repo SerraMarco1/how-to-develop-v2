@@ -123,5 +123,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "vita-di-un-nodo": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
