@@ -158,5 +158,51 @@
    },
    "motivo": "Le stelle vengono generate come figlie del cesto e posizionate fuori dallo schermo in basso (coordinata Y maggiore di 648 pixel)."
   }
+ },
+ "array": {
+  "es1": {
+   "impronta": "a21a23f8e6940fe93a95634e14f2068bd481231acb7b73eabbbdf55a92a36478",
+   "tentativi": 3,
+   "esito": "invisibile",
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 8,
+     "azioni": [
+      {
+       "azione": "move_right",
+       "inizio": 1,
+       "fine": 5,
+       "tasto": "D"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "stelle",
+       "cerca": {
+        "script": "res://star.gd"
+       },
+       "quanti": 5,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "muoversi",
+       "etichetta": "Stelle"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "L'Array gestisce le 5 stelle che cadono e si rigenerano",
+       "da": 1,
+       "a": 7,
+       "soggetto": "stelle"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «stelle» (script = res://star.gd; almeno 5 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 5 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 5, visibili al massimo 0. A 1 s: «Star» a (836.9, 796) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@5» a (1396.4, 796) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@6» a (604.7, 796) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@7» a (1100.3, 796) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "Soggetto «stelle» (script = res://star.gd; almeno 5 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 5 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 5, visibili al massimo 0. A 1 s: «Star» a (836.9, 796) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@5» a (1396.4, 796) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@6» a (604.7, 796) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@7» a (1100.3, 796) 128×128, fuori dallo schermo (dentro per il"
+  }
  }
 }

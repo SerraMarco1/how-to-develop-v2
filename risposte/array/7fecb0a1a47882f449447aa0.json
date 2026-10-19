@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 8,\n  \"azioni\": [\n    {\n      \"azione\": \"move_right\",\n      \"inizio\": 1,\n      \"fine\": 5,\n      \"tasto\": \"D\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"stelle\",\n      \"cerca\": {\n        \"script\": \"res://star.gd\"\n      },\n      \"quanti\": 5,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Stelle\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"L'Array gestisce le 5 stelle che cadono e si rigenerano\",\n      \"da\": 1,\n      \"a\": 7,\n      \"soggetto\": \"stelle\"\n    }\n  ]\n}",
- "ragionamento": 1189,
- "quando": "2026-10-19T16:05:37.200Z",
- "ruolo": "ritocco"
-}
