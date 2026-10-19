@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://node_2d.tscn\",\n  \"durata\": 8,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"sprite\",\n      \"cerca\": {\n        \"nome\": \"Sprite2D\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.0,\n      \"a\": 8.0,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Icona\"\n    },\n    {\n      \"id\": \"testo\",\n      \"cerca\": {\n        \"nome\": \"Label\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.0,\n      \"a\": 8.0,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"Benvenuto in Godot!\",\n      \"etichetta\": \"Scritta\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"L'icona di Godot e il messaggio di benvenuto\",\n      \"da\": 0.0,\n      \"a\": 8.0,\n      \"soggetto\": \"sprite\"\n    }\n  ]\n}",
+ "ragionamento": 1576,
+ "quando": "2026-10-19T15:59:09.845Z",
+ "ruolo": "ritocco"
+}
