@@ -142,5 +142,14 @@
   "tentativi": {
    "es2": 1
   }
+ },
+ "segnali-propri": {
+  "versione": 2,
+  "fragili": [
+   "es3"
+  ],
+  "tentativi": {
+   "es3": 1
+  }
  }
 }

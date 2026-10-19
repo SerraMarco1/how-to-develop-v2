@@ -1,0 +1,40 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T09:23:15.890Z",
+ "pezzo": "es3",
+ "azione": "verifiche robuste",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 3: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest non supera i controlli:\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] In basket.gd esiste la funzione _on_ruby_collected che incrementa il punteggio: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_2.gd:10)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at:\nReazione: si riprova al prossimo giro.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 29504,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] In basket.gd esiste la funzione _on_ruby_collected che incrementa il punteggio: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_2.gd:10)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_2.gd:10)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 10: `var ruby := instantiate_scene(\"res://ruby.tscn\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
+  ],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://ruby.gd",
+    "regex": "signal collected\\(earned_points: int\\)",
+    "descrizione": "In ruby.gd è dichiarato il segnale collected con parametro earned_points"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\nvar ruby_signal_val: int = 0\nvar ruby_received: bool = false\n\n\nfunc _on_ruby(val: int) -> void:\n\truby_received = true\n\truby_signal_val = val\n\n\nfunc _run_tests() -> void:\n\tvar ruby := await instantiate_scene(\"res://ruby.tscn\")\n\tif not check(\"ruby_scene\", ruby != null, \"ruby.tscn deve aprirsi senza errori\"):\n\t\treturn\n\tif not check(\"ruby_signal\", ruby.has_signal(\"collected\"), \"Ruby deve avere il segnale 'collected'\"):\n\t\treturn\n\tif not check(\"ruby_collect\", has_function(ruby, \"collect\"), \"Ruby deve avere il metodo collect()\"):\n\t\treturn\n\tvar expected_points = int(get_prop(ruby, \"points\", 150))\n\truby.collected.connect(_on_ruby)\n\tcall_if_exists(ruby, \"collect\")\n\tcheck(\"signal_fired\", ruby_received, \"Chiamando collect() il segnale collected deve essere emesso\")\n\tcheck(\"val_points\", ruby_signal_val == expected_points, \"Il segnale collected di Ruby deve trasmettere i punti correnti (attesi: %d, ricevuti: %d)\" % [expected_points, ruby_signal_val])\n",
+    "descrizione": "ruby.tscn è autonoma ed emette collected con i punti corretti quando viene chiamata collect()"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve avviarsi\"):\n\t\treturn\n\tif not check(\"ruby_callback\", has_function(main, \"_on_ruby_collected\"), \"basket.gd deve avere la funzione _on_ruby_collected\"):\n\t\treturn\n\tvar ruby := instantiate_scene(\"res://ruby.tscn\")\n\tvar points_to_add = 150\n\tif ruby != null:\n\t\tpoints_to_add = int(get_prop(ruby, \"points\", 150))\n\t\truby.queue_free()\n\tvar s_before: int = int(get_prop(main, \"score\", 0))\n\tcall_if_exists(main, \"_on_ruby_collected\", [points_to_add])\n\tvar s_after: int = int(get_prop(main, \"score\", 0))\n\tcheck(\"ruby_score\", s_after == s_before + points_to_add, \"_on_ruby_collected deve sommare i punti ricevuti al punteggio (aggiunti %d, punteggio da %d a %d)\" % [points_to_add, s_before, s_after])\n",
+    "descrizione": "In basket.gd esiste la funzione _on_ruby_collected che incrementa il punteggio"
+   }
+  ],
+  "consegna": "Anche la gemma `Ruby` (`res://ruby.tscn` e `res://ruby.gd`) deve usare la regola «segnali verso l'alto» invece di far leggere i propri punti dall'esterno.\n\n1. In `ruby.gd` dichiara il segnale `collected(earned_points: int)`.\n2. In `ruby.gd` crea la funzione `collect() -> void` che emette il segnale `collected` passando il valore di `points` e poi rimuove l'oggetto con `queue_free()`.\n3. In `basket.gd`, aggiorna `spawn_ruby`: appena il rubino viene istanziato, connetti il suo segnale `collected` a una nuova funzione `_on_ruby_collected(earned_points: int)` che aggiunge quei punti al punteggio del giocatore con `add_score`.\n4. In `basket.gd`, modifica `check_rubies()` in modo che, quando `ruby.hits_basket(global_position)` è vero, rimuova il rubino dall'array `rubies` e chiami `ruby.collect()`, senza modificare il punteggio direttamente lì dentro."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 24 s (16179 → 8495 token)"
+ ]
+}
