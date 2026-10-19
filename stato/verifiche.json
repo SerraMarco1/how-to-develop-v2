@@ -190,5 +190,15 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "control-ancore-e-dimensioni": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "contenitori": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
