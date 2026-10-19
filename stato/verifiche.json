@@ -176,5 +176,14 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "progetto-memory-2": {
+  "versione": 1,
+  "fragili": [
+   "test"
+  ],
+  "tentativi": {
+   "test": 1
+  }
  }
 }
