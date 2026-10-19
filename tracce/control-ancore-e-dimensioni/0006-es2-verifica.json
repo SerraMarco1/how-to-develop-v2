@@ -1,0 +1,77 @@
+{
+ "n": 6,
+ "quando": "2026-10-19T07:14:52.780Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (imita): approvato",
+ "spiegazione": "«La barra di stato inferiore». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: info_bar.tscn",
+ "richieste": 0,
+ "durataMs": 6320,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "imita",
+   "titolo": "La barra di stato inferiore",
+   "consegna": "Crea un nuovo progetto chiamato `BarraNotifiche` con scena principale `info_bar.tscn`.\n\nCostruisci una barra di stato orizzontale ancorata al fondo dello schermo che mantenga tre informazioni allineate al bordo inferiore:\n1. Nodo radice: `InfoBar` di tipo `Control`, con ancore estese su tutto lo schermo (`Full Rect`, da 0.0 a 1.0).\n2. `VersionLabel` (`Label`): agganciata in basso a sinistra (`anchor_top = 1.0`, `anchor_bottom = 1.0`, `anchor_left = 0.0`, `anchor_right = 0.0`). Deve stare a 24 pixel dal bordo sinistro e terminare a 18 pixel dal bordo inferiore (`offset_left = 24.0`, `offset_top = -48.0`, `offset_right = 174.0`, `offset_bottom = -18.0`). Imposta `custom_minimum_size` a `Vector2(150, 30)` e testo `Versione 1.0`.\n3. `HelpLabel` (`Label`): agganciata al centro in basso (`anchor_top = 1.0`, `anchor_bottom = 1.0`, `anchor_left = 0.5`, `anchor_right = 0.5`). Deve essere larga 260 pixel e alta 30 pixel, centrata orizzontalmente a 18 pixel dal fondo (`offset_left = -130.0`, `offset_top = -48.0`, `offset_right = 130.0`, `offset_bottom = -18.0`). Imposta `custom_minimum_size` a `Vector2(260, 30)`, allineamento orizzontale al centro e testo `Premi Spazio per iniziare`.\n4. `StatusLabel` (`Label`): agganciata in basso a destra (`anchor_top = 1.0`, `anchor_bottom = 1.0`, `anchor_left = 1.0`, `anchor_right = 1.0`). Deve stare a 24 pixel dal bordo destro e 18 pixel dal fondo (`offset_left = -164.0`, `offset_top = -48.0`, `offset_right = -24.0`, `offset_bottom = -18.0`). Imposta `custom_minimum_size` a `Vector2(140, 30)`, allineamento a destra e testo `Online`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "barra-notifiche",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per agganciare un elemento al fondo dello schermo, le sue ancore verticali `anchor_top` e `anchor_bottom` devono valere entrambe 1.0.",
+    "Quando un'ancora verticale è a 1.0, un offset_bottom negativo (es. -18) sposta il bordo inferiore verso l'alto rispetto al fondo della finestra.",
+    "Per centrare in orizzontale usa anchor_left = 0.5 e anchor_right = 0.5, dividendo la larghezza desiderata (260 px) in -130 e +130."
+   ],
+   "verifiche": [
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "run/main_scene",
+     "contiene": "info_bar.tscn",
+     "descrizione": "La scena principale è impostata su res://info_bar.tscn"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://info_bar.tscn",
+     "tipoNodo": "Control",
+     "nome": "InfoBar",
+     "descrizione": "La radice della scena è un Control chiamato InfoBar"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bar := await instantiate_main_scene() as Control\n\tif not check(\"bar_load\", bar != null, \"La scena info_bar.tscn deve istanziarsi correttamente ed essere un Control\"):\n\t\treturn\n\t\n\tvar ver := find_by_name(bar, \"VersionLabel\") as Label\n\tvar help := find_by_name(bar, \"HelpLabel\") as Label\n\tvar status := find_by_name(bar, \"StatusLabel\") as Label\n\t\n\tif not check(\"nodes\", ver != null and help != null and status != null, \"Servono i nodi VersionLabel, HelpLabel e StatusLabel\"):\n\t\treturn\n\t\n\tcheck(\"bottom_anchors\", ver.anchor_bottom == 1.0 and help.anchor_bottom == 1.0 and status.anchor_bottom == 1.0, \"Tutti e tre i nodi devono avere ancore verticali a 1.0\")\n\tcheck(\"horizontal_anchors\", ver.anchor_left == 0.0 and help.anchor_left == 0.5 and status.anchor_right == 1.0, \"VersionLabel a sinistra (0.0), HelpLabel al centro (0.5), StatusLabel a destra (1.0)\")\n\t\n\tvar sizes: Array[Vector2] = [Vector2(800.0, 600.0), Vector2(1024.0, 768.0), Vector2(1280.0, 720.0)]\n\tfor s in sizes:\n\t\tbar.size = s\n\t\tawait wait_frames(2)\n\t\t\n\t\tvar ver_bottom_dist := s.y - (ver.position.y + ver.size.y)\n\t\tvar help_center_x := help.position.x + help.size.x * 0.5\n\t\tvar status_right_dist := s.x - (status.position.x + status.size.x)\n\t\t\n\t\tcheck(\"ver_y_\" + str(int(s.y)), absf(ver_bottom_dist - 18.0) <= 6.0, \"VersionLabel deve distare circa 18px dal fondo della finestra\")\n\t\tcheck(\"help_x_\" + str(int(s.x)), absf(help_center_x - s.x * 0.5) <= 10.0, \"HelpLabel deve rimanere perfettamente centrata orizzontalmente\")\n\t\tcheck(\"status_x_\" + str(int(s.x)), absf(status_right_dist - 24.0) <= 6.0, \"StatusLabel deve distare circa 24px dal margine destro\")\n",
+     "descrizione": "I tre testi restano agganciati in basso (sinistra, centro, destra) a tre grandezze di finestra diverse"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"BarraNotifiche\"\nrun/main_scene=\"res://info_bar.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "info_bar.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"InfoBar\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VersionLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 2\nanchor_top = 1.0\nanchor_bottom = 1.0\noffset_left = 24.0\noffset_top = -48.0\noffset_right = 174.0\noffset_bottom = -18.0\ngrow_vertical = 0\ncustom_minimum_size = Vector2(150, 30)\ntext = \"Versione 1.0\"\n\n[node name=\"HelpLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 7\nanchor_left = 0.5\nanchor_top = 1.0\nanchor_right = 0.5\nanchor_bottom = 1.0\noffset_left = -130.0\noffset_top = -48.0\noffset_right = 130.0\noffset_bottom = -18.0\ngrow_horizontal = 2\ngrow_vertical = 0\ncustom_minimum_size = Vector2(260, 30)\ntext = \"Premi Spazio per iniziare\"\nhorizontal_alignment = 1\n\n[node name=\"StatusLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 3\nanchor_left = 1.0\nanchor_top = 1.0\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_left = -164.0\noffset_top = -48.0\noffset_right = -24.0\noffset_bottom = -18.0\ngrow_horizontal = 0\ngrow_vertical = 0\ncustom_minimum_size = Vector2(140, 30)\ntext = \"Online\"\nhorizontal_alignment = 2\n"
+     }
+    ],
+    "progetto": {
+     "nome": "BarraNotifiche",
+     "scenaPrincipale": "res://info_bar.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Impostando sia `anchor_top` che `anchor_bottom` su `1.0`, i nodi si agganciano al margine inferiore del genitore. Gli offset Y negativi (come `-48.0` e `-18.0`) misurano la distanza dal fondo verso l'alto, creando una fascia alta 30 pixel sollevata di 18 pixel dal bordo dello schermo. `VersionLabel` ha ancore X a 0.0 per restare a sinistra; `HelpLabel` ha ancore X a 0.5 per restare al centro; `StatusLabel` ha ancore X a 1.0 per restare a destra.",
+    "cambiati": [
+     "info_bar.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
