@@ -200,5 +200,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "controlli-di-uso-comune": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }

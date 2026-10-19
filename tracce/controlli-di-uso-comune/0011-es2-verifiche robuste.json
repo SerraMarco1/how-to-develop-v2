@@ -1,0 +1,40 @@
+{
+ "n": 11,
+ "quando": "2026-10-19T09:30:04.649Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 49361,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://new_game.tscn",
+    "tipoNodo": "Label",
+    "nome": "WarningLabel",
+    "descrizione": "La scena contiene una Label chiamata WarningLabel"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://new_game.tscn",
+    "tipoNodo": "Button",
+    "nome": "ResetButton",
+    "descrizione": "La scena contiene un Button chiamato ResetButton"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar menu := await instantiate_scene(\"res://new_game.tscn\")\n\tif not check(\"menu_exists\", menu != null, \"La scena res://new_game.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar warning_label := find_by_name(menu, \"WarningLabel\") as Label\n\tvar reset_button := find_by_name(menu, \"ResetButton\") as Button\n\tvar name_input := find_by_name(menu, \"NameInput\") as LineEdit\n\tvar slider := find_by_name(menu, \"DifficultySlider\") as Range\n\tvar bar := find_by_name(menu, \"DifficultyBar\") as Range\n\tvar check_box := find_by_name(menu, \"PowerupsCheck\") as CheckBox\n\tvar start_button := find_by_name(menu, \"StartButton\") as Button\n\n\tif not check(\"new_nodes\", warning_label != null and reset_button != null, \"Nella scena devono esserci WarningLabel e ResetButton\"):\n\t\treturn\n\n\tcheck(\"init_hidden\", warning_label.visible == false, \"All'avvio WarningLabel deve essere nascosta\")\n\n\tslider.value = 4.0\n\tslider.value_changed.emit(4.0)\n\tawait wait_frames(2)\n\tcheck(\"warning_visible\", warning_label.visible == true, \"Quando la difficoltà è >= 4 la WarningLabel deve essere visibile\")\n\n\tslider.value = 2.0\n\tslider.value_changed.emit(2.0)\n\tawait wait_frames(2)\n\tcheck(\"warning_hidden_again\", warning_label.visible == false, \"Quando la difficoltà scende sotto 4 la WarningLabel deve tornare nascosta\")\n\n\tname_input.text = \"Eroe\"\n\tname_input.text_changed.emit(\"Eroe\")\n\tslider.value = 5.0\n\tslider.value_changed.emit(5.0)\n\tcheck_box.button_pressed = true\n\tcheck_box.toggled.emit(true)\n\tawait wait_frames(2)\n\tcheck(\"pre_reset_ready\", start_button.disabled == false and warning_label.visible == true, \"I controlli devono essere configurati prima del reset\")\n\n\tawait click_button(reset_button)\n\tawait wait_frames(2)\n\n\tcheck(\"reset_name\", name_input.text == \"\", \"Dopo il reset il campo NameInput deve essere vuoto\")\n\tcheck(\"reset_slider\", slider.value == 2.0 and bar.value == 2.0, \"Dopo il reset DifficultySlider e DifficultyBar devono valere 2.0\")\n\tcheck(\"reset_check\", check_box.button_pressed == false, \"Dopo il reset PowerupsCheck deve essere deselezionata\")\n\tcheck(\"reset_btn_disabled\", start_button.disabled == true, \"Dopo il reset StartButton deve tornare disattivato\")\n\tcheck(\"reset_warning\", warning_label.visible == false, \"Dopo il reset WarningLabel deve essere nascosta\")\n",
+    "descrizione": "WarningLabel compare solo a difficoltà >= 4 e ResetButton ripristina tutti i controlli"
+   }
+  ],
+  "consegna": "Estendi la schermata `res://new_game.tscn` e il relativo script `res://new_game.gd` aggiungendo un avviso visivo quando la difficoltà è elevata e la possibilità di ripristinare i valori predefiniti:\n\n1. In `res://new_game.tscn`, sotto `DifficultyBar`, aggiungi una `Label` chiamata `WarningLabel` con accesso con nome unico (`%WarningLabel`) e testo `\"Attenzione: velocità stelle elevata!\"`.\n2. In `res://new_game.tscn`, in fondo al contenitore, sotto `StartButton`, aggiungi un `Button` chiamato `ResetButton` con accesso con nome unico (`%ResetButton`) e testo `\"Ripristina predefiniti\"`.\n3. In `res://new_game.gd`, aggiorna lo script per gestire i nuovi controlli:\n   - Dichiara i riferimenti con `@onready` per `WarningLabel` e `ResetButton` usando i nomi unici.\n   - Imposta la visibilità iniziale di `WarningLabel` su `false` in `_ready()` e assegna il testo e la configurazione di `ResetButton`.\n   - Collega il segnale `pressed` di `ResetButton` a una funzione `_on_reset_button_pressed()`.\n   - Quando `DifficultySlider` assume un valore maggiore o uguale a 4 (tramite la funzione di supporto `_update_warning()`), `WarningLabel` deve diventare visibile; quando scende sotto a 4, deve tornare nascosta.\n   - Quando il giocatore clicca su `ResetButton`, il campo `NameInput` si svuota, `DifficultySlider` e `DifficultyBar` tornano a `2.0`, `PowerupsCheck` viene deselezionata, `StartButton` torna disattivato, `WarningLabel` si nasconde e il sommario viene aggiornato."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 35 s (22403 → 14970 token)"
+ ]
+}
