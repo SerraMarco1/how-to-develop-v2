@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T16:00:49.200Z",
+ "aggiornato": "2026-10-19T16:01:21.853Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -52,10 +52,10 @@
    "slug": "process-e-delta",
    "numero": "1.2",
    "titolo": "_process e delta: far muovere qualcosa",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f01-programmare/process-e-delta.json",
-   "sha256": "39899f46e7942c6c5f5f6f5d27c4b5fee596ea10ee63c855b0932d9ef98fd1cc",
-   "byte": 43346
+   "sha256": "a3d89ccdafaad7e3d7074af76ea58f859232dd9bacc005ca9c050e8ceb7f71f8",
+   "byte": 43855
   },
   {
    "slug": "condizioni",

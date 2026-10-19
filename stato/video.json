@@ -51,5 +51,12 @@
    },
    "motivo": "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
   }
+ },
+ "process-e-delta": {
+  "es1": {
+   "impronta": "8949852d05e9b05a411508abd4c8fea9ab2ad26f0f98b2d0eecfbe85850be9f7",
+   "tentativi": 1,
+   "esito": "fatto"
+  }
  }
 }

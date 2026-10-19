@@ -1,0 +1,48 @@
+{
+ "n": 31,
+ "quando": "2026-10-19T16:01:21.849Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri star.tscn e premi F6, 4 s. Soggetti: «Stella» (muoversi). Scritte: «La stella scende di 180 pixel al secondo». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 20 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 31341,
+ "dati": {
+  "copione": {
+   "scena": "res://star.tscn",
+   "durata": 4,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "stella",
+     "cerca": {
+      "scena": "res://star.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 3,
+     "deve": "muoversi",
+     "etichetta": "Stella"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La stella scende di 180 pixel al secondo",
+     "da": 0.5,
+     "a": 3,
+     "soggetto": "stella"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "e11d330d2b37ca1eb134efe8bb76a65f67ab86bff2839e5e950f5714c77233b1",
+   "estensione": "mp4",
+   "byte": 20921
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 21 s (3158 → 205 token)"
+ ]
+}
