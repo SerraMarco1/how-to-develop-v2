@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:16:54.908Z",
+ "aggiornato": "2026-10-19T07:21:57.254Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -335,6 +335,15 @@
    "file": "lezioni/f03-interfaccia/control-ancore-e-dimensioni.json",
    "sha256": "be82a6fc4d26fa6e612fe19d78c61fdb04c0bf7a74f20de9fce856cc6125a5f1",
    "byte": 117428
+  },
+  {
+   "slug": "contenitori",
+   "numero": "3.1",
+   "titolo": "Contenitori: l'interfaccia che si dispone da sola",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/contenitori.json",
+   "sha256": "2dfa329da59ec4a2858d4a23274d7eb4a800a385f2655ea30154d51155f72595",
+   "byte": 169438
   }
  ],
  "documentazione": {
