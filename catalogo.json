@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:33:34.933Z",
+ "aggiornato": "2026-10-19T07:46:25.093Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -362,6 +362,15 @@
    "file": "lezioni/f03-interfaccia/temi-e-font.json",
    "sha256": "3e50bf9a04a344266e9bf43c552e5bc17c2ee9ff4139754d049bd88cd8c4f276",
    "byte": 213213
+  },
+  {
+   "slug": "interfaccia-in-partita",
+   "numero": "3.4",
+   "titolo": "L'interfaccia durante la partita: CanvasLayer",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/interfaccia-in-partita.json",
+   "sha256": "1b3d6d3b77789d19d61d92a0f689c2ec53f5b397fd089748aad7181bfbd060d6",
+   "byte": 186818
   }
  ],
  "documentazione": {
