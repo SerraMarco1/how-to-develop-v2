@@ -1,0 +1,54 @@
+{
+ "n": 19,
+ "quando": "2026-10-19T19:46:11.542Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16535,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 4,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 3,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "testo_punti",
+     "cerca": {
+      "classe": "Label"
+     },
+     "quanti": 1,
+     "da": 2,
+     "a": 2.5,
+     "deve": "muoversi",
+     "etichetta": "Punteggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il punteggio sale e si dissolve dopo la raccolta",
+     "da": 2,
+     "a": 2.5,
+     "soggetto": "testo_punti"
+    }
+   ]
+  },
+  "problemi": [
+   "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (8127 → 253 token)"
+ ]
+}
