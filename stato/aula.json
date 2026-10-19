@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-19T08:06:05.159Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-19T08:17:49.504Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "pausa",
   "numero": "3.7",
   "titolo": "Pausa"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 3.7 riprende da sola appena rispondono.",
- "riprende": "2026-10-19T08:16:05.159Z"
+ "messaggio": "Sta scrivendo la lezione 3.7 «Pausa».",
+ "riprende": null
 }
