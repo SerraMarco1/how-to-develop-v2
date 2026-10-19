@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 8,\n  \"azioni\": [\n    {\n      \"azione\": \"move_right\",\n      \"inizio\": 1.0,\n      \"fine\": 5.0,\n      \"tasto\": \"D\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"stelle\",\n      \"cerca\": {\n        \"script\": \"res://star.gd\"\n      },\n      \"quanti\": 5,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Stelle\"\n    },\n    {\n      \"id\": \"punteggio\",\n      \"cerca\": {\n        \"nome\": \"Label\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"Punti\",\n      \"etichetta\": \"Punteggio\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"L'Array gestisce le stelle che cadono\",\n      \"da\": 1.0,\n      \"a\": 4.0,\n      \"soggetto\": \"stelle\"\n    },\n    {\n      \"testo\": \"Raccogli le stelle per fare punti\",\n      \"da\": 4.5,\n      \"a\": 7.5,\n      \"soggetto\": \"punteggio\"\n    }\n  ]\n}",
+ "ragionamento": 1605,
+ "quando": "2026-10-19T16:04:58.077Z",
+ "ruolo": "ritocco"
+}
