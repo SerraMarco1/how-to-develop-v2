@@ -1,0 +1,16 @@
+{
+ "n": 16,
+ "quando": "2026-10-19T16:09:02.878Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Memorizzare la Label con @onready e nome unico %Label» non si vede sullo schermo: L'esercizio introduce @onready e nomi unici nel codice, ma l'aspetto visivo del gioco resta identico a prima.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9591,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (6105 → 45 token)"
+ ]
+}

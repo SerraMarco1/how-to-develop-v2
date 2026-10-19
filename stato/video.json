@@ -305,5 +305,13 @@
    "tentativi": 1,
    "esito": "fatto"
   }
+ },
+ "raggiungere-i-nodi": {
+  "es1": {
+   "impronta": "0ed8fcac78e8ea4803430b33b3d306feff940f473306a812670741e44bfeb1b4",
+   "tentativi": 1,
+   "esito": "niente",
+   "motivo": "L'esercizio introduce @onready e nomi unici nel codice, ma l'aspetto visivo del gioco resta identico a prima."
+  }
  }
 }
