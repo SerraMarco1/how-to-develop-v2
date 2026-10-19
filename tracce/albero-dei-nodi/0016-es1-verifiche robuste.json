@@ -1,0 +1,42 @@
+{
+ "n": 16,
+ "quando": "2026-10-19T09:15:41.464Z",
+ "pezzo": "es1",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 1: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 46480,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://basket.tscn",
+    "tipoNodo": "Sprite2D",
+    "nome": "Shadow",
+    "genitore": "Basket",
+    "descrizione": "La scena basket.tscn contiene un nodo Sprite2D chiamato Shadow come figlio di Basket"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://basket.tscn",
+    "tipoNodo": "Sprite2D",
+    "nome": "Handle",
+    "genitore": "Basket",
+    "descrizione": "La scena basket.tscn contiene un nodo Sprite2D chiamato Handle come figlio di Basket"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar shadow := basket.get_node_or_null(\"Shadow\") as Sprite2D\n\tvar handle := basket.get_node_or_null(\"Handle\") as Sprite2D\n\tvar label := basket.get_node_or_null(\"Label\") as Label\n\tif not check(\"nodes\", shadow != null and handle != null and label != null, \"Shadow, Handle e Label devono esistere come figli di Basket\"):\n\t\treturn\n\tcheck(\"order\", label.get_index() > handle.get_index() and handle.get_index() > shadow.get_index(), \"Label deve essere in fondo all'albero (dopo Handle e Shadow)\")\n\tcheck(\"shadow_pos\", shadow.position == Vector2(0, 35), \"La posizione locale di Shadow deve essere (0, 35)\")\n\tcheck(\"handle_pos\", handle.position == Vector2(0, -40), \"La posizione locale di Handle deve essere (0, -40)\")\n\tbasket.position = Vector2(400, 300)\n\tvar start_x := handle.global_position.x\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"moved\", handle.global_position.x > start_x, \"Quando Basket si sposta a destra, Handle deve spostarsi globalmente insieme a lui\")\n",
+    "descrizione": "I nodi figli si muovono e mantengono il corretto scostamento rispetto al genitore durante il movimento"
+   }
+  ],
+  "consegna": "Arricchisci la scena `basket.tscn` trasformando il cesto in una gerarchia di nodi:\n\n1. Sotto il nodo radice `Basket`, aggiungi due nodi figli di tipo `Sprite2D` chiamati `Shadow` e `Handle`.\n2. Assegna a entrambi la texture `res://icon.svg`.\n3. Per `Shadow`, imposta la posizione locale a `(0, 35)` e la scala a `(1.2, 0.2)`.\n4. Per `Handle`, imposta la posizione locale a `(0, -40)` e la scala a `(0.3, 0.6)`.\n5. Riordina i nodi nell'albero in modo che `Shadow` sia il primo figlio, seguito da `Handle`, e infine `Label` come ultimo nodo in fondo alla lista, così che il testo rimanga disegnato sopra tutto il resto."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 32 s (13831 → 6146 token)"
+ ]
+}
