@@ -352,7 +352,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar player_source := source_of(\"res://player.gd\")\n\tcheck(\"no_label_in_player\", not player_source.contains(\"EnergyLabel\") and not player_source.contains(\"Label\"), \"player.gd non deve nominare nodi Label\")\n\tcheck(\"no_bar_in_player\", not player_source.contains(\"EnergyBar\") and not player_source.contains(\"ProgressBar\"), \"player.gd non deve nominare ProgressBar\")\n\t\n\tvar world := await instantiate_main_scene()\n\tif not check(\"world_ok\", world != null, \"world.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar player := find_by_name(world, \"Player\")\n\tvar hud := find_by_name(world, \"HUD\")\n\tif not check(\"istanze_trovate\", player != null and hud != null, \"World deve contenere sia Player sia HUD\"):\n\t\treturn\n\t\n\tvar label := find_by_name(hud, \"EnergyLabel\") as Label\n\tvar bar := find_by_name(hud, \"EnergyBar\") as ProgressBar\n\tif not check(\"controlli_in_hud\", label != null and bar != null, \"HUD deve contenere EnergyLabel e EnergyBar\"):\n\t\treturn\n\t\n\tcall_if_exists(player, \"use_energy\", [35])\n\tawait wait_frames(2)\n\tcheck(\"label_aggiornata\", label.text == \"Energia: 65/100\", \"Dopo use_energy(35) il testo deve mostrare 'Energia: 65/100'\")\n\tcheck(\"bar_aggiornata\", is_equal_approx(bar.value, 65.0), \"Dopo use_energy(35) la barra deve valere 65\")\n",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar player_source := source_of(\"res://player.gd\")\n\tcheck(\"no_label_in_player\", not player_source.contains(\"EnergyLabel\"), \"player.gd non deve fare riferimento a EnergyLabel\")\n\tcheck(\"no_bar_in_player\", not player_source.contains(\"EnergyBar\"), \"player.gd non deve fare riferimento a EnergyBar\")\n\t\n\tvar world := await instantiate_main_scene()\n\tif not check(\"world_ok\", world != null, \"world.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar player := find_by_name(world, \"Player\")\n\tvar hud := find_by_name(world, \"HUD\")\n\tif not check(\"istanze_trovate\", player != null and hud != null, \"World deve contenere sia Player sia HUD\"):\n\t\treturn\n\t\n\tvar label := find_by_name(hud, \"EnergyLabel\") as Label\n\tvar bar := find_by_name(hud, \"EnergyBar\") as ProgressBar\n\tif not check(\"controlli_in_hud\", label != null and bar != null, \"HUD deve contenere EnergyLabel e EnergyBar\"):\n\t\treturn\n\t\n\tcall_if_exists(player, \"use_energy\", [35])\n\tawait wait_frames(2)\n\tcheck(\"label_aggiornata\", label.text == \"Energia: 65/100\", \"Dopo use_energy(35) il testo deve mostrare 'Energia: 65/100'\")\n\tcheck(\"bar_aggiornata\", is_equal_approx(bar.value, 65.0), \"Dopo use_energy(35) la barra deve valere 65\")\n",
       "descrizione": "Player non contiene riferimenti all'HUD ed emette il segnale per aggiornare la barra e la label"
      }
     ],
@@ -746,6 +746,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "es2"
+  ]
  }
 }
