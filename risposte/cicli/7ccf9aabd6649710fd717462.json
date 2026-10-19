@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 8,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"stelle\",\n      \"cerca\": {\n        \"scena\": \"res://star.tscn\"\n      },\n      \"quanti\": 5,\n      \"da\": 0.5,\n      \"a\": 5.0,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Stelle\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il ciclo for genera 5 stelle che iniziano a scendere.\",\n      \"da\": 0.5,\n      \"a\": 5.0,\n      \"soggetto\": \"stelle\"\n    }\n  ]\n}",
- "ragionamento": 1075,
- "quando": "2026-10-19T19:40:54.617Z",
- "ruolo": "ritocco"
-}
