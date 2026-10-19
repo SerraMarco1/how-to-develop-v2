@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:11:08.725Z",
+ "aggiornato": "2026-10-19T09:13:32.923Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -178,10 +178,10 @@
    "slug": "progetto-schiva-1",
    "numero": "1.16",
    "titolo": "Progetto «Schiva!» – tappa 1: muoversi e nascere",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/progetto-schiva-1.json",
-   "sha256": "8bd504f82286a17c986928a142cf1edcca47885794f33d28c3b635e797aeabda",
-   "byte": 23133
+   "sha256": "5732eab2c731b6aad1eb307ea33f8e50a0dbc7e43f4ba63ffa5b74f33580f94a",
+   "byte": 23346
   },
   {
    "slug": "progetto-schiva-2",

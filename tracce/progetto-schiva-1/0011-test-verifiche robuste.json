@@ -1,0 +1,56 @@
+{
+ "n": 11,
+ "quando": "2026-10-19T09:13:32.919Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 54256,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "impostazione",
+    "sezione": "application",
+    "chiave": "run/main_scene",
+    "contiene": "main.tscn",
+    "descrizione": "La scena principale del progetto è res://main.tscn"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://main.tscn",
+    "tipoNodo": "Sprite2D",
+    "nome": "Player",
+    "genitore": "Main",
+    "descrizione": "Nella scena principale è presente un nodo Sprite2D chiamato Player"
+   },
+   {
+    "tipo": "azione_input",
+    "nome": "move_left",
+    "descrizione": "L'azione move_left è configurata nella Input Map"
+   },
+   {
+    "tipo": "azione_input",
+    "nome": "move_right",
+    "descrizione": "L'azione move_right è configurata nella Input Map"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://meteor.gd",
+    "descrizione": "Esiste lo script res://meteor.gd per i meteoriti"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_ok\", main != null, \"La scena principale deve aprirsi correttamente\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as Node2D\n\tif not check(\"player_ok\", player != null, \"La scena deve contenere un nodo chiamato Player\"):\n\t\treturn\n\n\tvar start_pos: Vector2 = player.position\n\tawait hold_action(\"move_right\", 12)\n\tcheck(\"move_right\", player.position.x > start_pos.x, \"Premendo move_right la navicella deve muoversi verso destra\")\n\n\tawait hold_action(\"move_left\", 24)\n\tcheck(\"move_left\", player.position.x < start_pos.x, \"Premendo move_left la navicella deve muoversi verso sinistra\")\n\n\tvar mid_y: float = player.position.y\n\tawait hold_action(\"move_down\", 12)\n\tcheck(\"move_down\", player.position.y > mid_y, \"Premendo move_down la navicella deve muoversi verso il basso\")\n\n\tawait hold_action(\"move_up\", 24)\n\tcheck(\"move_up\", player.position.y < mid_y, \"Premendo move_up la navicella deve muoversi verso l'alto\")\n\n\tawait hold_action(\"move_left\", 120)\n\tcheck(\"border_left\", player.position.x >= 0.0, \"La navicella non deve uscire oltre il bordo sinistro (x >= 0)\")\n\n\tawait hold_action(\"move_up\", 120)\n\tcheck(\"border_top\", player.position.y >= 0.0, \"La navicella non deve uscire oltre il bordo superiore (y >= 0)\")\n\n\tvar meteors := find_all_by_class(main, \"Meteor\")\n\tif not check(\"meteors_count\", meteors.size() >= 3, \"Nella scena devono essere presenti almeno 3 nodi con class_name Meteor\"):\n\t\treturn\n\n\tvar first_meteor := meteors[0] as Node2D\n\tvar y_before: float = first_meteor.position.y\n\tawait wait_frames(30)\n\tcheck(\"meteor_moves\", first_meteor.position.y > y_before, \"I meteoriti devono muoversi verso il basso\")\n\n\tawait wait_seconds(3.5)\n\tvar all_repositioned := true\n\tfor m in meteors:\n\t\tvar node := m as Node2D\n\t\tif node.position.y > 660.0:\n\t\t\tall_repositioned = false\n\t\t\tbreak\n\tcheck(\"meteor_respawn\", all_repositioned, \"I meteoriti che superano il fondo dello schermo devono ripartire dall'alto (y <= 600)\")\n",
+    "descrizione": "La navicella si muove rispettando i bordi e i meteoriti scendono e ripartono dall'alto"
+   }
+  ],
+  "consegna": "Inizia a costruire da zero il gioco **«Schiva!»** all'interno del progetto `Schiva`.\n\nIn questa prima tappa la navicella deve muoversi liberamente nelle quattro direzioni restando dentro i bordi della finestra, mentre una serie di meteoriti scende verso il basso e riparte dall'alto a ciclo continuo.\n\n### Requisiti del progetto\n\n1. **Dimensioni della finestra**:\n   - Imposta la risoluzione della finestra nelle impostazioni del progetto (*Display* → *Window*) con larghezza (**Viewport Width**) a `800` pixel e altezza (**Viewport Height**) a `600` pixel.\n\n2. **Azioni di input**:\n   - Nella finestra delle impostazioni del progetto (*Input Map*), definisci le quattro azioni di movimento:\n     - `move_left` (assegna i tasti `A` e `Left`)\n     - `move_right` (assegna i tasti `D` e `Right`)\n     - `move_up` (assegna i tasti `W` e `Up`)\n     - `move_down` (assegna i tasti `S` e `Down`)\n\n3. **Scena principale**:\n   - Crea la scena `res://main.tscn` e impostala come scena principale del progetto.\n   - La radice della scena deve essere un `Node2D` chiamato `Main`, a cui collegherai lo script `res://main.gd`.\n\n4. **La navicella del giocatore**:\n   - All'interno di `Main`, aggiungi un nodo `Sprite2D` chiamato esattamente `Player` con la texture `res://icon.svg` (puoi scalarlo a piacere, ad esempio `Vector2(0.5, 0.5)`).\n   - Posiziona inizialmente la navicella all'interno dello schermo (ad esempio a coordinate `400, 500`).\n   - In `main.gd`, muovi `Player` nelle quattro direzioni quando le relative azioni sono premute, moltiplicando la direzione per una velocità costante e per `delta`. Per evitare che la navicella si muova più velocemente in diagonale, normalizza il vettore direzione con `direction.normalized()`.\n   - **Bordi dello schermo**: impedisci alla navicella di uscire dalla visuale limitandone la posizione con `clampf(valore, minimo, massimo)` (ad esempio `clampf(player.position.x, 0.0, 800.0)`), così che la posizione orizzontale $X$ resti tra `0` e `800` e la verticale $Y$ tra `0` e `600`.\n\n5. **I meteoriti**:\n   - Crea lo script `res://meteor.gd` che dichiara la classe globale `Meteor` ed estende `Sprite2D` (`class_name Meteor extends Sprite2D`).\n   - Assegna al meteorite la texture `res://icon.svg` (ad esempio in `_ready()`, scalata a `0.35`).\n   - In `_process(delta)` di `meteor.gd`, fai avanzare il meteorite verso il basso (aumentando la sua coordinata $Y$ a velocità costante).\n   - Quando il meteorite supera il fondo dello schermo ($Y > 600$), fallo ripartire dall'alto reimpostando la sua coordinata $Y$ a `-30` e assegnandogli una coordinata $X$ casuale compresa tra `0` e `800` (ad esempio con `randf_range(20.0, 780.0)`).\n   - Nella scena `main.tscn`, aggiungi a `Main` almeno 3 nodi `Sprite2D` con lo script `res://meteor.gd` collegato, posizionandoli inizialmente a quote $Y$ scaglionate (ad esempio a `-30`, `-200`, `-370`) e coordinate $X$ diverse, in modo che scendano continuamente a cascata."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 14 s (10212 → 3630 token)"
+ ]
+}

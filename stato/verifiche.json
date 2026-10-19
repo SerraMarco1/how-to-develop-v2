@@ -93,5 +93,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "progetto-schiva-1": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
