@@ -215,5 +215,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "cambiare-scena": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
