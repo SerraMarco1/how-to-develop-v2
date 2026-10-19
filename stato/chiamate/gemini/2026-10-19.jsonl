@@ -114,3 +114,4 @@
 {"quando":1792418073271,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"timer","ok":false,"contata":true,"durataMs":4137,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792421805113,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"timer","ok":false,"contata":true,"durataMs":621,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792425545063,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"l-editor-costruendo-una-scena","ok":true,"contata":true,"durataMs":4777,"tokenInput":2550,"tokenOutput":301,"ragionamento":1576}
+{"quando":1792425570744,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"il-primo-script","ok":true,"contata":true,"durataMs":4133,"tokenInput":2469,"tokenOutput":202,"ragionamento":1167}
