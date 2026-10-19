@@ -1,0 +1,47 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T16:13:09.625Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «restart» (nome = RestartButton; almeno 1 da 4 a 8 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 4 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 23532,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "restart",
+     "cerca": {
+      "nome": "RestartButton"
+     },
+     "quanti": 1,
+     "da": 4,
+     "a": 8,
+     "deve": "comparire",
+     "etichetta": "Pulsante Ricomincia"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il pulsante compare con una dissolvenza fluida",
+     "da": 4,
+     "a": 8,
+     "soggetto": "restart"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «restart» (nome = RestartButton; almeno 1 da 4 a 8 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 4 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 14 s (7700 → 201 token)"
+ ]
+}
