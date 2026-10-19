@@ -156,6 +156,7 @@
     "consegna": "Nel progetto allegato c'è un piccolo programma in cui una pallina rimbalza sullo schermo. Premendo l'azione `pause` (tasto P) si apre il menu di pausa e la pallina si ferma correttamente.\n\nTuttavia, una volta aperto il menu, è impossibile riprendere la partita: cliccando sul pulsante «Riprendi» (`ResumeButton`) non accade nulla e il gioco resta bloccato in pausa per sempre.\n\nIndividua la causa per cui il menu non riceve i clic e fai in modo che il pulsante «Riprendi» torni a rispondere, disattivando la pausa e facendo ripartire il movimento della pallina.",
     "modalita": "progetto",
     "dove": "a-parte",
+    "cartella": "la-pausa-che-non-si-toglie",
     "passiGuida": [],
     "suggerimenti": [
      "Cosa succede ai nodi con modalità di processo standard (Inherit) quando il gioco entra in pausa?",
@@ -172,6 +173,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"La pausa che non si toglie\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":80,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
       {
        "percorso": "ball.gd",
        "contenuto": "extends Sprite2D\n\nvar speed: float = 200.0\n\n\nfunc _process(delta: float) -> void:\n\tposition.x += speed * delta\n\tif position.x > 800.0 or position.x < 100.0:\n\t\tspeed = -speed\n"
@@ -190,7 +195,7 @@
       }
      ],
      "progetto": {
-      "nome": "PausaBloccata",
+      "nome": "La pausa che non si toglie",
       "scenaPrincipale": "res://main.tscn",
       "azioni": [
        {
@@ -215,19 +220,30 @@
        "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://pause_menu.gd\" id=\"1_menu\"]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -60.0\noffset_top = -20.0\noffset_right = 60.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"Riprendi\"\n"
       }
      ],
+     "progetto": {
+      "nome": "La pausa che non si toglie",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
      "spiegazione": "Nel progetto di partenza il nodo `PauseMenu` aveva la proprietà `process_mode` impostata sul valore predefinito `Inherit` (o `Pausable`). Quando veniva eseguito `get_tree().paused = true`, anche il menu di pausa veniva sospeso: di conseguenza `ResumeButton` non poteva ricevere eventi di clic del mouse. Configurando `process_mode = Node.PROCESS_MODE_ALWAYS` (o impostando `process_mode = 3` nella scena) il menu continua a elaborare input durante la pausa, consentendo al pulsante di essere cliccato.",
-     "cambiati": [],
+     "cambiati": [
+      "pause_menu.gd",
+      "pause_menu.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Nella scena deve esserci la pallina Ball\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
