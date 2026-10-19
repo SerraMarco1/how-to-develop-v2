@@ -107,9 +107,54 @@ export type Esercizio = z.infer<typeof EsercizioSchema>;
 export const StatoProgettoSchema = z.object({ nome: z.string(), cartella: z.string(), file: z.array(FileSchema), progetto: ProgettoSchema });
 export type StatoProgetto = z.infer<typeof StatoProgettoSchema>;
 
-// ─────────────────────────── Teoria ───────────────────────────
+// ─────────────────────────── Video del risultato atteso ───────────────────────────
 
+/** Un tasto simulato nei vecchi video della teoria (vedi il blocco "video" più sotto). */
 export const AzioneDemoSchema = z.object({ azione: testo, inizio: z.coerce.number().min(0), fine: z.coerce.number().min(0), tasto: z.string().optional() });
+
+/** Un tasto simulato nel video: l'azione della Input Map, quando, e il tasto da scrivere sullo schermo. */
+const AzioneVideoSchema = z.object({ azione: testo, inizio: z.coerce.number().min(0), fine: z.coerce.number().min(0), tasto: z.string().trim().max(20).optional() });
+
+/** Un file del progetto scritto come lo scrive Godot (res://…), senza uscire dalla cartella. */
+const risorsa = (estensione: string) => z.string().trim().regex(new RegExp(`^res://(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*\\.${estensione}$`), `un file res://….${estensione} del progetto`);
+
+/** Cosa deve fare un soggetto del video nel suo intervallo (vedi valutaCopione in godot/video.ts). */
+export const COSE_DA_FARE = ["esserci", "muoversi", "comparire", "sparire", "cambiare colore", "mostrare testo"] as const;
+
+export const SoggettoVideoSchema = z.object({
+  id: z.string().trim().regex(/^[a-z][a-z0-9_]{0,23}$/, "minuscole, cifre e _ (es. stelle)"),
+  /** Quali nodi: almeno un criterio; un nodo deve soddisfarli tutti. `nome` accetta * e ? come nel nome dei file. */
+  cerca: z
+    .object({ scena: risorsa("tscn").optional(), script: risorsa("gd").optional(), nome: z.string().trim().min(1).max(60).optional(), gruppo: z.string().trim().min(1).max(60).optional(), classe: z.string().trim().regex(/^[A-Za-z_][A-Za-z0-9_]{0,59}$/).optional() })
+    .refine((c) => Object.values(c).some(Boolean), "almeno un criterio fra scena, script, nome, gruppo, classe"),
+  /** Quanti di quei nodi devono vedersi insieme (almeno). */
+  quanti: z.coerce.number().int().min(1).max(20).default(1),
+  da: z.coerce.number().min(0),
+  a: z.coerce.number().min(0),
+  deve: z.enum(COSE_DA_FARE).default("esserci"),
+  /** Per "mostrare testo": il testo che i nodi devono mostrare (basta che lo contengano, maiuscole a parte). */
+  testo: z.string().trim().max(60).optional(),
+  /** Scritta accanto al riquadro intorno ai nodi. */
+  etichetta: z.string().trim().min(1).max(24),
+});
+export type SoggettoVideo = z.infer<typeof SoggettoVideoSchema>;
+
+/**
+ * Il copione del video «Il risultato atteso» di un esercizio: la scena che chi studia avvia (F5 la principale, F6 un'altra),
+ * i tasti simulati, i soggetti da mostrare (e da misurare) e le scritte, ognuna legata a un soggetto. Lo scrive un modello;
+ * prima di pubblicare il video la piattaforma controlla che i soggetti si vedano davvero e che non si vedano allo stesso
+ * modo nel progetto com'era prima dell'esercizio.
+ */
+export const CopioneSchema = z.object({
+  scena: risorsa("tscn"),
+  durata: z.coerce.number().min(4).max(15),
+  azioni: z.array(AzioneVideoSchema).max(8).default([]),
+  soggetti: z.array(SoggettoVideoSchema).min(1).max(4),
+  scritte: z.array(z.object({ testo: z.string().trim().min(1).max(80), da: z.coerce.number().min(0), a: z.coerce.number().min(0), soggetto: z.string().trim() })).min(1).max(4),
+});
+export type Copione = z.infer<typeof CopioneSchema>;
+
+// ─────────────────────────── Teoria ───────────────────────────
 
 const idBlocco = z.string().optional();
 
@@ -123,6 +168,11 @@ const BLOCCHI = [
   z.object({ id: idBlocco, tipo: z.literal("riepilogo"), md: testo }),
   /** Un'immagine vera dell'editor, scelta dal catalogo del pacchetto motore. */
   z.object({ id: idBlocco, tipo: z.literal("immagine"), immagine: testo, didascalia: z.string().default("") }),
+  /**
+   * I vecchi video della teoria (fino al 19 ottobre 2026): riprendevano la scena principale così com'era e non si
+   * mostrano più. Restano nel formato perché le lezioni pubblicate allora li contengono. I video di oggi sono
+   * «Il risultato atteso» di un esercizio (vedi CopioneSchema e `video` nel pacco della lezione).
+   */
   z.object({
     id: idBlocco,
     tipo: z.literal("video"),

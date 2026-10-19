@@ -13,6 +13,7 @@ import { indiceCompresso, preparaDocumentazione } from "./documentazione.ts";
 import { apriSegnalazione, commenta } from "./github.ts";
 import { esisteCantiere, LezioneTrattenuta, riapriCantiere, scriviLezione } from "./lezione/catena.ts";
 import { completaRipassi, pubblicaIndiceDocumentazione, pubblicaLezione } from "./lezione/pubblica.ts";
+import { completaVideo } from "./lezione/video.ts";
 import { scriviStatoPubblico } from "./pubblico.ts";
 import { importataDa, ricontrollaImportata } from "./ricontrollo.ts";
 import { rendiRobusteLeVerifiche } from "./robustezza.ts";
@@ -105,6 +106,8 @@ async function giro(): Promise<number> {
     if (completate) log(`Ripasso aggiunto a ${completate} ${completate === 1 ? "lezione già pubblicata" : "lezioni già pubblicate"}`);
     const robuste = await rendiRobusteLeVerifiche();
     if (robuste) log(`Verifiche corrette in ${robuste} ${robuste === 1 ? "lezione già pubblicata" : "lezioni già pubblicate"}`);
+    const filmate = await completaVideo();
+    if (filmate) log(`Video del risultato atteso aggiunti a ${filmate} ${filmate === 1 ? "lezione" : "lezioni"}`);
   } catch (errore) {
     if (!(errore instanceof GiroFinito)) throw errore;
     log(errore.message);

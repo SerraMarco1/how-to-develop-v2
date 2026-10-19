@@ -11,7 +11,7 @@ sola lettura.
 | `stile-di-casa.md` | Convenzioni del corso, inserite in ogni richiesta di scrittura, revisione e correzione |
 | `prompts/*.md` | Le istruzioni per i modelli (teoria, pratica, correzioni, revisione, ripasso, tutor, correttore, segnalazioni…), con segnaposto `{{nome}}` |
 | `harness/htd_test.gd` | Base degli script di verifica: esegue i controlli nel progetto e stampa `HTD_RESULT` |
-| `harness/htd_demo.gd` | Script per registrare il video del risultato simulando gli input |
+| `harness/htd_video.gd` | Base del video «Il risultato atteso»: avvia la scena del copione, simula i tasti, disegna scritte e riquadri, misura a ogni fotogramma se i soggetti si vedono e stampa `HTD_VIDEO` |
 | `immagini/` | Schermate VERE dell'editor con `catalogo.json`: le uniche immagini che una lezione può mostrare. `etichette-editor.json` raccoglie i testi dell'interfaccia letti da Godot |
 | `nomi-sbagliati.json` | Nomi dell'interfaccia che in questa versione di Godot non esistono: se una lezione li usa viene rimandata in correzione |
 | `impostazioni-editor.json` | Le impostazioni dell'editor che una verifica può leggere |

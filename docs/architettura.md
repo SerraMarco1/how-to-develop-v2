@@ -89,10 +89,6 @@ Le istruzioni per i modelli chiedono anche verifiche scritte per reggere: metter
 misurare un movimento, portarlo oltre un limite invece di aspettare che ci arrivi, scrivere nel messaggio il valore
 misurato («deve fermarsi a y = 560 (è a y = 530.0)»).
 
-Dal 19 ottobre le lezioni non hanno più video: quelli registrati fino ad allora riprendevano la scena principale così
-com'era (nella fase 1 il cesto, mezzo fuori dallo schermo) e non mostravano ciò di cui parlava la lezione. La teoria non
-li chiede e la fabbrica li toglie anche se un modello li scrive; l'aula non mostra quelli già pubblicati.
-
 Prima di scrivere lezioni nuove, a ogni giro la fabbrica: ricontrolla in Godot le lezioni arrivate dalla versione 1
 (`importate/`; quelle che non passano vengono riscritte), gestisce le segnalazioni aperte, poi completa il ripasso delle
 lezioni pubblicate senza (in quel momento il modello del ripasso era sovraccarico, o mancava la sua chiave). Una lezione
@@ -109,13 +105,56 @@ solo quello. La correzione deve ripassare tutti i controlli in Godot; allora la 
 l'avviso sull'esercizio sparisce. Ogni esercizio ha al massimo tre tentativi (i primi due con il modello del ritocco, il
 terzo con uno scrittore); se il modello che serve è fermo si riprova al giro dopo. Il registro è in `stato/verifiche.json`.
 
+Infine fa i video «Il risultato atteso» che mancano agli esercizi delle lezioni pubblicate (vedi sotto).
+
+### I video «Il risultato atteso»
+
+Fino al 19 ottobre la teoria aveva dei video che riprendevano la scena principale così com'era (nella fase 1 il cesto,
+mezzo fuori dallo schermo) e non mostravano ciò di cui parlava la lezione: «Cinque stelle create all'avvio» (1.9) non
+mostrava stelle, perché le stelle, figlie del cesto che sta a y = 600, finivano a y = 700–1070 sotto uno schermo alto 648;
+nella 1.2 la stella che cade si vede solo avviando `star.tscn` con F6, e il video riprendeva il cesto. Nessuno guardava
+cosa mostravano. Sono stati tolti, e quelli già pubblicati non si mostrano.
+
+Dalla sera del 19 ottobre ogni esercizio **guidato** e **«Rifai uguale»** (imita) ha un video che mostra cosa deve
+succedere quando chi studia avvia il gioco dopo aver fatto l'esercizio. Sta nell'esercizio, sotto la consegna, con
+scritto come avviarlo («Avvia il gioco con F5», «Apri star.tscn e premi F6»).
+
+- **Il copione** lo scrive il modello del ritocco (Flash-Lite, 500 richieste al giorno; nessuna richiesta Flash):
+  la scena da avviare, i tasti simulati, i **soggetti** (quali nodi, quanti, in che intervallo, cosa devono fare:
+  esserci, muoversi, comparire, sparire, cambiare colore, mostrare un testo) e le scritte, ognuna legata a un soggetto
+  (`motori/godot/prompts/video-copione.md`). Può rispondere che il video non si fa (il risultato si legge solo nel
+  pannello Output).
+- **La registrazione**: Godot avvia la soluzione con la base `motori/godot/harness/htd_video.gd`, nella finestra del
+  gioco così com'è (niente camera spostata: il video è un riferimento da confrontare), con sopra la scritta, un riquadro
+  giallo con un'etichetta intorno ai soggetti e il tasto premuto. Casualità fissata, 30 fotogrammi al secondo.
+- **I controlli**, prima di pubblicare (`condiviso/src/godot/video.ts`), tutti senza modelli:
+  1. il copione è possibile: la scena c'è (se non è la principale, la consegna la nomina), le azioni sono della Input
+     Map, i file dei soggetti esistono, le scritte stanno negli intervalli dei loro soggetti;
+  2. durante la registrazione stessa Godot misura a ogni fotogramma ogni soggetto: un nodo «si vede» se almeno l'80% del
+     suo rettangolo è dentro lo schermo, non è nascosto né trasparente; deve vedersi (e muoversi, cambiare…) per almeno
+     l'80% del suo intervallo;
+  3. nei fotogrammi veri del video, dove Godot dice che c'è un soggetto, i pixel devono essere diversi dallo sfondo che ha
+     intorno (prende un nodo coperto da un altro, una texture che non si carica, un video tutto di un colore);
+  4. lo stesso copione gira sul progetto com'era **prima** dell'esercizio (senza finestra, in meno di un secondo): se
+     passa anche lì, il video non mostra il risultato dell'esercizio e si scarta. È la regola delle verifiche (falliscono
+     prima, passano dopo): i vecchi video sarebbero stati scartati tutti qui.
+- Se un controllo fallisce, le misure precise tornano al modello («trovati fino a 5, visibili al massimo 0; «Star» a
+  (662, 700), fuori dallo schermo; lo schermo va da (0, 0) a (1152, 648)»), fino a tre tentativi. Poi l'esercizio resta
+  senza video; se i nodi c'erano ma fuori dallo schermo, la traccia lo dice con un passaggio a parte («il risultato
+  dell'esercizio non si vede nello schermo»): è un difetto dell'esercizio, non del video.
+- **Quando**: a ogni giro, prima delle lezioni nuove, per le lezioni pubblicate senza il video (anche quella appena
+  uscita: la pubblicazione non aspetta mai un video). Una lezione con video nuovi esce in una versione nuova in cui
+  cambiano solo i video. Il registro è in `stato/video.json`. Un video vale finché non cambiano la soluzione del suo
+  esercizio o il progetto di partenza (l'impronta è salvata con il copione); se cambiano, si rifà.
+- **Costo**: da 1 a 3 richieste Flash-Lite per esercizio con video (circa 1,2 per lezione), una volta sola.
+
 ### Chi scrive
 
 | Ruolo | Modelli | Perché |
 |---|---|---|
 | Scrittore (teoria, pratica, correzioni dalla seconda in poi) | Gemini Flash (tre «secchi» da 20 richieste al giorno) e i modelli che hanno superato la prova di scrittura | Il risultato lo giudicano Godot e il revisore, ma uno scrittore debole consuma richieste in correzioni |
 | Revisore | Gli stessi, mai un modello non approvato; se possibile diverso da chi ha scritto | Giudica i fatti della teoria: un problema conta solo se dimostrato con una frase vera della documentazione |
-| Ritocco (prima correzione di un pezzo bocciato) | Gemini Flash-Lite (500 richieste al giorno), poi gli altri | Il risultato lo giudica Godot: qui basta un modello veloce |
+| Ritocco (prima correzione di un pezzo bocciato, copioni dei video) | Gemini Flash-Lite (500 richieste al giorno), poi gli altri | Il risultato lo giudica Godot: qui basta un modello veloce |
 | Ripasso (domande di previsione) | Flash-Lite, Groq | Le risposte giuste non le scrive il modello: le calcola Godot eseguendo il codice |
 
 Le richieste si contano come le conta Google: il giorno di Gemini va da mezzanotte a mezzanotte in California, e i
@@ -179,6 +218,8 @@ precedente. L'aula mostra che il corso è fermo. Per ripartire: Actions → Fabb
   quale si sta parlando: il 17 ottobre, con un'unica chat per lezione, rispose sul sottomarino a una domanda sul rover.
   Vede la cartella dell'ultima verifica, non solo quella proposta.
 - La finestra non apre pagine esterne e non carica niente da internet: i link si aprono nel browser, solo verso siti noti.
+- Negli esercizi guidati e «Rifai uguale» mostra il video «Il risultato atteso» (dall'aula 2.0.4), con scritto come
+  avviare la scena. I vecchi video della teoria non si mostrano.
 - I tuoi dati (progressi, tentativi, chat con il tutor) restano sul PC, con una copia di sicurezza al giorno (le ultime 14).
 - Si installa per il solo utente, senza permessi di amministratore, e si aggiorna da sola dalle release del repository.
 

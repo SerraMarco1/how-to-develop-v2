@@ -8,8 +8,9 @@ import { fileURLToPath } from "node:url";
 import { apriAGodot, eseguiGodot, impostaGodot } from "../src/godot/esegui.ts";
 import { installaGodot } from "../src/godot/installa.ts";
 import { impostaCartellaTemporanea, nuovaCartellaTemporanea, scriviFileProgetto } from "../src/godot/verifica.ts";
-import { registraVideo } from "../src/godot/video.ts";
+import { registraVideo, valutaCopione } from "../src/godot/video.ts";
 import { impostaCartellaMotore } from "../src/motore.ts";
+import { CopioneSchema } from "../src/schemi.ts";
 
 // Il recinto di Godot nella fabbrica: su Linux, con HTD_GODOT_UTENTE, Godot gira come un altro utente del sistema.
 // Il controllo di sicurezza sul codice è la prima difesa; qui si prova la seconda, come se la prima fosse stata aggirata:
@@ -90,8 +91,10 @@ test("recinto: il video del risultato si registra anche con Godot come altro ute
   const scena = '[gd_scene format=3]\n\n[node name="Main" type="Node2D"]\n\n[node name="Title" type="Label" parent="."]\noffset_right = 200.0\noffset_bottom = 40.0\ntext = "Prova del video"\n';
   scriviFileProgetto(progetto, [{ percorso: "main.tscn", contenuto: scena }], "Video");
   const mp4 = path.join(uscita, "risultato.mp4");
-  await registraVideo({ cartellaProgetto: progetto, durata: 1, azioni: [], fileMp4: mp4 });
+  const copione = CopioneSchema.parse({ scena: "res://main.tscn", durata: 4, soggetti: [{ id: "titolo", cerca: { nome: "Title" }, da: 0.2, a: 3.5, etichetta: "Titolo" }], scritte: [{ testo: "Il titolo", da: 0.2, a: 3.5, soggetto: "titolo" }] });
+  const resoconto = await registraVideo({ cartellaProgetto: progetto, copione, fileMp4: mp4 });
   assert.ok(fs.statSync(mp4).size > 1000, "il video è stato scritto, fuori dalla cartella del progetto");
-  await assert.rejects(registraVideo({ cartellaProgetto: progetto, durata: 1, azioni: [], fileMp4: path.join(progetto, "dentro.mp4") }), /fuori dalla cartella del progetto/);
+  assert.deepEqual(valutaCopione(copione, resoconto).problemi, [], "le misure arrivano anche da Godot come altro utente");
+  await assert.rejects(registraVideo({ cartellaProgetto: progetto, copione, fileMp4: path.join(progetto, "dentro.mp4") }), /fuori dalla cartella del progetto/);
   assert.equal(await processiRimasti(utente!), "", "nessun processo dell'utente di Godot resta acceso");
 });

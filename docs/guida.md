@@ -22,6 +22,9 @@ repository).
 - **Corso** è l'elenco di tutte le lezioni, nell'ordine del piano. Si apre una lezione alla volta: la successiva si
   sblocca quando completi quella prima.
 - In una **lezione**: la teoria, poi gli esercizi e il test finale. Per ogni esercizio:
+  - negli esercizi guidati e in quelli «Rifai uguale» c'è il video **Il risultato atteso**: cosa deve succedere quando
+    avvii il gioco (con F5, o con F6 sulla scena che dice la didascalia) dopo aver fatto l'esercizio. Il riquadro
+    giallo indica ciò di cui parla la scritta; confrontalo con il tuo gioco;
   - prepara il progetto di partenza (se serve) e lavora in Godot;
   - premi **Verifica**: l'aula esegue il tuo progetto in un Godot di servizio e controlla il risultato (se fallisce,
     lo riprova una volta da sola: alcune verifiche davano esiti diversi da una volta all'altra);

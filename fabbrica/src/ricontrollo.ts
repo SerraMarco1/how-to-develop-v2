@@ -1,8 +1,7 @@
 import type { Media } from "@htd/condiviso/pacchetto.ts";
-import { percorsoMedia } from "@htd/condiviso/pacchetto.ts";
 import { lezioniDelCorso, type LezioneNelCorso } from "@htd/condiviso/piano.ts";
 import type { Lezione, Previsione, StatoProgetto } from "@htd/condiviso/schemi.ts";
-import { cancella, elenco, leggiJson, percorsoDati, salva } from "./archivio.ts";
+import { cancella, elenco, leggiJson, salva } from "./archivio.ts";
 import { statoDiPartenza } from "./corso.ts";
 import { soloProblemiMinori } from "./lezione/esercizio.ts";
 import { controllaPezzo, statoDopo } from "./lezione/pratica.ts";
@@ -21,7 +20,7 @@ export type LezioneImportata = {
   contenuto: Lezione;
   statoFinale: StatoProgetto | null;
   ripasso: Previsione[];
-  /** I video già registrati dalla versione 1: "video:<blocco>" → file in media/. */
+  /** I media della versione 1 (i suoi vecchi video della teoria, che non si pubblicano più). */
   media: Record<string, Media>;
   pubblicata: string;
   modelli: string[];
@@ -84,8 +83,7 @@ export async function ricontrollaImportata(lezione: LezioneNelCorso): Promise<bo
   }
   const finale = usaIlGioco ? stato : (importata.statoFinale ?? stato);
   registra({ slug: lezione.slug, pezzo: "lezione", azione: "ricontrollo", esito: "ok", titolo: "Lezione della versione 1: ricontrollo superato", dalle, spiegazione: `${esercizi.length} pezzi ricontrollati in Godot 4.7.2 con le regole della versione 2 (sicurezza, soluzione che passa, verifiche che falliscono prima del lavoro, previsioni ricalcolate). Il gioco di partenza è quello della lezione precedente.` });
-  const videoEsistenti = Object.fromEntries(Object.entries(importata.media).filter(([k]) => k.startsWith("video:")).map(([k, m]) => [k.slice("video:".length), percorsoDati(percorsoMedia(m))]));
-  await pubblicaLezione(lezione, { lezione: { ...contenuto, esercizi: ricontrollati.filter((e) => e.id !== "test"), test: ricontrollati.find((e) => e.id === "test")! }, statoFinale: finale, modelli: importata.modelli }, { importata: true, ripasso: importata.ripasso.length >= 3 ? importata.ripasso : undefined, videoEsistenti, pubblicata: importata.pubblicata });
+  await pubblicaLezione(lezione, { lezione: { ...contenuto, esercizi: ricontrollati.filter((e) => e.id !== "test"), test: ricontrollati.find((e) => e.id === "test")! }, statoFinale: finale, modelli: importata.modelli }, { importata: true, ripasso: importata.ripasso.length >= 3 ? importata.ripasso : undefined, pubblicata: importata.pubblicata });
   cancella(`importate/${lezione.slug}.json`);
   await salva(`${lezione.numero} ${lezione.slug}: lezione della versione 1 ricontrollata e pubblicata`, { subito: true });
   return true;

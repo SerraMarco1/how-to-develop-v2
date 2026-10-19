@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { z } from "zod";
-import { LezioneSchema, PrevisioneSchema, StatoProgettoSchema } from "./schemi.ts";
+import { CopioneSchema, LezioneSchema, PrevisioneSchema, StatoProgettoSchema } from "./schemi.ts";
 
 // Il formato con cui la fabbrica pubblica le lezioni nel ramo `corso` e l'aula le scarica.
 //
@@ -28,6 +28,14 @@ export type Media = z.infer<typeof MediaSchema>;
 
 export const percorsoMedia = (m: Pick<Media, "sha256" | "estensione">) => `media/${m.sha256}.${m.estensione}`;
 
+/**
+ * Il video «Il risultato atteso» di un esercizio: il copione con cui è stato registrato (e controllato) e l'impronta della
+ * soluzione e del progetto di partenza in quel momento. Se cambiano, il video non vale più e si rifà.
+ * Il file è nei media della lezione, con la chiave "video:<id dell'esercizio>".
+ */
+export const VideoEsercizioSchema = z.object({ copione: CopioneSchema, impronta: impronta });
+export type VideoEsercizio = z.infer<typeof VideoEsercizioSchema>;
+
 export const PaccoLezioneSchema = z.object({
   formato: z.literal(FORMATO),
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -43,10 +51,13 @@ export const PaccoLezioneSchema = z.object({
   /** Il progetto di riferimento alla fine della lezione: da qui parte la lezione successiva della fase. */
   statoFinale: StatoProgettoSchema.nullable(),
   /**
-   * I file binari usati dalla lezione: "immagine:<id>" per le schermate dell'editor, "video:<idBlocco>" per i video
-   * del risultato, "asset:assets/<file>" per gli asset del corso usati dagli esercizi.
+   * I file binari usati dalla lezione: "immagine:<id>" per le schermate dell'editor, "video:<idEsercizio>" per i video
+   * del risultato atteso (vedi `video`), "asset:assets/<file>" per gli asset del corso usati dagli esercizi. Le lezioni
+   * pubblicate prima del 19 ottobre 2026 possono avere anche "video:<idBlocco>" (b1, b2…): i vecchi video, non più mostrati.
    */
   media: z.record(z.string(), MediaSchema),
+  /** I video «Il risultato atteso», per id dell'esercizio (es1, test…). Vuoto se nessun esercizio ne ha uno. */
+  video: z.record(z.string(), VideoEsercizioSchema).default({}),
   /** Le voci del ripasso a intervalli: codice da leggere e risultato da prevedere, calcolato da Godot. Vuoto se la lezione non ha codice. */
   ripasso: z.array(PrevisioneSchema).default([]),
   origine: z.object({

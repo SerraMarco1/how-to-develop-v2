@@ -9,7 +9,7 @@ import { leggiJson, salva, scriviFile, scriviJson } from "./archivio.ts";
 import { catalogo, paccoPubblicato, paroleDelleLezioniPrima, testiDellaTeoria, valoriLezione } from "./corso.ts";
 import { promemoriaGenere, richiestaCorrezione } from "./lezione/catena.ts";
 import { eAvvisoMinoreDi, paroleDi, preparaEsercizio, problemaInstabili, problemaModificheNascoste, problemaNonSpiegato, problemaVerificheFragili, stessiFallimenti, VERIFICHE_FRAGILI } from "./lezione/esercizio.ts";
-import { controllaPezzo, statoDopo } from "./lezione/pratica.ts";
+import { baseDi, controllaPezzo, statoDopo } from "./lezione/pratica.ts";
 import { aggiornaCatalogo } from "./lezione/pubblica.ts";
 import { controllaTempo } from "./tempo.ts";
 import { costoLezione, registra, type Pezzo } from "./traccia.ts";
@@ -34,12 +34,6 @@ const SOLO_VERIFICHE =
   "La lezione è già pubblicata e chi studia ci sta lavorando: correggi SOLO il campo `verifiche`. Consegna, passi, suggerimenti e soluzione restano IDENTICI (le lezioni successive partono da questa soluzione). Le verifiche corrette devono continuare a passare sulla soluzione e a fallire sul progetto com'è prima del lavoro.";
 const SOLO_TESTI_E_VERIFICHE =
   "La lezione è già pubblicata e chi studia ci sta lavorando: la SOLUZIONE (file e impostazioni) e il progetto di partenza restano IDENTICI, perché le lezioni successive partono da lì. Correggi solo ciò che serve fra `consegna`, `passiGuida`, `suggerimenti` e `verifiche`. Le verifiche devono continuare a passare sulla soluzione e a fallire sul progetto com'è prima del lavoro.";
-
-/** Il progetto com'è prima dell'esercizio: il gioco della fase o il progetto di partenza a parte. */
-function baseDi(e: Esercizio, gioco: StatoProgetto | undefined): StatoProgetto {
-  if (e.dove === "gioco" && gioco) return gioco;
-  return { nome: e.titolo, cartella: e.cartella ?? "progetto", file: e.partenza?.file ?? [], progetto: e.partenza?.progetto ?? { nome: e.titolo, scenaPrincipale: "", azioni: [], autoload: [], impostazioni: [] } };
-}
 
 /** Il ruolo del modello per il tentativo n (da 0): Godot giudica, quindi prima il modello con molte richieste. */
 const ruoloDelTentativo = (n: number): Ruolo => (n < 2 ? "ritocco" : "scrittore");
@@ -150,6 +144,17 @@ async function pubblicaCorrezioni(pacco: PaccoLezione, nuovi: Esercizio[], corre
   aggiornaCatalogo({ ...voce, versione: nuovo.versione, sha256: sha256(testo), byte: Buffer.byteLength(testo) });
   registra({ slug: pacco.slug, pezzo: "lezione", azione: "verifiche robuste", esito: "ok", titolo: "Esercizi corretti nella lezione pubblicata", spiegazione: `Corretti ${corretti.join(", ")}: verifiche che accettano ogni lavoro giusto, consegne che dicono tutto ciò che serve. Teoria e soluzioni non cambiano. Versione ${nuovo.versione}.` });
   return nuovo;
+}
+
+/**
+ * Una versione nuova di una lezione in cui gli esercizi non cambiano (per esempio sono stati aggiunti solo i video): se
+ * la versione di prima era già ricontrollata, lo è anche questa, e non si rifanno i controlli in Godot.
+ */
+export function versioneConGliStessiEsercizi(slug: string, prima: number, dopo: number): void {
+  const registro = leggiJson<Record<string, Ricontrollo>>(FILE, {});
+  if (registro[slug]?.versione !== prima) return;
+  registro[slug].versione = dopo;
+  scriviJson(FILE, registro);
 }
 
 /**

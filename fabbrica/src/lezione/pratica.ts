@@ -64,6 +64,12 @@ export function preparaPezzo(grezzo: Esercizio, id: string, ruolo: Esercizio["ti
   return { ...pronto, genere, dove: "a-parte", soluzione: { ...pronto.soluzione, cambiati: pronto.soluzione.file.filter((f) => prima.get(f.percorso) !== f.contenuto && f.percorso !== "project.godot").map((f) => f.percorso) } };
 }
 
+/** Il progetto com'è prima dell'esercizio: il gioco della fase o il progetto di partenza a parte. */
+export function baseDi(e: Esercizio, gioco: StatoProgetto | undefined): StatoProgetto {
+  if (e.dove === "gioco" && gioco) return gioco;
+  return { nome: e.titolo, cartella: e.cartella ?? "progetto", file: e.partenza?.file ?? [], progetto: e.partenza?.progetto ?? { nome: e.titolo, scenaPrincipale: "", azioni: [], autoload: [], impostazioni: [] } };
+}
+
 /** Lo stato del gioco dopo un esercizio riuscito (per gli esercizi a parte il gioco resta com'era). */
 export function statoDopo(base: StatoProgetto, e: Esercizio): StatoProgetto {
   if (e.modalita !== "progetto" || e.dove !== "gioco") return base;
