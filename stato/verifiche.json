@@ -220,5 +220,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "autoload": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }

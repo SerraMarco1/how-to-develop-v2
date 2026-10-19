@@ -1,0 +1,38 @@
+{
+ "n": 16,
+ "quando": "2026-10-19T09:42:16.649Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 43123,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "Game\\.register_score",
+    "descrizione": "basket.gd chiama Game.register_score"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "res://game_over\\.tscn",
+    "descrizione": "basket.gd carica la schermata game_over.tscn a fine partita"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar game_autoload = get_node_or_null(\"/root/Game\")\n\tif not check(\"autoload_exists\", game_autoload != null, \"L'Autoload Game deve essere presente\"):\n\t\treturn\n\tcall_if_exists(game_autoload, \"reset_session\", [])\n\tset_prop_safe(game_autoload, \"difficulty\", 3)\n\tvar basket_scene: Node = await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket_instanced\", basket_scene != null, \"basket.tscn deve potersi istanziare\"):\n\t\treturn\n\tvar calculated_speed = get_prop(basket_scene, \"speed\", 0.0)\n\tcheck(\"speed_adjusted\", calculated_speed >= 419.0 and calculated_speed <= 421.0, \"Con difficolta 3 la velocita deve essere 300 + 3*40 = 420.0, trovata: \" + str(calculated_speed))\n\tcall_if_exists(basket_scene, \"_on_item_collected\", [50])\n\tvar cur_score = get_prop(game_autoload, \"current_score\", 0)\n\tcheck(\"score_saved\", cur_score == 50, \"Raccogliendo un oggetto Game.current_score deve aggiornarsi a 50\")\n\tcall_if_exists(basket_scene, \"take_damage\", [5])\n\tawait wait_frames(2)\n\tcheck(\"game_over_reached\", true, \"La partita gestisce il danno letale senza errori\")\n\n\nfunc set_prop_safe(obj: Object, prop: String, val) -> void:\n\tif obj != null:\n\t\tobj.set(prop, val)\n",
+    "descrizione": "La difficolta influenza la velocita, il punteggio si salva in Game e le vite esaurite portano a game_over"
+   }
+  ],
+  "consegna": "In questo momento la partita in `basket.gd` gestisce il punteggio e la fine della partita in locale, ma contiene problemi di integrazione con l'Autoload `Game` appena introdotto:\n- Quando la partita si avvia, la velocità del carrello non tiene conto della difficoltà memorizzata in `Game.difficulty`.\n- Quando il punteggio aumenta, non viene registrato dentro l'Autoload `Game`.\n- Quando le vite finiscono, il gioco si limita a fermarsi sul posto o a mostrare un pulsante provvisorio invece di passare alla schermata `res://game_over.tscn`.\n\nNel codice del progetto troverai alcune funzioni utili per la gestione del movimento e delle scene:\n- `Input.get_axis(\"negativo\", \"positivo\")` restituisce un valore numerico tra -1 e 1 in base alla pressione di due azioni (es. `Input.get_axis(\"move_left\", \"move_right\")`).\n- `is_in_group(\"nome\")` verifica se un nodo appartiene a uno specifico gruppo (es. `node.is_in_group(\"rocks\")`).\n- `get_tree().reload_current_scene()` ricarica interamente la scena attiva in quel momento.\n\nMetti a posto `res://basket.gd` in modo che:\n1. All'inizio della partita (`_ready()`), il valore di `speed` del cestello venga calcolato come `base_speed + float(Game.difficulty) * 40.0`, dove `base_speed` è la velocità di partenza (impostata a `300.0`).\n2. Quando il giocatore raccoglie punti (`_on_item_collected()`), oltre ad aggiornare la variabile locale `score` e l'HUD, chiami `Game.register_score(score)`.\n3. Quando le vite scendono a 0 o meno (`take_damage()`), il gioco deve cambiare scena caricando `res://game_over.tscn` con `get_tree().change_scene_to_file(\"res://game_over.tscn\")`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 30 s (19958 → 13092 token)"
+ ]
+}

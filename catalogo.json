@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:32:46.486Z",
+ "aggiornato": "2026-10-19T09:42:16.659Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -385,10 +385,10 @@
    "slug": "autoload",
    "numero": "3.6",
    "titolo": "Autoload: i dati che restano",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f03-interfaccia/autoload.json",
-   "sha256": "4b73a61ba7c572f31fdf35f1fd2d353c818e52a87bcf00068a3ef4f6fa93abb2",
-   "byte": 194688
+   "sha256": "412c1f4ff5f72cd011e4106aca3dbedc5eea7b9ec74ec0bd390bb2d81b387361",
+   "byte": 195287
   },
   {
    "slug": "pausa",
