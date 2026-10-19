@@ -107,3 +107,4 @@
 {"quando":1792402859419,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"autoload","ok":true,"contata":true,"durataMs":17571,"tokenInput":10463,"tokenOutput":3090,"ragionamento":5536}
 {"quando":1792402893528,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"autoload","ok":true,"contata":true,"durataMs":30431,"tokenInput":19958,"tokenOutput":13092,"ragionamento":2343}
 {"quando":1792402954126,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"focus-tastiera-e-gamepad","ok":false,"contata":true,"durataMs":27928,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792404304881,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"timer","ok":false,"contata":true,"durataMs":5358,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
