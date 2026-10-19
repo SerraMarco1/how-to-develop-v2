@@ -196,7 +196,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Progetto «Memory» – tappa 3: partita completa",
@@ -223,5 +224,10 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
