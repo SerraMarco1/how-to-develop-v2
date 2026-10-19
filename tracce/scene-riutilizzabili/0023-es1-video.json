@@ -1,0 +1,47 @@
+{
+ "n": 23,
+ "quando": "2026-10-19T16:09:16.204Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «item» (classe = FallingItem; almeno 1 da 0.5 a 5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 7, visibili al massimo 0. A 1 s: «FallingItem» a (589.8, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@129» a (989.7, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@130» a (1041.9, 616) 128×128, fuori dallo schermo (dentro per il 22%); «@Sprite2D@131» a (1196, 616) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 13320,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "item",
+     "cerca": {
+      "classe": "FallingItem"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5,
+     "deve": "muoversi",
+     "etichetta": "Oggetto"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Lo stampo falling_item.tscn genera gli oggetti in caduta",
+     "da": 0.5,
+     "a": 5,
+     "soggetto": "item"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «item» (classe = FallingItem; almeno 1 da 0.5 a 5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 7, visibili al massimo 0. A 1 s: «FallingItem» a (589.8, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@129» a (989.7, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@130» a (1041.9, 616) 128×128, fuori dallo schermo (dentro per il 22%); «@Sprite2D@131» a (1196, 616) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (6222 → 202 token)"
+ ]
+}
