@@ -20,3 +20,4 @@
 {"quando":1792394507187,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"contenitori","ok":true,"contata":true,"durataMs":5754,"tokenInput":2986,"tokenOutput":674,"ragionamento":1437}
 {"quando":1792394518610,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"controlli-di-uso-comune","ok":true,"contata":true,"durataMs":139207,"tokenInput":16424,"tokenOutput":3313,"ragionamento":4499}
 {"quando":1792394659266,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"controlli-di-uso-comune","ok":true,"contata":true,"durataMs":153577,"tokenInput":21174,"tokenOutput":11466,"ragionamento":11809}
+{"quando":1792394833712,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"controlli-di-uso-comune","ok":true,"contata":true,"durataMs":35464,"tokenInput":13653,"tokenOutput":223,"ragionamento":3393}

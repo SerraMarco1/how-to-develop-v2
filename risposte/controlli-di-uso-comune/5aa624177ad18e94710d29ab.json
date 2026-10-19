@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.7-flash",
+ "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"es1\", \"problema\": \"La verifica testa che StartButton torni disattivato quando il testo contiene solo spazi vuoti (`name_input.text = \\\"   \\\"`), ma nella consegna si chiede solo genericamente che «digitando un nome non vuoto StartButton si abiliti». Uno studente che controlla semplicemente `new_text != \\\"\\\"` o `not new_text.is_empty()` vedrà fallire il test.\", \"correzione\": \"Nella consegna al punto 4, esplicita il controllo sugli spazi vuoti, ad esempio: «collega i segnali appropriati in modo che digitando un nome valido (non vuoto e non composto da soli spazi, usando `strip_edges()`) `StartButton` si abiliti (e torni disattivato se vuoto), spostando il cursore la barra si aggiorni e `SummaryLabel` mostri il riepilogo aggiornato».\", \"fonte\": \"\"}]}",
+ "ragionamento": 3393,
+ "quando": "2026-10-19T07:27:49.178Z",
+ "ruolo": "revisore"
+}
