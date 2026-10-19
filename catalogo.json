@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:06:39.864Z",
+ "aggiornato": "2026-10-19T07:10:06.218Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -317,6 +317,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/progetto-memory-2.json",
    "sha256": "0ccdd3a383ac765061f7f6b44d773d57f7f6d5aca60d700c3fd9755929a529ce",
    "byte": 22385
+  },
+  {
+   "slug": "progetto-memory-3",
+   "numero": "2.13",
+   "titolo": "Progetto «Memory» – tappa 3: partita completa",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/progetto-memory-3.json",
+   "sha256": "c9a1a7fe3c14c84c05a0e9d97e76bcabc5e39e511466da89f4aced827ce5156c",
+   "byte": 28632
   }
  ],
  "documentazione": {
