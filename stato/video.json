@@ -705,6 +705,7 @@
    "impronta": "8b0da3fda7b98ddcc6057310107588e4bf74fcb821d450e8659c4baf8d1fab1f",
    "tentativi": 2,
    "esito": "niente",
+   "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://main_menu.tscn",
@@ -712,7 +713,7 @@
      "azioni": [],
      "soggetti": [
       {
-       "id": "play",
+       "id": "play_btn",
        "cerca": {
         "nome": "PlayButton"
        },
@@ -725,10 +726,10 @@
      ],
      "scritte": [
       {
-       "testo": "Il menu principale compare subito all'avvio del gioco",
+       "testo": "Il menu principale si avvia come prima schermata del gioco",
        "da": 0.5,
        "a": 5.5,
-       "soggetto": "play"
+       "soggetto": "play_btn"
       }
      ]
     },
@@ -736,7 +737,7 @@
      "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
     ]
    },
-   "motivo": "Il menu principale e i suoi pulsanti erano già presenti nel progetto iniziale; l'esercizio aggiunge solo lo script e la logica di collegamento, senza creare nuovi nodi visibili sullo schermo."
+   "motivo": "L'esercizio collega solo lo script e imposta la scena principale senza aggiungere nuovi nodi visivi."
   }
  },
  "autoload": {
