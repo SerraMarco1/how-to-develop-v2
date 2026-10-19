@@ -1,0 +1,47 @@
+{
+ "n": 14,
+ "quando": "2026-10-19T16:14:05.251Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «header»: per \"mostrare testo\" serve il campo testo.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 6823,
+ "dati": {
+  "copione": {
+   "scena": "res://mode_menu.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "header",
+     "cerca": {
+      "nome": "HeaderLabel"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 6,
+     "deve": "mostrare testo",
+     "etichetta": "Titolo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il titolo della schermata di selezione modalità",
+     "da": 0,
+     "a": 6,
+     "soggetto": "header"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «header»: per \"mostrare testo\" serve il campo testo."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (7949 → 197 token)"
+ ]
+}

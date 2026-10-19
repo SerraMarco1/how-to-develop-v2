@@ -155,3 +155,4 @@
 {"quando":1792426412544,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":6838,"tokenInput":2759,"tokenOutput":495,"ragionamento":2136}
 {"quando":1792426430367,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"contenitori","ok":true,"contata":true,"durataMs":6729,"tokenInput":8296,"tokenOutput":35,"ragionamento":2229}
 {"quando":1792426438429,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"contenitori","ok":true,"contata":true,"durataMs":5420,"tokenInput":7949,"tokenOutput":197,"ragionamento":1288}
+{"quando":1792426445255,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"contenitori","ok":true,"contata":true,"durataMs":5742,"tokenInput":8131,"tokenOutput":205,"ragionamento":1663}
