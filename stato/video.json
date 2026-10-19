@@ -298,5 +298,12 @@
    "esito": "niente",
    "motivo": "L'esercizio riorganizza il codice creando una classe riutilizzabile e tipizzando gli array, senza introdurre elementi visivi nuovi sullo schermo rispetto a quanto già presente nella lezione precedente."
   }
+ },
+ "albero-dei-nodi": {
+  "es1": {
+   "impronta": "f3e0138730a7b6eade4a364d06a42e2210ef4ecf2b97d15ed6d72ca3cd88896b",
+   "tentativi": 1,
+   "esito": "fatto"
+  }
  }
 }

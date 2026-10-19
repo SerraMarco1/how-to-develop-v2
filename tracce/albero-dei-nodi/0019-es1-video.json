@@ -1,0 +1,72 @@
+{
+ "n": 19,
+ "quando": "2026-10-19T16:08:51.734Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Ombra» (esserci), «Manico» (esserci). Scritte: «L'ombra posizionata sotto il cesto» · «Il manico posizionato sopra il cesto». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 42 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 18369,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 2,
+     "fine": 4,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "shadow",
+     "cerca": {
+      "nome": "Shadow"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 8,
+     "deve": "esserci",
+     "etichetta": "Ombra"
+    },
+    {
+     "id": "handle",
+     "cerca": {
+      "nome": "Handle"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 8,
+     "deve": "esserci",
+     "etichetta": "Manico"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'ombra posizionata sotto il cesto",
+     "da": 0.5,
+     "a": 3,
+     "soggetto": "shadow"
+    },
+    {
+     "testo": "Il manico posizionato sopra il cesto",
+     "da": 4,
+     "a": 6.5,
+     "soggetto": "handle"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "9ea5166efbf2e0c4ad2f98312edc894d6985b4bbface81f8fc6f64d3d70945b6",
+   "estensione": "mp4",
+   "byte": 43213
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (5959 → 378 token)"
+ ]
+}
