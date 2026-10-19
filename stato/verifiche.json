@@ -171,5 +171,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "progetto-memory-1": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
