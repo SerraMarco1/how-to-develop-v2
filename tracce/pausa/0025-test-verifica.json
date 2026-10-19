@@ -1,0 +1,111 @@
+{
+ "n": 25,
+ "quando": "2026-10-19T08:25:41.069Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (ripara): 1 problema",
+ "spiegazione": "«Test: Ricomincia senza rimanere congelati», scritto da gemini/gemini-flash-lite-latest. 1 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La scena game.tscn deve potersi avviare\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 3031,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La scena game.tscn deve potersi avviare\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Test: Ricomincia senza rimanere congelati",
+   "consegna": "Nel progetto di prova allegato, la partita (`game.tscn`) permette di muovere un personaggio e conta i punti. Premendo l'azione `pause` (tasto Escape) si apre il menu di pausa.\n\nSe il giocatore preme «Ricomincia» (`RestartButton`), la partita viene ricaricata ma il gioco resta completamente immobile: il personaggio non risponde più ai tasti e il tempo non avanza. La stessa cosa accade premendo «Menu» (`MenuButton`): viene caricata la schermata iniziale (`menu.tscn`), ma i suoi pulsanti non rispondono più ai clic.\n\nIndividua e risolvi l'errore in modo che, sia riavviando la partita sia tornando al menu principale dal menu di pausa, la nuova scena sia attiva e funzionante fin dal primo fotogramma.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "test-ricomincia-senza-rimanere-congelati",
+   "passiGuida": [],
+   "suggerimenti": [
+    "La proprietà paused appartiene allo SceneTree globale: quando ricarichi o cambi scena con change_scene_to_file, Godot non la reimposta in automatico."
+   ],
+   "verifiche": [
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tget_tree().paused = false\n\tvar game := await instantiate_scene(\"res://game.tscn\")\n\tif not check(\"game\", game != null, \"La scena game.tscn deve potersi avviare\"):\n\t\treturn\n\tvar restart_btn := find_by_name(game, \"RestartButton\") as Button\n\tvar menu_btn := find_by_name(game, \"MenuButton\") as Button\n\tif not check(\"btns\", restart_btn != null and menu_btn != null, \"Nel menu di pausa devono esserci RestartButton e MenuButton\"):\n\t\treturn\n\tawait tap_action(\"pause\")\n\tawait wait_frames(2)\n\tcheck(\"is_paused\", get_tree().paused, \"La pausa deve attivarsi correttamente\")\n\tawait click_button(restart_btn)\n\tawait wait_frames(4)\n\tcheck(\"restart_unpaused\", not get_tree().paused, \"Dopo aver premuto Ricomincia get_tree().paused deve essere false\")\n\tvar player := find_by_name(get_tree().current_scene, \"Player\") as Node2D\n\tif player != null:\n\t\tvar start_x := player.position.x\n\t\tawait wait_frames(5)\n\t\tcheck(\"player_moving\", player.position.x != start_x, \"Nella partita riavviata il giocatore deve muoversi regolarmente\")\n\tawait tap_action(\"pause\")\n\tawait wait_frames(2)\n\tvar current_menu_btn := find_by_name(get_tree().current_scene, \"MenuButton\") as Button\n\tif current_menu_btn != null:\n\t\tawait click_button(current_menu_btn)\n\t\tawait wait_frames(4)\n\tcheck(\"menu_unpaused\", not get_tree().paused, \"Tornando al menu principale get_tree().paused deve essere false\")\n\tcheck(\"menu_scene\", current_scene_path() == \"res://menu.tscn\", \"La scena caricata deve essere res://menu.tscn\")\n\tget_tree().paused = false\n",
+     "descrizione": "Dopo aver premuto Ricomincia o Menu dalla pausa, la scena caricata non eredita lo stato di congelamento"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "Test: Ricomincia senza rimanere congelati",
+     "scenaPrincipale": "res://menu.tscn",
+     "azioni": [
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Test: Ricomincia senza rimanere congelati\"\nrun/main_scene=\"res://menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends Sprite2D\n\nvar speed: float = 150.0\n\n\nfunc _process(delta: float) -> void:\n\tposition.x += speed * delta\n"
+     },
+     {
+      "percorso": "menu.gd",
+      "contenuto": "extends Control\n\n@onready var play_button: Button = $PlayButton\n\n\nfunc _ready() -> void:\n\tplay_button.pressed.connect(_on_play_button_pressed)\n\n\nfunc _on_play_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://game.tscn\")\n"
+     },
+     {
+      "percorso": "menu.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"PlayButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -80.0\noffset_top = -20.0\noffset_right = 80.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"Gioca\"\n"
+     },
+     {
+      "percorso": "pause_menu.gd",
+      "contenuto": "extends Control\n\n@onready var resume_button: Button = $VBoxContainer/ResumeButton\n@onready var restart_button: Button = $VBoxContainer/RestartButton\n@onready var menu_button: Button = $VBoxContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tprocess_mode = Node.PROCESS_MODE_ALWAYS\n\thide()\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"pause\"):\n\t\tif get_tree().paused:\n\t\t\tresume_game()\n\t\telse:\n\t\t\tpause_game()\n\n\nfunc pause_game() -> void:\n\tget_tree().paused = true\n\tshow()\n\n\nfunc resume_game() -> void:\n\tget_tree().paused = false\n\thide()\n\n\nfunc _on_resume_button_pressed() -> void:\n\tresume_game()\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://game.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
+     },
+     {
+      "percorso": "pause_menu.tscn",
+      "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://pause_menu.gd\" id=\"1_pause\"]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_pause\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -80.0\noffset_top = -60.0\noffset_right = 80.0\noffset_bottom = 60.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/separation = 8\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Riprendi\"\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Ricomincia\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Menu\"\n"
+     },
+     {
+      "percorso": "game.tscn",
+      "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://pause_menu.tscn\" id=\"3_pause\"]\n\n[node name=\"Game\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_player\")\n\n[node name=\"PauseMenu\" parent=\".\" scene=ExtResource(\"3_pause\")]\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Test: Ricomincia senza rimanere congelati\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "pause_menu.gd",
+      "contenuto": "extends Control\n\n@onready var resume_button: Button = $VBoxContainer/ResumeButton\n@onready var restart_button: Button = $VBoxContainer/RestartButton\n@onready var menu_button: Button = $VBoxContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tprocess_mode = Node.PROCESS_MODE_ALWAYS\n\thide()\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"pause\"):\n\t\tif get_tree().paused:\n\t\t\tresume_game()\n\t\telse:\n\t\t\tpause_game()\n\n\nfunc pause_game() -> void:\n\tget_tree().paused = true\n\tshow()\n\n\nfunc resume_game() -> void:\n\tget_tree().paused = false\n\thide()\n\n\nfunc _on_resume_button_pressed() -> void:\n\tresume_game()\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://game.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Test: Ricomincia senza rimanere congelati",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "La proprietà `paused` appartiene allo `SceneTree`, non alla singola scena: quando si cambia o si ricarica la scena tramite `change_scene_to_file()`, Godot non reimposta la pausa a `false`. Nei metodi `_on_restart_button_pressed` e `_on_menu_button_pressed`, chiamare `change_scene_to_file()` senza prima disattivare la pausa lasciava la nuova scena nello stato congelato. Aggiungendo `get_tree().paused = false` prima di caricare la scena, sia la nuova partita sia il menu principale tornano a elaborare normalmente fin dal primo fotogramma.",
+    "cambiati": [
+     "pause_menu.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
