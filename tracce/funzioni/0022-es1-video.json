@@ -1,0 +1,16 @@
+{
+ "n": 22,
+ "quando": "2026-10-19T19:40:22.453Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Organizzare il cesto e la stella in funzioni» non si vede sullo schermo: L'esercizio riorganizza il codice in funzioni dedicate senza modificare il comportamento visivo del gioco.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 3876,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 2 s (4466 → 31 token)"
+ ]
+}
