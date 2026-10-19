@@ -749,5 +749,7 @@
   "corretti": [
    "es2"
   ]
- }
+ },
+ "teoriaRivista": true,
+ "praticaRivista": true
 }
