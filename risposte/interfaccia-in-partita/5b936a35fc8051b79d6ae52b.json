@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"es2\", \"problema\": \"La verifica del codice in es2 controlla `not player_source.contains(\\\"Label\\\")` e `not player_source.contains(\\\"ProgressBar\\\")`. Se lo studente lascia un commento nel codice di player.gd (ad esempio `# Rimosso il nodo Label`), il test fallisce ingiustamente anche se la soluzione è corretta.\", \"correzione\": \"Rimuovere i controlli generici `contains(\\\"Label\\\")` e `contains(\\\"ProgressBar\\\")` sul testo dello script, poiché il test già verifica il corretto disaccoppiamento controllando che il giocatore emetta il segnale e aggiorni l'HUD.\", \"fonte\": \"\"}]}",
+ "ragionamento": 5256,
+ "quando": "2026-10-19T07:40:56.851Z",
+ "ruolo": "revisore"
+}
