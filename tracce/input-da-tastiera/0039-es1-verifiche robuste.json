@@ -1,0 +1,36 @@
+{
+ "n": 39,
+ "quando": "2026-10-19T08:58:19.507Z",
+ "pezzo": "es1",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 1: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 31174,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "azione_input",
+    "nome": "move_left",
+    "descrizione": "L'azione move_left è configurata nella Input Map"
+   },
+   {
+    "tipo": "azione_input",
+    "nome": "move_right",
+    "descrizione": "L'azione move_right è configurata nella Input Map"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar basket := find_by_name(main, \"Basket\") as Sprite2D\n\tif not check(\"basket\", basket != null, \"La scena deve contenere il nodo Basket\"):\n\t\treturn\n\tbasket.position = Vector2(400.0, 300.0)\n\tvar start_x: float = basket.position.x\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"move_right\", basket.position.x > start_x + 5.0, \"Tenendo premuto move_right il cesto deve muoversi verso destra (x = %.1f)\" % basket.position.x)\n\tvar right_x: float = basket.position.x\n\tawait hold_action(\"move_left\", 15)\n\tcheck(\"move_left\", basket.position.x < right_x - 5.0, \"Tenendo premuto move_left il cesto deve muoversi verso sinistra (x = %.1f)\" % basket.position.x)\n\tbasket.position = Vector2(20.0, 300.0)\n\tawait hold_action(\"move_left\", 5)\n\tcheck(\"clamp_left\", absf(basket.position.x - 64.0) < 0.5, \"Continuando a muoversi a sinistra il cesto deve fermarsi a 64 pixel (è a x = %.1f)\" % basket.position.x)\n\tbasket.position = Vector2(1200.0, 300.0)\n\tawait hold_action(\"move_right\", 5)\n\tcheck(\"clamp_right\", absf(basket.position.x - 1088.0) < 0.5, \"Continuando a muoversi a destra il cesto deve fermarsi a 1088 pixel (è a x = %.1f)\" % basket.position.x)\n",
+    "descrizione": "Il cesto si muove a sinistra e a destra con i comandi e non supera i bordi dello schermo"
+   }
+  ],
+  "consegna": "Nel progetto `Pioggia di stelle`, rendi il cesto controllabile da chi gioca associando i comandi da tastiera e impedendogli di uscire dalla finestra di gioco.\n\n1. Apri **Project → Project Settings** nella scheda **Input Map** e crea due azioni:\n   - `move_left`, assegnandole i tasti **Freccia Sinistra** e **A**.\n   - `move_right`, assegnandole i tasti **Freccia Destra** e **D**.\n2. Nello script `basket.gd`, aggiungi la funzione `_process(delta: float) -> void`:\n   - Calcola una variabile locale `direction` di tipo `float`: sottrai `1.0` se è attiva l'azione `move_left`, aggiungi `1.0` se è attiva l'azione `move_right`.\n   - Modifica `position.x` moltiplicando `direction * speed * delta`.\n   - Usa la funzione `clamp()` per mantenere `position.x` compresa tra `64.0` e `1088.0`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 16 s (11377 → 3830 token)"
+ ]
+}
