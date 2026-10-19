@@ -290,5 +290,13 @@
    },
    "motivo": "Lo stato di Game Over e il riavvio dipendono dalla perdita di tutte le vite tramite ostacoli casuali e dall'input dell'utente, rendendo il risultato non deterministico per una registrazione automatica."
   }
+ },
+ "classi-e-oggetti": {
+  "es1": {
+   "impronta": "e70ecbc7548cf1efb00ca3cfbd18f93dbacbcc4a80f6ee32d1dac1a1d3cd11d4",
+   "tentativi": 1,
+   "esito": "niente",
+   "motivo": "L'esercizio riorganizza il codice creando una classe riutilizzabile e tipizzando gli array, senza introdurre elementi visivi nuovi sullo schermo rispetto a quanto già presente nella lezione precedente."
+  }
  }
 }
