@@ -1,0 +1,48 @@
+{
+ "n": 18,
+ "quando": "2026-10-19T19:45:55.002Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 6 s. Soggetti: «Cesto» (cambiare dimensione). Scritte: «Il cesto si ingrandisce e rimbalza alla raccolta della stella». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 30 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 20048,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "cesto",
+     "cerca": {
+      "script": "res://basket.gd"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 5,
+     "deve": "cambiare dimensione",
+     "etichetta": "Cesto"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il cesto si ingrandisce e rimbalza alla raccolta della stella",
+     "da": 1,
+     "a": 5,
+     "soggetto": "cesto"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "1008af9b78a7adf910424578f8e1a89e110e3035041de932717172d504557804",
+   "estensione": "mp4",
+   "byte": 30831
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (8537 → 207 token)"
+ ]
+}
