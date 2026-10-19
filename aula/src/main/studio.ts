@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { shell } from "electron";
 import { cercaDocumentazione, formattaDocumentazione } from "@htd/condiviso/documentazione.ts";
+import { comeSiAvvia } from "@htd/condiviso/godot/video.ts";
 import { scriviFileProgetto, stessiFallimenti, verifica, type Controllo, type EsitoVerifica } from "@htd/condiviso/godot/verifica.ts";
 import { leggiFileMotore } from "@htd/condiviso/motore.ts";
 import type { Media, PaccoLezione } from "@htd/condiviso/pacchetto.ts";
@@ -91,7 +92,16 @@ async function vistaEsercizio(p: PaccoLezione, e: Esercizio, fatti: Set<string>)
     previsioni: await Promise.all(e.previsioni.map(async (x) => ({ id: x.id!, domandaHtml: await markdownHtml(x.domanda), codiceHtml: await codiceHtml(x.codice) }))),
     verifiche: e.verifiche.map((v) => v.descrizione).filter(Boolean),
     superato: fatti.has(e.id!),
+    video: videoAtteso(p, e),
   };
+}
+
+/** Il video «Il risultato atteso» di un esercizio, se la lezione ce l'ha (i vecchi video della teoria non si mostrano). */
+function videoAtteso(p: PaccoLezione, e: Esercizio): EsercizioVista["video"] {
+  const v = p.video[e.id!];
+  const m = p.media[`video:${e.id}`];
+  if (!v || !m || m.estensione !== "mp4") return null;
+  return { url: urlMedia(m), avvio: comeSiAvvia(v.copione, e.soluzione.progetto?.scenaPrincipale) };
 }
 
 export async function vistaLezione(slug: string): Promise<LezioneVista | null> {

@@ -48,6 +48,8 @@ export type EsercizioVista = {
   previsioni: { id: string; domandaHtml: string; codiceHtml: string }[];
   verifiche: string[];
   superato: boolean;
+  /** Il video «Il risultato atteso»: cosa deve succedere quando avvii il gioco (controllato dalla fabbrica prima di pubblicarlo). */
+  video: { url: string; avvio: string } | null;
 };
 
 export type LezioneVista = {

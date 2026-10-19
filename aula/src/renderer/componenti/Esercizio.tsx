@@ -65,6 +65,14 @@ export function Esercizio({ slug, e, onCompletata, onTutor }: { slug: string; e:
       <h3>{e.titolo}</h3>
       {e.genere && <p className="piccolo tenue">Allena: {e.genere.allena}</p>}
       <Html html={e.consegnaHtml} />
+      {e.video && (
+        <figure className="figura video-atteso">
+          <video src={e.video.url} controls loop muted playsInline preload="metadata" />
+          <figcaption>
+            <strong>Il risultato atteso.</strong> {e.video.avvio}: deve succedere questo. Il riquadro giallo indica ciò di cui parla la scritta.
+          </figcaption>
+        </figure>
+      )}
 
       {e.passiHtml.length > 0 && (
         <details className="apribile">

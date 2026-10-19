@@ -124,6 +124,32 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
     if (chiusa) assert.equal(await js(`window.htd.lezione(${JSON.stringify(chiusa.slug)})`), null, "una lezione chiusa non si apre nemmeno chiedendola direttamente");
     ok(`lezione «${aperta}» aperta: ${immagini.length} immagini e video caricati dal programma; le lezioni chiuse non si aprono`);
 
+    // 5b. I video «Il risultato atteso»: ognuno nel suo esercizio, il file giusto, lungo quanto il copione, con scritto
+    // come avviare la scena. I vecchi video della teoria non si mostrano.
+    const paccoAperto = JSON.parse(fs.readFileSync(path.join(process.env.HTD_PROVA_CORSO!, catalogo.lezioni.find((l) => l.slug === aperta)!.file), "utf8")) as {
+      media: Record<string, { sha256: string }>;
+      video?: Record<string, { copione: { durata: number; scena: string } }>;
+      contenuto: { blocchi: { tipo: string }[] };
+    };
+    const attesi = Object.entries(paccoAperto.video ?? {});
+    const mostrati = await js<{ id: string; src: string; durata: number; didascalia: string }[]>(
+      "Promise.all([...document.querySelectorAll('article.esercizio video')].map(v => new Promise(r => { const fatto = () => r({ id: v.closest('article').id, src: v.src, durata: v.duration, didascalia: v.closest('figure').innerText }); if (v.readyState > 0) fatto(); else { v.onloadedmetadata = fatto; v.onerror = () => r({ id: v.closest('article').id, src: v.src, durata: -1, didascalia: '' }); } })))",
+    );
+    assert.equal(mostrati.length, attesi.length, `un video per ogni esercizio che ce l'ha: ${JSON.stringify(mostrati)}`);
+    for (const [id, v] of attesi) {
+      const m = mostrati.find((x) => x.id === id);
+      assert.ok(m, `il video di ${id} è nel suo esercizio`);
+      assert.equal(m.src, `htd://media/${paccoAperto.media[`video:${id}`].sha256}.mp4`);
+      assert.ok(Math.abs(m.durata - v.copione.durata) < 0.6, `${id}: il video dura ${m.durata} s, il copione ${v.copione.durata} s`);
+      assert.match(m.didascalia, /Il risultato atteso\./);
+      assert.match(m.didascalia, /F5|F6/);
+    }
+    const blocchiVideo = paccoAperto.contenuto.blocchi.filter((b) => b.tipo === "video").length;
+    assert.equal(await js<number>("document.querySelectorAll('.pagina-lezione video').length"), attesi.length, "i vecchi video della teoria non si mostrano");
+    if (attesi.length) await js(`document.querySelector('article.esercizio video')?.scrollIntoView({ block: 'center' })`);
+    await schermata("04b-video-risultato-atteso");
+    ok(`video «Il risultato atteso»: ${attesi.length ? attesi.map(([id]) => id).join(", ") : "nessuno in questa lezione"}, caricati e lunghi quanto il copione${blocchiVideo ? `; ${blocchiVideo} vecchi video della teoria nascosti` : ""}`);
+
     // 6. Una consegna verificata in Godot: prima del lavoro non passa, con la soluzione sì.
     const voce = catalogo.lezioni.find((l) => l.slug === aperta)!;
     const pacco = JSON.parse(fs.readFileSync(path.join(process.env.HTD_PROVA_CORSO!, voce.file), "utf8")) as {
