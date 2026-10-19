@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-19T07:28:08.806Z",
+ "aggiornato": "2026-10-19T07:33:36.269Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "temi-e-font",
-  "numero": "3.3",
-  "titolo": "Temi e font: un aspetto coerente"
+  "slug": "interfaccia-in-partita",
+  "numero": "3.4",
+  "titolo": "L'interfaccia durante la partita: CanvasLayer"
  },
- "messaggio": "Sta scrivendo la lezione 3.3 «Temi e font: un aspetto coerente».",
+ "messaggio": "Sta scrivendo la lezione 3.4 «L'interfaccia durante la partita: CanvasLayer».",
  "riprende": null
 }

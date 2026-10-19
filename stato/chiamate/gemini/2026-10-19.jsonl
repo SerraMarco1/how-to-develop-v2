@@ -28,3 +28,4 @@
 {"quando":1792395141138,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"temi-e-font","ok":false,"contata":true,"durataMs":1863,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792395143005,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"temi-e-font","ok":true,"contata":true,"durataMs":57341,"tokenInput":12397,"tokenOutput":12,"ragionamento":7972}
 {"quando":1792395201842,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"temi-e-font","ok":true,"contata":true,"durataMs":8803,"tokenInput":2997,"tokenOutput":693,"ragionamento":2593}
+{"quando":1792395216285,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"interfaccia-in-partita","ok":true,"contata":true,"durataMs":80471,"tokenInput":16102,"tokenOutput":2939,"ragionamento":6959}
