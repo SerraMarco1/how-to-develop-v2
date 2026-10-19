@@ -58,5 +58,12 @@
    "tentativi": 1,
    "esito": "fatto"
   }
+ },
+ "condizioni": {
+  "es1": {
+   "impronta": "f04067057bc8415025091763250429e2ffd34c95c753dff836da4d73960e608e",
+   "tentativi": 1,
+   "esito": "fatto"
+  }
  }
 }

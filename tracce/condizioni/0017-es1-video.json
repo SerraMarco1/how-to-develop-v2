@@ -1,0 +1,48 @@
+{
+ "n": 17,
+ "quando": "2026-10-19T16:01:39.935Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri star.tscn e premi F6, 8 s. Soggetti: «Stella» (cambiare colore). Scritte: «La stella cambia colore e riparte dall'alto». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 58 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16684,
+ "dati": {
+  "copione": {
+   "scena": "res://star.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "stella",
+     "cerca": {
+      "scena": "res://star.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "cambiare colore",
+     "etichetta": "Stella"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La stella cambia colore e riparte dall'alto",
+     "da": 0.5,
+     "a": 7.5,
+     "soggetto": "stella"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "9807430ab82d561ca7caca6b11dab14f51981ac4692d224ced0976b02d6ee682",
+   "estensione": "mp4",
+   "byte": 59319
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (3529 → 203 token)"
+ ]
+}
