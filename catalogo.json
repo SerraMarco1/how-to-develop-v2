@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:51:19.197Z",
+ "aggiornato": "2026-10-19T07:58:06.515Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -380,6 +380,15 @@
    "file": "lezioni/f03-interfaccia/cambiare-scena.json",
    "sha256": "bfe9f8a00b2a3092c9f322bc7bf109a532ea2220e093935f682799da917f77eb",
    "byte": 208646
+  },
+  {
+   "slug": "autoload",
+   "numero": "3.6",
+   "titolo": "Autoload: i dati che restano",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/autoload.json",
+   "sha256": "4b73a61ba7c572f31fdf35f1fd2d353c818e52a87bcf00068a3ef4f6fa93abb2",
+   "byte": 194688
   }
  ],
  "documentazione": {
