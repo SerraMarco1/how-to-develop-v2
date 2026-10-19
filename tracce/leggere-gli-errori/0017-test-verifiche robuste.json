@@ -1,0 +1,41 @@
+{
+ "n": 17,
+ "quando": "2026-10-19T09:03:05.430Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 45028,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://basket.tscn",
+    "descrizione": "Il progetto contiene la scena basket.tscn"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://star.tscn",
+    "descrizione": "Il progetto contiene la scena star.tscn"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://rock.tscn",
+    "descrizione": "Il progetto contiene la scena rock.tscn"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_loaded\", basket != null, \"La scena principale basket.tscn deve avviarsi senza errori di compilazione\"):\n\t\treturn\n\tbasket.position = Vector2(500.0, 600.0)\n\tvar basket_start_x: float = basket.position.x\n\tawait hold_action(\"move_right\", 20)\n\tcheck(\"basket_moves\", basket.position.x > basket_start_x, \"Il cesto deve potersi spostare verso destra (x prima: %.1f, x ora: %.1f)\" % [basket_start_x, basket.position.x])\n\tbasket.position = Vector2(2000.0, 600.0)\n\tawait wait_physics_frames(2)\n\tcheck(\"basket_clamp\", basket.position.x < 2000.0, \"Il cesto non deve uscire dai confini dello schermo (rimasto a x = %.1f)\" % basket.position.x)\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_loaded\", star != null, \"La scena star.tscn deve caricarsi ed avviarsi senza errori\"):\n\t\treturn\n\tstar.position = Vector2(400.0, 200.0)\n\tvar initial_star_y: float = star.position.y\n\tawait wait_frames(10)\n\tcheck(\"star_falls\", star.position.y > initial_star_y, \"La stella deve cadere verso il basso con lo scorrere dei fotogrammi (y prima: %.1f, y ora: %.1f)\" % [initial_star_y, star.position.y])\n\tvar caught_result = call_if_exists(star, \"is_caught\", [star.position])\n\tcheck(\"star_is_caught\", caught_result == true, \"La funzione is_caught() deve restituire true quando il cesto e la stella si sovrappongono\")\n\tvar rock := await instantiate_scene(\"res://rock.tscn\")\n\tif not check(\"rock_loaded\", rock != null, \"La scena rock.tscn deve caricarsi ed avviarsi senza errori\"):\n\t\treturn\n\trock.position = Vector2(400.0, 200.0)\n\tvar initial_rock_x: float = rock.position.x\n\tawait wait_frames(10)\n\tcheck(\"rock_moves_right\", rock.position.x > initial_rock_x, \"La roccia deve spostarsi verso destra mentre cade (x prima: %.1f, x ora: %.1f)\" % [initial_rock_x, rock.position.x])\n",
+    "descrizione": "Tutte le scene si avviano senza errori, il cesto si sposta correttamente e rispetta i limiti, la stella cade regolarmente e la roccia si muove verso destra"
+   }
+  ],
+  "consegna": "Hai ricevuto una copia completa del gioco nella cartella `copia-pioggia-di-stelle`. All'interno del progetto sono presenti cinque errori (due errori di scrittura e tre errori di logica distribuiti tra i file) che causano i seguenti sintomi:\n\n1. **Il gioco principale non parte**: premendo **F5**, la scena principale `basket.tscn` non si avvia affatto e nel pannello **Output** compare un errore di scrittura relativo a una condizione in `basket.gd`.\n2. **La scena della stella non compila**: aprendo `res://star.tscn` e premendo **F6** per eseguirla da sola, Godot rifiuta l'avvio segnalando un errore di sintassi nella firma dei parametri di una funzione in `star.gd`.\n3. **Il cesto si blocca a metà schermo**: dopo aver consentito l'avvio della scena principale, il cesto si sposta regolarmente a sinistra ma, tenendo premuto a destra, si arresta bruscamente a metà schermo (a coordinata X = 576.0) senza poter proseguire verso il limite destro dello schermo.\n4. **La stella resta immobile in alto**: nella scena della stella, l'oggetto non scende lungo l'asse Y con lo scorrere dei fotogrammi ma rimane congelato in alto alla sua posizione iniziale.\n5. **La roccia scivola verso sinistra**: nella scena dell'ostacolo (`res://rock.tscn`), la roccia cade verso il basso ma scivola orizzontalmente verso sinistra anziché dirigersi verso destra.\n\nIndividua e risolvi tutti e cinque gli errori nei rispettivi script (`basket.gd`, `star.gd` e `rock.gd`) per rimettere in sesto il gioco."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 30 s (14618 → 7470 token)"
+ ]
+}

@@ -43,5 +43,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "leggere-gli-errori": {
+  "versione": 3,
+  "fragili": [],
+  "tentativi": {}
  }
 }
