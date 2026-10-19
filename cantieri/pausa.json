@@ -249,7 +249,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo pause il gioco deve entrare in pausa\n  - In pausa il pulsante Riprendi deve essere visibile\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
