@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:42:16.659Z",
+ "aggiornato": "2026-10-19T15:59:29.335Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -16,10 +16,10 @@
    "slug": "l-editor-costruendo-una-scena",
    "numero": "0.1",
    "titolo": "L'editor, costruendo una scena",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f00-orientamento/l-editor-costruendo-una-scena.json",
-   "sha256": "bcd7007aee81a81f8544c2377799a1bac98f41fbb1a1db6ef999922685409765",
-   "byte": 26709
+   "sha256": "65af605a1743b80cd09a267c4266ae12bd55cf8738ae10e8db81b07b06dd3fe8",
+   "byte": 27351
   },
   {
    "slug": "trovare-le-risposte-nella-documentazione",

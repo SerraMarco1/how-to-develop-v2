@@ -1,0 +1,60 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T15:59:29.329Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Icona» (esserci), «Scritta» (mostrare testo). Scritte: «L'icona di Godot e il messaggio di benvenuto». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 19 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 24268,
+ "dati": {
+  "copione": {
+   "scena": "res://node_2d.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "sprite",
+     "cerca": {
+      "nome": "Sprite2D"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 8,
+     "deve": "esserci",
+     "etichetta": "Icona"
+    },
+    {
+     "id": "testo",
+     "cerca": {
+      "nome": "Label"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 8,
+     "deve": "mostrare testo",
+     "testo": "Benvenuto in Godot!",
+     "etichetta": "Scritta"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'icona di Godot e il messaggio di benvenuto",
+     "da": 0,
+     "a": 8,
+     "soggetto": "sprite"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "66cef257bdfec2c3f073b9e2001b8d3f13c44cf1ce0431f58e67657fd96af489",
+   "estensione": "mp4",
+   "byte": 19285
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (2550 → 301 token)"
+ ]
+}
