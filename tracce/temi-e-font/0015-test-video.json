@@ -1,0 +1,16 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T16:16:18.132Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Stile dei pannelli e cornice per i messaggi» non si vede sullo schermo: Il nodo MessagePanel è stato aggiunto alla scena hud.tscn, ma la scena principale basket.tscn avviata con F5 non include hud.tscn, quindi il pannello non viene visualizzato a schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16157,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 15 s (8256 → 56 token)"
+ ]
+}
