@@ -294,7 +294,8 @@
    "impronta": "e70ecbc7548cf1efb00ca3cfbd18f93dbacbcc4a80f6ee32d1dac1a1d3cd11d4",
    "tentativi": 1,
    "esito": "niente",
-   "motivo": "L'esercizio riorganizza il codice creando una classe riutilizzabile e tipizzando gli array, senza introdurre elementi visivi nuovi sullo schermo rispetto a quanto già presente nella lezione precedente."
+   "regole": 2,
+   "motivo": "L'esercizio riorganizza il codice creando la classe FallingItem e aggiornando i riferimenti, ma il comportamento visivo del gioco resta identico a prima."
   }
  },
  "albero-dei-nodi": {

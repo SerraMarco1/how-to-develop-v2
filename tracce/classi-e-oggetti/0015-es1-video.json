@@ -1,0 +1,16 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T19:42:54.507Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Nasce la classe FallingItem» non si vede sullo schermo: L'esercizio riorganizza il codice creando la classe FallingItem e aggiornando i riferimenti, ma il comportamento visivo del gioco resta identico a prima.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 6298,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (6253 → 44 token)"
+ ]
+}
