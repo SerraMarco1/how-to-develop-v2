@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { impostaGodot } from "../src/godot/esegui.ts";
 import { installaGodot } from "../src/godot/installa.ts";
 import { impostaCartellaTemporanea, nuovaCartellaTemporanea, scriviFileProgetto } from "../src/godot/verifica.ts";
-import { accorciaCopione, comeSiAvvia, controllaFotogrammi, leggiResoconto, misuraCopione, nodiCheNonSiVedono, problemiDelCopione, registraVideo, valutaCopione } from "../src/godot/video.ts";
+import { accorciaCopione, comeSiAvvia, controllaFotogrammi, inizioDelVideo, tagliaInizio, leggiResoconto, misuraCopione, nodiCheNonSiVedono, problemiDelCopione, registraVideo, valutaCopione } from "../src/godot/video.ts";
 import { impostaCartellaMotore } from "../src/motore.ts";
 import { CopioneSchema, type Copione, type FileProgetto } from "../src/schemi.ts";
 
@@ -72,6 +72,11 @@ test("video: la stella che cade (1.2) si registra, si vede nei fotogrammi, e non
   assert.ok(fs.statSync(mp4).size > 5000, "il video è stato scritto");
   assert.deepEqual(resoconto.schermo, [1152, 648]);
   assert.deepEqual(await controllaFotogrammi(mp4, STELLA_CHE_CADE, resoconto), []);
+  // Il taglio dell'inizio: il video pubblicato perde i primi secondi, il resto resta uguale.
+  const tagliato = path.join(uscita, "tagliato.mp4");
+  await tagliaInizio(mp4, tagliato, 1.5);
+  const durata = async (file: string) => Number((await import("node:child_process")).execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString());
+  assert.ok(Math.abs((await durata(mp4)) - (await durata(tagliato)) - 1.5) < 0.1, "il video tagliato dura 1,5 secondi meno");
 
   // Senza registrare (senza finestra) le misure sono le stesse.
   const senzaVideo = await misuraCopione({ cartellaProgetto: cartellaCon([progetto("res://basket.tscn"), sprite("Star", "star.gd"), STAR_CADE]), copione: STELLA_CHE_CADE });
@@ -199,6 +204,9 @@ test("video: i problemi del copione che si vedono senza eseguirlo", () => {
   // Niente secondi vuoti in fondo: il video finisce un secondo dopo l'ultimo soggetto (ma dura almeno 4 secondi).
   assert.equal(accorciaCopione({ ...STELLA_CHE_CADE, durata: 12 }).durata, 4);
   assert.equal(accorciaCopione({ ...CINQUE_STELLE, durata: 12, soggetti: [{ ...CINQUE_STELLE.soggetti[0], a: 6.5 }] }).durata, 7.5);
+  // Niente secondi vuoti all'inizio: con la prima scritta a 10 s (la pausa della 2.5) il video comincia a 8,5 s.
+  assert.equal(inizioDelVideo(CINQUE_STELLE), 0);
+  assert.equal(inizioDelVideo({ ...CINQUE_STELLE, durata: 12, soggetti: [{ ...CINQUE_STELLE.soggetti[0], da: 10, a: 10.5 }], scritte: [{ testo: "Pausa", da: 10, a: 10.5, soggetto: "stelle" }] }), 8.5);
   assert.equal(comeSiAvvia(CINQUE_STELLE, "res://basket.tscn"), "Avvia il gioco con F5");
   // Percorsi fuori dal progetto: rifiutati dal formato.
   assert.throws(() => copione({ scena: "res://../fuori.tscn", soggetti: CINQUE_STELLE.soggetti }));

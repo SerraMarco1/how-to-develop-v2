@@ -127,6 +127,9 @@ scritto come avviarlo («Avvia il gioco con F5», «Apri star.tscn e premi F6»)
 - **La registrazione**: Godot avvia la soluzione con la base `motori/godot/harness/htd_video.gd`, nella finestra del
   gioco così com'è (niente camera spostata: il video è un riferimento da confrontare), con sopra la scritta, un riquadro
   giallo con un'etichetta intorno ai soggetti e il tasto premuto. Casualità fissata, 30 fotogrammi al secondo.
+  Il video finisce un secondo dopo l'ultimo soggetto e, se prima della prima scritta ci sono più di 3 secondi senza
+  niente da spiegare, comincia un secondo e mezzo prima di lei (il gioco gira comunque da capo: nella 2.5 la pausa tra
+  le ondate arriva a 10 secondi, e il primo video ne mostrava 10 di attesa).
 - **I controlli**, prima di pubblicare (`condiviso/src/godot/video.ts`), tutti senza modelli:
   1. il copione è possibile: la scena c'è (anche una che non è la principale: si avvia con F6, e l'aula lo scrive), le
      azioni sono della Input Map, i file dei soggetti esistono, le scritte stanno negli intervalli dei loro soggetti e

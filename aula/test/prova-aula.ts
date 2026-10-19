@@ -128,7 +128,7 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
     // come avviare la scena. I vecchi video della teoria non si mostrano.
     const paccoAperto = JSON.parse(fs.readFileSync(path.join(process.env.HTD_PROVA_CORSO!, catalogo.lezioni.find((l) => l.slug === aperta)!.file), "utf8")) as {
       media: Record<string, { sha256: string }>;
-      video?: Record<string, { copione: { durata: number; scena: string } }>;
+      video?: Record<string, { copione: { durata: number; scena: string }; inizio?: number }>;
       contenuto: { blocchi: { tipo: string }[] };
     };
     const attesi = Object.entries(paccoAperto.video ?? {});
@@ -141,7 +141,8 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
       assert.ok(m, `il video di ${id} è nel suo esercizio`);
       assert.equal(m.src, `htd://media/${paccoAperto.media[`video:${id}`].sha256}.mp4#t=0.5`);
       assert.ok(Math.abs(m.inizio - 0.5) < 0.1, `${id}: l'anteprima è il fotogramma a 0,5 s, con scritta e riquadro (è a ${m.inizio} s)`);
-      assert.ok(Math.abs(m.durata - v.copione.durata) < 0.6, `${id}: il video dura ${m.durata} s, il copione ${v.copione.durata} s`);
+      const attesa = v.copione.durata - (v.inizio ?? 0);
+      assert.ok(Math.abs(m.durata - attesa) < 0.6, `${id}: il video dura ${m.durata} s, il copione ${attesa} s (${v.copione.durata} meno l'inizio tagliato)`);
       assert.match(m.didascalia, /Il risultato atteso\./);
       assert.match(m.didascalia, /F5|F6/);
     }

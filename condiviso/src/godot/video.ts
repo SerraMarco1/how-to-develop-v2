@@ -412,6 +412,25 @@ export function accorciaCopione(copione: Copione): Copione {
   return { ...copione, durata: Math.max(4, Math.min(copione.durata, Math.ceil((fine + 1) * 10) / 10)) };
 }
 
+/**
+ * Da dove comincia il video pubblicato: un secondo e mezzo prima della prima scritta o del primo soggetto, se prima ci
+ * sono più di 3 secondi in cui non si spiega niente; 0 = dall'inizio. Il gioco deve comunque girare da capo (nella 2.5
+ * la pausa tra le ondate arriva a 10 secondi: il primo video mostrava 10 secondi di cesto fermo e mezzo secondo di
+ * pausa), ma chi guarda non deve aspettare. Misure e fotogrammi si controllano sulla registrazione intera, poi l'inizio
+ * si taglia (tagliaInizio).
+ */
+export function inizioDelVideo(copione: Copione): number {
+  const primo = Math.min(...copione.scritte.map((w) => w.da), ...copione.soggetti.map((s) => s.da));
+  return primo > 3 ? Math.round((primo - 1.5) * 10) / 10 : 0;
+}
+
+/** Scrive in `uscita` il video `ingresso` senza i suoi primi `inizio` secondi. */
+export async function tagliaInizio(ingresso: string, uscita: string, inizio: number): Promise<void> {
+  const ffmpeg = await ffmpegDisponibile();
+  if (!ffmpeg) throw new Error("ffmpeg non trovato: serve per tagliare il video");
+  await execFileAsync(ffmpeg, ["-y", "-loglevel", "error", "-ss", String(inizio), "-i", ingresso, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "26", "-preset", "veryfast", "-movflags", "+faststart", "-an", uscita], { timeout: 180_000 });
+}
+
 /** Come chi studia avvia la scena del video: F5 se è la scena principale, altrimenti F6 con la scena aperta. */
 export function comeSiAvvia(copione: Pick<Copione, "scena">, scenaPrincipale: string | null | undefined): string {
   return copione.scena === scenaPrincipale ? "Avvia il gioco con F5" : `Apri ${nomeScena(copione.scena)} e premi F6`;

@@ -33,7 +33,12 @@ export const percorsoMedia = (m: Pick<Media, "sha256" | "estensione">) => `media
  * soluzione e del progetto di partenza in quel momento. Se cambiano, il video non vale più e si rifà.
  * Il file è nei media della lezione, con la chiave "video:<id dell'esercizio>".
  */
-export const VideoEsercizioSchema = z.object({ copione: CopioneSchema, impronta: impronta });
+export const VideoEsercizioSchema = z.object({
+  copione: CopioneSchema,
+  impronta: impronta,
+  /** I secondi tagliati all'inizio del video pubblicato, dove non si spiegava niente (vedi inizioDelVideo). */
+  inizio: z.number().min(0).default(0),
+});
 export type VideoEsercizio = z.infer<typeof VideoEsercizioSchema>;
 
 export const PaccoLezioneSchema = z.object({

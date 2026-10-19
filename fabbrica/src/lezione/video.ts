@@ -5,7 +5,7 @@ import { problemiDelPacco } from "@htd/condiviso/controllo-pacco.ts";
 import { togliCartella } from "@htd/condiviso/godot/esegui.ts";
 import { leggiProjectGodot } from "@htd/condiviso/godot/progetto.ts";
 import { nuovaCartellaTemporanea, scriviFileProgetto } from "@htd/condiviso/godot/verifica.ts";
-import { accorciaCopione, comeSiAvvia, controllaFotogrammi, misuraCopione, nodiCheNonSiVedono, problemiDelCopione, registraVideo, valutaCopione } from "@htd/condiviso/godot/video.ts";
+import { accorciaCopione, comeSiAvvia, controllaFotogrammi, inizioDelVideo, tagliaInizio, misuraCopione, nodiCheNonSiVedono, problemiDelCopione, registraVideo, valutaCopione } from "@htd/condiviso/godot/video.ts";
 import { PaccoLezioneSchema, sha256, type Media, type PaccoLezione, type VideoEsercizio } from "@htd/condiviso/pacchetto.ts";
 import { controllaFileLezione, descriviViolazioni } from "@htd/condiviso/sicurezza.ts";
 import { CopioneSchema, type Copione, type Esercizio, type Lezione, type StatoProgetto } from "@htd/condiviso/schemi.ts";
@@ -157,8 +157,11 @@ type EsitoTentativo =
 
 const nomePezzo = (e: Esercizio) => (e.id === "test" ? "Test" : `Esercizio ${e.id?.replace("es", "")}`);
 
-/** Registra il copione sulla soluzione e lo prova sul progetto di prima: i problemi trovati (vuoto = il video va bene). */
-async function provaCopione(e: Esercizio, base: StatoProgetto, copione: Copione, mp4: string): Promise<{ problemi: string[]; invisibili: string[] }> {
+/**
+ * Registra il copione sulla soluzione e lo prova sul progetto di prima: i problemi trovati (vuoto = il video va bene) e,
+ * se va bene, il file da pubblicare (senza l'inizio in cui non si spiega niente: vedi inizioDelVideo).
+ */
+async function provaCopione(e: Esercizio, base: StatoProgetto, copione: Copione, mp4: string): Promise<{ problemi: string[]; invisibili: string[]; file?: string }> {
   const statici = problemiDelCopione(copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) });
   if (statici.length) return { problemi: statici, invisibili: [] };
   const cartella = nuovaCartellaTemporanea("video");
@@ -178,7 +181,11 @@ async function provaCopione(e: Esercizio, base: StatoProgetto, copione: Copione,
         return { problemi: ["Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."], invisibili: [] };
       }
     }
-    return { problemi: [], invisibili: [] };
+    const inizio = inizioDelVideo(copione);
+    if (inizio === 0) return { problemi: [], invisibili: [], file: mp4 };
+    const tagliato = mp4.replace(/.mp4$/, "-tagliato.mp4");
+    await tagliaInizio(mp4, tagliato, inizio);
+    return { problemi: [], invisibili: [], file: tagliato };
   } finally {
     togliCartella(cartella);
     togliCartella(prima);
@@ -216,7 +223,7 @@ async function unTentativo(slug: string, e: Esercizio, base: StatoProgetto, impr
   const uscita = nuovaCartellaTemporanea("video-mp4");
   const mp4 = path.join(uscita, "risultato.mp4");
   try {
-    let esito: { problemi: string[]; invisibili: string[] };
+    let esito: { problemi: string[]; invisibili: string[]; file?: string };
     try {
       esito = await provaCopione(e, base, copione, mp4);
     } catch (errore) {
@@ -241,7 +248,8 @@ async function unTentativo(slug: string, e: Esercizio, base: StatoProgetto, impr
       });
       return { problemi: esito.problemi, copione, invisibili: esito.invisibili };
     }
-    const media = salvaMedia(fs.readFileSync(mp4), "mp4");
+    const inizio = inizioDelVideo(copione);
+    const media = salvaMedia(fs.readFileSync(esito.file ?? mp4), "mp4");
     registra({
       slug,
       pezzo: e.id as Pezzo,
@@ -250,10 +258,10 @@ async function unTentativo(slug: string, e: Esercizio, base: StatoProgetto, impr
       modello: risposta.modello,
       dalle,
       titolo: `${nomePezzo(e)}: video del risultato atteso registrato`,
-      spiegazione: `Copione di ${risposta.modello}: ${comeSiAvvia(copione, scenaPrincipaleDi(e))}, ${copione.durata} s. Soggetti: ${copione.soggetti.map((s) => `«${s.etichetta}» (${s.deve})`).join(", ")}. Scritte: ${copione.scritte.map((w) => `«${w.testo}»`).join(" · ")}. I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video ${Math.round(media.byte / 1024)} KB.`,
+      spiegazione: `Copione di ${risposta.modello}: ${comeSiAvvia(copione, scenaPrincipaleDi(e))}, ${copione.durata} s. Soggetti: ${copione.soggetti.map((s) => `«${s.etichetta}» (${s.deve})`).join(", ")}. Scritte: ${copione.scritte.map((w) => `«${w.testo}»`).join(" · ")}. I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa.${inizio ? ` Il video pubblicato comincia a ${inizio} s: prima non si spiega niente.` : ""} Video ${Math.round(media.byte / 1024)} KB.`,
       dati: { copione, media },
     });
-    return { fatto: { copione, impronta }, media };
+    return { fatto: { copione, impronta, inizio }, media };
   } finally {
     togliCartella(uscita);
   }
@@ -304,10 +312,11 @@ export async function completaVideo(): Promise<number> {
     try {
       for (const { e, base, impronta } of eserciziDaFilmare(pacco.contenuto)) {
         const id = e.id!;
-        // Un video che vale ancora: stessa soluzione, e un copione che rispetta le regole di oggi (con due scritte nello
-        // stesso momento se ne vedeva una sola: si rifà).
+        // Un video che vale ancora: stessa soluzione, un copione che rispetta le regole di oggi (con due scritte nello
+        // stesso momento se ne vedeva una sola) e l'inizio vuoto tagliato (il primo video della 2.5 aveva 10 secondi di
+        // attesa). Altrimenti si rifà.
         const esistente = pacco.video[id];
-        if (esistente?.impronta === impronta && pacco.media[`video:${id}`] && problemiDelCopione(esistente.copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) }).length === 0) continue;
+        if (esistente?.impronta === impronta && pacco.media[`video:${id}`] && problemiDelCopione(esistente.copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) }).length === 0 && esistente.inizio === inizioDelVideo(esistente.copione)) continue;
         const prima = registro[voce.slug]?.[id];
         // Deciso per questa soluzione: risultato fuori dallo schermo, oppure niente da mostrare o tentativi esauriti con le
         // regole di oggi. Non si richiede. "fatto" senza un video valido nella lezione si rifà.
