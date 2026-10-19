@@ -116,3 +116,4 @@
 {"quando":1792425545063,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"l-editor-costruendo-una-scena","ok":true,"contata":true,"durataMs":4777,"tokenInput":2550,"tokenOutput":301,"ragionamento":1576}
 {"quando":1792425570744,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"il-primo-script","ok":true,"contata":true,"durataMs":4133,"tokenInput":2469,"tokenOutput":202,"ragionamento":1167}
 {"quando":1792425587505,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"variabili-e-tipi","ok":true,"contata":true,"durataMs":6794,"tokenInput":3224,"tokenOutput":208,"ragionamento":2110}
+{"quando":1792425602510,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"variabili-e-tipi","ok":true,"contata":true,"durataMs":12271,"tokenInput":3536,"tokenOutput":194,"ragionamento":3625}

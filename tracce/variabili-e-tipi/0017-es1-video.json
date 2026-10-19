@@ -1,0 +1,48 @@
+{
+ "n": 17,
+ "quando": "2026-10-19T16:00:02.507Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «cesto» (scena = res://basket.tscn; almeno 1 da 0 a 6 s; deve mostrare il testo «Vite: 3»): il testo «Vite: 3» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 3 s: «Basket» a (512, 536) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15003,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "cesto",
+     "cerca": {
+      "scena": "res://basket.tscn"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 6,
+     "deve": "mostrare testo",
+     "testo": "Vite: 3",
+     "etichetta": "Cesto"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il cesto mostra nome, vite e velocità",
+     "da": 0,
+     "a": 6,
+     "soggetto": "cesto"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «cesto» (scena = res://basket.tscn; almeno 1 da 0 a 6 s; deve mostrare il testo «Vite: 3»): il testo «Vite: 3» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 3 s: «Basket» a (512, 536) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (3224 → 208 token)"
+ ]
+}
