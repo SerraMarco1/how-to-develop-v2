@@ -73,5 +73,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "stati-del-gioco": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
