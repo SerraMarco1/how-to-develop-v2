@@ -211,47 +211,41 @@
  "dictionary": {
   "es1": {
    "impronta": "98747011c3ea5520b3940f1e157fff8fe1cf13296e5a887b740b3753fe7153f0",
-   "tentativi": 2,
-   "esito": "niente",
+   "tentativi": 3,
+   "esito": "rinuncia",
+   "regole": 2,
    "ultimo": {
     "copione": {
-     "scena": "res://basket.tscn",
-     "durata": 8,
-     "azioni": [
-      {
-       "azione": "move_right",
-       "inizio": 2,
-       "fine": 5,
-       "tasto": "D"
-      }
-     ],
+     "scena": "res://star.tscn",
+     "durata": 4,
+     "azioni": [],
      "soggetti": [
       {
-       "id": "star",
+       "id": "stella",
        "cerca": {
-        "script": "res://star.gd"
+        "scena": "res://star.tscn"
        },
        "quanti": 1,
        "da": 0.5,
-       "a": 7.5,
+       "a": 2,
        "deve": "muoversi",
-       "etichetta": "Oggetto"
+       "etichetta": "Stella"
       }
      ],
      "scritte": [
       {
-       "testo": "Gli oggetti cadono con colori e velocita' differenti",
+       "testo": "Il Dictionary definisce colore e velocità dei tipi di oggetti",
        "da": 0.5,
-       "a": 7.5,
-       "soggetto": "star"
+       "a": 2,
+       "soggetto": "stella"
       }
      ]
     },
     "problemi": [
-     "Soggetto «star» (script = res://star.gd; almeno 1 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 5, visibili al massimo 0. A 1 s: «Star» a (913.5, 876) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@5» a (1098, 836) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@6» a (1112.4, 876) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@7» a (1265.3, 796) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
     ]
    },
-   "motivo": "Le stelle vengono istanziate come figlie del cesto (posizionato a y = 600) e posizionate a y = 80 locali, risultando a una coordinata globale y = 680, che si trova fuori dallo schermo (altezza massima 648)."
+   "motivo": "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
   }
  },
  "stati-del-gioco": {
