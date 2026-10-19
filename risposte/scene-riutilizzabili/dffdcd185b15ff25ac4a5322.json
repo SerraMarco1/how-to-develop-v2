@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": false, \"perche\": \"Gli oggetti in caduta istanziati come figli del Cesto partono a una coordinata Y globale di 680 (sotto il bordo inferiore dello schermo a 648) e si muovono ulteriormente verso il basso, risultando completamente fuori dallo schermo.\"}",
- "ragionamento": 1967,
- "quando": "2026-10-19T16:09:23.833Z",
- "ruolo": "ritocco"
-}

@@ -1,0 +1,16 @@
+{
+ "n": 24,
+ "quando": "2026-10-19T16:09:25.278Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Crea lo stampo falling_item.tscn» non si vede sullo schermo: Gli oggetti in caduta istanziati come figli del Cesto partono a una coordinata Y globale di 680 (sotto il bordo inferiore dello schermo a 648) e si muovono ulteriormente verso il basso, risultando completamente fuori dallo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9071,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (6662 → 69 token)"
+ ]
+}
