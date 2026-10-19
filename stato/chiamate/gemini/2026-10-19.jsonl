@@ -69,3 +69,4 @@
 {"quando":1792398972988,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"focus-tastiera-e-gamepad","ok":true,"contata":true,"durataMs":199432,"tokenInput":20680,"tokenOutput":6308,"ragionamento":19688}
 {"quando":1792399172421,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"focus-tastiera-e-gamepad","ok":true,"contata":true,"durataMs":50606,"tokenInput":20680,"tokenOutput":7117}
 {"quando":1792399228114,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"focus-tastiera-e-gamepad","ok":true,"contata":true,"durataMs":57473,"tokenInput":19467,"tokenOutput":12719,"ragionamento":13413}
+{"quando":1792399297471,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"focus-tastiera-e-gamepad","ok":true,"contata":true,"durataMs":43284,"tokenInput":19837,"tokenOutput":13141,"ragionamento":7012}
