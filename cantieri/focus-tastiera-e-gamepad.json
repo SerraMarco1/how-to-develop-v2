@@ -384,7 +384,9 @@
    "genere": "trova",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo Su da ClassicButton il focus deve andare a BackButton\n  - Spostandosi a destra da BackButton si deve raggiungere HelpButton\n  - Premendo Giù da HelpButton il focus deve raggiungere TimeAttackButton\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
