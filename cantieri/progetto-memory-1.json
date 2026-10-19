@@ -168,7 +168,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Progetto «Memory» – tappa 1: la griglia",
@@ -195,5 +196,10 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
