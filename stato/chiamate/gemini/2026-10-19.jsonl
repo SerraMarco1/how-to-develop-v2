@@ -12,3 +12,4 @@
 {"quando":1792393879830,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":198835,"tokenInput":19814,"tokenOutput":11390,"ragionamento":13407}
 {"quando":1792394107172,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"control-ancore-e-dimensioni","ok":false,"contata":true,"durataMs":3033,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792394110209,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":91433,"tokenInput":15451,"tokenOutput":12,"ragionamento":8424}
+{"quando":1792394203061,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"control-ancore-e-dimensioni","ok":true,"contata":true,"durataMs":7622,"tokenInput":3047,"tokenOutput":811,"ragionamento":2466}
