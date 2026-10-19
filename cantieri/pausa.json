@@ -2,7 +2,7 @@
  "creato": "2026-10-19T07:58:07.930Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "titolo": "Il menu di pausa di Pioggia di stelle",
@@ -313,7 +313,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Il menu di pausa di Pioggia di stelle\" (obiettivo) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-3.7-flash",
   "gemini/gemini-flash-lite-latest",
