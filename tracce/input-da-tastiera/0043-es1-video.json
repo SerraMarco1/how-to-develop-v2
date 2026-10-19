@@ -1,0 +1,55 @@
+{
+ "n": 43,
+ "quando": "2026-10-19T16:02:06.722Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Cesto» (muoversi). Scritte: «Il cesto si sposta a destra premendo il tasto D». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 33 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 25325,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 5,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "basket",
+     "cerca": {
+      "script": "res://basket.gd"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 7,
+     "deve": "muoversi",
+     "etichetta": "Cesto"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il cesto si sposta a destra premendo il tasto D",
+     "da": 1,
+     "a": 5,
+     "soggetto": "basket"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "a53c7f2e7110ae128fb872b40bbaf497466b0d661be44a578fad063eb587b8c1",
+   "estensione": "mp4",
+   "byte": 34097
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 13 s (4052 → 252 token)"
+ ]
+}

@@ -65,5 +65,12 @@
    "tentativi": 1,
    "esito": "fatto"
   }
+ },
+ "input-da-tastiera": {
+  "es1": {
+   "impronta": "7e49dcfca2c9559911a825c4e9ab0cdefd876f65943fb2ad890f3a1bf12410a4",
+   "tentativi": 1,
+   "esito": "fatto"
+  }
  }
 }
