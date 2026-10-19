@@ -1,0 +1,35 @@
+{
+ "n": 19,
+ "quando": "2026-10-19T09:21:32.156Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest non supera i controlli:\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Due danni a distanza di 0.5 secondi tolgono una sola vita: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"lives_reduced_ok\" variable because the value doesn't have a set type.\n          at: GDScript::reload (res://htd/verifica_1.gd:22)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"lives_reduced_ok\" variable because the value doesn't have a set type.\n      \nReazione: si riprova al prossimo giro.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 53343,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Due danni a distanza di 0.5 secondi tolgono una sola vita: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"lives_reduced_ok\" variable because the value doesn't have a set type.\n          at: GDScript::reload (res://htd/verifica_1.gd:22)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"lives_reduced_ok\" variable because the value doesn't have a set type.\n          at: GDScript::reload (res://htd/verifica_1.gd:22)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 22: `var lives_reduced_ok := (lives_after_first == initial_lives - 1)`\nSuggerimenti:\n  - `:=` funziona solo se il valore a destra ha un tipo noto. Scrivi `var nome = valore` (con `=`) oppure dichiara il tipo: `var nome: float = valore`. Succede sempre con `get_prop(...)`, `call_if_exists(...)`, `get_node(...)`, `load(...)` e con i valori presi da Array e Dictionary."
+  ],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "create_timer\\(1\\.0\\)",
+    "descrizione": "Nel codice di basket.gd è presente un timer di 1.0 secondo"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene() as Sprite2D\n\tif not check(\"basket_exists\", basket != null, \"La scena principale Basket si istanzia correttamente\"):\n\t\treturn\n\t\n\tvar initial_lives = get_prop(basket, \"lives\", 3)\n\tvar expected_initial = get_prop(basket, \"INITIAL_LIVES\", 3)\n\tcheck(\n\t\t\"initial_lives\",\n\t\tinitial_lives == expected_initial,\n\t\t\"Le vite iniziali devono corrispondere a INITIAL_LIVES (sono %d, attese %d)\" % [initial_lives, expected_initial]\n\t)\n\t\n\t# Primo colpo\n\tcall_if_exists(basket, \"take_damage\", [1])\n\tawait wait_frames(2)\n\t\n\tvar lives_after_first = get_prop(basket, \"lives\", 0)\n\tvar lives_reduced_ok := (lives_after_first == initial_lives - 1)\n\tcheck(\n\t\t\"lives_reduced\",\n\t\tlives_reduced_ok,\n\t\t\"Dopo il primo danno le vite scendono di 1 (da %d a %d)\" % [initial_lives, lives_after_first]\n\t)\n\t\n\tvar is_inv = get_prop(basket, \"is_invulnerable\", false)\n\tcheck(\"is_invulnerable_true\", is_inv == true, \"Dopo aver subito danno il cesto deve essere invulnerabile\")\n\tcheck(\"modulate_semi_transparent\", basket.modulate.a < 0.9, \"Il cesto diventa semitrasparente (modulate.a ridotto, è %.2f)\" % basket.modulate.a)\n\t\n\t# Secondo colpo dopo mezzo secondo: deve essere ignorato\n\tawait wait_seconds(0.5)\n\tcall_if_exists(basket, \"take_damage\", [1])\n\tawait wait_frames(2)\n\tvar lives_during_inv = get_prop(basket, \"lives\", 0)\n\tcheck(\n\t\t\"damage_ignored\",\n\t\tlives_during_inv == lives_after_first,\n\t\t\"Un colpo subito durante l'invulnerabilità non deve togliere vite (vite: %d)\" % lives_during_inv\n\t)\n\t\n\t# Aspetta la fine del secondo di invulnerabilità\n\tawait wait_seconds(0.6)\n\tvar is_inv_after = get_prop(basket, \"is_invulnerable\", true)\n\tcheck(\"invulnerability_ended\", is_inv_after == false, \"Trascorsa l'attesa di 1 secondo l'invulnerabilità termina\")\n\tcheck(\"modulate_restored\", absf(basket.modulate.a - 1.0) < 0.05, \"L'opacità modulate.a torna a 1.0 (è %.2f)\" % basket.modulate.a)\n",
+    "descrizione": "Due danni a distanza di 0.5 secondi tolgono una sola vita"
+   }
+  ],
+  "consegna": "Modifica `basket.gd` in modo che, quando il cesto subisce un danno, diventi invulnerabile per un secondo intero prima di poter essere colpito di nuovo.\n\nRequisiti:\n1. Aggiungi a `basket.gd` una variabile `is_invulnerable: bool = false`.\n2. In `take_damage(amount: int)`:\n   - Se `is_invulnerable` è `true` oppure la partita non è in corso (`current_state != GameState.PLAYING`), la funzione deve interrompersi subito senza togliere vite.\n   - Quando viene applicato il danno e le vite rimaste sono maggiori di zero, attiva l'invulnerabilità: imposta `is_invulnerable = true` e riduci l'opacità del cesto impostando `modulate.a = 0.5`.\n   - Usa `await` con un timer creato al volo di `1.0` secondo (`get_tree().create_timer(1.0).timeout`).\n   - Trascorso il secondo, ripristina la piena opacità con `modulate.a = 1.0` e togli l'invulnerabilità con `is_invulnerable = false`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 48 s (15975 → 8274 token)"
+ ]
+}
