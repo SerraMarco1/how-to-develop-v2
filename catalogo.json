@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T19:47:57.853Z",
+ "aggiornato": "2026-10-19T19:49:01.392Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -340,10 +340,10 @@
    "slug": "contenitori",
    "numero": "3.1",
    "titolo": "Contenitori: l'interfaccia che si dispone da sola",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f03-interfaccia/contenitori.json",
-   "sha256": "9b3d325de2bfd8e5b0b6662eb82698afb754ff1d8648215175f7d627fbf48b43",
-   "byte": 169987
+   "sha256": "56ab4eb56f8a3e2640a4295d77b906ed6a3fd06605d3c1cfe6dc031b4f7cb37f",
+   "byte": 170715
   },
   {
    "slug": "controlli-di-uso-comune",

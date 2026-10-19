@@ -1,0 +1,47 @@
+{
+ "n": 22,
+ "quando": "2026-10-19T19:49:01.379Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test: video del risultato atteso, tentativo 3 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «version»: per \"mostrare testo\" serve il campo testo.\nReazione: tentativi finiti, l'esercizio resta senza video.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 7884,
+ "dati": {
+  "copione": {
+   "scena": "res://main_menu.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "version",
+     "cerca": {
+      "nome": "VersionLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "mostrare testo",
+     "etichetta": "Versione"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il testo di versione compare nell'angolo in basso a destra",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "version"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «version»: per \"mostrare testo\" serve il campo testo."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (8327 → 201 token)"
+ ]
+}

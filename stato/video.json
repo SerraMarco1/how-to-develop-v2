@@ -572,9 +572,41 @@
   },
   "test": {
    "impronta": "58497fef5045e5a14308846adc1b7dab8cc8784ad6030c6db029cbf5b618005d",
-   "tentativi": 1,
-   "esito": "niente",
-   "motivo": "L'esercizio modifica solo le proprietà di dimensione minima e allineamento di nodi già esistenti nella scena, senza aggiungere nuovi elementi visivi."
+   "tentativi": 3,
+   "esito": "rinuncia",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main_menu.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "version",
+       "cerca": {
+        "nome": "VersionLabel"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.5,
+       "deve": "mostrare testo",
+       "etichetta": "Versione"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il testo di versione compare nell'angolo in basso a destra",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "version"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «version»: per \"mostrare testo\" serve il campo testo."
+    ]
+   },
+   "motivo": "Soggetto «version»: per \"mostrare testo\" serve il campo testo."
   }
  },
  "controlli-di-uso-comune": {
