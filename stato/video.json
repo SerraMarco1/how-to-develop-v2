@@ -529,9 +529,9 @@
  "contenitori": {
   "es1": {
    "impronta": "0c00065f5e64d16a8a3536a10d677199be18352f8e81a87ceb977034551338cb",
-   "tentativi": 1,
-   "esito": "niente",
-   "motivo": "La scena del menu principale viene creata e salvata ma non viene avviata durante l'esecuzione del gioco principale."
+   "tentativi": 2,
+   "esito": "fatto",
+   "regole": 2
   },
   "es2": {
    "impronta": "6c29aa6bf4ed997e6b45402494f955191091d36e15faf75c9ecf187b372ba356",
