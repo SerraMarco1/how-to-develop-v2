@@ -5,3 +5,5 @@
 {"quando":1792393557378,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-memory-2","ok":true,"contata":true,"durataMs":30059,"tokenInput":3902,"tokenOutput":12,"ragionamento":1011}
 {"quando":1792393588912,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-memory-2","ok":true,"contata":true,"durataMs":6867,"tokenInput":2798,"tokenOutput":747,"ragionamento":2118}
 {"quando":1792393601057,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-memory-3","ok":true,"contata":true,"durataMs":129824,"tokenInput":11902,"tokenOutput":5229,"ragionamento":7811}
+{"quando":1792393743618,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-memory-3","ok":false,"contata":true,"durataMs":3660,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792393747282,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-memory-3","ok":true,"contata":true,"durataMs":45187,"tokenInput":4248,"tokenOutput":18,"ragionamento":3094}
