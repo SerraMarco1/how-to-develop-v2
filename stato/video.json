@@ -515,9 +515,9 @@
  "control-ancore-e-dimensioni": {
   "es1": {
    "impronta": "16d537b5db91acfacbf6ad5075b3b366c3dce264fadbef678c2df13a1f950427",
-   "tentativi": 1,
-   "esito": "niente",
-   "motivo": "La scena hud.tscn è stata creata ma non è ancora inserita nella scena principale del gioco (basket.tscn), quindi non compare sullo schermo all'avvio."
+   "tentativi": 2,
+   "esito": "fatto",
+   "regole": 2
   },
   "es2": {
    "impronta": "ab7f0e2c1c332b3af46bcb4a009246bb4848b6bc0edbc9d896184194f00e81fa",
