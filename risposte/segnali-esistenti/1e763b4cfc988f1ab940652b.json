@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 8,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"pulsante\",\n      \"cerca\": {\n        \"nome\": \"RestartButton\"\n      },\n      \"quanti\": 1,\n      \"da\": 4.0,\n      \"a\": 8.0,\n      \"deve\": \"comparire\",\n      \"etichetta\": \"Pulsante Ricomincia\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il pulsante Ricomincia compare quando finiscono le vite\",\n      \"da\": 4.0,\n      \"a\": 8.0,\n      \"soggetto\": \"pulsante\"\n    }\n  ]\n}",
- "ragionamento": 3227,
- "quando": "2026-10-19T16:09:41.498Z",
- "ruolo": "ritocco"
-}

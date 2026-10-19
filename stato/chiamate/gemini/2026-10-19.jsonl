@@ -139,3 +139,4 @@
 {"quando":1792426142885,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":5226,"tokenInput":6222,"tokenOutput":202,"ragionamento":1097}
 {"quando":1792426156208,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":7624,"tokenInput":6662,"tokenOutput":69,"ragionamento":1967}
 {"quando":1792426165286,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"segnali-esistenti","ok":true,"contata":true,"durataMs":16211,"tokenInput":7113,"tokenOutput":204,"ragionamento":3227}
+{"quando":1792426190732,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"segnali-esistenti","ok":true,"contata":true,"durataMs":13358,"tokenInput":7404,"tokenOutput":48,"ragionamento":2603}
