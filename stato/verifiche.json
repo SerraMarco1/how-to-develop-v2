@@ -128,5 +128,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "segnali-esistenti": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
