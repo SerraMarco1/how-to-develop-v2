@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": false, \"perche\": \"L'esercizio crea un singleton globale Autoload e aggiorna la logica di cambio scena, senza aggiungere nuovi elementi visivi sullo schermo.\"}",
+ "ragionamento": 1766,
+ "quando": "2026-10-19T16:17:12.980Z",
+ "ruolo": "ritocco"
+}
