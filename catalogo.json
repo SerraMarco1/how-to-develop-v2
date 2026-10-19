@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T15:59:46.008Z",
+ "aggiornato": "2026-10-19T16:00:49.200Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -43,10 +43,10 @@
    "slug": "variabili-e-tipi",
    "numero": "1.1",
    "titolo": "Variabili e tipi: ricordare i valori",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f01-programmare/variabili-e-tipi.json",
-   "sha256": "f206911377541374a345fcb9c020b642c9431abf0686f6f621afa67247a4efb6",
-   "byte": 45846
+   "sha256": "d01487fcb6ed74da515573cf30dfa336b2c59d949d7db0ae7abbac72d7b02b01",
+   "byte": 46377
   },
   {
    "slug": "process-e-delta",

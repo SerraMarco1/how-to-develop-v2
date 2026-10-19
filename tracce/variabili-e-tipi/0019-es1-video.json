@@ -1,0 +1,49 @@
+{
+ "n": 19,
+ "quando": "2026-10-19T16:00:49.195Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 6 s. Soggetti: «Testo a schermo» (mostrare testo). Scritte: «Il Label mostra nome, vite e velocità». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 16 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 23080,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "etichetta",
+     "cerca": {
+      "nome": "Label"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 6,
+     "deve": "mostrare testo",
+     "testo": "Cesto",
+     "etichetta": "Testo a schermo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il Label mostra nome, vite e velocità",
+     "da": 0,
+     "a": 6,
+     "soggetto": "etichetta"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "6024a2e9beb26ddd21bff2907c6d3a90efea2b096f31478ae4c2aa884a55befb",
+   "estensione": "mp4",
+   "byte": 16073
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 12 s (3460 → 202 token)"
+ ]
+}

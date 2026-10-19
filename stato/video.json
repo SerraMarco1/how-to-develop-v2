@@ -12,5 +12,44 @@
    "tentativi": 1,
    "esito": "fatto"
   }
+ },
+ "variabili-e-tipi": {
+  "es1": {
+   "impronta": "66eddb7890d7d39b34bc0cc704be1699be742fc38487cdf0323dca979f4cbb3f",
+   "tentativi": 3,
+   "esito": "fatto",
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "cesto",
+       "cerca": {
+        "scena": "res://basket.tscn"
+       },
+       "quanti": 1,
+       "da": 0,
+       "a": 6,
+       "deve": "esserci",
+       "etichetta": "Cesto"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il cesto mostra nome, vite e velocità",
+       "da": 0,
+       "a": 6,
+       "soggetto": "cesto"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+  }
  }
 }
