@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:07:10.512Z",
+ "aggiornato": "2026-10-19T09:09:29.881Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -133,10 +133,10 @@
    "slug": "dictionary",
    "numero": "1.11",
    "titolo": "Dictionary: dati con un nome",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/dictionary.json",
-   "sha256": "09ca9f185698240a21a79bd02c6d7cb40d9dbf99914559ada8360c4220ec3600",
-   "byte": 92902
+   "sha256": "b46abe76babf61cc7ff3b49cbd7afb5bf46ef9803d14c43cc5106d5a67b775fd",
+   "byte": 93324
   },
   {
    "slug": "stati-del-gioco",

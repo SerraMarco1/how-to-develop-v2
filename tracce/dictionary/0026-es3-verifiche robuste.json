@@ -1,0 +1,39 @@
+{
+ "n": 26,
+ "quando": "2026-10-19T09:09:24.115Z",
+ "pezzo": "es3",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 3: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 37173,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://main.tscn",
+    "tipoNodo": "Node2D",
+    "nome": "Main",
+    "descrizione": "La scena main.tscn ha un nodo Node2D chiamato Main"
+   },
+   {
+    "tipo": "script_collegato",
+    "scena": "res://main.tscn",
+    "nodo": "Main",
+    "descrizione": "Il nodo Main ha lo script shop.gd collegato"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check('main_inst', main != null, 'La scena principale deve caricarsi regolarmente'):\n\t\treturn\n\t\n\tcheck('has_sell', has_function(main, 'sell_item'), 'shop.gd deve dichiarare la funzione sell_item')\n\t\n\tvar initial_gold: int = get_prop(main, 'gold', 100)\n\tvar catalog = get_prop(main, 'catalog', {})\n\tvar potion_data = catalog.get('potion', {})\n\tvar potion_price: int = potion_data.get('price', 24)\n\tvar initial_stock: int = potion_data.get('stock', 5)\n\t\n\t# Verifica che buy_item continui a funzionare (regression test)\n\tvar bought = call_if_exists(main, 'buy_item', ['potion']) as bool\n\tcheck('buy_works', bought == true, 'buy_item(\\'potion\\') deve restituire true')\n\tvar gold_after_buy: int = get_prop(main, 'gold', initial_gold)\n\tcheck('gold_deducted', gold_after_buy == initial_gold - potion_price, 'Comprare una pozione deve scalare il prezzo corretto dall\\'oro (oro: %d)' % gold_after_buy)\n\t\n\t# Verifica vendita valida di pozione\n\tvar sold = call_if_exists(main, 'sell_item', ['potion']) as bool\n\tcheck('sell_works', sold == true, 'sell_item(\\'potion\\') con oggetto posseduto deve restituire true')\n\tvar gold_after_sell: int = get_prop(main, 'gold', initial_gold)\n\tvar refund: int = potion_price / 2\n\tcheck('gold_refunded', gold_after_sell == initial_gold - potion_price + refund, 'Vendere la pozione deve rimborsare meta\\' prezzo (oro: %d)' % gold_after_sell)\n\tvar stock_potion: int = call_if_exists(main, 'get_stock', ['potion'])\n\tcheck('stock_restored', stock_potion == initial_stock, 'Vendere un articolo deve ripristinare 1 unita\\' di scorta nel negozio (scorta: %d)' % stock_potion)\n\t\n\t# Verifica vendita di oggetto non posseduto\n\tvar sold_empty = call_if_exists(main, 'sell_item', ['potion']) as bool\n\tcheck('sell_empty', sold_empty == false, 'sell_item su un oggetto con quantita\\' 0 deve restituire false')\n\t\n\t# Verifica vendita con ID inesistente\n\tvar sold_invalid = call_if_exists(main, 'sell_item', ['inesistente']) as bool\n\tcheck('sell_invalid', sold_invalid == false, 'sell_item con ID inesistente deve restituire false')\n",
+    "descrizione": "buy_item continua a funzionare e sell_item gestisce vendite, inventario e scorte correttamente"
+   }
+  ],
+  "consegna": "Ricevi il progetto `BottegaMagica`, un sistema di commercio in stile RPG basato su dizionari.\nNel file `shop.gd` sono già presenti il catalogo degli articoli in vendita (`catalog: Dictionary`), il denaro del giocatore (`gold: int`), l'inventario degli oggetti acquistati (`inventory: Dictionary`) e la funzione `buy_item(item_id)` che scala monete e scorte per inserire l'oggetto nell'inventario.\n\nIl tuo compito è estendere `shop.gd` aggiungendo la funzione `sell_item(item_id: String) -> bool` per permettere al giocatore di rivendere oggetti al negoziante senza rompere il funzionamento di `buy_item`:\n\n1. Controlla che `item_id` sia presente in `inventory` e che la quantità posseduta sia maggiore di zero (`inventory.get(item_id, 0) > 0`). Se il giocatore non possiede quell'oggetto, restituisci `false`.\n2. Controlla con l'operatore `in` che `item_id` sia registrato nel catalogo del negozio (`catalog`). Se non esiste, restituisci `false`.\n3. Calcola il rimborso: il prezzo di vendita è pari alla metà del prezzo del catalogo, calcolato con la divisione intera `catalog[item_id][\"price\"] / 2`.\n4. Aggiungi il rimborso alle monete del giocatore (`gold`).\n5. Riduci di `1` la quantità di quell'oggetto in `inventory[item_id]`.\n6. Incrementa di `1` la scorta disponibile nel catalogo del negozio (`catalog[item_id][\"stock\"]`).\n7. Chiama `update_ui()` per aggiornare il testo a schermo.\n8. Restituisci `true`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 21 s (11495 → 3791 token)"
+ ]
+}

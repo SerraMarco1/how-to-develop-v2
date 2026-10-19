@@ -68,5 +68,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "dictionary": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
