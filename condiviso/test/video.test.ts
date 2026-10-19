@@ -159,13 +159,30 @@ test("video: comparire e sparire", { timeout: 5 * 60_000 }, async () => {
   assert.equal(valutaCopione(c, fermo).problemi.length, 2);
 });
 
+test("video: cambiare dimensione, il rimbalzo di un Tween su scale (lezione 2.9)", { timeout: 5 * 60_000 }, async () => {
+  const conTween = { percorso: "star.gd", contenuto: 'extends Sprite2D\n\n\nfunc _ready() -> void:\n\tposition = Vector2(576, 324)\n\tvar tween := create_tween()\n\ttween.tween_property(self, "scale", Vector2(1.6, 1.6), 0.8)\n\ttween.tween_property(self, "scale", Vector2.ONE, 0.8)\n' };
+  const senza = { percorso: "star.gd", contenuto: "extends Sprite2D\n\n\nfunc _ready() -> void:\n\tposition = Vector2(576, 324)\n" };
+  const c = copione({ scena: "res://star.tscn", soggetti: [{ id: "stella", cerca: { scena: "res://star.tscn" }, quanti: 1, da: 0.2, a: 2, deve: "cambiare dimensione", etichetta: "Stella" }] });
+  const dopo = await misuraCopione({ cartellaProgetto: cartellaCon([progetto("res://star.tscn"), sprite("Star", "star.gd"), conTween]), copione: c });
+  assert.deepEqual(valutaCopione(c, dopo).problemi, []);
+  const prima = await misuraCopione({ cartellaProgetto: cartellaCon([progetto("res://star.tscn"), sprite("Star", "star.gd"), senza]), copione: c });
+  assert.match(valutaCopione(c, prima).problemi[0] ?? "", /hanno cambiato dimensione solo 0 nodi su 1 \(cambio massimo 0%/);
+});
+
 test("video: i problemi del copione che si vedono senza eseguirlo", () => {
   const file = [progetto("res://basket.tscn"), sprite("Basket", "basket.gd"), BASKET_BASE, sprite("Star", "star.gd"), STAR_CADE];
-  const contesto = { file, azioni: ["move_left", "move_right"], scenaPrincipale: "res://basket.tscn", testi: "Modifica basket.gd" };
+  const contesto = { file, azioni: ["move_left", "move_right"] };
   assert.deepEqual(problemiDelCopione(CINQUE_STELLE, contesto), []);
-  // La stella che cade sta in star.tscn: se la consegna non la nomina, chi studia non sa di doverla avviare con F6.
-  assert.match(problemiDelCopione(STELLA_CHE_CADE, contesto)[0], /non è la principale/);
-  assert.deepEqual(problemiDelCopione(STELLA_CHE_CADE, { ...contesto, testi: "Apri star.tscn e premi F6" }), []);
+  // Una scena che non è la principale va bene: la didascalia del video dice di aprirla e premere F6.
+  assert.deepEqual(problemiDelCopione(STELLA_CHE_CADE, contesto), []);
+  // Due scritte nello stesso momento: se ne vedrebbe una sola (3.0 es2, 19 ottobre).
+  const insieme = { ...CINQUE_STELLE, scritte: [{ testo: "Una", da: 0.3, a: 3, soggetto: "stelle" }, { testo: "Due", da: 0.3, a: 3, soggetto: "stelle" }] };
+  assert.match(problemiDelCopione(insieme, contesto).join("\n"), /si sovrappongono/);
+  assert.deepEqual(problemiDelCopione({ ...insieme, scritte: [{ ...insieme.scritte[0], a: 1.5 }, { ...insieme.scritte[1], da: 1.5 }] }, contesto), []);
+  // Un effetto di mezzo secondo si può mostrare; uno più breve no.
+  const breve = (a: number) => ({ ...CINQUE_STELLE, soggetti: [{ ...CINQUE_STELLE.soggetti[0], da: 1, a }], scritte: [{ testo: "Breve", da: 1, a, soggetto: "stelle" }] });
+  assert.deepEqual(problemiDelCopione(breve(1.5), contesto), []);
+  assert.match(problemiDelCopione(breve(1.3), contesto).join("\n"), /almeno 0.5 secondi/);
   const sbagliato = copione({
     scena: "res://basket.tscn",
     durata: 5,

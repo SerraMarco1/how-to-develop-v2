@@ -361,12 +361,15 @@ func _misura_fotogramma() -> void:
 					var centro := r.get_center()
 					var col := _colore(ci)
 					if not nodi.has(chiave):
-						nodi[chiave] = {"nome": String(n.name), "fotogrammi": 0, "primo": [centro.x, centro.y], "spostamento": 0.0, "colore_primo": [col.r, col.g, col.b], "cambio_colore": 0.0}
+						nodi[chiave] = {"nome": String(n.name), "fotogrammi": 0, "primo": [centro.x, centro.y], "spostamento": 0.0, "colore_primo": [col.r, col.g, col.b], "cambio_colore": 0.0, "dimensione_prima": [maxf(r.size.x, 1.0), maxf(r.size.y, 1.0)], "cambio_dimensione": 0.0}
 					var d: Dictionary = nodi[chiave]
 					d.fotogrammi += 1
 					d.spostamento = maxf(float(d.spostamento), centro.distance_to(Vector2(d.primo[0], d.primo[1])))
 					var c0: Array = d.colore_primo
 					d.cambio_colore = maxf(float(d.cambio_colore), maxf(absf(col.r - c0[0]), maxf(absf(col.g - c0[1]), absf(col.b - c0[2]))))
+					# Di quanto è cambiata la dimensione (0,2 = il 20% più grande o più piccola, in larghezza o in altezza).
+					var d0: Array = d.dimensione_prima
+					d.cambio_dimensione = maxf(float(d.cambio_dimensione), maxf(absf(r.size.x / d0[0] - 1.0), absf(r.size.y / d0[1] - 1.0)))
 					d.ultimo = [snappedf(centro.x, 0.1), snappedf(centro.y, 0.1)]
 				if riquadra and riquadri.size() < 3:
 					riquadri.append(_arrotonda(r))

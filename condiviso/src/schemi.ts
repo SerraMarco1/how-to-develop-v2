@@ -119,7 +119,7 @@ const AzioneVideoSchema = z.object({ azione: testo, inizio: z.coerce.number().mi
 const risorsa = (estensione: string) => z.string().trim().regex(new RegExp(`^res://(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*\\.${estensione}$`), `un file res://….${estensione} del progetto`);
 
 /** Cosa deve fare un soggetto del video nel suo intervallo (vedi valutaCopione in godot/video.ts). */
-export const COSE_DA_FARE = ["esserci", "muoversi", "comparire", "sparire", "cambiare colore", "mostrare testo"] as const;
+export const COSE_DA_FARE = ["esserci", "muoversi", "comparire", "sparire", "cambiare colore", "cambiare dimensione", "mostrare testo"] as const;
 
 export const SoggettoVideoSchema = z.object({
   id: z.string().trim().regex(/^[a-z][a-z0-9_]{0,23}$/, "minuscole, cifre e _ (es. stelle)"),

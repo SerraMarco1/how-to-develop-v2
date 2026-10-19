@@ -32,6 +32,13 @@ import { aggiornaCatalogo, salvaMedia } from "./pubblica.ts";
 
 const FILE = "stato/video.json";
 const TENTATIVI = 3;
+/**
+ * La versione delle regole dei copioni. Gli esercizi rimasti senza video («niente», «rinuncia») con regole più vecchie si
+ * riprovano; quelli con il risultato fuori dallo schermo no (le regole non lo cambiano). 2: dalla sera del 19 ottobre,
+ * scene da avviare con F6 anche se la consegna non le nomina, effetti di mezzo secondo, «cambiare dimensione», una
+ * scritta alla volta.
+ */
+const REGOLE = 2;
 /** I tipi di esercizio con il video: il guidato (il primo su un argomento nuovo) e «Rifai uguale», dove è il riferimento. */
 const GENERI_CON_VIDEO = new Set(["guidato", "imita"]);
 
@@ -40,7 +47,7 @@ const GENERI_CON_VIDEO = new Set(["guidato", "imita"]);
  * "niente": il modello dice che il risultato non si vede sullo schermo; "invisibile": i nodi dell'esercizio ci sono ma
  * fuori dallo schermo (o nascosti); "rinuncia": tentativi finiti per altri motivi. Con l'impronta cambiata si riprova.
  */
-type StatoVideo = { impronta: string; tentativi: number; esito: "in corso" | "fatto" | "niente" | "invisibile" | "rinuncia"; motivo?: string; ultimo?: { copione: unknown; problemi: string[] } };
+type StatoVideo = { impronta: string; tentativi: number; esito: "in corso" | "fatto" | "niente" | "invisibile" | "rinuncia"; motivo?: string; ultimo?: { copione: unknown; problemi: string[] }; regole?: number };
 type Registro = Record<string, Record<string, StatoVideo>>;
 
 const RispostaCopioneSchema = z
@@ -152,7 +159,7 @@ const nomePezzo = (e: Esercizio) => (e.id === "test" ? "Test" : `Esercizio ${e.i
 
 /** Registra il copione sulla soluzione e lo prova sul progetto di prima: i problemi trovati (vuoto = il video va bene). */
 async function provaCopione(e: Esercizio, base: StatoProgetto, copione: Copione, mp4: string): Promise<{ problemi: string[]; invisibili: string[] }> {
-  const statici = problemiDelCopione(copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e), scenaPrincipale: scenaPrincipaleDi(e), testi: [e.consegna, ...e.passiGuida, ...e.suggerimenti].join("\n") });
+  const statici = problemiDelCopione(copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) });
   if (statici.length) return { problemi: statici, invisibili: [] };
   const cartella = nuovaCartellaTemporanea("video");
   const prima = nuovaCartellaTemporanea("video-prima");
@@ -297,12 +304,16 @@ export async function completaVideo(): Promise<number> {
     try {
       for (const { e, base, impronta } of eserciziDaFilmare(pacco.contenuto)) {
         const id = e.id!;
-        if (pacco.video[id]?.impronta === impronta && pacco.media[`video:${id}`]) continue;
+        // Un video che vale ancora: stessa soluzione, e un copione che rispetta le regole di oggi (con due scritte nello
+        // stesso momento se ne vedeva una sola: si rifà).
+        const esistente = pacco.video[id];
+        if (esistente?.impronta === impronta && pacco.media[`video:${id}`] && problemiDelCopione(esistente.copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) }).length === 0) continue;
         const prima = registro[voce.slug]?.[id];
-        // Finito per questa soluzione (niente da mostrare, risultato invisibile, tentativi esauriti): non si richiede.
-        // "fatto" senza il video nella lezione vuol dire che la pubblicazione non è riuscita: si rifà.
-        if (prima && prima.impronta === impronta && prima.esito !== "in corso" && prima.esito !== "fatto") continue;
-        const stato: StatoVideo = prima?.impronta === impronta && prima.esito === "in corso" ? prima : { impronta, tentativi: 0, esito: "in corso" };
+        // Deciso per questa soluzione: risultato fuori dallo schermo, oppure niente da mostrare o tentativi esauriti con le
+        // regole di oggi. Non si richiede. "fatto" senza un video valido nella lezione si rifà.
+        const deciso = prima?.impronta === impronta && (prima.esito === "invisibile" || ((prima.esito === "niente" || prima.esito === "rinuncia") && prima.regole === REGOLE));
+        if (deciso) continue;
+        const stato: StatoVideo = prima?.impronta === impronta && prima.esito === "in corso" ? { ...prima, regole: REGOLE } : { impronta, tentativi: 0, esito: "in corso", regole: REGOLE };
         // Prima di eseguire il codice della lezione, lo stesso controllo di sicurezza di ogni esecuzione.
         const rifiuti = [...descriviViolazioni(controllaFileLezione(e.soluzione.file)), ...descriviViolazioni(controllaFileLezione(base.file))];
         if (rifiuti.length && stato.esito === "in corso") {
@@ -326,6 +337,8 @@ export async function completaVideo(): Promise<number> {
             stato.motivo = esito.niente.slice(0, 500);
           } else if ("fatto" in esito) {
             stato.esito = "fatto";
+            delete stato.motivo;
+            delete stato.ultimo;
             nuovi[id] = { video: esito.fatto, media: esito.media };
           } else {
             precedente = { copione: esito.copione ?? null, problemi: esito.problemi.map((p) => p.slice(0, 900)) };

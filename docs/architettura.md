@@ -121,15 +121,16 @@ scritto come avviarlo («Avvia il gioco con F5», «Apri star.tscn e premi F6»)
 
 - **Il copione** lo scrive il modello del ritocco (Flash-Lite, 500 richieste al giorno; nessuna richiesta Flash):
   la scena da avviare, i tasti simulati, i **soggetti** (quali nodi, quanti, in che intervallo, cosa devono fare:
-  esserci, muoversi, comparire, sparire, cambiare colore, mostrare un testo) e le scritte, ognuna legata a un soggetto
-  (`motori/godot/prompts/video-copione.md`). Può rispondere che il video non si fa (il risultato si legge solo nel
-  pannello Output).
+  esserci, muoversi, comparire, sparire, cambiare colore o dimensione, mostrare un testo) e le scritte, una alla volta e
+  ognuna legata a un soggetto (`motori/godot/prompts/video-copione.md`). Può rispondere che il video non si fa (il
+  risultato si legge solo nel pannello Output, o il gioco resta uguale a prima).
 - **La registrazione**: Godot avvia la soluzione con la base `motori/godot/harness/htd_video.gd`, nella finestra del
   gioco così com'è (niente camera spostata: il video è un riferimento da confrontare), con sopra la scritta, un riquadro
   giallo con un'etichetta intorno ai soggetti e il tasto premuto. Casualità fissata, 30 fotogrammi al secondo.
 - **I controlli**, prima di pubblicare (`condiviso/src/godot/video.ts`), tutti senza modelli:
-  1. il copione è possibile: la scena c'è (se non è la principale, la consegna la nomina), le azioni sono della Input
-     Map, i file dei soggetti esistono, le scritte stanno negli intervalli dei loro soggetti;
+  1. il copione è possibile: la scena c'è (anche una che non è la principale: si avvia con F6, e l'aula lo scrive), le
+     azioni sono della Input Map, i file dei soggetti esistono, le scritte stanno negli intervalli dei loro soggetti e
+     non si sovrappongono (con due insieme se ne vede una sola);
   2. durante la registrazione stessa Godot misura a ogni fotogramma ogni soggetto: un nodo «si vede» se almeno l'80% del
      suo rettangolo è dentro lo schermo, non è nascosto né trasparente; deve vedersi (e muoversi, cambiare…) per almeno
      l'80% del suo intervallo;
@@ -147,6 +148,13 @@ scritto come avviarlo («Avvia il gioco con F5», «Apri star.tscn e premi F6»)
   cambiano solo i video. Il registro è in `stato/video.json`. Un video vale finché non cambiano la soluzione del suo
   esercizio o il progetto di partenza (l'impronta è salvata con il copione); se cambiano, si rifà.
 - **Costo**: da 1 a 3 richieste Flash-Lite per esercizio con video (circa 1,2 per lezione), una volta sola.
+- **Il primo giro vero** (19 ottobre, 34 esercizi in 20 minuti): 10 video, 23 «niente video», 1 risultato invisibile.
+  Guardati i fotogrammi: 8 video buoni; uno con tre scritte nello stesso intervallo (se ne vedeva una), uno con il
+  riquadro solo sul titolo. Molti «niente» erano giusti (esercizi che riordinano il codice: il gioco resta uguale; le
+  stelle figlie del cesto, sotto lo schermo, in 1.9, 1.10, 1.11 e 2.2), altri colpa delle regole: una scena diversa
+  dalla principale doveva essere nominata nella consegna (così restavano senza video la stella della 1.7 e i menu della
+  fase 3), un effetto di mezzo secondo non si poteva mostrare, il rimbalzo di un Tween non si poteva misurare. Con le
+  regole 2 (`REGOLE` in `lezione/video.ts`) quei casi si riprovano una volta, e i video che non le rispettano si rifanno.
 
 ### Chi scrive
 

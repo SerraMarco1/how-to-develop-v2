@@ -37,6 +37,10 @@ const QUOTA_TESTO = 0.5;
 const SPOSTAMENTO_MINIMO = 24;
 /** Di quanto (0–1, su un canale) deve cambiare il colore per «cambiare colore». */
 const CAMBIO_COLORE_MINIMO = 0.2;
+/** Di quanto (in proporzione, in larghezza o in altezza) deve cambiare il rettangolo per «cambiare dimensione». */
+const CAMBIO_DIMENSIONE_MINIMO = 0.15;
+/** La durata minima dell'intervallo di un soggetto: un effetto breve (una scritta che sale e sparisce) dura mezzo secondo. */
+const INTERVALLO_MINIMO = 0.5;
 /**
  * Nei fotogrammi: quota di pixel diversi dallo sfondo perché in un riquadro «ci sia qualcosa». Bassa perché una scritta
  * corta in una Label larga occupa poco (il «Pronti?» della 3.0, in una Label di 300×50: il 3%); un nodo coperto o che non
@@ -83,7 +87,7 @@ const ResocontoSchema = z.object({
       z.object({
         /** Ogni 0,1 s dell'intervallo: [t, nodi trovati, nodi che si vedono, nodi che mostrano il testo cercato]. */
         campioni: z.array(z.array(numero).length(4)).default([]),
-        nodi: z.record(z.string(), z.object({ nome: z.string(), fotogrammi: numero, spostamento: numero, cambio_colore: numero }).passthrough()).default({}),
+        nodi: z.record(z.string(), z.object({ nome: z.string(), fotogrammi: numero, spostamento: numero, cambio_colore: numero, cambio_dimensione: numero.default(0) }).passthrough()).default({}),
         esempi: z.array(z.object({ t: numero, nodi: z.array(z.object({ nome: z.string(), rett: rettangolo, dentro: numero, si_vede: z.boolean(), perche: z.string().default(""), testo: z.string().optional() })) })).default([]),
         riquadri: z.array(z.object({ f: z.number().int().nonnegative(), t: numero, rett: z.array(rettangolo) })).default([]),
       }),
@@ -253,6 +257,12 @@ export function valutaCopione(copione: Copione, resoconto: Resoconto): GiudizioC
         else if (cambiati < s.quanti) motivo = `si vedono, ma hanno cambiato colore solo ${cambiati} nodi su ${s.quanti} (cambio massimo ${cifra(Math.max(0, ...nodi.map((n) => n.cambio_colore)))} su 1, ne serve ${CAMBIO_COLORE_MINIMO}).`;
         break;
       }
+      case "cambiare dimensione": {
+        const cambiati = nodi.filter((n) => n.cambio_dimensione >= CAMBIO_DIMENSIONE_MINIMO).length;
+        if (presenti < QUOTA) motivo = pochi();
+        else if (cambiati < s.quanti) motivo = `si vedono, ma hanno cambiato dimensione solo ${cambiati} nodi su ${s.quanti} (cambio massimo ${percento(Math.max(0, ...nodi.map((n) => n.cambio_dimensione)))}, serve il ${percento(CAMBIO_DIMENSIONE_MINIMO)}).`;
+        break;
+      }
       case "mostrare testo": {
         const conTesto = quota((c) => c[3] >= s.quanti);
         if (!s.testo) motivo = "manca il testo da cercare.";
@@ -408,18 +418,16 @@ export function comeSiAvvia(copione: Pick<Copione, "scena">, scenaPrincipale: st
 }
 
 /**
- * I problemi di un copione che si vedono senza eseguirlo: scena, file, azioni e tempi devono esistere ed essere coerenti.
- * `testi`: consegna, passi e suggerimenti dell'esercizio (una scena che non è la principale deve essere nominata lì,
- * altrimenti chi studia non saprebbe di doverla avviare).
+ * I problemi di un copione che si vedono senza eseguirlo: scena, file, azioni e tempi devono esistere ed essere coerenti,
+ * e le scritte una alla volta. La scena può essere anche una che non è la principale: la didascalia del video dice come
+ * avviarla (F6). Fino al 19 ottobre sera doveva essere nominata nella consegna: così restavano senza video la stella
+ * della 1.7 e i menu della fase 3, che si vedono solo aprendo la loro scena.
  */
-export function problemiDelCopione(copione: Copione, contesto: { file: FileProgetto[]; azioni: string[]; scenaPrincipale: string | null | undefined; testi: string }): string[] {
+export function problemiDelCopione(copione: Copione, contesto: { file: FileProgetto[]; azioni: string[] }): string[] {
   const problemi: string[] = [];
   const esiste = (risorsa: string) => contesto.file.some((f) => `res://${f.percorso}` === risorsa);
   const scene = contesto.file.filter((f) => f.percorso.endsWith(".tscn")).map((f) => `res://${f.percorso}`);
   if (!esiste(copione.scena)) problemi.push(`La scena ${copione.scena} non c'è nella soluzione (scene: ${scene.join(", ") || "nessuna"}).`);
-  else if (copione.scena !== contesto.scenaPrincipale && !contesto.testi.includes(path.posix.basename(nomeScena(copione.scena)))) {
-    problemi.push(`La scena ${copione.scena} non è la principale (${contesto.scenaPrincipale || "nessuna"}) e la consegna non la nomina: chi studia non saprebbe di doverla avviare con F6. Usa la scena che la consegna fa avviare.`);
-  }
   const ids = new Set<string>();
   for (const s of copione.soggetti) {
     if (ids.has(s.id)) problemi.push(`Due soggetti si chiamano «${s.id}».`);
@@ -427,7 +435,7 @@ export function problemiDelCopione(copione: Copione, contesto: { file: FileProge
     if (s.cerca.scena && !esiste(s.cerca.scena)) problemi.push(`Soggetto «${s.id}»: la scena ${s.cerca.scena} non c'è nella soluzione.`);
     if (s.cerca.script && !esiste(s.cerca.script)) problemi.push(`Soggetto «${s.id}»: lo script ${s.cerca.script} non c'è nella soluzione.`);
     if (s.a > copione.durata + 0.001) problemi.push(`Soggetto «${s.id}»: l'intervallo finisce a ${cifra(s.a)} s, dopo la fine del video (${cifra(copione.durata)} s).`);
-    if (s.a - s.da < 1) problemi.push(`Soggetto «${s.id}»: l'intervallo (da ${cifra(s.da)} a ${cifra(s.a)} s) deve durare almeno 1 secondo.`);
+    if (s.a - s.da < INTERVALLO_MINIMO - 0.001) problemi.push(`Soggetto «${s.id}»: l'intervallo (da ${cifra(s.da)} a ${cifra(s.a)} s) deve durare almeno ${cifra(INTERVALLO_MINIMO)} secondi.`);
     if (s.deve === "mostrare testo" && !s.testo) problemi.push(`Soggetto «${s.id}»: per "mostrare testo" serve il campo testo.`);
   }
   for (const a of copione.azioni) {
@@ -438,6 +446,11 @@ export function problemiDelCopione(copione: Copione, contesto: { file: FileProge
     const s = copione.soggetti.find((x) => x.id === w.soggetto);
     if (!s) problemi.push(`La scritta «${w.testo}» è legata al soggetto «${w.soggetto}», che non c'è.`);
     else if (w.da < s.da - 0.05 || w.a > s.a + 0.05 || w.a <= w.da) problemi.push(`La scritta «${w.testo}» (da ${cifra(w.da)} a ${cifra(w.a)} s) deve stare dentro l'intervallo del suo soggetto «${s.id}» (da ${cifra(s.da)} a ${cifra(s.a)} s).`);
+  }
+  // Una scritta alla volta: con due nello stesso momento se ne vede una sola (3.0 es2, 19 ottobre: tre scritte da 0,5 a 8 s).
+  const ordinate = [...copione.scritte].sort((a, b) => a.da - b.da);
+  for (let i = 1; i < ordinate.length; i++) {
+    if (ordinate[i].da < ordinate[i - 1].a - 0.05) problemi.push(`Le scritte «${ordinate[i - 1].testo}» (fino a ${cifra(ordinate[i - 1].a)} s) e «${ordinate[i].testo}» (da ${cifra(ordinate[i].da)} s) si sovrappongono: se ne vedrebbe una sola. Mettile una dopo l'altra.`);
   }
   return problemi;
 }

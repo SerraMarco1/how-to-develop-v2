@@ -46,9 +46,9 @@ const { FORMATO, PaccoLezioneSchema, percorsoLezione, percorsoMedia, sha256 } = 
 const { EsercizioSchema } = await import("@htd/condiviso/schemi.ts");
 const { CONFIG } = await import("../src/configurazione.ts");
 const { FORNITORI } = await import("../src/ai/catalogo.ts");
-const { salva, scriviFile, leggiJson } = await import("../src/archivio.ts");
+const { salva, scriviFile, scriviJson, leggiJson } = await import("../src/archivio.ts");
 const { aggiornaCatalogo } = await import("../src/lezione/pubblica.ts");
-const { paccoPubblicato } = await import("../src/corso.ts");
+const { catalogo: catalogoAttuale, paccoPubblicato } = await import("../src/corso.ts");
 const { completaVideo, videoAncoraValidi } = await import("../src/lezione/video.ts");
 const { registroDiLezione } = await import("../src/traccia.ts");
 const { cominciaGiro } = await import("../src/tempo.ts");
@@ -144,6 +144,36 @@ test("video ancora validi: restano finché l'esercizio non cambia", () => {
   const cambiato = { ...pacco.contenuto, esercizi: [{ ...pacco.contenuto.esercizi[0], soluzione: { ...pacco.contenuto.esercizi[0].soluzione, file: gioco(BASKET_GD, STAR_CADE.replace("180.0", "200.0")) } }, pacco.contenuto.esercizi[1]] };
   assert.deepEqual(videoAncoraValidi(pacco, cambiato), { video: {}, media: {} });
   assert.deepEqual(videoAncoraValidi(null, pacco.contenuto), { video: {}, media: {} });
+});
+
+test("regole nuove: un video con due scritte insieme si rifà, un «niente» deciso con le regole vecchie si richiede una volta", { timeout: 15 * 60_000 }, async () => {
+  cominciaGiro();
+  // Come la sera del 19 ottobre: il registro scritto prima delle regole 2, e un video (3.0 es2) con le scritte sovrapposte.
+  const registro = leggiJson<Record<string, Record<string, Record<string, unknown>>>>("stato/video.json", {});
+  delete registro[l.slug].es2.regole;
+  delete registro[l.slug].test.regole;
+  scriviJson("stato/video.json", registro);
+  const pacco = paccoPubblicato(l.slug)!;
+  const copione = { ...pacco.video.es1.copione, scritte: [{ testo: "Una", da: 0.5, a: 3, soggetto: "stella" }, { testo: "Due", da: 0.5, a: 3, soggetto: "stella" }] };
+  const vecchio = PaccoLezioneSchema.parse({ ...pacco, versione: pacco.versione + 1, video: { es1: { ...pacco.video.es1, copione } } });
+  const voce = catalogoAttuale().lezioni.find((x) => x.slug === l.slug)!;
+  const testo = JSON.stringify(vecchio);
+  scriviFile(voce.file, testo);
+  aggiornaCatalogo({ ...voce, versione: vecchio.versione, sha256: sha256(testo), byte: Buffer.byteLength(testo) });
+  const primaDi = copioni().length;
+
+  assert.equal(await completaVideo(), 1);
+  const nuove = copioni().slice(primaDi);
+  assert.deepEqual(nuove.map((r) => r.testo.match(/Titolo: ([^\n]+)/)![1]), ["Fai cadere la stella", "Fai cadere la stella", "Stampa il punteggio"], "es1 rifatto (due copioni), es2 richiesto una volta, il test (risultato invisibile) no");
+  const dopo = paccoPubblicato(l.slug)!;
+  assert.equal(dopo.versione, vecchio.versione + 1);
+  assert.deepEqual(dopo.video.es1.copione.scritte.map((w) => w.testo), ["La stella scende di 180 pixel al secondo"]);
+  const ora = leggiJson<Record<string, Record<string, { esito: string; regole?: number; motivo?: string; ultimo?: unknown }>>>("stato/video.json", {})[l.slug];
+  assert.deepEqual([ora.es1.esito, ora.es1.regole, ora.es1.motivo, ora.es1.ultimo], ["fatto", 2, undefined, undefined], "dopo un video fatto il registro non tiene il copione scartato");
+  assert.deepEqual([ora.es2.esito, ora.es2.regole], ["niente", 2]);
+  assert.equal(ora.test.esito, "invisibile");
+  assert.equal(await completaVideo(), 0);
+  assert.equal(copioni().length, primaDi + 3);
 });
 
 test("video: con il modello del copione sovraccarico non si conta nessun tentativo, si riprova al giro dopo", { timeout: 10 * 60_000 }, async () => {
