@@ -38,5 +38,10 @@
   "versione": 3,
   "fragili": [],
   "tentativi": {}
+ },
+ "funzioni": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
