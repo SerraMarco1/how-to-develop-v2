@@ -160,13 +160,25 @@
     "passiGuida": [],
     "suggerimenti": [
      "Cosa succede ai nodi con modalità di processo standard (Inherit) quando il gioco entra in pausa?",
-     "Controlla la proprietà process_mode del nodo radice del menu di pausa: può elaborare input a gioco congelato?"
+     "Controlla la proprietà **Process Mode** del nodo `PauseMenu` nell'Inspector: può elaborare input a gioco congelato?"
     ],
     "verifiche": [
      {
+      "tipo": "azione_input",
+      "nome": "pause",
+      "descrizione": "L'azione di input pause è configurata nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Button",
+      "nome": "ResumeButton",
+      "descrizione": "La scena main.tscn contiene un Button chiamato ResumeButton"
+     },
+     {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tget_tree().paused = false\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve avviarsi senza errori\"):\n\t\treturn\n\tvar ball := find_by_name(main, \"Ball\") as Node2D\n\tif not check(\"ball\", ball != null, \"Nella scena deve esserci la pallina Ball\"):\n\t\treturn\n\tvar resume_btn := find_by_name(main, \"ResumeButton\") as Button\n\tif not check(\"btn\", resume_btn != null, \"Deve essere presente il pulsante ResumeButton\"):\n\t\treturn\n\tawait wait_frames(5)\n\tvar start_x := ball.position.x\n\tawait tap_action(\"pause\")\n\tawait wait_frames(2)\n\tcheck(\"paused\", get_tree().paused, \"Premendo pause il gioco deve entrare in pausa\")\n\tcheck(\"visible\", resume_btn.is_visible_in_tree(), \"In pausa il pulsante Riprendi deve essere visibile\")\n\tcheck(\"can_process\", resume_btn.can_process(), \"Il pulsante Riprendi deve poter ricevere input durante la pausa\")\n\tawait click_button(resume_btn)\n\tawait wait_frames(3)\n\tcheck(\"unpaused\", not get_tree().paused, \"Cliccando sul pulsante Riprendi get_tree().paused deve tornare false\")\n\tcheck(\"hidden\", not resume_btn.is_visible_in_tree(), \"Dopo aver premuto Riprendi il menu deve nascondersi\")\n\tawait wait_frames(5)\n\tcheck(\"ball_moved\", ball.position.x != start_x, \"Dopo aver tolto la pausa la pallina deve riprendere a muoversi\")\n\tget_tree().paused = false",
-      "descrizione": "Dopo aver attivato la pausa, cliccando su Riprendi la pausa si disattiva e la pallina torna a muoversi"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tget_tree().paused = false\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve avviarsi senza errori\"):\n\t\treturn\n\tvar ball := find_by_name(main, \"Ball\") as Node2D\n\tif not check(\"ball\", ball != null, \"Nella scena deve esserci il nodo Ball\"):\n\t\treturn\n\tvar resume_btn := find_by_name(main, \"ResumeButton\") as Button\n\tif not check(\"btn\", resume_btn != null, \"Deve essere presente il pulsante ResumeButton\"):\n\t\treturn\n\tawait wait_frames(5)\n\tawait tap_action(\"pause\")\n\tawait wait_frames(2)\n\tif not check(\"paused\", get_tree().paused, \"Premendo pause il gioco deve entrare in pausa\"):\n\t\treturn\n\tcheck(\"visible\", resume_btn.is_visible_in_tree(), \"In pausa il pulsante Riprendi deve essere visibile\")\n\tcheck(\"can_process\", resume_btn.can_process(), \"Il pulsante Riprendi deve poter ricevere input durante la pausa\")\n\tawait click_button(resume_btn)\n\tawait wait_frames(3)\n\tcheck(\"unpaused\", not get_tree().paused, \"Cliccando su Riprendi la pausa deve disattivarsi\")\n\tcheck(\"hidden\", not resume_btn.is_visible_in_tree(), \"Dopo aver premuto Riprendi il menu deve nascondersi\")\n\tget_tree().paused = false",
+      "descrizione": "In pausa il pulsante Riprendi risponde al clic e disattiva la pausa"
      }
     ],
     "previsioni": [],
@@ -174,20 +186,12 @@
     "partenza": {
      "file": [
       {
-       "percorso": "ball.gd",
-       "contenuto": "extends Sprite2D\n\nvar speed: float = 200.0\n\n\nfunc _process(delta: float) -> void:\n\tposition.x += speed * delta\n\tif position.x > 800.0 or position.x < 100.0:\n\t\tspeed = -speed\n"
-      },
-      {
-       "percorso": "pause_menu.gd",
-       "contenuto": "extends Control\n\n@onready var resume_button: Button = $ResumeButton\n\n\nfunc _ready() -> void:\n\thide()\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"pause\"):\n\t\tget_tree().paused = true\n\t\tshow()\n\n\nfunc _on_resume_button_pressed() -> void:\n\tget_tree().paused = false\n\thide()\n"
-      },
-      {
-       "percorso": "pause_menu.tscn",
-       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://pause_menu.gd\" id=\"1_menu\"]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -60.0\noffset_top = -20.0\noffset_right = 60.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"Riprendi\"\n"
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\nvar ball_speed: float = 200.0\n\n@onready var ball: Sprite2D = $Ball\n@onready var pause_menu: Panel = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/ResumeButton\n\n\nfunc _ready() -> void:\n\tpause_menu.hide()\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\n\nfunc _process(delta: float) -> void:\n\tball.position.x += ball_speed * delta\n\tif ball.position.x > 800.0 or ball.position.x < 100.0:\n\t\tball_speed = -ball_speed\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\tget_tree().paused = true\n\t\tpause_menu.show()\n\n\nfunc _on_resume_button_pressed() -> void:\n\tget_tree().paused = false\n\tpause_menu.hide()\n"
       },
       {
        "percorso": "main.tscn",
-       "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://ball.gd\" id=\"1_ball\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://pause_menu.tscn\" id=\"3_pause\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Ball\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_ball\")\n\n[node name=\"PauseMenu\" parent=\".\" instance=ExtResource(\"3_pause\")]\n"
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Ball\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"PauseMenu\" type=\"Panel\" parent=\".\"]\nvisible = false\noffset_left = 440.0\noffset_top = 220.0\noffset_right = 680.0\noffset_bottom = 380.0\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"PauseMenu\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -60.0\noffset_top = -20.0\noffset_right = 60.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"Riprendi\"\n"
       }
      ],
      "progetto": {
@@ -208,20 +212,12 @@
     "soluzione": {
      "file": [
       {
-       "percorso": "ball.gd",
-       "contenuto": "extends Sprite2D\n\nvar speed: float = 200.0\n\n\nfunc _process(delta: float) -> void:\n\tposition.x += speed * delta\n\tif position.x > 800.0 or position.x < 100.0:\n\t\tspeed = -speed\n"
-      },
-      {
-       "percorso": "pause_menu.gd",
-       "contenuto": "extends Control\n\n@onready var resume_button: Button = $ResumeButton\n\n\nfunc _ready() -> void:\n\thide()\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"pause\"):\n\t\tget_tree().paused = true\n\t\tshow()\n\n\nfunc _on_resume_button_pressed() -> void:\n\tget_tree().paused = false\n\thide()\n"
-      },
-      {
-       "percorso": "pause_menu.tscn",
-       "contenuto": "[gd_scene load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://pause_menu.gd\" id=\"1_menu\"]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -60.0\noffset_top = -20.0\noffset_right = 60.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"Riprendi\"\n"
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\nvar ball_speed: float = 200.0\n\n@onready var ball: Sprite2D = $Ball\n@onready var pause_menu: Panel = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/ResumeButton\n\n\nfunc _ready() -> void:\n\tpause_menu.hide()\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\n\nfunc _process(delta: float) -> void:\n\tball.position.x += ball_speed * delta\n\tif ball.position.x > 800.0 or ball.position.x < 100.0:\n\t\tball_speed = -ball_speed\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\tget_tree().paused = true\n\t\tpause_menu.show()\n\n\nfunc _on_resume_button_pressed() -> void:\n\tget_tree().paused = false\n\tpause_menu.hide()\n"
       },
       {
        "percorso": "main.tscn",
-       "contenuto": "[gd_scene load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://ball.gd\" id=\"1_ball\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://pause_menu.tscn\" id=\"3_pause\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Ball\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\nscript = ExtResource(\"1_ball\")\n\n[node name=\"PauseMenu\" parent=\".\" instance=ExtResource(\"3_pause\")]\n"
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"Ball\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 300)\nscale = Vector2(0.5, 0.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"PauseMenu\" type=\"Panel\" parent=\".\"]\nprocess_mode = 3\nvisible = false\noffset_left = 440.0\noffset_top = 220.0\noffset_right = 680.0\noffset_bottom = 380.0\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"PauseMenu\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -60.0\noffset_top = -20.0\noffset_right = 60.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"Riprendi\"\n"
       }
      ],
      "progetto": {
@@ -238,22 +234,23 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Nel progetto di partenza il nodo radice `PauseMenu` aveva la proprietà **Process Mode** impostata su **Inherit** (il valore predefinito). Quando veniva eseguito `get_tree().paused = true`, anche il menu di pausa e i suoi figli venivano congelati: di conseguenza `ResumeButton` non riceveva più gli input del mouse. Impostando **Process Mode** su **Always** (`process_mode = 3`) sul nodo `PauseMenu` in `pause_menu.tscn`, il menu continua a elaborare gli eventi anche quando l'albero di scena è in pausa, permettendo al pulsante «Riprendi» di funzionare.",
+     "spiegazione": "Nel progetto di partenza il nodo `PauseMenu` aveva la proprietà **Process Mode** impostata su **Inherit** (il valore predefinito). Quando veniva eseguito `get_tree().paused = true`, anche il pannello e il pulsante `ResumeButton` venivano congelati, impedendo al pulsante di elaborare i clic del mouse. Impostando **Process Mode** su **Always** (`process_mode = 3`) o su **When Paused** (`process_mode = 2`) sul nodo `PauseMenu`, il menu e i suoi nodi figli continuano a elaborare gli eventi anche quando la scena è in pausa, permettendo al pulsante «Riprendi» di funzionare.",
      "cambiati": [
-      "pause_menu.tscn"
+      "main.tscn"
      ],
      "rimossi": []
     }
    },
    "genere": "ripara",
    "correzioni": 2,
-   "semplificato": false,
+   "semplificato": true,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo pause il gioco deve entrare in pausa\n  - In pausa il pulsante Riprendi deve essere visibile\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
     "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash",
     "gemini/gemini-3.7-flash"
    ]
   },
