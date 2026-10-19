@@ -723,6 +723,12 @@
     ]
    },
    "motivo": "Il pulsante di riavvio è nascosto durante lo stato di gioco iniziale e non è visibile all'avvio della scena principale."
+  },
+  "es2": {
+   "impronta": "9060454b54c16efda4bbf53bd182355de1c1acf616a09d4ba221a4f4c39cb0aa",
+   "tentativi": 1,
+   "esito": "niente",
+   "motivo": "Le modifiche alle scene dei menu non sono visibili avviando la scena principale di gioco."
   }
  }
 }

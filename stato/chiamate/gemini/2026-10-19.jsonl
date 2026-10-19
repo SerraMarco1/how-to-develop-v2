@@ -161,3 +161,4 @@
 {"quando":1792426504799,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"temi-e-font","ok":true,"contata":true,"durataMs":7608,"tokenInput":8185,"tokenOutput":205,"ragionamento":2046}
 {"quando":1792426520408,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"temi-e-font","ok":true,"contata":true,"durataMs":4212,"tokenInput":8485,"tokenOutput":40,"ragionamento":1083}
 {"quando":1792426526082,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"temi-e-font","ok":true,"contata":true,"durataMs":15007,"tokenInput":7772,"tokenOutput":36,"ragionamento":2207}
+{"quando":1792426542963,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"temi-e-font","ok":true,"contata":true,"durataMs":9794,"tokenInput":8037,"tokenOutput":205,"ragionamento":2160}
