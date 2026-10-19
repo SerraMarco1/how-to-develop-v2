@@ -1,0 +1,56 @@
+{
+ "n": 31,
+ "quando": "2026-10-19T19:45:06.713Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 10.5 s. Soggetti: «Messaggio di pausa» (mostrare testo). Scritte: «A dieci secondi parte la pausa tra le ondate». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 45 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 27095,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 10.5,
+   "azioni": [
+    {
+     "azione": "move_left",
+     "inizio": 0,
+     "fine": 10.5,
+     "tasto": "A"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "label",
+     "cerca": {
+      "nome": "Label"
+     },
+     "quanti": 1,
+     "da": 10,
+     "a": 10.5,
+     "deve": "mostrare testo",
+     "testo": "Pausa!",
+     "etichetta": "Messaggio di pausa"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "A dieci secondi parte la pausa tra le ondate",
+     "da": 10,
+     "a": 10.5,
+     "soggetto": "label"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "2df8e5135fee1a8f5514f63817be88b83eb907a098d86862e13903fe80e529cd",
+   "estensione": "mp4",
+   "byte": 46089
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 13 s (8214 → 264 token)"
+ ]
+}
