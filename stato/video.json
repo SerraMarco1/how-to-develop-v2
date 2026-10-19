@@ -251,8 +251,9 @@
  "stati-del-gioco": {
   "es1": {
    "impronta": "11dbd0180699dfdcd0867e22deba9e8370d4f7ac402663ee0e3389088e7974b7",
-   "tentativi": 2,
+   "tentativi": 3,
    "esito": "niente",
+   "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://basket.tscn",
@@ -260,13 +261,13 @@
      "azioni": [],
      "soggetti": [
       {
-       "id": "label",
+       "id": "etichetta",
        "cerca": {
         "nome": "Label"
        },
        "quanti": 1,
-       "da": 4,
-       "a": 8,
+       "da": 3,
+       "a": 7.5,
        "deve": "mostrare testo",
        "testo": "Partita finita",
        "etichetta": "Messaggio"
@@ -274,18 +275,18 @@
      ],
      "scritte": [
       {
-       "testo": "Quando le vite finiscono, la partita si ferma e compare il messaggio",
-       "da": 4,
-       "a": 8,
-       "soggetto": "label"
+       "testo": "Quando le vite finiscono, il gioco mostra la fine partita",
+       "da": 3,
+       "a": 7.5,
+       "soggetto": "etichetta"
       }
      ]
     },
     "problemi": [
-     "Soggetto «label» (nome = Label; almeno 1 da 4 a 8 s; deve mostrare il testo «Partita finita»): il testo «Partita finita» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 6 s: «Label» a (516, 550) 151×23, si vede, testo «Punti: 0050 | Vite: 1». Lo schermo va da (0, 0) a (1152, 648)."
+     "Soggetto «etichetta» (nome = Label; almeno 1 da 3 a 7.5 s; deve mostrare il testo «Partita finita»): il testo «Partita finita» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 5 s: «Label» a (516, 550) 151×23, si vede, testo «Punti: 0050 | Vite: 1». Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "Lo stato di Game Over e il riavvio dipendono dalla perdita di tutte le vite tramite ostacoli casuali e dall'input dell'utente, rendendo il risultato non deterministico per una registrazione automatica."
+   "motivo": "La transizione allo stato di fine partita dipende da danni casuali delle rocce, rendendo impossibile prevedere con precisione temporale l'apparizione del testo di game over per la registrazione."
   }
  },
  "classi-e-oggetti": {
