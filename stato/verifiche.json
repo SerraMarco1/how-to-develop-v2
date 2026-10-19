@@ -151,5 +151,25 @@
   "tentativi": {
    "es3": 1
   }
+ },
+ "gruppi": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "export": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "tween": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "leggere-una-classe": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
