@@ -1,0 +1,36 @@
+{
+ "n": 40,
+ "quando": "2026-10-19T08:59:16.649Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 32109,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "azione_input",
+    "nome": "surface",
+    "descrizione": "L'azione surface è configurata nella Input Map"
+   },
+   {
+    "tipo": "azione_input",
+    "nome": "dive",
+    "descrizione": "L'azione dive è configurata nella Input Map"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar sub := find_by_name(main, \"Submarine\") as Sprite2D\n\tif not check(\"sub\", sub != null, \"La scena deve contenere il nodo Submarine\"):\n\t\treturn\n\tsub.position = Vector2(400, 300)\n\tawait hold_action(\"surface\", 10)\n\tcheck(\"surface\", sub.position.y < 300.0, \"Tenendo premuto surface il sottomarino deve salire verso l'alto\")\n\tsub.position = Vector2(400, 300)\n\tawait hold_action(\"dive\", 10)\n\tcheck(\"dive\", sub.position.y > 300.0, \"Tenendo premuto dive il sottomarino deve scendere verso il basso\")\n\tsub.position = Vector2(400, 50.0)\n\tawait hold_action(\"surface\", 5)\n\tcheck(\"clamp_surface\", absf(sub.position.y - 80.0) < 0.5, \"Continuando a salire il sottomarino deve fermarsi a 80 pixel alla superficie (è a y = %.1f)\" % sub.position.y)\n\tsub.position = Vector2(400, 1000.0)\n\tawait hold_action(\"dive\", 5)\n\tcheck(\"clamp_dive\", absf(sub.position.y - 560.0) < 0.5, \"Continuando a scendere il sottomarino deve fermarsi a 560 pixel sul fondale (è a y = %.1f)\" % sub.position.y)\n",
+    "descrizione": "Il sottomarino sale con surface, scende con dive e non supera i limiti di superficie e fondale"
+   }
+  ],
+  "consegna": "Nel progetto `Sottomarino` presente nella cartella `sottomarino`, rendi pilotabile un sottomarino lungo l'asse verticale.\n\n1. Apri le impostazioni del progetto nella scheda **Input Map** e crea due azioni:\n   - `surface`: assegna i tasti **W** e **Freccia Su** (emersione verso l'alto).\n   - `dive`: assegna i tasti **S** e **Freccia Giù** (immersione verso il basso).\n2. Nello script `submarine.gd`, implementa la funzione `_process(delta: float) -> void`:\n   - Calcola una variabile `direction: float = 0.0`.\n   - Se è premuta l'azione `surface`, sottrai `1.0` a `direction` (in Godot l'asse Y decresce andando verso l'alto).\n   - Se è premuta l'azione `dive`, aggiungi `1.0` a `direction`.\n   - Aggiorna la posizione verticale sommando `direction * speed * delta` a `position.y`.\n   - Usa `clamp()` per bloccare `position.y` in modo che il sottomarino non superi la superficie a `80.0` pixel e non tocchi il fondale a `560.0` pixel."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 14 s (9545 → 2187 token)"
+ ]
+}
