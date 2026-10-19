@@ -58,5 +58,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "cicli": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }

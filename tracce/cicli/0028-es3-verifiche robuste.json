@@ -1,0 +1,32 @@
+{
+ "n": 28,
+ "quando": "2026-10-19T09:07:01.721Z",
+ "pezzo": "es3",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 3: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 29033,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "while\\s+current_x\\s*<=\\s*960(\\.0)?:",
+    "descrizione": "Nel file basket.gd è presente un ciclo while con la condizione richiesta"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tif not check(\"has_func\", has_function(basket, \"spawn_rock_row\"), \"Il cesto deve contenere la funzione spawn_rock_row\"):\n\t\treturn\n\tvar rocks: Array[Node] = []\n\tfor child in basket.get_children():\n\t\tif child is Sprite2D and child.get_script() != null:\n\t\t\tvar script_path: String = child.get_script().resource_path\n\t\t\tif \"rock.gd\" in script_path:\n\t\t\t\trocks.append(child)\n\tif not check(\"rock_count\", rocks.size() == 5, \"Il metodo spawn_rock_row deve creare esattamente 5 rocce\"):\n\t\treturn\n\tvar first_rock: Sprite2D = rocks[0] as Sprite2D\n\tvar last_rock: Sprite2D = rocks[4] as Sprite2D\n\tcheck(\"positions\", is_equal_approx(first_rock.position.x, 160.0) and is_equal_approx(last_rock.position.x, 960.0), \"La prima roccia deve partire da X=160 e l'ultima arrivare a X=960\")\n",
+    "descrizione": "Vengono istanziate esattamente 5 rocce alla coordinata Y di 200.0 con spaziatura di 200 pixel"
+   }
+  ],
+  "consegna": "Prima di iniziare, apri i file `star.gd` e `rock.gd`: all'inizio della funzione `_ready()`, aggiungi il controllo della posizione iniziale salvando `var initial_pos: Vector2 = position` prima del reset e ripristinandola con `if initial_pos != Vector2.ZERO: position = initial_pos`. Questo serve a fare in modo che le stelle e le rocce mantengano la posizione esatta impostata da codice anziché sovrascriverla subito.\n\nPoi, dentro `basket.gd`, aggiungi una nuova funzione chiamata `spawn_rock_row()` che utilizza un ciclo `while` per creare una serie di ostacoli rocciosi da codice all'inizio della partita.\n\nLa funzione deve:\n1. Partire da una variabile locale `current_x: float = 160.0`.\n2. Eseguire un ciclo `while` che continua finché `current_x <= 960.0`.\n3. Ad ogni iterazione istanziare la scena `res://rock.tscn`.\n4. Posizionare la roccia alle coordinate `Vector2(current_x, 200.0)`.\n5. Aggiungere la roccia come figlia chiamando `add_child()`.\n6. Incrementare `current_x` di `200.0` pixel prima della fine di ciascun passaggio del ciclo per evitare loop infiniti.\n\nInfine, chiama `spawn_rock_row()` dentro `_ready()` di `basket.gd`, subito dopo il ciclo delle stelle."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 15 s (12202 → 4649 token)"
+ ]
+}
