@@ -67,7 +67,9 @@
    "genere": "da-zero",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Le carte si girano, le coppie diverse si ricoprono dopo un secondo bloccando i clic, le coppie uguali restano scoperte: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Expected indented block after \"if\" block.\n          at: GDScript::reload (res://htd/verifica_1.gd:13)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Expected indented block after \"if\" block.\n          at: GDScript::reload (res://htd/verifica_1.gd:13)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 13: `if \"value\" in child and \"is_face_up\" in child:`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
