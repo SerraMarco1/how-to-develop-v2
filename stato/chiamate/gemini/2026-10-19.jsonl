@@ -17,3 +17,4 @@
 {"quando":1792394298444,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"contenitori","ok":true,"contata":true,"durataMs":138034,"tokenInput":20151,"tokenOutput":7625,"ragionamento":8826}
 {"quando":1792394454608,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"contenitori","ok":true,"contata":true,"durataMs":33387,"tokenInput":19828,"tokenOutput":13042,"ragionamento":3748}
 {"quando":1792394496042,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"contenitori","ok":true,"contata":true,"durataMs":9748,"tokenInput":12325,"tokenOutput":12,"ragionamento":1822}
+{"quando":1792394507187,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"contenitori","ok":true,"contata":true,"durataMs":5754,"tokenInput":2986,"tokenOutput":674,"ragionamento":1437}
