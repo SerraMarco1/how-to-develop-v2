@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-18T10:33:32.496Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-19T07:01:58.325Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "progetto-memory-1",
   "numero": "2.11",
   "titolo": "Progetto «Memory» – tappa 1: la griglia"
  },
- "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 2.11 riprende quando si azzerano.",
- "riprende": "2026-10-19T07:00:00.496Z"
+ "messaggio": "Sta scrivendo la lezione 2.11 «Progetto «Memory» – tappa 1: la griglia».",
+ "riprende": null
 }
