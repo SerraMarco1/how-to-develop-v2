@@ -1,0 +1,35 @@
+{
+ "n": 20,
+ "quando": "2026-10-19T09:38:34.499Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 2 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest non supera i controlli:\n- VERIFICHE FRAGILI: le verifiche bocciano una soluzione giusta. Nella soluzione sono cambiati solo valori che il testo dell'esercizio non impone, quindi chi lo fa può sceglierli diversi:\n  - rock.gd: `START_Y` da 80.0 a 40.0\n  - rock.gd: `SPAWN_MIN_X` da 120.0 a 60.0\n  - rock.gd: `SPAWN_MAX_X` da 960.0 a 480.0\n  - rock.gd: `RESET_Y` da 680.0 a 340.0\n  - rock.gd: `MIN_X` da 50.0 a 25.0\n  - rock.gd: `MAX_X` da 1050.0 a 525.0\n  - rock.gd: `DANGER_Y` da 400.0 a 200.0\n  - rock.gd: `MIN_FALL_SPEED` da 200.0 a 100.0\nCon questi valori non passano più:\n  - Le vite iniziali devono essere 3 (trovate: 2)\nCorreggi le VERIFICHE, non la soluzione: devono accettare qualunque valore che la consegna lascia lib\nReazione: si riprova al prossimo giro.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 59941,
+ "dati": {
+  "problemi": [
+   "VERIFICHE FRAGILI: le verifiche bocciano una soluzione giusta. Nella soluzione sono cambiati solo valori che il testo dell'esercizio non impone, quindi chi lo fa può sceglierli diversi:\n  - rock.gd: `START_Y` da 80.0 a 40.0\n  - rock.gd: `SPAWN_MIN_X` da 120.0 a 60.0\n  - rock.gd: `SPAWN_MAX_X` da 960.0 a 480.0\n  - rock.gd: `RESET_Y` da 680.0 a 340.0\n  - rock.gd: `MIN_X` da 50.0 a 25.0\n  - rock.gd: `MAX_X` da 1050.0 a 525.0\n  - rock.gd: `DANGER_Y` da 400.0 a 200.0\n  - rock.gd: `MIN_FALL_SPEED` da 200.0 a 100.0\nCon questi valori non passano più:\n  - Le vite iniziali devono essere 3 (trovate: 2)\nCorreggi le VERIFICHE, non la soluzione: devono accettare qualunque valore che la consegna lascia libero. Per esempio: prima di misurare un movimento metti il nodo in un punto noto (`nodo.position = Vector2(400, 300)`); per controllare un limite porta il nodo oltre il limite e tieni premuta l'azione per pochi frame, invece di aspettare che ci arrivi da solo in un tempo fisso; confronta con valori letti dal gioco (`get_prop` legge anche le costanti) invece che scritti nella verifica."
+  ],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "create_timer\\(1\\.0\\)",
+    "descrizione": "Nel codice di basket.gd è presente un timer di 1.0 secondo"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket_exists\", basket != null, \"La scena principale Basket si istanzia correttamente\"):\n\t\treturn\n\t\n\tvar spawn_timer = get_prop(basket, \"spawn_timer_node\")\n\tif spawn_timer and spawn_timer.has_method(\"stop\"):\n\t\tspawn_timer.stop()\n\tvar wave_timer = get_prop(basket, \"wave_timer\")\n\tif wave_timer and wave_timer.has_method(\"stop\"):\n\t\twave_timer.stop()\n\t\n\tfor child in basket.get_children():\n\t\tif child is Sprite2D and child.name != \"Shadow\" and child.name != \"Handle\":\n\t\t\tchild.queue_free()\n\t\n\tvar initial_lives = get_prop(basket, \"lives\", 3)\n\tcheck(\"initial_lives\", initial_lives == 3, \"Le vite iniziali devono essere 3 (trovate: %d)\" % initial_lives)\n\t\n\tcall_if_exists(basket, \"take_damage\", [1])\n\tawait wait_frames(2)\n\t\n\tvar lives_after_first = get_prop(basket, \"lives\", -1)\n\tvar expected_after_first = initial_lives - 1\n\tcheck(\"lives_reduced\", lives_after_first == expected_after_first, \"Dopo il primo danno le vite scendono a %d (sono a %d)\" % [expected_after_first, lives_after_first])\n\t\n\tvar is_inv = get_prop(basket, \"is_invulnerable\", false)\n\tcheck(\"is_invulnerable_true\", is_inv == true, \"Dopo aver subito danno il cesto deve essere invulnerabile\")\n\t\n\tvar modulate_a = get_prop(basket, \"modulate\", Color.WHITE).a\n\tcheck(\"modulate_semi_transparent\", modulate_a < 0.9, \"Il cesto diventa semitrasparente (modulate.a è %.2f)\" % modulate_a)\n\t\n\tawait wait_seconds(0.5)\n\tcall_if_exists(basket, \"take_damage\", [1])\n\tawait wait_frames(2)\n\tvar lives_during_inv = get_prop(basket, \"lives\", -1)\n\tcheck(\"damage_ignored\", lives_during_inv == expected_after_first, \"Un colpo subito durante l'invulnerabilità non deve togliere vite (vite: %d)\" % lives_during_inv)\n\t\n\tawait wait_seconds(0.6)\n\tvar is_inv_after = get_prop(basket, \"is_invulnerable\", true)\n\tcheck(\"invulnerability_ended\", is_inv_after == false, \"Trascorsa l'attesa di 1 secondo l'invulnerabilità termina\")\n\t\n\tvar modulate_a_after = get_prop(basket, \"modulate\", Color.WHITE).a\n\tcheck(\"modulate_restored\", absf(modulate_a_after - 1.0) < 0.05, \"L'opacità modulate.a torna a 1.0 (è %.2f)\" % modulate_a_after)\n",
+    "descrizione": "Due danni a distanza di 0.5 secondi tolgono una sola vita"
+   }
+  ],
+  "consegna": "Modifica `basket.gd` in modo che, quando il cesto subisce un danno, diventi invulnerabile per un secondo intero prima di poter essere colpito di nuovo.\n\nRequisiti:\n1. Aggiungi a `basket.gd` una variabile `is_invulnerable: bool = false`.\n2. In `take_damage(amount: int)`:\n   - Se `is_invulnerable` è `true` oppure la partita non è in corso (`current_state != GameState.PLAYING`), la funzione deve interrompersi subito senza togliere vite.\n   - Quando viene applicato il danno e le vite rimaste sono maggiori di zero, attiva l'invulnerabilità: imposta `is_invulnerable = true` e riduci l'opacità del cesto impostando `modulate.a = 0.5`.\n   - Usa `await` con un timer creato al volo di `1.0` secondo (`get_tree().create_timer(1.0).timeout`).\n   - Trascorso il secondo, ripristina la piena opacità con `modulate.a = 1.0` e togli l'invulnerabilità con `is_invulnerable = false`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 44 s (15975 → 8024 token)"
+ ]
+}
