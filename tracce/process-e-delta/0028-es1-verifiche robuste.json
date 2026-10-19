@@ -1,0 +1,37 @@
+{
+ "n": 28,
+ "quando": "2026-10-19T08:55:58.464Z",
+ "pezzo": "es1",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 1: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 30824,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://star.gd",
+    "descrizione": "Il file res://star.gd esiste nel progetto"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://star.gd",
+    "regex": "func _process\\(",
+    "descrizione": "Lo script star.gd definisce la funzione _process"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar star := await instantiate_scene(\"res://star.tscn\")\n\tif not check(\"star_exists\", star != null, \"La scena star.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar initial_y: float = star.position.y\n\tcheck(\"initial_pos\", abs(initial_y - 80.0) < 1.0, \"La stella deve iniziare dalla coordinata Y iniziale (80)\")\n\t\n\tvar fall_speed = float(get_prop(star, \"fall_speed\", 180.0))\n\tvar expected_dist = fall_speed * 0.5\n\t\n\t# Test a 30 FPS\n\tEngine.max_fps = 30\n\tawait wait_seconds(0.5)\n\tvar y_after_30: float = star.position.y\n\tvar dist_30: float = y_after_30 - initial_y\n\t\n\tcheck(\"moves_down\", dist_30 > 0.0, \"La stella deve scendere verso il basso nel tempo\")\n\tcheck(\"speed_30\", abs(dist_30 - expected_dist) < 25.0, \"La stella deve percorrere una distanza coerente con la velocità (attesi circa %.1f pixel, percorsi %.1f)\" % [expected_dist, dist_30])\n\t\n\t# Riposiziona e testa a 60 FPS\n\tstar.position.y = initial_y\n\tEngine.max_fps = 60\n\tawait wait_seconds(0.5)\n\tvar y_after_60: float = star.position.y\n\tvar dist_60: float = y_after_60 - initial_y\n\tEngine.max_fps = 0\n\t\n\tcheck(\"speed_60\", abs(dist_60 - expected_dist) < 25.0, \"La stella deve percorrere una distanza coerente con la velocità a 60 FPS (attesi circa %.1f pixel, percorsi %.1f)\" % [expected_dist, dist_60])\n\tcheck(\"frame_independence\", abs(dist_60 - dist_30) < 15.0, \"La distanza percorsa deve essere equivalente a 30 FPS e a 60 FPS grazie alla moltiplicazione per delta (percorsi a 30 FPS: %.1f, a 60 FPS: %.1f)\" % [dist_30, dist_60])\n",
+    "descrizione": "La stella si muove verso il basso a velocità costante indipendentemente dalla frequenza dei fotogrammi"
+   }
+  ],
+  "consegna": "Fai muovere la stella verso il basso a velocità costante aggiornando la sua posizione a ogni fotogramma.\n\n1. Nel pannello *FileSystem*, apri la scena `star.tscn` ed entra nell'area di lavoro *Script* per modificare lo script `star.gd`.\n2. Sotto la funzione `_ready()`, aggiungi la funzione virtuale `_process(delta: float) -> void:`.\n3. Nel corpo di `_process()`, incrementa la coordinata `position.y` sommando lo spostamento calcolato moltiplicando la velocità `fall_speed` per il tempo trascorso `delta`.\n4. Salva lo script con Ctrl+S ed esegui la scena aperta premendo F6 per osservare la stella scendere in modo continuo."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 13 s (9790 → 2876 token)"
+ ]
+}
