@@ -304,7 +304,9 @@
    "genere": "riordina",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - La scena principale deve funzionare senza errori: Invalid assignment of property or key 'text' with value of type 'String' on a base object of type 'Nil'. (res://hud.gd:8 in set_energy)\nRighe citate dagli errori:\n  hud.gd, riga 8: `energy_label.text = \"Energia: %d/%d\" % [current, maximum]`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
