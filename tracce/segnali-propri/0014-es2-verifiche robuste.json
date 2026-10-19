@@ -1,0 +1,37 @@
+{
+ "n": 14,
+ "quando": "2026-10-19T09:22:36.754Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 33762,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://coin.gd",
+    "regex": "signal collected\\(amount: int\\)",
+    "descrizione": "In coin.gd è dichiarato il segnale collected con parametro amount"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar code: String = source_of(\"res://coin.gd\")\n\tcheck(\"no_parent\", not code.contains(\"get_parent\"), \"coin.gd non deve usare get_parent()\")\n\tcheck(\"has_signal\", code.contains(\"signal collected\"), \"coin.gd deve dichiarare il segnale collected\")\n",
+    "descrizione": "coin.gd non contiene get_parent() né riferimenti rigidi all'albero"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"main.tscn deve avviarsi senza errori\"):\n\t\treturn\n\tvar coin := find_by_name(main, \"Coin\")\n\tif not check(\"coin_found\", coin != null, \"La scena deve contenere il nodo Coin\"):\n\t\treturn\n\tvar expected_value: int = int(get_prop(coin, \"coin_value\", 10))\n\tawait wait_frames(5)\n\t# Muoviamo il giocatore sopra la moneta per toccarla\n\tvar player := find_by_name(main, \"Player\") as Node2D\n\tplayer.position = coin.position\n\tawait wait_frames(3)\n\tvar score: int = int(get_prop(main, \"score\", 0))\n\tcheck(\"score_increased\", score == expected_value, \"Toccando la moneta il punteggio deve salire a %d tramite il segnale (è a %d)\" % [expected_value, score])\n",
+    "descrizione": "Raccogliendo la moneta, il punteggio aumenta e la moneta scompare"
+   }
+  ],
+  "consegna": "Nel progetto ricevuto, una moneta (`Coin`) interagisce con il personaggio cercandolo direttamente nell'albero della scena con un percorso rigido (`get_parent().get_node(\"Player\")`) e modificandone a forza le variabili interne.\n\nRiscrivi `coin.gd` e `main.gd` per disaccoppiare i nodi seguendo la regola di Godot:\n1. In `coin.gd`, dichiara il segnale `collected(amount: int)`.\n2. In `coin.gd`, sostituisci la modifica diretta al giocatore con l'emissione del segnale `collected.emit(coin_value)` e libera la moneta con `queue_free()`.\n3. In `main.gd`, connetti il segnale della moneta a una funzione ricevente che aggiunga il valore alle monete del giocatore e aggiorni il testo a schermo.\n4. Mantieni inalterati i nomi delle variabili e il funzionamento del gioco, senza lasciare riferimenti a `get_parent()` in `coin.gd`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 16 s (10423 → 2790 token)"
+ ]
+}
