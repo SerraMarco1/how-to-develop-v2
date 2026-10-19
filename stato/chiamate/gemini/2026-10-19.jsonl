@@ -173,3 +173,4 @@
 {"quando":1792438862703,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"cicli","ok":true,"contata":true,"durataMs":6874,"tokenInput":5195,"tokenOutput":62,"ragionamento":2391}
 {"quando":1792438871222,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dictionary","ok":true,"contata":true,"durataMs":6232,"tokenInput":5788,"tokenOutput":202,"ragionamento":1828}
 {"quando":1792438886600,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dictionary","ok":true,"contata":true,"durataMs":11929,"tokenInput":6226,"tokenOutput":202,"ragionamento":4279}
+{"quando":1792438905475,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dictionary","ok":true,"contata":true,"durataMs":9454,"tokenInput":6228,"tokenOutput":143,"ragionamento":3465}
