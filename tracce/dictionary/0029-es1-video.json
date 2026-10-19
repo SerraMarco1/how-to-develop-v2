@@ -1,0 +1,16 @@
+{
+ "n": 29,
+ "quando": "2026-10-19T16:06:10.320Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Configurare i tipi di stella con un Dictionary» non si vede sullo schermo: Le stelle vengono istanziate come figlie del cesto (posizionato a y = 600) e posizionate a y = 80 locali, risultando a una coordinata globale y = 680, che si trova fuori dallo schermo (altezza massima 648).",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9252,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (6059 → 81 token)"
+ ]
+}
