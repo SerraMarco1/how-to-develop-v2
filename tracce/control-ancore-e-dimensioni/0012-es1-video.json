@@ -1,0 +1,16 @@
+{
+ "n": 12,
+ "quando": "2026-10-19T16:13:32.540Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Costruisci la schermata HUD con le ancore» non si vede sullo schermo: La scena hud.tscn è stata creata ma non è ancora inserita nella scena principale del gioco (basket.tscn), quindi non compare sullo schermo all'avvio.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 6828,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (8403 → 54 token)"
+ ]
+}
