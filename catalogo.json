@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:02:46.512Z",
+ "aggiornato": "2026-10-19T07:06:39.864Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -308,6 +308,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/progetto-memory-1.json",
    "sha256": "ea8f9891377b6e0c37d287e0c6d403283d773461b2def1967ff2487cb83ff0c6",
    "byte": 14711
+  },
+  {
+   "slug": "progetto-memory-2",
+   "numero": "2.12",
+   "titolo": "Progetto «Memory» – tappa 2: le regole",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/progetto-memory-2.json",
+   "sha256": "0ccdd3a383ac765061f7f6b44d773d57f7f6d5aca60d700c3fd9755929a529ce",
+   "byte": 22385
   }
  ],
  "documentazione": {
