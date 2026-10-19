@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:58:06.515Z",
+ "aggiornato": "2026-10-19T08:33:21.246Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -389,6 +389,15 @@
    "file": "lezioni/f03-interfaccia/autoload.json",
    "sha256": "4b73a61ba7c572f31fdf35f1fd2d353c818e52a87bcf00068a3ef4f6fa93abb2",
    "byte": 194688
+  },
+  {
+   "slug": "pausa",
+   "numero": "3.7",
+   "titolo": "Pausa",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/pausa.json",
+   "sha256": "6492f2a6c61bdc001ffbb10249bf6af253a0821bf90ea5d22fe4d174e58bb408",
+   "byte": 63933
   }
  ],
  "documentazione": {
