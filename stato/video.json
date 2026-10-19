@@ -621,6 +621,11 @@
    "tentativi": 1,
    "esito": "niente",
    "motivo": "La scena hud.tscn è stata creata ma non è ancora inserita nella scena principale del gioco (basket.tscn), quindi non compare sullo schermo all'avvio."
+  },
+  "es2": {
+   "impronta": "ab7f0e2c1c332b3af46bcb4a009246bb4848b6bc0edbc9d896184194f00e81fa",
+   "tentativi": 1,
+   "esito": "fatto"
   }
  }
 }

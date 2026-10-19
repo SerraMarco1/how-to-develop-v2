@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://info_bar.tscn\",\n  \"durata\": 8,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"version\",\n      \"cerca\": {\n        \"nome\": \"VersionLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 8,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"Versione 1.0\",\n      \"etichetta\": \"Versione\"\n    },\n    {\n      \"id\": \"help\",\n      \"cerca\": {\n        \"nome\": \"HelpLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 8,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"Premi Spazio per iniziare\",\n      \"etichetta\": \"Aiuto\"\n    },\n    {\n      \"id\": \"status\",\n      \"cerca\": {\n        \"nome\": \"StatusLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 8,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"Online\",\n      \"etichetta\": \"Stato\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"La versione e posizionata in basso a sinistra\",\n      \"da\": 0.5,\n      \"a\": 8,\n      \"soggetto\": \"version\"\n    },\n    {\n      \"testo\": \"Il messaggio di aiuto e centrato sul fondo\",\n      \"da\": 0.5,\n      \"a\": 8,\n      \"soggetto\": \"help\"\n    },\n    {\n      \"testo\": \"Lo stato online e allineato a destra\",\n      \"da\": 0.5,\n      \"a\": 8,\n      \"soggetto\": \"status\"\n    }\n  ]\n}",
- "ragionamento": 2136,
- "quando": "2026-10-19T16:13:39.383Z",
- "ruolo": "ritocco"
-}

@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T16:08:51.741Z",
+ "aggiornato": "2026-10-19T16:13:48.840Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -331,10 +331,10 @@
    "slug": "control-ancore-e-dimensioni",
    "numero": "3.0",
    "titolo": "Control: ancore e dimensioni",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f03-interfaccia/control-ancore-e-dimensioni.json",
-   "sha256": "be82a6fc4d26fa6e612fe19d78c61fdb04c0bf7a74f20de9fce856cc6125a5f1",
-   "byte": 117428
+   "sha256": "2fd81b135c8d5b7a3a87311400a389192847dc9946f14118e348fe5c48a539df",
+   "byte": 118430
   },
   {
    "slug": "contenitori",
