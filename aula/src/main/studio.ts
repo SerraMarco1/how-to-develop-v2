@@ -101,7 +101,8 @@ function videoAtteso(p: PaccoLezione, e: Esercizio): EsercizioVista["video"] {
   const v = p.video[e.id!];
   const m = p.media[`video:${e.id}`];
   if (!v || !m || m.estensione !== "mp4") return null;
-  return { url: urlMedia(m), avvio: comeSiAvvia(v.copione, e.soluzione.progetto?.scenaPrincipale) };
+  // Parte da mezzo secondo: il primo fotogramma, che fa da anteprima, non ha ancora scritta e riquadro.
+  return { url: `${urlMedia(m)}#t=0.5`, avvio: comeSiAvvia(v.copione, e.soluzione.progetto?.scenaPrincipale) };
 }
 
 export async function vistaLezione(slug: string): Promise<LezioneVista | null> {

@@ -132,14 +132,15 @@ export async function esegui(finestra: BrowserWindow): Promise<number> {
       contenuto: { blocchi: { tipo: string }[] };
     };
     const attesi = Object.entries(paccoAperto.video ?? {});
-    const mostrati = await js<{ id: string; src: string; durata: number; didascalia: string }[]>(
-      "Promise.all([...document.querySelectorAll('article.esercizio video')].map(v => new Promise(r => { const fatto = () => r({ id: v.closest('article').id, src: v.src, durata: v.duration, didascalia: v.closest('figure').innerText }); if (v.readyState > 0) fatto(); else { v.onloadedmetadata = fatto; v.onerror = () => r({ id: v.closest('article').id, src: v.src, durata: -1, didascalia: '' }); } })))",
+    const mostrati = await js<{ id: string; src: string; durata: number; inizio: number; didascalia: string }[]>(
+      "Promise.all([...document.querySelectorAll('article.esercizio video')].map(v => new Promise(r => { const fatto = () => setTimeout(() => r({ id: v.closest('article').id, src: v.src, durata: v.duration, inizio: v.currentTime, didascalia: v.closest('figure').innerText }), 500); if (v.readyState > 0) fatto(); else { v.onloadedmetadata = fatto; v.onerror = () => r({ id: v.closest('article').id, src: v.src, durata: -1, inizio: -1, didascalia: '' }); } })))",
     );
     assert.equal(mostrati.length, attesi.length, `un video per ogni esercizio che ce l'ha: ${JSON.stringify(mostrati)}`);
     for (const [id, v] of attesi) {
       const m = mostrati.find((x) => x.id === id);
       assert.ok(m, `il video di ${id} è nel suo esercizio`);
-      assert.equal(m.src, `htd://media/${paccoAperto.media[`video:${id}`].sha256}.mp4`);
+      assert.equal(m.src, `htd://media/${paccoAperto.media[`video:${id}`].sha256}.mp4#t=0.5`);
+      assert.ok(Math.abs(m.inizio - 0.5) < 0.1, `${id}: l'anteprima è il fotogramma a 0,5 s, con scritta e riquadro (è a ${m.inizio} s)`);
       assert.ok(Math.abs(m.durata - v.copione.durata) < 0.6, `${id}: il video dura ${m.durata} s, il copione ${v.copione.durata} s`);
       assert.match(m.didascalia, /Il risultato atteso\./);
       assert.match(m.didascalia, /F5|F6/);
