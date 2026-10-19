@@ -205,5 +205,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "temi-e-font": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
