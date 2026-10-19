@@ -138,7 +138,7 @@
    "correzioni": 2,
    "semplificato": true,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo pause get_tree().paused deve diventare true\n  - In pausa il menu e il pulsante Riprendi devono essere visibili\n  - Durante la pausa il carrello deve rimanere fermo\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo l'azione pause get_tree().paused deve diventare true\n  - In pausa il menu di pausa deve essere visibile\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
