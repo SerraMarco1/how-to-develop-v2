@@ -1,0 +1,16 @@
+{
+ "n": 19,
+ "quando": "2026-10-19T19:51:03.665Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Crea e registra l'Autoload Game» non si vede sullo schermo: L'esercizio crea un Autoload e imposta la logica di transizione dei dati, ma non aggiunge elementi visivi direttamente sullo schermo all'avvio della scena.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 6895,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (8231 → 53 token)"
+ ]
+}

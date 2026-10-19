@@ -745,7 +745,8 @@
    "impronta": "22e9e014fa0782fe680d27c07ffac4dfba333de2140b0339028452552100b79c",
    "tentativi": 1,
    "esito": "niente",
-   "motivo": "L'esercizio crea un singleton globale Autoload e aggiorna la logica di cambio scena, senza aggiungere nuovi elementi visivi sullo schermo."
+   "regole": 2,
+   "motivo": "L'esercizio crea un Autoload e imposta la logica di transizione dei dati, ma non aggiunge elementi visivi direttamente sullo schermo all'avvio della scena."
   }
  }
 }
