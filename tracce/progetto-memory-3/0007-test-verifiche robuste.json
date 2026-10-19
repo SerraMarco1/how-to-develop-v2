@@ -1,0 +1,62 @@
+{
+ "n": 7,
+ "quando": "2026-10-19T09:27:58.324Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 54951,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://main.tscn",
+    "tipoNodo": "Label",
+    "nome": "MovesLabel",
+    "genitore": "Main",
+    "descrizione": "La scena main.tscn contiene una Label chiamata MovesLabel"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://main.tscn",
+    "tipoNodo": "Label",
+    "nome": "VictoryLabel",
+    "genitore": "Main",
+    "descrizione": "La scena main.tscn contiene una Label chiamata VictoryLabel"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://main.tscn",
+    "tipoNodo": "Button",
+    "nome": "RestartButton",
+    "genitore": "Main",
+    "descrizione": "La scena main.tscn contiene un Button chiamato RestartButton"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://card.gd",
+    "regex": "create_tween\\(",
+    "descrizione": "Lo script card.gd usa create_tween() per animare il giro della carta"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://main.gd",
+    "regex": "@export.*grid_size",
+    "descrizione": "Lo script main.gd esporta la proprietà grid_size"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar moves_label := find_by_name(main, \"MovesLabel\") as Label\n\tvar victory_label := find_by_name(main, \"VictoryLabel\") as Label\n\tvar restart_btn := find_by_name(main, \"RestartButton\") as Button\n\n\tif not check(\"ui\", moves_label != null and victory_label != null and restart_btn != null, \"Tutti i controlli UI (MovesLabel, VictoryLabel, RestartButton) devono essere presenti\"):\n\t\treturn\n\n\tcheck(\"initial_moves\", moves_label.text == \"Moves: 0\", \"MovesLabel deve mostrare 'Moves: 0' all'avvio\")\n\tcheck(\"initial_victory\", not victory_label.visible, \"VictoryLabel deve essere inizialmente nascosta\")\n\n\tvar cards := get_tree().get_nodes_in_group(\"cards\")\n\tif not check(\"cards_medium\", cards.size() == 16, \"Con la griglia MEDIUM devono essere create 16 carte\"):\n\t\treturn\n\n\t# Trova due carte con valori diversi per verificare l'incremento delle mosse\n\tvar first: Node = cards[0]\n\tvar second_diff: Node = null\n\tfor c in cards:\n\t\tif c != first and get_prop(c, \"value\", 0) != get_prop(first, \"value\", 0):\n\t\t\tsecond_diff = c\n\t\t\tbreak\n\n\tif second_diff != null:\n\t\tvar btn1 := find_by_class(first, \"Button\") as BaseButton\n\t\tvar btn2 := find_by_class(second_diff, \"Button\") as BaseButton\n\t\tif btn1 != null and btn2 != null:\n\t\t\tawait click_button(btn1)\n\t\t\tawait wait_seconds(0.2)\n\t\t\tawait click_button(btn2)\n\t\t\tawait wait_seconds(1.2)\n\t\t\tcheck(\"moves_one\", moves_label.text == \"Moves: 1\", \"Dopo aver girato una coppia non corrispondente le mosse devono essere 'Moves: 1'\")\n\t\t\tcheck(\"cards_face_down\", not get_prop(first, \"is_face_up\", true) and not get_prop(second_diff, \"is_face_up\", true), \"Le carte con valori diversi devono tornare coperte\")\n\n\t# Risolvi tutte le coppie rimanenti per verificare la vittoria\n\tvar pairs_map := {}\n\tfor c in cards:\n\t\tvar val: int = get_prop(c, \"value\", 0)\n\t\tif not pairs_map.has(val):\n\t\t\tpairs_map[val] = []\n\t\tpairs_map[val].append(c)\n\n\tfor val in pairs_map.keys():\n\t\tvar pair: Array = pairs_map[val]\n\t\tvar c1: Node = pair[0]\n\t\tvar c2: Node = pair[1]\n\t\tif not get_prop(c1, \"is_face_up\", false):\n\t\t\tvar b1 := find_by_class(c1, \"Button\") as BaseButton\n\t\t\tvar b2 := find_by_class(c2, \"Button\") as BaseButton\n\t\t\tif b1 != null and b2 != null:\n\t\t\t\tawait click_button(b1)\n\t\t\t\tawait wait_seconds(0.2)\n\t\t\t\tawait click_button(b2)\n\t\t\t\tawait wait_seconds(0.2)\n\n\tcheck(\"victory_visible\", victory_label.visible, \"Quando tutte le coppie sono scoperte VictoryLabel deve diventare visibile\")\n\n\t# Test RestartButton\n\tawait click_button(restart_btn)\n\tawait wait_frames(3)\n\tcheck(\"restart_moves\", moves_label.text == \"Moves: 0\", \"Dopo aver premuto RestartButton le mosse devono tornare a 'Moves: 0'\")\n\tcheck(\"restart_victory\", not victory_label.visible, \"Dopo aver premuto RestartButton VictoryLabel deve tornare nascosta\")\n\n\t# Test griglia SMALL\n\tmain.set(\"grid_size\", 0)\n\tcall_if_exists(main, \"start_game\")\n\tawait wait_frames(3)\n\tvar small_cards := get_tree().get_nodes_in_group(\"cards\")\n\tcheck(\"cards_small\", small_cards.size() == 4, \"Con grid_size impostata su SMALL devono esserci 4 carte\")\n\n\t# Test griglia LARGE\n\tmain.set(\"grid_size\", 2)\n\tcall_if_exists(main, \"start_game\")\n\tawait wait_frames(3)\n\tvar large_cards := get_tree().get_nodes_in_group(\"cards\")\n\tcheck(\"cards_large\", large_cards.size() == 24, \"Con grid_size impostata su LARGE devono esserci 24 carte\")\n",
+    "descrizione": "La partita funziona interamente: mosse contate, vittoria, riavvio e tre grandezze di griglia"
+   }
+  ],
+  "consegna": "Completa il gioco «Memory» rendendolo regolabile e rigiocabile.\n\n### Requisiti dell'interfaccia in `main.tscn`\nDentro il nodo `Main`, aggiungi questi tre nodi:\n1. Una `Label` chiamata `MovesLabel` per il conteggio delle mosse, con testo iniziale `\"Moves: 0\"`.\n2. Una `Label` chiamata `VictoryLabel` per il messaggio di vittoria, con testo a piacere (ad esempio `\"Hai vinto!\"`). All'avvio della partita deve essere nascosta (`visible = false`).\n3. Un `Button` chiamato `RestartButton` con testo a piacere (ad esempio `\"Nuova partita\"`). Cliccandolo si deve avviare una nuova partita.\n\n### Requisiti dello script `card.gd`\nNella funzione `flip()`, anima il giro della carta usando un `Tween` creato con `create_tween()`:\n- Inverti lo stato di `is_face_up`.\n- Con `tween_property`, porta la proprietà `\"scale:x\"` del nodo carta a `0.0` in 0.1 secondi.\n- Con `tween_callback`, chiama la funzione `update_display` a metà animazione (quando la carta è sottile come una lama).\n- Con un secondo `tween_property`, riporta `\"scale:x\"` a `1.0` in 0.1 secondi.\n\n### Requisiti dello script `main.gd`\n1. **Grandezze della griglia:**\n   - Definisci un'enumerazione `GridSize` con tre valori: `SMALL`, `MEDIUM`, `LARGE`.\n   - Esporta una proprietà `grid_size` di tipo `GridSize`, con valore predefinito `GridSize.MEDIUM`.\n   - In base a `grid_size`, la griglia deve avere:\n     - `GridSize.SMALL`: 2 colonne e 2 righe (4 carte in totale, valori da 1 a 2 a coppie);\n     - `GridSize.MEDIUM`: 4 colonne e 4 righe (16 carte in totale, valori da 1 a 8 a coppie);\n     - `GridSize.LARGE`: 6 colonne e 4 righe (24 carte in totale, valori da 1 a 12 a coppie).\n2. **Avvio e riavvio della partita:**\n   - Crea una funzione `start_game()` (chiamata in `_ready()` e alla pressione di `RestartButton`).\n   - All'inizio di `start_game()`, rimuovi ed elimina con `queue_free()` tutte le carte della partita precedente. Per rimuovere un nodo da un gruppo prima di eliminarlo, usa la funzione `remove_from_group()` (ad esempio `card.remove_from_group(\"cards\")`). Aggiungi ogni carta creata al gruppo `\"cards\"` per poterle ritrovare e cancellare facilmente.\n   - Azzera il contatore delle mosse (`moves = 0`), aggiorna `MovesLabel` in `\"Moves: 0\"` e nascondi `VictoryLabel`.\n3. **Conteggio delle mosse:**\n   - Ogni volta che viene girata la seconda carta di un tentativo, aumenta il contatore delle mosse di 1 e aggiorna `MovesLabel` nel formato `\"Moves: \" + str(moves)`.\n4. **Vittoria:**\n   - Tieni traccia delle coppie indovinate. Quando tutte le coppie della griglia sono state scoperte, mostra `VictoryLabel` rendendola visibile (`visible = true`)."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 26 s (13095 → 5575 token)"
+ ]
+}

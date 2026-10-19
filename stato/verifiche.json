@@ -185,5 +185,10 @@
   "tentativi": {
    "test": 1
   }
+ },
+ "progetto-memory-3": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
