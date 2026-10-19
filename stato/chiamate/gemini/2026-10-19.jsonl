@@ -132,3 +132,4 @@
 {"quando":1792425946456,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dictionary","ok":true,"contata":true,"durataMs":5184,"tokenInput":5601,"tokenOutput":249,"ragionamento":1390}
 {"quando":1792425961070,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dictionary","ok":true,"contata":true,"durataMs":7951,"tokenInput":6059,"tokenOutput":81,"ragionamento":1831}
 {"quando":1792425970326,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"stati-del-gioco","ok":true,"contata":true,"durataMs":58340,"tokenInput":5445,"tokenOutput":213,"ragionamento":5980}
+{"quando":1792426037797,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"stati-del-gioco","ok":true,"contata":true,"durataMs":66687,"tokenInput":5760,"tokenOutput":56,"ragionamento":2080}

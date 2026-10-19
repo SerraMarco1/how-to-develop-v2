@@ -1,0 +1,48 @@
+{
+ "n": 13,
+ "quando": "2026-10-19T16:07:17.793Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «label» (nome = Label; almeno 1 da 4 a 8 s; deve mostrare il testo «Partita finita»): il testo «Partita finita» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 6 s: «Label» a (516, 550) 151×23, si vede, testo «Punti: 0050 | Vite: 1». Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 67468,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "label",
+     "cerca": {
+      "nome": "Label"
+     },
+     "quanti": 1,
+     "da": 4,
+     "a": 8,
+     "deve": "mostrare testo",
+     "testo": "Partita finita",
+     "etichetta": "Messaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Quando le vite finiscono, la partita si ferma e compare il messaggio",
+     "da": 4,
+     "a": 8,
+     "soggetto": "label"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «label» (nome = Label; almeno 1 da 4 a 8 s; deve mostrare il testo «Partita finita»): il testo «Partita finita» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 6 s: «Label» a (516, 550) 151×23, si vede, testo «Punti: 0050 | Vite: 1». Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 58 s (5445 → 213 token)"
+ ]
+}
