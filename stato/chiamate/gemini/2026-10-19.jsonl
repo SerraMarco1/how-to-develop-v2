@@ -89,3 +89,4 @@
 {"quando":1792401233527,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-schiva-2","ok":true,"contata":true,"durataMs":16745,"tokenInput":12672,"tokenOutput":4855,"ragionamento":3091}
 {"quando":1792401294986,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":32098,"tokenInput":13831,"tokenOutput":6146,"ragionamento":9796}
 {"quando":1792401362695,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":20456,"tokenInput":13488,"tokenOutput":5788,"ragionamento":4084}
+{"quando":1792401463710,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":19629,"tokenInput":14184,"tokenOutput":6624,"ragionamento":2839}
