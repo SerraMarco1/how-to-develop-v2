@@ -1,0 +1,41 @@
+{
+ "n": 41,
+ "quando": "2026-10-19T09:01:29.593Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 89877,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "azione_input",
+    "nome": "move_left",
+    "descrizione": "L'azione move_left è presente nella Input Map"
+   },
+   {
+    "tipo": "azione_input",
+    "nome": "move_right",
+    "descrizione": "L'azione move_right è presente nella Input Map"
+   },
+   {
+    "tipo": "azione_input",
+    "nome": "turbo",
+    "descrizione": "L'azione turbo è presente nella Input Map"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar rover := find_by_name(main, \"Rover\") as Sprite2D\n\tif not check(\"rover\", rover != null, \"La scena deve contenere il nodo Rover\"):\n\t\treturn\n\t\n\trover.position = Vector2(400.0, 500.0)\n\tvar start_x: float = rover.position.x\n\tawait hold_action(\"move_right\", 20)\n\tvar delta_normal: float = rover.position.x - start_x\n\tcheck(\"move_normal\", delta_normal > 2.0, \"Tenendo premuto move_right il rover deve muoversi verso destra\")\n\t\n\trover.position = Vector2(400.0, 500.0)\n\tvar before_turbo_x: float = rover.position.x\n\tInput.action_press(\"turbo\")\n\tawait hold_action(\"move_right\", 20)\n\tInput.action_release(\"turbo\")\n\tvar delta_turbo: float = rover.position.x - before_turbo_x\n\tcheck(\"turbo_speed\", delta_turbo > delta_normal * 1.2, \"Con turbo attivo il rover deve percorrere molta piu' strada nello stesso tempo\")\n\t\n\tInput.action_press(\"turbo\")\n\tawait wait_frames(2)\n\tcheck(\"color_orange\", rover.modulate.is_equal_approx(Color.ORANGE), \"Quando turbo e' premuto il colore del rover deve diventare Color.ORANGE\")\n\tInput.action_release(\"turbo\")\n\tawait wait_frames(2)\n\tcheck(\"color_white\", rover.modulate.is_equal_approx(Color.WHITE), \"Quando turbo non e' premuto il colore deve tornare Color.WHITE\")\n\t\n\trover.position = Vector2(50.0, 500.0)\n\tawait hold_action(\"move_left\", 5)\n\tcheck(\"clamp_left\", rover.position.x >= 119.9 and rover.position.x <= 120.1, \"Il rover non deve superare il limite sinistro di 120 pixel\")\n\t\n\trover.position = Vector2(1100.0, 500.0)\n\tawait hold_action(\"move_right\", 5)\n\tcheck(\"clamp_right\", rover.position.x >= 1029.9 and rover.position.x <= 1030.1, \"Il rover non deve superare il limite destro di 1030 pixel\")\n",
+    "descrizione": "Il rover si muove, accelera e cambia colore con turbo, e rispetta i limiti della pista"
+   }
+  ],
+  "consegna": "Nel progetto `Corsa nel deserto` presente nella cartella `corsa-nel-deserto`, programma il movimento orizzontale di un rover spaziale dotato di turbo e delimitato dai confini della pista.\n\n1. Nella scheda **Input Map** delle impostazioni del progetto, configura tre azioni:\n   - `move_left`: tasti **A** e **Freccia Sinistra**.\n   - `move_right`: tasti **D** e **Freccia Destra**.\n   - `turbo`: tasti **Shift** e **Space**.\n2. Nello script `rover.gd`, implementa la funzione `_process(delta: float) -> void`:\n   - Se l'azione `turbo` è premuta, la velocità di movimento usata per il fotogramma corrente deve essere `turbo_speed` e il colore del nodo (`modulate`) deve diventare `Color.ORANGE`.\n   - Se l'azione `turbo` non è premuta, la velocità deve essere `base_speed` e il colore deve essere `Color.WHITE`.\n   - Calcola la direzione orizzontale in base alla pressione di `move_left` (-1.0) e `move_right` (+1.0).\n   - Sposta il rover lungo l'asse X moltiplicando la direzione, la velocità calcolata e `delta`.\n   - Usa `clamp()` per fare in modo che `position.x` resti sempre compresa tra `120.0` e `1030.0` pixel."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 71 s (10084 → 2772 token)"
+ ]
+}

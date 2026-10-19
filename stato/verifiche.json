@@ -33,5 +33,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "input-da-tastiera": {
+  "versione": 3,
+  "fragili": [],
+  "tentativi": {}
  }
 }
