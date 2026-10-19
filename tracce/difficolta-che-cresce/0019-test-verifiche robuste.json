@@ -1,0 +1,43 @@
+{
+ "n": 19,
+ "quando": "2026-10-19T09:11:08.720Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 48850,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://basket.gd",
+    "descrizione": "Il file res://basket.gd esiste nel progetto"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "spawn_timer",
+    "descrizione": "Lo script basket.gd definisce la variabile spawn_timer"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "get_spawn_interval",
+    "descrizione": "Lo script basket.gd contiene la funzione get_spawn_interval()"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve aprirsi senza errori\"):\n\t\treturn\n\t\n\tif not check(\"fn_interval\", has_function(basket, \"get_spawn_interval\"), \"basket.gd deve avere una funzione get_spawn_interval()\"):\n\t\treturn\n\t\n\tbasket.set(\"game_time\", 0.0)\n\tvar interval_0 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_at_0\", typeof(interval_0) == TYPE_FLOAT and absf(interval_0 - 2.0) < 0.05, \"All'inizio (tempo 0s) get_spawn_interval() deve restituire 2.0 secondi\")\n\t\n\tbasket.set(\"game_time\", 30.0)\n\tvar interval_30 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_at_30\", typeof(interval_30) == TYPE_FLOAT and absf(interval_30 - 1.25) < 0.05, \"A meta' percorso (tempo 30s) get_spawn_interval() deve restituire 1.25 secondi\")\n\t\n\tbasket.set(\"game_time\", 60.0)\n\tvar interval_60 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_at_60\", typeof(interval_60) == TYPE_FLOAT and absf(interval_60 - 0.5) < 0.05, \"A difficolta' massima (tempo 60s) get_spawn_interval() deve restituire 0.5 secondi\")\n\t\n\tbasket.set(\"game_time\", 120.0)\n\tvar interval_120 = call_if_exists(basket, \"get_spawn_interval\")\n\tcheck(\"interval_min\", typeof(interval_120) == TYPE_FLOAT and absf(interval_120 - 0.5) < 0.05, \"L'intervallo non deve scendere sotto 0.5 secondi anche con tempo avanzato\")\n\t\n\tbasket.set(\"spawn_timer\", 1.8)\n\tcall_if_exists(basket, \"reset_game\")\n\tvar timer_reset = get_prop(basket, \"spawn_timer\", -1.0)\n\tcheck(\"reset_timer\", timer_reset == 0.0, \"reset_game() deve azzerare spawn_timer portandolo a 0.0\")\n",
+    "descrizione": "L'intervallo di nascita scende da 2.0s a 0.5s all'avanzare del tempo e reset_game azzera correttamente il timer"
+   }
+  ],
+  "consegna": "Completa il sistema di generazione dinamica in `res://basket.gd`, facendo comparire nuove stelle periodicamente senza usare il nodo Timer, con un ritmo che si intensifica nel tempo.\n\nEcco i requisiti da realizzare:\n1. Aggiungi la variabile `spawn_timer: float = 0.0` per accumulare il tempo trascorso dall'ultima generazione.\n2. Crea la funzione `get_spawn_interval() -> float`: restituisce l'intervallo in secondi tra una stella e la successiva. All'inizio del gioco (difficoltà 0.0) l'intervallo deve essere di `2.0` secondi; a difficoltà massima (1.0) deve scendere a `0.5` secondi. Usa `lerpf(2.0, 0.5, get_difficulty_factor())` e assicurati con `max(intervallo, 0.5)` che non scenda mai sotto mezzo secondo.\n3. In `_process(delta: float)`, durante lo stato `GameState.PLAYING`, somma `delta` a `spawn_timer`.\n4. Sempre nello stato `GameState.PLAYING`, quando `spawn_timer` raggiunge o supera `get_spawn_interval()`, sottrai l'intervallo corrente da `spawn_timer` e chiama `spawn_star()`.\n5. In `reset_game()`, azzera anche `spawn_timer` a `0.0`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 35 s (13692 → 6296 token)"
+ ]
+}

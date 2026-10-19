@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:09:29.881Z",
+ "aggiornato": "2026-10-19T09:11:08.725Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -151,10 +151,10 @@
    "slug": "difficolta-che-cresce",
    "numero": "1.13",
    "titolo": "Difficoltà che cresce nel tempo",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/difficolta-che-cresce.json",
-   "sha256": "5691c3b8b7e24e36d2df3c6fc5b70743a50fa58d1e05605d4cf55c9262db1f21",
-   "byte": 77346
+   "sha256": "a9f7af887ee9012341fee99860d4177a5213428fbb6db53bd8d3cb17741bc77a",
+   "byte": 76346
   },
   {
    "slug": "ordinare-il-codice",

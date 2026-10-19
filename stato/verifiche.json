@@ -78,5 +78,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "difficolta-che-cresce": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
