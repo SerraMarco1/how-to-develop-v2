@@ -72,5 +72,13 @@
    "tentativi": 1,
    "esito": "fatto"
   }
+ },
+ "funzioni": {
+  "es1": {
+   "impronta": "5ff57a117916149b7e5b3e55e3a30cfe3ca204cd1d0539bf93e7f9915da8292f",
+   "tentativi": 1,
+   "esito": "niente",
+   "motivo": "L'esercizio riorganizza il codice in funzioni senza modificare il comportamento visivo del gioco."
+  }
  }
 }
