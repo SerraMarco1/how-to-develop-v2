@@ -1,0 +1,33 @@
+{
+ "n": 14,
+ "quando": "2026-10-19T09:34:08.932Z",
+ "pezzo": "es3",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 3: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 26137,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "impostazione",
+    "sezione": "autoload",
+    "chiave": "UserSession",
+    "contiene": "*res://user_session.gd",
+    "descrizione": "L'Autoload UserSession è registrato correttamente con *res://user_session.gd"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar session = get_node_or_null(\"/root/UserSession\")\n\tif not check(\"autoload_found\", session != null, \"L'Autoload UserSession deve essere registrato e attivo\"):\n\t\treturn\n\tvar login := await instantiate_scene(\"res://login_screen.tscn\")\n\tif not check(\"login_loaded\", login != null, \"login_screen.tscn deve potersi caricare\"):\n\t\treturn\n\tvar input := find_by_name(login, \"NameInput\") as LineEdit\n\tvar btn := find_by_name(login, \"ConfirmButton\") as Button\n\tif not check(\"controls_found\", input != null and btn != null, \"NameInput e ConfirmButton devono esistere in login_screen\"):\n\t\treturn\n\tinput.text = \"Alice\"\n\tawait click_button(btn)\n\tvar saved_name = get_prop(session, \"player_name\", \"\")\n\tcheck(\"name_saved\", saved_name == \"Alice\", \"UserSession.player_name deve contenere 'Alice'\")\n\tvar profile := await instantiate_scene(\"res://profile_view.tscn\")\n\tif not check(\"profile_loaded\", profile != null, \"profile_view.tscn deve potersi caricare\"):\n\t\treturn\n\tvar label := find_by_name(profile, \"ProfileLabel\") as Label\n\tif not check(\"label_found\", label != null, \"ProfileLabel deve esistere in profile_view\"):\n\t\treturn\n\tcheck(\"label_text\", label.text == \"Profilo di: Alice\", \"ProfileLabel deve mostrare 'Profilo di: Alice', trovato: '\" + label.text + \"'\")\n",
+    "descrizione": "UserSession conserva il nome impostato e profile_view lo visualizza"
+   }
+  ],
+  "consegna": "Il progetto di prova `ProfiloGiocatore` contiene un menu `login_screen.tscn` e una schermata profilo `profile_view.tscn`. Quando si preme il pulsante di conferma, il gioco va in crash mostrando un errore su una variabile non trovata, e se si tenta di eseguire la schermata profilo il nome del giocatore rimane vuoto.\n\nTrova e risolvi gli errori nei file del progetto:\n1. Nelle impostazioni del progetto (Project Settings -> Globals -> Autoload), l'Autoload è registrato con il nome errato `Session` anziché `UserSession`.\n2. Nel file `user_session.gd`, la variabile definita si chiama `current_user` anziché `player_name`: rinominala in modo che corrisponda a ciò che il resto del codice si aspetta.\n3. Verifica che il flusso tra le schermate funzioni correttamente in modo che `UserSession.player_name` memorizzi il nome e venga mostrato come `\"Profilo di: \" + UserSession.player_name`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 16 s (10463 → 2971 token)"
+ ]
+}
