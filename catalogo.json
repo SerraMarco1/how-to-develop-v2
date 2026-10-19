@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-18T09:24:18.897Z",
+ "aggiornato": "2026-10-19T07:02:46.512Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -299,6 +299,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/leggere-una-classe.json",
    "sha256": "a3e6c89b17c1fa1ed818f4c4e105d514fdebacfb64318e732dc1cebe7e7fce00",
    "byte": 113290
+  },
+  {
+   "slug": "progetto-memory-1",
+   "numero": "2.11",
+   "titolo": "Progetto «Memory» – tappa 1: la griglia",
+   "versione": 1,
+   "file": "lezioni/f02-nodi-scene-segnali/progetto-memory-1.json",
+   "sha256": "ea8f9891377b6e0c37d287e0c6d403283d773461b2def1967ff2487cb83ff0c6",
+   "byte": 14711
   }
  ],
  "documentazione": {
