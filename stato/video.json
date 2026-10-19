@@ -522,7 +522,8 @@
   "es2": {
    "impronta": "ab7f0e2c1c332b3af46bcb4a009246bb4848b6bc0edbc9d896184194f00e81fa",
    "tentativi": 1,
-   "esito": "fatto"
+   "esito": "fatto",
+   "regole": 2
   }
  },
  "contenitori": {
