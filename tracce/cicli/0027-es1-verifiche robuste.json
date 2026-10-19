@@ -1,0 +1,32 @@
+{
+ "n": 27,
+ "quando": "2026-10-19T09:06:20.786Z",
+ "pezzo": "es1",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 1: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 34725,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "for\\s+\\w+\\s+in\\s+range\\(5\\):",
+    "descrizione": "Nel file basket.gd viene utilizzato un ciclo for con range(5)"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene()\n\tif not check(\"basket\", basket != null, \"La scena basket.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar stars: Array[Node] = []\n\tfor child in basket.get_children():\n\t\tif child is Sprite2D and child != basket:\n\t\t\tstars.append(child)\n\tif not check(\"star_count\", stars.size() == 5, \"Il cesto deve contenere esattamente 5 stelle create dal codice\"):\n\t\treturn\n\tvar star_0: Sprite2D = stars[0] as Sprite2D\n\tvar star_4: Sprite2D = stars[4] as Sprite2D\n\tcheck(\"star_spacing\", star_4.position.x > star_0.position.x and star_4.position.y > star_0.position.y, \"Le stelle devono avere posizioni X e Y crescenti calcolate con l'indice del ciclo\")\n",
+    "descrizione": "All'avvio vengono create esattamente 5 stelle figlie con posizioni scalate"
+   }
+  ],
+  "consegna": "All'avvio della partita abbiamo bisogno di più stelle sullo schermo anziché una sola. Modifica `basket.gd` per generare da codice 5 stelle dentro la funzione `_ready()` usando un ciclo `for`.\n\nPer creare un nodo da un file di scena salvato, si carica la scena con `load(\"res://star.tscn\")` e si chiama `.instantiate()` per ottenerne l'istanza (ad esempio: `var star = load(\"res://star.tscn\").instantiate()`). Aggiungi ciascuna stella come nodo figlio del cesto con `add_child(star)` e subito dopo imposta la sua posizione calcolando le coordinate tramite l'indice del ciclo: la coordinata X deve valere `150.0 + i * 180.0` e la coordinata Y deve valere `80.0 + i * 50.0` (dove `i` è l'indice da 0 a 4)."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 21 s (11622 → 4121 token)"
+ ]
+}

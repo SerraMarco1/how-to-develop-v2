@@ -81,3 +81,4 @@
 {"quando":1792400611354,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"casualita-e-distanze","ok":true,"contata":true,"durataMs":29996,"tokenInput":11539,"tokenOutput":4357,"ragionamento":8513}
 {"quando":1792400665161,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"punteggio-e-testo","ok":true,"contata":true,"durataMs":47492,"tokenInput":11195,"tokenOutput":4328,"ragionamento":3208}
 {"quando":1792400746063,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"cicli","ok":true,"contata":true,"durataMs":21095,"tokenInput":11622,"tokenOutput":4121,"ragionamento":5934}
+{"quando":1792400792691,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"cicli","ok":true,"contata":true,"durataMs":15375,"tokenInput":12202,"tokenOutput":4649,"ragionamento":2224}
