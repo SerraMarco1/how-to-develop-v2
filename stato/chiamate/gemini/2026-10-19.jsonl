@@ -99,3 +99,4 @@
 {"quando":1792402023375,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-memory-3","ok":true,"contata":true,"durataMs":26495,"tokenInput":13095,"tokenOutput":5575,"ragionamento":8148}
 {"quando":1792402155290,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"controlli-di-uso-comune","ok":true,"contata":true,"durataMs":35266,"tokenInput":22403,"tokenOutput":14970,"ragionamento":3399}
 {"quando":1792402260789,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"interfaccia-in-partita","ok":true,"contata":true,"durataMs":17324,"tokenInput":10696,"tokenOutput":3159,"ragionamento":4995}
+{"quando":1792402304067,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"interfaccia-in-partita","ok":true,"contata":true,"durataMs":48045,"tokenInput":23589,"tokenOutput":16370,"ragionamento":7345}

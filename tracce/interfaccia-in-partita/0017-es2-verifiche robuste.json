@@ -1,0 +1,43 @@
+{
+ "n": 17,
+ "quando": "2026-10-19T09:31:35.085Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 34298,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://hud.tscn",
+    "descrizione": "La nuova scena hud.tscn esiste"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://hud.gd",
+    "descrizione": "Lo script hud.gd esiste"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://hud.tscn",
+    "tipoNodo": "CanvasLayer",
+    "nome": "HUD",
+    "descrizione": "La radice di hud.tscn è un CanvasLayer chiamato HUD"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar player_source := source_of(\"res://player.gd\")\n\tcheck(\"no_label_in_player\", not player_source.contains(\"EnergyLabel\"), \"player.gd non deve fare riferimento a EnergyLabel\")\n\tcheck(\"no_bar_in_player\", not player_source.contains(\"EnergyBar\"), \"player.gd non deve fare riferimento a EnergyBar\")\n\t\n\tvar world := await instantiate_main_scene()\n\tif not check(\"world_ok\", world != null, \"world.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar player := find_by_name(world, \"Player\")\n\tvar hud := find_by_name(world, \"HUD\")\n\tif not check(\"istanze_trovate\", player != null and hud != null, \"World deve contenere sia Player sia HUD\"):\n\t\treturn\n\t\n\tvar label := find_by_name(hud, \"EnergyLabel\") as Label\n\tvar bar := find_by_name(hud, \"EnergyBar\") as ProgressBar\n\tif not check(\"controlli_in_hud\", label != null and bar != null, \"HUD deve contenere EnergyLabel e EnergyBar\"):\n\t\treturn\n\t\n\tvar max_val = get_prop(player, \"max_energy\", 100)\n\tcall_if_exists(player, \"use_energy\", [35])\n\tawait wait_frames(2)\n\tvar current_val = get_prop(player, \"energy\", 65)\n\tvar expected_text := \"Energia: %d/%d\" % [current_val, max_val]\n\tcheck(\"label_aggiornata\", label.text == expected_text, \"Dopo use_energy(35) il testo deve mostrare '%s' (è '%s')\" % [expected_text, label.text])\n\tcheck(\"bar_aggiornata\", is_equal_approx(bar.value, float(current_val)), \"Dopo use_energy(35) la barra deve valere %d (vale %.1f)\" % [current_val, bar.value])\n",
+    "descrizione": "Player non contiene riferimenti all'HUD ed emette il segnale per aggiornare la barra e la label"
+   }
+  ],
+  "consegna": "Nel progetto di questo esercizio il nodo giocatore (`Player`) aggiorna direttamente da dentro il suo script un'etichetta `Label` e una barra `ProgressBar` posizionate nella scena, leggendo le coordinate e cambiando i testi a mano.\n\nRiorganizza l'interfaccia applicando il disaccoppiamento:\n1. Crea la scena `hud.tscn` con radice `CanvasLayer` di nome `HUD` e collegata allo script `hud.gd`.\n2. Sposta dentro `hud.tscn` la `Label` (chiamata `EnergyLabel`) e la `ProgressBar` (chiamata `EnergyBar`).\n3. In `hud.gd`, implementa la funzione `set_energy(current: int, maximum: int) -> void` che aggiorna sia il testo di `EnergyLabel` nel formato `\"Energia: %d/%d\" % [current, maximum]`, sia la proprietà `value` e `max_value` di `EnergyBar`.\n4. Nello script `player.gd`, rimuovi i riferimenti diretti ai nodi dell'interfaccia e dichiara il segnale:\n   `signal energy_changed(current: int, maximum: int)`\n   Emetti questo segnale ogni volta che l'energia cambia (in `_ready`, quando il giocatore consuma energia con `use_energy` o quando recupera energia con `restore_energy`).\n5. Nella scena principale `world.tscn`, istanzia `hud.tscn` come figlia di `World` e connetti il segnale `energy_changed` del nodo `Player` alla funzione `set_energy` del nodo `HUD`.\n\nIl comportamento del gioco deve rimanere identico, ma `player.gd` non deve contenere alcun riferimento a nodi UI o a testi formattati."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 17 s (10696 → 3159 token)"
+ ]
+}
