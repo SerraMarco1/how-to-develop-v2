@@ -414,47 +414,10 @@
  "export": {
   "es1": {
    "impronta": "4317fb81c3fbfceb43438c2cd03b724702a182f7ef524cafab49253d112ae72b",
-   "tentativi": 2,
+   "tentativi": 1,
    "esito": "niente",
-   "ultimo": {
-    "copione": {
-     "scena": "res://basket.tscn",
-     "durata": 8,
-     "azioni": [
-      {
-       "azione": "move_right",
-       "inizio": 1,
-       "fine": 4,
-       "tasto": "D"
-      }
-     ],
-     "soggetti": [
-      {
-       "id": "basket",
-       "cerca": {
-        "scena": "res://basket.tscn"
-       },
-       "quanti": 1,
-       "da": 0,
-       "a": 8,
-       "deve": "muoversi",
-       "etichetta": "Cesto"
-      }
-     ],
-     "scritte": [
-      {
-       "testo": "Il cesto verde si sposta a destra",
-       "da": 1,
-       "a": 4,
-       "soggetto": "basket"
-      }
-     ]
-    },
-    "problemi": [
-     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
-    ]
-   },
-   "motivo": "L'esercizio sposta i parametri nell'Inspector e usa variabili esportate al posto delle costanti: il comportamento visivo del gioco resta identico a prima."
+   "regole": 2,
+   "motivo": "L'esercizio rende configurabili i parametri del cesto nell'Inspector e usa variabili esportate al posto delle costanti: il comportamento visivo del gioco resta identico a prima."
   }
  },
  "tween": {
