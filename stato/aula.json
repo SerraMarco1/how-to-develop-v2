@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-19T12:52:15.308Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-19T12:52:20.652Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "focus-tastiera-e-gamepad",
   "numero": "3.8",
   "titolo": "Menu con tastiera e gamepad: il focus"
  },
- "messaggio": "Sta scrivendo la lezione 3.8 «Menu con tastiera e gamepad: il focus».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 3.8 riprende da sola appena rispondono.",
+ "riprende": "2026-10-19T13:52:15.652Z"
 }
