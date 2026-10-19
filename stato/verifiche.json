@@ -53,5 +53,10 @@
   "versione": 3,
   "fragili": [],
   "tentativi": {}
+ },
+ "punteggio-e-testo": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }

@@ -1,0 +1,45 @@
+{
+ "n": 15,
+ "quando": "2026-10-19T09:05:26.685Z",
+ "pezzo": "es1",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 1: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 61527,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://basket.tscn",
+    "tipoNodo": "Label",
+    "nome": "Label",
+    "descrizione": "La scena basket.tscn contiene il nodo Label figlio del cesto"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "func update_ui\\(\\)",
+    "descrizione": "In basket.gd è definita la funzione update_ui()"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "func set_speed\\(",
+    "descrizione": "In basket.gd è definita la funzione set_speed()"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale basket.tscn deve avviarsi correttamente\"):\n\t\treturn\n\tvar label := find_by_class(main, \"Label\") as Label\n\tif not check(\"label\", label != null, \"Il nodo Label deve essere presente nel cesto\"):\n\t\treturn\n\tawait wait_frames(2)\n\tvar p_name = get_prop(main, \"player_name\", \"Cesto\")\n\tvar lives = get_prop(main, \"lives\", 3)\n\tvar speed = get_prop(main, \"speed\", 350.0)\n\tvar expected := \"%s | Vite: %d | Vel: %.1f\" % [p_name, lives, speed]\n\tcheck(\"initial_text\", label.text == expected, \"All'avvio il Label deve mostrare '%s', ma mostra '%s'\" % [expected, label.text])\n\tif not check(\"has_set_speed\", has_function(main, \"set_speed\"), \"Lo script basket.gd deve possedere la funzione set_speed(new_speed: float)\"):\n\t\treturn\n\tcall_if_exists(main, \"set_speed\", [420.5])\n\tvar expected_updated := \"%s | Vite: %d | Vel: %.1f\" % [p_name, lives, 420.5]\n\tcheck(\"updated_speed\", label.text == expected_updated, \"Dopo set_speed(420.5) il Label deve mostrare '%s', ma mostra '%s'\" % [expected_updated, label.text])\n\tcall_if_exists(main, \"set_speed\", [200.0])\n\tvar expected_200 := \"%s | Vite: %d | Vel: %.1f\" % [p_name, lives, 200.0]\n\tcheck(\"integer_speed\", label.text == expected_200, \"Con velocità 200.0 il Label deve mostrare '%s', ma mostra '%s'\" % [expected_200, label.text])\n",
+    "descrizione": "Il testo iniziale è formattato correttamente e set_speed aggiorna la scritta"
+   }
+  ],
+  "consegna": "Nel file `basket.gd`, il testo del nodo `Label` viene composto dentro `_ready()` sommando stringhe con `+` e convertendo i numeri con `str()`. Questo approccio non controlla i decimali e rende il codice difficile da leggere.\n\nRiorganizza la gestione del testo del cesto seguendo queste specifiche:\n\n1. Crea in `basket.gd` la funzione `update_ui() -> void` che assegna alla proprietà `text` di `$Label` una stringa formattata con l'operatore `%`:\n   - Il formato deve essere: `\"%s | Vite: %d | Vel: %.1f\"` sostituito dai valori di `player_name`, `lives` e `speed`.\n2. In `_ready()`, elimina la vecchia riga che componeva il testo con `+` e chiama invece `update_ui()` per impostare la scritta iniziale.\n3. Crea la funzione `set_speed(new_speed: float) -> void` che aggiorna la variabile `speed` con il valore ricevuto e chiama subito `update_ui()`, così il testo a schermo si aggiorna solo quando la velocità cambia davvero."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 47 s (11195 → 4328 token)"
+ ]
+}

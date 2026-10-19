@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T09:04:14.931Z",
+ "aggiornato": "2026-10-19T09:05:35.562Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -106,10 +106,10 @@
    "slug": "punteggio-e-testo",
    "numero": "1.8",
    "titolo": "Punteggio e testo sullo schermo",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/punteggio-e-testo.json",
-   "sha256": "31b40acd237ce037170d830c53473469a8e57741775c929809e4ebcf235619bf",
-   "byte": 59869
+   "sha256": "cb70605cdef4848432bd364edbc4b62363bd835978ccb3602ca5ffbcb605ae55",
+   "byte": 60186
   },
   {
    "slug": "cicli",
