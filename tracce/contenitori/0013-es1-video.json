@@ -1,0 +1,16 @@
+{
+ "n": 13,
+ "quando": "2026-10-19T16:13:58.422Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Costruisci il menu principale con i contenitori» non si vede sullo schermo: La scena del menu principale viene creata e salvata ma non viene avviata durante l'esecuzione del gioco principale.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 8057,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (8296 → 35 token)"
+ ]
+}
