@@ -1,0 +1,16 @@
+{
+ "n": 12,
+ "quando": "2026-10-19T16:12:19.568Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Far rimbalzare il cesto quando raccoglie una stella» non si vede sullo schermo: L'esercizio aggiunge un'animazione di scala al cesto che non può essere verificata dai criteri consentiti, e il cesto si muoveva già prima dell'esercizio.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16626,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 15 s (8287 → 50 token)"
+ ]
+}

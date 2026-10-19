@@ -486,5 +486,51 @@
    },
    "motivo": "L'esercizio sposta i parametri nell'Inspector e usa variabili esportate al posto delle costanti: il comportamento visivo del gioco resta identico a prima."
   }
+ },
+ "tween": {
+  "es1": {
+   "impronta": "ffe6eb1c5b7ae40f765090238130ddd12eb72ca50683efb546ba80cf54ebf71b",
+   "tentativi": 2,
+   "esito": "niente",
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 8,
+     "azioni": [
+      {
+       "azione": "move_right",
+       "inizio": 1,
+       "fine": 3,
+       "tasto": "D"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "cesto",
+       "cerca": {
+        "script": "res://basket.gd"
+       },
+       "quanti": 1,
+       "da": 0,
+       "a": 8,
+       "deve": "muoversi",
+       "etichetta": "Cesto"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il cesto rimbalza quando raccoglie una stella",
+       "da": 1,
+       "a": 7,
+       "soggetto": "cesto"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio aggiunge un'animazione di scala al cesto che non può essere verificata dai criteri consentiti, e il cesto si muoveva già prima dell'esercizio."
+  }
  }
 }
