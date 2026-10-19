@@ -1,0 +1,47 @@
+{
+ "n": 30,
+ "quando": "2026-10-19T19:43:37.147Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «restart» (nome = RestartButton; almeno 1 da 5 a 10 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 5 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 18063,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 10,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "restart",
+     "cerca": {
+      "nome": "RestartButton"
+     },
+     "quanti": 1,
+     "da": 5,
+     "a": 10,
+     "deve": "comparire",
+     "etichetta": "Pulsante Ricomincia"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Quando finiscono le vite, appare il pulsante di riavvio",
+     "da": 5,
+     "a": 10,
+     "soggetto": "restart"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «restart» (nome = RestartButton; almeno 1 da 5 a 10 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 5 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (7300 → 207 token)"
+ ]
+}
