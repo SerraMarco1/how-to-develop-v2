@@ -1,0 +1,54 @@
+{
+ "n": 17,
+ "quando": "2026-10-19T19:45:34.953Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «cesto» (script = res://basket.gd; almeno 1 da 0.5 a 7.5 s; deve cambiare dimensione): si vedono, ma hanno cambiato dimensione solo 0 nodi su 1 (cambio massimo 0%, serve il 15%). A 4 s: «Basket» a (1024, 536) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 13139,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 0.5,
+     "fine": 3,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "cesto",
+     "cerca": {
+      "script": "res://basket.gd"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "cambiare dimensione",
+     "etichetta": "Cesto"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il cesto si ingrandisce e rimbalza alla raccolta della stella",
+     "da": 1,
+     "a": 4.5,
+     "soggetto": "cesto"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «cesto» (script = res://basket.gd; almeno 1 da 0.5 a 7.5 s; deve cambiare dimensione): si vedono, ma hanno cambiato dimensione solo 0 nodi su 1 (cambio massimo 0%, serve il 15%). A 4 s: «Basket» a (1024, 536) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 3 s (8217 → 255 token)"
+ ]
+}

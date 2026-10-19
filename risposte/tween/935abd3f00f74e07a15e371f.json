@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"cesto\",\n      \"cerca\": {\n        \"script\": \"res://basket.gd\"\n      },\n      \"quanti\": 1,\n      \"da\": 1.0,\n      \"a\": 5.0,\n      \"deve\": \"cambiare dimensione\",\n      \"etichetta\": \"Cesto\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il cesto si ingrandisce e rimbalza alla raccolta della stella\",\n      \"da\": 1.0,\n      \"a\": 5.0,\n      \"soggetto\": \"cesto\"\n    }\n  ]\n}",
+ "ragionamento": 2326,
+ "quando": "2026-10-19T19:45:43.243Z",
+ "ruolo": "ritocco"
+}
