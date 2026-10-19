@@ -121,3 +121,4 @@
 {"quando":1792425650509,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"process-e-delta","ok":true,"contata":true,"durataMs":21340,"tokenInput":3158,"tokenOutput":205,"ragionamento":818}
 {"quando":1792425683254,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"condizioni","ok":true,"contata":true,"durataMs":4268,"tokenInput":3529,"tokenOutput":203,"ragionamento":1284}
 {"quando":1792425701399,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"input-da-tastiera","ok":true,"contata":true,"durataMs":12998,"tokenInput":4052,"tokenOutput":252,"ragionamento":868}
+{"quando":1792425728186,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"funzioni","ok":true,"contata":true,"durataMs":9816,"tokenInput":4279,"tokenOutput":30,"ragionamento":1015}
