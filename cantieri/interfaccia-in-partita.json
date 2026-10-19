@@ -254,6 +254,10 @@
     "partenza": {
      "file": [
       {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SeparazioneHUD\"\nrun/main_scene=\"res://world.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
        "percorso": "player.gd",
        "contenuto": "extends Node2D\n\nvar max_energy: int = 100\nvar energy: int = 100\n\n@onready var label: Label = $\"../EnergyLabel\"\n@onready var bar: ProgressBar = $\"../EnergyBar\"\n\n\nfunc _ready() -> void:\n\t_update_display()\n\n\nfunc use_energy(amount: int) -> void:\n\tenergy = maxi(0, energy - amount)\n\t_update_display()\n\n\nfunc restore_energy(amount: int) -> void:\n\tenergy = mini(max_energy, energy + amount)\n\t_update_display()\n\n\nfunc _update_display() -> void:\n\tif label != null:\n\t\tlabel.text = \"Energia: \" + str(energy) + \"/\" + str(max_energy)\n\tif bar != null:\n\t\tbar.max_value = max_energy\n\t\tbar.value = energy\n"
       },
@@ -278,7 +282,7 @@
       },
       {
        "percorso": "hud.gd",
-       "contenuto": "extends CanvasLayer\n\n@onready var energy_label: Label = $EnergyLabel\n@onready var energy_bar: ProgressBar = $EnergyBar\n\n\nfunc set_energy(current: int, maximum: int) -> void:\n\tenergy_label.text = \"Energia: %d/%d\" % [current, maximum]\n\tenergy_bar.max_value = maximum\n\tenergy_bar.value = current\n"
+       "contenuto": "extends CanvasLayer\n\n\nfunc set_energy(current: int, maximum: int) -> void:\n\tvar energy_label := $EnergyLabel as Label\n\tvar energy_bar := $EnergyBar as ProgressBar\n\tif energy_label != null:\n\t\tenergy_label.text = \"Energia: %d/%d\" % [current, maximum]\n\tif energy_bar != null:\n\t\tenergy_bar.max_value = maximum\n\t\tenergy_bar.value = current\n"
       },
       {
        "percorso": "player.gd",
@@ -297,18 +301,24 @@
       "impostazioni": []
      },
      "spiegazione": "Spostando i nodi grafici all'interno di `hud.tscn` e lasciando che `hud.gd` gestisca la propria rappresentazione visiva, eliminiamo qualsiasi accoppiamento diretto in `player.gd`. Il giocatore notifica l'avvenuto consumo o recupero tramite il segnale `energy_changed(current, maximum)` senza preoccuparsi di chi lo stia ascoltando né di come l'informazione verrà formattata a video. Nella scena genitore `world.tscn`, il segnale è connesso alla funzione ricevente `set_energy` di `HUD`.",
-     "cambiati": [],
+     "cambiati": [
+      "hud.tscn",
+      "hud.gd",
+      "player.gd",
+      "world.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "riordina",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - La scena principale deve funzionare senza errori: Invalid assignment of property or key 'text' with value of type 'String' on a base object of type 'Nil'. (res://hud.gd:8 in set_energy)\nRighe citate dagli errori:\n  hud.gd, riga 8: `energy_label.text = \"Energia: %d/%d\" % [current, maximum]`"
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
@@ -387,7 +397,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "L'interfaccia durante la partita: CanvasLayer",
