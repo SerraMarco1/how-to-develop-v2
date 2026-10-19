@@ -357,40 +357,41 @@
  "segnali-esistenti": {
   "es1": {
    "impronta": "cc5a34b3706379615c4e04b55db444e373e74221e7e8f29542570050fcbc6f94",
-   "tentativi": 2,
+   "tentativi": 3,
    "esito": "niente",
+   "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://basket.tscn",
-     "durata": 8,
+     "durata": 10,
      "azioni": [],
      "soggetti": [
       {
-       "id": "pulsante",
+       "id": "restart",
        "cerca": {
         "nome": "RestartButton"
        },
        "quanti": 1,
-       "da": 4,
-       "a": 8,
+       "da": 3,
+       "a": 10,
        "deve": "comparire",
        "etichetta": "Pulsante Ricomincia"
       }
      ],
      "scritte": [
       {
-       "testo": "Il pulsante Ricomincia compare quando finiscono le vite",
-       "da": 4,
-       "a": 8,
-       "soggetto": "pulsante"
+       "testo": "Quando finiscono le vite, appare il pulsante di riavvio",
+       "da": 3,
+       "a": 10,
+       "soggetto": "restart"
       }
      ]
     },
     "problemi": [
-     "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 4 a 8 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 4 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+     "Soggetto «restart» (nome = RestartButton; almeno 1 da 3 a 10 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 3 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "Il pulsante di riavvio compare solo quando il giocatore esaurisce le vite, un evento casuale che non puo essere garantito in un video di durata fissa."
+   "motivo": "Il pulsante di riavvio compare sullo schermo solo al Game Over, un evento legato al gameplay e alla casualità della caduta degli oggetti che non può essere previsto in un intervallo di tempo fisso."
   }
  },
  "timer": {

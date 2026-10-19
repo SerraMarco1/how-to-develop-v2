@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 12,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"labelondata\",\n      \"cerca\": {\n        \"nome\": \"Label\"\n      },\n      \"quanti\": 1,\n      \"da\": 10.0,\n      \"a\": 12.0,\n      \"deve\": \"mostrare testo\",\n      \"etichetta\": \"Messaggio ondata\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Dopo dieci secondi parte la pausa tra le ondate\",\n      \"da\": 10.0,\n      \"a\": 12.0,\n      \"soggetto\": \"labelondata\"\n    }\n  ]\n}",
+ "ragionamento": 2369,
+ "quando": "2026-10-19T19:44:22.690Z",
+ "ruolo": "ritocco"
+}
