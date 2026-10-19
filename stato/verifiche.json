@@ -225,5 +225,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "pausa": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
