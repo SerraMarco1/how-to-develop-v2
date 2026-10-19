@@ -1,0 +1,47 @@
+{
+ "n": 33,
+ "quando": "2026-10-19T20:08:27.425Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «etichetta»: per \"mostrare testo\" serve il campo testo.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15593,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 12,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "etichetta",
+     "cerca": {
+      "nome": "Label"
+     },
+     "quanti": 1,
+     "da": 10,
+     "a": 11.5,
+     "deve": "mostrare testo",
+     "etichetta": "Etichetta di stato"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Dopo 10 secondi parte la pausa dell'ondata 2",
+     "da": 10,
+     "a": 11.5,
+     "soggetto": "etichetta"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «etichetta»: per \"mostrare testo\" serve il campo testo."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 14 s (7894 → 211 token)"
+ ]
+}
