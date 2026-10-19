@@ -576,6 +576,43 @@
     ]
    },
    "motivo": "La scritta fluttuante viene eliminata dopo 0.5 secondi dall'animazione, rendendo impossibile coprire l'intervallo minimo di 1 secondo richiesto per il soggetto nel copione."
+  },
+  "test": {
+   "impronta": "caff358e197abc6a60a653ce1de6ac1467cf7d1e387ffb95376b5b753b659e87",
+   "tentativi": 2,
+   "esito": "niente",
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 8,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "restart",
+       "cerca": {
+        "nome": "RestartButton"
+       },
+       "quanti": 1,
+       "da": 4,
+       "a": 8,
+       "deve": "comparire",
+       "etichetta": "Pulsante Ricomincia"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il pulsante compare con una dissolvenza fluida",
+       "da": 4,
+       "a": 8,
+       "soggetto": "restart"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «restart» (nome = RestartButton; almeno 1 da 4 a 8 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 4 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "La comparsa del pulsante di ricomincia dipende dalla sconfitta del giocatore, che avviene in tempi casuali e non prevedibili con precisione per un video automatico."
   }
  }
 }

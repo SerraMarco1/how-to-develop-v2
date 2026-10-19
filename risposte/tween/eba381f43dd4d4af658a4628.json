@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"La comparsa del pulsante di ricomincia dipende dalla sconfitta del giocatore, che avviene in tempi casuali e non prevedibili con precisione per un video automatico.\"\n}",
- "ragionamento": 1640,
- "quando": "2026-10-19T16:13:24.310Z",
- "ruolo": "ritocco"
-}

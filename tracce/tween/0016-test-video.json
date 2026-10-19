@@ -1,0 +1,16 @@
+{
+ "n": 16,
+ "quando": "2026-10-19T16:13:25.703Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Dissolvenza fluida di fine partita» non si vede sullo schermo: La comparsa del pulsante di ricomincia dipende dalla sconfitta del giocatore, che avviene in tempi casuali e non prevedibili con precisione per un video automatico.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16076,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 15 s (7987 → 53 token)"
+ ]
+}
