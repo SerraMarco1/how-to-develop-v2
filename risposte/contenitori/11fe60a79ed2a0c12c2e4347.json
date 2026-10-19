@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": true, \"scena\": \"res://main_menu.tscn\", \"durata\": 6, \"azioni\": [], \"soggetti\": [{\"id\": \"titolo\", \"cerca\": {\"nome\": \"TitleLabel\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 5.5, \"deve\": \"mostrare testo\", \"etichetta\": \"Titolo\"}, {\"id\": \"gioca\", \"cerca\": {\"nome\": \"PlayButton\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 5.5, \"deve\": \"mostrare testo\", \"etichetta\": \"Pulsante Gioca\"}], \"scritte\": [{\"testo\": \"Il titolo del gioco è centrato automaticamente\", \"da\": 0.5, \"a\": 2.5, \"soggetto\": \"titolo\"}, {\"testo\": \"I contenitori organizzano i pulsanti senza coordinate\", \"da\": 3.0, \"a\": 5.5, \"soggetto\": \"gioca\"}]}",
- "ragionamento": 1119,
- "quando": "2026-10-19T19:48:03.141Z",
- "ruolo": "ritocco"
-}
