@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T07:10:06.218Z",
+ "aggiornato": "2026-10-19T07:16:54.908Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -326,6 +326,15 @@
    "file": "lezioni/f02-nodi-scene-segnali/progetto-memory-3.json",
    "sha256": "c9a1a7fe3c14c84c05a0e9d97e76bcabc5e39e511466da89f4aced827ce5156c",
    "byte": 28632
+  },
+  {
+   "slug": "control-ancore-e-dimensioni",
+   "numero": "3.0",
+   "titolo": "Control: ancore e dimensioni",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/control-ancore-e-dimensioni.json",
+   "sha256": "be82a6fc4d26fa6e612fe19d78c61fdb04c0bf7a74f20de9fce856cc6125a5f1",
+   "byte": 117428
   }
  ],
  "documentazione": {
