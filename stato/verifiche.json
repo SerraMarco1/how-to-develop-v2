@@ -83,5 +83,15 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "ordinare-il-codice": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "classi-e-oggetti": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }

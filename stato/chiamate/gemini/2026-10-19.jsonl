@@ -85,3 +85,4 @@
 {"quando":1792400880288,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dictionary","ok":true,"contata":true,"durataMs":24589,"tokenInput":13592,"tokenOutput":6053,"ragionamento":5474}
 {"quando":1792400926944,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dictionary","ok":true,"contata":true,"durataMs":20574,"tokenInput":11495,"tokenOutput":3791,"ragionamento":5252}
 {"quando":1792401019871,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"difficolta-che-cresce","ok":true,"contata":true,"durataMs":35012,"tokenInput":13692,"tokenOutput":6296,"ragionamento":8606}
+{"quando":1792401158666,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-schiva-1","ok":true,"contata":true,"durataMs":13887,"tokenInput":10212,"tokenOutput":3630,"ragionamento":3099}
