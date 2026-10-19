@@ -1,0 +1,52 @@
+{
+ "n": 18,
+ "quando": "2026-10-19T09:32:46.475Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 62410,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://basket.tscn",
+    "tipoNodo": "CanvasLayer",
+    "nome": "HUD",
+    "genitore": "Basket",
+    "descrizione": "In basket.tscn è presente l'istanza di HUD come figlia di Basket"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "signal score_changed",
+    "descrizione": "basket.gd dichiara il segnale score_changed"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "signal lives_changed",
+    "descrizione": "basket.gd dichiara il segnale lives_changed"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "signal wave_time_updated",
+    "descrizione": "basket.gd dichiara il segnale wave_time_updated"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar basket_source := source_of(\"res://basket.gd\")\n\tcheck(\"no_ui_label\", not basket_source.contains(\"ui_label\"), \"basket.gd non deve più fare riferimento a ui_label\")\n\t\n\tvar basket := await instantiate_scene(\"res://basket.tscn\")\n\tif not check(\"basket_ok\", basket != null, \"basket.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar hud := find_by_name(basket, \"HUD\") as CanvasLayer\n\tif not check(\"hud_in_basket\", hud != null, \"HUD deve essere istanziato dentro basket.tscn\"):\n\t\treturn\n\t\n\tvar score_lbl := find_by_name(hud, \"ScoreLabel\") as Label\n\tvar lives_box := find_by_name(hud, \"LivesContainer\") as HBoxContainer\n\tif not check(\"elementi_hud\", score_lbl != null and lives_box != null, \"ScoreLabel e LivesContainer devono essere presenti nell'HUD\"):\n\t\treturn\n\t\n\tawait wait_frames(2)\n\tvar initial_score = int(get_prop(basket, \"score\", 0))\n\tcheck(\"score_iniziale\", score_lbl.text == \"Punti: \" + str(initial_score), \"All'avvio il punteggio mostrato deve corrispondere a quello del gioco\")\n\t\n\tvar test_points := 50\n\tcall_if_exists(basket, \"add_score\", [test_points])\n\tawait wait_frames(2)\n\tvar current_score = int(get_prop(basket, \"score\", test_points))\n\tcheck(\"score_dopo_aggiunta\", score_lbl.text == \"Punti: \" + str(current_score), \"Dopo add_score l'HUD deve mostrare il punteggio aggiornato\")\n\t\n\tvar initial_lives := int(get_prop(basket, \"lives\", 3))\n\tcall_if_exists(basket, \"take_damage\", [1])\n\tawait wait_frames(2)\n\tvar expected_lives := int(get_prop(basket, \"lives\", initial_lives - 1))\n\tvar icons: Array[Node] = lives_box.get_children()\n\tif check(\"icone_presenti\", icons.size() > 0, \"LivesContainer deve avere delle icone vita\"):\n\t\tvar visible_count := 0\n\t\tfor node in icons:\n\t\t\tvar item := node as CanvasItem\n\t\t\tif item != null and item.visible:\n\t\t\t\tvisible_count += 1\n\t\tcheck(\"vite_aggiornate_hud\", visible_count == expected_lives, \"Il numero di icone vita visibili nell'HUD deve corrispondere alle vite del carrello (%d)\" % expected_lives)\n",
+    "descrizione": "L'HUD riceve i segnali del gioco: punteggio e vite mostrati corrispondono a quelli di basket"
+   }
+  ],
+  "consegna": "Nel gioco `Pioggia di stelle`, il carrello in `basket.gd` possiede ancora il vecchio nodo figlio `%Label` (assegnato alla variabile `ui_label`) e aggiorna i testi a mano dentro `update_ui()` e `process_playing()`.\n\nRiorganizza `basket.tscn` e `basket.gd` per delegare l'intera interfaccia di partita alla scena `hud.tscn`:\n\n1. In `basket.gd`, dichiara tre nuovi segnali personalizzati:\n   - `signal score_changed(new_score: int)`\n   - `signal lives_changed(new_lives: int)`\n   - `signal wave_time_updated(current_time: float, max_duration: float)`\n2. Nella scena `basket.tscn`, istanzia la scena `res://hud.tscn` come nodo figlio di `Basket` chiamandolo `HUD`.\n3. Nello script `basket.gd`:\n   - Ottieni il riferimento a `HUD` tramite `@onready var hud: CanvasLayer = $HUD`.\n   - In `_ready()`, se `hud` è presente, collega i tre segnali ai rispettivi metodi dell'interfaccia:\n     - `score_changed` a `hud.update_score`\n     - `lives_changed` a `hud.update_lives`\n     - `wave_time_updated` a `hud.update_wave_progress`\n   - Emetti i segnali nei punti appropriati:\n     - In `_ready()` e in `reset_game()`, emetti `score_changed(score)` e `lives_changed(lives)` per inizializzare l'interfaccia.\n     - Quando il punteggio cambia (in `add_score`), emetti `score_changed(score)`.\n     - Quando le vite cambiano (in `take_damage`), emetti `lives_changed(lives)`.\n     - Nel metodo `process_playing(delta)`, calcola il tempo trascorso dell'ondata come `wave_duration - wave_timer.time_left` ed emetti `wave_time_updated` con il tempo trascorso e `wave_duration`.\n4. Rimuovi dall'interno della scena `basket.tscn` il vecchio nodo `Label` (la vecchia etichetta `%Label`) e in `basket.gd` rimuovi la variabile `@onready var ui_label: Label = %Label` e qualsiasi assegnazione a `ui_label.text`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 48 s (23589 → 16370 token)"
+ ]
+}

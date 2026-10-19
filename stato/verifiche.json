@@ -210,5 +210,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "interfaccia-in-partita": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
