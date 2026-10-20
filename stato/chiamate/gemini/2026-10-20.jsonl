@@ -13,3 +13,4 @@
 {"quando":1792482308859,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"focus-tastiera-e-gamepad","ok":true,"contata":true,"durataMs":153344,"tokenInput":11966,"tokenOutput":12,"ragionamento":2527}
 {"quando":1792482463736,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"focus-tastiera-e-gamepad","ok":true,"contata":true,"durataMs":8275,"tokenInput":2989,"tokenOutput":548,"ragionamento":2753}
 {"quando":1792482478056,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":254370,"tokenInput":13851,"tokenOutput":3417,"ragionamento":13076}
+{"quando":1792482733766,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":146691,"tokenInput":21185,"tokenOutput":3462}
