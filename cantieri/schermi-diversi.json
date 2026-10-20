@@ -594,13 +594,13 @@
     "tipo": "test",
     "genere": "obiettivo",
     "titolo": "Alterna finestra e schermo intero da tastiera",
-    "consegna": "Rendi possibile passare dalla modalità a finestra allo schermo intero (e viceversa) in qualsiasi momento premendo il tasto **F11**.\n\n1. Nella scheda **Input Map** delle impostazioni di progetto crea una nuova azione di input chiamata `toggle_fullscreen` e assegna ad essa il tasto fisico **F11**.\n2. Nello script autoload `res://game.gd` (che è sempre presente e attivo in tutte le schermate del gioco), intercetta l'input dell'utente con la funzione `_unhandled_input(event: InputEvent) -> void`.\n3. Quando l'azione `toggle_fullscreen` viene premuta:\n   - Se la finestra si trova attualmente a schermo intero (`DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN`), riportala in modalità finestra richiamando `DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)`.\n   - Altrimenti, impostala a schermo intero con `DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)`.",
+    "consegna": "Rendi possibile passare dalla modalità a finestra allo schermo intero (e viceversa) in qualsiasi momento premendo il tasto **F11**.\n\n1. Nelle impostazioni del progetto (**Project Settings** → **Input Map**), crea una nuova azione di input chiamata `toggle_fullscreen` e assegna ad essa il tasto fisico **F11**.\n2. In Godot la modalità della finestra si controlla tramite la classe di sistema `DisplayServer`. Nello script autoload `res://game.gd` (sempre attivo in ogni scena del gioco), inserisci la gestione dell'evento aggiungendo questo frammento di codice:\n\n```gdscript\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"toggle_fullscreen\"):\n\t\ttoggle_fullscreen()\n\n\nfunc toggle_fullscreen() -> void:\n\tvar current_mode: int = DisplayServer.window_get_mode()\n\tif current_mode == DisplayServer.WINDOW_MODE_FULLSCREEN:\n\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)\n\telse:\n\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)\n```",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "pioggia-di-stelle",
     "passiGuida": [],
     "suggerimenti": [
-     "In `game.gd` usa `event.is_action_pressed(\"toggle_fullscreen\")` all'interno di `_unhandled_input` per rilevare quando viene premuto il tasto."
+     "Assicurati che il nome dell'azione `toggle_fullscreen` nella Input Map sia identico a quello verificato nel codice."
     ],
     "verifiche": [
      {
@@ -901,6 +901,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
