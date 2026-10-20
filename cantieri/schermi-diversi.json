@@ -407,9 +407,27 @@
       "descrizione": "Nella Input Map esiste l'azione toggle_fullscreen assegnata a F11"
      },
      {
-      "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tcheck(\"main_scene\", main != null, \"La scena principale deve aprirsi senza errori\")\n\tawait wait_frames(2)\n\tvar initial_mode: int = DisplayServer.window_get_mode()\n\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)\n\tawait wait_frames(2)\n\n\tawait tap_action(\"toggle_fullscreen\")\n\tawait wait_frames(3)\n\tvar is_full: bool = (DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN)\n\tcheck(\"switched_to_full\", is_full, \"Premendo toggle_fullscreen dalla finestra normale si deve passare a WINDOW_MODE_FULLSCREEN (modalità attuale: %d)\" % DisplayServer.window_get_mode())\n\n\tawait tap_action(\"toggle_fullscreen\")\n\tawait wait_frames(3)\n\tvar is_windowed: bool = (DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED)\n\tcheck(\"switched_to_windowed\", is_windowed, \"Premendo di nuovo toggle_fullscreen da schermo intero si deve tornare a WINDOW_MODE_WINDOWED (modalità attuale: %d)\" % DisplayServer.window_get_mode())\n\n\tDisplayServer.window_set_mode(initial_mode)",
-      "descrizione": "Premendo toggle_fullscreen la modalità finestra si alterna tra normale e schermo intero"
+      "tipo": "file_esiste",
+      "percorso": "res://game.gd",
+      "descrizione": "Lo script autoload res://game.gd è presente nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://game.gd",
+      "regex": "_unhandled_input",
+      "descrizione": "Lo script game.gd intercetta l'input con _unhandled_input"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://game.gd",
+      "regex": "toggle_fullscreen",
+      "descrizione": "Lo script game.gd controlla l'azione toggle_fullscreen"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://game.gd",
+      "regex": "WINDOW_MODE_FULLSCREEN",
+      "descrizione": "Lo script game.gd imposta la modalità schermo intero tramite DisplayServer"
      }
     ],
     "previsioni": [],
@@ -556,19 +574,23 @@
       ]
      },
      "spiegazione": "L'Autoload `Game` rimane attivo per l'intera durata dell'applicazione, indipendentemente dai cambi di scena. Implementando `_unhandled_input` al suo interno, il gioco può intercettare l'azione `toggle_fullscreen` in qualunque istante (durante il menu principale, la partita o la schermata di game over) e utilizzare `DisplayServer` per alternare fluidamente tra la modalità finestra e la modalità schermo intero.",
-     "cambiati": [],
+     "cambiati": [
+      "project.godot",
+      "game.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo toggle_fullscreen dalla finestra normale si deve passare a WINDOW_MODE_FULLSCREEN (modalità attuale: 1)\n  - Premendo di nuovo toggle_fullscreen da schermo intero si deve tornare a WINDOW_MODE_WINDOWED (modalità attuale: 1)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   }
  },
