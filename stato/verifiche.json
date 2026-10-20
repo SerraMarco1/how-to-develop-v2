@@ -224,5 +224,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "focus-tastiera-e-gamepad": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
