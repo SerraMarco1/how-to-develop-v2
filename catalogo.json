@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-20T07:32:31.064Z",
+ "aggiornato": "2026-10-20T07:47:56.391Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -398,6 +398,15 @@
    "file": "lezioni/f03-interfaccia/pausa.json",
    "sha256": "6492f2a6c61bdc001ffbb10249bf6af253a0821bf90ea5d22fe4d174e58bb408",
    "byte": 63933
+  },
+  {
+   "slug": "focus-tastiera-e-gamepad",
+   "numero": "3.8",
+   "titolo": "Menu con tastiera e gamepad: il focus",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/focus-tastiera-e-gamepad.json",
+   "sha256": "5b6a02e695e5bbe7f0d0c7976cd01cbeff8a425b1bf774cea32741983939e689",
+   "byte": 176285
   }
  ],
  "documentazione": {
