@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-20T07:47:56.391Z",
+ "aggiornato": "2026-10-20T08:15:49.227Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -407,6 +407,15 @@
    "file": "lezioni/f03-interfaccia/focus-tastiera-e-gamepad.json",
    "sha256": "5b6a02e695e5bbe7f0d0c7976cd01cbeff8a425b1bf774cea32741983939e689",
    "byte": 176285
+  },
+  {
+   "slug": "schermi-diversi",
+   "numero": "3.9",
+   "titolo": "Schermi diversi",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/schermi-diversi.json",
+   "sha256": "b3af18e0a72570318214e9c7f257b38753868b39df63cea96107cfebb6a0cfe2",
+   "byte": 141887
   }
  ],
  "documentazione": {

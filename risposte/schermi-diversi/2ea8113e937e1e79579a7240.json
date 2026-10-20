@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-latest",
- "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Il test richiede l'uso di DisplayServer (con i metodi window_get_mode, window_set_mode e le costanti WINDOW_MODE_FULLSCREEN e WINDOW_MODE_WINDOWED) e della funzione _unhandled_input. Questi elementi non sono mai stati spiegati nella parte teorica (che si interrompe bruscamente al blocco 6 senza trattare lo schermo intero) né figurano tra i prerequisiti delle lezioni precedenti.\",\n      \"correzione\": \"Fornire nella consegna tutto il frammento di codice necessario da inserire in game.gd per la gestione dello schermo intero con DisplayServer, oppure completare la parte teorica spiegando come interrogare e modificare la modalità della finestra tramite DisplayServer prima di richiederlo nel test.\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
- "ragionamento": 1956,
- "quando": "2026-10-20T08:12:58.967Z",
- "ruolo": "revisore"
-}
