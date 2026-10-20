@@ -1,8 +1,8 @@
 {
  "sovraccarico": {
   "gemini": {
-   "volte": 2,
-   "fino": 1792499090121
+   "volte": 3,
+   "fino": 1792501595738
   }
  },
  "fermi": {
@@ -15,7 +15,7 @@
    "errore": "HTTP 429: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash\nPlease retry i"
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1792499090121,
+   "fino": 1792501595738,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-flash-lite-latest": {
@@ -45,5 +45,5 @@
  },
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": 1792499090124
+ "prossimoTentativo": 1792501595741
 }
