@@ -325,6 +325,7 @@
    "stato": "da_fare",
    "grezzo": {
     "tipo": "autonomo",
+    "genere": "trova",
     "titolo": "Rientro rapido e navigazione bidirezionale nella selezione modalità",
     "consegna": "Nella scena di selezione della modalità (`mode_menu.tscn`), dobbiamo collegare la schermata al sistema di navigazione da tastiera e gamepad.\n\n1. Crea uno script `mode_menu.gd` e collegalo alla radice `ModeMenu`.\n2. All'avvio della scena, assegna il focus in modo differito al primo pulsante della griglia, `ClassicButton`.\n3. Quando il giocatore preme l'azione `ui_cancel`, la scena deve ritornare al menu principale (`res://main_menu.tscn`). La stessa cosa deve succedere quando si clicca o attiva il pulsante `BackButton`.\n4. Nella griglia dei pulsanti (`ModesGrid`) e nella barra inferiore (`BottomBar`), Godot sa già muoversi orizzontalmente e verticalmente. Tuttavia, muovendosi verso l'alto da `ClassicButton` o `TimeAttackButton`, l'utente rimane bloccato.\n   Cerca nella documentazione la proprietà di `Control` che permette di specificare a mano il vicino di focus in alto. Imposta tale proprietà su `ClassicButton` in modo che puntando in alto selezioni `BackButton`, e su `TimeAttackButton` in modo che puntando in alto selezioni `HelpButton`.\n5. Fai l'opposto per la barra inferiore: cerca la proprietà del vicino di focus in basso e imposta su `BackButton` il salto verso `ClassicButton`, e su `HelpButton` il salto verso `TimeAttackButton`.",
     "modalita": "progetto",
@@ -438,7 +439,7 @@
       },
       {
        "percorso": "mode_menu.tscn",
-       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Theme\" path=\"res://game_theme.tres\" id=\"1_theme\"]\n[ext_resource type=\"Script\" path=\"res://mode_menu.gd\" id=\"2_script\"]\n\n[node name=\"ModeMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = ExtResource(\"1_theme\")\nscript = ExtResource(\"2_script\")\n\n[node name=\"Margin\" type=\"MarginContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 30\ntheme_override_constants/margin_top = 30\ntheme_override_constants/margin_right = 30\ntheme_override_constants/margin_bottom = 30\n\n[node name=\"Layout\" type=\"VBoxContainer\" parent=\"Margin\"]\nlayout_mode = 2\n\n[node name=\"HeaderLabel\" type=\"Label\" parent=\"Margin/Layout\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 28\ntext = \"SCEGLI LA MODALITÀ\"\nhorizontal_alignment = 1\n\n[node name=\"GridCenter\" type=\"CenterContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"ModesGrid\" type=\"GridContainer\" parent=\"Margin/Layout/GridCenter\"]\nlayout_mode = 2\ncolumns = 2\n\n[node name=\"ClassicButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../../BottomBar/BackButton\")\ntext = \"Classica\"\n\n[node name=\"TimeAttackButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../../BottomBar/HelpButton\")\ntext = \"Corsa contro il tempo\"\n\n[node name=\"HardcoreButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Difficile\"\n\n[node name=\"ZenButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Rilassata\"\n\n[node name=\"BottomBar\" type=\"HBoxContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"BackButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\nfocus_neighbor_bottom = NodePath(\"../GridCenter/ModesGrid/ClassicButton\")\ntext = \"Indietro\"\n\n[node name=\"HelpButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\nfocus_neighbor_bottom = NodePath(\"../GridCenter/ModesGrid/TimeAttackButton\")\ntext = \"Guida\"\n"
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Theme\" path=\"res://game_theme.tres\" id=\"1_theme\"]\n[ext_resource type=\"Script\" path=\"res://mode_menu.gd\" id=\"2_script\"]\n\n[node name=\"ModeMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = ExtResource(\"1_theme\")\nscript = ExtResource(\"2_script\")\n\n[node name=\"Margin\" type=\"MarginContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 30\ntheme_override_constants/margin_top = 30\ntheme_override_constants/margin_right = 30\ntheme_override_constants/margin_bottom = 30\n\n[node name=\"Layout\" type=\"VBoxContainer\" parent=\"Margin\"]\nlayout_mode = 2\n\n[node name=\"HeaderLabel\" type=\"Label\" parent=\"Margin/Layout\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 28\ntext = \"SCEGLI LA MODALITÀ\"\nhorizontal_alignment = 1\n\n[node name=\"GridCenter\" type=\"CenterContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"ModesGrid\" type=\"GridContainer\" parent=\"Margin/Layout/GridCenter\"]\nlayout_mode = 2\ncolumns = 2\n\n[node name=\"ClassicButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../../../BottomBar/BackButton\")\ntext = \"Classica\"\n\n[node name=\"TimeAttackButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\nfocus_neighbor_top = NodePath(\"../../../BottomBar/HelpButton\")\ntext = \"Corsa contro il tempo\"\n\n[node name=\"HardcoreButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Difficile\"\n\n[node name=\"ZenButton\" type=\"Button\" parent=\"Margin/Layout/GridCenter/ModesGrid\"]\ncustom_minimum_size = Vector2(180, 50)\nlayout_mode = 2\ntext = \"Rilassata\"\n\n[node name=\"BottomBar\" type=\"HBoxContainer\" parent=\"Margin/Layout\"]\nlayout_mode = 2\n\n[node name=\"BackButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\nfocus_neighbor_bottom = NodePath(\"../../GridCenter/ModesGrid/ClassicButton\")\ntext = \"Indietro\"\n\n[node name=\"HelpButton\" type=\"Button\" parent=\"Margin/Layout/BottomBar\"]\ncustom_minimum_size = Vector2(120, 35)\nlayout_mode = 2\nfocus_neighbor_bottom = NodePath(\"../../GridCenter/ModesGrid/TimeAttackButton\")\ntext = \"Guida\"\n"
       },
       {
        "percorso": "mode_menu.gd",
@@ -473,19 +474,23 @@
       "impostazioni": []
      },
      "spiegazione": "Le proprietà `focus_neighbor_top` e `focus_neighbor_bottom` consentono di superare i limiti della gerarchia: collegando direttamente i percorsi tra la riga superiore della griglia (`ModesGrid`) e la barra inferiore (`BottomBar`), il giocatore può scorrere tutti i comandi in modo intuitivo con il D-pad o le frecce senza incontrare vicoli ciechi.",
-     "cambiati": [],
+     "cambiati": [
+      "mode_menu.tscn",
+      "mode_menu.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "trova",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo Su da ClassicButton il focus deve andare a BackButton\n  - Spostandosi a destra da BackButton si deve raggiungere HelpButton\n  - Premendo Giù da HelpButton il focus deve raggiungere TimeAttackButton\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   },
   "test": {
@@ -559,7 +564,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Menu con tastiera e gamepad: il focus",
