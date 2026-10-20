@@ -15,3 +15,4 @@
 {"quando":1792482478056,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":254370,"tokenInput":13851,"tokenOutput":3417,"ragionamento":13076}
 {"quando":1792482733766,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":146691,"tokenInput":21185,"tokenOutput":3462}
 {"quando":1792482892189,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":37102,"tokenInput":18661,"tokenOutput":11754,"ragionamento":7156}
+{"quando":1792482934719,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":167230,"tokenInput":18751,"tokenOutput":10949,"ragionamento":7793}
