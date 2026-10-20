@@ -4,3 +4,4 @@
 {"quando":1792480911408,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"segnali-propri","ok":true,"contata":true,"durataMs":350418,"tokenInput":16179,"tokenOutput":1960,"ragionamento":47036}
 {"quando":1792481261828,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"segnali-propri","ok":true,"contata":true,"durataMs":76096,"tokenInput":16179,"tokenOutput":8384,"ragionamento":3674}
 {"quando":1792481377011,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-memory-2","ok":true,"contata":true,"durataMs":152892,"tokenInput":12362,"tokenOutput":4534,"ragionamento":13846}
+{"quando":1792481556368,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"focus-tastiera-e-gamepad","ok":true,"contata":true,"durataMs":185627,"tokenInput":20161,"tokenOutput":12681,"ragionamento":7672}
