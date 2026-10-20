@@ -1,0 +1,32 @@
+{
+ "n": 39,
+ "quando": "2026-10-20T07:21:09.250Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 3 di 3",
+ "spiegazione": "La correzione di gemini/gemini-3.6-flash supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-3.6-flash",
+ "richieste": 1,
+ "durataMs": 79328,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://basket.gd",
+    "regex": "create_timer\\(1\\.0\\)",
+    "descrizione": "Nel codice di basket.gd è presente un timer di 1.0 secondo"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar basket := await instantiate_main_scene() as Sprite2D\n\tif not check(\"basket_exists\", basket != null, \"La scena principale Basket si istanzia correttamente\"):\n\t\treturn\n\t\n\tvar spawn_timer = basket.get_node_or_null(\"SpawnTimer\") as Timer\n\tif spawn_timer:\n\t\tspawn_timer.stop()\n\tvar wave_timer = basket.get_node_or_null(\"WaveTimer\") as Timer\n\tif wave_timer:\n\t\twave_timer.stop()\n\t\n\tvar stars = get_prop(basket, \"stars\")\n\tif stars is Array:\n\t\tfor item in stars:\n\t\t\tif is_instance_valid(item):\n\t\t\t\titem.queue_free()\n\t\tstars.clear()\n\t\n\tvar rubies = get_prop(basket, \"rubies\")\n\tif rubies is Array:\n\t\tfor ruby in rubies:\n\t\t\tif is_instance_valid(ruby):\n\t\t\t\truby.queue_free()\n\t\trubies.clear()\n\t\n\tfor child in basket.get_children():\n\t\tif child is Sprite2D and child.name != \"Shadow\" and child.name != \"Handle\":\n\t\t\tchild.queue_free()\n\t\n\tvar initial_lives = get_prop(basket, \"INITIAL_LIVES\", 3)\n\tvar current_lives = get_prop(basket, \"lives\", initial_lives)\n\tcheck(\"initial_lives\", current_lives == initial_lives, \"Le vite iniziali devono essere %d (trovate %d)\" % [initial_lives, current_lives])\n\t\n\tcall_if_exists(basket, \"take_damage\", [1])\n\tawait wait_frames(2)\n\t\n\tvar expected_lives_after_first = initial_lives - 1\n\tvar lives_after_first = get_prop(basket, \"lives\", 0)\n\tcheck(\"lives_reduced\", lives_after_first == expected_lives_after_first, \"Dopo il primo danno le vite scendono a %d (trovate %d)\" % [expected_lives_after_first, lives_after_first])\n\t\n\tvar is_inv = get_prop(basket, \"is_invulnerable\", false)\n\tcheck(\"is_invulnerable_true\", is_inv == true, \"Dopo aver subito danno il cesto deve essere invulnerabile\")\n\tcheck(\"modulate_semi_transparent\", basket.modulate.a < 0.9, \"Il cesto diventa semitrasparente (modulate.a ridotto, trovato %.2f)\" % basket.modulate.a)\n\t\n\tawait wait_seconds(0.5)\n\tcall_if_exists(basket, \"take_damage\", [1])\n\tawait wait_frames(2)\n\tvar lives_during_inv = get_prop(basket, \"lives\", 0)\n\tcheck(\"damage_ignored\", lives_during_inv == expected_lives_after_first, \"Un colpo subito durante l'invulnerabilità non deve togliere vite (vite trovate %d)\" % lives_during_inv)\n\t\n\tawait wait_seconds(0.6)\n\tvar is_inv_after = get_prop(basket, \"is_invulnerable\", true)\n\tcheck(\"invulnerability_ended\", is_inv_after == false, \"Trascorsa l'attesa di 1 secondo l'invulnerabilità termina\")\n\tcheck(\"modulate_restored\", basket.modulate.a == 1.0, \"L'opacità modulate.a torna a 1.0 (trovato %.2f)\" % basket.modulate.a)\n",
+    "descrizione": "Due danni a distanza di 0.5 secondi tolgono una sola vita"
+   }
+  ],
+  "consegna": "Modifica `basket.gd` in modo che, quando il cesto subisce un danno, diventi invulnerabile per un secondo intero prima di poter essere colpito di nuovo.\n\nRequisiti:\n1. Aggiungi a `basket.gd` una variabile `is_invulnerable: bool = false`.\n2. In `take_damage(amount: int)`:\n   - Se `is_invulnerable` è `true` oppure la partita non è in corso (`current_state != GameState.PLAYING`), la funzione deve interrompersi subito senza togliere vite.\n   - Quando viene applicato il danno e le vite rimaste sono maggiori di zero, attiva l'invulnerabilità: imposta `is_invulnerable = true` e riduci l'opacità del cesto impostando `modulate.a = 0.5`.\n   - Usa `await` con un timer creato al volo di `1.0` secondo (`get_tree().create_timer(1.0).timeout`).\n   - Trascorso il secondo, ripristina la piena opacità con `modulate.a = 1.0` e togli l'invulnerabilità con `is_invulnerable = false`."
+ },
+ "chiamate": [
+  "gemini-3.6-flash: risposta in 61 s (15975 → 8442 token)"
+ ]
+}

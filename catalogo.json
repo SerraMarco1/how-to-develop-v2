@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-19T20:27:18.433Z",
+ "aggiornato": "2026-10-20T07:21:21.420Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -250,10 +250,10 @@
    "slug": "timer",
    "numero": "2.5",
    "titolo": "Timer: far succedere le cose nel tempo",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f02-nodi-scene-segnali/timer.json",
-   "sha256": "725b59fc151729434dc7d450a13ce395c7ee36bfa4b42b3f0028afa710e879df",
-   "byte": 114625
+   "sha256": "507e20b7175eea39c8ff664c0965679ce87e1cc3e72e00e3819e2ea2079829e2",
+   "byte": 115635
   },
   {
    "slug": "segnali-propri",

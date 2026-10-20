@@ -135,10 +135,8 @@
   "tentativi": {}
  },
  "timer": {
-  "versione": -1,
-  "fragili": [
-   "es2"
-  ],
+  "versione": 4,
+  "fragili": [],
   "tentativi": {
    "es2": 2
   }
