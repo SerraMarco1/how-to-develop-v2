@@ -1,0 +1,17 @@
+{
+ "n": 38,
+ "quando": "2026-10-20T07:07:32.087Z",
+ "pezzo": "es2",
+ "azione": "verifiche robuste",
+ "esito": "attesa",
+ "guasto": "fornitore",
+ "titolo": "Esercizio 2: correzione della lezione pubblicata, 3 di 3",
+ "spiegazione": "Nessun modello disponibile per il ruolo \"scrittore\" (ultimi errori: gemini/gemini-flash-latest: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again lat | gemini/gemini-3.7-flash: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again lat | Google Gemini è sovraccarico: res\nReazione: si riprova al prossimo giro.",
+ "richieste": 2,
+ "durataMs": 301559,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-latest: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+  "gemini-3.7-flash: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+ ]
+}
