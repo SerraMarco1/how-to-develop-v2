@@ -616,7 +616,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar game := get_node_or_null(\"/root/Game\")\n\tif game !=:\n\t\tgame.current_score = 450\n\tvar scene := await instantiate_scene(\"res://game_over.tscn\")\n\tif not check(\"scene\", scene != null, \"La scena game_over.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(2)\n\tvar restart_btn := find_by_name(scene, \"RestartButton\") as Button\n\tvar menu_btn := find_by_name(scene, \"MainMenuButton\") as Button\n\tvar score_lbl := find_by_name(scene, \"ScoreLabel\") as Label\n\tvar title_lbl := find_by_name(scene, \"TitleLabel\") as Label\n\tif not check(\"nodes\", restart_btn != null and menu_btn != null and score_lbl != null and title_lbl != null, \"Tutti i nodi richiesti devono essere presenti nella scena\"):\n\t\treturn\n\tcheck(\"score_text\", score_lbl.text == \"Punti: 450\", \"ScoreLabel deve mostrare il punteggio salvato in Game.current_score\")\n\tcheck(\"labels_no_focus\", score_lbl.focus_mode == Control.FOCUS_NONE and title_lbl.focus_mode == Control.FOCUS_NONE, \"Le etichette devono avere focus_mode impostato a None (0)\")\n\tcheck(\"restart_focused\", restart_btn.has_focus(), \"All'avvio RestartButton deve possedere il focus\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"down_to_menu\", menu_btn.has_focus(), \"Premendo Giù il focus deve passare su MainMenuButton\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"down_wrap_restart\", restart_btn.has_focus(), \"Premendo Giù da MainMenuButton il focus deve tornare a RestartButton\")\n\tawait tap_action(\"ui_up\")\n\tawait wait_frames(2)\n\tcheck(\"up_wrap_menu\", menu_btn.has_focus(), \"Premendo Su da RestartButton il focus deve andare a MainMenuButton\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar game := get_node_or_null(\"/root/Game\")\n\tif game != null:\n\t\tgame.current_score = 450\n\tvar scene := await instantiate_scene(\"res://game_over.tscn\")\n\tif not check(\"scene\", scene != null, \"La scena game_over.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tawait wait_frames(2)\n\tvar restart_btn := find_by_name(scene, \"RestartButton\") as Button\n\tvar menu_btn := find_by_name(scene, \"MainMenuButton\") as Button\n\tvar score_lbl := find_by_name(scene, \"ScoreLabel\") as Label\n\tvar title_lbl := find_by_name(scene, \"TitleLabel\") as Label\n\tif not check(\"nodes\", restart_btn != null and menu_btn != null and score_lbl != null and title_lbl != null, \"Tutti i nodi richiesti devono essere presenti nella scena\"):\n\t\treturn\n\tcheck(\"score_text\", score_lbl.text == \"Punti: 450\", \"ScoreLabel deve mostrare il punteggio salvato in Game.current_score\")\n\tcheck(\"labels_no_focus\", score_lbl.focus_mode == Control.FOCUS_NONE and title_lbl.focus_mode == Control.FOCUS_NONE, \"Le etichette devono avere focus_mode impostato a None (0)\")\n\tcheck(\"restart_focused\", restart_btn.has_focus(), \"All'avvio RestartButton deve possedere il focus\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"down_to_menu\", menu_btn.has_focus(), \"Premendo Giù il focus deve passare su MainMenuButton\")\n\tawait tap_action(\"ui_down\")\n\tawait wait_frames(2)\n\tcheck(\"down_wrap_restart\", restart_btn.has_focus(), \"Premendo Giù da MainMenuButton il focus deve tornare a RestartButton\")\n\tawait tap_action(\"ui_up\")\n\tawait wait_frames(2)\n\tcheck(\"up_wrap_menu\", menu_btn.has_focus(), \"Premendo Su da RestartButton il focus deve andare a MainMenuButton\")",
       "descrizione": "RestartButton ottiene il focus all'avvio, i label non sono selezionabili e i pulsanti ciclano correttamente"
      }
     ],
@@ -740,19 +740,23 @@
       "impostazioni": []
      },
      "spiegazione": "Nella schermata finale, `RestartButton` riceve il focus differito in `_ready()` consentendo al giocatore di rigiocare immediatamente con il gamepad premendo solo il tasto di conferma (`ui_accept`). La proprietà `focus_mode = 0` (`Control.FOCUS_NONE`) sulle etichette garantisce che nessun elemento non interattivo possa essere selezionato, mentre `focus_neighbor_top` e `focus_neighbor_bottom` sui pulsanti creano un ciclo bidirezionale perfetto tra le due opzioni disponibili.",
-     "cambiati": [],
+     "cambiati": [
+      "game_over.tscn",
+      "game_over.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "trova",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] RestartButton ottiene il focus all'avvio, i label non sono selezionabili e i pulsanti ciclano correttamente: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Expected expression after \"!=\" operator.\n          at: GDScript::reload (res://htd/verifica_1.gd:6)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Expected expression after \"!=\" operator.\n          at: GDScript::reload (res://htd/verifica_1.gd:6)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 6: `if game !=:`"
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   }
  },
