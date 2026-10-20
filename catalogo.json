@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-20T08:15:49.227Z",
+ "aggiornato": "2026-10-20T08:22:59.783Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -416,6 +416,15 @@
    "file": "lezioni/f03-interfaccia/schermi-diversi.json",
    "sha256": "b3af18e0a72570318214e9c7f257b38753868b39df63cea96107cfebb6a0cfe2",
    "byte": 141887
+  },
+  {
+   "slug": "progetto-quiz-1",
+   "numero": "3.10",
+   "titolo": "Progetto «Quiz» – tappa 1: dati e schermate",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/progetto-quiz-1.json",
+   "sha256": "63b10df43398bb4d374706be2266e4d9746d34d4016b96380e8f135b4f83cbc7",
+   "byte": 24896
   }
  ],
  "documentazione": {
