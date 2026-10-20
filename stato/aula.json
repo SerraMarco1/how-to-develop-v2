@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-20T07:47:58.033Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-20T07:58:52.992Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "schermi-diversi",
   "numero": "3.9",
   "titolo": "Schermi diversi"
  },
- "messaggio": "Sta scrivendo la lezione 3.9 «Schermi diversi».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 3.9 riprende da sola appena rispondono.",
+ "riprende": "2026-10-20T08:08:52.992Z"
 }
