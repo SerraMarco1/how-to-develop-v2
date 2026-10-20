@@ -22,3 +22,4 @@
 {"quando":1792483980572,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":152809,"tokenInput":18568,"tokenOutput":11625,"ragionamento":2848}
 {"quando":1792484138454,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"schermi-diversi","ok":true,"contata":true,"durataMs":6417,"tokenInput":3014,"tokenOutput":762,"ragionamento":2010}
 {"quando":1792484150718,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-quiz-1","ok":true,"contata":true,"durataMs":240611,"tokenInput":11375,"tokenOutput":4783,"ragionamento":7141}
+{"quando":1792484401760,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-quiz-1","ok":true,"contata":true,"durataMs":162940,"tokenInput":3818,"tokenOutput":12,"ragionamento":981}
