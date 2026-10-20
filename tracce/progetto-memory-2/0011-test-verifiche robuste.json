@@ -1,0 +1,39 @@
+{
+ "n": 11,
+ "quando": "2026-10-20T07:32:31.061Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 3 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-latest",
+ "richieste": 1,
+ "durataMs": 174053,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://card.tscn",
+    "tipoNodo": "Button",
+    "nome": "Button",
+    "descrizione": "La scena card.tscn contiene un nodo Button chiamato Button per gestire il clic"
+   },
+   {
+    "tipo": "script_collegato",
+    "scena": "res://main.tscn",
+    "nodo": "Main",
+    "descrizione": "Il nodo Main ha lo script main.gd collegato"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve essere impostata e avviarsi senza errori\"):\n\t\treturn\n\t\n\tawait wait_frames(5)\n\t\n\tvar cards: Array[Node] = []\n\tfor child in main.get_children():\n\t\tif \"value\" in child and \"is_face_up\" in child:\n\t\t\tcards.append(child)\n\t\n\tvar cols = get_prop(main, \"COLS\", 4)\n\tvar rows = get_prop(main, \"ROWS\", 4)\n\tvar expected_count: int = 16\n\tif typeof(cols) == TYPE_INT and typeof(rows) == TYPE_INT:\n\t\texpected_count = cols * rows\n\t\n\tif not check(\"cards_count\", cards.size() == expected_count, \"La scena deve contenere le carte generate in griglia (trovate: %d)\" % cards.size()):\n\t\treturn\n\t\n\tif not check(\"enough_cards\", cards.size() >= 4, \"La griglia deve contenere almeno 4 carte per eseguire la verifica\"):\n\t\treturn\n\t\n\tvar all_face_down := true\n\tfor c in cards:\n\t\tvar face_up = get_prop(c, \"is_face_up\", false)\n\t\tif face_up:\n\t\t\tall_face_down = false\n\t\t\tbreak\n\tif not check(\"initial_face_down\", all_face_down, \"All'avvio tutte le carte devono essere coperte (is_face_up = false)\"):\n\t\treturn\n\t\n\tvar card_diff_1: Node = cards[0]\n\tvar card_diff_2: Node = cards[1]\n\tvar card_other: Node = cards[2]\n\tvar card_same_1: Node = cards[2]\n\tvar card_same_2: Node = cards[3]\n\t\n\tcard_diff_1.set(\"value\", 1)\n\tcard_diff_2.set(\"value\", 2)\n\tcard_same_1.set(\"value\", 3)\n\tcard_same_2.set(\"value\", 3)\n\t\n\tvar btn_diff_1 := card_diff_1.get_node_or_null(\"Button\") as BaseButton\n\tvar btn_diff_2 := card_diff_2.get_node_or_null(\"Button\") as BaseButton\n\tvar btn_other := card_other.get_node_or_null(\"Button\") as BaseButton\n\tvar btn_same_1 := card_same_1.get_node_or_null(\"Button\") as BaseButton\n\tvar btn_same_2 := card_same_2.get_node_or_null(\"Button\") as BaseButton\n\t\n\tif not check(\"btn_present\", btn_diff_1 != null and btn_diff_2 != null and btn_other != null and btn_same_2 != null, \"Ogni carta deve contenere un nodo Button chiamato Button\"):\n\t\treturn\n\t\n\tawait click_button(btn_diff_1)\n\tvar up_1 = get_prop(card_diff_1, \"is_face_up\", false)\n\tcheck(\"first_flip\", up_1 == true, \"Cliccando una carta coperta, questa deve girarsi a faccia in su\")\n\t\n\tawait click_button(btn_diff_2)\n\tvar up_2 = get_prop(card_diff_2, \"is_face_up\", false)\n\tcheck(\"second_flip\", up_2 == true, \"Cliccando la seconda carta con valore diverso, deve girarsi a faccia in su\")\n\t\n\tawait wait_seconds(0.2)\n\tawait click_button(btn_other)\n\tvar up_other = get_prop(card_other, \"is_face_up\", false)\n\tcheck(\"blocked_during_wait\", up_other == false, \"Durante l'attesa di un secondo i clic devono essere ignorati: un'altra carta non deve girarsi\")\n\t\n\tawait wait_seconds(1.0)\n\tvar reset_1 = get_prop(card_diff_1, \"is_face_up\", false)\n\tvar reset_2 = get_prop(card_diff_2, \"is_face_up\", false)\n\tcheck(\"flipped_back\", reset_1 == false and reset_2 == false, \"Dopo 1 secondo di attesa le due carte con valori diversi devono ricoprirsi entrambe\")\n\t\n\tcard_same_1.set(\"value\", 3)\n\tcard_same_2.set(\"value\", 3)\n\tawait click_button(btn_same_1)\n\tawait click_button(btn_same_2)\n\tvar same_up_1 = get_prop(card_same_1, \"is_face_up\", false)\n\tvar same_up_2 = get_prop(card_same_2, \"is_face_up\", false)\n\tcheck(\"pair_flipped\", same_up_1 == true and same_up_2 == true, \"Due carte con lo stesso valore devono girarsi entrambe a faccia in su\")\n\t\n\tawait wait_seconds(1.2)\n\tvar still_up_1 = get_prop(card_same_1, \"is_face_up\", false)\n\tvar still_up_2 = get_prop(card_same_2, \"is_face_up\", false)\n\tcheck(\"pair_stays_up\", still_up_1 == true and still_up_2 == true, \"Una coppia con lo stesso valore deve rimanere scoperta e non ricoprirsi dopo un secondo\")\n",
+    "descrizione": "Le carte si girano, le coppie diverse si ricoprono dopo un secondo bloccando i clic, le coppie uguali restano scoperte"
+   }
+  ],
+  "consegna": "In questa tappa implementi le regole di gioco di Memory nel progetto `Memory`.\n\n### Requisiti da realizzare:\n1. **Pulsante sulla carta (`card.tscn`)**:\n   - Aggiungi alla scena `card.tscn` un nodo `Button` chiamato `Button`.\n   - Imposta la proprietà **Flat** su attivo (in modo che il pulsante sia trasparente e mostri lo sprite e il testo sottostanti) e dimensiona il rettangolo (ad esempio da `-38` a `38` su X e Y) per coprire l'intera carta.\n2. **Segnale del clic (`card.gd`)**:\n   - In `card.gd`, dichiara il segnale personalizzato `card_clicked(card: Node)`.\n   - Connetti il segnale `pressed` del nodo `Button` a un metodo locale (come `_on_button_pressed()`) che emette `card_clicked(self)`.\n3. **Regole del gioco (`main.gd`)**:\n   - All'interno di `create_grid()`, quando istanzi ciascuna carta, connetti il suo segnale `card_clicked` a una funzione di gestione in `main.gd` (ad esempio `_on_card_clicked(card: Node)`). Prima di connettere puoi verificare che il segnale sia presente con il metodo `has_signal(\"nome_segnale\")`, che restituisce `true` o `false` a seconda che il nodo possieda il segnale indicato (ad esempio `if card.has_signal(\"card_clicked\"):`).\n   - Implementa la logica delle coppie:\n     - Se il gioco è nello stato di attesa (due carte diverse scoperte che devono ricoprirsi), ignora qualsiasi nuovo clic.\n     - Se la carta cliccata è già scoperta (`is_face_up == true`), ignora il clic.\n     - Quando una carta valida viene cliccata, girala a faccia in su chiamando `card.flip()`.\n     - Se è la prima carta della mossa, memorizzala e aspetta la seconda.\n     - Se è la seconda carta della mossa:\n       - Se ha lo stesso `value` della prima, le due carte formano una coppia corretta e rimangono scoperte per il resto della partita.\n       - Se ha un `value` diverso, attendi 1 secondo durante il quale nessun'altra carta può essere cliccata; trascorso il secondo, ricopri entrambe le carte chiamando `flip()` su ciascuna."
+ },
+ "chiamate": [
+  "gemini-flash-latest: risposta in 153 s (12362 → 4534 token)"
+ ]
+}
