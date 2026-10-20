@@ -444,7 +444,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo toggle_fullscreen dalla finestra normale si deve passare a WINDOW_MODE_FULLSCREEN\n  - Premendo di nuovo toggle_fullscreen da schermo intero si deve tornare a WINDOW_MODE_WINDOWED\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]

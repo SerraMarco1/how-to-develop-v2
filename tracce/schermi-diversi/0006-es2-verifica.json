@@ -1,0 +1,63 @@
+{
+ "n": 6,
+ "quando": "2026-10-20T07:54:48.349Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (prevedi): approvato",
+ "spiegazione": "«Rapporti d'aspetto e ridimensionamento». 4 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 1.66666666666667 · true · 0 · 304.0",
+ "richieste": 0,
+ "durataMs": 2977,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Rapporti d'aspetto e ridimensionamento",
+   "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce, senza eseguirlo.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "extends RefCounted\n\nfunc run() -> float:\n\tvar base_w: float = 1152.0\n\tvar base_h: float = 648.0\n\tvar target_w: float = 1920.0\n\tvar target_h: float = 1080.0\n\tvar scale_x: float = target_w / base_w\n\tvar scale_y: float = target_h / base_h\n\treturn scale_x\n",
+     "domanda": "Quanto vale scale_x alla fine?",
+     "risposta": "1.66666666666667",
+     "spiegazione": "1920 / 1152 fa esattamente 1.66666666666667 (5/3). Poiché 1080 / 648 è anch'esso 5/3, la finestra 1920×1080 ha le stesse identiche proporzioni (16:9) della risoluzione di base 1152×648.",
+     "id": "es2p1"
+    },
+    {
+     "codice": "extends RefCounted\n\nfunc run() -> bool:\n\tvar base_ratio: float = 1152.0 / 648.0\n\tvar ultra_wide_w: float = 2560.0\n\tvar ultra_wide_h: float = 1080.0\n\tvar window_ratio: float = ultra_wide_w / ultra_wide_h\n\treturn window_ratio > base_ratio\n",
+     "domanda": "Cosa restituisce la funzione (true o false)?",
+     "risposta": "true",
+     "spiegazione": "base_ratio vale 1152 / 648 ≈ 1.777 (16:9). window_ratio per 2560×1080 vale 2560 / 1080 ≈ 2.37. Essendo 2.37 > 1.77, la condizione è vera (true): lo schermo ultrawide è più largo in proporzione, quindi con aspect 'keep' compaiono bande nere ai lati (pillarbox).",
+     "id": "es2p2"
+    },
+    {
+     "codice": "extends RefCounted\n\nfunc run() -> int:\n\tvar base_size := Vector2(1152, 648)\n\tvar window_size := Vector2(1920, 1080)\n\tvar scale_factor: float = minf(window_size.x / base_size.x, window_size.y / base_size.y)\n\tvar effective_width: float = base_size.x * scale_factor\n\tvar total_black_bars_px: float = window_size.x - effective_width\n\treturn int(total_black_bars_px)\n",
+     "domanda": "Quanto vale total_black_bars_px convertito in intero?",
+     "risposta": "0",
+     "spiegazione": "Poiché entrambe le dimensioni crescono dello stesso fattore (5/3, cioè circa 1.6667), effective_width = 1152 * (5/3) = 1920. La larghezza effettiva copre l'intera finestra: lo spazio occupato dalle bande nere è esattamente 0 pixel.",
+     "id": "es2p3"
+    },
+    {
+     "codice": "extends RefCounted\n\nfunc run() -> float:\n\tvar base_size := Vector2(1152, 648)\n\tvar window_size := Vector2(1280, 1024)\n\tvar scale_factor: float = minf(window_size.x / base_size.x, window_size.y / base_size.y)\n\tvar effective_height: float = base_size.y * scale_factor\n\tvar total_letterbox_y: float = window_size.y - effective_height\n\treturn total_letterbox_y\n",
+     "domanda": "Quanto vale total_letterbox_y alla fine?",
+     "risposta": "304.0",
+     "spiegazione": "1280 / 1152 fa circa 1.111, mentre 1024 / 648 fa circa 1.580. La funzione minf sceglie il fattore minore (1280 / 1152 = 1.111111) per mantenere l'immagine intera. L'altezza coperta è 648 * (1280 / 1152) = 720 pixel. Lo spazio rimanente verticale è 1024 - 720 = 304.0 pixel (letterbox).",
+     "id": "es2p4"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
