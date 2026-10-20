@@ -142,10 +142,8 @@
   }
  },
  "segnali-propri": {
-  "versione": 2,
-  "fragili": [
-   "es3"
-  ],
+  "versione": 3,
+  "fragili": [],
   "tentativi": {
    "es3": 2
   }
