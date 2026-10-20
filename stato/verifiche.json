@@ -229,5 +229,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "schermi-diversi": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "progetto-quiz-1": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
