@@ -21,3 +21,4 @@
 {"quando":1792575344733,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":371307,"tokenInput":19345,"tokenOutput":8009,"ragionamento":20219}
 {"quando":1792575727277,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-quiz-3","ok":false,"contata":true,"durataMs":2196,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792575729477,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":251859,"tokenInput":16091,"tokenOutput":7141,"ragionamento":13226}
+{"quando":1792575995797,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":221313,"tokenInput":3619,"tokenOutput":12,"ragionamento":934}
