@@ -10,6 +10,7 @@
     "consegna": "Completa il ciclo di gioco del progetto `Quiz` gestendo risposte, tempo, punteggio e schermata finale con record.\n\nEcco i requisiti da realizzare:\n\n1. **Autoload `QuizData` (`res://quiz_data.gd`)**:\n   - Aggiungi le variabili per memorizzare il punteggio dell'ultima partita (`score: int`, parte da 0) e il punteggio record (`high_score: int`, parte da 0).\n\n2. **Schermata del quiz (`res://quiz.tscn` e `res://quiz.gd`)**:\n   - Aggiungi una `ProgressBar` chiamata `TimeBar` dentro la gerarchia visibile di `quiz.tscn` (puoi posizionarla nel contenitore verticale principale).\n   - Aggiungi un `Timer` chiamato `QuestionTimer` con tempo massimo di 5 secondi (in `_ready` o da Inspector con durata `5.0` e `one_shot = true`).\n   - A ogni domanda:\n     - Mostra il testo della domanda e i 4 pulsanti di risposta (`Answer0`, `Answer1`, `Answer2`, `Answer3`).\n     - Assegna il focus da tastiera al primo pulsante (`Answer0.grab_focus()`).\n     - Reimposta e avvia il timer di 5 secondi.\n     - Aggiorna in continuo il valore di `TimeBar` durante `_process` per mostrare il tempo rimanente (da 5 a 0 oppure da 0 a 5, usando `QuestionTimer.time_left`).\n   - Quando il giocatore preme una risposta:\n     - Disabilita temporaneamente i pulsanti di risposta per impedire clic multipli.\n     - Ferma il timer.\n     - Se l'opzione scelta è corretta (l'indice corrisponde al valore `correct` della domanda in `QuizData.questions`), colora o segnala il pulsante e aumenta di 1 il punteggio corrente in `QuizData.score`.\n     - Mostra per 1 secondo quale risposta era corretta (ad esempio modificando il testo del pulsante, oppure cambiando colore o usando un timer di attesa di 1 secondo).\n     - Passa alla domanda successiva.\n   - Se il timer da 5 secondi scade prima che il giocatore scelga (segnale `timeout`):\n     - Disabilita i pulsanti e mostra la risposta corretta per 1 secondo, senza assegnare punti.\n     - Passa alla domanda successiva.\n   - Quando tutte le domande dell'elenco sono state completate:\n     - Aggiorna il record in `QuizData.high_score` se `QuizData.score > QuizData.high_score`.\n     - Cambia scena passando a `res://results.tscn` tramite `get_tree().change_scene_to_file(\"res://results.tscn\")`.\n\n3. **Schermata dei risultati (`res://results.tscn` con script `res://results.gd`)**:\n   - La radice deve essere un nodo `Control` (chiamato `Results`).\n   - Deve contenere:\n     - Una `Label` chiamata `ScoreLabel` che mostra il punteggio ottenuto (es. `\"Punteggio: X\"`).\n     - Una `Label` chiamata `HighScoreLabel` che mostra il record registrato in `QuizData.high_score` (es. `\"Record: Y\"`).\n     - Un `Button` chiamato `RestartButton` con testo `\"Rigioca\"` che, se premuto, riporta alla schermata di gioco `res://quiz.tscn`.\n     - Un `Button` chiamato `MenuButton` con testo `\"Menu Principale\"` che, se premuto, riporta a `res://menu.tscn`.\n   - In `_ready`, assegna il focus con `grab_focus()` a `RestartButton` per consentire la navigazione immediata via tastiera.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [],
     "verifiche": [
@@ -41,7 +42,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_node := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz_caricato\", quiz_node != null, \"La scena quiz.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar quiz_data := Engine.get_singleton(\"QuizData\") if Engine.has_singleton(\"QuizData\") else null\n\tif quiz_data == null:\n\t\tquiz_data = get_tree().root.get_node_or_null(\"QuizData\")\n\tif not check(\"autoload_presente\", quiz_data != null, \"L'Autoload QuizData deve essere accessibile\"): \n\t\treturn\n\n\tvar btn0 := find_by_name(quiz_node, \"Answer0\") as Button\n\tvar btn1 := find_by_name(quiz_node, \"Answer1\") as Button\n\tif not check(\"bottoni_quiz\", btn0 != null and btn1 != null, \"I pulsanti Answer0 e Answer1 devono esistere in quiz.tscn\"):\n\t\treturn\n\n\t# Rispondi correttamente alla prima domanda (indice 1: Marte)\n\tawait click_button(btn1)\n\t# Attendiamo il passaggio di domanda (pausa di circa 1 secondo)\n\tawait wait_seconds(1.2)\n\n\tvar score_val = get_prop(quiz_data, \"score\", -1)\n\tcheck(\"punteggio_aumentato\", score_val == 1, \"Rispondendo correttamente alla prima domanda, score deve valere 1 (è: %s)\" % str(score_val))\n\n\t# Test della schermata results\n\tvar results_node := await instantiate_scene(\"res://results.tscn\")\n\tif not check(\"results_caricato\", results_node != null, \"La scena results.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar score_label := find_by_name(results_node, \"ScoreLabel\") as Label\n\tvar high_label := find_by_name(results_node, \"HighScoreLabel\") as Label\n\tvar restart_btn := find_by_name(results_node, \"RestartButton\") as Button\n\tcheck(\"labels_results\", score_label != null and high_label != null, \"results.tscn deve contenere ScoreLabel e HighScoreLabel\")\n\tcheck(\"focus_restart\", restart_btn != null and restart_btn.has_focus(), \"RestartButton deve ricevere il focus all'apertura dei risultati\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_node := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz_caricato\", quiz_node != null, \"La scena quiz.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar quiz_data := get_tree().root.get_node_or_null(\"QuizData\")\n\tif not check(\"autoload_presente\", quiz_data != null, \"L'Autoload QuizData deve essere accessibile\"):\n\t\treturn\n\n\tvar btn0 := find_by_name(quiz_node, \"Answer0\") as Button\n\tvar btn1 := find_by_name(quiz_node, \"Answer1\") as Button\n\tif not check(\"bottoni_quiz\", btn0 != null and btn1 != null, \"I pulsanti Answer0 e Answer1 devono esistere in quiz.tscn\"):\n\t\treturn\n\n\tawait click_button(btn1)\n\tawait wait_seconds(1.2)\n\n\tvar score_val = get_prop(quiz_data, \"score\", -1)\n\tcheck(\"punteggio_aumentato\", score_val == 1, \"Rispondendo correttamente alla prima domanda, score deve valere 1 (è: %s)\" % str(score_val))\n\n\tvar results_node := await instantiate_scene(\"res://results.tscn\")\n\tif not check(\"results_caricato\", results_node != null, \"La scena results.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar score_label := find_by_name(results_node, \"ScoreLabel\") as Label\n\tvar high_label := find_by_name(results_node, \"HighScoreLabel\") as Label\n\tvar restart_btn := find_by_name(results_node, \"RestartButton\") as Button\n\tcheck(\"labels_results\", score_label != null and high_label != null, \"results.tscn deve contenere ScoreLabel e HighScoreLabel\")\n\tcheck(\"focus_restart\", restart_btn != null and restart_btn.has_focus(), \"RestartButton deve ricevere il focus all'apertura dei risultati\")",
       "descrizione": "La partita gestisce le risposte esatte, il punteggio, il cambio alla schermata finale e il record"
      }
     ],
@@ -49,6 +50,14 @@
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": "menu.gd",
+       "contenuto": "extends Control\n\n@onready var play_button: Button = $CenterContainer/VBoxContainer/PlayButton\n\n\nfunc _ready() -> void:\n\tplay_button.grab_focus()\n\tplay_button.pressed.connect(_on_play_button_pressed)\n\n\nfunc _on_play_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n"
+      },
+      {
+       "percorso": "menu.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_menu\"]\ndefault_font_size = 22\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_menu\")\nscript = ExtResource(\"1_menu\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 40\ntext = \"IL QUIZ\"\nhorizontal_alignment = 1\n\n[node name=\"PlayButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 50)\nlayout_mode = 2\ntext = \"Gioca\"\n"
+      },
       {
        "percorso": "quiz_data.gd",
        "contenuto": "extends Node\n\nvar questions: Array[Dictionary] = [\n\t{\n\t\t\"question\": \"Quale pianeta del sistema solare è noto come il Pianeta Rosso?\",\n\t\t\"options\": [\"Venere\", \"Marte\", \"Giove\", \"Saturno\"],\n\t\t\"correct\": 1\n\t},\n\t{\n\t\t\"question\": \"Qual è il linguaggio di scripting nativo di Godot?\",\n\t\t\"options\": [\"GDScript\", \"Python\", \"Lua\", \"C#\"],\n\t\t\"correct\": 0\n\t},\n\t{\n\t\t\"question\": \"Quanti bit formano un singolo byte?\",\n\t\t\"options\": [\"4\", \"8\", \"16\", \"32\"],\n\t\t\"correct\": 1\n\t}\n]\n\nvar score: int = 0\nvar high_score: int = 0\n"
@@ -74,8 +83,34 @@
       "nome": "Quiz",
       "scenaPrincipale": "res://menu.tscn",
       "azioni": [],
-      "autoload": [],
-      "impostazioni": []
+      "autoload": [
+       {
+        "nome": "QuizData",
+        "percorso": "res://quiz_data.gd"
+       }
+      ],
+      "impostazioni": [
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_width",
+        "valore": "800"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_height",
+        "valore": "600"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/stretch/mode",
+        "valore": "canvas_items"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/stretch/aspect",
+        "valore": "keep"
+       }
+      ]
      },
      "spiegazione": "In questa seconda tappa abbiamo chiuso il ciclo completo di gameplay del Quiz:\n1. In `QuizData` (Autoload persistente) abbiamo aggiunto `score` e `high_score`, che rimangono memorizzati tra le schermate e tra partite successive.\n2. In `quiz.gd`, due nodi `Timer` gestiscono rispettivamente la scadenza della risposta (5 secondi) e la pausa di feedback visivo (1 secondo per mostrare se la risposta era esatta o errata prima del passaggio automatico alla domanda successiva).\n3. La `ProgressBar` (`TimeBar`) riflette in ogni frame `question_timer.time_left`.\n4. La schermata dei risultati (`results.tscn` e `results.gd`) legge i valori finali da `QuizData`, permette di rigiocare immediatamente ricaricando `res://quiz.tscn` oppure di tornare al menu principale (`res://menu.tscn`), garantendo l'assegnazione iniziale del focus per chi gioca con la tastiera.",
      "cambiati": [],
@@ -83,19 +118,21 @@
     }
    },
    "genere": "da-zero",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "controllo di sicurezza — verifica 5 riga 8: get_singleton non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo"
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Progetto «Quiz» – tappa 2: partita",
