@@ -17,3 +17,5 @@
 {"quando":1792574386416,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":393064,"tokenInput":14510,"tokenOutput":1616,"ragionamento":24380}
 {"quando":1792574779482,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":156359,"tokenInput":14510,"tokenOutput":6258}
 {"quando":1792574942633,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":22044,"tokenInput":15518,"tokenOutput":7775,"ragionamento":2695}
+{"quando":1792574970116,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":374615,"tokenInput":15330,"tokenOutput":8207,"ragionamento":21004}
+{"quando":1792575344733,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":371307,"tokenInput":19345,"tokenOutput":8009,"ragionamento":20219}

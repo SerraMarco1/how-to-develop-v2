@@ -1,0 +1,157 @@
+{
+ "n": 9,
+ "quando": "2026-10-21T09:29:30.108Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (da-zero): 1 problema",
+ "spiegazione": "«Progetto «Quiz» – tappa 3: rifinitura», scritto da gemini/gemini-flash-lite-latest. 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Nella scena quiz.tscn esiste il nodo PauseMenu per la gestione della pausa: Nodi presenti: Quiz (Control), MarginContainer (MarginContainer), VBoxContainer (VBoxContainer), TimeBar (ProgressBar), QuestionLabel (Label), AnswersContainer (VBoxContainer), Answer0 (Button), Answer1 (Button), Answer2 (Button), Answer3 (Button), QuestionTimer (Timer), FeedbackTimer (Timer), PauseMenu (ColorRect), CenterContainer (CenterContainer), VBoxContainer (VBoxContainer), TitleLabel (Label), ResumeButton (Button), QuitButton (Button)\n  - Premendo l'azione pause il SceneTree deve andare in pausa (get_tree().paused = true)\n  - Durante la pausa il nodo PauseMenu deve diventare visibile\n  - Quando si apre la pausa ResumeButton deve ricevere il focus per poter riprendere da tastiera\n  - Premendo ResumeButton il gioco non deve più essere in pausa\n  - Dopo aver premuto ResumeButton il PauseMenu deve essere nascosto\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 3740,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Nella scena quiz.tscn esiste il nodo PauseMenu per la gestione della pausa: Nodi presenti: Quiz (Control), MarginContainer (MarginContainer), VBoxContainer (VBoxContainer), TimeBar (ProgressBar), QuestionLabel (Label), AnswersContainer (VBoxContainer), Answer0 (Button), Answer1 (Button), Answer2 (Button), Answer3 (Button), QuestionTimer (Timer), FeedbackTimer (Timer), PauseMenu (ColorRect), CenterContainer (CenterContainer), VBoxContainer (VBoxContainer), TitleLabel (Label), ResumeButton (Button), QuitButton (Button)\n  - Premendo l'azione pause il SceneTree deve andare in pausa (get_tree().paused = true)\n  - Durante la pausa il nodo PauseMenu deve diventare visibile\n  - Quando si apre la pausa ResumeButton deve ricevere il focus per poter riprendere da tastiera\n  - Premendo ResumeButton il gioco non deve più essere in pausa\n  - Dopo aver premuto ResumeButton il PauseMenu deve essere nascosto\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "titolo": "Progetto «Quiz» – tappa 3: rifinitura",
+   "consegna": "Rifinisci il gioco del Quiz portando l'esperienza a livello professionale, rendendolo navigabile interamente da tastiera, con finestra adattabile, animazione di comparsa delle domande e menu di pausa accessibile durante la partita.\n\nEcco i requisiti da implementare:\n\n1. **Adattamento finestra e risoluzione**:\n   - Nelle impostazioni di progetto imposta la risoluzione base a larghezza `1152` e altezza `648` (`display/window/size/viewport_width` e `viewport_height`).\n   - Imposta lo stretch mode su `\"canvas_items\"` (`display/window/stretch/mode`) e lo stretch aspect su `\"expand\"` (`display/window/stretch/aspect`).\n   - Aggiungi l'azione di input `toggle_fullscreen` associata al tasto `F11` (o al tasto che preferisci). In `menu.gd` (o tramite input globale non vincolato alla pausa), premendo l'azione passa da finestra a schermo intero e viceversa usando `DisplayServer.window_set_mode`.\n\n2. **Azione di pausa**:\n   - Crea l'azione di input `pause` associata al tasto `Escape`.\n\n3. **Menu di Pausa nella schermata di quiz**:\n   - Dentro `quiz.tscn` aggiungi un pannello o contenitore per la pausa chiamato esattamente `PauseMenu` (un nodo di tipo `Control` o derivato come `ColorRect` o `CenterContainer`). Deve essere nascosto (`visible = false`) all'avvio del quiz.\n   - Il nodo `PauseMenu` (o il nodo che gestisce l'input di pausa) deve continuare a funzionare quando il gioco è in pausa: imposta la sua proprietà `process_mode` su *Always* (`PROCESS_MODE_ALWAYS`).\n   - Quando viene premuta l'azione `pause` durante la partita, attiva o disattiva la pausa con `get_tree().paused = not get_tree().paused`.\n   - Se si entra in pausa, mostra `PauseMenu` (`visible = true`) e assegna subito il focus al pulsante per riprendere la partita.\n   - Dentro `PauseMenu` inserisci almeno due pulsanti: `ResumeButton` (per riprendere) e `QuitButton` (per tornare al menu principale `res://menu.tscn`).\n   - Cliccando o attivando `ResumeButton`, nascondi `PauseMenu`, togli la pausa (`get_tree().paused = false`) e ridai il focus alla prima risposta disponibile.\n   - Cliccando o attivando `QuitButton`, togli la pausa (`get_tree().paused = false`) prima di cambiare scena verso `res://menu.tscn`.\n\n4. **Animazione di comparsa della domanda (Tween)**:\n   - All'inizio di ogni domanda (in `display_question`), crea un `Tween` che anima l'opacità o la transizione di comparsa della domanda e delle risposte: per esempio porta `modulate.a` del contenitore delle risposte o della domanda da `0.0` a `1.0` in circa `0.3` secondi per rendere fluida la presentazione.\n\n5. **Navigazione completa da tastiera**:\n   - Assicurati che ogni schermata (`menu.tscn`, `quiz.tscn`, `results.tscn`, e il menu di pausa) selezioni automaticamente il primo pulsante con `grab_focus()` in modo che il gioco sia completamente giocabile con le sole frecce direzionali e `ui_accept` (Invio/Spazio).",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "quiz",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Ricorda di impostare process_mode a Node.PROCESS_MODE_ALWAYS su PauseMenu (o sullo script che intercetta la pausa in _unhandled_input), altrimenti get_tree().paused = true bloccherà anche la lettura del tasto Escape."
+   ],
+   "verifiche": [
+    {
+     "tipo": "impostazione",
+     "sezione": "display",
+     "chiave": "window/stretch/mode",
+     "contiene": "canvas_items",
+     "descrizione": "Lo Stretch Mode è configurato su canvas_items nelle impostazioni di progetto"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "display",
+     "chiave": "window/stretch/aspect",
+     "contiene": "expand",
+     "descrizione": "Lo Stretch Aspect è configurato su expand nelle impostazioni di progetto"
+    },
+    {
+     "tipo": "azione_input",
+     "nome": "pause",
+     "descrizione": "Nella Input Map esiste l'azione pause"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://quiz.tscn",
+     "tipoNodo": "Control",
+     "nome": "PauseMenu",
+     "descrizione": "Nella scena quiz.tscn esiste il nodo PauseMenu per la gestione della pausa"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz_caricato\", quiz != null, \"La scena quiz.tscn deve caricarsi correttamente\"):\n\t\treturn\n\n\tvar pause_menu := find_by_name(quiz, \"PauseMenu\") as Control\n\tif not check(\"pause_menu_trovato\", pause_menu != null, \"In quiz.tscn deve esserci il nodo PauseMenu\"):\n\t\treturn\n\n\tcheck(\"pause_nascosto_inizio\", not pause_menu.visible, \"All'inizio della domanda il PauseMenu deve essere nascosto\")\n\n\t# Premiamo l'azione pause\n\tawait tap_action(\"pause\")\n\tawait wait_frames(2)\n\n\tcheck(\"tree_in_pausa\", get_tree().paused, \"Premendo l'azione pause il SceneTree deve andare in pausa (get_tree().paused = true)\")\n\tcheck(\"pause_visibile\", pause_menu.visible, \"Durante la pausa il nodo PauseMenu deve diventare visibile\")\n\n\tvar resume_btn := find_by_name(pause_menu, \"ResumeButton\") as Button\n\tif check(\"resume_esiste\", resume_btn != null, \"Dentro PauseMenu deve esserci un Button chiamato ResumeButton\"):\n\t\tcheck(\"resume_ha_focus\", resume_btn.has_focus(), \"Quando si apre la pausa ResumeButton deve ricevere il focus per poter riprendere da tastiera\")\n\t\tawait click_button(resume_btn)\n\t\tawait wait_frames(2)\n\t\tcheck(\"tree_ripristinato\", not get_tree().paused, \"Premendo ResumeButton il gioco non deve più essere in pausa\")\n\t\tcheck(\"pause_nascosto_dopo_resume\", not pause_menu.visible, \"Dopo aver premuto ResumeButton il PauseMenu deve essere nascosto\")\n\n\t# Riattiviamo la pausa e premiamo QuitButton\n\tawait tap_action(\"pause\")\n\tawait wait_frames(2)\n\tvar quit_btn := find_by_name(pause_menu, \"QuitButton\") as Button\n\tif check(\"quit_esiste\", quit_btn != null, \"Dentro PauseMenu deve esserci un Button chiamato QuitButton\"):\n\t\tawait click_button(quit_btn)\n\t\tawait wait_frames(3)\n\t\tcheck(\"pausa_resettata_su_quit\", not get_tree().paused, \"Tornando al menu tramite QuitButton get_tree().paused deve essere reimpostato su false\")\n\t\tcheck(\"cambio_scena_menu\", current_scene_path() == \"res://menu.tscn\", \"Premendo QuitButton si deve tornare a res://menu.tscn\")\n",
+     "descrizione": "Il gioco supporta navigazione da tastiera, pausa corretta e ritorno al menu"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Quiz\"\nrun/main_scene=\"res://menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nQuizData=\"*res://quiz_data.gd\"\n\n[display]\n\nwindow/size/viewport_width=1152\nwindow/size/viewport_height=648\nwindow/stretch/mode=\"canvas_items\"\nwindow/stretch/aspect=\"expand\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\ntoggle_fullscreen={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194342,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_menu\"]\ndefault_font_size = 22\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_menu\")\nscript = ExtResource(\"1_menu\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 40\ntext = \"IL QUIZ\"\nhorizontal_alignment = 1\n\n[node name=\"PlayButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 50)\nlayout_mode = 2\ntext = \"Gioca\"\n"
+     },
+     {
+      "percorso": "quiz_data.gd",
+      "contenuto": "extends Node\n\nvar questions: Array[Dictionary] = [\n\t{\n\t\t\"question\": \"Quale pianeta del sistema solare è noto come il Pianeta Rosso?\",\n\t\t\"options\": [\"Venere\", \"Marte\", \"Giove\", \"Saturno\"],\n\t\t\"correct\": 1\n\t},\n\t{\n\t\t\"question\": \"Qual è il linguaggio di scripting nativo di Godot?\",\n\t\t\"options\": [\"GDScript\", \"Python\", \"Lua\", \"C#\"],\n\t\t\"correct\": 0\n\t},\n\t{\n\t\t\"question\": \"Quanti bit formano un singolo byte?\",\n\t\t\"options\": [\"4\", \"8\", \"16\", \"32\"],\n\t\t\"correct\": 1\n\t}\n]\n\nvar score: int = 0\nvar high_score: int = 0\n"
+     },
+     {
+      "percorso": "results.gd",
+      "contenuto": "extends Control\n\n@onready var score_label: Label = $CenterContainer/VBoxContainer/ScoreLabel\n@onready var high_score_label: Label = $CenterContainer/VBoxContainer/HighScoreLabel\n@onready var restart_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/RestartButton\n@onready var menu_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tscore_label.text = \"Punteggio: \" + str(QuizData.score)\n\thigh_score_label.text = \"Record: \" + str(QuizData.high_score)\n\trestart_button.grab_focus()\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
+     },
+     {
+      "percorso": "results.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://results.gd\" id=\"1_results\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_results\"]\ndefault_font_size = 22\n\n[node name=\"Results\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_results\")\nscript = ExtResource(\"1_results\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 36\ntext = \"PARTITA TERMINATA\"\nhorizontal_alignment = 1\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Punteggio: 0\"\nhorizontal_alignment = 1\n\n[node name=\"HighScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Record: 0\"\nhorizontal_alignment = 1\n\n[node name=\"ButtonsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Rigioca\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+     },
+     {
+      "percorso": "menu.gd",
+      "contenuto": "extends Control\n\n@onready var play_button: Button = $CenterContainer/VBoxContainer/PlayButton\n\n\nfunc _ready() -> void:\n\tplay_button.grab_focus()\n\tplay_button.pressed.connect(_on_play_button_pressed)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"toggle_fullscreen\"):\n\t\tvar mode: DisplayServer.WindowMode = DisplayServer.window_get_mode()\n\t\tif mode == DisplayServer.WINDOW_MODE_FULLSCREEN:\n\t\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)\n\t\telse:\n\t\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)\n\n\nfunc _on_play_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n"
+     },
+     {
+      "percorso": "quiz.gd",
+      "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\n\nvar current_question_index: int = 0\nvar answering_locked: bool = false\n\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var answers_container: VBoxContainer = $MarginContainer/VBoxContainer/AnswersContainer\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n@onready var feedback_timer: Timer = $FeedbackTimer\n\n@onready var pause_menu: Control = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n@onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tcurrent_question_index = 0\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\tfeedback_timer.timeout.connect(_on_feedback_timeout)\n\n\tanswer_buttons[0].pressed.connect(_on_answer_0_pressed)\n\tanswer_buttons[1].pressed.connect(_on_answer_1_pressed)\n\tanswer_buttons[2].pressed.connect(_on_answer_2_pressed)\n\tanswer_buttons[3].pressed.connect(_on_answer_3_pressed)\n\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\tpause_menu.visible = false\n\tdisplay_question(current_question_index)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"pause\"):\n\t\ttoggle_pause()\n\telif event.is_action_pressed(\"toggle_fullscreen\"):\n\t\tvar mode: DisplayServer.WindowMode = DisplayServer.window_get_mode()\n\t\tif mode == DisplayServer.WINDOW_MODE_FULLSCREEN:\n\t\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)\n\t\telse:\n\t\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\t\ttime_bar.value = question_timer.time_left\n\n\nfunc toggle_pause() -> void:\n\tvar is_paused: bool = not get_tree().paused\n\tget_tree().paused = is_paused\n\tpause_menu.visible = is_paused\n\tif is_paused:\n\t\tresume_button.grab_focus()\n\telse:\n\t\t_focus_first_active_answer()\n\n\nfunc _focus_first_active_answer() -> void:\n\tfor btn in answer_buttons:\n\t\tif not btn.disabled:\n\t\t\tbtn.grab_focus()\n\t\t\treturn\n\n\nfunc _on_resume_button_pressed() -> void:\n\ttoggle_pause()\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n\n\nfunc display_question(index: int) -> void:\n\tif index < 0 or index >= QuizData.questions.size():\n\t\tfinish_quiz()\n\t\treturn\n\n\tanswering_locked = false\n\tvar data: Dictionary = QuizData.questions[index]\n\tquestion_label.text = str(data.get(\"question\", \"\"))\n\tvar options: Array = data.get(\"options\", [])\n\tfor i in range(answer_buttons.size()):\n\t\tif i < options.size():\n\t\t\tanswer_buttons[i].text = str(options[i])\n\t\t\tanswer_buttons[i].disabled = false\n\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\t# Animazione di comparsa morbida con Tween\n\tanswers_container.modulate.a = 0.0\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(answers_container, \"modulate:a\", 1.0, 0.3)\n\n\nfunc _on_answer_0_pressed() -> void:\n\t_select_answer(0)\n\n\nfunc _on_answer_1_pressed() -> void:\n\t_select_answer(1)\n\n\nfunc _on_answer_2_pressed() -> void:\n\t_select_answer(2)\n\n\nfunc _on_answer_3_pressed() -> void:\n\t_select_answer(3)\n\n\nfunc _select_answer(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar data: Dictionary = QuizData.questions[current_question_index]\n\tvar correct_index: int = int(data.get(\"correct\", 0))\n\n\tif button_index == correct_index:\n\t\tQuizData.score += 1\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tanswer_buttons[correct_index].text += \"  [CORRETTO]\"\n\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tfeedback_timer.start(FEEDBACK_DURATION)\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar data: Dictionary = QuizData.questions[current_question_index]\n\tvar correct_index: int = int(data.get(\"correct\", 0))\n\tanswer_buttons[correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tfeedback_timer.start(FEEDBACK_DURATION)\n\n\nfunc _on_feedback_timeout() -> void:\n\tcurrent_question_index += 1\n\tdisplay_question(current_question_index)\n\n\nfunc finish_quiz() -> void:\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+     },
+     {
+      "percorso": "quiz.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz.gd\" id=\"1_quiz\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_quiz\"]\ndefault_font_size = 20\n\n[node name=\"Quiz\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_quiz\")\nscript = ExtResource(\"1_quiz\")\n\n[node name=\"MarginContainer\" type=\"MarginContainer\" parent=\".\"]\nprocess_mode = 1\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 60\ntheme_override_constants/margin_top = 40\ntheme_override_constants/margin_right = 60\ntheme_override_constants/margin_bottom = 40\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"MarginContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 28\nalignment = 1\n\n[node name=\"TimeBar\" type=\"ProgressBar\" parent=\"MarginContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(0, 20)\nlayout_mode = 2\nmax_value = 5.0\nvalue = 5.0\nshow_percentage = false\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 26\ntext = \"Testo della domanda\"\nhorizontal_alignment = 1\nautowrap_mode = 2\n\n[node name=\"AnswersContainer\" type=\"VBoxContainer\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"Answer0\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 1\"\n\n[node name=\"Answer2\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 2\"\n\n[node name=\"Answer3\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 3\"\n\n[node name=\"QuestionTimer\" type=\"Timer\" parent=\".\"]\nprocess_mode = 1\none_shot = true\n\n[node name=\"FeedbackTimer\" type=\"Timer\" parent=\".\"]\nprocess_mode = 1\none_shot = true\n\n[node name=\"PauseMenu\" type=\"ColorRect\" parent=\".\"]\nvisible = false\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ncolor = Color(0, 0, 0, 0.705882)\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\"PauseMenu\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"PauseMenu/CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 20\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 32\ntext = \"PAUSA\"\nhorizontal_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Riprendi\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Quiz",
+     "scenaPrincipale": "res://menu.tscn",
+     "azioni": [
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      },
+      {
+       "nome": "toggle_fullscreen",
+       "tasti": [
+        "F11"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "QuizData",
+       "percorso": "res://quiz_data.gd"
+      }
+     ],
+     "impostazioni": [
+      {
+       "sezione": "display",
+       "chiave": "window/size/viewport_width",
+       "valore": "1152"
+      },
+      {
+       "sezione": "display",
+       "chiave": "window/size/viewport_height",
+       "valore": "648"
+      },
+      {
+       "sezione": "display",
+       "chiave": "window/stretch/mode",
+       "valore": "canvas_items"
+      },
+      {
+       "sezione": "display",
+       "chiave": "window/stretch/aspect",
+       "valore": "expand"
+      }
+     ]
+    },
+    "spiegazione": "Per completare la terza tappa del Quiz abbiamo rifinito tutti gli aspetti dell'interfaccia e del ciclo di vita del gioco:\n1. Nelle Project Settings abbiamo impostato la risoluzione base e configurato `canvas_items` con aspect `expand`: l'interfaccia si adatta a qualsiasi schermo senza deformarsi o ritagliarsi.\n2. Con l'azione `pause` (Escape), attiviamo `get_tree().paused = not get_tree().paused`. Affinché l'input e il menu di pausa rimangano reattivi a gioco fermo, la radice `Quiz` (o il nodo `PauseMenu`) adotta `process_mode = PROCESS_MODE_ALWAYS` (valore 3), mentre i nodi di gioco come il timer e i controlli delle domande usano `PROCESS_MODE_PAUSABLE` (valore 1) per rimanere congelati.\n3. All'apertura della pausa il `ResumeButton` ottiene immediatamente il focus con `grab_focus()`, garantendo piena navigazione senza mouse. Prima di tornare al menu principale con `change_scene_to_file`, reimpostiamo `get_tree().paused = false` per evitare che la scena successiva rimanga bloccata in pausa.\n4. All'avvio di ogni domanda usiamo `create_tween().tween_property(answers_container, \"modulate:a\", 1.0, 0.3)` per animare delicatamente la comparsa delle risposte.",
+    "cambiati": [
+     "project.godot",
+     "menu.gd",
+     "quiz.gd",
+     "quiz.tscn"
+    ],
+    "rimossi": []
+   },
+   "genere": "da-zero",
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
