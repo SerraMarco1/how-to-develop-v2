@@ -3,3 +3,5 @@
 {"quando":1792566694505,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-quiz-2","ok":true,"contata":true,"durataMs":27290,"tokenInput":13599,"tokenOutput":6284,"ragionamento":7889}
 {"quando":1792566721797,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-quiz-2","ok":true,"contata":true,"durataMs":13036,"tokenInput":17695,"tokenOutput":6163,"ragionamento":344}
 {"quando":1792566751367,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-quiz-2","ok":true,"contata":true,"durataMs":261153,"tokenInput":13548,"tokenOutput":6057,"ragionamento":7720}
+{"quando":1792567028538,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-quiz-2","ok":false,"contata":true,"durataMs":3550,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792567032091,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-quiz-2","ok":false,"contata":true,"durataMs":25019,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
