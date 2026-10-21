@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-20T08:22:59.783Z",
+ "aggiornato": "2026-10-21T08:43:33.544Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -425,6 +425,15 @@
    "file": "lezioni/f03-interfaccia/progetto-quiz-1.json",
    "sha256": "63b10df43398bb4d374706be2266e4d9746d34d4016b96380e8f135b4f83cbc7",
    "byte": 24896
+  },
+  {
+   "slug": "progetto-quiz-2",
+   "numero": "3.11",
+   "titolo": "Progetto «Quiz» – tappa 2: partita",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/progetto-quiz-2.json",
+   "sha256": "e9265571aeb3fedb51b417352f31bd07fc59740f65c49b6821b47049129956d7",
+   "byte": 41341
   }
  ],
  "documentazione": {
