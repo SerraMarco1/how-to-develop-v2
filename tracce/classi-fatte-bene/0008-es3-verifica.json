@@ -1,0 +1,70 @@
+{
+ "n": 8,
+ "quando": "2026-10-21T10:06:06.475Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (prevedi): approvato",
+ "spiegazione": "«Prevedi il comportamento di classi e setter». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 35 · 100 · 30 · 6 · 10",
+ "richieste": 0,
+ "durataMs": 2788,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedi il comportamento di classi e setter",
+   "consegna": "Leggi con attenzione ciascuno script GDScript e scrivi il valore restituito dalla funzione `run()`, senza eseguire il codice.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "class Item extends RefCounted:\n\tvar value: int\n\tfunc _init(p_value: int = 10) -> void:\n\t\tvalue = p_value\n\n\nfunc run() -> int:\n\tvar a := Item.new()\n\tvar b := Item.new(25)\n\treturn a.value + b.value\n",
+     "domanda": "Quale numero intero restituisce la funzione run()?",
+     "risposta": "35",
+     "spiegazione": "L'istanza `a` viene creata senza argomenti, quindi il parametro `p_value` assume il suo valore predefinito pari a 10. L'istanza `b` riceve esplicitamente 25. La somma `a.value + b.value` produce 10 + 25 = 35.",
+     "id": "es3p1"
+    },
+    {
+     "codice": "class HealthTracker extends RefCounted:\n\tvar hp: int = 100:\n\t\tset(value):\n\t\t\thp = clampi(value, 0, 100)\n\n\nfunc run() -> int:\n\tvar tracker := HealthTracker.new()\n\ttracker.hp = 150\n\tvar val1 := tracker.hp\n\ttracker.hp = -20\n\tvar val2 := tracker.hp\n\treturn val1 + val2\n",
+     "domanda": "Quale numero restituisce la funzione run()?",
+     "risposta": "100",
+     "spiegazione": "Il setter di `hp` applica `clampi(value, 0, 100)` a qualsiasi assegnazione. Assegnare 150 porta `hp` al limite massimo consentito, ovvero 100 (`val1`). Assegnare -20 porta `hp` al limite minimo consentito, ovvero 0 (`val2`). La somma 100 + 0 restituisce 100.",
+     "id": "es3p2"
+    },
+    {
+     "codice": "class ScoreCard extends RefCounted:\n\tvar points: int = 0\n\tstatic func create_bonus(base: int) -> ScoreCard:\n\t\tvar card := ScoreCard.new()\n\t\tcard.points = base * 2\n\t\treturn card\n\n\nfunc run() -> int:\n\tvar card := ScoreCard.create_bonus(15)\n\treturn card.points\n",
+     "domanda": "Quale valore numerico restituisce la funzione run()?",
+     "risposta": "30",
+     "spiegazione": "La funzione statica `create_bonus` appartiene alla classe e non a una singola istanza. Viene invocata direttamente con `ScoreCard.create_bonus(15)`. Al suo interno crea un nuovo `ScoreCard`, imposta i punti a 15 * 2 = 30 e restituisce l'oggetto creato. `card.points` vale quindi 30.",
+     "id": "es3p3"
+    },
+    {
+     "codice": "class StepCounter extends RefCounted:\n\tvar _steps: int = 0\n\tfunc step() -> void:\n\t\t_steps += 2\n\tfunc get_steps() -> int:\n\t\treturn _steps\n\n\nfunc run() -> int:\n\tvar counter := StepCounter.new()\n\tcounter.step()\n\tcounter.step()\n\tcounter.step()\n\treturn counter.get_steps()\n",
+     "domanda": "Quale numero restituisce la funzione run()?",
+     "risposta": "6",
+     "spiegazione": "La variabile interna `_steps` parte da 0. Ogni invocazione del metodo pubblico `step()` incrementa il contatore di 2. Dopo tre chiamate, `_steps` raggiunge il valore 6, che viene letto dal metodo getter `get_steps()`.",
+     "id": "es3p4"
+    },
+    {
+     "codice": "class MiniSession extends RefCounted:\n\tvar count: int = 0\n\tvar total: int = 2\n\tvar score: int = 0\n\tfunc advance() -> void:\n\t\tcount += 1\n\tfunc is_done() -> bool:\n\t\treturn count >= total\n\tfunc answer(is_right: bool) -> bool:\n\t\tif is_done():\n\t\t\treturn false\n\t\tif is_right:\n\t\t\tscore += 10\n\t\treturn is_right\n\n\nfunc run() -> int:\n\tvar session := MiniSession.new()\n\tsession.answer(true)\n\tsession.advance()\n\tsession.answer(false)\n\tsession.advance()\n\tsession.answer(true)\n\treturn session.score\n",
+     "domanda": "Quale punteggio numerico restituisce la funzione run()?",
+     "risposta": "10",
+     "spiegazione": "Alla prima risposta esatta il punteggio sale a 10 e `advance()` porta `count` a 1. La seconda risposta è falsa, quindi non aggiunge punti e il secondo `advance()` porta `count` a 2. A questo punto `is_done()` restituisce `true` (2 >= 2). Quando viene chiamata la terza risposta, il controllo `if is_done(): return false` blocca l'operazione prima di assegnare i punti. Il punteggio finale rimane 10.",
+     "id": "es3p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
