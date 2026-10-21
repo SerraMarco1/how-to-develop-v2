@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-latest",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Nello script di verifica, il test clicca forzatamente `btn1` (`Answer1`) assumendo che la prima domanda abbia sempre l'indice corretto 1 (`await click_button(btn1)`). Se lo studente ha inserito domande con risposta corretta diversa (es. indice 0, 2 o 3, cosa del tutto lecita dato che la consegna non impone l'indice corretto della prima domanda), il test preme una risposta sbagliata e fallisce ingiustamente su `score_val == 1`.\",\n      \"correzione\": \"Nello script di verifica, ricava l'indice corretto della prima domanda leggendolo da `quiz_data.questions[0]` (ad es. `var correct_idx = quiz_data.questions[0][\\\"correct\\\"]`) e recupera dinamicamente il pulsante corrispondente (`find_by_name(quiz_node, \\\"Answer\\\" + str(correct_idx)) as Button`) prima di invocare `await click_button(...)`.\"\n    }\n  ]\n}",
+ "ragionamento": 1601,
+ "quando": "2026-10-21T08:39:25.465Z",
+ "ruolo": "revisore"
+}

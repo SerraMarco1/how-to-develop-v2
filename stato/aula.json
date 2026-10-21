@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-21T07:55:35.691Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-21T08:37:09.077Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "progetto-quiz-2",
   "numero": "3.11",
   "titolo": "Progetto «Quiz» – tappa 2: partita"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 3.11 riprende da sola appena rispondono.",
- "riprende": "2026-10-21T08:35:35.690Z"
+ "messaggio": "Sta scrivendo la lezione 3.11 «Progetto «Quiz» – tappa 2: partita».",
+ "riprende": null
 }
