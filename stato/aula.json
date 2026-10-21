@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-21T11:22:43.672Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-21T12:24:17.613Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "classi-fatte-bene",
   "numero": "4.0",
   "titolo": "Classi fatte bene"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.0 riprende da sola appena rispondono.",
- "riprende": "2026-10-21T12:22:43.672Z"
+ "messaggio": "Sta scrivendo la lezione 4.0 «Classi fatte bene».",
+ "riprende": null
 }
