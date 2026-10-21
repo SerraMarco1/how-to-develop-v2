@@ -1,8 +1,100 @@
 {
  "creato": "2026-10-20T08:23:01.278Z",
- "pezzi": {},
+ "pezzi": {
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "da-zero",
+    "titolo": "Progetto «Quiz» – tappa 2: la partita completa",
+    "consegna": "Completa il ciclo di gioco del progetto `Quiz` gestendo risposte, tempo, punteggio e schermata finale con record.\n\nEcco i requisiti da realizzare:\n\n1. **Autoload `QuizData` (`res://quiz_data.gd`)**:\n   - Aggiungi le variabili per memorizzare il punteggio dell'ultima partita (`score: int`, parte da 0) e il punteggio record (`high_score: int`, parte da 0).\n\n2. **Schermata del quiz (`res://quiz.tscn` e `res://quiz.gd`)**:\n   - Aggiungi una `ProgressBar` chiamata `TimeBar` dentro la gerarchia visibile di `quiz.tscn` (puoi posizionarla nel contenitore verticale principale).\n   - Aggiungi un `Timer` chiamato `QuestionTimer` con tempo massimo di 5 secondi (in `_ready` o da Inspector con durata `5.0` e `one_shot = true`).\n   - A ogni domanda:\n     - Mostra il testo della domanda e i 4 pulsanti di risposta (`Answer0`, `Answer1`, `Answer2`, `Answer3`).\n     - Assegna il focus da tastiera al primo pulsante (`Answer0.grab_focus()`).\n     - Reimposta e avvia il timer di 5 secondi.\n     - Aggiorna in continuo il valore di `TimeBar` durante `_process` per mostrare il tempo rimanente (da 5 a 0 oppure da 0 a 5, usando `QuestionTimer.time_left`).\n   - Quando il giocatore preme una risposta:\n     - Disabilita temporaneamente i pulsanti di risposta per impedire clic multipli.\n     - Ferma il timer.\n     - Se l'opzione scelta è corretta (l'indice corrisponde al valore `correct` della domanda in `QuizData.questions`), colora o segnala il pulsante e aumenta di 1 il punteggio corrente in `QuizData.score`.\n     - Mostra per 1 secondo quale risposta era corretta (ad esempio modificando il testo del pulsante, oppure cambiando colore o usando un timer di attesa di 1 secondo).\n     - Passa alla domanda successiva.\n   - Se il timer da 5 secondi scade prima che il giocatore scelga (segnale `timeout`):\n     - Disabilita i pulsanti e mostra la risposta corretta per 1 secondo, senza assegnare punti.\n     - Passa alla domanda successiva.\n   - Quando tutte le domande dell'elenco sono state completate:\n     - Aggiorna il record in `QuizData.high_score` se `QuizData.score > QuizData.high_score`.\n     - Cambia scena passando a `res://results.tscn` tramite `get_tree().change_scene_to_file(\"res://results.tscn\")`.\n\n3. **Schermata dei risultati (`res://results.tscn` con script `res://results.gd`)**:\n   - La radice deve essere un nodo `Control` (chiamato `Results`).\n   - Deve contenere:\n     - Una `Label` chiamata `ScoreLabel` che mostra il punteggio ottenuto (es. `\"Punteggio: X\"`).\n     - Una `Label` chiamata `HighScoreLabel` che mostra il record registrato in `QuizData.high_score` (es. `\"Record: Y\"`).\n     - Un `Button` chiamato `RestartButton` con testo `\"Rigioca\"` che, se premuto, riporta alla schermata di gioco `res://quiz.tscn`.\n     - Un `Button` chiamato `MenuButton` con testo `\"Menu Principale\"` che, se premuto, riporta a `res://menu.tscn`.\n   - In `_ready`, assegna il focus con `grab_focus()` a `RestartButton` per consentire la navigazione immediata via tastiera.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://results.tscn",
+      "descrizione": "La scena results.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz.tscn",
+      "tipoNodo": "ProgressBar",
+      "nome": "TimeBar",
+      "descrizione": "La scena quiz.tscn contiene una ProgressBar chiamata TimeBar"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://results.tscn",
+      "tipoNodo": "Button",
+      "nome": "RestartButton",
+      "descrizione": "La scena results.tscn contiene un Button chiamato RestartButton"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://results.tscn",
+      "tipoNodo": "Button",
+      "nome": "MenuButton",
+      "descrizione": "La scena results.tscn contiene un Button chiamato MenuButton"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_node := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz_caricato\", quiz_node != null, \"La scena quiz.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar quiz_data := Engine.get_singleton(\"QuizData\") if Engine.has_singleton(\"QuizData\") else null\n\tif quiz_data == null:\n\t\tquiz_data = get_tree().root.get_node_or_null(\"QuizData\")\n\tif not check(\"autoload_presente\", quiz_data != null, \"L'Autoload QuizData deve essere accessibile\"): \n\t\treturn\n\n\tvar btn0 := find_by_name(quiz_node, \"Answer0\") as Button\n\tvar btn1 := find_by_name(quiz_node, \"Answer1\") as Button\n\tif not check(\"bottoni_quiz\", btn0 != null and btn1 != null, \"I pulsanti Answer0 e Answer1 devono esistere in quiz.tscn\"):\n\t\treturn\n\n\t# Rispondi correttamente alla prima domanda (indice 1: Marte)\n\tawait click_button(btn1)\n\t# Attendiamo il passaggio di domanda (pausa di circa 1 secondo)\n\tawait wait_seconds(1.2)\n\n\tvar score_val = get_prop(quiz_data, \"score\", -1)\n\tcheck(\"punteggio_aumentato\", score_val == 1, \"Rispondendo correttamente alla prima domanda, score deve valere 1 (è: %s)\" % str(score_val))\n\n\t# Test della schermata results\n\tvar results_node := await instantiate_scene(\"res://results.tscn\")\n\tif not check(\"results_caricato\", results_node != null, \"La scena results.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar score_label := find_by_name(results_node, \"ScoreLabel\") as Label\n\tvar high_label := find_by_name(results_node, \"HighScoreLabel\") as Label\n\tvar restart_btn := find_by_name(results_node, \"RestartButton\") as Button\n\tcheck(\"labels_results\", score_label != null and high_label != null, \"results.tscn deve contenere ScoreLabel e HighScoreLabel\")\n\tcheck(\"focus_restart\", restart_btn != null and restart_btn.has_focus(), \"RestartButton deve ricevere il focus all'apertura dei risultati\")",
+      "descrizione": "La partita gestisce le risposte esatte, il punteggio, il cambio alla schermata finale e il record"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz_data.gd",
+       "contenuto": "extends Node\n\nvar questions: Array[Dictionary] = [\n\t{\n\t\t\"question\": \"Quale pianeta del sistema solare è noto come il Pianeta Rosso?\",\n\t\t\"options\": [\"Venere\", \"Marte\", \"Giove\", \"Saturno\"],\n\t\t\"correct\": 1\n\t},\n\t{\n\t\t\"question\": \"Qual è il linguaggio di scripting nativo di Godot?\",\n\t\t\"options\": [\"GDScript\", \"Python\", \"Lua\", \"C#\"],\n\t\t\"correct\": 0\n\t},\n\t{\n\t\t\"question\": \"Quanti bit formano un singolo byte?\",\n\t\t\"options\": [\"4\", \"8\", \"16\", \"32\"],\n\t\t\"correct\": 1\n\t}\n]\n\nvar score: int = 0\nvar high_score: int = 0\n"
+      },
+      {
+       "percorso": "quiz.gd",
+       "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\n\nvar current_question_index: int = 0\nvar answering_locked: bool = false\n\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n@onready var feedback_timer: Timer = $FeedbackTimer\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tcurrent_question_index = 0\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\tfeedback_timer.timeout.connect(_on_feedback_timeout)\n\t\n\tfor i in range(answer_buttons.size()):\n\t\tvar btn: Button = answer_buttons[i]\n\t\tbtn.pressed.connect(_on_answer_pressed.bind(i))\n\t\n\tdisplay_question(current_question_index)\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\t\ttime_bar.value = question_timer.time_left\n\n\nfunc display_question(index: int) -> void:\n\tif index < 0 or index >= QuizData.questions.size():\n\t\tfinish_quiz()\n\t\treturn\n\n\tanswering_locked = false\n\tvar data: Dictionary = QuizData.questions[index]\n\tquestion_label.text = str(data.get(\"question\", \"\"))\n\tvar options: Array = data.get(\"options\", [])\n\tfor i in range(answer_buttons.size()):\n\t\tif i < options.size():\n\t\t\tanswer_buttons[i].text = str(options[i])\n\t\t\tanswer_buttons[i].disabled = false\n\t\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\nfunc _on_answer_pressed(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar data: Dictionary = QuizData.questions[current_question_index]\n\tvar correct_index: int = int(data.get(\"correct\", 0))\n\n\tif button_index == correct_index:\n\t\tQuizData.score += 1\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tanswer_buttons[correct_index].text += \"  [CORRETTO]\"\n\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tfeedback_timer.start(FEEDBACK_DURATION)\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar data: Dictionary = QuizData.questions[current_question_index]\n\tvar correct_index: int = int(data.get(\"correct\", 0))\n\tanswer_buttons[correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tfeedback_timer.start(FEEDBACK_DURATION)\n\n\nfunc _on_feedback_timeout() -> void:\n\tcurrent_question_index += 1\n\tdisplay_question(current_question_index)\n\n\nfunc finish_quiz() -> void:\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+      },
+      {
+       "percorso": "quiz.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz.gd\" id=\"1_quiz\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_quiz\"]\ndefault_font_size = 20\n\n[node name=\"Quiz\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_quiz\")\nscript = ExtResource(\"1_quiz\")\n\n[node name=\"MarginContainer\" type=\"MarginContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 60\ntheme_override_constants/margin_top = 40\ntheme_override_constants/margin_right = 60\ntheme_override_constants/margin_bottom = 40\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"MarginContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 28\nalignment = 1\n\n[node name=\"TimeBar\" type=\"ProgressBar\" parent=\"MarginContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(0, 20)\nlayout_mode = 2\nmax_value = 5.0\nvalue = 5.0\nshow_percentage = false\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 26\ntext = \"Testo della domanda\"\nhorizontal_alignment = 1\nautowrap_mode = 2\n\n[node name=\"AnswersContainer\" type=\"VBoxContainer\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"Answer0\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 1\"\n\n[node name=\"Answer2\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 2\"\n\n[node name=\"Answer3\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 3\"\n\n[node name=\"QuestionTimer\" type=\"Timer\" parent=\".\"]\none_shot = true\n\n[node name=\"FeedbackTimer\" type=\"Timer\" parent=\".\"]\none_shot = true\n"
+      },
+      {
+       "percorso": "results.gd",
+       "contenuto": "extends Control\n\n@onready var score_label: Label = $CenterContainer/VBoxContainer/ScoreLabel\n@onready var high_score_label: Label = $CenterContainer/VBoxContainer/HighScoreLabel\n@onready var restart_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/RestartButton\n@onready var menu_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tscore_label.text = \"Punteggio: \" + str(QuizData.score)\n\thigh_score_label.text = \"Record: \" + str(QuizData.high_score)\n\trestart_button.grab_focus()\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
+      },
+      {
+       "percorso": "results.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://results.gd\" id=\"1_results\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_results\"]\ndefault_font_size = 22\n\n[node name=\"Results\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_results\")\nscript = ExtResource(\"1_results\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 36\ntext = \"PARTITA TERMINATA\"\nhorizontal_alignment = 1\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Punteggio: 0\"\nhorizontal_alignment = 1\n\n[node name=\"HighScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Record: 0\"\nhorizontal_alignment = 1\n\n[node name=\"ButtonsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Rigioca\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Quiz",
+      "scenaPrincipale": "res://menu.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "In questa seconda tappa abbiamo chiuso il ciclo completo di gameplay del Quiz:\n1. In `QuizData` (Autoload persistente) abbiamo aggiunto `score` e `high_score`, che rimangono memorizzati tra le schermate e tra partite successive.\n2. In `quiz.gd`, due nodi `Timer` gestiscono rispettivamente la scadenza della risposta (5 secondi) e la pausa di feedback visivo (1 secondo per mostrare se la risposta era esatta o errata prima del passaggio automatico alla domanda successiva).\n3. La `ProgressBar` (`TimeBar`) riflette in ogni frame `question_timer.time_left`.\n4. La schermata dei risultati (`results.tscn` e `results.gd`) legge i valori finali da `QuizData`, permette di rigiocare immediatamente ricaricando `res://quiz.tscn` oppure di tornare al menu principale (`res://menu.tscn`), garantendo l'assegnazione iniziale del focus per chi gioca con la tastiera.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "da-zero",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
- "modelli": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
  "teoria": {
   "titolo": "Progetto «Quiz» – tappa 2: partita",
   "sommario": "Risposta giusta o sbagliata mostrata prima di passare oltre, tempo per rispondere con una barra, punteggio, schermata dei risultati con il record.",
@@ -25,5 +117,8 @@
     "md": "- Nessun passo e nessun suggerimento: decidi tu scene, script e nomi, tranne quelli che la consegna fissa.\n- La piattaforma esegue il tuo progetto e controlla cosa succede.\n- Se ti blocchi, riapri la lezione della fase che tratta quel punto: non c'è fretta."
    }
   ]
- }
+ },
+ "ordine": [
+  "test"
+ ]
 }
