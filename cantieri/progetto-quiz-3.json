@@ -306,5 +306,10 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
