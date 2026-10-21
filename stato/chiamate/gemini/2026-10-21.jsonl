@@ -23,3 +23,4 @@
 {"quando":1792575729477,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":251859,"tokenInput":16091,"tokenOutput":7141,"ragionamento":13226}
 {"quando":1792575995797,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":221313,"tokenInput":3619,"tokenOutput":12,"ragionamento":934}
 {"quando":1792576218565,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-quiz-3","ok":true,"contata":true,"durataMs":8092,"tokenInput":2746,"tokenOutput":819,"ragionamento":2453}
+{"quando":1792576232483,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"classi-fatte-bene","ok":true,"contata":true,"durataMs":440470,"tokenInput":12572,"tokenOutput":2962,"ragionamento":4595}
