@@ -85,7 +85,9 @@
    "genere": "da-zero",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — verifica 5 riga 8: get_singleton non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
