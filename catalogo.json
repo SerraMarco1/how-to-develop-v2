@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-21T08:43:33.544Z",
+ "aggiornato": "2026-10-21T09:50:30.945Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -434,6 +434,15 @@
    "file": "lezioni/f03-interfaccia/progetto-quiz-2.json",
    "sha256": "e9265571aeb3fedb51b417352f31bd07fc59740f65c49b6821b47049129956d7",
    "byte": 41341
+  },
+  {
+   "slug": "progetto-quiz-3",
+   "numero": "3.12",
+   "titolo": "Progetto «Quiz» – tappa 3: rifinitura",
+   "versione": 1,
+   "file": "lezioni/f03-interfaccia/progetto-quiz-3.json",
+   "sha256": "dc528e71ba86dded7ca4ad4e70b6dfe44eea38a005b89eadd6da9c6e5e73e1db",
+   "byte": 52758
   }
  ],
  "documentazione": {
