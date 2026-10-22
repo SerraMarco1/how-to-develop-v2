@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Al punto 2 della consegna del test si chiede di creare un 'array tipizzato Array[String] usando Question.from_dict(...)', ma Question.from_dict(...) restituisce istanze di Question. L'array deve essere di tipo Array[Question] per poter essere passato al costruttore di QuizSession.\",\n      \"correzione\": \"Nel punto 2 della consegna del test, sostituire 'array tipizzato Array[String]' con 'array tipizzato Array[Question]'.\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
- "ragionamento": 3277,
- "quando": "2026-10-21T12:24:33.595Z",
- "ruolo": "revisore"
-}

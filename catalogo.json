@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-21T09:50:30.945Z",
+ "aggiornato": "2026-10-22T07:03:51.835Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -443,6 +443,15 @@
    "file": "lezioni/f03-interfaccia/progetto-quiz-3.json",
    "sha256": "dc528e71ba86dded7ca4ad4e70b6dfe44eea38a005b89eadd6da9c6e5e73e1db",
    "byte": 52758
+  },
+  {
+   "slug": "classi-fatte-bene",
+   "numero": "4.0",
+   "titolo": "Classi fatte bene",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/classi-fatte-bene.json",
+   "sha256": "6eb845e2767c5283ec84f9bf91a2951689dc6847534eea7f59cb8d5992a011bf",
+   "byte": 111184
   }
  ],
  "documentazione": {
