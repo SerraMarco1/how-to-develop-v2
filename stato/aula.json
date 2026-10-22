@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-22T07:02:05.323Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-22T07:03:59.981Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "classi-fatte-bene",
-  "numero": "4.0",
-  "titolo": "Classi fatte bene"
+  "slug": "ereditarieta-e-composizione",
+  "numero": "4.1",
+  "titolo": "Ereditarietà e composizione"
  },
- "messaggio": "Sta scrivendo la lezione 4.0 «Classi fatte bene».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.1 riprende da sola appena rispondono.",
+ "riprende": "2026-10-22T07:13:59.980Z"
 }
