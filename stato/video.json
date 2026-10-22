@@ -748,5 +748,14 @@
    "regole": 2,
    "motivo": "L'esercizio crea un Autoload e imposta la logica di transizione dei dati, ma non aggiunge elementi visivi direttamente sullo schermo all'avvio della scena."
   }
+ },
+ "classi-fatte-bene": {
+  "es1": {
+   "impronta": "7f7236e96010eef3050ddebfaed779f77d4802b9d33aa5aaa09219febf040c95",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "La classe Question viene creata nel file question.gd ma non è ancora utilizzata dal gioco, quindi la schermata del quiz appare esattamente come prima."
+  }
  }
 }

@@ -1,0 +1,16 @@
+{
+ "n": 49,
+ "quando": "2026-10-22T07:18:46.473Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Crea la classe Question» non si vede sullo schermo: La classe Question viene creata nel file question.gd ma non è ancora utilizzata dal gioco, quindi la schermata del quiz appare esattamente come prima.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 19256,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 17 s (6701 → 48 token)"
+ ]
+}
