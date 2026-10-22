@@ -572,6 +572,7 @@
     "consegna": "Riscrivi `quiz.gd` in modo che deleghi l'intera logica di partita alle classi `Question` e `QuizSession`, lasciando al nodo `Quiz` il solo compito di gestire la grafica e l'interazione.\n\nRequisiti:\n1. In `quiz.gd`, rimuovi la variabile `current_question_index` e dichiara `var session: QuizSession`.\n2. In `_ready()`, azzera `QuizData.score = 0`. Cicla su `QuizData.questions` e crea un array tipizzato `Array[Question]` usando `Question.from_dict(...)` per ciascun elemento. Istanzia `session = QuizSession.new(...)` con le domande caricate.\n3. Rinomina la funzione che mostra le domande in `display_current_question()` (senza parametri). Se `session.is_finished()` è vero, chiama `finish_quiz()`. Altrimenti recupera la domanda con `session.get_current_question()`, imposta il testo di `question_label` e compila le etichette di `answer_buttons` disattivando i pulsanti eccedenti.\n4. In `_select_answer(button_index: int)` interroga la sessione con `var was_correct: bool = session.submit_answer(button_index)`. Usa questo valore per aggiornare i testi dei pulsanti con i feedback `[GIUSTO!]` o `[SBAGLIATO]` e mostra la risposta corretta ricavandola da `current.correct_index`.\n5. In `_on_feedback_timeout()` chiama `session.advance()` e poi `display_current_question()`.\n6. In `finish_quiz()`, assegna `QuizData.score = session.score` prima di confrontarlo con `QuizData.high_score` e cambiare scena a `res://results.tscn`.\n7. In `_on_question_timeout()`, ricava l'indice corretto direttamente da `session.get_current_question().correct_index`.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [
      "In `_ready()`, crea una lista vuota `var loaded: Array[Question] = []`, fai un ciclo `for item in QuizData.questions:` e usa `loaded.append(Question.from_dict(item))`. Poi passa l'array a `QuizSession.new(loaded)`."
@@ -680,7 +681,6 @@
      ],
      "rimossi": []
     },
-    "cartella": "quiz",
     "id": "test"
    }
   }
@@ -777,6 +777,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
