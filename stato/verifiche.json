@@ -249,5 +249,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "classi-fatte-bene": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
