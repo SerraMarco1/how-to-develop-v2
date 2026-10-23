@@ -1,0 +1,47 @@
+{
+ "n": 26,
+ "quando": "2026-10-23T12:04:35.258Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15946,
+ "dati": {
+  "copione": {
+   "scena": "res://mode_menu.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "menu",
+     "cerca": {
+      "nome": "ModeMenu"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Menu principale"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il tema si propaga automaticamente a tutti i pulsanti",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "menu"
+    }
+   ]
+  },
+  "problemi": [
+   "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (7963 → 199 token)"
+ ]
+}
