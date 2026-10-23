@@ -89,6 +89,7 @@ I nomi dell'interfaccia qui sotto sono stati letti dalle schermate del vero Godo
 - **Autoload** solo per stato davvero globale (es. `GameState` con punteggio e salvataggi).
 - **Gruppi** per identificare categorie di nodi (`"enemies"`, `"collectibles"`).
 - **Scene riutilizzabili**: ogni elemento che compare più volte (nemici, proiettili, monete) è una scena separata istanziata.
+- **Oggetti creati da codice**: un nodo aggiunto con `add_child()` si disegna rispetto al genitore (la sua `position` si somma a quella del genitore) e lo segue quando si sposta. Se l'oggetto deve muoversi per conto suo nello schermo (stelle, sassi, proiettili) e il genitore non sta fermo in (0, 0), come il cesto in basso a y = 600, scrivi `top_level = true` prima di `add_child()`, oppure aggiungilo a un nodo fermo. Nel gioco «Pioggia di stelle» si fa così dalla 1.9: fino al 20 ottobre le stelle create dal cesto finivano sotto lo schermo.
 
 ## File di scena (.tscn) scritti a mano nelle soluzioni
 Formato minimo valido, senza `uid`:

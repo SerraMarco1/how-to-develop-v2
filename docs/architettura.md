@@ -96,7 +96,8 @@ così esce in una versione nuova in cui cambia solo il ripasso; l'aula la scaric
 perché sono legati alla lezione e non alla versione. Se il modello del ripasso è fermo non si chiede niente; dopo tre
 risposte inutilizzabili per la stessa lezione si smette, per non spendere richieste all'infinito.
 
-Poi ricontrolla gli **esercizi delle lezioni pubblicate** con quei quattro controlli (`robustezza.ts`; le lezioni uscite
+Poi applica le **correzioni del gioco** non ancora fatte (vedi sotto), e ricontrolla gli **esercizi delle lezioni
+pubblicate** con quei quattro controlli (`robustezza.ts`; le lezioni uscite
 prima non ci erano passate: il 17-19 ottobre 12 verifiche su 55 bocciavano la variante lecita, 1 la propria soluzione a
 caso, 3 esercizi avevano modifiche nascoste che facevano fallire le verifiche e 8 usavano funzioni mai spiegate). Un
 esercizio con problemi torna a un modello che corregge **verifiche e testi** (consegna, passi, suggerimenti): la
@@ -106,6 +107,42 @@ l'avviso sull'esercizio sparisce. Ogni esercizio ha al massimo tre tentativi (i 
 terzo con uno scrittore); se il modello che serve è fermo si riprova al giro dopo. Il registro è in `stato/verifiche.json`.
 
 Infine fa i video «Il risultato atteso» che mancano agli esercizi delle lezioni pubblicate (vedi sotto).
+
+### Le correzioni del gioco
+
+La robustezza non cambia mai una soluzione, e una segnalazione non tocca un esercizio da cui sono già partite altre
+lezioni: ognuna parte dal gioco com'era alla fine della precedente. Quando l'errore è proprio nella soluzione e le
+lezioni dopo l'hanno ereditato, serve una **correzione del gioco** (`fabbrica/src/correzioni.ts`), scritta da una
+persona in un file di `fabbrica/src/correzioni/`:
+
+- **la stessa modifica del codice su tutti i file della catena**, dalla lezione sbagliata in poi: progetto di partenza,
+  soluzione di ogni esercizio, gioco finale, esempi di codice della teoria. Così ogni lezione parte ancora esattamente
+  da dove finisce la precedente (la fabbrica lo controlla prima di cominciare);
+- **i testi** dove chi studia deve fare la cosa nuova (teoria, consegne, passi, suggerimenti, verifiche), scritti a mano
+  nello stesso file: nessun modello. Ogni testo da cambiare deve esserci esattamente una volta; se la lezione è cambiata
+  da quando la correzione è stata scritta, la correzione si ferma invece di scrivere nel punto sbagliato.
+
+Ogni esercizio che cambia ripassa **tutti i controlli in Godot**, come in una lezione appena scritta (falliscono prima,
+passano due volte dopo, variante lecita e letterale, cose non spiegate). I controlli superati restano in
+`stato/correzioni.json`, così se il tempo del giro finisce si riprende da lì. Solo quando passano tutti, le lezioni
+escono **tutte insieme** in una versione nuova; se uno fallisce non cambia niente, la traccia della lezione dice
+perché e la correzione non si riprova finché non cambia il suo codice. I video degli esercizi cambiati si rifanno da
+soli (cambia l'impronta della soluzione). Una correzione non usa modelli: si fa anche nei giri in cui la fabbrica
+aspetta che i modelli tornino liberi.
+
+La prima, **le stelle figlie del cesto** (`correzioni/stelle-del-cesto.ts`, 20-23 ottobre). Dalla 1.9 il cesto creava
+stelle, sassi e rubini con `add_child(x)`: un figlio si disegna spostato della posizione del genitore e lo segue, e il
+cesto sta a (576, 600). Una stella a `position` (150, 80) si disegnava a (726, 680), sotto lo schermo alto 648, e
+scivolava con il cesto; cadendo fino a `position.y` = 680 restava sempre fra y = 680 e 1280. Mai visibile, dalla 1.9
+alla 3.5 (dalla 3.5 il cesto non crea più niente all'avvio). Il test della 1.9 creava anche stelle con
+`Sprite2D.new()` senza immagine. La correzione è `x.top_level = true` prima di ogni `add_child(x)` di un oggetto che
+cade: il nodo resta figlio del cesto (array, gruppi, `remove_child`, `get_children()` come prima) ma usa le coordinate
+dello schermo. Nessun valore di `position` cambia, quindi le verifiche già scritte restano valide. Scartate: altre
+coordinate (`star.gd` riporta la stella a y = 680 rispetto al cesto), un altro genitore (la 1.10 toglie le stelle con
+`remove_child` dal cesto e sei verifiche contano i suoi figli), una scena principale nuova (il gioco dalla 1.0). Nella
+1.9 la teoria spiega il perché, es1, es3 e test lo chiedono, e tre controlli nuovi bocciano stelle e rocce fuori dallo
+schermo («prima di add_child(star) serve star.top_level = true») e stelle senza immagine. Cambiano 62 esercizi in 24
+lezioni (1.9-3.5); lo stile di casa ora lo dice ai modelli, perché la fase 5 riprende il gioco.
 
 ### I video «Il risultato atteso»
 
@@ -154,7 +191,8 @@ scritto come avviarlo («Avvia il gioco con F5», «Apri star.tscn e premi F6»)
 - **Il primo giro vero** (19 ottobre, 34 esercizi in 20 minuti): 10 video, 23 «niente video», 1 risultato invisibile.
   Guardati i fotogrammi: 8 video buoni; uno con tre scritte nello stesso intervallo (se ne vedeva una), uno con il
   riquadro solo sul titolo. Molti «niente» erano giusti (esercizi che riordinano il codice: il gioco resta uguale; le
-  stelle figlie del cesto, sotto lo schermo, in 1.9, 1.10, 1.11 e 2.2), altri colpa delle regole: una scena diversa
+  stelle figlie del cesto, sotto lo schermo, in 1.9, 1.10, 1.11 e 2.2: un difetto degli esercizi, corretto con la prima
+  correzione del gioco), altri colpa delle regole: una scena diversa
   dalla principale doveva essere nominata nella consegna (così restavano senza video la stella della 1.7 e i menu della
   fase 3), un effetto di mezzo secondo non si poteva mostrare, il rimbalzo di un Tween non si poteva misurare. Con le
   regole 2 (`REGOLE` in `lezione/video.ts`) quei casi si riprovano una volta, e i video che non le rispettano si rifanno.

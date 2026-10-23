@@ -8,6 +8,7 @@ import { problemiDelPiano } from "@htd/condiviso/piano.ts";
 import { AINonDisponibile } from "./ai/router.ts";
 import { salva, spingi } from "./archivio.ts";
 import { CONFIG } from "./configurazione.ts";
+import { applicaCorrezioni, correzioniInSospeso } from "./correzioni.ts";
 import { prossimaLezione } from "./corso.ts";
 import { indiceCompresso, preparaDocumentazione } from "./documentazione.ts";
 import { apriSegnalazione, commenta } from "./github.ts";
@@ -86,9 +87,16 @@ async function giro(): Promise<number> {
     if (segnalazione) await commenta(segnalazione, "Riprova avviata: la fabbrica riparte da questa lezione.", true).catch(() => {});
     await salva(`${slug}: riprova chiesta dal proprietario`, { subito: true });
   }
+  // Mentre si aspettano i modelli si fa solo ciò che non li usa: una correzione del gioco (vedi correzioni.ts).
+  let soloSenzaModelli = false;
   if (!argomenti.has("--riprova") && stato.prossimoTentativo && Date.now() < stato.prossimoTentativo && !argomenti.has("--solo-prepara")) {
-    log(`Niente da fare prima delle ${new Date(stato.prossimoTentativo).toLocaleTimeString("it-IT", { timeZone: "Europe/Rome" })}: nessun modello può rispondere prima.`);
-    return 0;
+    const quando = new Date(stato.prossimoTentativo).toLocaleTimeString("it-IT", { timeZone: "Europe/Rome" });
+    if (!correzioniInSospeso()) {
+      log(`Niente da fare prima delle ${quando}: nessun modello può rispondere prima.`);
+      return 0;
+    }
+    log(`Nessun modello può rispondere prima delle ${quando}: intanto la correzione del gioco, che non usa modelli.`);
+    soloSenzaModelli = true;
   }
 
   log("Preparazione di Godot…");
@@ -100,10 +108,23 @@ async function giro(): Promise<number> {
     return 0;
   }
 
+  if (soloSenzaModelli) {
+    try {
+      const corrette = await applicaCorrezioni();
+      if (corrette) log(`Gioco corretto in ${corrette} ${corrette === 1 ? "lezione" : "lezioni"}`);
+    } catch (errore) {
+      if (!(errore instanceof GiroFinito)) throw errore;
+      log(errore.message);
+    }
+    return 0;
+  }
+
   await gestisciSegnalazioni();
   try {
     const completate = await completaRipassi();
     if (completate) log(`Ripasso aggiunto a ${completate} ${completate === 1 ? "lezione già pubblicata" : "lezioni già pubblicate"}`);
+    const corrette = await applicaCorrezioni();
+    if (corrette) log(`Gioco corretto in ${corrette} ${corrette === 1 ? "lezione" : "lezioni"}`);
     const robuste = await rendiRobusteLeVerifiche();
     if (robuste) log(`Verifiche corrette in ${robuste} ${robuste === 1 ? "lezione già pubblicata" : "lezioni già pubblicate"}`);
     const filmate = await completaVideo();
