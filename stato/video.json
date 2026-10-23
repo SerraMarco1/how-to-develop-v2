@@ -590,34 +590,34 @@
    "motivo": "Il pulsante RestartButton è nascosto durante la normale partita e non risulta visibile sullo schermo all'avvio della scena principale."
   },
   "es2": {
-   "impronta": "9060454b54c16efda4bbf53bd182355de1c1acf616a09d4ba221a4f4c39cb0aa",
+   "impronta": "7c1f6e9b18abb7e58e1cfe8820b4ebed148c5c11cc0508ae392215da19d5b79c",
    "tentativi": 2,
    "esito": "niente",
    "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://mode_menu.tscn",
-     "durata": 8,
+     "durata": 6,
      "azioni": [],
      "soggetti": [
       {
-       "id": "titolo",
+       "id": "menu",
        "cerca": {
-        "nome": "HeaderLabel"
+        "nome": "ModeMenu"
        },
        "quanti": 1,
        "da": 0.5,
-       "a": 7.5,
+       "a": 5.5,
        "deve": "esserci",
-       "etichetta": "Titolo"
+       "etichetta": "Menu principale"
       }
      ],
      "scritte": [
       {
-       "testo": "Il tema viene applicato al menu e al titolo",
-       "da": 1,
-       "a": 7,
-       "soggetto": "titolo"
+       "testo": "Il tema si propaga automaticamente a tutti i pulsanti",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "menu"
       }
      ]
     },
@@ -625,7 +625,7 @@
      "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
     ]
    },
-   "motivo": "L'esercizio modifica solo le proprietà di tema e dimensione del testo di nodi che erano già presenti nel progetto, quindi il controllo passerebbe anche prima di applicare le modifiche."
+   "motivo": "L'esercizio modifica proprietà di nodi esistenti senza aggiungere nuovi nodi, rendendo impossibile distinguere lo stato precedente da quello successivo tramite i soggetti."
   },
   "test": {
    "impronta": "59fcc21c475fe6ac19c5ba1fa63e5968d8bb5b8f8b9ab001c48a4656b1cd61c0",
