@@ -65,7 +65,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] I metodi save_high_score e load_high_score salvano e ripristinano il record correttamente da user://savegame.json: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:8)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:8)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 8: `QuizData.high_score = 42`"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
