@@ -149,7 +149,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://announcer.tscn\")\n\tif not check(\"scena\", scene != null, \"La scena announcer.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar label := scene.get_node_or_null(\"Label\") as Label\n\tif not check(\"label\", label != null, \"La scena deve contenere il nodo Label\"):\n\t\treturn\n\n\tvar completed := false\n\tscene.connect(\"sequence_completed\", func() -> void: completed = true)\n\n\tcall_if_exists(scene, \"start_sequence\")\n\tcheck(\"step1\", label.text == \"Pronti...\", \"All'inizio della sequenza il testo deve essere 'Pronti...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step2\", label.text == \"Partenza...\", \"Dopo 0.5s il testo deve diventare 'Partenza...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step3\", label.text == \"Via!\", \"Dopo un altro intervallo il testo deve essere 'Via!'\")\n\tawait wait_seconds(0.55)\n\tcheck(\n\t\t\"clear\", label.text == \"\", \"Al termine il testo deve essere svuotato\"\n\t)\n\tawait wait_frames(2)\n\tcheck(\n\t\t\"signal\", completed, \"Il segnale sequence_completed deve essere emesso alla fine della sequenza\"\n\t)",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://announcer.tscn\")\n\tif not check(\"scena\", scene != null, \"La scena announcer.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar label := scene.get_node_or_null(\"Label\") as Label\n\tif not check(\"label\", label != null, \"La scena deve contenere il nodo Label\"):\n\t\treturn\n\n\tvar completed := [false]\n\tif scene.has_signal(\"sequence_completed\"):\n\t\tscene.connect(\"sequence_completed\", func() -> void: completed[0] = true)\n\n\tcall_if_exists(scene, \"start_sequence\")\n\tcheck(\"step1\", label.text == \"Pronti...\", \"All'inizio della sequenza il testo deve essere 'Pronti...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step2\", label.text == \"Partenza...\", \"Dopo 0.5s il testo deve diventare 'Partenza...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step3\", label.text == \"Via!\", \"Dopo un altro intervallo il testo deve essere 'Via!'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"clear\", label.text == \"\", \"Al termine il testo deve essere svuotato\")\n\tawait wait_frames(2)\n\tcheck(\"signal\", completed[0], \"Il segnale sequence_completed deve essere emesso alla fine della sequenza\")",
       "descrizione": "La sequenza mostra i tre testi nei tempi corretti ed emette il segnale sequence_completed"
      }
     ],
@@ -197,19 +197,23 @@
       "impostazioni": []
      },
      "spiegazione": "Grazie ad `await get_tree().create_timer(0.5).timeout`, la funzione `start_sequence()` si arresta temporaneamente e riprende automaticamente dopo mezzo secondo, senza bisogno di creare nodi Timer nella scena o frammentare la logica in tre funzioni di callback separate. Il controllo `if not is_inside_tree(): return` dopo ogni `await` assicura che, se la scena viene distrutta durante l'attesa, l'esecuzione si interrompa senza tentare di accedere alla `Label`.",
-     "cambiati": [],
+     "cambiati": [
+      "announcer.tscn",
+      "announcer.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "riordina",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il segnale sequence_completed deve essere emesso alla fine della sequenza\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   },
   "es3": {
