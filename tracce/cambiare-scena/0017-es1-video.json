@@ -1,0 +1,16 @@
+{
+ "n": 17,
+ "quando": "2026-10-23T12:05:54.848Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Il menu principale e l'avvio del gioco» non si vede sullo schermo: L'esercizio collega lo script ai pulsanti e imposta la scena principale, ma non crea nuovi elementi visibili sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15738,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 14 s (8388 → 37 token)"
+ ]
+}

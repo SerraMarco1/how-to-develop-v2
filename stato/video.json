@@ -636,34 +636,34 @@
  },
  "cambiare-scena": {
   "es1": {
-   "impronta": "8b0da3fda7b98ddcc6057310107588e4bf74fcb821d450e8659c4baf8d1fab1f",
+   "impronta": "17fa4d7ecc233357e3c01da68561b0a05b3d2ab5dbdf4db715cf566b1c0a4929",
    "tentativi": 2,
    "esito": "niente",
    "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://main_menu.tscn",
-     "durata": 6,
+     "durata": 8,
      "azioni": [],
      "soggetti": [
       {
-       "id": "play_btn",
+       "id": "play_button",
        "cerca": {
         "nome": "PlayButton"
        },
        "quanti": 1,
        "da": 0.5,
-       "a": 5.5,
+       "a": 7.5,
        "deve": "esserci",
        "etichetta": "Pulsante Gioca"
       }
      ],
      "scritte": [
       {
-       "testo": "Il menu principale si avvia come prima schermata del gioco",
+       "testo": "Il menu principale compare correttamente all'avvio",
        "da": 0.5,
-       "a": 5.5,
-       "soggetto": "play_btn"
+       "a": 7.5,
+       "soggetto": "play_button"
       }
      ]
     },
@@ -671,7 +671,7 @@
      "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
     ]
    },
-   "motivo": "L'esercizio collega solo lo script e imposta la scena principale senza aggiungere nuovi nodi visivi."
+   "motivo": "L'esercizio collega lo script ai pulsanti e imposta la scena principale, ma non crea nuovi elementi visibili sullo schermo."
   }
  },
  "autoload": {
