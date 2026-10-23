@@ -254,5 +254,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "ereditarieta-e-composizione": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
