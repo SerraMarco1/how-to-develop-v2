@@ -1,0 +1,48 @@
+{
+ "n": 19,
+ "quando": "2026-10-23T11:21:35.764Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «messaggio»: per \"mostrare testo\" serve il campo testo.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 2,
+ "durataMs": 15657,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "messaggio",
+     "cerca": {
+      "nome": "Label"
+     },
+     "quanti": 1,
+     "da": 3,
+     "a": 8,
+     "deve": "mostrare testo",
+     "etichetta": "Fine partita"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Le vite si azzerano e la partita finisce",
+     "da": 3,
+     "a": 8,
+     "soggetto": "messaggio"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «messaggio»: per \"mostrare testo\" serve il campo testo."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 11 s (5652 → 133 token)",
+  "gemini-flash-lite-latest: risposta in 3 s (5841 → 130 token)"
+ ]
+}

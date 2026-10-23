@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": true, \"scena\": \"res://basket.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"messaggio\", \"cerca\": {\"nome\": \"Label\"}, \"quanti\": 1, \"da\": 3, \"a\": 8, \"deve\": \"mostrare testo\", \"etichetta\": \"Fine partita\"}], \"scritte\": [{\"testo\": \"Le vite si azzerano e la partita finisce\", \"da\": 3, \"a\": 8, \"soggetto\": \"messaggio\"}]}",
- "ragionamento": 1006,
- "quando": "2026-10-23T11:21:34.430Z",
- "ruolo": "ritocco"
-}
