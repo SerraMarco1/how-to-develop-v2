@@ -1,0 +1,48 @@
+{
+ "n": 34,
+ "quando": "2026-10-23T11:23:56.427Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «pulsante» (scena = res://basket.tscn, nome = RestartButton; almeno 1 da 5 a 8 s; deve comparire): nessun nodo della scena in esecuzione corrisponde a scena = res://basket.tscn, nome = RestartButton.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 21605,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "pulsante",
+     "cerca": {
+      "scena": "res://basket.tscn",
+      "nome": "RestartButton"
+     },
+     "quanti": 1,
+     "da": 5,
+     "a": 8,
+     "deve": "comparire",
+     "etichetta": "Pulsante Ricomincia"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il pulsante compare quando finiscono le vite",
+     "da": 5,
+     "a": 8,
+     "soggetto": "pulsante"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «pulsante» (scena = res://basket.tscn, nome = RestartButton; almeno 1 da 5 a 8 s; deve comparire): nessun nodo della scena in esecuzione corrisponde a scena = res://basket.tscn, nome = RestartButton."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 12 s (7329 → 215 token)"
+ ]
+}
