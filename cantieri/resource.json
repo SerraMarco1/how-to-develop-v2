@@ -84,7 +84,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Il menu mostra il titolo dell'argomento e avvia il quiz con le domande caricate dalla risorsa: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:17)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:17)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 17: `check(\"questions_loaded\", QuizData.questions.size() >= 2, \"Premendo Gioca, QuizData.questions deve contenere le domande della risorsa (trovate: %d)\" % QuizData.questions.size())`"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
