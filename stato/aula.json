@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-23T07:15:28.620Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-23T07:38:06.757Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "file-e-json",
   "numero": "4.3",
   "titolo": "File e JSON: leggere e scrivere"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.3 riprende da sola appena rispondono.",
- "riprende": "2026-10-23T07:35:28.619Z"
+ "messaggio": "Sta scrivendo la lezione 4.3 «File e JSON: leggere e scrivere».",
+ "riprende": null
 }
