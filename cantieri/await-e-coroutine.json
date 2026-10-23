@@ -309,32 +309,32 @@
     "tipo": "autonomo",
     "genere": "obiettivo",
     "titolo": "Unificare il feedback di risposta con await",
-    "consegna": "In `quiz.gd`, la gestione della risposta del giocatore e lo scadere del tempo sono attualmente legati a un nodo `FeedbackTimer` e alla callback `_on_feedback_timeout()`. Riorganizza il flusso rendendolo lineare con `await`:\n\n1. In `quiz.tscn`, elimina il nodo `FeedbackTimer`.\n2. In `quiz.gd`:\n   - Rimuovi il riferimento `@onready var feedback_timer` e la connessione del suo segnale in `_ready()`.\n   - Rimuovi la funzione `_on_feedback_timeout()`.\n   - Crea una funzione privata `_show_feedback_and_advance()` che:\n     - Disabilita tutti i pulsanti di `answer_buttons`.\n     - Attende la durata `FEEDBACK_DURATION` con `await get_tree().create_timer(FEEDBACK_DURATION).timeout`.\n     - Verifica la presenza nell'albero della scena con `if not is_inside_tree(): return`.\n     - Fa avanzare la sessione con `session.advance()` e chiama `display_current_question()`.\n   - Modifica `_select_answer(button_index: int)` e `_on_question_timeout()` in modo che, dopo aver evidenziato i testi sui pulsanti, chiamino `_show_feedback_and_advance()`.",
+    "consegna": "Nel quiz, la gestione dell'attesa dopo la risposta del giocatore o dopo lo scadere del tempo usa un nodo timer dedicato. Riorganizza il flusso rendendolo lineare con `await` e predisponi i dati di sessione per testare la scena:\n\n1. In `quiz_data.gd`, dichiara le variabili `score: int = 0`, `current_topic_title: String = \"\"` e `questions: Array[Question] = []`. In `_ready()`, se `questions` è vuoto (`questions.is_empty()`), assegna due domande di prova (`Question.new(\"Domanda 1\", [\"A\", \"B\"], 0)` e `Question.new(\"Domanda 2\", [\"C\", \"D\"], 1)`), e aggiungi la funzione vuota `save_high_score() -> void: pass`. Questo permette di testare la scena del quiz anche avviandola da sola.\n2. In `quiz.tscn`, elimina il nodo `FeedbackTimer`.\n3. In `quiz.gd`, sostituisci la gestione del timer di feedback con `await`:\n   - Non appena viene scelta una risposta o scade il tempo della domanda, disabilita tutti i pulsanti di `answer_buttons` per bloccare ulteriori clic e mostra il testo di feedback.\n   - Attendi la durata `FEEDBACK_DURATION` usando `await get_tree().create_timer(FEEDBACK_DURATION).timeout`.\n   - Dopo l'attesa, se il nodo è ancora presente nell'albero della scena (`if not is_inside_tree(): return`), fai avanzare la sessione con `session.advance()` e mostra la nuova domanda con `display_current_question()`.",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [
-     "Dopo aver rimosso `FeedbackTimer` dalla scena `quiz.tscn`, assicurati che in `_ready()` non ci sia più `feedback_timer.timeout.connect(...)`.",
-     "In `_select_answer()` e `_on_question_timeout()`, sostituisci la riga `feedback_timer.start(FEEDBACK_DURATION)` con la chiamata a `_show_feedback_and_advance()`.",
-     "Nella funzione `_show_feedback_and_advance()`, inserisci il controllo di sicurezza `if not is_inside_tree(): return` subito dopo la riga con `await`."
+     "In `quiz_data.gd`, controlla `if questions.is_empty():` dentro `_ready()` prima di inserire le domande di prova.",
+     "In `quiz.gd`, rimuovi la variabile `@onready var feedback_timer`, il segnale connesso in `_ready()` e la funzione `_on_feedback_timeout()`.",
+     "Puoi creare una funzione privata (ad esempio `_show_feedback_and_advance()`) che disabilita i pulsanti, esegue l'`await` e fa avanzare la sessione; chiamala sia al termine di `_select_answer()` che in `_on_question_timeout()`."
     ],
     "verifiche": [
      {
       "tipo": "testo_in_file",
       "percorso": "res://quiz.gd",
-      "regex": "await get_tree\\(\\)\\.create_timer",
-      "descrizione": "quiz.gd usa await get_tree().create_timer per l'attesa del feedback"
+      "regex": "create_timer\\(",
+      "descrizione": "quiz.gd crea un timer da codice per il feedback"
      },
      {
       "tipo": "testo_in_file",
       "percorso": "res://quiz.gd",
-      "regex": "if not is_inside_tree\\(\\):",
-      "descrizione": "quiz.gd controlla is_inside_tree() dopo l'attesa"
+      "regex": "is_inside_tree\\(\\)",
+      "descrizione": "quiz.gd verifica che il nodo sia ancora nell'albero della scena"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz\", quiz != null, \"La scena quiz.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tcheck(\"no_feedback_timer\", quiz.get_node_or_null(\"FeedbackTimer\") == null, \"Il nodo FeedbackTimer deve essere rimosso dalla scena quiz.tscn\")\n\n\tvar btn0 := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/AnswersContainer/Answer0\") as Button\n\tvar label := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/QuestionLabel\") as Label\n\tif not check(\"nodes\", btn0 != null and label != null, \"I nodi Answer0 e QuestionLabel devono esistere\"):\n\t\treturn\n\n\tcheck(\"q1\", label.text == \"Domanda 1\", \"All'avvio deve comparire la prima domanda\")\n\tawait click_button(btn0)\n\tcheck(\"btn_disabled\", btn0.disabled, \"Subito dopo il clic i pulsanti devono essere disabilitati\")\n\tcheck(\"feedback_visible\", btn0.text.find(\"[GIUSTO!]\") != -1, \"Il pulsante deve mostrare il feedback\")\n\n\tawait wait_seconds(1.1)\n\tcheck(\"q2\", label.text == \"Domanda 2\", \"Dopo l'attesa del feedback deve comparire la seconda domanda\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz\", quiz != null, \"La scena quiz.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tcheck(\"no_feedback_timer\", quiz.get_node_or_null(\"FeedbackTimer\") == null, \"Il nodo FeedbackTimer deve essere rimosso dalla scena quiz.tscn\")\n\n\tvar btn0 := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/AnswersContainer/Answer0\") as Button\n\tvar label := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/QuestionLabel\") as Label\n\tif not check(\"nodes\", btn0 != null and label != null, \"I nodi Answer0 e QuestionLabel devono esistere\"):\n\t\treturn\n\n\tcheck(\"q1\", label.text == \"Domanda 1\", \"All'avvio deve comparire la prima domanda\")\n\tawait click_button(btn0)\n\tcheck(\"btn_disabled\", btn0.disabled, \"Subito dopo il clic i pulsanti devono essere disabilitati\")\n\tcheck(\"feedback_visible\", btn0.text.find(\"[GIUSTO!]\") != -1, \"Il pulsante deve mostrare il feedback\")\n\n\tvar duration = get_prop(quiz, \"FEEDBACK_DURATION\", 1.0)\n\tvar wait_time: float = float(duration) + 0.2\n\tawait wait_seconds(wait_time)\n\tcheck(\"q2\", label.text == \"Domanda 2\", \"Dopo l'attesa del feedback deve comparire la seconda domanda\")",
       "descrizione": "Il quiz avanza correttamente dopo la risposta attendendo il feedback senza generare errori"
      }
     ],
@@ -439,8 +439,9 @@
        }
       ]
      },
-     "spiegazione": "Eliminando il nodo `FeedbackTimer` e la funzione `_on_feedback_timeout()`, abbiamo accentrato la pausa post-risposta nella funzione `_show_feedback_and_advance()`. L'attesa di `FEEDBACK_DURATION` avviene tramite `await get_tree().create_timer(FEEDBACK_DURATION).timeout`. Il controllo `if not is_inside_tree(): return` garantisce che la funzione non prosegua se durante il secondo di attesa l'utente esce dalla scena.",
+     "spiegazione": "Rimuovendo il nodo FeedbackTimer, la pausa post-risposta viene accentrata nella funzione _show_feedback_and_advance() grazie a await get_tree().create_timer(FEEDBACK_DURATION).timeout. La verifica if not is_inside_tree(): return garantisce che il codice non continui se la scena viene abbandonata durante l'attesa. In QuizData, le variabili di sessione e le domande predefinite garantiscono che la scena quiz.tscn funzioni sia quando viene avviata da sola sia all'interno del flusso completo del gioco.",
      "cambiati": [
+      "quiz_data.gd",
       "quiz.tscn",
       "quiz.gd"
      ],
@@ -449,14 +450,15 @@
    },
    "genere": "obiettivo",
    "correzioni": 2,
-   "semplificato": false,
+   "semplificato": true,
    "problemi": [
     "la soluzione cambia anche quiz_data.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  quiz_data.gd:\n    + riga 3: var score: int = 0\n    + riga 5: var current_topic_title: String = \"\"\n    + riga 7: var questions: Array[Question] = []\n    + riga 12:   if questions.is_empty():\n    + riga 13:     var q_opts1: Array[String] = [\"A\", \"B\"]\n    + riga 14:     var q_opts2: Array[String] = [\"C\", \"D\"]\n    + riga 15:     questions = [\n    + riga 16:       Question.new(\"Domanda 1\", q_opts1, 0),\n    + riga 17:       Question.new(\"Domanda 2\", q_opts2, 1)\n    + riga 18:     ]\n    + riga 21: func save_high_score() -> void:\n    + riga 22:   pass\nCon quei file com'erano prima falliscono:\n  - All'avvio deve comparire la prima domanda\n  - Subito dopo il clic i pulsanti devono essere disabilitati\n  - Il pulsante deve mostrare il feedback\n  - Dopo l'attesa del feedback deve comparire la seconda domanda\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
     "gemini/gemini-flash-lite-latest",
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "test": {
