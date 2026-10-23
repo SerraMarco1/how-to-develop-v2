@@ -628,7 +628,7 @@
    "motivo": "L'esercizio modifica proprietà di nodi esistenti senza aggiungere nuovi nodi, rendendo impossibile distinguere lo stato precedente da quello successivo tramite i soggetti."
   },
   "test": {
-   "impronta": "59fcc21c475fe6ac19c5ba1fa63e5968d8bb5b8f8b9ab001c48a4656b1cd61c0",
+   "impronta": "4f70745da21255a99e36870d523cc50c3bb49a4e6334e54d55d3d19e17c84dce",
    "tentativi": 2,
    "esito": "fatto",
    "regole": 2
