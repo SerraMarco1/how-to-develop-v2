@@ -887,7 +887,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "la soluzione cambia anche item_data.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  item_data.gd:\n    - riga 4: var item_name: String = \"\"\n    - riga 5: var price: int = 0\n    - riga 8: func _init(p_name: String, p_price: int) -> void:\n    + riga 4: @export var item_name: String = \"\"\n    + riga 5: @export var price: int = 0\n    + riga 8: func _init(p_name: String = \"\", p_price: int = 0) -> void:\nCon quei file com'erano prima falliscono:\n  - PriceLabel deve mostrare il prezzo corretto caricato dal file potion.tres (50). Testo attuale: 'Prezzo: 0'\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://shop.tscn deve caricarsi senza errori: res://shop.tscn:3 - Parse Error: Unknown tag 'gd_resource' in file. (scene/resources/resource_format_text.cpp:41 in _printerr)\nFailed loading resource: res://shop.tscn. (core/io/resource_loader.cpp:317 in _load)\n  - La scena principale res://shop.tscn deve esistere e aprirsi\nRighe citate dagli errori:\n  shop.tscn, riga 3: `[gd_resource format=3]`"
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
