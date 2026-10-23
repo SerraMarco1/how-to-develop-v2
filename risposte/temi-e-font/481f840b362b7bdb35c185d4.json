@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://basket.tscn\", \"durata\": 6, \"azioni\": [], \"soggetti\": [{\"id\": \"pulsante\", \"cerca\": {\"nome\": \"RestartButton\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 5.0, \"deve\": \"esserci\", \"etichetta\": \"Pulsante\"}], \"scritte\": [{\"testo\": \"Il tema centralizzato applica lo stile personalizzato al pulsante\", \"da\": 0.5, \"a\": 5.0, \"soggetto\": \"pulsante\"}]}",
+ "ragionamento": 2400,
+ "quando": "2026-10-23T12:03:52.881Z",
+ "ruolo": "ritocco"
+}
