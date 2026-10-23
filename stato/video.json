@@ -180,7 +180,7 @@
  },
  "stati-del-gioco": {
   "es1": {
-   "impronta": "11dbd0180699dfdcd0867e22deba9e8370d4f7ac402663ee0e3389088e7974b7",
+   "impronta": "30a4f3603e599284c23849329ae57a45abafddfaa7451eef634cab4101e23bba",
    "tentativi": 3,
    "esito": "niente",
    "regole": 2,
@@ -191,32 +191,32 @@
      "azioni": [],
      "soggetti": [
       {
-       "id": "etichetta",
+       "id": "messaggio",
        "cerca": {
         "nome": "Label"
        },
        "quanti": 1,
        "da": 3,
-       "a": 7.5,
+       "a": 8,
        "deve": "mostrare testo",
        "testo": "Partita finita",
-       "etichetta": "Messaggio"
+       "etichetta": "Fine partita"
       }
      ],
      "scritte": [
       {
-       "testo": "Quando le vite finiscono, il gioco mostra la fine partita",
+       "testo": "Le vite si azzerano e la partita finisce",
        "da": 3,
-       "a": 7.5,
-       "soggetto": "etichetta"
+       "a": 8,
+       "soggetto": "messaggio"
       }
      ]
     },
     "problemi": [
-     "Soggetto «etichetta» (nome = Label; almeno 1 da 3 a 7.5 s; deve mostrare il testo «Partita finita»): il testo «Partita finita» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 5 s: «Label» a (516, 550) 151×23, si vede, testo «Punti: 0050 | Vite: 1». Lo schermo va da (0, 0) a (1152, 648)."
+     "Soggetto «messaggio» (nome = Label; almeno 1 da 3 a 8 s; deve mostrare il testo «Partita finita»): il testo «Partita finita» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 5 s: «Label» a (516, 550) 151×23, si vede, testo «Punti: 0050 | Vite: 1». Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "La transizione allo stato di fine partita dipende da danni casuali delle rocce, rendendo impossibile prevedere con precisione temporale l'apparizione del testo di game over per la registrazione."
+   "motivo": "La schermata di game over dipende dalla perdita casuale delle vite e non puo essere sincronizzata in un intervallo di tempo fisso."
   }
  },
  "classi-e-oggetti": {
