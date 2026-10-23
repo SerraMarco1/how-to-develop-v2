@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-23T03:55:15.573Z",
+ "aggiornato": "2026-10-23T07:57:16.845Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -470,6 +470,15 @@
    "file": "lezioni/f04-programmare-meglio/resource.json",
    "sha256": "3b3dae05595968a150aad5d07f61bcfc833f536635caf9f8d87b1239415484dc",
    "byte": 112877
+  },
+  {
+   "slug": "file-e-json",
+   "numero": "4.3",
+   "titolo": "File e JSON: leggere e scrivere",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/file-e-json.json",
+   "sha256": "7f12969d2e1b5e8d710fec6100000cce13272c71de15ad247248ad9cdf5728f6",
+   "byte": 135505
   }
  ],
  "documentazione": {
