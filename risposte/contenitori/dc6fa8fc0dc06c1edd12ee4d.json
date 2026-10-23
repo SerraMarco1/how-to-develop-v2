@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main_menu.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"pulsanti\",\n      \"cerca\": {\n        \"nome\": \"*Button\"\n      },\n      \"quanti\": 3,\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Pulsanti\"\n    },\n    {\n      \"id\": \"versione\",\n      \"cerca\": {\n        \"nome\": \"VersionLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Versione\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"I pulsanti hanno dimensioni minime definite\",\n      \"da\": 0.5,\n      \"a\": 2.8,\n      \"soggetto\": \"pulsanti\"\n    },\n    {\n      \"testo\": \"Il testo di versione si posiziona a destra\",\n      \"da\": 3.2,\n      \"a\": 5.5,\n      \"soggetto\": \"versione\"\n    }\n  ]\n}",
+ "ragionamento": 1824,
+ "quando": "2026-10-23T12:01:50.399Z",
+ "ruolo": "ritocco"
+}
