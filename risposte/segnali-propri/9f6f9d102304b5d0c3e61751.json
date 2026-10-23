@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://basket.tscn\",\n  \"durata\": 8,\n  \"azioni\": [\n    {\n      \"azione\": \"move_left\",\n      \"inizio\": 1.0,\n      \"fine\": 3.0,\n      \"tasto\": \"A\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"stella\",\n      \"cerca\": {\n        \"classe\": \"FallingItem\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 3.0,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Stella\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Le stelle usano i segnali per aggiornare i punti\",\n      \"da\": 0.5,\n      \"a\": 3.0,\n      \"soggetto\": \"stella\"\n    }\n  ]\n}",
- "ragionamento": 1823,
- "quando": "2026-10-23T11:24:51.663Z",
- "ruolo": "ritocco"
-}
