@@ -438,8 +438,8 @@
   },
   "test": {
    "impronta": "1ccc688f6e0fa21cab49135ab40160ae7b5a40ee416fb8e6a2e103bbebac9fab",
-   "tentativi": 1,
-   "esito": "in corso",
+   "tentativi": 2,
+   "esito": "niente",
    "regole": 2,
    "ultimo": {
     "copione": {
@@ -472,7 +472,7 @@
      "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 5 a 7.5 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 5 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 5 a 7.5 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 5 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+   "motivo": "Il pulsante di fine partita compare solo dopo la sconfitta del giocatore, un evento basato sulla perdita delle vite che non si verifica in modo deterministico o prevedibile durante l'esecuzione automatica della scena senza input."
   }
  },
  "control-ancore-e-dimensioni": {

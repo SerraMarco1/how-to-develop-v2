@@ -1,0 +1,16 @@
+{
+ "n": 33,
+ "quando": "2026-10-23T12:00:45.206Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Dissolvenza fluida di fine partita» non si vede sullo schermo: Il pulsante di fine partita compare solo dopo la sconfitta del giocatore, un evento basato sulla perdita delle vite che non si verifica in modo deterministico o prevedibile durante l'esecuzione automatica della scena senza input.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 11885,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 11 s (8187 → 56 token)"
+ ]
+}
