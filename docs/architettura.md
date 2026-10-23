@@ -143,6 +143,10 @@ coordinate (`star.gd` riporta la stella a y = 680 rispetto al cesto), un altro g
 1.9 la teoria spiega il perché, es1, es3 e test lo chiedono, e tre controlli nuovi bocciano stelle e rocce fuori dallo
 schermo («prima di add_child(star) serve star.top_level = true») e stelle senza immagine. Cambiano 62 esercizi in 24
 lezioni (1.9-3.5); lo stile di casa ora lo dice ai modelli, perché la fase 5 riprende il gioco.
+Applicata dalla fabbrica il 23 ottobre in 13 minuti, in un giro che aspettava i modelli: 24 lezioni in una versione
+nuova, catena intatta. I video delle 24 lezioni passano da 9 a 11: nuovi 1.9 es1 e 1.10 es1 (prima le stelle non si
+vedevano) e 2.9 es2; persa la 2.5 es1, perché il copione nuovo fa vincere la partita prima della pausa. La 1.11 es1 e la
+2.2 es1 restano senza video, ora perché le stelle si vedono già prima dell'esercizio e il copione non mostra cosa cambia.
 
 ### I video «Il risultato atteso»
 
