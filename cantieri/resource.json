@@ -812,6 +812,22 @@
     ],
     "verifiche": [
      {
+      "tipo": "progetto_godot",
+      "descrizione": "Il progetto ItemShop è presente"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://shop.tscn",
+      "descrizione": "La scena shop.tscn esiste"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://shop.tscn",
+      "tipoNodo": "Label",
+      "nome": "PriceLabel",
+      "descrizione": "Nella scena shop.tscn è presente il nodo PriceLabel"
+     },
+     {
       "tipo": "script_godot",
       "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar shop := await instantiate_main_scene()\n\tif not check(\"shop\", shop != null, \"shop.tscn deve avviarsi senza errori di caricamento risorsa\"):\n\t\treturn\n\tvar label := find_by_name(shop, \"PriceLabel\") as Label\n\tif not check(\"label\", label != null, \"PriceLabel deve esistere nella scena\"):\n\t\treturn\n\tcheck(\"price_shown\", label.text.contains(\"50\"), \"PriceLabel deve mostrare il prezzo corretto caricato dal file potion.tres (50). Testo attuale: '%s'\" % label.text)",
       "descrizione": "Il negozio carica l'oggetto e mostra a schermo il prezzo corretto"
@@ -821,10 +837,6 @@
     "daTrovare": [],
     "partenza": {
      "file": [
-      {
-       "percorso": "project.godot",
-       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ItemShop\"\nrun/main_scene=\"res://shop.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
-      },
       {
        "percorso": "item_data.gd",
        "contenuto": "class_name ItemData\nextends Resource\n\nvar item_name: String = \"\"\nvar price: int = 0\n\n\nfunc _init(p_name: String, p_price: int) -> void:\n\titem_name = p_name\n\tprice = p_price\n"
@@ -839,7 +851,7 @@
       },
       {
        "percorso": "shop.tscn",
-       "contenuto": "[gd_resource format=3]\n\n[ext_resource type=\"Script\" path=\"res://shop.gd\" id=\"1_shop\"]\n[ext_resource type=\"Resource\" path=\"res://potion.tres\" id=\"2_item\"]\n\n[node name=\"Shop\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_shop\")\ncurrent_item = ExtResource(\"2_item\")\n\n[node name=\"PriceLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 300.0\noffset_bottom = 80.0\ntext = \"Prezzo: 0\"\n"
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://shop.gd\" id=\"1_shop\"]\n[ext_resource type=\"Resource\" path=\"res://potion.tres\" id=\"2_item\"]\n\n[node name=\"Shop\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_shop\")\ncurrent_item = ExtResource(\"2_item\")\n\n[node name=\"PriceLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 300.0\noffset_bottom = 80.0\ntext = \"Prezzo: 0\"\n"
       }
      ],
      "progetto": {
@@ -866,7 +878,7 @@
       },
       {
        "percorso": "shop.tscn",
-       "contenuto": "[gd_resource format=3]\n\n[ext_resource type=\"Script\" path=\"res://shop.gd\" id=\"1_shop\"]\n[ext_resource type=\"Resource\" path=\"res://potion.tres\" id=\"2_item\"]\n\n[node name=\"Shop\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_shop\")\ncurrent_item = ExtResource(\"2_item\")\n\n[node name=\"PriceLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 300.0\noffset_bottom = 80.0\ntext = \"Prezzo: 0\"\n"
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://shop.gd\" id=\"1_shop\"]\n[ext_resource type=\"Resource\" path=\"res://potion.tres\" id=\"2_item\"]\n\n[node name=\"Shop\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_shop\")\ncurrent_item = ExtResource(\"2_item\")\n\n[node name=\"PriceLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 300.0\noffset_bottom = 80.0\ntext = \"Prezzo: 0\"\n"
       }
      ],
      "progetto": {
@@ -884,14 +896,15 @@
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://shop.tscn deve caricarsi senza errori: res://shop.tscn:3 - Parse Error: Unknown tag 'gd_resource' in file. (scene/resources/resource_format_text.cpp:41 in _printerr)\nFailed loading resource: res://shop.tscn. (core/io/resource_loader.cpp:317 in _load)\n  - La scena principale res://shop.tscn deve esistere e aprirsi\nRighe citate dagli errori:\n  shop.tscn, riga 3: `[gd_resource format=3]`"
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
@@ -899,7 +912,8 @@
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Resource: i dati come file",
