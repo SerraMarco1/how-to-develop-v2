@@ -1,0 +1,16 @@
+{
+ "n": 35,
+ "quando": "2026-10-23T11:21:20.101Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Configurare i tipi di stella con un Dictionary» non si vede sullo schermo: L'esercizio riorganizza la logica delle stelle esistenti tramite un Dictionary senza introdurre nuovi nodi o scene; il controllo automatico rileva gli stessi elementi del progetto precedente.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 13496,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 12 s (6046 → 49 token)"
+ ]
+}

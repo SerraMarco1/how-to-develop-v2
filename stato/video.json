@@ -140,34 +140,34 @@
  },
  "dictionary": {
   "es1": {
-   "impronta": "98747011c3ea5520b3940f1e157fff8fe1cf13296e5a887b740b3753fe7153f0",
-   "tentativi": 3,
-   "esito": "rinuncia",
+   "impronta": "2c2b447a9e101d07da51773ab7b2bc2660dd693076561b9437339e02adea741b",
+   "tentativi": 2,
+   "esito": "niente",
    "regole": 2,
    "ultimo": {
     "copione": {
-     "scena": "res://star.tscn",
-     "durata": 4,
+     "scena": "res://basket.tscn",
+     "durata": 7,
      "azioni": [],
      "soggetti": [
       {
-       "id": "stella",
+       "id": "stelle",
        "cerca": {
-        "scena": "res://star.tscn"
+        "script": "res://star.gd"
        },
        "quanti": 1,
        "da": 0.5,
-       "a": 2,
+       "a": 6,
        "deve": "muoversi",
-       "etichetta": "Stella"
+       "etichetta": "Oggetti"
       }
      ],
      "scritte": [
       {
-       "testo": "Il Dictionary definisce colore e velocità dei tipi di oggetti",
+       "testo": "Gli oggetti ora usano colori e velocità del Dictionary",
        "da": 0.5,
-       "a": 2,
-       "soggetto": "stella"
+       "a": 6,
+       "soggetto": "stelle"
       }
      ]
     },
@@ -175,7 +175,7 @@
      "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
     ]
    },
-   "motivo": "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+   "motivo": "L'esercizio riorganizza la logica delle stelle esistenti tramite un Dictionary senza introdurre nuovi nodi o scene; il controllo automatico rileva gli stessi elementi del progetto precedente."
   }
  },
  "stati-del-gioco": {
