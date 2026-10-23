@@ -1,0 +1,74 @@
+{
+ "n": 15,
+ "quando": "2026-10-23T11:30:50.706Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1 (prevedi): 1 problema",
+ "spiegazione": "«Cosa succede durante l'attesa con await», scritto da gemini/gemini-3.7-flash. 5 previsioni eseguite in Godot per ricavarne la risposta giusta.\n- la previsione 5 non si esegue in Godot 4.7: lo script deve essere GDScript valido con `func run():` che restituisce un valore\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 29278,
+ "dati": {
+  "problemi": [
+   "la previsione 5 non si esegue in Godot 4.7: lo script deve essere GDScript valido con `func run():` che restituisce un valore"
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Cosa succede durante l'attesa con await",
+   "consegna": "Leggi attentamente ciascun frammento di codice e scrivi cosa restituisce la funzione `run()`, senza eseguirlo sul computer.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "class_name PrevediSemplice\nextends RefCounted\n\nsignal evento_completato(punti: int)\n\nfunc run() -> int:\n\tvar punteggio: int = 10\n\t_modifica_dopo.call_deferred()\n\tvar bonus: int = await evento_completato\n\treturn punteggio + bonus\n\nfunc _modifica_dopo() -> void:\n\tevento_completato.emit(5)\n",
+     "domanda": "Quale numero intero restituisce la funzione run()?",
+     "risposta": "15",
+     "spiegazione": "`run()` si ferma sulla riga con `await evento_completato`. Nel frame successivo `_modifica_dopo()` viene eseguita ed emette il segnale con il valore `5`. L'await riceve `5`, lo assegna a `bonus` e la funzione prosegue restituendo `10 + 5 = 15`.",
+     "id": "es1p1"
+    },
+    {
+     "codice": "class_name PrevediOrdine\nextends RefCounted\n\nfunc passo_a(registro: Array[String]) -> void:\n\tregistro.append(\"A\")\n\nfunc passo_b(registro: Array[String]) -> void:\n\tregistro.append(\"B\")\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\tpasso_a(registro)\n\tpasso_b(registro)\n\treturn \",\".join(registro)\n",
+     "domanda": "Quale testo restituisce la funzione run()?",
+     "risposta": "A,B",
+     "spiegazione": "Le due funzioni sono sincrone (non contengono `await`): `passo_a` scrive \"A\", poi `passo_b` scrive \"B\". Il metodo `join` unisce gli elementi con la virgola producendo `\"A,B\"`.",
+     "id": "es1p2"
+    },
+    {
+     "codice": "class_name PrevediCoroutine\nextends RefCounted\n\nsignal tick\n\nfunc operazione_lenta(registro: Array[String]) -> void:\n\tregistro.append(\"1\")\n\tawait tick\n\tregistro.append(\"2\")\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\toperazione_lenta(registro)\n\tregistro.append(\"3\")\n\ttick.emit()\n\treturn \",\".join(registro)\n",
+     "domanda": "Quale testo restituisce la funzione run()?",
+     "risposta": "1,3,2",
+     "spiegazione": "Quando `run()` chiama `operazione_lenta(registro)` senza `await`, `operazione_lenta` appende `\"1\"` e poi si sospende su `await tick`, restituendo subito il controllo a `run()`. `run()` prosegue ed aggiunge `\"3\"`. Solo a quel punto viene emesso `tick.emit()`, risvegliando `operazione_lenta` che appende `\"2\"`. Il risultato finale è `\"1,3,2\"`.",
+     "id": "es1p3"
+    },
+    {
+     "codice": "class_name PrevediAwaitAnnidato\nextends RefCounted\n\nsignal pronto\n\nfunc azione_interna() -> int:\n\tawait pronto\n\treturn 40\n\nfunc operazione() -> int:\n\tvar valore: int = await azione_interna()\n\treturn valore + 2\n\nfunc run() -> int:\n\tpronto.emit.call_deferred()\n\tvar totale: int = await operazione()\n\treturn totale\n",
+     "domanda": "Quale numero intero restituisce la funzione run()?",
+     "risposta": "42",
+     "spiegazione": "`run()` attende `operazione()`, che a sua volta attende `azione_interna()`. Nel ciclo successivo `pronto.emit()` risveglia `azione_interna`, che restituisce 40. `operazione()` riceve 40, aggiunge 2 ottenendo 42 e lo restituisce a `run()`. Il risultato è 42.",
+     "id": "es1p4"
+    },
+    {
+     "codice": "class_name PrevediScudo\nextends RefCounted\n\nsignal passo\n\nfunc calcola() -> int:\n\tvar x: int = 10\n\tawait passo\n\tx += 5\n\tawait passo\n\tx += 20\n\treturn x\n\nfunc run() -> int:\n\tpasso.emit.call_deferred()\n\tvar res: int = await calcola()\n\treturn res\n",
+     "domanda": "Quale numero intero restituisce la funzione run()?",
+     "risposta": "",
+     "spiegazione": "La funzione `run()` chiama in differita un solo `passo.emit()`. La coroutine `calcola()` riceve il primo segnale e porta `x` a 15, ma poi si blocca sul secondo `await passo` perché non viene emesso nessun altro segnale. Non terminando mai il secondo passo, la funzione non completa l'operazione.",
+     "id": "es1p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
