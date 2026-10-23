@@ -55,7 +55,10 @@ jobs:
       # Godot gira con un utente a parte: non può leggere i file né l'ambiente della fabbrica (dove stanno le chiavi).
       - name: Utente separato per Godot, cartelle di lavoro
         run: |
-          sudo useradd --create-home --shell /usr/sbin/nologin htdgodot
+          # La home si crea a parte, vuota: --create-home ci copierebbe /etc/skel, che sulle macchine di GitHub ha 816 MB
+          # di strumenti (Rust, .NET...) e prendeva da 20 a 130 secondi. Stessi permessi che dà useradd (750).
+          sudo useradd --no-create-home --home-dir /home/htdgodot --shell /usr/sbin/nologin htdgodot
+          sudo install -d -m 750 -o htdgodot -g htdgodot /home/htdgodot
           # Le protezioni del kernel sui collegamenti nelle cartelle condivise (di solito già attive: qui si fissano).
           sudo sysctl -q -w fs.protected_symlinks=1 fs.protected_hardlinks=1 fs.protected_regular=2 fs.protected_fifos=2
           sudo mkdir -p /opt/htd-cache

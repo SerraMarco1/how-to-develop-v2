@@ -34,7 +34,9 @@ jobs:
       # Come nella fabbrica: Godot gira come un utente a parte. Le prove lo usano (vedi condiviso/test/recinto.test.ts).
       - name: Utente separato per Godot
         run: |
-          sudo useradd --create-home --shell /usr/sbin/nologin htdgodot
+          # Home creata a parte, vuota: --create-home ci copierebbe i 816 MB di /etc/skel (vedi fabbrica.yml).
+          sudo useradd --no-create-home --home-dir /home/htdgodot --shell /usr/sbin/nologin htdgodot
+          sudo install -d -m 750 -o htdgodot -g htdgodot /home/htdgodot
           sudo sysctl -q -w fs.protected_symlinks=1 fs.protected_hardlinks=1 fs.protected_regular=2 fs.protected_fifos=2
           sudo mkdir -p /opt/htd-cache
           sudo chown "$(id -u):$(id -g)" /opt/htd-cache
