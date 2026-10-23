@@ -52,3 +52,5 @@
 {"quando":1792755792236,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":27303,"tokenInput":15635,"tokenOutput":8479,"ragionamento":4707}
 {"quando":1792755819544,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":19802,"tokenInput":19844,"tokenOutput":8426,"ragionamento":1108}
 {"quando":1792755844214,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":279523,"tokenInput":15774,"tokenOutput":8605,"ragionamento":27608}
+{"quando":1792756137614,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"await-e-coroutine","ok":false,"contata":true,"durataMs":441,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792756138059,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"await-e-coroutine","ok":false,"contata":true,"durataMs":458,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
