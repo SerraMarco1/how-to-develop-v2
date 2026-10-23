@@ -30,3 +30,4 @@
 {"quando":1792754536773,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":5365,"tokenInput":6166,"tokenOutput":165,"ragionamento":1847}
 {"quando":1792754555417,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"raggiungere-i-nodi","ok":true,"contata":true,"durataMs":3948,"tokenInput":6312,"tokenOutput":47,"ragionamento":1179}
 {"quando":1792754560743,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":5727,"tokenInput":6429,"tokenOutput":208,"ragionamento":1906}
+{"quando":1792754574104,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scene-riutilizzabili","ok":true,"contata":true,"durataMs":5946,"tokenInput":6752,"tokenOutput":201,"ragionamento":1858}
