@@ -1,0 +1,64 @@
+{
+ "n": 27,
+ "quando": "2026-10-23T12:02:01.484Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 19613,
+ "dati": {
+  "copione": {
+   "scena": "res://main_menu.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "pulsanti",
+     "cerca": {
+      "nome": "*Button"
+     },
+     "quanti": 3,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Pulsanti"
+    },
+    {
+     "id": "versione",
+     "cerca": {
+      "nome": "VersionLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Versione"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "I pulsanti hanno dimensioni minime definite",
+     "da": 0.5,
+     "a": 2.8,
+     "soggetto": "pulsanti"
+    },
+    {
+     "testo": "Il testo di versione si posiziona a destra",
+     "da": 3.2,
+     "a": 5.5,
+     "soggetto": "versione"
+    }
+   ]
+  },
+  "problemi": [
+   "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (8009 → 336 token)"
+ ]
+}
