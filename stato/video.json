@@ -369,11 +369,49 @@
  },
  "segnali-propri": {
   "es1": {
-   "impronta": "5981c3e0b2d7a6cb8a3caa759d2e089a4249c42f718e7475cd23ce0c7570e83e",
-   "tentativi": 1,
+   "impronta": "c7d7e0c7f0d919548cb2ba0705da168ba3ebcb0d4a739ecad713972da518ab9c",
+   "tentativi": 2,
    "esito": "niente",
    "regole": 2,
-   "motivo": "L'esercizio riorganizza il codice usando i segnali ma il comportamento visivo del gioco rimane lo stesso di prima."
+   "ultimo": {
+    "copione": {
+     "scena": "res://basket.tscn",
+     "durata": 4,
+     "azioni": [
+      {
+       "azione": "move_left",
+       "inizio": 1,
+       "fine": 3,
+       "tasto": "A"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "stella",
+       "cerca": {
+        "classe": "FallingItem"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 3,
+       "deve": "muoversi",
+       "etichetta": "Stella"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Le stelle usano i segnali per aggiornare i punti",
+       "da": 0.5,
+       "a": 3,
+       "soggetto": "stella"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio modifica la logica interna introducendo i segnali: il comportamento visivo del gioco resta identico a prima e non ci sono elementi visivi nuovi da mostrare."
   }
  },
  "export": {
