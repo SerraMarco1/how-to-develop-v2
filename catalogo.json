@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-22T07:03:51.835Z",
+ "aggiornato": "2026-10-23T03:07:08.150Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -452,6 +452,15 @@
    "file": "lezioni/f04-programmare-meglio/classi-fatte-bene.json",
    "sha256": "6eb845e2767c5283ec84f9bf91a2951689dc6847534eea7f59cb8d5992a011bf",
    "byte": 111184
+  },
+  {
+   "slug": "ereditarieta-e-composizione",
+   "numero": "4.1",
+   "titolo": "Ereditarietà e composizione",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/ereditarieta-e-composizione.json",
+   "sha256": "288641ff1f9196db1bf9598cc4a89a4f0164309818a4c62f22400b4dcdad11d4",
+   "byte": 104356
   }
  ],
  "documentazione": {
