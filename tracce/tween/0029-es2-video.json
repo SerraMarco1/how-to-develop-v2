@@ -1,0 +1,48 @@
+{
+ "n": 29,
+ "quando": "2026-10-23T11:26:26.683Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 2: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 4 s. Soggetti: «Punteggio fluttuante» (muoversi). Scritte: «Il punteggio sale e si dissolve dopo la raccolta». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 155 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 20455,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 4,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "punteggio",
+     "cerca": {
+      "classe": "Label"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 3,
+     "deve": "muoversi",
+     "etichetta": "Punteggio fluttuante"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il punteggio sale e si dissolve dopo la raccolta",
+     "da": 1,
+     "a": 3,
+     "soggetto": "punteggio"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "1a680f26eb632154a4705009112181a364a01e18201486fa723ee6f458fb97a3",
+   "estensione": "mp4",
+   "byte": 158730
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (8128 → 204 token)"
+ ]
+}
