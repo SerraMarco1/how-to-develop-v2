@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-23T07:57:16.845Z",
+ "aggiornato": "2026-10-23T11:17:18.059Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -115,64 +115,64 @@
    "slug": "cicli",
    "numero": "1.9",
    "titolo": "Cicli: for e while",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f01-programmare/cicli.json",
-   "sha256": "c707d7d07c3ceffb0d27d7c908061fc2cb379312d5fc9acba51305a11230b756",
-   "byte": 71201
+   "sha256": "bb23df1bafede224a204b64bd58a15b809254dc65cbe8923e3b425ddb9be95a8",
+   "byte": 76246
   },
   {
    "slug": "array",
    "numero": "1.10",
    "titolo": "Array: tanti oggetti insieme",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/array.json",
-   "sha256": "df02d59c727cd4144bf3077bfdfc95099d2280e6d843723687aae4c97d606411",
-   "byte": 79462
+   "sha256": "235886421016e2dfe7eada6c6712c673324b6b085ae700dff6a4a20df3b2df3c",
+   "byte": 80034
   },
   {
    "slug": "dictionary",
    "numero": "1.11",
    "titolo": "Dictionary: dati con un nome",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f01-programmare/dictionary.json",
-   "sha256": "b46abe76babf61cc7ff3b49cbd7afb5bf46ef9803d14c43cc5106d5a67b775fd",
-   "byte": 93324
+   "sha256": "dc3a91cdcd77a268991bb924dd85d7cf75890e6ef3e13ba4a1eacfadd1716047",
+   "byte": 93559
   },
   {
    "slug": "stati-del-gioco",
    "numero": "1.12",
    "titolo": "Stati del gioco: enum e match",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/stati-del-gioco.json",
-   "sha256": "b587b8c92af0e6b4e1b58ac33b19ddc7c0a5a671876f50694898a89bc270b579",
-   "byte": 81121
+   "sha256": "313e4d14aa63bc58c1b7f525f6d3016915b88eb74e4c662ccf0fdfc36b507ea4",
+   "byte": 81441
   },
   {
    "slug": "difficolta-che-cresce",
    "numero": "1.13",
    "titolo": "Difficoltà che cresce nel tempo",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f01-programmare/difficolta-che-cresce.json",
-   "sha256": "a9f7af887ee9012341fee99860d4177a5213428fbb6db53bd8d3cb17741bc77a",
-   "byte": 76346
+   "sha256": "9d4be942850c2a316995aaab140da58a2517476915042682aa1bc54d07adc7ce",
+   "byte": 76610
   },
   {
    "slug": "ordinare-il-codice",
    "numero": "1.14",
    "titolo": "Ordinare il codice",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/ordinare-il-codice.json",
-   "sha256": "acaf261e4ee9e4e368601d144e79e9afae5d0a83e243466b41470b1fbfae1cfd",
-   "byte": 75055
+   "sha256": "623fd7875d8bbcba0696257c278fc707d3037d213baa4a59c0e0326f2b6dfdfe",
+   "byte": 75290
   },
   {
    "slug": "classi-e-oggetti",
    "numero": "1.15",
    "titolo": "Classi e oggetti: ogni cosa pensa a sé",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f01-programmare/classi-e-oggetti.json",
-   "sha256": "fdee21e38d9a8c204fd73517c5494cae2c0a932271610e023b7fae406c09c8d2",
-   "byte": 100000
+   "sha256": "657a2e2d4b311dd1e35220f6d8f3be432c94c8497937f742894ebc693681b557",
+   "byte": 100320
   },
   {
    "slug": "progetto-schiva-1",
@@ -205,100 +205,100 @@
    "slug": "albero-dei-nodi",
    "numero": "2.0",
    "titolo": "L'albero dei nodi: genitori e figli",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f02-nodi-scene-segnali/albero-dei-nodi.json",
-   "sha256": "76c3a2f98586c1d02bd38d89a075165d248154f737799a72586459534fc4b847",
-   "byte": 91882
+   "sha256": "7e5fdb5358a63e49447c754f7d94adcdff0492b8f845533bc50573764ccab628",
+   "byte": 91439
   },
   {
    "slug": "raggiungere-i-nodi",
    "numero": "2.1",
    "titolo": "Raggiungere i nodi dal codice",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f02-nodi-scene-segnali/raggiungere-i-nodi.json",
-   "sha256": "c9334b82d44e078a096506bdd3251a56dd5fbc985ca55728b8e7f946b059e4bf",
-   "byte": 99083
+   "sha256": "227e61348f46fdaa877788dfecd4d95911d46a8325b43e16a95665a07590873f",
+   "byte": 99374
   },
   {
    "slug": "scene-riutilizzabili",
    "numero": "2.2",
    "titolo": "Scene riutilizzabili: lo stampo e le copie",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f02-nodi-scene-segnali/scene-riutilizzabili.json",
-   "sha256": "9676ccfd6dc0b68ea214820ebc843e8d2c0e5d5cc30f43323d1b9cded2b41ac7",
-   "byte": 115196
+   "sha256": "3168fa91220762a7a3f1c9492756415e5466fdc5991098cceb358cb5dcd5cc4c",
+   "byte": 115877
   },
   {
    "slug": "vita-di-un-nodo",
    "numero": "2.3",
    "titolo": "La vita di un nodo: dalla nascita a queue_free()",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f02-nodi-scene-segnali/vita-di-un-nodo.json",
-   "sha256": "1c802e9659aaa1371a0e4b8059ad70b0a06cd20f7fe0780e5e0f84f8bb146d7f",
-   "byte": 92156
+   "sha256": "6b1539193f3c241722ff94ae03a7063f31e85225b0f1884ac2f054a4ec5bc5cf",
+   "byte": 92491
   },
   {
    "slug": "segnali-esistenti",
    "numero": "2.4",
    "titolo": "Segnali: collegare ciò che esiste già",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f02-nodi-scene-segnali/segnali-esistenti.json",
-   "sha256": "9578b912b308718731e36c3cc6410d06ca3ecabe53f1144788b19877acc4ba0d",
-   "byte": 105931
+   "sha256": "5c366432db52b99e54747242dfa57bda1a934db496d43afe58fe194dd36868f0",
+   "byte": 106347
   },
   {
    "slug": "timer",
    "numero": "2.5",
    "titolo": "Timer: far succedere le cose nel tempo",
-   "versione": 4,
+   "versione": 5,
    "file": "lezioni/f02-nodi-scene-segnali/timer.json",
-   "sha256": "507e20b7175eea39c8ff664c0965679ce87e1cc3e72e00e3819e2ea2079829e2",
-   "byte": 115635
+   "sha256": "0d430892f6ae230d7cce40e4d97f061ca0979c379ccb5626e03759edbfadbdd7",
+   "byte": 115437
   },
   {
    "slug": "segnali-propri",
    "numero": "2.6",
    "titolo": "Segnali tuoi, con parametri",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f02-nodi-scene-segnali/segnali-propri.json",
-   "sha256": "0378040c4f4576bc26d4201d73339d00ef5af6715f169ac37ae9e889ca3f67b8",
-   "byte": 126465
+   "sha256": "bcd023c4d5c5d27b582c6fcb4095cba2ff03b55ad420d217f75db1a912abc02f",
+   "byte": 126895
   },
   {
    "slug": "gruppi",
    "numero": "2.7",
    "titolo": "Gruppi: parlare a tanti nodi insieme",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f02-nodi-scene-segnali/gruppi.json",
-   "sha256": "1dd03e821ba1dce46b0f22aacd98e063875dd75ebb2d3cf1131c69e8ab032002",
-   "byte": 96726
+   "sha256": "fc253a8b6ba954ed34d2a07ebbe6d964cd017dac8e31488212f370309a415fa0",
+   "byte": 97129
   },
   {
    "slug": "export",
    "numero": "2.8",
    "titolo": "@export: regolare il gioco dall'Inspector",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f02-nodi-scene-segnali/export.json",
-   "sha256": "10cffaa74180f6ef9e036a02f2167c1878bf98253ef19878ee7d68290fcabc20",
-   "byte": 131919
+   "sha256": "6ea6f567472623ba5eac0aaedd87f1acba4f0b49ebb762abc9309ea8a6d12c28",
+   "byte": 132490
   },
   {
    "slug": "tween",
    "numero": "2.9",
    "titolo": "Tween: animare con il codice",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f02-nodi-scene-segnali/tween.json",
-   "sha256": "ed1fe76cfd8a526c42c4294e9abd840b0a37e8a3c8ed1357f0ec991ad3423628",
-   "byte": 135546
+   "sha256": "6c2ce02261aca81d2892cd93bff4a14782541487f21e49081da6a9cde3b0fbb7",
+   "byte": 135581
   },
   {
    "slug": "leggere-una-classe",
    "numero": "2.10",
    "titolo": "Leggere la pagina di una classe che non conosci",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f02-nodi-scene-segnali/leggere-una-classe.json",
-   "sha256": "a3e6c89b17c1fa1ed818f4c4e105d514fdebacfb64318e732dc1cebe7e7fce00",
-   "byte": 113290
+   "sha256": "fd6b6cd3241d08ee4a09f6a0cbfa43ea791f8c5cab2df67e2f4c2b74c0c1ba05",
+   "byte": 113749
   },
   {
    "slug": "progetto-memory-1",
@@ -331,55 +331,55 @@
    "slug": "control-ancore-e-dimensioni",
    "numero": "3.0",
    "titolo": "Control: ancore e dimensioni",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f03-interfaccia/control-ancore-e-dimensioni.json",
-   "sha256": "9bc3ac05ab0b96005c97a7aecd11381ef2be146f047cc805d0c0b2d2859367a9",
-   "byte": 118996
+   "sha256": "e13fb5a530860202f8018b095178b7647631f10e841997475b9026e8bf770098",
+   "byte": 118579
   },
   {
    "slug": "contenitori",
    "numero": "3.1",
    "titolo": "Contenitori: l'interfaccia che si dispone da sola",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f03-interfaccia/contenitori.json",
-   "sha256": "56ab4eb56f8a3e2640a4295d77b906ed6a3fd06605d3c1cfe6dc031b4f7cb37f",
-   "byte": 170715
+   "sha256": "d030c0f63e5e2dad82643fba776cb7dab8becc5cf55ccb31e27ec36697fdad57",
+   "byte": 170010
   },
   {
    "slug": "controlli-di-uso-comune",
    "numero": "3.2",
    "titolo": "I controlli che userai sempre",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f03-interfaccia/controlli-di-uso-comune.json",
-   "sha256": "a2bcef8f9350e0afa7b425191d4d96675bde48a2334655769ccc46e50a0a01a6",
-   "byte": 201309
+   "sha256": "9dfdc1970486497ac412a7fb64ea08b078b4f70caf01cba67757c5284d4b0e0d",
+   "byte": 201335
   },
   {
    "slug": "temi-e-font",
    "numero": "3.3",
    "titolo": "Temi e font: un aspetto coerente",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f03-interfaccia/temi-e-font.json",
-   "sha256": "c2943dd17290ab47b55e5efcd207a33b62c2ce2022816df3069b58b46c8df097",
-   "byte": 213964
+   "sha256": "2a1e07b0bb72ad5749505d48ab3eafe70c69eba6d7215ef14705df43efe5440e",
+   "byte": 213785
   },
   {
    "slug": "interfaccia-in-partita",
    "numero": "3.4",
    "titolo": "L'interfaccia durante la partita: CanvasLayer",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f03-interfaccia/interfaccia-in-partita.json",
-   "sha256": "d1eca51b7a8f4b0b949c1af6fe795331ca0493bc4ed501a8b6cc662bd3258d1f",
-   "byte": 187618
+   "sha256": "6679c014a646136f6bd91e31c7e462f6f6a668f1dceedec027fe2fda6bd8c48c",
+   "byte": 188077
   },
   {
    "slug": "cambiare-scena",
    "numero": "3.5",
    "titolo": "Più scene: dal menu alla partita e ritorno",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f03-interfaccia/cambiare-scena.json",
-   "sha256": "bfe9f8a00b2a3092c9f322bc7bf109a532ea2220e093935f682799da917f77eb",
-   "byte": 208646
+   "sha256": "c6db5a16d2e997c11a2252365daba64864c525ae9b1b32d11736043c26f586c9",
+   "byte": 208993
   },
   {
    "slug": "autoload",

@@ -60,37 +60,37 @@
   "tentativi": {}
  },
  "cicli": {
-  "versione": 2,
+  "versione": 3,
   "fragili": [],
   "tentativi": {}
  },
  "array": {
-  "versione": 1,
+  "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
  "dictionary": {
-  "versione": 2,
+  "versione": 3,
   "fragili": [],
   "tentativi": {}
  },
  "stati-del-gioco": {
-  "versione": 1,
-  "fragili": [],
-  "tentativi": {}
- },
- "difficolta-che-cresce": {
   "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
+ "difficolta-che-cresce": {
+  "versione": 3,
+  "fragili": [],
+  "tentativi": {}
+ },
  "ordinare-il-codice": {
-  "versione": 1,
+  "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
  "classi-e-oggetti": {
-  "versione": 1,
+  "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
@@ -110,61 +110,61 @@
   "tentativi": {}
  },
  "albero-dei-nodi": {
-  "versione": 3,
+  "versione": 4,
   "fragili": [],
   "tentativi": {}
  },
  "raggiungere-i-nodi": {
-  "versione": 2,
+  "versione": 3,
   "fragili": [],
   "tentativi": {}
  },
  "scene-riutilizzabili": {
-  "versione": 2,
+  "versione": 3,
   "fragili": [],
   "tentativi": {}
  },
  "vita-di-un-nodo": {
-  "versione": 2,
+  "versione": 3,
   "fragili": [],
   "tentativi": {}
  },
  "segnali-esistenti": {
-  "versione": 1,
+  "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
  "timer": {
-  "versione": 4,
+  "versione": 5,
   "fragili": [],
   "tentativi": {
    "es2": 2
   }
  },
  "segnali-propri": {
-  "versione": 3,
+  "versione": 4,
   "fragili": [],
   "tentativi": {
    "es3": 2
   }
  },
  "gruppi": {
-  "versione": 1,
-  "fragili": [],
-  "tentativi": {}
- },
- "export": {
-  "versione": 1,
-  "fragili": [],
-  "tentativi": {}
- },
- "tween": {
   "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
+ "export": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "tween": {
+  "versione": 3,
+  "fragili": [],
+  "tentativi": {}
+ },
  "leggere-una-classe": {
-  "versione": 1,
+  "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
@@ -186,32 +186,32 @@
   "tentativi": {}
  },
  "control-ancore-e-dimensioni": {
-  "versione": 3,
+  "versione": 4,
   "fragili": [],
   "tentativi": {}
  },
  "contenitori": {
-  "versione": 3,
+  "versione": 4,
   "fragili": [],
   "tentativi": {}
  },
  "controlli-di-uso-comune": {
-  "versione": 3,
+  "versione": 4,
   "fragili": [],
   "tentativi": {}
  },
  "temi-e-font": {
-  "versione": 2,
+  "versione": 3,
   "fragili": [],
   "tentativi": {}
  },
  "interfaccia-in-partita": {
-  "versione": 2,
+  "versione": 3,
   "fragili": [],
   "tentativi": {}
  },
  "cambiare-scena": {
-  "versione": 1,
+  "versione": 2,
   "fragili": [],
   "tentativi": {}
  },
