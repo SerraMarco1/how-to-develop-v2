@@ -692,7 +692,9 @@
    "genere": "ripara",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione cambia anche warrior.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  warrior.gd:\n    - riga 8:   pass\n    + riga 8:   if stats:\n    + riga 9:     stats = stats.duplicate()\nCon quei file com'erano prima falliscono:\n  - WarriorB deve rimanere intatto a 20 HP (ha 15 HP)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
