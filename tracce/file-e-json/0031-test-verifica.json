@@ -1,0 +1,154 @@
+{
+ "n": 31,
+ "quando": "2026-10-23T05:31:25.500Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (ripara): 1 problema",
+ "spiegazione": "«Test finale: Protezione dai file rovinati», scritto da gemini/gemini-3.6-flash. 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono\nReazione: le correzioni previste sono finite.",
+ "richieste": 0,
+ "durataMs": 6641,
+ "dati": {
+  "problemi": [
+   "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Test finale: Protezione dai file rovinati",
+   "consegna": "Nel gioco `Quiz`, la funzione `load_topic_records()` in `quiz_data.gd` è stata modificata ed è diventata instabile: se il file `user://records.json` sul computer del giocatore è vuoto (0 byte) o rovinato, `QuizData` assegna `null` a `topic_records`, provocando un errore fatale al momento di accedere ai record.\n\nSintomi: sostituendo `user://records.json` con un file vuoto o con testo invalido, l'avvio del gioco o l'apertura del menu genera un crash.\n\nIspeziona `quiz_data.gd` e ripara `load_topic_records()` garantendo una protezione completa contro file mancanti, vuoti o corrotti:\n1. Se il file `user://records.json` non esiste (`FileAccess.file_exists`), non può essere aperto (`file == null`), la parsing JSON non restituisce `OK`, oppure `json.data` non è un `Dictionary` (`is Dictionary`), imposta sempre `topic_records = {}` (dizionario vuoto).\n2. Assegna `topic_records = json.data` solo quando l'analisi del file ha avuto successo ed è stato confermato che si tratta di un `Dictionary`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "quiz",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Verifica che `load_topic_records()` assegni sempre `topic_records = {}` quando `parse_result != OK` o quando `not (json.data is Dictionary)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://quiz_data.gd",
+     "regex": "func load_topic_records",
+     "descrizione": "In quiz_data.gd la funzione load_topic_records è definita"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data := get_node_or_null(\"/root/QuizData\")\n\tif not check(\"quiz_data_node\", quiz_data != null, \"L'autoload QuizData deve essere presente\"):\n\t\treturn\n\n\tif FileAccess.file_exists(\"user://records.json\"):\n\t\tDirAccess.remove_absolute(\"user://records.json\")\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_missing: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"missing_file\", ok_missing, \"Con file mancante topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_empty := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_empty != null:\n\t\tf_empty.store_string(\"\")\n\t\tf_empty.close()\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_empty: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"empty_file\", ok_empty, \"Con file vuoto topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_bad := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_bad != null:\n\t\tf_bad.store_string(\"testo non json {[\")\n\t\tf_bad.close()\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_corrupt: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"corrupt_file\", ok_corrupt, \"Con file rovinato topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_not_dict := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_not_dict != null:\n\t\tf_not_dict.store_string(\"123\")\n\t\tf_not_dict.close()\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_not_dict: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"not_dict_file\", ok_not_dict, \"Se il JSON contiene dati che non sono un Dictionary, topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_valid := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_valid != null:\n\t\tf_valid.store_string(\"{\\\"Cultura Generale\\\": 10}\")\n\t\tf_valid.close()\n\tquiz_data.load_topic_records()\n\tvar ok_valid: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.get(\"Cultura Generale\") == 10\n\tcheck(\"valid_file\", ok_valid, \"Con file JSON valido topic_records deve caricare i dati correttamente\")\n\n\tif FileAccess.file_exists(\"user://records.json\"):\n\t\tDirAccess.remove_absolute(\"user://records.json\")\n\n\tvar main := await instantiate_main_scene()\n\tcheck(\"main_runs\", main != null, \"Il gioco deve potersi avviare regolarmente\")\n",
+     "descrizione": "Il gioco gestisce in modo sicuro file mancanti, vuoti, corrotti e non-Dictionary in user://records.json senza crash"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Quiz\"\nrun/main_scene=\"res://menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nQuizData=\"*res://quiz_data.gd\"\n\n[display]\n\nwindow/size/viewport_width=1152\nwindow/size/viewport_height=648\nwindow/stretch/mode=\"canvas_items\"\nwindow/stretch/aspect=\"expand\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "results.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://results.gd\" id=\"1_results\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_results\"]\ndefault_font_size = 22\n\n[node name=\"Results\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_results\")\nscript = ExtResource(\"1_results\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 36\ntext = \"PARTITA TERMINATA\"\nhorizontal_alignment = 1\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Punteggio: 0\"\nhorizontal_alignment = 1\n\n[node name=\"HighScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Record: 0\"\nhorizontal_alignment = 1\n\n[node name=\"ButtonsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Rigioca\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+     },
+     {
+      "percorso": "quiz.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz.gd\" id=\"1_quiz\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_quiz\"]\ndefault_font_size = 20\n\n[node name=\"Quiz\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_quiz\")\nscript = ExtResource(\"1_quiz\")\n\n[node name=\"MarginContainer\" type=\"MarginContainer\" parent=\".\"]\nprocess_mode = 1\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 60\ntheme_override_constants/margin_top = 40\ntheme_override_constants/margin_right = 60\ntheme_override_constants/margin_bottom = 40\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"MarginContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 28\nalignment = 1\n\n[node name=\"TimeBar\" type=\"ProgressBar\" parent=\"MarginContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(0, 20)\nlayout_mode = 2\nmax_value = 5.0\nvalue = 5.0\nshow_percentage = false\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 26\ntext = \"Testo della domanda\"\nhorizontal_alignment = 1\nautowrap_mode = 2\n\n[node name=\"AnswersContainer\" type=\"VBoxContainer\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"Answer0\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 1\"\n\n[node name=\"Answer2\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 2\"\n\n[node name=\"Answer3\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 3\"\n\n[node name=\"QuestionTimer\" type=\"Timer\" parent=\".\"]\nprocess_mode = 1\none_shot = true\n\n[node name=\"FeedbackTimer\" type=\"Timer\" parent=\".\"]\nprocess_mode = 1\none_shot = true\n\n[node name=\"PauseMenu\" type=\"ColorRect\" parent=\".\"]\nvisible = false\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ncolor = Color(0, 0, 0, 0.705882)\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\"PauseMenu\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"PauseMenu/CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 20\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 32\ntext = \"PAUSA\"\nhorizontal_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Riprendi\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+     },
+     {
+      "percorso": "quiz_session.gd",
+      "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif correct:\n\t\tscore += 1\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n"
+     },
+     {
+      "percorso": "true_false_question.gd",
+      "contenuto": "class_name TrueFalseQuestion\nextends Question\n\n\nfunc _init(p_text: String = \"\", is_true: bool = true) -> void:\n\tvar correct: int = 0 if is_true else 1\n\tvar tf_options: Array[String] = [\"Vero\", \"Falso\"]\n\tsuper(p_text, tf_options, correct)\n"
+     },
+     {
+      "percorso": "numeric_question.gd",
+      "contenuto": "class_name NumericQuestion\nextends Question\n\nvar target_value: float = 0.0\nvar tolerance: float = 0.0\n\n\nfunc _init(\n\tp_text: String = \"\",\n\tp_options: Array[String] = [],\n\tp_target: float = 0.0,\n\tp_tolerance: float = 0.0\n) -> void:\n\tvar tol: float = absf(p_tolerance)\n\tvar correct_idx: int = -1\n\tfor i in range(p_options.size()):\n\t\tvar val: float = p_options[i].to_float()\n\t\tif absf(val - p_target) <= tol:\n\t\t\tcorrect_idx = i\n\t\t\tbreak\n\tsuper(p_text, p_options, correct_idx)\n\ttarget_value = p_target\n\ttolerance = tol\n\n\nfunc is_correct(answer_index: int) -> bool:\n\tif answer_index < 0 or answer_index >= options.size():\n\t\treturn false\n\tvar chosen_val: float = options[answer_index].to_float()\n\treturn absf(chosen_val - target_value) <= tolerance\n"
+     },
+     {
+      "percorso": "question.gd",
+      "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n\n\nstatic func from_dict(data: Dictionary) -> Question:\n\tvar q_text: String = str(data.get(\"question\", \"\"))\n\tvar raw_options: Array = data.get(\"options\", [])\n\tvar q_options: Array[String] = []\n\tfor item in raw_options:\n\t\tq_options.append(str(item))\n\tvar q_correct: int = int(data.get(\"correct\", 0))\n\treturn Question.new(q_text, q_options, q_correct)\n"
+     },
+     {
+      "percorso": "quiz_topic.gd",
+      "contenuto": "class_name QuizTopic\nextends Resource\n\n@export var title: String = \"\"\n@export var questions: Array[Question] = []\n\n\nfunc _init(p_title: String = \"\", p_questions: Array[Question] = []) -> void:\n\ttitle = p_title\n\tquestions = p_questions\n"
+     },
+     {
+      "percorso": "general_knowledge.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuizTopic\" load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz_topic.gd\" id=\"1_topic\"]\n[ext_resource type=\"Script\" path=\"res://question.gd\" id=\"2_question\"]\n\n[sub_resource type=\"Resource\" id=\"Resource_q1\"]\nscript = ExtResource(\"2_question\")\ntext = \"Quale pianeta è detto il Pianeta Rosso?\"\noptions = Array[String]([\"Venere\", \"Marte\", \"Giove\", \"Saturno\"])\ncorrect_index = 1\n\n[sub_resource type=\"Resource\" id=\"Resource_q2\"]\nscript = ExtResource(\"2_question\")\ntext = \"Qual è la capitale d'Italia?\"\noptions = Array[String]([\"Milano\", \"Napoli\", \"Roma\", \"Torino\"])\ncorrect_index = 2\n\n[resource]\nscript = ExtResource(\"1_topic\")\ntitle = \"Cultura Generale\"\nquestions = Array[ExtResource(\"2_question\")]([SubResource(\"Resource_q1\"), SubResource(\"Resource_q2\")])\n"
+     },
+     {
+      "percorso": "videogames.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuizTopic\" load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz_topic.gd\" id=\"1_topic\"]\n[ext_resource type=\"Script\" path=\"res://question.gd\" id=\"2_question\"]\n\n[sub_resource type=\"Resource\" id=\"Resource_v1\"]\nscript = ExtResource(\"2_question\")\ntext = \"Chi è l'idraulico baffuto di Nintendo?\"\noptions = Array[String]([\"Mario\", \"Luigi\", \"Wario\", \"Toad\"])\ncorrect_index = 0\n\n[sub_resource type=\"Resource\" id=\"Resource_v2\"]\nscript = ExtResource(\"2_question\")\ntext = \"In quale anno è uscito il primo Pac-Man?\"\noptions = Array[String]([\"1978\", \"1980\", \"1983\", \"1985\"])\ncorrect_index = 1\n\n[resource]\nscript = ExtResource(\"1_topic\")\ntitle = \"Videogiochi\"\nquestions = Array[ExtResource(\"2_question\")]([SubResource(\"Resource_v1\"), SubResource(\"Resource_v2\")])\n"
+     },
+     {
+      "percorso": "menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_menu\"]\ndefault_font_size = 22\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_menu\")\nscript = ExtResource(\"1_menu\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 40\ntext = \"IL QUIZ\"\nhorizontal_alignment = 1\n\n[node name=\"TopicsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n"
+     },
+     {
+      "percorso": "menu.gd",
+      "contenuto": "extends Control\n\n@export var topic_paths: Array[String] = [\n\t\"res://general_knowledge.tres\",\n\t\"res://videogames.tres\"\n]\n\n@onready var title_label: Label = $CenterContainer/VBoxContainer/TitleLabel\n@onready var topics_container: VBoxContainer = $CenterContainer/VBoxContainer/TopicsContainer\n\n\nfunc _ready() -> void:\n\tfor child in topics_container.get_children():\n\t\tchild.queue_free()\n\n\tvar first_button: Button = null\n\tfor path in topic_paths:\n\t\tvar topic: QuizTopic = load(path) as QuizTopic\n\t\tif topic == null:\n\t\t\tcontinue\n\n\t\tvar btn := Button.new()\n\t\tbtn.text = topic.title\n\t\tbtn.custom_minimum_size = Vector2(240, 48)\n\t\tbtn.pressed.connect(_on_topic_selected.bind(topic))\n\t\ttopics_container.add_child(btn)\n\n\t\tif first_button == null:\n\t\t\tfirst_button = btn\n\n\tif first_button != null:\n\t\tfirst_button.grab_focus()\n\n\nfunc _on_topic_selected(selected_topic: QuizTopic) -> void:\n\tif selected_topic != null:\n\t\tQuizData.questions = selected_topic.questions\n\t\tQuizData.current_topic_title = selected_topic.title\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n"
+     },
+     {
+      "percorso": "quiz.gd",
+      "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\n\nvar session: QuizSession\nvar answering_locked: bool = false\n\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n@onready var feedback_timer: Timer = $FeedbackTimer\n\n@onready var pause_menu: ColorRect = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n@onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tsession = QuizSession.new(QuizData.questions.duplicate())\n\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\tfeedback_timer.timeout.connect(_on_feedback_timeout)\n\n\tanswer_buttons[0].pressed.connect(_on_answer_0_pressed)\n\tanswer_buttons[1].pressed.connect(_on_answer_1_pressed)\n\tanswer_buttons[2].pressed.connect(_on_answer_2_pressed)\n\tanswer_buttons[3].pressed.connect(_on_answer_3_pressed)\n\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\tpause_menu.visible = false\n\tdisplay_current_question()\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\t\ttime_bar.value = question_timer.time_left\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\ttoggle_pause()\n\n\nfunc toggle_pause() -> void:\n\tvar is_paused: bool = not get_tree().paused\n\tget_tree().paused = is_paused\n\tpause_menu.visible = is_paused\n\tif is_paused:\n\t\tresume_button.grab_focus()\n\telse:\n\t\t_focus_first_active_answer()\n\n\nfunc _focus_first_active_answer() -> void:\n\tfor btn in answer_buttons:\n\t\tif btn.visible and not btn.disabled:\n\t\t\tbtn.grab_focus()\n\t\t\treturn\n\n\nfunc _on_resume_button_pressed() -> void:\n\ttoggle_pause()\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n\n\nfunc display_current_question() -> void:\n\tif session.is_finished():\n\t\tfinish_quiz()\n\t\treturn\n\n\tanswering_locked = false\n\tvar current: Question = session.get_current_question()\n\tquestion_label.text = current.text\n\n\tfor i in range(answer_buttons.size()):\n\t\tif i < current.options.size():\n\t\t\tanswer_buttons[i].text = current.options[i]\n\t\t\tanswer_buttons[i].visible = true\n\t\t\tanswer_buttons[i].disabled = false\n\t\telse:\n\t\t\tanswer_buttons[i].visible = false\n\t\t\tanswer_buttons[i].disabled = true\n\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\nfunc _on_answer_0_pressed() -> void:\n\t_select_answer(0)\n\n\nfunc _on_answer_1_pressed() -> void:\n\t_select_answer(1)\n\n\nfunc _on_answer_2_pressed() -> void:\n\t_select_answer(2)\n\n\nfunc _on_answer_3_pressed() -> void:\n\t_select_answer(3)\n\n\nfunc _select_answer(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar current: Question = session.get_current_question()\n\tvar was_correct: bool = session.submit_answer(button_index)\n\n\tif was_correct:\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\t\tanswer_buttons[current.correct_index].text += \"  [CORRETTO]\"\n\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tfeedback_timer.start(FEEDBACK_DURATION)\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar current: Question = session.get_current_question()\n\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\tanswer_buttons[current.correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tfeedback_timer.start(FEEDBACK_DURATION)\n\n\nfunc _on_feedback_timeout() -> void:\n\tsession.advance()\n\tdisplay_current_question()\n\n\nfunc finish_quiz() -> void:\n\tQuizData.score = session.score\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\t\tQuizData.save_high_score()\n\n\tif QuizData.current_topic_title != \"\":\n\t\tvar current_record: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\tif QuizData.score > current_record:\n\t\t\tQuizData.topic_records[QuizData.current_topic_title] = QuizData.score\n\t\t\tQuizData.save_topic_records()\n\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+     },
+     {
+      "percorso": "results.gd",
+      "contenuto": "extends Control\n\n@onready var score_label: Label = $CenterContainer/VBoxContainer/ScoreLabel\n@onready var high_score_label: Label = $CenterContainer/VBoxContainer/HighScoreLabel\n@onready var restart_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/RestartButton\n@onready var menu_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tscore_label.text = \"Punteggio: \" + str(QuizData.score)\n\tif QuizData.current_topic_title != \"\":\n\t\tvar topic_rec: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\thigh_score_label.text = \"Record (\" + QuizData.current_topic_title + \"): \" + str(topic_rec)\n\telse:\n\t\thigh_score_label.text = \"Record: \" + str(QuizData.high_score)\n\trestart_button.grab_focus()\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
+     },
+     {
+      "percorso": "quiz_data.gd",
+      "contenuto": "extends Node\n\nvar questions: Array[Question] = [\n\tQuestion.new(\n\t\t\"Quale pianeta del sistema solare è noto come il Pianeta Rosso?\",\n\t\t[\"Venere\", \"Marte\", \"Giove\", \"Saturno\"],\n\t\t1\n\t),\n\tQuestion.new(\n\t\t\"Qual è il linguaggio di scripting nativo di Godot?\",\n\t\t[\"GDScript\", \"Python\", \"Lua\", \"C#\"],\n\t\t0\n\t),\n\tTrueFalseQuestion.new(\n\t\t\"Il Sole è una stella.\",\n\t\ttrue\n\t),\n\tNumericQuestion.new(\n\t\t\"In quale anno è stato pubblicato Godot come progetto open source?\",\n\t\t[\"2010\", \"2014\", \"2018\", \"2020\"],\n\t\t2014.0,\n\t\t0.0\n\t)\n]\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tload_high_score()\n\tload_topic_records()\n\n\nfunc save_high_score() -> void:\n\tvar save_data: Dictionary = {\n\t\t\"high_score\": high_score\n\t}\n\tvar json_string: String = JSON.stringify(save_data)\n\tvar file: FileAccess = FileAccess.open(\"user://savegame.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_high_score() -> void:\n\tif not FileAccess.file_exists(\"user://savegame.json\"):\n\t\thigh_score = 0\n\t\treturn\n\n\tvar file: FileAccess = FileAccess.open(\"user://savegame.json\", FileAccess.READ)\n\tif file == null:\n\t\thigh_score = 0\n\t\treturn\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\thigh_score = 0\n\t\treturn\n\n\tif json.data is Dictionary and json.data.has(\"high_score\"):\n\t\thigh_score = int(json.data[\"high_score\"])\n\telse:\n\t\thigh_score = 0\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_topic_records() -> void:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\telse:\n\t\ttopic_records = {}\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Quiz",
+     "scenaPrincipale": "res://menu.tscn",
+     "azioni": [
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "QuizData",
+       "percorso": "res://quiz_data.gd"
+      }
+     ],
+     "impostazioni": [
+      {
+       "sezione": "display",
+       "chiave": "window/size/viewport_width",
+       "valore": "1152"
+      },
+      {
+       "sezione": "display",
+       "chiave": "window/size/viewport_height",
+       "valore": "648"
+      },
+      {
+       "sezione": "display",
+       "chiave": "window/stretch/mode",
+       "valore": "canvas_items"
+      },
+      {
+       "sezione": "display",
+       "chiave": "window/stretch/aspect",
+       "valore": "expand"
+      }
+     ]
+    },
+    "spiegazione": "Ripariamo `load_topic_records()` verificando in sequenza l'esistenza del file con `FileAccess.file_exists()`, la validità del puntatore ritornato da `open()`, il codice di ritorno `OK` di `json.parse()` e il tipo di dato `json.data is Dictionary`. Se una qualsiasi verifica fallisce, `topic_records` viene impostato in modo sicuro sul dizionario vuoto `{}`.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
