@@ -15,34 +15,34 @@
     "verifiche": [],
     "previsioni": [
      {
-      "codice": "class_name PrevediSemplice\nextends RefCounted\n\nsignal evento_completato(punti: int)\n\nfunc run() -> int:\n\tvar punteggio: int = 10\n\t_modifica_dopo.call_deferred()\n\tvar bonus: int = await evento_completato\n\treturn punteggio + bonus\n\nfunc _modifica_dopo() -> void:\n\tevento_completato.emit(5)",
+      "codice": "extends RefCounted\n\nsignal evento_completato(punti: int)\n\n\nfunc run() -> int:\n\tvar punteggio: int = 10\n\t_modifica_dopo.call_deferred()\n\tvar bonus: int = await evento_completato\n\treturn punteggio + bonus\n\n\nfunc _modifica_dopo() -> void:\n\tevento_completato.emit(5)",
       "domanda": "Quale numero intero restituisce la funzione run()?",
       "risposta": "",
-      "spiegazione": "`run()` si ferma sulla riga con `await evento_completato`. Nel frame successivo `_modifica_dopo()` viene eseguita ed emette il segnale con il valore `5`. L'await riceve `5`, lo assegna a `bonus` e la funzione prosegue restituendo `10 + 5 = 15`."
+      "spiegazione": "`run()` imposta `punteggio` a 10, pianifica l'esecuzione di `_modifica_dopo()` nel frame successivo e si sospende su `await evento_completato`. Nel frame differito viene emesso il segnale con il valore `5`. L'await riceve il parametro, lo assegna a `bonus` e la funzione prosegue restituendo `10 + 5 = 15`."
      },
      {
-      "codice": "class_name PrevediOrdine\nextends RefCounted\n\nfunc passo_a(registro: Array[String]) -> void:\n\tregistro.append(\"A\")\n\nfunc passo_b(registro: Array[String]) -> void:\n\tregistro.append(\"B\")\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\tpasso_a(registro)\n\tpasso_b(registro)\n\treturn \",\".join(registro)",
+      "codice": "extends RefCounted\n\n\nfunc passo_a(registro: Array[String]) -> void:\n\tregistro.append(\"A\")\n\n\nfunc passo_b(registro: Array[String]) -> void:\n\tregistro.append(\"B\")\n\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\tpasso_a(registro)\n\tpasso_b(registro)\n\treturn \",\".join(registro)",
       "domanda": "Quale testo restituisce la funzione run()?",
       "risposta": "",
-      "spiegazione": "Le due funzioni sono sincrone (non contengono `await`): `passo_a` scrive \"A\", poi `passo_b` scrive \"B\". Il metodo `join` unisce gli elementi con la virgola producendo `\"A,B\"`."
+      "spiegazione": "Le due funzioni sono sincrone (non contengono `await`): `passo_a` aggiunge `\"A\"`, poi `passo_b` aggiunge `\"B\"`. Il metodo `join` unisce gli elementi con la virgola producendo `\"A,B\"`."
      },
      {
-      "codice": "class_name PrevediCoroutine\nextends RefCounted\n\nsignal tick\n\nfunc operazione_lenta(registro: Array[String]) -> void:\n\tregistro.append(\"1\")\n\tawait tick\n\tregistro.append(\"2\")\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\toperazione_lenta(registro)\n\tregistro.append(\"3\")\n\ttick.emit()\n\treturn \",\".join(registro)",
+      "codice": "extends RefCounted\n\nsignal tick\n\n\nfunc operazione_lenta(registro: Array[String]) -> void:\n\tregistro.append(\"1\")\n\tawait tick\n\tregistro.append(\"2\")\n\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\toperazione_lenta(registro)\n\tregistro.append(\"3\")\n\ttick.emit()\n\treturn \",\".join(registro)",
       "domanda": "Quale testo restituisce la funzione run()?",
       "risposta": "",
-      "spiegazione": "Quando `run()` chiama `operazione_lenta(registro)` senza `await`, `operazione_lenta` appende `\"1\"` e poi si sospende su `await tick`, restituendo subito il controllo a `run()`. `run()` prosegue ed aggiunge `\"3\"`. Solo a quel punto viene emesso `tick.emit()`, risvegliando `operazione_lenta` che appende `\"2\"`. Il risultato finale è `\"1,3,2\"`."
+      "spiegazione": "Chiamando `operazione_lenta(registro)` senza `await`, la funzione aggiunge subito `\"1\"` e poi si sospende su `await tick`, restituendo immediatamente il controllo a `run()`. `run()` prosegue ed aggiunge `\"3\"`. Solo a quel punto viene eseguito `tick.emit()`, risvegliando `operazione_lenta` che aggiunge `\"2\"`. Il testo finale è `\"1,3,2\"`."
      },
      {
-      "codice": "class_name PrevediAwaitAnnidato\nextends RefCounted\n\nsignal pronto\n\nfunc azione_interna() -> int:\n\tawait pronto\n\treturn 40\n\nfunc operazione() -> int:\n\tvar valore: int = await azione_interna()\n\treturn valore + 2\n\nfunc run() -> int:\n\tpronto.emit.call_deferred()\n\tvar totale: int = await operazione()\n\treturn totale",
+      "codice": "extends RefCounted\n\nsignal pronto\n\n\nfunc azione_interna() -> int:\n\tawait pronto\n\treturn 40\n\n\nfunc operazione() -> int:\n\tvar valore: int = await azione_interna()\n\treturn valore + 2\n\n\nfunc run() -> int:\n\tpronto.emit.call_deferred()\n\tvar totale: int = await operazione()\n\treturn totale",
       "domanda": "Quale numero intero restituisce la funzione run()?",
       "risposta": "",
-      "spiegazione": "`run()` attende `operazione()`, che a sua volta attende `azione_interna()`. Nel ciclo successivo `pronto.emit()` risveglia `azione_interna`, che restituisce 40. `operazione()` riceve 40, aggiunge 2 ottenendo 42 e lo restituisce a `run()`. Il risultato è 42."
+      "spiegazione": "`run()` pianifica l'emissione del segnale `pronto` in differita e attende `operazione()`, che a sua volta attende `azione_interna()`. All'emissione differita di `pronto`, `azione_interna()` si risveglia e restituisce 40. `operazione()` riceve 40, calcola `40 + 2 = 42` e lo restituisce a `run()`, che a sua volta restituisce 42."
      },
      {
-      "codice": "class_name PrevediScudo\nextends RefCounted\n\nsignal passo\n\nfunc calcola() -> int:\n\tvar x: int = 10\n\tawait passo\n\tx += 5\n\tawait passo\n\tx += 20\n\treturn x\n\nfunc run() -> int:\n\tpasso.emit.call_deferred()\n\tvar res: int = await calcola()\n\treturn res",
+      "codice": "extends RefCounted\n\nsignal passo\n\nvar valore: int = 0\n\n\nfunc avvia() -> void:\n\tvalore += 1\n\tawait passo\n\tvalore += 10\n\n\nfunc run() -> int:\n\tavvia()\n\tavvia()\n\tpasso.emit()\n\treturn valore",
       "domanda": "Quale numero intero restituisce la funzione run()?",
       "risposta": "",
-      "spiegazione": "La funzione `run()` chiama in differita un solo `passo.emit()`. La coroutine `calcola()` riceve il primo segnale e porta `x` a 15, ma poi si blocca sul secondo `await passo` perché non viene emesso nessun altro segnale. Non terminando mai il secondo passo, la funzione non completa l'operazione."
+      "spiegazione": "La prima chiamata a `avvia()` porta `valore` a 1 e si sospende su `await passo`. La seconda chiamata a `avvia()` incrementa `valore` a 2 e si sospende sullo stesso segnale. Quando `run()` esegue `passo.emit()`, entrambe le coroutine in attesa vengono risvegliate dallo stesso segnale ed eseguono ciascuna `valore += 10` (2 + 10 + 10). Il valore finale restituito è 22."
      }
     ],
     "daTrovare": [],
@@ -54,13 +54,14 @@
     }
    },
    "genere": "prevedi",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la previsione 5 non si esegue in Godot 4.7: lo script deve essere GDScript valido con `func run():` che restituisce un valore"
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-latest"
    ]
   },
   "es2": {
@@ -291,7 +292,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "await: aspettare senza fermare il gioco",
