@@ -491,8 +491,8 @@
  },
  "contenitori": {
   "es1": {
-   "impronta": "0c00065f5e64d16a8a3536a10d677199be18352f8e81a87ceb977034551338cb",
-   "tentativi": 2,
+   "impronta": "65d6a1c3bae860885701d191539c44eba5d9be398c3b3fd8d4d25fc61f5e8b12",
+   "tentativi": 1,
    "esito": "fatto",
    "regole": 2
   },

@@ -1,0 +1,65 @@
+{
+ "n": 25,
+ "quando": "2026-10-23T12:01:25.275Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri main_menu.tscn e premi F6, 8 s. Soggetti: «Titolo» (esserci), «Pulsante» (esserci). Scritte: «Il titolo è centrato nella schermata principale» · «I contenitori posizionano i pulsanti senza coordinate». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 24 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 17668,
+ "dati": {
+  "copione": {
+   "scena": "res://main_menu.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "titolo",
+     "cerca": {
+      "nome": "TitleLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Titolo"
+    },
+    {
+     "id": "bottone",
+     "cerca": {
+      "nome": "PlayButton"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Pulsante"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il titolo è centrato nella schermata principale",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "titolo"
+    },
+    {
+     "testo": "I contenitori posizionano i pulsanti senza coordinate",
+     "da": 4,
+     "a": 7.5,
+     "soggetto": "bottone"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "facb534070c7acfcea17ccbc300ed44daf1539c14ba994de169ea9b65d604dae",
+   "estensione": "mp4",
+   "byte": 24175
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (8479 → 339 token)"
+ ]
+}
