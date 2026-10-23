@@ -1,0 +1,109 @@
+{
+ "n": 13,
+ "quando": "2026-10-23T03:28:02.417Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 3 (ripara): 1 problema",
+ "spiegazione": "«Dati modificati inaspettatamente», scritto da gemini/gemini-3.7-flash. 1 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione cambia anche warrior.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  warrior.gd:\n    - riga 8:   pass\n    + riga 8:   if stats:\n    + riga 9:     stats = stats.duplicate()\nCon quei file com'erano prima falliscono:\n  - WarriorB deve rimanere intatto a 20 HP (ha 15 HP)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 9075,
+ "dati": {
+  "problemi": [
+   "la soluzione cambia anche warrior.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  warrior.gd:\n    - riga 8:   pass\n    + riga 8:   if stats:\n    + riga 9:     stats = stats.duplicate()\nCon quei file com'erano prima falliscono:\n  - WarriorB deve rimanere intatto a 20 HP (ha 15 HP)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Dati modificati inaspettatamente",
+   "consegna": "Nel mini-progetto di gestione carte `CardGame`, due guerrieri (`WarriorA` e `WarriorB`) vengono generati a inizio partita a partire dal medesimo modello di dati risorsa (`warrior_template.tres`).\n\nSintomo del difetto: quando `WarriorA` subisce 5 punti di danno durante il duello, anche la salute di `WarriorB` diminuisce a vista d'occhio dello stesso valore, come se condividessero magicamente le ferite. Correggi il problema in modo che le modifiche ai punti vita di un guerriero non intacchino mai le statistiche dell'altro.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Ricorda la caratteristica fondamentale delle risorse in memoria: se due nodi puntano alla stessa istanza della risorsa caricata da disco, condividono lo stesso spazio in memoria.",
+    "Per rendere indipendente una risorsa prima di modificarne i dati variabili nel tempo, controlla il metodo `.duplicate()`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar warrior_a := find_by_name(main, \"WarriorA\")\n\tvar warrior_b := find_by_name(main, \"WarriorB\")\n\tif not check(\"warriors\", warrior_a != null and warrior_b != null, \"Servono entrambi i nodi WarriorA e WarriorB\"):\n\t\treturn\n\tcall_if_exists(warrior_a, \"take_damage\", [5])\n\tawait wait_frames(2)\n\tvar hp_a = get_prop(get_prop(warrior_a, \"stats\"), \"health\")\n\tvar hp_b = get_prop(get_prop(warrior_b, \"stats\"), \"health\")\n\tcheck(\"hp_a_reduced\", hp_a == 15, \"WarriorA doveva passare da 20 a 15 HP (ha %s HP)\" % str(hp_a))\n\tcheck(\"hp_b_intact\", hp_b == 20, \"WarriorB deve rimanere intatto a 20 HP (ha %s HP)\" % str(hp_b))\n",
+     "descrizione": "Ferire WarriorA non modifica i punti vita di WarriorB"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "CardGame",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CardGame\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "card_stats.gd",
+      "contenuto": "class_name CardStats\nextends Resource\n\n@export var card_name: String = \"Guerriero\"\n@export var health: int = 20\n"
+     },
+     {
+      "percorso": "warrior_template.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"CardStats\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://card_stats.gd\" id=\"1_stats\"]\n\n[resource]\nscript = ExtResource(\"1_stats\")\ncard_name = \"Guerriero\"\nhealth = 20\n"
+     },
+     {
+      "percorso": "warrior.gd",
+      "contenuto": "extends Node\nclass_name Warrior\n\n@export var stats: CardStats\n\n\nfunc _ready() -> void:\n\tpass\n\n\nfunc take_damage(amount: int) -> void:\n\tif stats:\n\t\tstats.health -= amount\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://warrior.gd\" id=\"1_warrior\"]\n[ext_resource type=\"Resource\" path=\"res://warrior_template.tres\" id=\"2_stats\"]\n\n[node name=\"Main\" type=\"Node\"]\n\n[node name=\"WarriorA\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"1_warrior\")\nstats = ExtResource(\"2_stats\")\n\n[node name=\"WarriorB\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"1_warrior\")\nstats = ExtResource(\"2_stats\")\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CardGame\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "card_stats.gd",
+      "contenuto": "class_name CardStats\nextends Resource\n\n@export var card_name: String = \"Guerriero\"\n@export var health: int = 20\n"
+     },
+     {
+      "percorso": "warrior_template.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"CardStats\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://card_stats.gd\" id=\"1_stats\"]\n\n[resource]\nscript = ExtResource(\"1_stats\")\ncard_name = \"Guerriero\"\nhealth = 20\n"
+     },
+     {
+      "percorso": "warrior.gd",
+      "contenuto": "extends Node\nclass_name Warrior\n\n@export var stats: CardStats\n\n\nfunc _ready() -> void:\n\tif stats:\n\t\tstats = stats.duplicate()\n\n\nfunc take_damage(amount: int) -> void:\n\tif stats:\n\t\tstats.health -= amount\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://warrior.gd\" id=\"1_warrior\"]\n[ext_resource type=\"Resource\" path=\"res://warrior_template.tres\" id=\"2_stats\"]\n\n[node name=\"Main\" type=\"Node\"]\n\n[node name=\"WarriorA\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"1_warrior\")\nstats = ExtResource(\"2_stats\")\n\n[node name=\"WarriorB\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"1_warrior\")\nstats = ExtResource(\"2_stats\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "CardGame",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Le risorse in Godot vengono caricate e mantenute in memoria come singola istanza condivisa per riferimento. Entrambi i guerrieri facevano riferimento allo stesso oggetto `CardStats`. Chiamando `stats = stats.duplicate()` in `_ready()`, ogni guerriero ottiene una copia indipendente della risorsa: quando uno subisce danno, modifica solo le proprie statistiche lasciando intatte quelle degli altri.",
+    "cambiati": [
+     "warrior.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es3",
+   "cartella": "dati-modificati-inaspettatamente"
+  }
+ },
+ "chiamate": []
+}
