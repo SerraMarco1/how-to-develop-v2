@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://falling_item.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"oggetto\",\n      \"cerca\": {\n        \"scena\": \"res://falling_item.tscn\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 4.0,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Oggetto\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"L'oggetto istanziato dallo stampo cade sullo schermo\",\n      \"da\": 0.5,\n      \"a\": 4.0,\n      \"soggetto\": \"oggetto\"\n    }\n  ]\n}",
+ "ragionamento": 1906,
+ "quando": "2026-10-23T11:22:46.472Z",
+ "ruolo": "ritocco"
+}

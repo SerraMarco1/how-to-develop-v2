@@ -238,11 +238,11 @@
  },
  "raggiungere-i-nodi": {
   "es1": {
-   "impronta": "0ed8fcac78e8ea4803430b33b3d306feff940f473306a812670741e44bfeb1b4",
+   "impronta": "0cc3d6b9bf2cef4c03a063a474c6851e75683bab0c144af1b6c87a2824367dd0",
    "tentativi": 1,
    "esito": "niente",
    "regole": 2,
-   "motivo": "Il gioco si comporta come prima e mostra lo stesso testo a schermo; l'esercizio ottimizza il codice usando un nome unico e l'annotazione onready senza cambiare l'aspetto visivo."
+   "motivo": "L'esercizio ottimizza il codice usando un nodo unico e @onready, ma il gioco si comporta e mostra la stessa interfaccia di prima."
   }
  },
  "scene-riutilizzabili": {
