@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": true, \"scena\": \"res://quiz.tscn\", \"durata\": 6, \"azioni\": [], \"soggetti\": [{\"id\": \"pulsante\", \"cerca\": {\"nome\": \"Answer0\", \"classe\": \"Button\"}, \"quanti\": 1, \"da\": 1.0, \"a\": 3.0, \"deve\": \"mostrare testo\", \"testo\": \"Venere\", \"etichetta\": \"Pulsante Risposta\"}], \"scritte\": [{\"testo\": \"Le domande a quattro scelte mostrano tutti i bottoni\", \"da\": 1.0, \"a\": 3.0, \"soggetto\": \"pulsante\"}]}",
- "ragionamento": 5222,
- "quando": "2026-10-23T03:23:08.365Z",
- "ruolo": "ritocco"
-}

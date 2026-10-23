@@ -1,0 +1,49 @@
+{
+ "n": 51,
+ "quando": "2026-10-23T03:23:18.694Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 2 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 24719,
+ "dati": {
+  "copione": {
+   "scena": "res://quiz.tscn",
+   "durata": 4,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "pulsante",
+     "cerca": {
+      "nome": "Answer0",
+      "classe": "Button"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 3,
+     "deve": "mostrare testo",
+     "testo": "Venere",
+     "etichetta": "Pulsante Risposta"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Le domande a quattro scelte mostrano tutti i bottoni",
+     "da": 1,
+     "a": 3,
+     "soggetto": "pulsante"
+    }
+   ]
+  },
+  "problemi": [
+   "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 14 s (7532 → 156 token)"
+ ]
+}
