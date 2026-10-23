@@ -544,9 +544,10 @@
  },
  "controlli-di-uso-comune": {
   "es1": {
-   "impronta": "671cee617f852aa20d57958a959a99155f54a07bbf3cb85b0e5c8aafb242abb5",
+   "impronta": "02607665ea116c34f97bcf96cadd24e6b0eb3787ec0b8ba465e74945d753e54f",
    "tentativi": 1,
-   "esito": "fatto"
+   "esito": "fatto",
+   "regole": 2
   }
  },
  "temi-e-font": {

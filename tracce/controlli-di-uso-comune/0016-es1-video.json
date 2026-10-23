@@ -1,0 +1,65 @@
+{
+ "n": 16,
+ "quando": "2026-10-23T12:03:23.911Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri new_game.tscn e premi F6, 8 s. Soggetti: «Menu Nuova Partita» (esserci), «Pulsante Gioca» (esserci). Scritte: «La schermata mostra i controlli per impostare la partita» · «Il pulsante Gioca si attiva dopo aver inserito il nome». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 29 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 38561,
+ "dati": {
+  "copione": {
+   "scena": "res://new_game.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "menu",
+     "cerca": {
+      "nome": "NewGameMenu"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Menu Nuova Partita"
+    },
+    {
+     "id": "pulsante",
+     "cerca": {
+      "nome": "StartButton"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Pulsante Gioca"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La schermata mostra i controlli per impostare la partita",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "menu"
+    },
+    {
+     "testo": "Il pulsante Gioca si attiva dopo aver inserito il nome",
+     "da": 4,
+     "a": 7.5,
+     "soggetto": "pulsante"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "526d6323d339543ca314099734d227b2e6a3010d31a2908284777b0b403f7f11",
+   "estensione": "mp4",
+   "byte": 29891
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 26 s (8485 → 348 token)"
+ ]
+}
