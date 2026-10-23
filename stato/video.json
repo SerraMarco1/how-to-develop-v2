@@ -247,42 +247,42 @@
  },
  "scene-riutilizzabili": {
   "es1": {
-   "impronta": "270a70da0b0de8725675cc6950855654d6518ad0b9232fe80fbffa87ebcc120d",
-   "tentativi": 2,
-   "esito": "niente",
+   "impronta": "905923282327ef4c18cb7672ecbbbf7018793dbab70c3d5e22c8fddf46ef044d",
+   "tentativi": 3,
+   "esito": "rinuncia",
    "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://basket.tscn",
-     "durata": 5,
+     "durata": 8,
      "azioni": [],
      "soggetti": [
       {
-       "id": "item",
+       "id": "falling_items",
        "cerca": {
         "classe": "FallingItem"
        },
        "quanti": 1,
-       "da": 0.5,
-       "a": 4,
-       "deve": "muoversi",
-       "etichetta": "Oggetto"
+       "da": 1,
+       "a": 7,
+       "deve": "esserci",
+       "etichetta": "Oggetti cadenti"
       }
      ],
      "scritte": [
       {
-       "testo": "Il nuovo stampo genera oggetti in caduta",
-       "da": 0.5,
-       "a": 4,
-       "soggetto": "item"
+       "testo": "Gli oggetti creati dallo stampo compaiono sullo schermo",
+       "da": 1,
+       "a": 7,
+       "soggetto": "falling_items"
       }
      ]
     },
     "problemi": [
-     "Soggetto «item» (classe = FallingItem; almeno 1 da 0.5 a 4 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 7, visibili al massimo 0. A 1 s: «FallingItem» a (589.8, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@129» a (989.7, 616) 128×128, fuori dallo schermo (dentro per il 25%); «@Sprite2D@130» a (1041.9, 616) 128×128, fuori dallo schermo (dentro per il 22%); «@Sprite2D@131» a (1196, 616) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
     ]
    },
-   "motivo": "Gli oggetti istanziati come figli del cesto vengono posizionati fuori dallo schermo in basso."
+   "motivo": "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
   }
  },
  "segnali-esistenti": {
