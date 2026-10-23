@@ -880,7 +880,9 @@
    "genere": "ripara",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione cambia anche item_data.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  item_data.gd:\n    - riga 4: var item_name: String = \"\"\n    - riga 5: var price: int = 0\n    - riga 8: func _init(p_name: String, p_price: int) -> void:\n    + riga 4: @export var item_name: String = \"\"\n    + riga 5: @export var price: int = 0\n    + riga 8: func _init(p_name: String = \"\", p_price: int = 0) -> void:\nCon quei file com'erano prima falliscono:\n  - PriceLabel deve mostrare il prezzo corretto caricato dal file potion.tres (50). Testo attuale: 'Prezzo: 0'\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
