@@ -1,0 +1,16 @@
+{
+ "n": 48,
+ "quando": "2026-10-23T08:14:59.424Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Salvare e caricare il record su disco» non si vede sullo schermo: Il salvataggio e il caricamento del record avvengono su file e non modificano elementi visivi sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 7223,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (7835 → 42 token)"
+ ]
+}

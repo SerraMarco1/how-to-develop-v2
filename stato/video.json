@@ -807,5 +807,14 @@
    "esito": "fatto",
    "regole": 2
   }
+ },
+ "file-e-json": {
+  "es1": {
+   "impronta": "9b8f96410b01d579186f5671c9ebb0c6862abbf09c76af857f98df37e6f5fd41",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il salvataggio e il caricamento del record avvengono su file e non modificano elementi visivi sullo schermo."
+  }
  }
 }

@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"Il salvataggio e il caricamento del record avvengono su file e non modificano elementi visivi sullo schermo.\"\n}",
- "ragionamento": 1632,
- "quando": "2026-10-23T08:14:58.134Z",
- "ruolo": "ritocco"
-}
