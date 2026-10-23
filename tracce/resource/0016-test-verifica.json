@@ -1,0 +1,108 @@
+{
+ "n": 16,
+ "quando": "2026-10-23T03:28:37.499Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (ripara): 1 problema",
+ "spiegazione": "«Risolvi i problemi di serializzazione delle risorse dell'inventario», scritto da gemini/gemini-3.7-flash. 1 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione cambia anche item_data.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  item_data.gd:\n    - riga 4: var item_name: String = \"\"\n    - riga 5: var price: int = 0\n    - riga 8: func _init(p_name: String, p_price: int) -> void:\n    + riga 4: @export var item_name: String = \"\"\n    + riga 5: @export var price: int = 0\n    + riga 8: func _init(p_name: String = \"\", p_price: int = 0) -> void:\nCon quei file com'erano prima falliscono:\n  - PriceLabel deve mostrare il prezzo corretto caricato dal file potion.tres (50). Testo attuale: 'Prezzo: 0'\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 10376,
+ "dati": {
+  "problemi": [
+   "la soluzione cambia anche item_data.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  item_data.gd:\n    - riga 4: var item_name: String = \"\"\n    - riga 5: var price: int = 0\n    - riga 8: func _init(p_name: String, p_price: int) -> void:\n    + riga 4: @export var item_name: String = \"\"\n    + riga 5: @export var price: int = 0\n    + riga 8: func _init(p_name: String = \"\", p_price: int = 0) -> void:\nCon quei file com'erano prima falliscono:\n  - PriceLabel deve mostrare il prezzo corretto caricato dal file potion.tres (50). Testo attuale: 'Prezzo: 0'\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Risolvi i problemi di serializzazione delle risorse dell'inventario",
+   "consegna": "Nel progetto `ItemShop`, gli oggetti in vendita sono definiti da risorse personalizzate salvate su file (`potion.tres`). Il gioco però non si avvia correttamente o genera errori di caricamento e azzeramento dei dati quando tenta di leggerli.\n\nSintomi del difetto:\n1. All'avvio della scena `shop.tscn`, la console segnala errori di istanziazione e la risorsa `potion.tres` perde i suoi valori nell'Inspector o non riesce a impostare il prezzo corretto a schermo.\n2. L'etichetta del negozio mostra un prezzo pari a 0 anziché il valore memorizzato nel file.\n\nTrova e correggi l'errore nello script della risorsa affinché il motore sia in grado di istanziare e caricare correttamente le proprietà da file.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Controlla attentamente come è definito il costruttore `_init` della risorsa e le annotazioni sulle sue proprietà esportate."
+   ],
+   "verifiche": [
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar shop := await instantiate_main_scene()\n\tif not check(\"shop\", shop != null, \"shop.tscn deve avviarsi senza errori di caricamento risorsa\"):\n\t\treturn\n\tvar label := find_by_name(shop, \"PriceLabel\") as Label\n\tif not check(\"label\", label != null, \"PriceLabel deve esistere nella scena\"):\n\t\treturn\n\tcheck(\"price_shown\", label.text.contains(\"50\"), \"PriceLabel deve mostrare il prezzo corretto caricato dal file potion.tres (50). Testo attuale: '%s'\" % label.text)\n",
+     "descrizione": "Il negozio carica l'oggetto e mostra a schermo il prezzo corretto"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "ItemShop",
+     "scenaPrincipale": "res://shop.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ItemShop\"\nrun/main_scene=\"res://shop.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "item_data.gd",
+      "contenuto": "class_name ItemData\nextends Resource\n\nvar item_name: String = \"\"\nvar price: int = 0\n\n\nfunc _init(p_name: String, p_price: int) -> void:\n\titem_name = p_name\n\tprice = p_price\n"
+     },
+     {
+      "percorso": "potion.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"ItemData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://item_data.gd\" id=\"1_item\"]\n\n[resource]\nscript = ExtResource(\"1_item\")\nitem_name = \"Pozione di Cura\"\nprice = 50\n"
+     },
+     {
+      "percorso": "shop.gd",
+      "contenuto": "extends Control\n\n@export var current_item: ItemData\n@onready var price_label: Label = $PriceLabel\n\n\nfunc _ready() -> void:\n\tif current_item != null:\n\t\tprice_label.text = current_item.item_name + \": \" + str(current_item.price) + \" monete\"\n"
+     },
+     {
+      "percorso": "shop.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://shop.gd\" id=\"1_shop\"]\n[ext_resource type=\"Resource\" path=\"res://potion.tres\" id=\"2_item\"]\n\n[node name=\"Shop\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_shop\")\ncurrent_item = ExtResource(\"2_item\")\n\n[node name=\"PriceLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 300.0\noffset_bottom = 80.0\ntext = \"Prezzo: 0\"\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ItemShop\"\nrun/main_scene=\"res://shop.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "item_data.gd",
+      "contenuto": "class_name ItemData\nextends Resource\n\n@export var item_name: String = \"\"\n@export var price: int = 0\n\n\nfunc _init(p_name: String = \"\", p_price: int = 0) -> void:\n\titem_name = p_name\n\tprice = p_price\n"
+     },
+     {
+      "percorso": "potion.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"ItemData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://item_data.gd\" id=\"1_item\"]\n\n[resource]\nscript = ExtResource(\"1_item\")\nitem_name = \"Pozione di Cura\"\nprice = 50\n"
+     },
+     {
+      "percorso": "shop.gd",
+      "contenuto": "extends Control\n\n@export var current_item: ItemData\n@onready var price_label: Label = $PriceLabel\n\n\nfunc _ready() -> void:\n\tif current_item != null:\n\t\tprice_label.text = current_item.item_name + \": \" + str(current_item.price) + \" monete\"\n"
+     },
+     {
+      "percorso": "shop.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://shop.gd\" id=\"1_shop\"]\n[ext_resource type=\"Resource\" path=\"res://potion.tres\" id=\"2_item\"]\n\n[node name=\"Shop\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_shop\")\ncurrent_item = ExtResource(\"2_item\")\n\n[node name=\"PriceLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 300.0\noffset_bottom = 80.0\ntext = \"Prezzo: 0\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "ItemShop",
+     "scenaPrincipale": "res://shop.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Gli script che estendono `Resource` richiedono due condizioni fondamentali per funzionare correttamente con il motore di serializzazione: 1) le variabili devono essere annotate con `@export` affinché Godot le salvi e le carichi da disco; 2) il costruttore `_init()` deve prevedere valori predefiniti per tutti i suoi parametri (`p_name: String = \"\"`, `p_price: int = 0`), perché Godot istanzia le risorse da file senza passare argomenti a `_init`.",
+    "cambiati": [
+     "item_data.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test",
+   "cartella": "risolvi-i-problemi-di-serializzazione-de"
+  }
+ },
+ "chiamate": []
+}
