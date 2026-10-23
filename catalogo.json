@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-23T03:07:08.150Z",
+ "aggiornato": "2026-10-23T03:41:32.410Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -461,6 +461,15 @@
    "file": "lezioni/f04-programmare-meglio/ereditarieta-e-composizione.json",
    "sha256": "288641ff1f9196db1bf9598cc4a89a4f0164309818a4c62f22400b4dcdad11d4",
    "byte": 104356
+  },
+  {
+   "slug": "resource",
+   "numero": "4.2",
+   "titolo": "Resource: i dati come file",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/resource.json",
+   "sha256": "62876a667ec874f556379e1d547ba92a54f92dc740de297c76ef266fb36d380a",
+   "byte": 112314
   }
  ],
  "documentazione": {
