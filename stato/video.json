@@ -230,9 +230,10 @@
  },
  "albero-dei-nodi": {
   "es1": {
-   "impronta": "f3e0138730a7b6eade4a364d06a42e2210ef4ecf2b97d15ed6d72ca3cd88896b",
+   "impronta": "8f36622105b8e8ffe8ffcd3cabb86b0badf68f6c2358239072bd397fd4ab8011",
    "tentativi": 1,
-   "esito": "fatto"
+   "esito": "fatto",
+   "regole": 2
   }
  },
  "raggiungere-i-nodi": {

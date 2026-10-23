@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": true, \"scena\": \"res://basket.tscn\", \"durata\": 6, \"azioni\": [{\"azione\": \"move_right\", \"inizio\": 1.0, \"fine\": 4.0, \"tasto\": \"D\"}], \"soggetti\": [{\"id\": \"ombra\", \"cerca\": {\"nome\": \"Shadow\"}, \"quanti\": 1, \"da\": 1.0, \"a\": 4.0, \"deve\": \"muoversi\", \"etichetta\": \"Ombra\"}], \"scritte\": [{\"testo\": \"L'ombra segue i movimenti del cesto\", \"da\": 1.0, \"a\": 4.0, \"soggetto\": \"ombra\"}]}",
- "ragionamento": 1847,
- "quando": "2026-10-23T11:22:22.139Z",
- "ruolo": "ritocco"
-}

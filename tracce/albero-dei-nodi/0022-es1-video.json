@@ -1,0 +1,55 @@
+{
+ "n": 22,
+ "quando": "2026-10-23T11:22:33.906Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 5 s. Soggetti: «Ombra» (muoversi). Scritte: «L'ombra segue i movimenti del cesto». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 193 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 17135,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 5,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 4,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "ombra",
+     "cerca": {
+      "nome": "Shadow"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 4,
+     "deve": "muoversi",
+     "etichetta": "Ombra"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'ombra segue i movimenti del cesto",
+     "da": 1,
+     "a": 4,
+     "soggetto": "ombra"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "8528f8bb3a9e79561db7191435097e177097a4f6a983fe49ac9e8756cffe1f0c",
+   "estensione": "mp4",
+   "byte": 197409
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (6166 → 165 token)"
+ ]
+}
