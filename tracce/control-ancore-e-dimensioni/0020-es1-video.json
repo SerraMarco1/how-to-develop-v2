@@ -1,0 +1,67 @@
+{
+ "n": 20,
+ "quando": "2026-10-23T12:01:06.342Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri hud.tscn e premi F6, 8 s. Soggetti: «Punteggio» (mostrare testo), «Messaggio» (mostrare testo). Scritte: «Il punteggio iniziale parte da zero» · «Il messaggio al centro mostra Pronti?». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 21 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 21124,
+ "dati": {
+  "copione": {
+   "scena": "res://hud.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "score",
+     "cerca": {
+      "nome": "ScoreLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "mostrare testo",
+     "testo": "Punti: 0",
+     "etichetta": "Punteggio"
+    },
+    {
+     "id": "message",
+     "cerca": {
+      "nome": "MessageLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "mostrare testo",
+     "testo": "Pronti?",
+     "etichetta": "Messaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il punteggio iniziale parte da zero",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "score"
+    },
+    {
+     "testo": "Il messaggio al centro mostra Pronti?",
+     "da": 4,
+     "a": 7.5,
+     "soggetto": "message"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "23c4fc4bb06b1d497b00cb793d28afb8ec323cbb01ea4095f3f6222c609d96ec",
+   "estensione": "mp4",
+   "byte": 21181
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (8586 → 352 token)"
+ ]
+}
