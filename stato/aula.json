@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-23T07:56:50.263Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-23T08:01:53.399Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "file-e-json",
-  "numero": "4.3",
-  "titolo": "File e JSON: leggere e scrivere"
+  "slug": "await-e-coroutine",
+  "numero": "4.4",
+  "titolo": "await: aspettare senza fermare il gioco"
  },
- "messaggio": "Sta scrivendo la lezione 4.3 «File e JSON: leggere e scrivere».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.4 riprende da sola appena rispondono.",
+ "riprende": "2026-10-23T08:11:53.399Z"
 }
