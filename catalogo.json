@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-23T11:22:33.915Z",
+ "aggiornato": "2026-10-23T11:26:52.135Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -286,10 +286,10 @@
    "slug": "tween",
    "numero": "2.9",
    "titolo": "Tween: animare con il codice",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f02-nodi-scene-segnali/tween.json",
-   "sha256": "6c2ce02261aca81d2892cd93bff4a14782541487f21e49081da6a9cde3b0fbb7",
-   "byte": 135581
+   "sha256": "28d5ebdb037e71718641686c3e76f2d99a23a10a89014d21ec0c943a39305e5b",
+   "byte": 136760
   },
   {
    "slug": "leggere-una-classe",

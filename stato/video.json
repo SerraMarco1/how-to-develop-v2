@@ -437,9 +437,9 @@
    "regole": 2
   },
   "test": {
-   "impronta": "caff358e197abc6a60a653ce1de6ac1467cf7d1e387ffb95376b5b753b659e87",
-   "tentativi": 2,
-   "esito": "niente",
+   "impronta": "1ccc688f6e0fa21cab49135ab40160ae7b5a40ee416fb8e6a2e103bbebac9fab",
+   "tentativi": 1,
+   "esito": "in corso",
    "regole": 2,
    "ultimo": {
     "copione": {
@@ -453,26 +453,26 @@
         "nome": "RestartButton"
        },
        "quanti": 1,
-       "da": 4,
-       "a": 7,
+       "da": 5,
+       "a": 7.5,
        "deve": "comparire",
        "etichetta": "Pulsante Ricomincia"
       }
      ],
      "scritte": [
       {
-       "testo": "Il pulsante di ricomincia compare con una dissolvenza fluida",
-       "da": 4,
-       "a": 7,
+       "testo": "Il pulsante di fine partita compare con una dissolvenza fluida",
+       "da": 5,
+       "a": 7.5,
        "soggetto": "pulsante"
       }
      ]
     },
     "problemi": [
-     "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 4 a 7 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 4 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+     "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 5 a 7.5 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 5 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "Il pulsante di ricomincia compare solo in caso di sconfitta e la sua apparizione non può essere sincronizzata con precisione in un test automatico."
+   "motivo": "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 5 a 7.5 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 5 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
   }
  },
  "control-ancore-e-dimensioni": {
