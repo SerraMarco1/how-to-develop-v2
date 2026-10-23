@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": true, \"scena\": \"res://main_menu.tscn\", \"durata\": 6, \"azioni\": [], \"soggetti\": [{\"id\": \"versione\", \"cerca\": {\"nome\": \"VersionLabel\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 5.5, \"deve\": \"mostrare testo\", \"testo\": \"v1.0\", \"etichetta\": \"Versione\"}], \"scritte\": [{\"testo\": \"Il testo di versione mostra v1.0 a destra\", \"da\": 0.5, \"a\": 5.5, \"soggetto\": \"versione\"}]}",
- "ragionamento": 1135,
- "quando": "2026-10-23T12:02:35.856Z",
- "ruolo": "ritocco"
-}

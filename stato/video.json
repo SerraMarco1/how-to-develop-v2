@@ -503,7 +503,7 @@
    "regole": 2
   },
   "test": {
-   "impronta": "58497fef5045e5a14308846adc1b7dab8cc8784ad6030c6db029cbf5b618005d",
+   "impronta": "01289c224800dd358335702d743304da305329bc237b6ddcbb7f980f69f0e951",
    "tentativi": 3,
    "esito": "rinuncia",
    "regole": 2,
@@ -514,7 +514,7 @@
      "azioni": [],
      "soggetti": [
       {
-       "id": "version",
+       "id": "versione",
        "cerca": {
         "nome": "VersionLabel"
        },
@@ -522,23 +522,24 @@
        "da": 0.5,
        "a": 5.5,
        "deve": "mostrare testo",
+       "testo": "v1.0",
        "etichetta": "Versione"
       }
      ],
      "scritte": [
       {
-       "testo": "Il testo di versione compare nell'angolo in basso a destra",
+       "testo": "Il testo di versione mostra v1.0 a destra",
        "da": 0.5,
        "a": 5.5,
-       "soggetto": "version"
+       "soggetto": "versione"
       }
      ]
     },
     "problemi": [
-     "Soggetto «version»: per \"mostrare testo\" serve il campo testo."
+     "Soggetto «versione» (nome = VersionLabel; almeno 1 da 0.5 a 5.5 s; deve mostrare il testo «v1.0»): Godot dice che si vede, ma nei fotogrammi del video in quel punto c'è solo lo sfondo (qualcosa di disegnato in 0 riquadri su 11): un altro nodo lo copre, o non disegna niente."
     ]
    },
-   "motivo": "Soggetto «version»: per \"mostrare testo\" serve il campo testo."
+   "motivo": "Soggetto «versione» (nome = VersionLabel; almeno 1 da 0.5 a 5.5 s; deve mostrare il testo «v1.0»): Godot dice che si vede, ma nei fotogrammi del video in quel punto c'è solo lo sfondo (qualcosa di disegnato in 0 riquadri su 11): un altro nodo lo copre, o non disegna niente."
   }
  },
  "controlli-di-uso-comune": {
