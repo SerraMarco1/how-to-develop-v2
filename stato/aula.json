@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-23T03:41:04.583Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-23T03:41:58.452Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "resource",
-  "numero": "4.2",
-  "titolo": "Resource: i dati come file"
+  "slug": "file-e-json",
+  "numero": "4.3",
+  "titolo": "File e JSON: leggere e scrivere"
  },
- "messaggio": "Sta scrivendo la lezione 4.2 «Resource: i dati come file».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.3 riprende da sola appena rispondono.",
+ "riprende": "2026-10-23T03:51:58.451Z"
 }
