@@ -1,0 +1,67 @@
+{
+ "n": 22,
+ "quando": "2026-10-23T11:20:48.184Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Stelle» (muoversi). Scritte: «L'Array gestisce le stelle che scendono» · «Le stelle vengono sostituite quando escono». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 375 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 18454,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_left",
+     "inizio": 1,
+     "fine": 3,
+     "tasto": "A"
+    },
+    {
+     "azione": "move_right",
+     "inizio": 4,
+     "fine": 6,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "stelle",
+     "cerca": {
+      "scena": "res://star.tscn"
+     },
+     "quanti": 5,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "muoversi",
+     "etichetta": "Stelle"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'Array gestisce le stelle che scendono",
+     "da": 1,
+     "a": 3.5,
+     "soggetto": "stelle"
+    },
+    {
+     "testo": "Le stelle vengono sostituite quando escono",
+     "da": 4.5,
+     "a": 7.5,
+     "soggetto": "stelle"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "80ab45705d19e618a79ec22d14cce53d6709dfe1a4bdd948d7230c627fdf3819",
+   "estensione": "mp4",
+   "byte": 383714
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (5703 → 347 token)"
+ ]
+}
