@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://new_game.tscn\",\n  \"durata\": 8,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"menu\",\n      \"cerca\": {\n        \"nome\": \"NewGameMenu\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Menu Nuova Partita\"\n    },\n    {\n      \"id\": \"pulsante\",\n      \"cerca\": {\n        \"nome\": \"StartButton\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Pulsante Gioca\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"La schermata mostra i controlli per impostare la partita\",\n      \"da\": 0.5,\n      \"a\": 3.5,\n      \"soggetto\": \"menu\"\n    },\n    {\n      \"testo\": \"Il pulsante Gioca si attiva dopo aver inserito il nome\",\n      \"da\": 4.0,\n      \"a\": 7.5,\n      \"soggetto\": \"pulsante\"\n    }\n  ]\n}",
+ "ragionamento": 2787,
+ "quando": "2026-10-23T12:03:11.196Z",
+ "ruolo": "ritocco"
+}
