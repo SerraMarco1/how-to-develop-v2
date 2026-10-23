@@ -87,7 +87,8 @@ async function giro(): Promise<number> {
     if (segnalazione) await commenta(segnalazione, "Riprova avviata: la fabbrica riparte da questa lezione.", true).catch(() => {});
     await salva(`${slug}: riprova chiesta dal proprietario`, { subito: true });
   }
-  // Mentre si aspettano i modelli si fa solo ciò che non li usa: una correzione del gioco (vedi correzioni.ts).
+  // Mentre si aspettano i modelli si fa solo ciò che non li usa: una correzione del gioco (vedi correzioni.ts) e, subito
+  // dopo, i video dei suoi esercizi che passano ancora con lo stesso copione.
   let soloSenzaModelli = false;
   if (!argomenti.has("--riprova") && stato.prossimoTentativo && Date.now() < stato.prossimoTentativo && !argomenti.has("--solo-prepara")) {
     const quando = new Date(stato.prossimoTentativo).toLocaleTimeString("it-IT", { timeZone: "Europe/Rome" });
@@ -111,7 +112,12 @@ async function giro(): Promise<number> {
   if (soloSenzaModelli) {
     try {
       const corrette = await applicaCorrezioni();
-      if (corrette) log(`Gioco corretto in ${corrette} ${corrette === 1 ? "lezione" : "lezioni"}`);
+      if (corrette) {
+        log(`Gioco corretto in ${corrette} ${corrette === 1 ? "lezione" : "lezioni"}`);
+        // I video degli esercizi cambiati: quelli che passano ancora con lo stesso copione tornano subito, senza modelli.
+        const filmate = await completaVideo({ senzaModelli: true });
+        if (filmate) log(`Video rifatti con lo stesso copione in ${filmate} ${filmate === 1 ? "lezione" : "lezioni"}`);
+      }
     } catch (errore) {
       if (!(errore instanceof GiroFinito)) throw errore;
       log(errore.message);

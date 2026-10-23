@@ -15,7 +15,7 @@ import { leggiJson, salva, scriviFile, scriviJson } from "../archivio.ts";
 import { catalogo, paccoPubblicato } from "../corso.ts";
 import { versioneConGliStessiEsercizi } from "../robustezza.ts";
 import { controllaTempo, GiroFinito } from "../tempo.ts";
-import { costoLezione, registra, type Pezzo } from "../traccia.ts";
+import { costoLezione, registra, registroDiLezione, type Pezzo } from "../traccia.ts";
 import { baseDi, progettoPerPrompt, statoDopo } from "./pratica.ts";
 import { aggiornaCatalogo, salvaMedia } from "./pubblica.ts";
 
@@ -29,6 +29,10 @@ import { aggiornaCatalogo, salvaMedia } from "./pubblica.ts";
 // Si fa a ogni giro, prima di scrivere lezioni nuove, per le lezioni pubblicate che non hanno ancora il video (anche
 // quella appena uscita: la pubblicazione non aspetta mai un video). Una lezione con video nuovi esce in una versione nuova
 // in cui cambiano solo i video; i progressi nell'aula restano, perché sono legati alla lezione e non alla versione.
+//
+// Un video vale finché non cambiano la soluzione del suo esercizio o il progetto di partenza. Quando cambiano (una
+// correzione del gioco, una segnalazione), prima di chiedere un copione nuovo si registra di nuovo quello del video di
+// prima, con tutti i controlli: se passa ancora, il video torna senza richieste; se no, il modello parte da lui.
 
 const FILE = "stato/video.json";
 const TENTATIVI = 3;
@@ -46,8 +50,11 @@ const GENERI_CON_VIDEO = new Set(["guidato", "imita"]);
  * Per ogni lezione e esercizio: l'impronta della soluzione su cui si è lavorato, i tentativi fatti e com'è finita.
  * "niente": il modello dice che il risultato non si vede sullo schermo; "invisibile": i nodi dell'esercizio ci sono ma
  * fuori dallo schermo (o nascosti); "rinuncia": tentativi finiti per altri motivi. Con l'impronta cambiata si riprova.
+ * `copione`: quello dell'ultimo video fatto, che resta anche quando la soluzione cambia e il video viene tolto (una
+ * correzione del gioco, una segnalazione): prima di chiederne uno nuovo si registra di nuovo lui. `riprovato`: l'impronta
+ * su cui, registrato di nuovo, non ha passato i controlli (su quella non si riprova).
  */
-type StatoVideo = { impronta: string; tentativi: number; esito: "in corso" | "fatto" | "niente" | "invisibile" | "rinuncia"; motivo?: string; ultimo?: { copione: unknown; problemi: string[] }; regole?: number; ritaglioFallito?: string };
+type StatoVideo = { impronta: string; tentativi: number; esito: "in corso" | "fatto" | "niente" | "invisibile" | "rinuncia"; motivo?: string; ultimo?: { copione: unknown; problemi: string[]; videoDiPrima?: boolean }; regole?: number; ritaglioFallito?: string; copione?: Copione; riprovato?: string };
 type Registro = Record<string, Record<string, StatoVideo>>;
 
 const RispostaCopioneSchema = z
@@ -121,12 +128,16 @@ function schermoDelProgetto(e: Esercizio): string {
 
 const scenaPrincipaleDi = (e: Esercizio) => e.soluzione.progetto?.scenaPrincipale || undefined;
 
-function richiestaCopione(slug: string, e: Esercizio, precedente?: { copione: unknown; problemi: string[] }): RichiestaAI<z.infer<typeof RispostaCopioneSchema>> {
+function richiestaCopione(slug: string, e: Esercizio, precedente?: StatoVideo["ultimo"]): RichiestaAI<z.infer<typeof RispostaCopioneSchema>> {
   const azioni = azioniDelProgetto(e);
   const tasti = new Map((e.soluzione.progetto?.azioni ?? []).map((a) => [a.nome, a.tasti]));
-  const correzione = precedente
-    ? `\n## Il copione di prima è stato scartato\n${JSON.stringify(precedente.copione)}\n\nPerché (misurato da Godot):\n${precedente.problemi.map((p) => `- ${p.slice(0, 900)}`).join("\n")}\n\nScrivi un copione nuovo che tenga conto di queste misure. Se i nodi che l'esercizio crea stanno davvero fuori dallo schermo, il video non si può fare: rispondi {"video": false, "perche": "…"}.\n`
-    : "";
+  const misure = precedente?.problemi.map((p) => `- ${p.slice(0, 900)}`).join("\n");
+  const invisibile = `Se i nodi che l'esercizio crea stanno davvero fuori dallo schermo, il video non si può fare: rispondi {"video": false, "perche": "…"}.`;
+  const correzione = !precedente
+    ? ""
+    : precedente.videoDiPrima
+      ? `\n## Il copione del video di prima non passa più\nQuesto copione faceva il video dell'esercizio prima che cambiassero la soluzione o il progetto di partenza:\n${JSON.stringify(precedente.copione)}\n\nSulla soluzione di oggi non supera i controlli (misurato da Godot):\n${misure}\n\nParti da lui: tieni ciò che funziona ancora (scena, tasti tenuti premuti, soggetti, tempi) e cambia solo ciò che queste misure dicono. ${invisibile}\n`
+      : `\n## Il copione di prima è stato scartato\n${JSON.stringify(precedente.copione)}\n\nPerché (misurato da Godot):\n${misure}\n\nScrivi un copione nuovo che tenga conto di queste misure. ${invisibile}\n`;
   return {
     ruolo: "ritocco",
     slug,
@@ -192,7 +203,7 @@ async function provaCopione(e: Esercizio, base: StatoProgetto, copione: Copione,
   }
 }
 
-async function unTentativo(slug: string, e: Esercizio, base: StatoProgetto, impronta: string, tentativo: number, precedente?: { copione: unknown; problemi: string[] }): Promise<EsitoTentativo> {
+async function unTentativo(slug: string, e: Esercizio, base: StatoProgetto, impronta: string, tentativo: number, precedente?: StatoVideo["ultimo"]): Promise<EsitoTentativo> {
   const richiesta = richiestaCopione(slug, e, precedente);
   // Nessun modello libero per il copione: non si bussa, si riprova al giro dopo.
   if (candidati("ritocco", { tokenStimati: stimaToken(richiesta.messaggi) + (richiesta.maxTokens ?? 4000), escludi: [] }).disponibili.length === 0) return { attesa: true };
@@ -268,26 +279,57 @@ async function unTentativo(slug: string, e: Esercizio, base: StatoProgetto, impr
 }
 
 /**
- * Registra di nuovo il copione di un video già pubblicato, con tutti i controlli, e lo taglia all'inizio: il video da
- * pubblicare, o null se qualcosa non va (resta nella traccia, e il video di prima resta pubblicato).
+ * Il copione dell'ultimo video fatto per un esercizio: quello del registro o, per i video fatti prima del 23 ottobre 2026
+ * (allora il registro non lo teneva), quello dell'ultima registrazione riuscita nella traccia della lezione.
  */
-async function ritaglia(slug: string, e: Esercizio, base: StatoProgetto, copione: Copione, impronta: string): Promise<{ video: VideoEsercizio; media: Media } | null> {
+function copioneRiuscito(slug: string, id: string, prima: StatoVideo | undefined): Copione | null {
+  const dalRegistro = CopioneSchema.safeParse(prima?.copione);
+  if (dalRegistro.success) return dalRegistro.data;
+  for (const riga of registroDiLezione(slug).reverse()) {
+    if (riga.pezzo !== id || riga.azione !== "video" || riga.esito !== "ok" || !riga.dati) continue;
+    try {
+      const copione = CopioneSchema.safeParse(leggiJson<{ dati?: { copione?: unknown } | null }>(`tracce/${slug}/${riga.dati}`, {}).dati?.copione);
+      if (copione.success) return copione.data;
+    } catch {
+      // Un file della traccia illeggibile: si guarda la registrazione prima.
+    }
+  }
+  return null;
+}
+
+/**
+ * Registra di nuovo un copione che ha già fatto un video, con tutti i controlli di un copione nuovo, senza chiedere niente
+ * ai modelli. "taglio": il video pubblicato è giusto ma comincia con secondi in cui non si spiega niente. "soluzione": la
+ * soluzione o il progetto di partenza sono cambiati (una correzione del gioco, una segnalazione) e il video di prima non
+ * vale più; se lo stesso copione passa ancora, il video torna, ripreso sul gioco di oggi. Il 19 e il 23 ottobre, chiedendo
+ * un copione nuovo per la 2.5, il modello non fece più tenere premuto A: si vinceva prima della pausa tra le ondate, e il
+ * video si perse. Restituisce il video da pubblicare, o i problemi trovati (anche nella traccia).
+ */
+async function registraDiNuovo(slug: string, e: Esercizio, base: StatoProgetto, copione: Copione, impronta: string, perche: "taglio" | "soluzione"): Promise<{ video: VideoEsercizio; media: Media } | { problemi: string[] }> {
   const dalle = Date.now();
   const inizio = inizioDelVideo(copione);
+  const nonRiuscito = perche === "taglio" ? `${nomePezzo(e)}: taglio dell'inizio del video non riuscito` : `${nomePezzo(e)}: lo stesso copione non supera più i controlli`;
+  const reazione = perche === "taglio" ? "resta pubblicato il video di prima, non si riprova." : "su questa soluzione non si riprova. Se per lei il video non è già deciso, il copione nuovo si chiede al modello partendo da questo e da queste misure.";
   const uscita = nuovaCartellaTemporanea("video-mp4");
   try {
+    controllaTempo();
     const esito = await provaCopione(e, base, copione, path.join(uscita, "risultato.mp4"));
     if (esito.problemi.length || !esito.file) {
-      registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "fallito", guasto: "contenuto", dalle, titolo: `${nomePezzo(e)}: taglio dell'inizio del video non riuscito`, spiegazione: `Registrando di nuovo lo stesso copione i controlli non passano più:\n${esito.problemi.map((p) => `- ${p.slice(0, 600)}`).join("\n")}\nReazione: resta pubblicato il video di prima, non si riprova.` });
-      return null;
+      const problemi = esito.problemi.length ? esito.problemi : ["la registrazione non ha prodotto il video"];
+      const prima = perche === "taglio" ? "Registrando di nuovo lo stesso copione i controlli non passano più" : "La soluzione o il progetto di partenza sono cambiati. Il copione del video di prima, registrato di nuovo sulla soluzione di oggi, non supera i controlli";
+      registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "fallito", guasto: "contenuto", dalle, titolo: nonRiuscito, spiegazione: `${prima}:\n${problemi.map((p) => `- ${p.slice(0, 600)}`).join("\n")}\nReazione: ${reazione}`, dati: { copione, problemi } });
+      return { problemi };
     }
     const media = salvaMedia(fs.readFileSync(esito.file), "mp4");
-    registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "ok", dalle, titolo: `${nomePezzo(e)}: video tagliato all'inizio`, spiegazione: `Lo stesso copione, registrato di nuovo e ricontrollato, senza i primi ${inizio} secondi in cui non si spiegava niente. Nessuna richiesta ai modelli. Video ${Math.round(media.byte / 1024)} KB.` });
+    const kb = Math.round(media.byte / 1024);
+    if (perche === "taglio") registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "ok", dalle, titolo: `${nomePezzo(e)}: video tagliato all'inizio`, spiegazione: `Lo stesso copione, registrato di nuovo e ricontrollato, senza i primi ${inizio} secondi in cui non si spiegava niente. Nessuna richiesta ai modelli. Video ${kb} KB.`, dati: { copione, media } });
+    else registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "ok", dalle, titolo: `${nomePezzo(e)}: video rifatto con lo stesso copione`, spiegazione: `La soluzione o il progetto di partenza sono cambiati. Il copione del video di prima, registrato di nuovo sulla soluzione di oggi, supera tutti i controlli: i soggetti si vedono come dice, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima non passa. Nessuna richiesta ai modelli.${inizio ? ` Il video pubblicato comincia a ${inizio} s.` : ""} Video ${kb} KB.`, dati: { copione, media } });
     return { video: { copione, impronta, inizio }, media };
   } catch (errore) {
     if (errore instanceof GiroFinito) throw errore;
-    registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "fallito", guasto: "piattaforma", dalle, titolo: `${nomePezzo(e)}: taglio dell'inizio del video non riuscito`, spiegazione: `Errore del programma: ${(errore as Error).message.slice(0, 600)}\nReazione: resta pubblicato il video di prima, non si riprova.` });
-    return null;
+    console.error(`Video di ${slug} ${e.id}: ${(errore as Error).stack ?? errore}`);
+    registra({ slug, pezzo: e.id as Pezzo, azione: "video", esito: "fallito", guasto: "piattaforma", dalle, titolo: nonRiuscito, spiegazione: `Errore del programma: ${(errore as Error).message.slice(0, 600)}\nReazione: ${reazione}`, dati: { copione, errore: (errore as Error).stack } });
+    return { problemi: [`Errore della piattaforma durante la registrazione: ${(errore as Error).message.slice(0, 300)}`] };
   } finally {
     togliCartella(uscita);
   }
@@ -324,9 +366,11 @@ async function pubblicaVideo(pacco: PaccoLezione, nuovi: Record<string, { video:
 
 /**
  * Fa i video che mancano agli esercizi guidati e «Rifai uguale» delle lezioni pubblicate. Si ferma (e riprende al giro
- * dopo) quando il modello del copione non è libero. Restituisce quante lezioni sono uscite in una versione nuova.
+ * dopo) quando il modello del copione non è libero. Con `senzaModelli` (un giro che aspetta i modelli, subito dopo una
+ * correzione del gioco) fa solo ciò che non chiede niente: registrare di nuovo copioni già riusciti. Restituisce quante
+ * lezioni sono uscite in una versione nuova.
  */
-export async function completaVideo(): Promise<number> {
+export async function completaVideo(opzioni: { senzaModelli?: boolean } = {}): Promise<number> {
   const registro = leggiJson<Registro>(FILE, {});
   let pubblicate = 0;
   for (const voce of catalogo().lezioni) {
@@ -342,33 +386,53 @@ export async function completaVideo(): Promise<number> {
         // stesso momento se ne vedeva una sola) e l'inizio vuoto tagliato (il primo video della 2.5 aveva 10 secondi di
         // attesa). Altrimenti si rifà.
         const esistente = pacco.video[id];
-        const giusto = esistente?.impronta === impronta && pacco.media[`video:${id}`] && problemiDelCopione(esistente.copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) }).length === 0;
+        const pubblicato = esistente?.impronta === impronta && Boolean(pacco.media[`video:${id}`]);
+        const giusto = pubblicato && problemiDelCopione(esistente.copione, { file: e.soluzione.file, azioni: azioniDelProgetto(e) }).length === 0;
         if (giusto && esistente.inizio === inizioDelVideo(esistente.copione)) continue;
         const prima = registro[voce.slug]?.[id];
         // Un video giusto a cui manca solo il taglio dell'inizio: si registra di nuovo lo stesso copione (la registrazione
-        // è la stessa a ogni volta) e si taglia, senza chiedere niente al modello. Il 19 ottobre, chiedendo un copione
-        // nuovo per la 2.5, il modello non fece più tenere premuto A: nel gioco si vinceva prima della pausa, e dopo tre
-        // tentativi restava solo il video vecchio.
+        // è la stessa a ogni volta) e si taglia, senza chiedere niente al modello.
         if (giusto && prima?.ritaglioFallito !== impronta) {
-          const ritagliato = await ritaglia(voce.slug, e, base, esistente.copione, impronta);
-          (registro[voce.slug] ??= {})[id] = ritagliato ? { impronta, tentativi: prima?.impronta === impronta ? prima.tentativi : 0, esito: "fatto", regole: REGOLE } : { ...(prima ?? { impronta, tentativi: 0, esito: "fatto" }), ritaglioFallito: impronta };
-          if (ritagliato) nuovi[id] = ritagliato;
+          const ritagliato = await registraDiNuovo(voce.slug, e, base, esistente.copione, impronta, "taglio");
+          (registro[voce.slug] ??= {})[id] = "video" in ritagliato ? { impronta, tentativi: prima?.impronta === impronta ? prima.tentativi : 0, esito: "fatto", regole: REGOLE, copione: esistente.copione } : { ...(prima ?? { impronta, tentativi: 0, esito: "fatto" }), copione: esistente.copione, ritaglioFallito: impronta };
+          if ("video" in ritagliato) nuovi[id] = ritagliato;
           scriviJson(FILE, registro);
           continue;
         }
-        // Deciso per questa soluzione: risultato fuori dallo schermo, oppure niente da mostrare o tentativi esauriti con le
-        // regole di oggi. Non si richiede. "fatto" senza un video valido nella lezione si rifà.
-        const deciso = prima?.impronta === impronta && (prima.esito === "invisibile" || ((prima.esito === "niente" || prima.esito === "rinuncia") && prima.regole === REGOLE));
-        if (deciso) continue;
-        const stato: StatoVideo = prima?.impronta === impronta && prima.esito === "in corso" ? { ...prima, regole: REGOLE } : { impronta, tentativi: 0, esito: "in corso", regole: REGOLE };
         // Prima di eseguire il codice della lezione, lo stesso controllo di sicurezza di ogni esecuzione.
         const rifiuti = [...descriviViolazioni(controllaFileLezione(e.soluzione.file)), ...descriviViolazioni(controllaFileLezione(base.file))];
+        // Il video di prima non vale più per questa soluzione (o non c'è più): prima di chiedere un copione nuovo si
+        // registra di nuovo quello che l'aveva fatto, una volta per soluzione, anche se per lei è già deciso che il video
+        // non si fa (quella decisione è venuta da copioni nuovi, non da lui).
+        let riprova: StatoVideo["ultimo"];
+        const vecchio = !pubblicato && !rifiuti.length && prima?.riprovato !== impronta ? copioneRiuscito(voce.slug, id, prima) : null;
+        if (vecchio) {
+          const rifatto = await registraDiNuovo(voce.slug, e, base, vecchio, impronta, "soluzione");
+          if ("video" in rifatto) {
+            (registro[voce.slug] ??= {})[id] = { impronta, tentativi: 0, esito: "fatto", regole: REGOLE, copione: vecchio };
+            nuovi[id] = rifatto;
+            scriviJson(FILE, registro);
+            continue;
+          }
+          riprova = { copione: vecchio, problemi: rifatto.problemi.map((p) => p.slice(0, 900)), videoDiPrima: true };
+          (registro[voce.slug] ??= {})[id] = { ...(prima ?? { impronta, tentativi: 0, esito: "in corso", regole: REGOLE }), copione: vecchio, riprovato: impronta };
+          scriviJson(FILE, registro);
+        }
+        if (opzioni.senzaModelli) continue;
+        const ora = registro[voce.slug]?.[id];
+        // Deciso per questa soluzione: risultato fuori dallo schermo, oppure niente da mostrare o tentativi esauriti con le
+        // regole di oggi. Non si richiede. "fatto" senza un video valido nella lezione si rifà.
+        const deciso = ora?.impronta === impronta && (ora.esito === "invisibile" || ((ora.esito === "niente" || ora.esito === "rinuncia") && ora.regole === REGOLE));
+        if (deciso) continue;
+        const stato: StatoVideo = ora?.impronta === impronta && ora.esito === "in corso" ? { ...ora, regole: REGOLE } : { impronta, tentativi: 0, esito: "in corso", regole: REGOLE, copione: ora?.copione, riprovato: ora?.riprovato };
         if (rifiuti.length && stato.esito === "in corso") {
           stato.esito = "rinuncia";
           stato.motivo = `codice rifiutato dal controllo di sicurezza: ${rifiuti.slice(0, 3).join(" | ")}`.slice(0, 500);
           registra({ slug: voce.slug, pezzo: id as Pezzo, azione: "video", esito: "fallito", guasto: "contenuto", titolo: `${nomePezzo(e)}: video non fatto`, spiegazione: `Il codice dell'esercizio non supera il controllo di sicurezza, quindi non si esegue: ${rifiuti.slice(0, 5).join(" | ")}` });
         }
-        // Il copione scartato l'ultima volta (anche in un giro prima) torna al modello con le sue misure.
+        // Il copione scartato l'ultima volta (anche in un giro prima) torna al modello con le sue misure: se lo stesso
+        // copione del video di prima è appena stato registrato di nuovo senza passare, il modello parte da lui.
+        if (riprova) stato.ultimo = riprova;
         let precedente = stato.ultimo;
         let invisibili: string[] = [];
         while (stato.tentativi < TENTATIVI && stato.esito === "in corso") {
@@ -386,6 +450,8 @@ export async function completaVideo(): Promise<number> {
             stato.esito = "fatto";
             delete stato.motivo;
             delete stato.ultimo;
+            delete stato.riprovato;
+            stato.copione = esito.fatto.copione;
             nuovi[id] = { video: esito.fatto, media: esito.media };
           } else {
             precedente = { copione: esito.copione ?? null, problemi: esito.problemi.map((p) => p.slice(0, 900)) };

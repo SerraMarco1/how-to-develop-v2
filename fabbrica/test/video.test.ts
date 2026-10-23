@@ -12,6 +12,8 @@ import { fornitoreFinto, preparaAmbiente } from "./aiuto.ts";
 // - es2 (imita): un risultato che si legge solo nel pannello Output: il modello dice che il video non si fa;
 // - test (imita): le cinque stelle della 1.9, create come figlie del cesto e quindi sotto lo schermo: tre copioni
 //   scartati, poi niente video e una nota nella traccia («il risultato non si vede nello schermo»).
+// Poi la lezione cambia come in una correzione del gioco (una riga nel cesto di tutta la catena, o una stella più
+// veloce): il copione del video di prima si registra di nuovo prima di chiederne uno nuovo.
 
 const { dati } = preparaAmbiente("video");
 
@@ -70,10 +72,11 @@ const gioco = (basket: string, star: string) => [
 ];
 const l = lezioneDelCorso("cicli")!;
 
-function pubblica(es1Star = STAR_CADE) {
-  const es1 = EsercizioSchema.parse({ id: "es1", tipo: "guidato", genere: "guidato", titolo: "Fai cadere la stella", consegna: "In `star.gd` aggiungi `_process(delta)` e somma `fall_speed * delta` a `position.y`. Apri `star.tscn` e premi F6.", modalita: "progetto", dove: "gioco", passiGuida: ["Apri star.gd", "Scrivi _process", "Somma lo spostamento", "Premi F6"], soluzione: { file: gioco(BASKET_GD, es1Star), progetto, cambiati: ["star.gd"] } });
+/** Pubblica la lezione; `basket` cambia il cesto in tutta la catena, come una correzione del gioco. */
+function pubblica(es1Star = STAR_CADE, basket = BASKET_GD) {
+  const es1 = EsercizioSchema.parse({ id: "es1", tipo: "guidato", genere: "guidato", titolo: "Fai cadere la stella", consegna: "In `star.gd` aggiungi `_process(delta)` e somma `fall_speed * delta` a `position.y`. Apri `star.tscn` e premi F6.", modalita: "progetto", dove: "gioco", passiGuida: ["Apri star.gd", "Scrivi _process", "Somma lo spostamento", "Premi F6"], soluzione: { file: gioco(basket, es1Star), progetto, cambiati: ["star.gd"] } });
   const es2 = EsercizioSchema.parse({ id: "es2", genere: "imita", titolo: "Stampa il punteggio", consegna: "Stampa `Punti: 10` nel pannello Output all'avvio.", modalita: "progetto", dove: "a-parte", partenza: { file: [{ percorso: "main.tscn", contenuto: '[gd_scene format=3]\n\n[node name="Main" type="Node2D"]\n' }] }, soluzione: { file: [{ percorso: "main.tscn", contenuto: '[gd_scene format=3]\n\n[ext_resource type="Script" path="res://main.gd" id="1"]\n\n[node name="Main" type="Node2D"]\nscript = ExtResource("1")\n' }, { percorso: "main.gd", contenuto: 'extends Node2D\n\n\nfunc _ready() -> void:\n\tprint("Punti: 10")\n' }], progetto: { nome: "Punti", scenaPrincipale: "res://main.tscn" }, cambiati: ["main.gd"] } });
-  const prova = EsercizioSchema.parse({ id: "test", tipo: "test", genere: "imita", titolo: "Cinque stelle all'avvio", consegna: "In `basket.gd` crea cinque stelle con un ciclo for, figlie del cesto, in (150 + i * 180, 80 + i * 50).", modalita: "progetto", dove: "gioco", soluzione: { file: gioco(BASKET_STELLE, es1Star), progetto, cambiati: ["basket.gd"] } });
+  const prova = EsercizioSchema.parse({ id: "test", tipo: "test", genere: "imita", titolo: "Cinque stelle all'avvio", consegna: "In `basket.gd` crea cinque stelle con un ciclo for, figlie del cesto, in (150 + i * 180, 80 + i * 50).", modalita: "progetto", dove: "gioco", soluzione: { file: gioco(basket + BASKET_STELLE.slice(BASKET_GD.length), es1Star), progetto, cambiati: ["basket.gd"] } });
   const precedente = paccoPubblicato(l.slug);
   const pacco = PaccoLezioneSchema.parse({
     formato: FORMATO,
@@ -84,7 +87,7 @@ function pubblica(es1Star = STAR_CADE) {
     tipo: l.tipo,
     minuti: l.minuti,
     versione: (precedente?.versione ?? 0) + 1,
-    contenuto: { titolo: l.titolo, sommario: "Cicli.", blocchi: [{ id: "b1", tipo: "testo", md: "Il ciclo for." }], esercizi: [es1, es2], test: prova, statoIniziale: { nome: "Pioggia di stelle", cartella: "pioggia-di-stelle", file: gioco(BASKET_GD, STAR_FERMA), progetto } },
+    contenuto: { titolo: l.titolo, sommario: "Cicli.", blocchi: [{ id: "b1", tipo: "testo", md: "Il ciclo for." }], esercizi: [es1, es2], test: prova, statoIniziale: { nome: "Pioggia di stelle", cartella: "pioggia-di-stelle", file: gioco(basket, STAR_FERMA), progetto } },
     statoFinale: null,
     media: precedente?.media ?? {},
     video: precedente?.video ?? {},
@@ -201,16 +204,116 @@ test("un video giusto che comincia tardi si registra di nuovo e si taglia, senza
   assert.ok(registroDiLezione(l.slug).some((r) => r.pezzo === "es1" && r.titolo === "Esercizio 1: video tagliato all'inizio"));
 });
 
+type VoceRegistro = { impronta: string; esito: string; tentativi: number; regole?: number; motivo?: string; copione?: unknown; riprovato?: string; ultimo?: { copione: unknown; problemi: string[]; videoDiPrima?: boolean } };
+const registroVideo = () => leggiJson<Record<string, Record<string, VoceRegistro>>>("stato/video.json", {});
+const improntaDi = (id: string) => eserciziDaFilmare(paccoPubblicato(l.slug)!.contenuto).find((x) => x.e.id === id)!.impronta;
+const quante = (titolo: string) => registroDiLezione(l.slug).filter((r) => r.pezzo === "es1" && r.titolo === titolo).length;
+/** Il test della lezione (risultato invisibile) già deciso per la soluzione di oggi: non chiede copioni. */
+function testGiaDeciso() {
+  const registro = registroVideo();
+  registro[l.slug].test = { impronta: improntaDi("test"), tentativi: 3, esito: "invisibile", regole: 2 };
+  scriviJson("stato/video.json", registro);
+}
+
+test("soluzione cambiata, risultato uguale (come la correzione delle stelle): lo stesso copione torna senza richieste", { timeout: 15 * 60_000 }, async () => {
+  cominciaGiro();
+  const prima = paccoPubblicato(l.slug)!;
+  // Una riga nel cesto di tutta la catena: la soluzione di es1 e il progetto di partenza cambiano, il video di prima non vale più.
+  pubblica(STAR_CADE.replace("180.0", "60.0"), BASKET_GD + "\tz_index = 1\n");
+  const primaDi = copioni().length;
+
+  assert.equal(await completaVideo(), 1);
+  assert.ok(!copioni().slice(primaDi).some((r) => r.testo.includes("Titolo: Fai cadere la stella")), "nessun copione chiesto per es1");
+  const dopo = paccoPubblicato(l.slug)!;
+  assert.deepEqual([dopo.video.es1.copione, dopo.video.es1.impronta, dopo.video.es1.inizio], [prima.video.es1.copione, improntaDi("es1"), 2.5], "lo stesso copione, sulla soluzione di oggi, tagliato all'inizio come prima");
+  assert.notEqual(dopo.video.es1.impronta, prima.video.es1.impronta);
+  assert.ok(fs.statSync(path.join(dati, percorsoMedia(dopo.media["video:es1"]))).size > 5000, "il video è nei media della lezione");
+  const es1 = registroVideo()[l.slug].es1;
+  assert.deepEqual([es1.esito, es1.copione], ["fatto", prima.video.es1.copione], "il registro tiene il copione del video");
+  assert.equal(quante("Esercizio 1: video rifatto con lo stesso copione"), 1);
+
+  // Al giro dopo non si fa niente.
+  const richieste = finto.richieste.length;
+  assert.equal(await completaVideo(), 0);
+  assert.equal(finto.richieste.length, richieste);
+});
+
+test("come la 2.5: registro scritto prima del 23 ottobre (niente copione, «niente» già deciso), il copione è solo nella traccia", { timeout: 15 * 60_000 }, async () => {
+  cominciaGiro();
+  const prima = paccoPubblicato(l.slug)!;
+  pubblica(STAR_CADE.replace("180.0", "60.0"), BASKET_GD + "\tz_index = 2\n");
+  // Il registro della 2.5 es1 il 23 ottobre: copioni nuovi chiesti e rifiutati per la soluzione corretta, niente copione.
+  const registro = registroVideo();
+  registro[l.slug].es1 = { impronta: improntaDi("es1"), tentativi: 2, esito: "niente", regole: 2, motivo: "Il gioco raggiunge la condizione di vittoria prima dei 10 secondi." };
+  scriviJson("stato/video.json", registro);
+  testGiaDeciso();
+  const richieste = finto.richieste.length;
+
+  assert.equal(await completaVideo(), 1);
+  assert.equal(finto.richieste.length, richieste, "nessuna richiesta");
+  const dopo = paccoPubblicato(l.slug)!;
+  assert.deepEqual([dopo.video.es1.copione, dopo.video.es1.impronta], [prima.video.es1.copione, improntaDi("es1")]);
+  assert.deepEqual([registroVideo()[l.slug].es1.esito, registroVideo()[l.slug].es1.copione], ["fatto", prima.video.es1.copione]);
+});
+
+test("lo stesso copione non passa più: una sola riprova, poi il modello parte da lui con le misure", { timeout: 15 * 60_000 }, async () => {
+  cominciaGiro();
+  const prima = paccoPubblicato(l.slug)!;
+  // La stella torna veloce: a 4 secondi, dove il copione di prima la mostra, è già sotto lo schermo.
+  pubblica(STAR_CADE, BASKET_GD + "\tz_index = 3\n");
+  testGiaDeciso();
+  const primaDi = copioni().length;
+  const nonPassa = quante("Esercizio 1: lo stesso copione non supera più i controlli");
+
+  assert.equal(await completaVideo(), 1);
+  assert.equal(quante("Esercizio 1: lo stesso copione non supera più i controlli"), nonPassa + 1);
+  const es1 = copioni().slice(primaDi).filter((r) => r.testo.includes("Titolo: Fai cadere la stella"));
+  assert.equal(es1.length, 2, "il copione di prima scartato, poi un copione nuovo scartato e uno giusto");
+  assert.match(es1[0].testo, /Il copione del video di prima non passa più[\s\S]*Dopo quattro secondi la stella scende ancora[\s\S]*fuori dallo schermo[\s\S]*Parti da lui/);
+  assert.doesNotMatch(es1[0].testo, /Il copione di prima è stato scartato/);
+  const dopo = paccoPubblicato(l.slug)!;
+  assert.deepEqual(dopo.video.es1.copione.scritte.map((w) => w.testo), ["La stella scende di 180 pixel al secondo"]);
+  assert.notDeepEqual(dopo.video.es1.copione, prima.video.es1.copione);
+  const voce = registroVideo()[l.slug].es1;
+  assert.deepEqual([voce.esito, voce.copione, voce.riprovato, voce.ultimo], ["fatto", dopo.video.es1.copione, undefined, undefined], "il registro tiene il copione nuovo");
+  const richieste = finto.richieste.length;
+  assert.equal(await completaVideo(), 0);
+  assert.equal(finto.richieste.length, richieste);
+});
+
+test("giro che aspetta i modelli, subito dopo una correzione: solo lo stesso copione, nessuna richiesta", { timeout: 15 * 60_000 }, async () => {
+  cominciaGiro();
+  const prima = paccoPubblicato(l.slug)!;
+  pubblica(STAR_CADE, BASKET_GD + "\tz_index = 4\n");
+  const primaDelTest = registroVideo()[l.slug].test;
+  const richieste = finto.richieste.length;
+
+  assert.equal(await completaVideo({ senzaModelli: true }), 1);
+  assert.equal(finto.richieste.length, richieste, "nessuna richiesta");
+  const dopo = paccoPubblicato(l.slug)!;
+  assert.deepEqual([dopo.video.es1.copione, dopo.video.es1.impronta], [prima.video.es1.copione, improntaDi("es1")]);
+  assert.deepEqual(registroVideo()[l.slug].test, primaDelTest, "il test (nessun copione riuscito) aspetta il giro normale");
+  assert.equal(await completaVideo({ senzaModelli: true }), 0);
+  assert.equal(finto.richieste.length, richieste);
+});
+
 test("video: con il modello del copione sovraccarico non si conta nessun tentativo, si riprova al giro dopo", { timeout: 10 * 60_000 }, async () => {
   cominciaGiro();
-  // La stella di es1 cambia velocità (una correzione della lezione): il video di prima non vale più.
-  pubblica(STAR_CADE.replace("180.0", "240.0"));
+  // La stella di es1 cambia velocità (una correzione della lezione): il video di prima non vale più, e il suo copione
+  // non passa (a 600 pixel al secondo la stella esce dallo schermo in meno di un secondo).
+  pubblica(STAR_CADE.replace("180.0", "600.0"));
   sovraccarico = true;
   const versione = paccoPubblicato(l.slug)!.versione;
+  const nonPassa = quante("Esercizio 1: lo stesso copione non supera più i controlli");
   assert.equal(await completaVideo(), 0);
   assert.equal(paccoPubblicato(l.slug)!.versione, versione, "nessuna versione nuova");
-  const registro = leggiJson<Record<string, Record<string, { esito: string; tentativi: number }>>>("stato/video.json", {})[l.slug];
-  assert.deepEqual([registro.es1.esito, registro.es1.tentativi], ["in corso", 0]);
+  const registro = registroVideo()[l.slug];
+  assert.deepEqual([registro.es1.esito, registro.es1.tentativi, registro.es1.riprovato, registro.es1.ultimo?.videoDiPrima], ["in corso", 0, improntaDi("es1"), true]);
   assert.ok(registroDiLezione(l.slug).some((r) => r.pezzo === "es1" && r.esito === "attesa" && r.guasto === "fornitore"));
+  assert.equal(quante("Esercizio 1: lo stesso copione non supera più i controlli"), nonPassa + 1);
+  // Al giro dopo, ancora sovraccarico: il copione di prima non si riprova, e il modello partirà da lui.
+  assert.equal(await completaVideo(), 0);
+  assert.equal(quante("Esercizio 1: lo stesso copione non supera più i controlli"), nonPassa + 1);
+  assert.equal(registroVideo()[l.slug].es1.ultimo?.videoDiPrima, true);
   finto.chiuso();
 });

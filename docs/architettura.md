@@ -126,9 +126,11 @@ Ogni esercizio che cambia ripassa **tutti i controlli in Godot**, come in una le
 passano due volte dopo, variante lecita e letterale, cose non spiegate). I controlli superati restano in
 `stato/correzioni.json`, così se il tempo del giro finisce si riprende da lì. Solo quando passano tutti, le lezioni
 escono **tutte insieme** in una versione nuova; se uno fallisce non cambia niente, la traccia della lezione dice
-perché e la correzione non si riprova finché non cambia il suo codice. I video degli esercizi cambiati si rifanno da
-soli (cambia l'impronta della soluzione). Una correzione non usa modelli: si fa anche nei giri in cui la fabbrica
-aspetta che i modelli tornino liberi.
+perché e la correzione non si riprova finché non cambia il suo codice. I video degli esercizi cambiati non valgono più
+(cambia l'impronta della soluzione): subito dopo, nello stesso giro, la fabbrica registra di nuovo il copione di ognuno
+sulla soluzione corretta, e quelli che passano ancora tutti i controlli tornano senza richieste; per gli altri si chiede
+un copione nuovo (vedi «I video»). Una correzione non usa modelli: si fa anche nei giri in cui la fabbrica aspetta che i
+modelli tornino liberi, e in quei giri, dopo di lei, si fanno solo i video che tornano con lo stesso copione.
 
 La prima, **le stelle figlie del cesto** (`correzioni/stelle-del-cesto.ts`, 20-23 ottobre). Dalla 1.9 il cesto creava
 stelle, sassi e rubini con `add_child(x)`: un figlio si disegna spostato della posizione del genitore e lo segue, e il
@@ -191,6 +193,16 @@ scritto come avviarlo («Avvia il gioco con F5», «Apri star.tscn e premi F6»)
   uscita: la pubblicazione non aspetta mai un video). Una lezione con video nuovi esce in una versione nuova in cui
   cambiano solo i video. Il registro è in `stato/video.json`. Un video vale finché non cambiano la soluzione del suo
   esercizio o il progetto di partenza (l'impronta è salvata con il copione); se cambiano, si rifà.
+- **Quando la soluzione cambia** (una correzione del gioco, una segnalazione, un ricontrollo), prima di chiedere un
+  copione nuovo si registra di nuovo **lo stesso copione** del video di prima sulla soluzione di oggi, con tutti i
+  controlli, compreso «fallisce prima», e senza richieste. Se passa, il video torna, ripreso sul gioco di oggi. Se no, la
+  traccia dice perché, su quella soluzione non si riprova, e la richiesta al modello parte da quel copione e dalle misure
+  («tieni ciò che funziona ancora e cambia solo ciò che le misure dicono»). Il registro tiene il copione di ogni video
+  fatto anche quando il video viene tolto; per i video fatti prima del 23 ottobre, quando non lo teneva, la fabbrica lo
+  prende dalla traccia dell'ultima registrazione riuscita dell'esercizio (`tracce/<lezione>/`). Il motivo: dopo la
+  correzione delle stelle la 2.5 «timer» es1 perse il video, perché il copione nuovo di Flash-Lite non teneva più premuto A
+  e la partita si vinceva prima della pausa tra le ondate (lo stesso era successo il 19 ottobre); il copione vecchio,
+  registrato sulla soluzione corretta, passava ancora tutti i controlli.
 - **Costo**: da 1 a 3 richieste Flash-Lite per esercizio con video (circa 1,2 per lezione), una volta sola.
 - **Il primo giro vero** (19 ottobre, 34 esercizi in 20 minuti): 10 video, 23 «niente video», 1 risultato invisibile.
   Guardati i fotogrammi: 8 video buoni; uno con tre scritte nello stesso intervallo (se ne vedeva una), uno con il
