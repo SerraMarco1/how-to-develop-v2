@@ -124,42 +124,10 @@
  },
  "cicli": {
   "es1": {
-   "impronta": "e77b50741865841ac7840077f2c570358435728e7a25940f6004bd47314e39c3",
+   "impronta": "73d70f5d1fec0327d9694387f711d1a04759428d4c6d87cf200eee09a2346e5e",
    "tentativi": 2,
-   "esito": "niente",
-   "regole": 2,
-   "ultimo": {
-    "copione": {
-     "scena": "res://basket.tscn",
-     "durata": 6,
-     "azioni": [],
-     "soggetti": [
-      {
-       "id": "stelle",
-       "cerca": {
-        "scena": "res://star.tscn"
-       },
-       "quanti": 5,
-       "da": 0.5,
-       "a": 5,
-       "deve": "muoversi",
-       "etichetta": "Stelle"
-      }
-     ],
-     "scritte": [
-      {
-       "testo": "Il ciclo for genera 5 stelle che iniziano a scendere.",
-       "da": 0.5,
-       "a": 5,
-       "soggetto": "stelle"
-      }
-     ]
-    },
-    "problemi": [
-     "Soggetto «stelle» (scena = res://star.tscn; almeno 5 da 0.5 a 5 s; deve muoversi): si vedono almeno 5 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 5, visibili al massimo 0. A 1 s: «Star» a (662, 796) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@5» a (842, 846) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@6» a (1022, 896) 128×128, fuori dallo schermo (dentro per il 0%); «@Sprite2D@7» a (1202, 946) 128×128, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
-    ]
-   },
-   "motivo": "Le stelle vengono create come figlie del cesto e posizionate a coordinate Y comprese tra 680 e 880, finendo completamente fuori dallo schermo che è alto 648 pixel."
+   "esito": "fatto",
+   "regole": 2
   }
  },
  "array": {

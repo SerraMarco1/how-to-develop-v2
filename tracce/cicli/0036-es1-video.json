@@ -1,0 +1,48 @@
+{
+ "n": 36,
+ "quando": "2026-10-23T11:20:28.212Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 4 s. Soggetti: «Stelle» (muoversi). Scritte: «Il ciclo for genera cinque stelle». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 87 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16991,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 4,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "stelle",
+     "cerca": {
+      "scena": "res://star.tscn"
+     },
+     "quanti": 5,
+     "da": 0.5,
+     "a": 2,
+     "deve": "muoversi",
+     "etichetta": "Stelle"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il ciclo for genera cinque stelle",
+     "da": 0.5,
+     "a": 2,
+     "soggetto": "stelle"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "acedbd2c9097d7b03ce957f96fb9e96be7c5d0184f0b90261c6b51851a54ac8e",
+   "estensione": "mp4",
+   "byte": 88771
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (5267 → 198 token)"
+ ]
+}

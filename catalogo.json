@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-23T11:17:18.059Z",
+ "aggiornato": "2026-10-23T11:20:28.223Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -115,10 +115,10 @@
    "slug": "cicli",
    "numero": "1.9",
    "titolo": "Cicli: for e while",
-   "versione": 3,
+   "versione": 4,
    "file": "lezioni/f01-programmare/cicli.json",
-   "sha256": "bb23df1bafede224a204b64bd58a15b809254dc65cbe8923e3b425ddb9be95a8",
-   "byte": 76246
+   "sha256": "584250b8429553ece086747941e7c89ee10722bffae5a9cc2ab8de59a8d943a9",
+   "byte": 76750
   },
   {
    "slug": "array",
