@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-23T01:21:13.316Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-23T02:47:05.204Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "ereditarieta-e-composizione",
   "numero": "4.1",
   "titolo": "Ereditarietà e composizione"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.1 riprende da sola appena rispondono.",
- "riprende": "2026-10-23T02:21:13.316Z"
+ "messaggio": "Sta scrivendo la lezione 4.1 «Ereditarietà e composizione».",
+ "riprende": null
 }
