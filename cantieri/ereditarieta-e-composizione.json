@@ -641,7 +641,9 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Invalid type in function 'new' in base 'GDScript'. The array of argument 2 (Array) does not have the same element type as the expected typed array argument. (res://htd/verifica_1.gd:9 in _run_tests)\nOutput di Godot:\nERROR: Error constructing a GDScriptInstance: 'RefCounted(numeric_question.gd)::_init': Cannot convert argument 2 from Array to Array\n   at: _create_instance (modules/gdscript/gdscript.cpp:203)\nSCRIPT ERROR: Invalid type in function 'new' in base 'GDScript'. The array of argument 2 (Array) does not have the same element type as the expected typed array argument.\n          at: _run_tests (res://htd/verifica_1.gd:9)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 9: `var q: Variant = num_script.new(\"Stima il valore bersaglio\", [\"80\", \"98\", \"120\", \"104\"], 100.0, 5.0)`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]

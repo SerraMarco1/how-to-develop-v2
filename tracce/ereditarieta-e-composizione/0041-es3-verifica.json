@@ -1,0 +1,70 @@
+{
+ "n": 41,
+ "quando": "2026-10-23T02:52:25.827Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (prevedi): approvato",
+ "spiegazione": "«Prevedere il tipo e il comportamento con l'ereditarietà». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: Bau! · 15 · true · 0 · 50",
+ "richieste": 0,
+ "durataMs": 4067,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedere il tipo e il comportamento con l'ereditarietà",
+   "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce la funzione `run()`, senza eseguirlo.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "class BaseAnimal:\n\textends RefCounted\n\tfunc speak() -> String:\n\t\treturn \"...\"\n\nclass Dog:\n\textends BaseAnimal\n\tfunc speak() -> String:\n\t\treturn \"Bau!\"\n\nfunc run() -> String:\n\tvar pet: BaseAnimal = Dog.new()\n\treturn pet.speak()\n",
+     "domanda": "Quale stringa restituisce la chiamata a run()?",
+     "risposta": "Bau!",
+     "spiegazione": "L'oggetto creato con Dog.new() è un'istanza di Dog, anche se la variabile è tipizzata come BaseAnimal. Chiamando speak(), viene eseguito il metodo ridefinito della classe figlia, restituendo 'Bau!'.",
+     "id": "es3p1"
+    },
+    {
+     "codice": "class Weapon:\n\textends RefCounted\n\tvar damage: int = 10\n\tfunc calculate_damage() -> int:\n\t\treturn damage\n\nclass MagicWeapon:\n\textends Weapon\n\tvar bonus: int = 5\n\tfunc calculate_damage() -> int:\n\t\treturn super() + bonus\n\nfunc run() -> int:\n\tvar mw := MagicWeapon.new()\n\treturn mw.calculate_damage()\n",
+     "domanda": "Quale numero intero restituisce run()?",
+     "risposta": "15",
+     "spiegazione": "MagicWeapon fa l'override di calculate_damage(): chiama super(), che restituisce 10 (il damage definito in Weapon), e vi somma bonus (5). 10 + 5 = 15.",
+     "id": "es3p2"
+    },
+    {
+     "codice": "class Entity:\n\textends RefCounted\n\nclass Player:\n\textends Entity\n\nclass Enemy:\n\textends Entity\n\nfunc run() -> bool:\n\tvar p: Entity = Player.new()\n\treturn p is Entity and not (p is Enemy)\n",
+     "domanda": "Quale valore booleano (true o false) restituisce run()?",
+     "risposta": "true",
+     "spiegazione": "Player eredita da Entity, quindi 'p is Entity' è true. Tuttavia Player non eredita da Enemy, quindi 'p is Enemy' è false, e la sua negazione 'not' è true. True and True dà true.",
+     "id": "es3p3"
+    },
+    {
+     "codice": "class Box:\n\textends RefCounted\n\tvar value: int = 100\n\nclass MagicBox:\n\textends Box\n\tvar secret: int = 42\n\nfunc run() -> int:\n\tvar normal_box: Box = Box.new()\n\tvar as_magic: MagicBox = normal_box as MagicBox\n\tif as_magic == null:\n\t\treturn 0\n\treturn as_magic.secret\n",
+     "domanda": "Quale numero intero restituisce run()?",
+     "risposta": "0",
+     "spiegazione": "normal_box è un'istanza pura di Box, non di MagicBox. L'operatore 'as MagicBox' fallisce e produce 'null'. La condizione if as_magic == null risulta vera e la funzione restituisce 0.",
+     "id": "es3p4"
+    },
+    {
+     "codice": "class Multiplier:\n\textends RefCounted\n\tvar factor: int = 2\n\tfunc apply(x: int) -> int:\n\t\treturn x * factor\n\nclass TripleMultiplier:\n\textends Multiplier\n\tfunc _init() -> void:\n\t\tfactor = 3\n\nfunc run() -> int:\n\tvar list: Array[Multiplier] = [Multiplier.new(), TripleMultiplier.new()]\n\tvar total: int = 0\n\tfor m in list:\n\t\ttotal += m.apply(10)\n\treturn total\n",
+     "domanda": "Quale numero intero restituisce run() alla fine del ciclo?",
+     "risposta": "50",
+     "spiegazione": "Il primo elemento è Multiplier (factor = 2): apply(10) dà 20. Il secondo elemento è TripleMultiplier (factor = 3 per il costruttore): apply(10) dà 30. Il totale è 20 + 30 = 50.",
+     "id": "es3p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "L'ereditarietà permette al polimorfismo di richiamare i metodi ridefiniti delle sottoclassi. `is` verifica se un'istanza discende da un tipo, `as` converte in modo sicuro restituendo `null` se il cast non è valido, e `super()` permette di invocare l'implementazione del genitore.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
