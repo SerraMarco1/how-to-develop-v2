@@ -614,13 +614,14 @@
     "tipo": "autonomo",
     "genere": "ripara",
     "titolo": "Dati modificati inaspettatamente",
-    "consegna": "Nel mini-progetto di gestione carte `CardGame`, due guerrieri (`WarriorA` e `WarriorB`) vengono generati a inizio partita a partire dal medesimo modello di dati risorsa (`warrior_template.tres`).\n\nSintomo del difetto: quando `WarriorA` subisce 5 punti di danno durante il duello, anche la salute di `WarriorB` diminuisce a vista d'occhio dello stesso valore, come se condividessero magicamente le ferite. Correggi il problema in modo che le modifiche ai punti vita di un guerriero non intacchino mai le statistiche dell'altro.",
+    "consegna": "Nel mini-progetto di gestione carte `CardGame`, due guerrieri (`WarriorA` e `WarriorB`) vengono generati a inizio partita a partire dal medesimo modello di dati risorsa (`warrior_template.tres`).\n\nSintomo del difetto: quando `WarriorA` subisce 5 punti di danno durante il duello, anche la salute di `WarriorB` diminuisce a vista d'occhio dello stesso valore, come se condividessero magicamente le ferite. Apri lo script `warrior.gd` e modificalo nella funzione `_ready()` duplicando la risorsa `stats` con `.duplicate()` in modo che ogni guerriero abbia le sue statistiche indipendenti.",
     "modalita": "progetto",
     "dove": "a-parte",
+    "cartella": "dati-modificati-inaspettatamente",
     "passiGuida": [],
     "suggerimenti": [
      "Ricorda la caratteristica fondamentale delle risorse in memoria: se due nodi puntano alla stessa istanza della risorsa caricata da disco, condividono lo stesso spazio in memoria.",
-     "Per rendere indipendente una risorsa prima di modificarne i dati variabili nel tempo, controlla il metodo `.duplicate()`."
+     "Per rendere indipendente una risorsa prima di modificarne i dati variabili nel tempo, usa il metodo `.duplicate()`."
     ],
     "verifiche": [
      {
@@ -633,6 +634,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CardGame\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
       {
        "percorso": "card_stats.gd",
        "contenuto": "class_name CardStats\nextends Resource\n\n@export var card_name: String = \"Guerriero\"\n@export var health: int = 20\n"
@@ -685,18 +690,21 @@
       "impostazioni": []
      },
      "spiegazione": "Le risorse in Godot vengono caricate e mantenute in memoria come singola istanza condivisa per riferimento. Entrambi i guerrieri facevano riferimento allo stesso oggetto `CardStats`. Chiamando `stats = stats.duplicate()` in `_ready()`, ogni guerriero ottiene una copia indipendente della risorsa: quando uno subisce danno, modifica solo le proprie statistiche lasciando intatte quelle degli altri.",
-     "cambiati": [],
+     "cambiati": [
+      "warrior.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione cambia anche warrior.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  warrior.gd:\n    - riga 8:   pass\n    + riga 8:   if stats:\n    + riga 9:     stats = stats.duplicate()\nCon quei file com'erano prima falliscono:\n  - WarriorB deve rimanere intatto a 20 HP (ha 15 HP)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
