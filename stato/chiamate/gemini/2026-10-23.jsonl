@@ -27,3 +27,4 @@
 {"quando":1792754495768,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"stati-del-gioco","ok":true,"contata":true,"durataMs":7959,"tokenInput":5837,"tokenOutput":203,"ragionamento":2321}
 {"quando":1792754513844,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"stati-del-gioco","ok":true,"contata":true,"durataMs":9261,"tokenInput":5966,"tokenOutput":40,"ragionamento":2966}
 {"quando":1792754526350,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"classi-e-oggetti","ok":true,"contata":true,"durataMs":9281,"tokenInput":6273,"tokenOutput":47,"ragionamento":1039}
+{"quando":1792754536773,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"albero-dei-nodi","ok":true,"contata":true,"durataMs":5365,"tokenInput":6166,"tokenOutput":165,"ragionamento":1847}

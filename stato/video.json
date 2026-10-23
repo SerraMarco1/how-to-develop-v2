@@ -221,11 +221,11 @@
  },
  "classi-e-oggetti": {
   "es1": {
-   "impronta": "e70ecbc7548cf1efb00ca3cfbd18f93dbacbcc4a80f6ee32d1dac1a1d3cd11d4",
+   "impronta": "d3c933d603b34e196ada5a5fb4380703a94b51e6f1afa372381a6882708b84ed",
    "tentativi": 1,
    "esito": "niente",
    "regole": 2,
-   "motivo": "L'esercizio riorganizza il codice creando la classe FallingItem e aggiornando i riferimenti, ma il comportamento visivo del gioco resta identico a prima."
+   "motivo": "L'esercizio introduce la classe FallingItem e la tipizzazione del codice, senza modificare l'aspetto visivo o il comportamento visibile del gioco."
   }
  },
  "albero-dei-nodi": {
