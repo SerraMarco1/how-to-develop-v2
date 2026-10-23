@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://basket.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"falling_items\", \"cerca\": {\"classe\": \"FallingItem\"}, \"quanti\": 1, \"da\": 1, \"a\": 7, \"deve\": \"esserci\", \"etichetta\": \"Oggetti cadenti\"}], \"scritte\": [{\"testo\": \"Gli oggetti creati dallo stampo compaiono sullo schermo\", \"da\": 1, \"a\": 7, \"soggetto\": \"falling_items\"}]}",
+ "ragionamento": 2219,
+ "quando": "2026-10-23T11:23:20.796Z",
+ "ruolo": "ritocco"
+}

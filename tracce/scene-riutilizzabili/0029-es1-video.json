@@ -1,0 +1,47 @@
+{
+ "n": 29,
+ "quando": "2026-10-23T11:23:09.829Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 2 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «oggetti» (classe = FallingItem; almeno 1 da 1 a 6 s; deve muoversi): si vedono, ma si sono spostati di almeno 24 pixel solo 0 nodi su 1 (spostamento massimo 0 pixel). A 3 s: «FallingItem» a (288.5, 16) 128×128, si vede; «@Sprite2D@401» a (776, 16) 128×128, si vede; «@Sprite2D@402» a (237.6, 16) 128×128, si vede; «@Sprite2D@403» a (272, 16) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15727,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 7,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "oggetti",
+     "cerca": {
+      "classe": "FallingItem"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 6,
+     "deve": "muoversi",
+     "etichetta": "Oggetti"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Gli oggetti istanziati dallo stampo cadono sullo schermo",
+     "da": 1,
+     "a": 6,
+     "soggetto": "oggetti"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «oggetti» (classe = FallingItem; almeno 1 da 1 a 6 s; deve muoversi): si vedono, ma si sono spostati di almeno 24 pixel solo 0 nodi su 1 (spostamento massimo 0 pixel). A 3 s: «FallingItem» a (288.5, 16) 128×128, si vede; «@Sprite2D@401» a (776, 16) 128×128, si vede; «@Sprite2D@402» a (237.6, 16) 128×128, si vede; «@Sprite2D@403» a (272, 16) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (6752 → 201 token)"
+ ]
+}
