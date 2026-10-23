@@ -2,5 +2,73 @@
  "creato": "2026-10-22T07:03:54.361Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-3.7-flash"
+ ],
+ "teoria": {
+  "titolo": "Ereditarietà e composizione",
+  "sommario": "In questa lezione impari a estendere le tue classi con l'ereditarietà, ridefinendo metodi e chiamando super() per creare tipi di domanda specializzati. Scopri come verificare e convertire i tipi con is e as, e quando preferire la composizione rispetto all'ereditarietà per mantenere il codice chiaro e flessibile.",
+  "concetti": [
+   "Ereditarietà con extends",
+   "Chiamata super()",
+   "Override di metodi",
+   "Operatore is",
+   "Operatore as (casting)",
+   "Composizione rispetto a ereditarietà"
+  ],
+  "obiettivi": [
+   "Una classe che estende una classe tua: ridefinire un metodo, chiamare super()",
+   "is e as: chiedere di che tipo è un oggetto",
+   "Quando conviene comporre (un oggetto che ne contiene altri) invece di ereditare"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nel nostro progetto abbiamo creato la classe `Question` per rappresentare una domanda a scelta multipla con quattro opzioni. Man mano che un gioco si espande, però, nascono esigenze diverse: potresti volere domande del tipo **Vero o Falso** (con due sole risposte fisse) oppure domande con un **numero da indovinare** (in cui non si premono pulsanti, ma si valuta se un numero inserito è abbastanza vicino alla risposta esatta, con un margine di tolleranza).\n\nSe aggiungessimo tutte queste varianti dentro l'unica classe `Question` riempiendola di controlli `if`, il codice diventerebbe presto confuso e pieno di eccezioni. La soluzione della programmazione a oggetti è l'**ereditarietà**: creare una classe base comune che contiene ciò che tutte le domande condividono (come il testo della domanda), per poi derivare classi figlie specializzate che aggiungono o modificano solo il comportamento che serve."
+   },
+   {
+    "tipo": "testo",
+    "md": "In GDScript puoi fare in modo che una classe estenda un'altra classe scritta da te usando la parola chiave `extends` seguita dal nome globale della classe genitore (dichiarata con `class_name`). La classe figlia eredita automaticamente tutte le variabili e i metodi della classe madre.\n\nQuando la classe madre ha un costruttore `_init()` con parametri (come la nostra `Question(p_text, p_options, p_correct_index)`), la classe figlia deve richiamare quel costruttore per inizializzare le variabili ereditate. Questo si fa usando la parola chiave `super(...)`, passandole i valori richiesti dalla classe base."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name TrueFalseQuestion\nextends Question\n\n\nfunc _init(p_text: String, is_true: bool) -> void:\n\t# In una domanda Vero/Falso, 0 corrisponde a Vero e 1 a Falso\n\tvar correct: int = 0 if is_true else 1\n\tvar tf_options: Array[String] = [\"Vero\", \"Falso\"]\n\t\n\t# Inizializza la classe base Question con le sue tre informazioni\n\tsuper(p_text, tf_options, correct)",
+    "spiegazione": "`TrueFalseQuestion` estende `Question`. Il suo costruttore `_init()` non chiede un elenco di opzioni né un indice numerico: gli bastano il testo e un valore booleano (`is_true`). Costruisce l'array con le due sole opzioni possibili e richiama il costruttore della classe base tramite `super()`. Per tutto il resto del gioco, un'istanza di `TrueFalseQuestion` è a tutti gli effetti una `Question`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Una classe figlia non si limita a ereditare: può anche **ridefinire** (in inglese fare l'*override* di) un metodo della classe madre riscrivendo la funzione con lo stesso identico nome. Quando qualcuno chiama quel metodo sull'oggetto figlio, Godot eseguirà la nuova versione specializzata al posto di quella originale.\n\nConsidera ora una domanda numerica: `NumericQuestion`. In questo tipo di domanda non esiste una lista di risposte tra cui scegliere, né un indice corretto. La domanda ha un valore numerico bersaglio (`target_value`) e un margine di tolleranza (`tolerance`). Per verificare la risposta, non possiamo limitarci a confrontare un indice: dobbiamo ridefinire il controllo della risposta o aggiungere un metodo dedicato che calcoli la differenza."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name NumericQuestion\nextends Question\n\nvar target_value: float = 0.0\nvar tolerance: float = 0.0\n\n\nfunc _init(p_text: String, p_target: float, p_tolerance: float = 0.0) -> void:\n\t# Chiama il costruttore base passando opzioni vuote e un indice non valido\n\tsuper(p_text, [], -1)\n\ttarget_value = p_target\n\ttolerance = absf(p_tolerance)\n\n\nfunc is_numeric_answer_correct(answer: float) -> bool:\n\t# Calcola la distanza tra il valore dato e il valore bersaglio\n\tvar difference: float = absf(answer - target_value)\n\treturn difference <= tolerance",
+    "spiegazione": "`NumericQuestion` eredita da `Question` e aggiunge due variabili membro: `target_value` e `tolerance`. Nel suo `_init()` passa a `super()` un array vuoto e l'indice `-1`, perché non ci sono bottoni con opzioni testuali. Aggiunge poi `is_numeric_answer_correct()` per verificare se il numero inserito rientra nell'intervallo consentito tramite `absf()`, che restituisce il valore assoluto della differenza eliminando il segno negativo."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Se la classe base definisce un costruttore `_init` con parametri, la classe che estende deve chiamare `super(...)` passandogli gli argomenti previsti. Inoltre, se vuoi richiamare l'implementazione originale di un metodo durante un override usa `super(argomenti)`; se vuoi chiamare un metodo con un nome diverso della classe base, la sintassi è `super.nome_metodo(argomenti)`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Nel nostro gioco, la sessione contiene un elenco di domande: `Array[Question]`. Poiché sia `TrueFalseQuestion` sia `NumericQuestion` estendono `Question`, possono essere inserite tutte nello stesso array. La sessione può iterare su ciascuna domanda e leggere `question.text` senza preoccuparsi del tipo specifico.\n\nTuttavia, quando l'interfaccia grafica deve mostrare la domanda a schermo, deve sapere come disegnarla: quattro bottoni per la domanda standard, due soli bottoni per il Vero o Falso, oppure una casella di testo numerica per la domanda con tolleranza. Per interrogare il tipo di un oggetto e usarlo in sicurezza, GDScript mette a disposizione due parole chiave:\n- **`is`**: verifica se un oggetto appartiene a una certa classe (o a una sua sottoclasse). Restituisce `true` o `false`.\n- **`as`**: prova a convertire l'oggetto in quel tipo specifico (*type casting*). Se l'oggetto appartiene a quella classe, restituisce l'oggetto con il tipo dichiarato; se non appartiene a quella classe, restituisce `null` senza bloccare il gioco."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "func inspect_question(q: Question) -> void:\n\t# Tutte le domande possiedono la proprietà text\n\tprint(\"Testo: \", q.text)\n\t\n\tif q is NumericQuestion:\n\t\t# Usiamo 'as' per dire all'editor che qui vogliamo trattarlo come NumericQuestion\n\t\tvar num_q: NumericQuestion = q as NumericQuestion\n\t\tprint(\"Tipo numerico. Bersaglio: \", num_q.target_value, \" Tolleranza: \", num_q.tolerance)\n\telif q is TrueFalseQuestion:\n\t\tprint(\"Tipo Vero/Falso. Mostra 2 pulsanti.\")\n\telse:\n\t\tprint(\"Tipo standard a scelta multipla. Opzioni: \", q.options.size())",
+    "spiegazione": "Con `q is NumericQuestion` verifichiamo la natura specifica della domanda. Usando poi `q as NumericQuestion`, assegniamo il riferimento a una variabile tipizzata in modo statico: questo permette all'editor di suggerire le proprietà esclusive di quella classe (`target_value` e `tolerance`) e garantisce controlli precisi."
+   },
+   {
+    "tipo": "testo",
+    "md": "L'ereditarietà è utile, ma non è sempre la scelta migliore. Esiste una regola fondamentale per decidere come strutturare le classi: la differenza tra **ereditarietà** ed **composizione**.\n\n- **Ereditarietà (relazione \"è un\")**: si usa quando la nuova classe è davvero un tipo specializzato della classe genitore. Una `TrueFalseQuestion` **è una** `Question`. Una `NumericQuestion` **è una** `Question`.\n- **Composizione (relazione \"ha un\")**: si usa quando un oggetto racchiude o coordina altri oggetti per svolgere il suo compito. La nostra classe `QuizSession`, ad esempio, non eredita da `Question` e non eredita da `Array`. `QuizSession` **ha un** array di domande (`_questions: Array[Question]`) e **ha un** punteggio (`score: int`).\n\nAbusare dell'ereditarietà crea catene lunghe e rigide in cui modificare la classe genitore rischia di rompere decine di classi figlie. Quando hai il dubbio se creare una sottoclasse oppure inserire un oggetto come variabile dentro un altro, preferisci la **composizione**: rende il progetto più modulare, ordinato e facile da cambiare."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Usando `extends NomeClasse` una classe eredita tutte le variabili e i metodi di un'altra classe definita con `class_name`.\n- Nel costruttore `_init()` di una classe figlia si usa `super(...)` per richiamare il costruttore della classe base.\n- Una classe figlia può ridefinire (*override*) un metodo della classe madre riscrivendolo; se serve la versione base, si chiama `super()`.\n- L'operatore `is` restituisce `true` se l'oggetto è un'istanza della classe indicata o di una sua sottoclasse.\n- L'operatore `as` converte un oggetto in un tipo specifico o restituisce `null` se il tipo non corrisponde.\n- Si usa l'ereditarietà quando la relazione è \"è un\" (una domanda numerica è una domanda); si usa la composizione quando la relazione è \"ha un\" (la sessione ha delle domande)."
+   }
+  ]
+ }
 }

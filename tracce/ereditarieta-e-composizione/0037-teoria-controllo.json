@@ -1,0 +1,15 @@
+{
+ "n": 37,
+ "quando": "2026-10-23T02:49:07.927Z",
+ "pezzo": "teoria",
+ "azione": "controllo",
+ "esito": "ok",
+ "titolo": "Teoria: controllo di qualità fatto dal codice",
+ "spiegazione": "Nessun difetto.",
+ "richieste": 0,
+ "dati": {
+  "problemi": [],
+  "ritocchi": []
+ },
+ "chiamate": []
+}
