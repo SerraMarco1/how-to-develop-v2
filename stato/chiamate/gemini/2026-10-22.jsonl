@@ -27,3 +27,4 @@
 {"quando":1792723989216,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"ereditarieta-e-composizione","ok":false,"contata":true,"durataMs":1496,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792724705345,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"ereditarieta-e-composizione","ok":true,"contata":true,"durataMs":108713,"tokenInput":14229,"tokenOutput":12,"ragionamento":1848}
 {"quando":1792724815509,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"ereditarieta-e-composizione","ok":true,"contata":true,"durataMs":7198,"tokenInput":2859,"tokenOutput":936,"ragionamento":1874}
+{"quando":1792724829405,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"resource","ok":true,"contata":true,"durataMs":154646,"tokenInput":15353,"tokenOutput":2603,"ragionamento":14088}

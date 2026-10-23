@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-23T03:05:05.320Z",
+ "aggiornato": "2026-10-23T03:07:09.385Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "ereditarieta-e-composizione",
-  "numero": "4.1",
-  "titolo": "Ereditarietà e composizione"
+  "slug": "resource",
+  "numero": "4.2",
+  "titolo": "Resource: i dati come file"
  },
- "messaggio": "Sta scrivendo la lezione 4.1 «Ereditarietà e composizione».",
+ "messaggio": "Sta scrivendo la lezione 4.2 «Resource: i dati come file».",
  "riprende": null
 }
