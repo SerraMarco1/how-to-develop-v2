@@ -259,5 +259,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "resource": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
