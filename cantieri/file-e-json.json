@@ -773,8 +773,8 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data := get_node_or_null(\"/root/QuizData\")\n\tif not check(\"quiz_data_node\", quiz_data != null, \"L'autoload QuizData deve essere presente\"):\n\t\treturn\n\tif FileAccess.file_exists(\"user://records.json\"):\n\t\tDirAccess.remove_absolute(\"user://records.json\")\n\tquiz_data.load_topic_records()\n\tcheck(\"missing_file\", typeof(quiz_data.topic_records) == TYPE_DICTIONARY, \"Con file mancante topic_records deve rimanere un Dictionary vuoto\")\n\tvar f_empty := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_empty != null:\n\t\tf_empty.store_string(\"\")\n\t\tf_empty.close()\n\tquiz_data.load_topic_records()\n\tcheck(\"empty_file\", typeof(quiz_data.topic_records) == TYPE_DICTIONARY, \"Con file vuoto topic_records deve rimanere un Dictionary vuoto senza provocare errori\")\n\tvar f_bad := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_bad != null:\n\t\tf_bad.store_string(\"testo non json {[\")\n\t\tf_bad.close()\n\tquiz_data.load_topic_records()\n\tcheck(\"corrupt_file\", typeof(quiz_data.topic_records) == TYPE_DICTIONARY, \"Con file rovinato topic_records deve rimanere un Dictionary vuoto senza crash\")\n\tvar main := await instantiate_main_scene()\n\tcheck(\"main_runs\", main != null, \"Il gioco deve potersi avviare regolarmente anche in presenza di file corrotti su disco\")",
-      "descrizione": "Il gioco gestisce in modo sicuro file mancanti, vuoti e corrotti in user://records.json senza bloccare l'avvio"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data := get_node_or_null(\"/root/QuizData\")\n\tif not check(\"quiz_data_node\", quiz_data != null, \"L'autoload QuizData deve essere presente\"):\n\t\treturn\n\n\tif FileAccess.file_exists(\"user://records.json\"):\n\t\tDirAccess.remove_absolute(\"user://records.json\")\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_missing: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"missing_file\", ok_missing, \"Con file mancante topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_empty := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_empty != null:\n\t\tf_empty.store_string(\"\")\n\t\tf_empty.close()\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_empty: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"empty_file\", ok_empty, \"Con file vuoto topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_bad := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_bad != null:\n\t\tf_bad.store_string(\"testo non json {[\")\n\t\tf_bad.close()\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_corrupt: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"corrupt_file\", ok_corrupt, \"Con file rovinato topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_not_dict := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_not_dict != null:\n\t\tf_not_dict.store_string(\"123\")\n\t\tf_not_dict.close()\n\tquiz_data.topic_records = {\"vecchio\": 1}\n\tquiz_data.load_topic_records()\n\tvar ok_not_dict: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.is_empty()\n\tcheck(\"not_dict_file\", ok_not_dict, \"Se il JSON contiene dati che non sono un Dictionary, topic_records deve essere resettato a un Dictionary vuoto {}\")\n\n\tvar f_valid := FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif f_valid != null:\n\t\tf_valid.store_string(\"{\\\"Cultura Generale\\\": 10}\")\n\t\tf_valid.close()\n\tquiz_data.load_topic_records()\n\tvar ok_valid: bool = typeof(quiz_data.topic_records) == TYPE_DICTIONARY and quiz_data.topic_records.get(\"Cultura Generale\") == 10\n\tcheck(\"valid_file\", ok_valid, \"Con file JSON valido topic_records deve caricare i dati correttamente\")\n\n\tif FileAccess.file_exists(\"user://records.json\"):\n\t\tDirAccess.remove_absolute(\"user://records.json\")\n\n\tvar main := await instantiate_main_scene()\n\tcheck(\"main_runs\", main != null, \"Il gioco deve potersi avviare regolarmente\")",
+      "descrizione": "Il gioco gestisce in modo sicuro file mancanti, vuoti, corrotti e non-Dictionary in user://records.json senza crash"
      }
     ],
     "previsioni": [],
@@ -884,14 +884,15 @@
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
