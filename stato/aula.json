@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-23T03:09:51.142Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-23T03:23:40.697Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "resource",
   "numero": "4.2",
   "titolo": "Resource: i dati come file"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.2 riprende da sola appena rispondono.",
- "riprende": "2026-10-23T03:19:51.142Z"
+ "messaggio": "Sta scrivendo la lezione 4.2 «Resource: i dati come file».",
+ "riprende": null
 }

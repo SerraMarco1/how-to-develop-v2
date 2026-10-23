@@ -1,0 +1,49 @@
+{
+ "n": 52,
+ "quando": "2026-10-23T03:23:40.695Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 3 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «pulsante_vero» (nome = Answer0, classe = Button; almeno 1 da 10.5 a 11.8 s; deve mostrare il testo «Vero»): il testo «Vero» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 11 s: «Answer0» a (60, 266) 1032×48, si vede, testo «GDScript». Lo schermo va da (0, 0) a (1152, 648).\nReazione: tentativi finiti, l'esercizio resta senza video.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 21999,
+ "dati": {
+  "copione": {
+   "scena": "res://quiz.tscn",
+   "durata": 12,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "pulsante_vero",
+     "cerca": {
+      "nome": "Answer0",
+      "classe": "Button"
+     },
+     "quanti": 1,
+     "da": 10.5,
+     "a": 11.8,
+     "deve": "mostrare testo",
+     "testo": "Vero",
+     "etichetta": "Pulsante Vero"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Le domande Vero o Falso mostrano l'etichetta Vero",
+     "da": 10.5,
+     "a": 11.8,
+     "soggetto": "pulsante_vero"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «pulsante_vero» (nome = Answer0, classe = Button; almeno 1 da 10.5 a 11.8 s; deve mostrare il testo «Vero»): il testo «Vero» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 11 s: «Answer0» a (60, 266) 1032×48, si vede, testo «GDScript». Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 10 s (7504 → 232 token)"
+ ]
+}
