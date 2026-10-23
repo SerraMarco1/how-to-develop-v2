@@ -49,3 +49,5 @@
 {"quando":1792755050713,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":251952,"tokenInput":4142,"tokenOutput":1348,"ragionamento":5021}
 {"quando":1792755315448,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":29049,"tokenInput":10048,"tokenOutput":2794,"ragionamento":10062}
 {"quando":1792755354508,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":413625,"tokenInput":10074,"tokenOutput":2550,"ragionamento":11742}
+{"quando":1792755792236,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":27303,"tokenInput":15635,"tokenOutput":8479,"ragionamento":4707}
+{"quando":1792755819544,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":19802,"tokenInput":19844,"tokenOutput":8426,"ragionamento":1108}
