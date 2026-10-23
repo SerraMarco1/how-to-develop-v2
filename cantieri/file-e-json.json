@@ -607,7 +607,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -675,13 +675,80 @@
    "genere": "ripara",
    "correzioni": 1,
    "semplificato": false,
-   "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] load_settings gestisce in modo sicuro file mancanti, rovinati o validi senza mandare in crash l'applicazione: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var sm: Object = instantiate_script(\"res://save_manager.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash",
     "gemini/gemini-flash-lite-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Ripara il caricamento del salvataggio rovinato",
+    "consegna": "Nel progetto a parte `RiparaSalvataggio`, la classe `SaveManager` in `save_manager.gd` contiene la funzione `load_settings()`. Attualmente, se il file `user://settings.json` non esiste ancora, è vuoto o contiene testo formattato male (sintassi JSON non valida), la funzione va in errore e interrompe il gioco.\n\nSintomi: il gioco si blocca con un crash all'avvio se il file di salvataggio è mancante o difettoso.\n\nRipara `load_settings()` applicando una rigorosa programmazione difensiva:\n1. Se il file `user://settings.json` non esiste (`FileAccess.file_exists`), oppure se l'apertura con `FileAccess.open` restituisce `null`, la funzione deve restituire subito il dizionario predefinito `{\"volume\": 80, \"fullscreen\": false}`.\n2. Se il contenuto letto con `get_as_text()` non supera l'analisi `json.parse(content)` (ossia il risultato è diverso da `OK`), la funzione deve restituire i valori predefiniti.\n3. Se `json.data` non è un `Dictionary` (`is Dictionary`), restituisci i valori predefiniti.\n4. Se tutti i controlli hanno successo, restituisci `json.data`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "ripara-salvataggio",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://save_manager.gd",
+      "descrizione": "Il file save_manager.gd esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar sm: Object = await instantiate_script(\"res://save_manager.gd\")\n\tif not check(\"script_exists\", sm != null, \"Lo script save_manager.gd deve essere valido e istanziabile\"):\n\t\treturn\n\tif FileAccess.file_exists(\"user://settings.json\"):\n\t\tDirAccess.remove_absolute(\"user://settings.json\")\n\tvar res_missing = call_if_exists(sm, \"load_settings\", [], {})\n\tcheck(\"missing\", typeof(res_missing) == TYPE_DICTIONARY and res_missing.get(\"volume\", 0) == 80, \"Con file mancante load_settings deve restituire le impostazioni predefinite\")\n\tvar f := FileAccess.open(\"user://settings.json\", FileAccess.WRITE)\n\tif f != null:\n\t\tf.store_string(\"{\\\"volume\\\": 99, invalid_json_syntax\")\n\t\tf.close()\n\tvar res_corrupt = call_if_exists(sm, \"load_settings\", [], {})\n\tcheck(\"corrupt\", typeof(res_corrupt) == TYPE_DICTIONARY and res_corrupt.get(\"volume\", 0) == 80, \"Con file rovinato load_settings non deve andare in crash e deve restituire i valori di default\")\n\tvar f2 := FileAccess.open(\"user://settings.json\", FileAccess.WRITE)\n\tif f2 != null:\n\t\tf2.store_string(\"{\\\"volume\\\": 50, \\\"fullscreen\\\": true}\")\n\t\tf2.close()\n\tvar res_valid = call_if_exists(sm, \"load_settings\", [], {})\n\tcheck(\"valid\", typeof(res_valid) == TYPE_DICTIONARY and res_valid.get(\"volume\", 0) == 50, \"Con file valido load_settings deve restituire il dizionario caricato da file\")\n",
+      "descrizione": "load_settings gestisce in modo sicuro file mancanti, rovinati o validi senza mandare in crash l'applicazione"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "RiparaSalvataggio",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RiparaSalvataggio\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "save_manager.gd",
+       "contenuto": "class_name SaveManager\nextends RefCounted\n\n\nfunc load_settings() -> Dictionary:\n\t# CODICE ROTTO: assume che il file esista sempre e che il JSON sia perfetto\n\tvar file: FileAccess = FileAccess.open(\"user://settings.json\", FileAccess.READ)\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tjson.parse(content)\n\treturn json.data as Dictionary\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RiparaSalvataggio\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "save_manager.gd",
+       "contenuto": "class_name SaveManager\nextends RefCounted\n\n\nfunc load_settings() -> Dictionary:\n\tvar default_settings: Dictionary = {\"volume\": 80, \"fullscreen\": false}\n\n\tif not FileAccess.file_exists(\"user://settings.json\"):\n\t\treturn default_settings\n\n\tvar file: FileAccess = FileAccess.open(\"user://settings.json\", FileAccess.READ)\n\tif file == null:\n\t\treturn default_settings\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\treturn default_settings\n\n\tif json.data is Dictionary:\n\t\treturn json.data\n\treturn default_settings\n"
+      }
+     ],
+     "progetto": {
+      "nome": "RiparaSalvataggio",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Aggiungiamo tutti i controlli della programmazione difensiva: verifichiamo prima che il file esista con `FileAccess.file_exists()`, controlliamo che `FileAccess.open()` non restituisca `null`, che la sintassi JSON sia corretta verificando che `json.parse()` restituisca `OK`, e infine verifichiamo che `json.data` sia effettivamente un `Dictionary` con l'operatore `is`.",
+     "cambiati": [
+      "save_manager.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es3"
+   }
   },
   "test": {
    "stato": "da_fare",
