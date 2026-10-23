@@ -366,7 +366,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://quiz.gd deve caricarsi senza errori: Parse Error: Expected indented block after \"if\" block. (res://quiz.gd:45 in GDScript::reload)\nFailed to load script \"res://quiz.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  quiz.gd, riga 45: `if not answering_locked and not question_timer.is_stopped():`"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
