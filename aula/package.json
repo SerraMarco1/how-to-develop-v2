@@ -23,12 +23,12 @@
     "electron": "43.7.7",
     "electron-builder": "26.15.3",
     "electron-updater": "6.8.9",
-    "markdown-it": "15.0.2",
+    "markdown-it": "15.0.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "shiki": "4.4.3",
     "undici": "7.29.1",
-    "vite": "8.3.2",
+    "vite": "8.3.5",
     "zod": "4.6.5"
   }
 }
