@@ -416,11 +416,11 @@
  },
  "export": {
   "es1": {
-   "impronta": "4317fb81c3fbfceb43438c2cd03b724702a182f7ef524cafab49253d112ae72b",
+   "impronta": "575712c5258a0234d2021c966776f95f07436e5b2fda03a84473d3e7e99af4f9",
    "tentativi": 1,
    "esito": "niente",
    "regole": 2,
-   "motivo": "L'esercizio rende configurabili i parametri del cesto nell'Inspector e usa variabili esportate al posto delle costanti: il comportamento visivo del gioco resta identico a prima."
+   "motivo": "L'esercizio rende i parametri configurabili nell'Inspector e il gioco si comporta visivamente come prima."
   }
  },
  "tween": {

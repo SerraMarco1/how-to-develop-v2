@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"L'esercizio rende i parametri configurabili nell'Inspector e il gioco si comporta visivamente come prima.\"\n}",
- "ragionamento": 1333,
- "quando": "2026-10-23T11:25:12.722Z",
- "ruolo": "ritocco"
-}

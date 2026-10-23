@@ -1,0 +1,16 @@
+{
+ "n": 17,
+ "quando": "2026-10-23T11:25:14.187Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Esporre i parametri del cesto nell'Inspector» non si vede sullo schermo: L'esercizio rende i parametri configurabili nell'Inspector e il gioco si comporta visivamente come prima.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 6612,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (8578 → 38 token)"
+ ]
+}
