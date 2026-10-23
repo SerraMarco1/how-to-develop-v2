@@ -56,7 +56,9 @@
    "genere": "prevedi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la previsione 5 non si esegue in Godot 4.7: lo script deve essere GDScript valido con `func run():` che restituisce un valore"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
