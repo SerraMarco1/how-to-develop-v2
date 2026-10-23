@@ -552,7 +552,7 @@
  },
  "temi-e-font": {
   "es1": {
-   "impronta": "ffda5ab8d36fbf67675be89daba5e3c149e2a2afd459abdf8735786438623356",
+   "impronta": "5cd09dadb1b1cef1a35b1e2b2ba9bf83f44e37e92b750f2df6e1689a460d2a62",
    "tentativi": 2,
    "esito": "niente",
    "regole": 2,
@@ -563,31 +563,31 @@
      "azioni": [],
      "soggetti": [
       {
-       "id": "button",
+       "id": "pulsante",
        "cerca": {
         "nome": "RestartButton"
        },
        "quanti": 1,
-       "da": 0,
-       "a": 6,
+       "da": 0.5,
+       "a": 5,
        "deve": "esserci",
        "etichetta": "Pulsante"
       }
      ],
      "scritte": [
       {
-       "testo": "Il pulsante ora usa il nuovo tema grafico personalizzato",
+       "testo": "Il tema centralizzato applica lo stile personalizzato al pulsante",
        "da": 0.5,
-       "a": 5.5,
-       "soggetto": "button"
+       "a": 5,
+       "soggetto": "pulsante"
       }
      ]
     },
     "problemi": [
-     "Soggetto «button» (nome = RestartButton; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+     "Soggetto «pulsante» (nome = RestartButton; almeno 1 da 0.5 a 5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
     ]
    },
-   "motivo": "Il pulsante di riavvio è nascosto all'avvio della partita e il suo stile non è visibile sullo schermo all'avvio della scena principale."
+   "motivo": "Il pulsante RestartButton è nascosto durante la normale partita e non risulta visibile sullo schermo all'avvio della scena principale."
   },
   "es2": {
    "impronta": "9060454b54c16efda4bbf53bd182355de1c1acf616a09d4ba221a4f4c39cb0aa",

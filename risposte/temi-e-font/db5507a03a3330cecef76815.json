@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"Il pulsante RestartButton è nascosto durante la normale partita e non risulta visibile sullo schermo all'avvio della scena principale.\"\n}",
- "ragionamento": 1089,
- "quando": "2026-10-23T12:04:17.962Z",
- "ruolo": "ritocco"
-}
