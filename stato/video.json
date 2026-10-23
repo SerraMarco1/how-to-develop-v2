@@ -287,42 +287,43 @@
  },
  "segnali-esistenti": {
   "es1": {
-   "impronta": "cc5a34b3706379615c4e04b55db444e373e74221e7e8f29542570050fcbc6f94",
-   "tentativi": 3,
+   "impronta": "84c3fbc30c798474989e69cda7c4f0bfb9d7dc77c69fb13b49e99664a27d50c9",
+   "tentativi": 2,
    "esito": "niente",
    "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://basket.tscn",
-     "durata": 10,
+     "durata": 8,
      "azioni": [],
      "soggetti": [
       {
-       "id": "restart",
+       "id": "pulsante",
        "cerca": {
+        "scena": "res://basket.tscn",
         "nome": "RestartButton"
        },
        "quanti": 1,
-       "da": 3,
-       "a": 10,
+       "da": 5,
+       "a": 8,
        "deve": "comparire",
        "etichetta": "Pulsante Ricomincia"
       }
      ],
      "scritte": [
       {
-       "testo": "Quando finiscono le vite, appare il pulsante di riavvio",
-       "da": 3,
-       "a": 10,
-       "soggetto": "restart"
+       "testo": "Il pulsante compare quando finiscono le vite",
+       "da": 5,
+       "a": 8,
+       "soggetto": "pulsante"
       }
      ]
     },
     "problemi": [
-     "Soggetto «restart» (nome = RestartButton; almeno 1 da 3 a 10 s; deve comparire): alla fine dell'intervallo si vedono solo nel 0% del tempo (serve l'80%): visibili al massimo 0. A 3 s: «RestartButton» a (526, 620) 100×31, nascosto, testo «Ricomincia». Lo schermo va da (0, 0) a (1152, 648)."
+     "Soggetto «pulsante» (scena = res://basket.tscn, nome = RestartButton; almeno 1 da 5 a 8 s; deve comparire): nessun nodo della scena in esecuzione corrisponde a scena = res://basket.tscn, nome = RestartButton."
     ]
    },
-   "motivo": "Il pulsante di riavvio compare sullo schermo solo al Game Over, un evento legato al gameplay e alla casualità della caduta degli oggetti che non può essere previsto in un intervallo di tempo fisso."
+   "motivo": "Il pulsante di riavvio compare solo dopo aver perso tutte le vite, una condizione che non si verifica in modo deterministico durante l'esecuzione automatica del test."
   }
  },
  "timer": {

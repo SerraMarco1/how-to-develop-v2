@@ -1,0 +1,16 @@
+{
+ "n": 35,
+ "quando": "2026-10-23T11:24:09.000Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Aggiungi il pulsante di riavvio e collega il segnale pressed» non si vede sullo schermo: Il pulsante di riavvio compare solo dopo aver perso tutte le vite, una condizione che non si verifica in modo deterministico durante l'esecuzione automatica del test.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 12572,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 11 s (7570 → 52 token)"
+ ]
+}
