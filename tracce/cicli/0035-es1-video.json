@@ -1,0 +1,47 @@
+{
+ "n": 35,
+ "quando": "2026-10-23T11:20:11.220Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «stelle» (scena = res://star.tscn; almeno 5 da 0.5 a 4 s; deve muoversi): si vedono almeno 5 nodi solo nel 58% dell'intervallo (serve l'80%): trovati fino a 5, visibili al massimo 5. A 2 s: «Star» a (86, 376) 128×128, si vede; «@Sprite2D@5» a (266, 426) 128×128, si vede; «@Sprite2D@6» a (446, 476) 128×128, si vede; «@Sprite2D@7» a (626, 526) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 18248,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 5,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "stelle",
+     "cerca": {
+      "scena": "res://star.tscn"
+     },
+     "quanti": 5,
+     "da": 0.5,
+     "a": 4,
+     "deve": "muoversi",
+     "etichetta": "Stelle"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il ciclo for genera cinque stelle",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "stelle"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «stelle» (scena = res://star.tscn; almeno 5 da 0.5 a 4 s; deve muoversi): si vedono almeno 5 nodi solo nel 58% dell'intervallo (serve l'80%): trovati fino a 5, visibili al massimo 5. A 2 s: «Star» a (86, 376) 128×128, si vede; «@Sprite2D@5» a (266, 426) 128×128, si vede; «@Sprite2D@6» a (446, 476) 128×128, si vede; «@Sprite2D@7» a (626, 526) 128×128, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (4874 → 197 token)"
+ ]
+}
