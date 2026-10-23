@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://basket.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"stelle\", \"cerca\": {\"script\": \"res://star.gd\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 6.0, \"deve\": \"muoversi\", \"etichetta\": \"Oggetti\"}], \"scritte\": [{\"testo\": \"Gli oggetti ora usano colori e velocità del Dictionary\", \"da\": 0.5, \"a\": 6.0, \"soggetto\": \"stelle\"}]}",
+ "ragionamento": 1079,
+ "quando": "2026-10-23T11:20:53.658Z",
+ "ruolo": "ritocco"
+}
