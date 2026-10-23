@@ -264,5 +264,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "file-e-json": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
