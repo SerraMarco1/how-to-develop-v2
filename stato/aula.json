@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-23T09:05:47.791Z",
+ "aggiornato": "2026-10-23T10:14:23.680Z",
  "stato": "aspetta",
  "lezione": {
   "slug": "await-e-coroutine",
@@ -7,5 +7,5 @@
   "titolo": "await: aspettare senza fermare il gioco"
  },
  "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.4 riprende da sola appena rispondono.",
- "riprende": "2026-10-23T09:45:47.790Z"
+ "riprende": "2026-10-23T11:14:23.680Z"
 }
