@@ -149,7 +149,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://announcer.tscn\")\n\tif not check(\"scena\", scene != null, \"La scena announcer.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar label := scene.get_node_or_null(\"Label\") as Label\n\tif not check(\"label\", label != null, \"La scena deve contenere il nodo Label\"):\n\t\treturn\n\n\tvar completed := false\n\tscene.connect(\"sequence_completed\", func() -> void: completed = true)\n\n\tcall_if_exists(scene, \"start_sequence\")\n\tcheck(\"step1\", label.text == \"Pronti...\", \"All'inizio della sequenza il testo deve essere 'Pronti...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step2\", label.text == \"Partenza...\", \"Dopo 0.5s il testo deve diventare 'Partenza...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step3\", label.text == \"Via!\", \"Dopo un altro intervallo il testo deve essere 'Via!'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"clear\", label.text == \"\", \"Al termine il testo deve essere svuotato\")\n\tcheck(\"signal\", completed, \"Il segnale sequence_completed deve essere emesso alla fine della sequenza\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://announcer.tscn\")\n\tif not check(\"scena\", scene != null, \"La scena announcer.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar label := scene.get_node_or_null(\"Label\") as Label\n\tif not check(\"label\", label != null, \"La scena deve contenere il nodo Label\"):\n\t\treturn\n\n\tvar completed := false\n\tscene.connect(\"sequence_completed\", func() -> void: completed = true)\n\n\tcall_if_exists(scene, \"start_sequence\")\n\tcheck(\"step1\", label.text == \"Pronti...\", \"All'inizio della sequenza il testo deve essere 'Pronti...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step2\", label.text == \"Partenza...\", \"Dopo 0.5s il testo deve diventare 'Partenza...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step3\", label.text == \"Via!\", \"Dopo un altro intervallo il testo deve essere 'Via!'\")\n\tawait wait_seconds(0.55)\n\tcheck(\n\t\t\"clear\", label.text == \"\", \"Al termine il testo deve essere svuotato\"\n\t)\n\tawait wait_frames(2)\n\tcheck(\n\t\t\"signal\", completed, \"Il segnale sequence_completed deve essere emesso alla fine della sequenza\"\n\t)",
       "descrizione": "La sequenza mostra i tre testi nei tempi corretti ed emette il segnale sequence_completed"
      }
     ],
@@ -157,6 +157,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Announcer\"\nrun/main_scene=\"res://announcer.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
       {
        "percorso": "announcer.tscn",
        "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://announcer.gd\" id=\"1_announcer\"]\n\n[node name=\"Announcer\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_announcer\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -100.0\noffset_top = -20.0\noffset_right = 100.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\nhorizontal_alignment = 1\n\n[node name=\"TimerA\" type=\"Timer\" parent=\".\"]\none_shot = true\n\n[node name=\"TimerB\" type=\"Timer\" parent=\".\"]\none_shot = true\n\n[node name=\"TimerC\" type=\"Timer\" parent=\".\"]\none_shot = true\n"
@@ -198,13 +202,14 @@
     }
    },
    "genere": "riordina",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il segnale sequence_completed deve essere emesso alla fine della sequenza\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es3": {
@@ -349,7 +354,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "await: aspettare senza fermare il gioco",
