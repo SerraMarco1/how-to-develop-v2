@@ -1,6 +1,292 @@
 {
  "creato": "2026-10-23T07:57:18.214Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Cosa succede durante l'attesa con await",
+    "consegna": "Leggi attentamente ciascun frammento di codice e scrivi cosa restituisce la funzione `run()`, senza eseguirlo sul computer.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "class_name PrevediSemplice\nextends RefCounted\n\nsignal evento_completato(punti: int)\n\nfunc run() -> int:\n\tvar punteggio: int = 10\n\t_modifica_dopo.call_deferred()\n\tvar bonus: int = await evento_completato\n\treturn punteggio + bonus\n\nfunc _modifica_dopo() -> void:\n\tevento_completato.emit(5)",
+      "domanda": "Quale numero intero restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "`run()` si ferma sulla riga con `await evento_completato`. Nel frame successivo `_modifica_dopo()` viene eseguita ed emette il segnale con il valore `5`. L'await riceve `5`, lo assegna a `bonus` e la funzione prosegue restituendo `10 + 5 = 15`."
+     },
+     {
+      "codice": "class_name PrevediOrdine\nextends RefCounted\n\nfunc passo_a(registro: Array[String]) -> void:\n\tregistro.append(\"A\")\n\nfunc passo_b(registro: Array[String]) -> void:\n\tregistro.append(\"B\")\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\tpasso_a(registro)\n\tpasso_b(registro)\n\treturn \",\".join(registro)",
+      "domanda": "Quale testo restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "Le due funzioni sono sincrone (non contengono `await`): `passo_a` scrive \"A\", poi `passo_b` scrive \"B\". Il metodo `join` unisce gli elementi con la virgola producendo `\"A,B\"`."
+     },
+     {
+      "codice": "class_name PrevediCoroutine\nextends RefCounted\n\nsignal tick\n\nfunc operazione_lenta(registro: Array[String]) -> void:\n\tregistro.append(\"1\")\n\tawait tick\n\tregistro.append(\"2\")\n\nfunc run() -> String:\n\tvar registro: Array[String] = []\n\toperazione_lenta(registro)\n\tregistro.append(\"3\")\n\ttick.emit()\n\treturn \",\".join(registro)",
+      "domanda": "Quale testo restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "Quando `run()` chiama `operazione_lenta(registro)` senza `await`, `operazione_lenta` appende `\"1\"` e poi si sospende su `await tick`, restituendo subito il controllo a `run()`. `run()` prosegue ed aggiunge `\"3\"`. Solo a quel punto viene emesso `tick.emit()`, risvegliando `operazione_lenta` che appende `\"2\"`. Il risultato finale è `\"1,3,2\"`."
+     },
+     {
+      "codice": "class_name PrevediAwaitAnnidato\nextends RefCounted\n\nsignal pronto\n\nfunc azione_interna() -> int:\n\tawait pronto\n\treturn 40\n\nfunc operazione() -> int:\n\tvar valore: int = await azione_interna()\n\treturn valore + 2\n\nfunc run() -> int:\n\tpronto.emit.call_deferred()\n\tvar totale: int = await operazione()\n\treturn totale",
+      "domanda": "Quale numero intero restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "`run()` attende `operazione()`, che a sua volta attende `azione_interna()`. Nel ciclo successivo `pronto.emit()` risveglia `azione_interna`, che restituisce 40. `operazione()` riceve 40, aggiunge 2 ottenendo 42 e lo restituisce a `run()`. Il risultato è 42."
+     },
+     {
+      "codice": "class_name PrevediScudo\nextends RefCounted\n\nsignal passo\n\nfunc calcola() -> int:\n\tvar x: int = 10\n\tawait passo\n\tx += 5\n\tawait passo\n\tx += 20\n\treturn x\n\nfunc run() -> int:\n\tpasso.emit.call_deferred()\n\tvar res: int = await calcola()\n\treturn res",
+      "domanda": "Quale numero intero restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "La funzione `run()` chiama in differita un solo `passo.emit()`. La coroutine `calcola()` riceve il primo segnale e porta `x` a 15, ma poi si blocca sul secondo `await passo` perché non viene emesso nessun altro segnale. Non terminando mai il secondo passo, la funzione non completa l'operazione."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "riordina",
+    "titolo": "Linearizzare una sequenza di annunci",
+    "consegna": "Nel progetto trovi una scena `announcer.tscn` con script `announcer.gd`. Attualmente il gestore mostra tre messaggi consecutivi usando tre nodi `Timer` separati (`TimerA`, `TimerB`, `TimerC`) e tre funzioni callback diverse sparpagliate nel file.\n\nRiscrivi `announcer.gd` in modo pulito e lineare:\n1. Rimuovi i riferimenti e i collegamenti ai tre nodi timer.\n2. Riscrivi la funzione `start_sequence()` in modo che sia una coroutine unica che:\n   - Mostra il testo `\"Pronti...\"` su `Label`.\n   - Attende `0.5` secondi usando `await get_tree().create_timer(0.5).timeout`.\n   - Mostra il testo `\"Partenza...\"` su `Label`.\n   - Attende `0.5` secondi usando `await get_tree().create_timer(0.5).timeout`.\n   - Mostra il testo `\"Via!\"` su `Label`.\n   - Attende `0.5` secondi usando `await get_tree().create_timer(0.5).timeout`.\n   - Imposta il testo di `Label` su `\"\"` (stringa vuota) ed emette il segnale personalizzato `sequence_completed`.\n3. Dopo ogni `await`, inserisci la clausola di sicurezza `if not is_inside_tree(): return` per evitare errori se la scena viene scaricata.\n4. La funzione più lunga non deve superare 25 righe e il codice non deve contenere tipi non dichiarati.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "announcer",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Usa `await get_tree().create_timer(0.5).timeout` per scandire i tre intervalli temporali in sequenza dall'alto in basso.",
+     "Ricordati di dichiarare in cima allo script il segnale: `signal sequence_completed`.",
+     "Elimina le vecchie funzioni collegate ai timer (_on_timer_a_timeout, ecc.): tutto il flusso adesso risiede all'interno di `start_sequence()`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://announcer.gd",
+      "regex": "await get_tree\\(\\)\\.create_timer",
+      "descrizione": "Lo script usa await con create_timer per scandire il tempo"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://announcer.gd",
+      "regex": "if not is_inside_tree\\(\\):",
+      "descrizione": "Viene verificato is_inside_tree() dopo l'attesa"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://announcer.tscn\")\n\tif not check(\"scena\", scene != null, \"La scena announcer.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar label := scene.get_node_or_null(\"Label\") as Label\n\tif not check(\"label\", label != null, \"La scena deve contenere il nodo Label\"):\n\t\treturn\n\n\tvar completed := false\n\tscene.connect(\"sequence_completed\", func() -> void: completed = true)\n\n\tcall_if_exists(scene, \"start_sequence\")\n\tcheck(\"step1\", label.text == \"Pronti...\", \"All'inizio della sequenza il testo deve essere 'Pronti...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step2\", label.text == \"Partenza...\", \"Dopo 0.5s il testo deve diventare 'Partenza...'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"step3\", label.text == \"Via!\", \"Dopo un altro intervallo il testo deve essere 'Via!'\")\n\tawait wait_seconds(0.55)\n\tcheck(\"clear\", label.text == \"\", \"Al termine il testo deve essere svuotato\")\n\tcheck(\"signal\", completed, \"Il segnale sequence_completed deve essere emesso alla fine della sequenza\")",
+      "descrizione": "La sequenza mostra i tre testi nei tempi corretti ed emette il segnale sequence_completed"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "announcer.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://announcer.gd\" id=\"1_announcer\"]\n\n[node name=\"Announcer\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_announcer\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -100.0\noffset_top = -20.0\noffset_right = 100.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\nhorizontal_alignment = 1\n\n[node name=\"TimerA\" type=\"Timer\" parent=\".\"]\none_shot = true\n\n[node name=\"TimerB\" type=\"Timer\" parent=\".\"]\none_shot = true\n\n[node name=\"TimerC\" type=\"Timer\" parent=\".\"]\none_shot = true\n"
+      },
+      {
+       "percorso": "announcer.gd",
+       "contenuto": "extends Control\n\nsignal sequence_completed\n\n@onready var label: Label = $Label\n@onready var timer_a: Timer = $TimerA\n@onready var timer_b: Timer = $TimerB\n@onready var timer_c: Timer = $TimerC\n\n\nfunc _ready() -> void:\n\ttimer_a.timeout.connect(_on_timer_a_timeout)\n\ttimer_b.timeout.connect(_on_timer_b_timeout)\n\ttimer_c.timeout.connect(_on_timer_c_timeout)\n\n\nfunc start_sequence() -> void:\n\tlabel.text = \"Pronti...\"\n\ttimer_a.start(0.5)\n\n\nfunc _on_timer_a_timeout() -> void:\n\tlabel.text = \"Partenza...\"\n\ttimer_b.start(0.5)\n\n\nfunc _on_timer_b_timeout() -> void:\n\tlabel.text = \"Via!\"\n\ttimer_c.start(0.5)\n\n\nfunc _on_timer_c_timeout() -> void:\n\tlabel.text = \"\"\n\tsequence_completed.emit()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Announcer",
+      "scenaPrincipale": "res://announcer.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "announcer.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://announcer.gd\" id=\"1_announcer\"]\n\n[node name=\"Announcer\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_announcer\")\n\n[node name=\"Label\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -100.0\noffset_top = -20.0\noffset_right = 100.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\nhorizontal_alignment = 1\n"
+      },
+      {
+       "percorso": "announcer.gd",
+       "contenuto": "extends Control\n\nsignal sequence_completed\n\n@onready var label: Label = $Label\n\n\nfunc start_sequence() -> void:\n\tlabel.text = \"Pronti...\"\n\tawait get_tree().create_timer(0.5).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tlabel.text = \"Partenza...\"\n\tawait get_tree().create_timer(0.5).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tlabel.text = \"Via!\"\n\tawait get_tree().create_timer(0.5).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tlabel.text = \"\"\n\tsequence_completed.emit()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Announcer",
+      "scenaPrincipale": "res://announcer.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Grazie ad `await get_tree().create_timer(0.5).timeout`, la funzione `start_sequence()` si arresta temporaneamente e riprende automaticamente dopo mezzo secondo, senza bisogno di creare nodi Timer nella scena o frammentare la logica in tre funzioni di callback separate. Il controllo `if not is_inside_tree(): return` dopo ogni `await` assicura che, se la scena viene distrutta durante l'attesa, l'esecuzione si interrompa senza tentare di accedere alla `Label`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "riordina",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Unificare il feedback di risposta con await",
+    "consegna": "In `quiz.gd`, la gestione della risposta del giocatore e lo scadere del tempo sono attualmente legati a un nodo `FeedbackTimer` e alla callback `_on_feedback_timeout()`. Riorganizza il flusso rendendolo lineare con `await`:\n\n1. In `quiz.tscn`, elimina il nodo `FeedbackTimer`.\n2. In `quiz.gd`:\n   - Rimuovi il riferimento `@onready var feedback_timer` e la connessione del suo segnale in `_ready()`.\n   - Rimuovi la funzione `_on_feedback_timeout()`.\n   - Crea una funzione privata `_show_feedback_and_advance()` che:\n     - Disabilita tutti i pulsanti di `answer_buttons`.\n     - Attende la durata `FEEDBACK_DURATION` con `await get_tree().create_timer(FEEDBACK_DURATION).timeout`.\n     - Verifica la presenza nell'albero della scena con `if not is_inside_tree(): return`.\n     - Fa avanzare la sessione con `session.advance()` e chiama `display_current_question()`.\n   - Modifica `_select_answer(button_index: int)` e `_on_question_timeout()` in modo che, dopo aver evidenziato i testi sui pulsanti, chiamino `_show_feedback_and_advance()`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "quiz",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Dopo aver rimosso `FeedbackTimer` dalla scena `quiz.tscn`, assicurati che in `_ready()` non ci sia più `feedback_timer.timeout.connect(...)`.",
+     "In `_select_answer()` e `_on_question_timeout()`, sostituisci la riga `feedback_timer.start(FEEDBACK_DURATION)` con la chiamata a `_show_feedback_and_advance()`.",
+     "Nella funzione `_show_feedback_and_advance()`, inserisci il controllo di sicurezza `if not is_inside_tree(): return` subito dopo la riga con `await`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://quiz.gd",
+      "regex": "await get_tree\\(\\)\\.create_timer",
+      "descrizione": "quiz.gd usa await get_tree().create_timer per l'attesa del feedback"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://quiz.gd",
+      "regex": "if not is_inside_tree\\(\\):",
+      "descrizione": "quiz.gd controlla is_inside_tree() dopo l'attesa"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tQuizData.questions = [\n\t\tQuestion.new(\"Domanda 1\", [\"A\", \"B\"], 0),\n\t\tQuestion.new(\"Domanda 2\", [\"C\", \"D\"], 1)\n\t]\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz\", quiz != null, \"La scena quiz.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tcheck(\"no_feedback_timer\", quiz.get_node_or_null(\"FeedbackTimer\") == null, \"Il nodo FeedbackTimer deve essere rimosso dalla scena quiz.tscn\")\n\n\tvar btn0 := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/AnswersContainer/Answer0\") as Button\n\tvar label := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/QuestionLabel\") as Label\n\tif not check(\"nodes\", btn0 != null and label != null, \"I nodi Answer0 e QuestionLabel devono esistere\"):\n\t\treturn\n\n\tcheck(\"q1\", label.text == \"Domanda 1\", \"All'avvio deve comparire la prima domanda\")\n\tawait click_button(btn0)\n\tcheck(\"btn_disabled\", btn0.disabled, \"Subito dopo il clic i pulsanti devono essere disabilitati\")\n\tcheck(\"feedback_visible\", btn0.text.find(\"[GIUSTO!]\") != -1, \"Il pulsante deve mostrare il feedback\")\n\n\tawait wait_seconds(1.1)\n\tcheck(\"q2\", label.text == \"Domanda 2\", \"Dopo l'attesa del feedback deve comparire la seconda domanda\")",
+      "descrizione": "Il quiz avanza correttamente dopo la risposta attendendo il feedback senza generare errori"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz.gd\" id=\"1_quiz\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_quiz\"]\ndefault_font_size = 20\n\n[node name=\"Quiz\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_quiz\")\nscript = ExtResource(\"1_quiz\")\n\n[node name=\"MarginContainer\" type=\"MarginContainer\" parent=\".\"]\nprocess_mode = 1\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 60\ntheme_override_constants/margin_top = 40\ntheme_override_constants/margin_right = 60\ntheme_override_constants/margin_bottom = 40\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"MarginContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 28\nalignment = 1\n\n[node name=\"TimeBar\" type=\"ProgressBar\" parent=\"MarginContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(0, 20)\nlayout_mode = 2\nmax_value = 5.0\nvalue = 5.0\nshow_percentage = false\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 26\ntext = \"Testo della domanda\"\nhorizontal_alignment = 1\nautowrap_mode = 2\n\n[node name=\"AnswersContainer\" type=\"VBoxContainer\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"Answer0\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 1\"\n\n[node name=\"Answer2\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 2\"\n\n[node name=\"Answer3\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 3\"\n\n[node name=\"QuestionTimer\" type=\"Timer\" parent=\".\"]\nprocess_mode = 1\none_shot = true\n\n[node name=\"PauseMenu\" type=\"ColorRect\" parent=\".\"]\nvisible = false\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ncolor = Color(0, 0, 0, 0.705882)\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\"PauseMenu\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"PauseMenu/CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 20\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 32\ntext = \"PAUSA\"\nhorizontal_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Riprendi\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+      },
+      {
+       "percorso": "quiz.gd",
+       "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\n\nvar session: QuizSession\nvar answering_locked: bool = false\n\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n\n@onready var pause_menu: ColorRect = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n@onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tsession = QuizSession.new(QuizData.questions.duplicate())\n\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\n\tanswer_buttons[0].pressed.connect(_on_answer_0_pressed)\n\tanswer_buttons[1].pressed.connect(_on_answer_1_pressed)\n\tanswer_buttons[2].pressed.connect(_on_answer_2_pressed)\n\tanswer_buttons[3].pressed.connect(_on_answer_3_pressed)\n\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\tpause_menu.visible = false\n\tdisplay_current_question()\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\ttime_bar.value = question_timer.time_left\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\ttoggle_pause()\n\n\nfunc toggle_pause() -> void:\n\tvar is_paused: bool = not get_tree().paused\n\tget_tree().paused = is_paused\n\tpause_menu.visible = is_paused\n\tif is_paused:\n\t\tresume_button.grab_focus()\n\telse:\n\t\t_focus_first_active_answer()\n\n\nfunc _focus_first_active_answer() -> void:\n\tfor btn in answer_buttons:\n\t\tif btn.visible and not btn.disabled:\n\t\t\tbtn.grab_focus()\n\t\t\treturn\n\n\nfunc _on_resume_button_pressed() -> void:\n\ttoggle_pause()\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n\n\nfunc display_current_question() -> void:\n\tif session.is_finished():\n\t\tfinish_quiz()\n\t\treturn\n\n\tanswering_locked = false\n\tvar current: Question = session.get_current_question()\n\tquestion_label.text = current.text\n\n\tfor i in range(answer_buttons.size()):\n\t\tif i < current.options.size():\n\t\t\tanswer_buttons[i].text = current.options[i]\n\t\t\tanswer_buttons[i].visible = true\n\t\t\tanswer_buttons[i].disabled = false\n\t\telse:\n\t\t\tanswer_buttons[i].visible = false\n\t\t\tanswer_buttons[i].disabled = true\n\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\nfunc _on_answer_0_pressed() -> void:\n\t_select_answer(0)\n\n\nfunc _on_answer_1_pressed() -> void:\n\t_select_answer(1)\n\n\nfunc _on_answer_2_pressed() -> void:\n\t_select_answer(2)\n\n\nfunc _on_answer_3_pressed() -> void:\n\t_select_answer(3)\n\n\nfunc _select_answer(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar current: Question = session.get_current_question()\n\tvar was_correct: bool = session.submit_answer(button_index)\n\n\tif was_correct:\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\t\tanswer_buttons[current.correct_index].text += \"  [CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar current: Question = session.get_current_question()\n\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\tanswer_buttons[current.correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _show_feedback_and_advance() -> void:\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tawait get_tree().create_timer(FEEDBACK_DURATION).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tsession.advance()\n\tdisplay_current_question()\n\n\nfunc finish_quiz() -> void:\n\tQuizData.score = session.score\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\t\tQuizData.save_high_score()\n\n\tif QuizData.current_topic_title != \"\":\n\t\tvar current_record: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\tif QuizData.score > current_record:\n\t\t\tQuizData.topic_records[QuizData.current_topic_title] = QuizData.score\n\t\t\tQuizData.save_topic_records()\n\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Quiz",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Eliminando il nodo `FeedbackTimer` e la funzione `_on_feedback_timeout()`, abbiamo accentrato la pausa post-risposta nella funzione `_show_feedback_and_advance()`. L'attesa di `FEEDBACK_DURATION` avviene tramite `await get_tree().create_timer(FEEDBACK_DURATION).timeout`. Il controllo `if not is_inside_tree(): return` garantisce che la funzione non prosegua se durante il secondo di attesa l'utente esce dalla scena.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Transizione fluida tra le domande con Tween e await",
+    "consegna": "Rifinisci il cambio domanda in `quiz.gd` introducendo una transizione visiva animata con `Tween` e concatenandola in `_show_feedback_and_advance()` tramite `await`:\n\n1. Aggiungi in `quiz.gd` una costante `FADE_DURATION: float = 0.2`.\n2. Crea due funzioni ausiliarie per animare la trasparenza di un nodo visivo:\n   - `_fade_out(target: CanvasItem) -> void`: crea un tween con `create_tween()`, interpola la proprietà `\"modulate:a\"` di `target` verso `0.0` in `FADE_DURATION` secondi, e attende il completamento con `await tween.finished`.\n   - `_fade_in(target: CanvasItem) -> void`: crea un tween con `create_tween()`, interpola la proprietà `\"modulate:a\"` di `target` verso `1.0` in `FADE_DURATION` secondi, e attende il completamento con `await tween.finished`.\n3. Salva un riferimento al contenitore principale con `@onready var margin_container: MarginContainer = $MarginContainer`.\n4. Riscrivi la sequenza in `_show_feedback_and_advance()` in questo ordine preciso:\n   - Disabilita tutti i pulsanti di risposta.\n   - Attende `FEEDBACK_DURATION` con `await get_tree().create_timer(FEEDBACK_DURATION).timeout`.\n   - Controlla `if not is_inside_tree(): return`.\n   - Esegue la sfumatura in uscita chiamando `await _fade_out(margin_container)`.\n   - Controlla `if not is_inside_tree(): return`.\n   - Fa avanzare la sessione (`session.advance()`).\n   - Aggiorna la schermata (`display_current_question()`).\n   - Se la sessione non è finita (`not session.is_finished()`), fa riapparire il contenitore chiamando `await _fade_in(margin_container)` seguito da `if not is_inside_tree(): return`.\n5. Verifica che tornando al menu principale durante la transizione non compaia alcun errore nel debugger.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "quiz",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per attendere che un Tween finisca, usa `await tween.finished`. Le funzioni `_fade_out` e `_fade_in` diventano così a loro volta coroutine che puoi attendere con `await`.",
+     "Ricordati di inserire `if not is_inside_tree(): return` dopo ogni riga che contiene `await`.",
+     "Prima di fare il fade_in controlla `not session.is_finished()`, perché se il quiz è terminato `display_current_question()` chiama `finish_quiz()` e cambia già scena."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://quiz.gd",
+      "regex": "await _fade_out\\(",
+      "descrizione": "quiz.gd attende _fade_out con await"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://quiz.gd",
+      "regex": "await _fade_in\\(",
+      "descrizione": "quiz.gd attende _fade_in con await"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://quiz.gd",
+      "regex": "await tween\\.finished",
+      "descrizione": "Le funzioni di dissolvenza attendono il segnale finished del Tween"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tQuizData.questions = [\n\t\tQuestion.new(\"Domanda Alfa\", [\"1\", \"2\"], 0),\n\t\tQuestion.new(\"Domanda Beta\", [\"3\", \"4\"], 0)\n\t]\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz\", quiz != null, \"La scena quiz.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar margin := quiz.get_node_or_null(\"MarginContainer\") as MarginContainer\n\tvar btn0 := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/AnswersContainer/Answer0\") as Button\n\tvar label := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/QuestionLabel\") as Label\n\tif not check(\"nodes\", margin != null and btn0 != null and label != null, \"I nodi necessari devono essere presenti\"):\n\t\treturn\n\n\tawait click_button(btn0)\n\t# Durante il feedback iniziale (1.0s) l'opacità è ancora piena\n\tawait wait_seconds(0.5)\n\tcheck(\"alpha_before_fade\", margin.modulate.a > 0.9, \"Durante il secondo di feedback il contenitore deve rimanere visibile\")\n\n\t# Arrivati a 1.1s è iniziato il fade out\n\tawait wait_seconds(0.6)\n\t# A 1.25s il fade out (0.2s) è finito e inizia il fade in per la domanda successiva\n\tawait wait_seconds(0.3)\n\tcheck(\"q2_reached\", label.text == \"Domanda Beta\", \"La domanda successiva deve comparire\")\n\tcheck(\"alpha_faded_in\", margin.modulate.a > 0.8, \"Al termine del fade in il contenitore torna opaco\")\n\n\t# Collaudo cambio scena a metà sequenza per verificare assenza di crash\n\tawait click_button(btn0)\n\tawait wait_seconds(0.3)\n\tvar quit_btn := quiz.get_node_or_null(\"PauseMenu/CenterContainer/VBoxContainer/QuitButton\") as Button\n\tif quit_btn != null:\n\t\tcall_if_exists(quiz, \"_on_quit_button_pressed\")\n\t\tawait wait_seconds(1.5)\n\t\tcheck(\"no_errors\", errors_text() == \"\", \"Non deve comparire alcun errore tornando al menu durante la sequenza (Errori: %s)\" % errors_text())",
+      "descrizione": "La transizione sfuma il contenitore e un'uscita anticipata al menu non produce errori"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz.gd",
+       "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\nconst FADE_DURATION: float = 0.2\n\nvar session: QuizSession\nvar answering_locked: bool = false\n\n@onready var margin_container: MarginContainer = $MarginContainer\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n\n@onready var pause_menu: ColorRect = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n@onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tsession = QuizSession.new(QuizData.questions.duplicate())\n\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\n\tanswer_buttons[0].pressed.connect(_on_answer_0_pressed)\n\tanswer_buttons[1].pressed.connect(_on_answer_1_pressed)\n\tanswer_buttons[2].pressed.connect(_on_answer_2_pressed)\n\tanswer_buttons[3].pressed.connect(_on_answer_3_pressed)\n\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\tpause_menu.visible = false\n\tdisplay_current_question()\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\t\ttime_bar.value = question_timer.time_left\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\ttoggle_pause()\n\n\nfunc toggle_pause() -> void:\n\tvar is_paused: bool = not get_tree().paused\n\tget_tree().paused = is_paused\n\tpause_menu.visible = is_paused\n\tif is_paused:\n\t\tresume_button.grab_focus()\n\telse:\n\t\t_focus_first_active_answer()\n\n\nfunc _focus_first_active_answer() -> void:\n\tfor btn in answer_buttons:\n\t\tif btn.visible and not btn.disabled:\n\t\t\tbtn.grab_focus()\n\t\t\treturn\n\n\nfunc _on_resume_button_pressed() -> void:\n\ttoggle_pause()\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n\n\nfunc display_current_question() -> void:\n\tif session.is_finished():\n\t\tfinish_quiz()\n\t\treturn\n\n\tanswering_locked = false\n\tvar current: Question = session.get_current_question()\n\tquestion_label.text = current.text\n\n\tfor i in range(answer_buttons.size()):\n\t\tif i < current.options.size():\n\t\t\tanswer_buttons[i].text = current.options[i]\n\t\t\tanswer_buttons[i].visible = true\n\t\t\tanswer_buttons[i].disabled = false\n\t\telse:\n\t\t\tanswer_buttons[i].visible = false\n\t\t\tanswer_buttons[i].disabled = true\n\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\nfunc _on_answer_0_pressed() -> void:\n\t_select_answer(0)\n\n\nfunc _on_answer_1_pressed() -> void:\n\t_select_answer(1)\n\n\nfunc _on_answer_2_pressed() -> void:\n\t_select_answer(2)\n\n\nfunc _on_answer_3_pressed() -> void:\n\t_select_answer(3)\n\n\nfunc _select_answer(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar current: Question = session.get_current_question()\n\tvar was_correct: bool = session.submit_answer(button_index)\n\n\tif was_correct:\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\t\tanswer_buttons[current.correct_index].text += \"  [CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar current: Question = session.get_current_question()\n\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\tanswer_buttons[current.correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _fade_out(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 0.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _fade_in(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 1.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _show_feedback_and_advance() -> void:\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tawait get_tree().create_timer(FEEDBACK_DURATION).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tawait _fade_out(margin_container)\n\tif not is_inside_tree():\n\t\treturn\n\n\tsession.advance()\n\tdisplay_current_question()\n\n\tif not session.is_finished():\n\t\tawait _fade_in(margin_container)\n\t\tif not is_inside_tree():\n\t\t\treturn\n\n\nfunc finish_quiz() -> void:\n\tQuizData.score = session.score\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\t\tQuizData.save_high_score()\n\n\tif QuizData.current_topic_title != \"\":\n\t\tvar current_record: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\tif QuizData.score > current_record:\n\t\t\tQuizData.topic_records[QuizData.current_topic_title] = QuizData.score\n\t\t\tQuizData.save_topic_records()\n\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Quiz",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Le funzioni `_fade_out` e `_fade_in` creano un'animazione `Tween` e attendono il segnale `finished`. All'interno di `_show_feedback_and_advance()`, concateniamo con `await` l'attesa del feedback, la dissolvenza in uscita, l'avanzamento della sessione con aggiornamento dei testi e infine la dissolvenza in entrata. Dopo ogni `await`, la guardia `if not is_inside_tree(): return` interrompe la coroutine qualora la scena venga abbandonata durante la transizione, impedendo errori o riferimenti a nodi rimossi.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.7-flash"
@@ -70,5 +356,11 @@
     "md": "- `await` sospende l'esecuzione della funzione corrente senza fermare il resto del gioco, trasformandola in una coroutine.\n- L'esecuzione riprende da sola non appena viene emesso il segnale atteso (ad esempio `timeout` di un timer o `finished` di un `Tween`).\n- `get_tree().create_timer(secondi).timeout` permette di aspettare un intervallo di tempo senza dover istanziare un nodo `Timer` nella scena.\n- Puoi concatenare le coroutine: una funzione può aspettare il completamento di un'altra scrivendo `await nome_funzione()`.\n- Poiché la scena può cambiare mentre la funzione è in attesa, verifica sempre `if not is_inside_tree(): return` subito dopo l'attesa per operare in sicurezza."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
