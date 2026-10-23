@@ -1,0 +1,49 @@
+{
+ "n": 50,
+ "quando": "2026-10-23T03:22:53.972Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «pulsante_vero» (scena = res://quiz.tscn, nome = Answer0; almeno 1 da 10.5 a 12 s; deve mostrare il testo «Vero»): nessun nodo della scena in esecuzione corrisponde a scena = res://quiz.tscn, nome = Answer0.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 36771,
+ "dati": {
+  "copione": {
+   "scena": "res://quiz.tscn",
+   "durata": 12,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "pulsante_vero",
+     "cerca": {
+      "scena": "res://quiz.tscn",
+      "nome": "Answer0"
+     },
+     "quanti": 1,
+     "da": 10.5,
+     "a": 12,
+     "deve": "mostrare testo",
+     "testo": "Vero",
+     "etichetta": "Pulsante Vero"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La domanda Vero o Falso mostra solo i primi due pulsanti",
+     "da": 10.5,
+     "a": 12,
+     "soggetto": "pulsante_vero"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «pulsante_vero» (scena = res://quiz.tscn, nome = Answer0; almeno 1 da 10.5 a 12 s; deve mostrare il testo «Vero»): nessun nodo della scena in esecuzione corrisponde a scena = res://quiz.tscn, nome = Answer0."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 13 s (7257 → 237 token)"
+ ]
+}
