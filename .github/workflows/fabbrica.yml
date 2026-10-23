@@ -71,8 +71,10 @@ jobs:
             /opt/htd-cache/docs-*.sqlite
           key: fabbrica-${{ hashFiles('codice/motori/godot/engine.json') }}
 
+      # Lo script lascia il mirror Ubuntu di Azure se è lento: un passo di 30 minuti toglierebbe il tempo al giro.
       - name: Schermo finto e ffmpeg (per i video del risultato)
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends xvfb ffmpeg libgl1-mesa-dri > /dev/null
+        timeout-minutes: 10
+        run: bash codice/.github/pacchetti-di-sistema.sh
 
       - name: Dipendenze
         working-directory: codice

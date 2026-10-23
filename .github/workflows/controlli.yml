@@ -26,8 +26,10 @@ jobs:
           cache: npm
 
       # Come nella fabbrica: schermo finto e ffmpeg, per provare anche la registrazione dei video del risultato.
+      # Lo script lascia il mirror Ubuntu di Azure se è lento (dal 22 ottobre 2026 succede in alcune regioni).
       - name: Schermo finto e ffmpeg
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends xvfb ffmpeg libgl1-mesa-dri > /dev/null
+        timeout-minutes: 10
+        run: bash .github/pacchetti-di-sistema.sh
 
       # Come nella fabbrica: Godot gira come un utente a parte. Le prove lo usano (vedi condiviso/test/recinto.test.ts).
       - name: Utente separato per Godot
