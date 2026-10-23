@@ -34,3 +34,4 @@
 {"quando":1792725773976,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"ereditarieta-e-composizione","ok":true,"contata":true,"durataMs":14387,"tokenInput":7532,"tokenOutput":156,"ragionamento":5222}
 {"quando":1792725798697,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"ereditarieta-e-composizione","ok":true,"contata":true,"durataMs":9892,"tokenInput":7504,"tokenOutput":232,"ragionamento":3399}
 {"quando":1792725820720,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"resource","ok":true,"contata":true,"durataMs":162534,"tokenInput":17670,"tokenOutput":9360}
+{"quando":1792725988174,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"resource","ok":true,"contata":true,"durataMs":23934,"tokenInput":15966,"tokenOutput":8479,"ragionamento":3365}
