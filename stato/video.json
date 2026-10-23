@@ -799,5 +799,13 @@
    },
    "motivo": "Soggetto «pulsante_vero» (nome = Answer0, classe = Button; almeno 1 da 10.5 a 11.8 s; deve mostrare il testo «Vero»): il testo «Vero» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 11 s: «Answer0» a (60, 266) 1032×48, si vede, testo «GDScript». Lo schermo va da (0, 0) a (1152, 648)."
   }
+ },
+ "resource": {
+  "es1": {
+   "impronta": "6e9a2d69d7d9706cdacef266265b89a23a0642066dfefc7caf0e69ae5dfc9e86",
+   "tentativi": 1,
+   "esito": "fatto",
+   "regole": 2
+  }
  }
 }

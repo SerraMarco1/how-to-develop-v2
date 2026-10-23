@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-23T03:41:32.410Z",
+ "aggiornato": "2026-10-23T03:55:15.573Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -466,10 +466,10 @@
    "slug": "resource",
    "numero": "4.2",
    "titolo": "Resource: i dati come file",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f04-programmare-meglio/resource.json",
-   "sha256": "62876a667ec874f556379e1d547ba92a54f92dc740de297c76ef266fb36d380a",
-   "byte": 112314
+   "sha256": "3b3dae05595968a150aad5d07f61bcfc833f536635caf9f8d87b1239415484dc",
+   "byte": 112877
   }
  ],
  "documentazione": {

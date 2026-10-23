@@ -1,0 +1,49 @@
+{
+ "n": 26,
+ "quando": "2026-10-23T03:55:15.567Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 6 s. Soggetti: «Titolo del quiz» (mostrare testo). Scritte: «Il titolo del menu legge la risorsa QuizTopic». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 17 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 21109,
+ "dati": {
+  "copione": {
+   "scena": "res://menu.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "titolo",
+     "cerca": {
+      "nome": "TitleLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "mostrare testo",
+     "testo": "IL QUIZ: CULTURA GENERALE",
+     "etichetta": "Titolo del quiz"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il titolo del menu legge la risorsa QuizTopic",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "titolo"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "e3267aaf2409df90e57d2c381fb2666b48a798f6c3a1ba6682db3438f6a966ae",
+   "estensione": "mp4",
+   "byte": 17501
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (8041 → 218 token)"
+ ]
+}
