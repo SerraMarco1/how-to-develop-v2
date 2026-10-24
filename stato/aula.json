@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-24T07:15:50.181Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-24T07:27:53.375Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "callable-e-lambda",
   "numero": "4.5",
   "titolo": "Funzioni come valori: Callable e lambda"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.5 riprende da sola appena rispondono.",
- "riprende": "2026-10-24T07:25:50.180Z"
+ "messaggio": "Sta scrivendo la lezione 4.5 «Funzioni come valori: Callable e lambda».",
+ "riprende": null
 }

@@ -269,5 +269,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "await-e-coroutine": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
