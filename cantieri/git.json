@@ -90,7 +90,13 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — .gitignore: i file .gitignore non possono far parte di una lezione",
+    "controllo di sicurezza — .gitattributes: i file .gitattributes non possono far parte di una lezione",
+    "controllo di sicurezza — .git/HEAD: i file .git/head non possono far parte di una lezione",
+    "controllo di sicurezza — .git/config: i file .git/config non possono far parte di una lezione",
+    "controllo di sicurezza — .git/logs/HEAD: i file .git/logs/head non possono far parte di una lezione"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
