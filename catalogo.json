@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-24T08:08:58.909Z",
+ "aggiornato": "2026-10-24T08:30:47.251Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -506,6 +506,15 @@
    "file": "lezioni/f04-programmare-meglio/scegliere-le-strutture-dati.json",
    "sha256": "cb509ffc47c48312482ba4c8e0cfd1ac8cdce39cd3d413c00df416b3fb7020e6",
    "byte": 115326
+  },
+  {
+   "slug": "collaudare-il-proprio-codice",
+   "numero": "4.7",
+   "titolo": "Collaudare il proprio codice: scrivere i controlli",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/collaudare-il-proprio-codice.json",
+   "sha256": "528a2c2e4e34f5dccca4e03e939c6c4392e877084b1a781b7c29443e1c52403a",
+   "byte": 171074
   }
  ],
  "documentazione": {
