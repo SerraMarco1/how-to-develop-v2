@@ -90,7 +90,7 @@
    ]
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -260,7 +260,8 @@
   }
  },
  "avvisi": [
-  "L'esercizio \"Configura la versione e i file ignorati\" (guidato) non superava i controlli: è stato tolto."
+  "L'esercizio \"Configura la versione e i file ignorati\" (guidato) non superava i controlli: è stato tolto.",
+  "L'esercizio \"Mostra la versione del gioco nel menu\" (obiettivo) non superava i controlli ed è stato tolto: questa lezione ha solo il test."
  ],
  "modelli": [
   "gemini/gemini-flash-latest",
