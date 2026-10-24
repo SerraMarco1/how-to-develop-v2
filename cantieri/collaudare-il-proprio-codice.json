@@ -735,7 +735,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Collaudare il proprio codice: scrivere i controlli",
@@ -811,5 +812,10 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
