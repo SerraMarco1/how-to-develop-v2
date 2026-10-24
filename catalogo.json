@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-24T07:01:34.162Z",
+ "aggiornato": "2026-10-24T07:05:45.848Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -479,6 +479,15 @@
    "file": "lezioni/f04-programmare-meglio/file-e-json.json",
    "sha256": "7f12969d2e1b5e8d710fec6100000cce13272c71de15ad247248ad9cdf5728f6",
    "byte": 135505
+  },
+  {
+   "slug": "await-e-coroutine",
+   "numero": "4.4",
+   "titolo": "await: aspettare senza fermare il gioco",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/await-e-coroutine.json",
+   "sha256": "bf900924fa6599c974da751f02c5fd038e729557a317571836ea1b5dca5f1af5",
+   "byte": 117236
   }
  ],
  "documentazione": {
