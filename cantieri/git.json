@@ -187,7 +187,8 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
+    "controllo di sicurezza — .gitignore: i file .gitignore non possono far parte di una lezione",
+    "controllo di sicurezza — .gitattributes: i file .gitattributes non possono far parte di una lezione"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
