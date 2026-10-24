@@ -1,0 +1,90 @@
+{
+ "n": 15,
+ "quando": "2026-10-24T08:58:19.162Z",
+ "pezzo": "es1",
+ "azione": "ripiego",
+ "esito": "saltato",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: tolto dalla lezione",
+ "spiegazione": "Dopo le correzioni e la riscrittura semplificata l'esercizio non supera i controlli:\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script VersionInfo definisce correttamente versione, file ignorati e metodo get_info: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR:…\nReazione: l'esercizio viene tolto e la cosa è dichiarata tra gli avvisi della lezione.",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script VersionInfo definisce correttamente versione, file ignorati e metodo get_info: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var info_script = instantiate_script(\"res://version_info.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
+  ],
+  "ultimo": {
+   "tipo": "autonomo",
+   "genere": "guidato",
+   "titolo": "Configura la versione e i file ignorati",
+   "consegna": "In questo esercizio configuri la gestione della versione e l'elenco dei file da escludere dal controllo versione per il progetto «Quiz».\n\n1. Crea lo script `version_info.gd` nella radice del progetto (`res://version_info.gd`).\n2. Dichiara la costante `VERSION` di tipo `String` con valore `\"1.0.0\"`.\n3. Dichiara la costante `IGNORED_PATHS` di tipo `Array[String]` contenente gli elementi `\".godot/\"` e `\"*.translation\"`.\n4. Aggiungi la funzione `get_info() -> String` che restituisce la stringa `\"Quiz v\" + VERSION`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "quiz",
+   "passiGuida": [
+    "Nel pannello *FileSystem*, fai clic con il tasto destro sulla cartella `res://` e scegli **New Script...**.",
+    "Imposta il nome dello script su `version_info.gd` e premi **Create**.",
+    "Nel codice dello script definisci le costanti `VERSION: String = \"1.0.0\"` e `IGNORED_PATHS: Array[String] = [\".godot/\", \"*.translation\"]`.",
+    "Scrivi la funzione `func get_info() -> String:` che restituisce `\"Quiz v\" + VERSION` e salva con Ctrl+S."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://version_info.gd",
+     "descrizione": "Il file version_info.gd è presente nella radice del progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://version_info.gd",
+     "regex": "IGNORED_PATHS",
+     "descrizione": "Lo script definisce la costante IGNORED_PATHS per i file da escludere"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar info_script = instantiate_script(\"res://version_info.gd\")\n\tif not check(\"script_exists\", info_script != null, \"Lo script res://version_info.gd deve esistere e potersi istanziare\"):\n\t\treturn\n\tvar version = get_prop(info_script, \"VERSION\", \"\")\n\tcheck(\"version_const\", str(version) == \"1.0.0\", \"La costante VERSION deve essere '1.0.0'\")\n\tvar ignored = get_prop(info_script, \"IGNORED_PATHS\", [])\n\tcheck(\"ignored_paths\", typeof(ignored) == TYPE_ARRAY and ignored.has(\".godot/\") and ignored.has(\"*.translation\"), \"La costante IGNORED_PATHS deve contenere '.godot/' e '*.translation'\")\n\tvar info_text = call_if_exists(info_script, \"get_info\", [], \"\")\n\tcheck(\"get_info_func\", str(info_text) == \"Quiz v1.0.0\", \"La funzione get_info() deve restituire 'Quiz v1.0.0'\")",
+     "descrizione": "Lo script VersionInfo definisce correttamente versione, file ignorati e metodo get_info"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -100.0\noffset_top = -20.0\noffset_right = 100.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"IL QUIZ\"\nhorizontal_alignment = 1\n"
+     },
+     {
+      "percorso": "menu.gd",
+      "contenuto": "extends Control\n\n\nfunc _ready() -> void:\n\tpass\n"
+     },
+     {
+      "percorso": "quiz_data.gd",
+      "contenuto": "extends Node\n\nvar score: int = 0\n"
+     },
+     {
+      "percorso": "version_info.gd",
+      "contenuto": "class_name VersionInfo\nextends RefCounted\n\nconst VERSION: String = \"1.0.0\"\nconst IGNORED_PATHS: Array[String] = [\".godot/\", \"*.translation\"]\n\n\nfunc get_info() -> String:\n\treturn \"Quiz v\" + VERSION\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Quiz",
+     "scenaPrincipale": "res://menu.tscn",
+     "azioni": [],
+     "autoload": [
+      {
+       "nome": "QuizData",
+       "percorso": "res://quiz_data.gd"
+      }
+     ],
+     "impostazioni": []
+    },
+    "spiegazione": "In Godot, tracciare le informazioni di versione e conoscere quali elementi escludere (come la cartella `.godot/` e i file `*.translation` generati dall'editor) è fondamentale per organizzare la storia del progetto. Definire queste informazioni in uno script centralizzato come `version_info.gd` permette di accedere alla versione e ai dati di configurazione in tutto il gioco.",
+    "cambiati": [
+     "version_info.gd"
+    ],
+    "rimossi": []
+   }
+  }
+ },
+ "chiamate": []
+}
