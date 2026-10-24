@@ -29,10 +29,6 @@
  },
  "maxToken": {},
  "troncate": {
-  "gemini/gemini-flash-latest:14000": {
-   "volte": 2,
-   "quando": 1792180543905
-  },
   "gemini/gemini-3.7-flash:14000": {
    "volte": 2,
    "quando": 1792225939961
