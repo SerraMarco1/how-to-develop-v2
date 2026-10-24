@@ -2,7 +2,7 @@
  "creato": "2026-10-24T08:30:48.820Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -212,7 +212,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Configura la versione e i file ignorati\" (guidato) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-flash-lite-latest",
