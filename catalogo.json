@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-24T07:05:45.848Z",
+ "aggiornato": "2026-10-24T07:40:21.407Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -488,6 +488,15 @@
    "file": "lezioni/f04-programmare-meglio/await-e-coroutine.json",
    "sha256": "bf900924fa6599c974da751f02c5fd038e729557a317571836ea1b5dca5f1af5",
    "byte": 117236
+  },
+  {
+   "slug": "callable-e-lambda",
+   "numero": "4.5",
+   "titolo": "Funzioni come valori: Callable e lambda",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/callable-e-lambda.json",
+   "sha256": "7b991a7a1df96dbbf29c767cec7b32511c9dd2215a7d8603729324c0afab8a2c",
+   "byte": 109721
   }
  ],
  "documentazione": {
