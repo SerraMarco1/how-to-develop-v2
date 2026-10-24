@@ -164,11 +164,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "controllo di sicurezza — .gitignore: i file .gitignore non possono far parte di una lezione",
-    "controllo di sicurezza — .gitattributes: i file .gitattributes non possono far parte di una lezione",
-    "controllo di sicurezza — .git/HEAD: i file .git/head non possono far parte di una lezione",
-    "controllo di sicurezza — .git/config: i file .git/config non possono far parte di una lezione",
-    "controllo di sicurezza — .git/logs/HEAD: i file .git/logs/head non possono far parte di una lezione"
+    "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
