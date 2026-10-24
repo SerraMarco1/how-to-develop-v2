@@ -45,3 +45,4 @@
 {"quando":1792833461076,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"git","ok":true,"contata":true,"durataMs":70902,"tokenInput":20931,"tokenOutput":2707,"ragionamento":12197}
 {"quando":1792833533512,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"git","ok":true,"contata":true,"durataMs":51735,"tokenInput":18818,"tokenOutput":11844,"ragionamento":16983}
 {"quando":1792833590103,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"git","ok":true,"contata":true,"durataMs":59769,"tokenInput":18192,"tokenOutput":11795,"ragionamento":4062}
+{"quando":1792833651279,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"git","ok":true,"contata":true,"durataMs":32760,"tokenInput":18285,"tokenOutput":1610,"ragionamento":5984}
