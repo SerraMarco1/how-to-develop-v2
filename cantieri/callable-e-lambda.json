@@ -1,6 +1,201 @@
 {
  "creato": "2026-10-24T07:05:47.074Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedi il comportamento di filter, map, sort_custom e lambda",
+    "consegna": "Leggi con attenzione ciascun frammento di codice GDScript e indica il valore esatto restituito dalla funzione `run()`, senza eseguire il programma.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run():\n\tvar numbers: Array[int] = [3, 8, 12, 5, 20, 7]\n\tvar big: Array = numbers.filter(func(n: int) -> bool: return n > 10)\n\treturn big.size()",
+      "domanda": "Che valore numerico restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "Il metodo `filter()` invoca la lambda su ogni numero dell'array: solo 12 e 20 sono maggiori di 10. L'array risultante `big` contiene `[12, 20]`, la cui dimensione `size()` è 2."
+     },
+     {
+      "codice": "func run():\n\tvar words: Array[String] = [\"godot\", \"quiz\", \"gdscript\"]\n\tvar lengths: Array = words.map(func(w: String) -> int: return w.length())\n\treturn lengths[1]",
+      "domanda": "Che valore numerico restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "Il metodo `map()` trasforma ciascuna stringa nella sua lunghezza calcolata con `length()`. L'elemento con indice 1 corrisponde a `\"quiz\"`, che ha 4 caratteri, quindi `lengths[1]` vale 4."
+     },
+     {
+      "codice": "func run():\n\tvar scores: Array[int] = [10, 50, 25, 40]\n\tscores.sort_custom(func(a: int, b: int) -> bool: return a > b)\n\treturn scores[0] + scores[1]",
+      "domanda": "Quanto vale la somma restituita alla fine?",
+      "risposta": "",
+      "spiegazione": "`sort_custom()` riordina l'array sul posto. Poiché la funzione lambda restituisce `true` quando `a > b`, l'array viene ordinato in senso decrescente: `[50, 40, 25, 10]`. I primi due elementi sono 50 e 40, e la loro somma è 90."
+     },
+     {
+      "codice": "func run():\n\tvar bonus: int = 5\n\tvar add_bonus: Callable = func(val: int) -> int: return val + bonus\n\tbonus = 20\n\treturn add_bonus.call(10)",
+      "domanda": "Che valore numerico restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "In GDScript le funzioni lambda catturano le variabili locali esterne per valore nel momento esatto in cui vengono create. Al momento della creazione della lambda `bonus` valeva 5; la modifica successiva `bonus = 20` non influenza il valore catturato, per cui `add_bonus.call(10)` restituisce `10 + 5 = 15`."
+     },
+     {
+      "codice": "func run():\n\tvar values: Array[int] = [4, 6, 8, 11]\n\tvar has_odd: bool = values.any(func(n: int) -> bool: return n % 2 != 0)\n\tvar all_positive: bool = values.all(func(n: int) -> bool: return n > 0)\n\treturn has_odd and all_positive",
+      "domanda": "Che valore booleano (true o false) restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "`values.any(...)` restituisce `true` perché nell'array c'è almeno un numero dispari (11). `values.all(...)` restituisce `true` perché tutti i numeri sono maggiori di zero. L'operazione `true and true` restituisce `true`."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Gli esercizi mettono alla prova i concetti fondamentali dei Callable: filtraggio con `filter`, trasformazione con `map`, ordinamento sul posto con `sort_custom`, verifica con `any`/`all` e la cattura per valore delle variabili locali nelle funzioni lambda.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Pulsanti centralizzati con bind e classifica ordinata",
+    "consegna": "Riorganizza il codice del quiz usando `Callable`, `bind` e `sort_custom`:\n\n1. In `quiz.gd`:\n   - Nel metodo `_ready()`, elimina i 4 collegamenti manuali ai singoli pulsanti di risposta (`answer_buttons[0].pressed.connect(...)`, ecc.).\n   - Scrivi un ciclo `for` che scorre tutti i pulsanti dell'array `answer_buttons` e collega il loro segnale `pressed` direttamente al metodo `_select_answer`, passando l'indice del pulsante con `.bind(i)`.\n   - Rimuovi dallo script le 4 funzioni ridondanti `_on_answer_0_pressed`, `_on_answer_1_pressed`, `_on_answer_2_pressed` e `_on_answer_3_pressed`.\n\n2. In `quiz_data.gd`:\n   - Aggiungi la funzione `func get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:`.\n   - La funzione deve leggere i record dal dizionario `source` fornito (se `source` è vuoto o omesso, deve usare la variabile `topic_records`).\n   - Converte ogni coppia chiave/valore in un `Dictionary` con la forma `{\"topic\": nome_argomento, \"score\": punteggio}`.\n   - Ordina l'array di dizionari in ordine decrescente di punteggio (dal punteggio più alto a quello più basso) usando `sort_custom()` con una funzione lambda.\n   - Restituisce l'array risultante.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "quiz",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `quiz.gd` puoi usare un ciclo `for i in range(answer_buttons.size()):` e chiamare `answer_buttons[i].pressed.connect(_select_answer.bind(i))`.",
+     "In `quiz_data.gd`, crea una variabile `records_list: Array[Dictionary] = []` e popolala scorrendo le chiavi del dizionario con un ciclo `for topic in target:`.",
+     "Per ordinare l'array in ordine decrescente con `sort_custom()`, passa una funzione lambda a due argomenti: `func(a: Dictionary, b: Dictionary) -> bool: return a[\"score\"] > b[\"score\"]`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://quiz.gd",
+      "regex": "\\.bind\\(",
+      "descrizione": "I pulsanti in quiz.gd sono collegati usando il metodo bind()"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar test_data: Dictionary = {\n\t\t\"Videogiochi\": 4,\n\t\t\"Cultura\": 10,\n\t\t\"Cinema\": 7\n\t}\n\tvar sorted: Array = call_if_exists(QuizData, \"get_sorted_records\", [test_data], [])\n\tif not check(\"records_count\", sorted.size() == 3, \"get_sorted_records() deve restituire 3 elementi per un dizionario con 3 argomenti\"):\n\t\treturn\n\n\tvar first: Dictionary = sorted[0]\n\tvar second: Dictionary = sorted[1]\n\tvar third: Dictionary = sorted[2]\n\n\tcheck(\"first_record\", first.get(\"topic\") == \"Cultura\" and int(first.get(\"score\")) == 10, \"Il primo record deve essere Cultura con punteggio 10\")\n\tcheck(\"second_record\", second.get(\"topic\") == \"Cinema\" and int(second.get(\"score\")) == 7, \"Il secondo record deve essere Cinema con punteggio 7\")\n\tcheck(\"third_record\", third.get(\"topic\") == \"Videogiochi\" and int(third.get(\"score\")) == 4, \"Il terzo record deve essere Videogiochi con punteggio 4\")\n\n\tvar quiz_scene := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"scene_loaded\", quiz_scene != null, \"La scena quiz.tscn deve caricarsi senza errori\"):\n\t\treturn\n\n\tcheck(\"cleaned_functions\", not has_function(quiz_scene, \"_on_answer_0_pressed\"), \"Le quattro vecchie funzioni come _on_answer_0_pressed devono essere rimosse da quiz.gd\")\n\n\tvar btn0 := quiz_scene.get_node_or_null(\"MarginContainer/VBoxContainer/AnswersContainer/Answer0\") as Button\n\tif not check(\"btn0_exists\", btn0 != null, \"Answer0 deve esistere nella scena\"):\n\t\treturn\n\n\tawait click_button(btn0)\n\tvar locked = get_prop(quiz_scene, \"answering_locked\", false)\n\tcheck(\"button_clicked\", locked == true, \"Premendo il pulsante Answer0 la risposta deve essere registrata tramite _select_answer collegata con bind\")",
+      "descrizione": "get_sorted_records ordina correttamente la classifica e i pulsanti funzionano con bind"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz.gd",
+       "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\nconst FADE_DURATION: float = 0.2\n\nvar session: QuizSession\nvar answering_locked: bool = false\n\n@onready var margin_container: MarginContainer = $MarginContainer\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n\n@onready var pause_menu: ColorRect = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n@onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tsession = QuizSession.new(QuizData.questions.duplicate())\n\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\n\tfor i in range(answer_buttons.size()):\n\t\tanswer_buttons[i].pressed.connect(_select_answer.bind(i))\n\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\tpause_menu.visible = false\n\tdisplay_current_question()\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\ttime_bar.value = question_timer.time_left\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\ttoggle_pause()\n\n\nfunc toggle_pause() -> void:\n\tvar is_paused: bool = not get_tree().paused\n\tget_tree().paused = is_paused\n\tpause_menu.visible = is_paused\n\tif is_paused:\n\t\tresume_button.grab_focus()\n\telse:\n\t\t_focus_first_active_answer()\n\n\nfunc _focus_first_active_answer() -> void:\n\tfor btn in answer_buttons:\n\t\tif btn.visible and not btn.disabled:\n\t\t\tbtn.grab_focus()\n\t\t\treturn\n\n\nfunc _on_resume_button_pressed() -> void:\n\ttoggle_pause()\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n\n\nfunc display_current_question() -> void:\n\tif session.is_finished():\n\t\tfinish_quiz()\n\t\treturn\n\n\tanswering_locked = false\n\tvar current: Question = session.get_current_question()\n\tquestion_label.text = current.text\n\n\tfor i in range(answer_buttons.size()):\n\t\tif i < current.options.size():\n\t\t\tanswer_buttons[i].text = current.options[i]\n\t\t\tanswer_buttons[i].visible = true\n\t\t\tanswer_buttons[i].disabled = false\n\t\telse:\n\t\t\tanswer_buttons[i].visible = false\n\t\t\tanswer_buttons[i].disabled = true\n\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\nfunc _select_answer(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar current: Question = session.get_current_question()\n\tvar was_correct: bool = session.submit_answer(button_index)\n\n\tif was_correct:\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\t\tanswer_buttons[current.correct_index].text += \"  [CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar current: Question = session.get_current_question()\n\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\tanswer_buttons[current.correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _fade_out(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 0.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _fade_in(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 1.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _show_feedback_and_advance() -> void:\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tawait get_tree().create_timer(FEEDBACK_DURATION).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tawait _fade_out(margin_container)\n\tif not is_inside_tree():\n\t\treturn\n\n\tsession.advance()\n\tdisplay_current_question()\n\n\tif not session.is_finished():\n\t\tawait _fade_in(margin_container)\n\t\tif not is_inside_tree():\n\t\t\treturn\n\n\nfunc finish_quiz() -> void:\n\tQuizData.score = session.score\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\t\tQuizData.save_high_score()\n\n\tif QuizData.current_topic_title != \"\":\n\t\tvar current_record: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\tif QuizData.score > current_record:\n\t\t\tQuizData.topic_records[QuizData.current_topic_title] = QuizData.score\n\t\t\tQuizData.save_topic_records()\n\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+      },
+      {
+       "percorso": "quiz_data.gd",
+       "contenuto": "extends Node\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\nvar questions: Array[Question] = []\n\n\nfunc _ready() -> void:\n\tload_topic_records()\n\tif questions.is_empty():\n\t\tvar q_opts1: Array[String] = [\"A\", \"B\"]\n\t\tvar q_opts2: Array[String] = [\"C\", \"D\"]\n\t\tquestions = [\n\t\t\tQuestion.new(\"Domanda 1\", q_opts1, 0),\n\t\t\tQuestion.new(\"Domanda 2\", q_opts2, 1)\n\t\t]\n\n\nfunc save_high_score() -> void:\n\tpass\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_topic_records() -> bool:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\t\treturn true\n\n\ttopic_records = {}\n\treturn false\n\n\nfunc get_topic_record(topic_name: String) -> int:\n\tif topic_records.has(topic_name):\n\t\treturn int(topic_records[topic_name])\n\treturn 0\n\n\nfunc get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:\n\tvar target: Dictionary = source if not source.is_empty() else topic_records\n\tvar records_list: Array[Dictionary] = []\n\tfor topic in target:\n\t\trecords_list.append({\n\t\t\t\"topic\": str(topic),\n\t\t\t\"score\": int(target[topic])\n\t\t})\n\trecords_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:\n\t\treturn a[\"score\"] > b[\"score\"]\n\t)\n\treturn records_list\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Con `_select_answer.bind(i)` associamo a ogni pulsante il proprio indice numerico al momento della connessione; quando il segnale `pressed` scatta, Godot invoca `_select_answer(i)` direttamente. Questo elimina la necessità di scrivere quattro funzioni quasi identiche. In `quiz_data.gd`, trasformiamo il dizionario in una lista di dizionari e usiamo `sort_custom()` con una funzione lambda che confronta i punteggi per disporli dal più alto al più basso.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Filtrare le domande per difficoltà ed errori",
+    "consegna": "Completa il quiz introducendo il tracciamento degli errori e i filtri per le domande usando le funzioni lambda e `filter()`:\n\n1. In `quiz_session.gd`:\n   - Aggiungi la variabile `var wrong_questions: Array[Question] = []` e reinizializzala in `_init()` come array vuoto.\n   - In `submit_answer(selected_index: int) -> bool`: se la risposta fornita non è corretta (`not correct`), aggiungi la domanda corrente `current` all'array `wrong_questions` prima di uscire.\n   - Crea la funzione `func get_wrong_questions() -> Array[Question]:` che restituisce `wrong_questions`.\n\n2. In `quiz_data.gd`:\n   - Aggiungi la variabile `var last_wrong_questions: Array[Question] = []`.\n   - Aggiungi la funzione `func filter_difficult_questions(source: Array[Question]) -> Array[Question]:` che usa `source.filter(...)` con una lambda per restituire solo le domande che hanno più di 2 opzioni (`q.options.size() > 2`).\n   - Aggiungi la funzione `func filter_wrong_questions(source: Array[Question], wrong_pool: Array[Question]) -> Array[Question]:` che usa `source.filter(...)` con una lambda per restituire solo le domande presenti in `wrong_pool` (puoi usare `wrong_pool.has(q)`).\n\n3. In `quiz.gd`:\n   - Nel metodo `finish_quiz()`, memorizza gli errori della sessione corrente prima di cambiare scena: assegna `session.get_wrong_questions()` a `QuizData.last_wrong_questions`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "quiz",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per convertire l'array generico restituito da `source.filter(...)` in un `Array[Question]`, puoi usare il metodo `result.assign(filtered)` su un array tipizzato vuoto `var result: Array[Question] = []`.",
+     "Nel metodo `finish_quiz()` di `quiz.gd`, assegna `QuizData.last_wrong_questions = session.get_wrong_questions()` prima della chiamata a `change_scene_to_file`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://quiz_data.gd",
+      "regex": "filter\\(",
+      "descrizione": "QuizData usa il metodo filter() per selezionare le domande"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar q_easy := Question.new(\"Facile?\", [\"Vero\", \"Falso\"], 0)\n\tvar q_diff1 := Question.new(\"Difficile 1?\", [\"A\", \"B\", \"C\", \"D\"], 1)\n\tvar q_diff2 := Question.new(\"Difficile 2?\", [\"X\", \"Y\", \"Z\"], 2)\n\tvar all_questions: Array[Question] = [q_easy, q_diff1, q_diff2]\n\n\tvar diff_result: Array = call_if_exists(QuizData, \"filter_difficult_questions\", [all_questions], [])\n\tif not check(\"filter_diff_count\", diff_result.size() == 2, \"filter_difficult_questions deve restituire solo le 2 domande con più di 2 opzioni (ha restituito %d)\" % diff_result.size()):\n\t\treturn\n\n\tcheck(\"filter_diff_content\", diff_result.has(q_diff1) and diff_result.has(q_diff2), \"Le domande difficili restituite devono essere q_diff1 e q_diff2\")\n\n\tvar wrong_pool: Array[Question] = [q_diff1]\n\tvar wrong_result: Array = call_if_exists(QuizData, \"filter_wrong_questions\", [all_questions, wrong_pool], [])\n\tif not check(\"filter_wrong_count\", wrong_result.size() == 1, \"filter_wrong_questions deve restituire solo 1 domanda (ha restituito %d)\" % wrong_result.size()):\n\t\treturn\n\n\tcheck(\"filter_wrong_content\", wrong_result[0] == q_diff1, \"La domanda sbagliata restituita deve essere q_diff1\")\n\n\tvar session := QuizSession.new([q_easy, q_diff1])\n\tsession.submit_answer(1)\n\tvar recorded_wrong: Array = call_if_exists(session, \"get_wrong_questions\", [], [])\n\tcheck(\"session_wrong_count\", recorded_wrong.size() == 1 and recorded_wrong.has(q_easy), \"QuizSession deve registrare q_easy tra le domande sbagliate dopo una risposta errata\")",
+      "descrizione": "I filtri per domande difficili ed errori funzionano correttamente"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz_session.gd",
+       "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar wrong_questions: Array[Question] = []\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\twrong_questions = []\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif correct:\n\t\tscore += 1\n\telse:\n\t\twrong_questions.append(current)\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n\n\nfunc get_wrong_questions() -> Array[Question]:\n\treturn wrong_questions\n"
+      },
+      {
+       "percorso": "quiz_data.gd",
+       "contenuto": "extends Node\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\nvar questions: Array[Question] = []\nvar last_wrong_questions: Array[Question] = []\n\n\nfunc _ready() -> void:\n\tload_topic_records()\n\tif questions.is_empty():\n\t\tvar q_opts1: Array[String] = [\"A\", \"B\"]\n\t\tvar q_opts2: Array[String] = [\"C\", \"D\"]\n\t\tquestions = [\n\t\t\tQuestion.new(\"Domanda 1\", q_opts1, 0),\n\t\t\tQuestion.new(\"Domanda 2\", q_opts2, 1)\n\t\t]\n\n\nfunc save_high_score() -> void:\n\tpass\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_topic_records() -> bool:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\t\treturn true\n\n\ttopic_records = {}\n\treturn false\n\n\nfunc get_topic_record(topic_name: String) -> int:\n\tif topic_records.has(topic_name):\n\t\treturn int(topic_records[topic_name])\n\treturn 0\n\n\nfunc get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:\n\tvar target: Dictionary = source if not source.is_empty() else topic_records\n\tvar records_list: Array[Dictionary] = []\n\tfor topic in target:\n\t\trecords_list.append({\n\t\t\t\"topic\": str(topic),\n\t\t\t\"score\": int(target[topic])\n\t\t})\n\trecords_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:\n\t\treturn a[\"score\"] > b[\"score\"]\n\t)\n\treturn records_list\n\n\nfunc filter_difficult_questions(source: Array[Question]) -> Array[Question]:\n\tvar filtered: Array = source.filter(func(q: Question) -> bool:\n\t\treturn q != null and q.options.size() > 2\n\t)\n\tvar result: Array[Question] = []\n\tresult.assign(filtered)\n\treturn result\n\n\nfunc filter_wrong_questions(source: Array[Question], wrong_pool: Array[Question]) -> Array[Question]:\n\tvar filtered: Array = source.filter(func(q: Question) -> bool:\n\t\treturn q != null and wrong_pool.has(q)\n\t)\n\tvar result: Array[Question] = []\n\tresult.assign(filtered)\n\treturn result\n"
+      },
+      {
+       "percorso": "quiz.gd",
+       "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\nconst FADE_DURATION: float = 0.2\n\nvar session: QuizSession\nvar answering_locked: bool = false\n\n@onready var margin_container: MarginContainer = $MarginContainer\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n\n@onready var pause_menu: ColorRect = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n@onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tsession = QuizSession.new(QuizData.questions.duplicate())\n\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\n\tfor i in range(answer_buttons.size()):\n\t\tanswer_buttons[i].pressed.connect(_select_answer.bind(i))\n\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\tpause_menu.visible = false\n\tdisplay_current_question()\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\t\ttime_bar.value = question_timer.time_left\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\ttoggle_pause()\n\n\nfunc toggle_pause() -> void:\n\tvar is_paused: bool = not get_tree().paused\n\tget_tree().paused = is_paused\n\tpause_menu.visible = is_paused\n\tif is_paused:\n\t\tresume_button.grab_focus()\n\telse:\n\t\t_focus_first_active_answer()\n\n\nfunc _focus_first_active_answer() -> void:\n\tfor btn in answer_buttons:\n\t\tif btn.visible and not btn.disabled:\n\t\t\tbtn.grab_focus()\n\t\t\treturn\n\n\nfunc _on_resume_button_pressed() -> void:\n\ttoggle_pause()\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n\n\nfunc display_current_question() -> void:\n\tif session.is_finished():\n\t\tfinish_quiz()\n\t\treturn\n\n\tanswering_locked = false\n\tvar current: Question = session.get_current_question()\n\tquestion_label.text = current.text\n\n\tfor i in range(answer_buttons.size()):\n\t\tif i < current.options.size():\n\t\t\tanswer_buttons[i].text = current.options[i]\n\t\t\tanswer_buttons[i].visible = true\n\t\t\tanswer_buttons[i].disabled = false\n\t\telse:\n\t\t\tanswer_buttons[i].visible = false\n\t\t\tanswer_buttons[i].disabled = true\n\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\nfunc _select_answer(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar current: Question = session.get_current_question()\n\tvar was_correct: bool = session.submit_answer(button_index)\n\n\tif was_correct:\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\t\tanswer_buttons[current.correct_index].text += \"  [CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar current: Question = session.get_current_question()\n\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\tanswer_buttons[current.correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _fade_out(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 0.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _fade_in(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 1.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _show_feedback_and_advance() -> void:\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tawait get_tree().create_timer(FEEDBACK_DURATION).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tawait _fade_out(margin_container)\n\tif not is_inside_tree():\n\t\treturn\n\n\tsession.advance()\n\tdisplay_current_question()\n\n\tif not session.is_finished():\n\t\tawait _fade_in(margin_container)\n\t\tif not is_inside_tree():\n\t\t\treturn\n\n\nfunc finish_quiz() -> void:\n\tQuizData.score = session.score\n\tQuizData.last_wrong_questions = session.get_wrong_questions()\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\t\tQuizData.save_high_score()\n\n\tif QuizData.current_topic_title != \"\":\n\t\tvar current_record: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\tif QuizData.score > current_record:\n\t\t\tQuizData.topic_records[QuizData.current_topic_title] = QuizData.score\n\t\t\tQuizData.save_topic_records()\n\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Tracciando gli errori in `QuizSession` memorizziamo le domande risposte in modo non corretto. In `QuizData`, implementiamo due metodi di filtro: `filter_difficult_questions` usa `filter()` con una lambda per scartare le domande semplici con solo 2 opzioni, mentre `filter_wrong_questions` seleziona unicamente le domande presenti nell'elenco degli errori tramite `wrong_pool.has(q)`. Infine, `finish_quiz()` salva la lista delle domande sbagliate nell'Autoload in modo da poter essere riutilizzata nelle partite future.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -65,5 +260,10 @@
     "md": "- Un `Callable` è un tipo di dato che rappresenta una funzione; si esegue chiamando `.call()`.\n- Le lambda (`func(parametri): ...`) sono funzioni anonime scritte sul posto, ideali da passare come criteri temporanei.\n- `filter()` seleziona elementi e `map()` li trasforma, creando in entrambi i casi un nuovo array.\n- `sort_custom()` riordina l'array originale in base al risultato di una funzione di confronto tra due elementi.\n- `any()` e `all()` verificano rapidamente se almeno uno o tutti gli elementi soddisfano una determinata condizione.\n- Il metodo `.bind()` allega valori aggiuntivi a un `Callable`, permettendo di collegare più nodi con segnali semplici (come `pressed`) a una sola funzione centralizzata."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
