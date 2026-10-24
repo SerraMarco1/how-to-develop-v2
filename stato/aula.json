@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-24T07:01:35.694Z",
+ "aggiornato": "2026-10-24T07:05:47.061Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "await-e-coroutine",
-  "numero": "4.4",
-  "titolo": "await: aspettare senza fermare il gioco"
+  "slug": "callable-e-lambda",
+  "numero": "4.5",
+  "titolo": "Funzioni come valori: Callable e lambda"
  },
- "messaggio": "Sta scrivendo la lezione 4.4 «await: aspettare senza fermare il gioco».",
+ "messaggio": "Sta scrivendo la lezione 4.5 «Funzioni come valori: Callable e lambda».",
  "riprende": null
 }
