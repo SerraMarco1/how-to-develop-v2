@@ -220,7 +220,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "riordina",
@@ -289,7 +289,80 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "riordina",
+    "titolo": "Riordinare: velocizzare la ricerca nel catalogo",
+    "consegna": "Nel progetto `CatalogoOggetti`, apri `res://item_catalog.gd`. Lo script funziona, ma memorizza gli oggetti in un `Array` non tipizzato e in ogni funzione usa un ciclo `for` con un `if` interno per cercare l'oggetto per ID.\n\nRiscrivi `ItemCatalog` memorizzando gli oggetti in un `Dictionary` in cui la chiave è l'ID dell'oggetto (`String`) e il valore è un dizionario con le proprietà `name` (`String`) e `price` (`int`):\n- Mantieni invariati i nomi e i parametri di tutte le funzioni pubbliche (`add_item`, `has_item`, `get_price`, `get_name`, `remove_item`, `get_item_count`).\n- Elimina tutti i cicli `for`: ogni lettura, verifica o rimozione per ID deve avvenire direttamente tramite le funzioni del `Dictionary` (`has`, `erase`, accesso per chiave).\n- Il comportamento deve rimanere identico a prima: i controlli devono passare sia prima sia dopo la riscrittura.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "catalogo-oggetti",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Sostituisci la variabile `items: Array = []` con un dizionario privato `_items: Dictionary = {}`.",
+     "In `add_item(id, name, price)`, puoi assegnare direttamente `_items[id] = {\"name\": name, \"price\": price}`: se l'oggetto esisteva gia viene sovrascritto, se non c'era viene creato in un solo passaggio.",
+     "In `has_item`, `get_price`, `get_name` e `remove_item`, usa `_items.has(id)` e `_items.erase(id)` per gestire le operazioni istantaneamente senza alcun ciclo."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://item_catalog.gd",
+      "descrizione": "Il file res://item_catalog.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar cat_script: GDScript = load(\"res://item_catalog.gd\") as GDScript\n\tif not check(\"script\", cat_script != null, \"res://item_catalog.gd deve compilare senza errori\"):\n\t\treturn\n\tvar catalog = cat_script.new()\n\n\tcall_if_exists(catalog, \"add_item\", [\"sword\", \"Spada di ferro\", 50])\n\tcall_if_exists(catalog, \"add_item\", [\"shield\", \"Scudo di legno\", 30])\n\tcheck(\"count\", call_if_exists(catalog, \"get_item_count\", [], 0) == 2, \"Il catalogo deve contenere 2 oggetti\")\n\tcheck(\"has_sword\", call_if_exists(catalog, \"has_item\", [\"sword\"], false) == true, \"has_item('sword') deve restituire true\")\n\tcheck(\"has_potion\", call_if_exists(catalog, \"has_item\", [\"potion\"], true) == false, \"has_item('potion') deve restituire false\")\n\tcheck(\"price_sword\", call_if_exists(catalog, \"get_price\", [\"sword\"], 0) == 50, \"get_price('sword') deve restituire 50\")\n\tcheck(\"name_shield\", str(call_if_exists(catalog, \"get_name\", [\"shield\"], \"\")) == \"Scudo di legno\", \"get_name('shield') deve restituire 'Scudo di legno'\")\n\n\tcall_if_exists(catalog, \"add_item\", [\"sword\", \"Spada affilata\", 75])\n\tcheck(\"count_after_update\", call_if_exists(catalog, \"get_item_count\", [], 0) == 2, \"Aggiornare un oggetto esistente non deve aumentare il conteggio\")\n\tcheck(\"updated_price\", call_if_exists(catalog, \"get_price\", [\"sword\"], 0) == 75, \"Il prezzo aggiornato della spada deve essere 75\")\n\n\tvar rem_ok = call_if_exists(catalog, \"remove_item\", [\"shield\"], false)\n\tcheck(\"rem_ok\", rem_ok == true, \"remove_item su un oggetto esistente deve restituire true\")\n\tcheck(\"count_after_rem\", call_if_exists(catalog, \"get_item_count\", [], 0) == 1, \"Dopo la rimozione deve rimanere 1 oggetto\")\n\tvar rem_fail = call_if_exists(catalog, \"remove_item\", [\"nonexistent\"], true)\n\tcheck(\"rem_fail\", rem_fail == false, \"remove_item su un oggetto inesistente deve restituire false\")\n\n\tcheck(\"no_for_loops\", count_in_code(\"res://item_catalog.gd\", \"for\") == 0, \"ItemCatalog non deve usare alcun ciclo for: la ricerca deve avvenire direttamente tramite Dictionary\")\n\tcheck(\"short_functions\", longest_function_lines(\"res://item_catalog.gd\") <= 6, \"Le funzioni devono essere concise e dirette (massimo 6 righe di codice per funzione)\")\n",
+      "descrizione": "Il catalogo funziona come prima ma sfrutta il Dictionary senza cicli for lenti"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "CatalogoOggetti",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CatalogoOggetti\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "item_catalog.gd",
+       "contenuto": "class_name ItemCatalog\nextends RefCounted\n\nvar items: Array = []\n\n\nfunc add_item(id: String, name: String, price: int) -> void:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\titem[\"name\"] = name\n\t\t\titem[\"price\"] = price\n\t\t\treturn\n\titems.append({\"id\": id, \"name\": name, \"price\": price})\n\n\nfunc has_item(id: String) -> bool:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\treturn true\n\treturn false\n\n\nfunc get_price(id: String) -> int:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\treturn item[\"price\"]\n\treturn 0\n\n\nfunc get_name(id: String) -> String:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\treturn item[\"name\"]\n\treturn \"\"\n\n\nfunc remove_item(id: String) -> bool:\n\tfor i in range(items.size()):\n\t\tif items[i][\"id\"] == id:\n\t\t\titems.remove_at(i)\n\t\t\treturn true\n\treturn false\n\n\nfunc get_item_count() -> int:\n\treturn items.size()\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CatalogoOggetti\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "item_catalog.gd",
+       "contenuto": "class_name ItemCatalog\nextends RefCounted\n\nvar _items: Dictionary = {}\n\n\nfunc add_item(id: String, name: String, price: int) -> void:\n\t_items[id] = {\"name\": name, \"price\": price}\n\n\nfunc has_item(id: String) -> bool:\n\treturn _items.has(id)\n\n\nfunc get_price(id: String) -> int:\n\tif not _items.has(id):\n\t\treturn 0\n\treturn int(_items[id][\"price\"])\n\n\nfunc get_name(id: String) -> String:\n\tif not _items.has(id):\n\t\treturn \"\"\n\treturn str(_items[id][\"name\"])\n\n\nfunc remove_item(id: String) -> bool:\n\tif not _items.has(id):\n\t\treturn false\n\t_items.erase(id)\n\treturn true\n\n\nfunc get_item_count() -> int:\n\treturn _items.size()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "CatalogoOggetti",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Nel codice di partenza, per cercare, verificare o cancellare un oggetto era necessario scorrere l'intero array con un ciclo `for`. Con centinaia di oggetti, questo approccio rallenta il gioco inutilmente. Riorganizzando i dati in un `Dictionary` indicizzato per ID (`_items[id]`), l'accesso per chiave è istantaneo (tempo costante) e i cicli `for` scompaiono del tutto, rendendo il codice molto più corto, pulito e leggibile.",
+     "cambiati": [
+      "item_catalog.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "test": {
    "stato": "da_fare",
