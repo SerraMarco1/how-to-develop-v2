@@ -1,0 +1,53 @@
+{
+ "n": 44,
+ "quando": "2026-10-24T07:01:34.151Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video rifatto con lo stesso copione",
+ "spiegazione": "La soluzione o il progetto di partenza sono cambiati. Il copione del video di prima, registrato di nuovo sulla soluzione di oggi, supera tutti i controlli: i soggetti si vedono come dice, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima non passa. Nessuna richiesta ai modelli. Il video pubblicato comincia a 8.5 s. Video 57 KB.",
+ "richieste": 0,
+ "durataMs": 20065,
+ "dati": {
+  "copione": {
+   "scena": "res://basket.tscn",
+   "durata": 10.5,
+   "azioni": [
+    {
+     "azione": "move_left",
+     "inizio": 0,
+     "fine": 10.5,
+     "tasto": "A"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "label",
+     "cerca": {
+      "nome": "Label"
+     },
+     "quanti": 1,
+     "da": 10,
+     "a": 10.5,
+     "deve": "mostrare testo",
+     "testo": "Pausa!",
+     "etichetta": "Messaggio di pausa"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "A dieci secondi parte la pausa tra le ondate",
+     "da": 10,
+     "a": 10.5,
+     "soggetto": "label"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "e33695f82fdd8dc934bd83b3c2dd8dcf2b11c1d154250efc568da8cf787f4d55",
+   "estensione": "mp4",
+   "byte": 57926
+  }
+ },
+ "chiamate": []
+}

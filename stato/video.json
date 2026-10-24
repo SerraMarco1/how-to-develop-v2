@@ -329,42 +329,43 @@
  "timer": {
   "es1": {
    "impronta": "d8b37cc9d2e1026827926c0432a85f7769c8d79197b551345f96dff611b7f11d",
-   "tentativi": 2,
-   "esito": "niente",
+   "tentativi": 0,
+   "esito": "fatto",
    "regole": 2,
-   "ultimo": {
-    "copione": {
-     "scena": "res://basket.tscn",
-     "durata": 12,
-     "azioni": [],
-     "soggetti": [
-      {
-       "id": "etichetta",
-       "cerca": {
-        "classe": "Label"
-       },
-       "quanti": 1,
-       "da": 10,
-       "a": 12,
-       "deve": "mostrare testo",
-       "testo": "Pausa!",
-       "etichetta": "Testo onda"
-      }
-     ],
-     "scritte": [
-      {
-       "testo": "Il timer fa partire la pausa di tre secondi",
-       "da": 10,
-       "a": 12,
-       "soggetto": "etichetta"
-      }
-     ]
-    },
-    "problemi": [
-     "Soggetto «etichetta» (classe = Label; almeno 1 da 10 a 12 s; deve mostrare il testo «Pausa!»): il testo «Pausa!» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 11 s: «Label» a (516, 550) 397×23, si vede, testo «Vittoria! Punti: 150 | Premi Invio per giocare ancora». Lo schermo va da (0, 0) a (1152, 648)."
+   "copione": {
+    "scena": "res://basket.tscn",
+    "durata": 10.5,
+    "azioni": [
+     {
+      "azione": "move_left",
+      "inizio": 0,
+      "fine": 10.5,
+      "tasto": "A"
+     }
+    ],
+    "soggetti": [
+     {
+      "id": "label",
+      "cerca": {
+       "nome": "Label"
+      },
+      "quanti": 1,
+      "da": 10,
+      "a": 10.5,
+      "deve": "mostrare testo",
+      "testo": "Pausa!",
+      "etichetta": "Messaggio di pausa"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "A dieci secondi parte la pausa tra le ondate",
+      "da": 10,
+      "a": 10.5,
+      "soggetto": "label"
+     }
     ]
-   },
-   "motivo": "Il gioco raggiunge la condizione di vittoria prima dei 10 secondi, impedendo l'attivazione della pausa dell'ondata."
+   }
   }
  },
  "segnali-propri": {
