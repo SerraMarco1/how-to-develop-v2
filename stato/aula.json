@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-23T13:58:50.501Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-24T07:01:35.694Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "await-e-coroutine",
   "numero": "4.4",
   "titolo": "await: aspettare senza fermare il gioco"
  },
- "messaggio": "Per oggi la lezione 4.4 ha usato le richieste che le spettano: riprende domani.",
- "riprende": "2026-10-24T07:00:00.501Z"
+ "messaggio": "Sta scrivendo la lezione 4.4 «await: aspettare senza fermare il gioco».",
+ "riprende": null
 }
