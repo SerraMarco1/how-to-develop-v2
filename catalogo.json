@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-24T08:06:29.985Z",
+ "aggiornato": "2026-10-24T08:08:58.909Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -497,6 +497,15 @@
    "file": "lezioni/f04-programmare-meglio/callable-e-lambda.json",
    "sha256": "334189e142bcf7a0316795ec1d4ca3dcda4a8e691c7a56ca78cd09dec586f2d8",
    "byte": 109658
+  },
+  {
+   "slug": "scegliere-le-strutture-dati",
+   "numero": "4.6",
+   "titolo": "Scegliere come tenere i dati",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/scegliere-le-strutture-dati.json",
+   "sha256": "cb509ffc47c48312482ba4c8e0cfd1ac8cdce39cd3d413c00df416b3fb7020e6",
+   "byte": 115326
   }
  ],
  "documentazione": {
