@@ -1,0 +1,70 @@
+{
+ "n": 5,
+ "quando": "2026-10-24T07:15:12.956Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (prevedi): approvato",
+ "spiegazione": "«Prevedi il comportamento di filter, map, sort_custom e lambda». 5 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: 2 · 4 · 90 · 15 · true",
+ "richieste": 0,
+ "durataMs": 2967,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedi il comportamento di filter, map, sort_custom e lambda",
+   "consegna": "Leggi con attenzione ciascun frammento di codice GDScript e indica il valore esatto restituito dalla funzione `run()`, senza eseguire il programma.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "func run():\n\tvar numbers: Array[int] = [3, 8, 12, 5, 20, 7]\n\tvar big: Array = numbers.filter(func(n: int) -> bool: return n > 10)\n\treturn big.size()\n",
+     "domanda": "Che valore numerico restituisce la funzione?",
+     "risposta": "2",
+     "spiegazione": "Il metodo `filter()` invoca la lambda su ogni numero dell'array: solo 12 e 20 sono maggiori di 10. L'array risultante `big` contiene `[12, 20]`, la cui dimensione `size()` è 2.",
+     "id": "es1p1"
+    },
+    {
+     "codice": "func run():\n\tvar words: Array[String] = [\"godot\", \"quiz\", \"gdscript\"]\n\tvar lengths: Array = words.map(func(w: String) -> int: return w.length())\n\treturn lengths[1]\n",
+     "domanda": "Che valore numerico restituisce la funzione?",
+     "risposta": "4",
+     "spiegazione": "Il metodo `map()` trasforma ciascuna stringa nella sua lunghezza calcolata con `length()`. L'elemento con indice 1 corrisponde a `\"quiz\"`, che ha 4 caratteri, quindi `lengths[1]` vale 4.",
+     "id": "es1p2"
+    },
+    {
+     "codice": "func run():\n\tvar scores: Array[int] = [10, 50, 25, 40]\n\tscores.sort_custom(func(a: int, b: int) -> bool: return a > b)\n\treturn scores[0] + scores[1]\n",
+     "domanda": "Quanto vale la somma restituita alla fine?",
+     "risposta": "90",
+     "spiegazione": "`sort_custom()` riordina l'array sul posto. Poiché la funzione lambda restituisce `true` quando `a > b`, l'array viene ordinato in senso decrescente: `[50, 40, 25, 10]`. I primi due elementi sono 50 e 40, e la loro somma è 90.",
+     "id": "es1p3"
+    },
+    {
+     "codice": "func run():\n\tvar bonus: int = 5\n\tvar add_bonus: Callable = func(val: int) -> int: return val + bonus\n\tbonus = 20\n\treturn add_bonus.call(10)\n",
+     "domanda": "Che valore numerico restituisce la funzione?",
+     "risposta": "15",
+     "spiegazione": "In GDScript le funzioni lambda catturano le variabili locali esterne per valore nel momento esatto in cui vengono create. Al momento della creazione della lambda `bonus` valeva 5; la modifica successiva `bonus = 20` non influenza il valore catturato, per cui `add_bonus.call(10)` restituisce `10 + 5 = 15`.",
+     "id": "es1p4"
+    },
+    {
+     "codice": "func run():\n\tvar values: Array[int] = [4, 6, 8, 11]\n\tvar has_odd: bool = values.any(func(n: int) -> bool: return n % 2 != 0)\n\tvar all_positive: bool = values.all(func(n: int) -> bool: return n > 0)\n\treturn has_odd and all_positive\n",
+     "domanda": "Che valore booleano (true o false) restituisce la funzione?",
+     "risposta": "true",
+     "spiegazione": "`values.any(...)` restituisce `true` perché nell'array c'è almeno un numero dispari (11). `values.all(...)` restituisce `true` perché tutti i numeri sono maggiori di zero. L'operazione `true and true` restituisce `true`.",
+     "id": "es1p5"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "Gli esercizi mettono alla prova i concetti fondamentali dei Callable: filtraggio con `filter`, trasformazione con `map`, ordinamento sul posto con `sort_custom`, verifica con `any`/`all` e la cattura per valore delle variabili locali nelle funzioni lambda.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
