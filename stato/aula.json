@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-24T08:20:39.020Z",
+ "aggiornato": "2026-10-24T08:30:48.811Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "collaudare-il-proprio-codice",
-  "numero": "4.7",
-  "titolo": "Collaudare il proprio codice: scrivere i controlli"
+  "slug": "git",
+  "numero": "4.8",
+  "titolo": "Git: la storia del progetto"
  },
- "messaggio": "Sta scrivendo la lezione 4.7 «Collaudare il proprio codice: scrivere i controlli».",
+ "messaggio": "Sta scrivendo la lezione 4.8 «Git: la storia del progetto».",
  "riprende": null
 }
