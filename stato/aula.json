@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-24T09:21:39.471Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-24T09:32:50.561Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "git",
   "numero": "4.8",
   "titolo": "Git: la storia del progetto"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.8 riprende da sola appena rispondono.",
- "riprende": "2026-10-24T09:31:39.470Z"
+ "messaggio": "Sta scrivendo la lezione 4.8 «Git: la storia del progetto».",
+ "riprende": null
 }
