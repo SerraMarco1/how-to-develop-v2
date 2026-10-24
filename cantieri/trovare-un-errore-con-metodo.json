@@ -23,7 +23,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar q1 := Question.new(\"Q1\", [\"A\", \"B\"], 0)\n\tvar q2 := Question.new(\"Q2\", [\"A\", \"B\"], 0)\n\tvar q3 := Question.new(\"Q3\", [\"A\", \"B\"], 0)\n\tvar questions: Array[Question] = [q1, q2, q3]\n\tvar session := QuizSession.new(questions)\n\tif not check(\"init_q1\", session.get_current_question() == q1, \"All'inizio la domanda corrente deve essere Q1\"):\n\t\treturn\n\tsession.submit_answer(0)\n\tvar q_after_submit := session.get_current_question()\n\tif not check(\"same_q_before_advance\", q_after_submit == q1, \"Inviare la risposta non deve far avanzare l'indice prima di chiamare advance()\"): \n\t\treturn\n\tsession.advance()\n\tvar q_after_advance := session.get_current_question()\n\tcheck(\"next_q_after_advance\", q_after_advance == q2, \"Dopo advance() la domanda corrente deve essere Q2, senza saltare domande\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar q1 := Question.new(\"Q1\", [\"A\", \"B\"], 0)\n\tvar q2 := Question.new(\"Q2\", [\"A\", \"B\"], 0)\n\tvar q3 := Question.new(\"Q3\", [\"A\", \"B\"], 0)\n\tvar questions: Array[Question] = [q1, q2, q3]\n\tvar session := QuizSession.new(questions)\n\tif not check(\"init_q1\", session.get_current_question() == q1, \"All'inizio la domanda corrente deve essere Q1\"):\n\t\treturn\n\tsession.submit_answer(0)\n\tvar q_after_submit := session.get_current_question()\n\tif not check(\"same_q_before_advance\", q_after_submit == q1, \"Inviare la risposta non deve far avanzare l'indice prima di chiamare advance()\"):\n\t\treturn\n\tsession.advance()\n\tvar q_after_advance := session.get_current_question()\n\tcheck(\"next_q_after_advance\", q_after_advance == q2, \"Dopo advance() la domanda corrente deve essere Q2, senza saltare domande\")",
       "descrizione": "Inviare una risposta non fa saltare la domanda successiva"
      },
      {
@@ -36,6 +36,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Quiz\"\nrun/main_scene=\"res://menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nQuizData=\"*res://quiz_data.gd\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
       {
        "percorso": "question.gd",
        "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n"
@@ -80,6 +84,10 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "question.gd",
+       "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n"
+      },
+      {
        "percorso": "quiz_session.gd",
        "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar wrong_questions: Array[Question] = []\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\twrong_questions = []\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif correct:\n\t\tscore += 1\n\telse:\n\t\twrong_questions.append(current)\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n\n\nfunc get_wrong_questions() -> Array[Question]:\n\treturn wrong_questions\n"
       },
@@ -108,18 +116,22 @@
       "impostazioni": []
      },
      "spiegazione": "1. In `quiz_session.gd`, la funzione `submit_answer()` incrementava erroneamente `_current_index += 1`. Poiché l'avanzamento alla domanda successiva viene gestito da `advance()` in `quiz.gd`, l'indice veniva incrementato due volte di seguito, saltando ogni volta una domanda. Rimuovendo `_current_index += 1` da `submit_answer()`, l'avanzamento torna regolare.\n2. In `quiz_data.gd`, la funzione lambda in `get_sorted_records()` usava il confronto `a[\"score\"] < b[\"score\"]`, che ordinava gli elementi in modo crescente (punteggi più bassi prima). Cambiando l'operatore in `>` (`a[\"score\"] > b[\"score\"]`), i punteggi vengono ordinati correttamente in modo decrescente.",
-     "cambiati": [],
+     "cambiati": [
+      "quiz_session.gd",
+      "quiz_data.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "`soluzione.progetto.scenaPrincipale` è \"res://menu.tscn\", ma quel file non è in `soluzione.file`"
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
@@ -244,7 +256,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Trovare un errore con metodo",
