@@ -189,8 +189,8 @@
    "correzioni": 2,
    "semplificato": true,
    "problemi": [
-    "controllo di sicurezza — .gitignore: i file .gitignore non possono far parte di una lezione",
-    "controllo di sicurezza — .gitattributes: i file .gitattributes non possono far parte di una lezione"
+    "menu.tscn riga 14: il nodo \"TitleLabel\" ha parent=\"..\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")",
+    "menu.tscn riga 30: il nodo \"VersionLabel\" ha parent=\"..\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
