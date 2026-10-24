@@ -94,26 +94,37 @@
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
-    "titolo": "Costruisci la storia del Quiz con commit organizzati",
-    "consegna": "Registra tutti i file rimanenti del progetto «Quiz» nella storia di Git, raggruppandoli in commit logici e compatti.\n\nOrganizza il lavoro con `git add` e `git commit` rispettando queste condizioni:\n- L'archivio Git deve contenere complessivamente almeno 5 commit.\n- Ogni commit deve avere un messaggio chiaro e descrittivo di almeno 10 caratteri che spiega cosa è stato registrato (per esempio separando le classi di dati, le risorse delle domande, le schermate secondarie e la scena del quiz).\n- I messaggi di tutti i commit devono essere diversi tra loro: evita descrizioni generiche come \"modifiche\" o \"commit 2\".\n- Tutti i file di gioco (`.gd`, `.tscn`, `.tres`) devono essere salvati nella cronologia, lasciando l'area di lavoro pulita.",
+    "titolo": "Inizializza Git e configura i file ignorati",
+    "consegna": "Metti il progetto del Quiz sotto controllo versione con Git.\n\n1. Nella radice del progetto, crea il file `.gitignore` in modo che escluda la cartella `.godot/` e i file di traduzione con estensione `*.translation`. Puoi crearlo direttamente oppure usare la funzione dell'editor in **Project -> Version Control -> Generate Version Control Metadata**.\n2. Assicurati che sia presente anche il file `.gitattributes` nella radice del progetto.\n3. Apri il terminale del tuo computer nella cartella del progetto `quiz` e inizializza l'archivio Git con `git init`.\n4. Registra i primi commit per salvare la configurazione del progetto e le classi del quiz con messaggi descrittivi e non vuoti.",
     "modalita": "progetto",
     "dove": "gioco",
     "passiGuida": [],
     "suggerimenti": [
-     "Esegui `git status` da terminale per vedere l'elenco dei file ancora da salvare e decidere come raggrupparli prima di ciascun commit.",
-     "Prepara gruppi coerenti di file con `git add <file1> <file2> ...` e registra ciascun gruppo con `git commit -m \"Descrizione con verbo chiaro\"`.",
-     "Puoi creare un commit per le classi di dati (`question.gd`, `quiz_topic.gd`, ecc.), uno per i dati e l'autoload (`general_knowledge.tres`, `videogames.tres`, `quiz_data.gd`), uno per i menu (`menu.tscn`, `results.tscn`, ecc.) e uno per la partita (`quiz.tscn`, `quiz.gd`, `quiz_session.gd`). Verifica alla fine con `git log --oneline`."
+     "In Godot 4.7 puoi generare `.gitignore` e `.gitattributes` cliccando sul menu **Project -> Version Control -> Generate Version Control Metadata**.",
+     "Se preferisci creare `.gitignore` a mano, crea un file di testo chiamato `.gitignore` nella radice del progetto e scrivi al suo interno `.godot/` e `*.translation` su righe separate.",
+     "Nel terminale della cartella del progetto, esegui `git init` per inizializzare l'archivio, poi usa `git add` e `git commit -m \"messaggio\"` per registrare i salvataggi."
     ],
     "verifiche": [
      {
       "tipo": "file_esiste",
       "percorso": "res://.gitignore",
-      "descrizione": "Il file .gitignore è presente"
+      "descrizione": "Il file .gitignore esiste nella radice del progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://.gitignore",
+      "regex": "\\.godot",
+      "descrizione": "Il file .gitignore esclude la cartella .godot/"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://.gitattributes",
+      "descrizione": "Il file .gitattributes esiste nella radice del progetto"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar head_file := FileAccess.open(\"res://.git/HEAD\", FileAccess.READ)\n\tif not check(\"git_head\", head_file != null, \"L'archivio Git deve essere presente\"):\n\t\treturn\n\n\tvar log_file := FileAccess.open(\"res://.git/logs/HEAD\", FileAccess.READ)\n\tif not check(\"git_log\", log_file != null, \"Il file di registro .git/logs/HEAD deve esistere\"):\n\t\treturn\n\n\tvar content: String = log_file.get_as_text()\n\tvar lines: PackedStringArray = content.split(\"\\n\", false)\n\tvar commit_messages: Array[String] = []\n\n\tfor line in lines:\n\t\tvar commit_idx: int = line.find(\"commit\")\n\t\tif commit_idx != -1:\n\t\t\tvar msg_part: String = line.substr(commit_idx)\n\t\t\tvar colon_idx: int = msg_part.find(\":\")\n\t\t\tif colon_idx != -1:\n\t\t\t\tmsg_part = msg_part.substr(colon_idx + 1)\n\t\t\tvar cleaned: String = msg_part.strip_edges()\n\t\t\tif not cleaned.is_empty():\n\t\t\t\tcommit_messages.append(cleaned)\n\n\tvar count: int = commit_messages.size()\n\tif not check(\"commit_count\", count >= 5, \"La storia di Git deve contenere almeno 5 commit (trovati: %d)\" % count):\n\t\treturn\n\n\tvar all_long_enough: bool = true\n\tvar unique_messages: Dictionary = {}\n\tfor msg in commit_messages:\n\t\tunique_messages[msg] = true\n\t\tif msg.length() < 10:\n\t\t\tall_long_enough = false\n\n\tcheck(\"commit_len\", all_long_enough, \"Tutti i messaggi dei commit devono essere descrittivi (almeno 10 caratteri)\")\n\tcheck(\"commit_unique\", unique_messages.size() >= 5, \"I messaggi dei commit devono essere tutti distinti tra loro\")",
-      "descrizione": "La storia di Git contiene almeno 5 commit con messaggi descrittivi e distinti"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar gitignore := source_of(\"res://.gitignore\")\n\tcheck(\"gitignore_not_empty\", not gitignore.is_empty(), \"Il file .gitignore deve contenere le regole di esclusione\")\n\tcheck(\"gitignore_godot\", gitignore.contains(\".godot\"), \"Il file .gitignore deve escludere la cartella .godot/\")\n\n\tvar gitattributes := source_of(\"res://.gitattributes\")\n\tcheck(\"gitattributes_exists\", not gitattributes.is_empty(), \"Il file .gitattributes deve essere presente\")\n\n\tvar is_git := DirAccess.dir_exists_absolute(\"res://.git\") or DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(\"res://.git\"))\n\tcheck(\"git_repo\", is_git, \"La cartella .git deve essere presente dopo l'inizializzazione dell'archivio\")",
+      "descrizione": "L'archivio Git e la configurazione dei file ignorati sono corretti"
      }
     ],
     "previsioni": [],
@@ -121,8 +132,16 @@
     "soluzione": {
      "file": [
       {
-       "percorso": ".git/logs/HEAD",
-       "contenuto": "0000000000000000000000000000000000000000 1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a Studente <studente@example.com> 1700000001 +0100\tcommit (initial): Configura progetto e file ignorati\n1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a 2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b Studente <studente@example.com> 1700000002 +0100\tcommit: Aggiunge classi di dati Question e QuizTopic\n2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b 3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c Studente <studente@example.com> 1700000003 +0100\tcommit: Aggiunge risorse delle domande e autoload QuizData\n3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c 4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d Studente <studente@example.com> 1700000004 +0100\tcommit: Aggiunge schermate di menu e risultati\n4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d 5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e Studente <studente@example.com> 1700000005 +0100\tcommit: Aggiunge schermata di gioco principale del quiz\n"
+       "percorso": ".gitignore",
+       "contenuto": "# File generati da Godot e cache dell'editor\n.godot/\n*.translation\n"
+      },
+      {
+       "percorso": ".gitattributes",
+       "contenuto": "* text=auto\n"
+      },
+      {
+       "percorso": ".git/HEAD",
+       "contenuto": "ref: refs/heads/main\n"
       }
      ],
      "progetto": {
@@ -132,7 +151,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Dividere i file in commit tematici permette di tenere traccia della crescita del progetto in modo ordinato. Con `git add` si selezionano i file collegati tra loro (ad esempio le classi di supporto o le schermate utente) e con `git commit -m` si registra l'istantanea accompagnata da un messaggio chiaro che inizia con un verbo all'indicativo presente.",
+     "spiegazione": "Il file `.gitignore` indica a Git quali elementi ignorare: la cartella `.godot/` contiene i file temporanei e di cache generati dall'editor che cambiano continuamente e non vanno tracciati nella storia del progetto. Il file `.gitattributes` definisce la gestione dei testi e dei file binari. Eseguendo `git init` nella cartella del progetto, Git crea la sua struttura di tracciamento e permette di registrare le modifiche in modo ordinato.",
      "cambiati": [],
      "rimossi": []
     }
@@ -142,7 +161,7 @@
    "semplificato": false,
    "problemi": [],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-3.6-flash"
    ]
   },
   "test": {
@@ -150,32 +169,29 @@
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
-    "titolo": "Annulla un errore con git restore e registra una miglioria",
-    "consegna": "Metti alla prova la rete di sicurezza di Git annullando una modifica scorretta e registrando poi un miglioramento alla schermata dei risultati.\n\n1. Fai una prova di errore: apri `res://results.gd` ed effettua una modifica scorretta di prova dentro `_ready()`, per esempio cambiando l'assegnazione del testo del punteggio con `score_label.text = \"ERRORE DI PROVA\"`. Salva con Ctrl+S.\n2. Nel terminale, digita `git diff results.gd` per osservare la differenza evidenziata tra il commit precedente e la modifica corrente, poi controlla lo stato con `git status`.\n3. Annulla la modifica errata con il comando: `git restore results.gd`. Riapri o ricarica lo script per verificare che sia tornato identico a prima.\n4. Ora implementa la vera miglioria in `res://results.gd`: dentro `_ready()`, controlla se il punteggio è maggiore di zero ed eguaglia il record con `QuizData.score > 0 and QuizData.score == QuizData.high_score`. Se la condizione è vera, aggiungi in coda al testo di `score_label` la dicitura `\" - Nuovo Record!\"` (per esempio: `score_label.text += \" - Nuovo Record!\"`).\n5. Prepara `results.gd` con `git add results.gd` e registra il nuovo commit con un messaggio descrittivo (per esempio: `git commit -m \"Segnala nuovo record nella schermata dei risultati\"`), portando la storia del repository a un totale di almeno 6 commit.",
+    "titolo": "Annulla un errore con Git e aggiungi la classe QuizStats",
+    "consegna": "Sperimenta il ripristino dei file modificati per errore e aggiungi un nuovo modulo di calcolo delle statistiche al Quiz.\n\n1. Apri lo script `res://results.gd` e modifica temporaneamente la riga dentro `_ready()` che imposta il punteggio visualizzato, scrivendo un testo errato a tua scelta.\n2. Apri il terminale della cartella del progetto e digita `git status` per verificare che Git rileva la modifica non ancora salvata.\n3. Annulla la modifica errata usando il comando `git restore res://results.gd`, riportando il file al suo stato originale pulito.\n4. Crea un nuovo script `res://quiz_stats.gd` con nome classe `QuizStats` che estende `RefCounted`.\n5. Nella classe `QuizStats` aggiungi la seguente funzione statica per calcolare la percentuale di precisione:\n   `static func calculate_accuracy(correct_answers: int, total_questions: int) -> float:`\n   - Se `total_questions <= 0`, restituisci `0.0` per evitare divisioni per zero.\n   - Altrimenti, restituisci la percentuale di risposte corrette calcolata come `(float(correct_answers) / float(total_questions)) * 100.0`.\n6. Aggiungi il nuovo file all'area di staging con `git add res://quiz_stats.gd` e registra un commit con un messaggio chiaro (ad esempio: `\"Aggiunge classe QuizStats per il calcolo delle statistiche\"`).",
     "modalita": "progetto",
     "dove": "gioco",
     "passiGuida": [],
     "suggerimenti": [
-     "Ricorda di salvare il file con Ctrl+S prima di eseguire `git diff` o `git restore` dal terminale.",
-     "Il comando `git restore results.gd` scarta le modifiche non ancora registrate sul file e ripristina la versione dell'ultimo commit.",
-     "Nella funzione `_ready()` di `results.gd`, verifica prima che `score_label.text` sia stato impostato con il punteggio base, poi usa una condizione `if` per aggiungere `\" - Nuovo Record!\"`."
+     "Usa `git restore res://results.gd` nel terminale per annullare la modifica di prova prima di preparare e registrare il commit per `res://quiz_stats.gd`."
     ],
     "verifiche": [
      {
       "tipo": "file_esiste",
-      "percorso": "res://results.gd",
-      "descrizione": "Il file results.gd è presente"
-     },
-     {
-      "tipo": "testo_in_file",
-      "percorso": "res://results.gd",
-      "regex": "Nuovo Record!",
-      "descrizione": "Lo script results.gd aggiunge il testo 'Nuovo Record!' al punteggio quando si eguaglia il record"
+      "percorso": "res://quiz_stats.gd",
+      "descrizione": "Il file res://quiz_stats.gd esiste nella radice del progetto"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tQuizData.score = 3\n\tQuizData.high_score = 3\n\tQuizData.current_topic_title = \"\"\n\tvar results_scene := await instantiate_scene(\"res://results.tscn\")\n\tif not check(\"results_loaded\", results_scene != null, \"La scena res://results.tscn deve aprirsi senza errori\"):\n\t\treturn\n\n\tvar score_label := find_by_name(results_scene, \"ScoreLabel\") as Label\n\tif not check(\"score_label\", score_label != null, \"Nella scena results.tscn deve esserci la Label ScoreLabel\"):\n\t\treturn\n\n\tcheck(\"record_text\", score_label.text.find(\"Nuovo Record!\") != -1, \"Quando il punteggio eguaglia il record (e > 0), ScoreLabel deve contenere 'Nuovo Record!' (testo: '%s')\" % score_label.text)\n\n\tresults_scene.queue_free()\n\tawait wait_frames(2)\n\tQuizData.score = 0\n\tQuizData.high_score = 0\n\tresults_scene = await instantiate_scene(\"res://results.tscn\")\n\tif results_scene != null:\n\t\tscore_label = find_by_name(results_scene, \"ScoreLabel\") as Label\n\t\tif score_label != null:\n\t\t\tcheck(\"no_record_at_zero\", score_label.text.find(\"Nuovo Record!\") == -1, \"Con punteggio pari a 0 non deve comparire 'Nuovo Record!'\")\n\n\tvar log_file := FileAccess.open(\"res://.git/logs/HEAD\", FileAccess.READ)\n\tif not check(\"git_log\", log_file != null, \"Il file .git/logs/HEAD deve esistere\"):\n\t\treturn\n\n\tvar content: String = log_file.get_as_text()\n\tvar lines: PackedStringArray = content.split(\"\\n\", false)\n\tvar commit_messages: Array[String] = []\n\n\tfor line in lines:\n\t\tvar commit_idx: int = line.find(\"commit\")\n\t\tif commit_idx != -1:\n\t\t\tvar msg_part: String = line.substr(commit_idx)\n\t\t\tvar colon_idx: int = msg_part.find(\":\")\n\t\t\tif colon_idx != -1:\n\t\t\t\tmsg_part = msg_part.substr(colon_idx + 1)\n\t\t\tvar cleaned: String = msg_part.strip_edges()\n\t\t\tif not cleaned.is_empty():\n\t\t\t\tcommit_messages.append(cleaned)\n\n\tvar count: int = commit_messages.size()\n\tif not check(\"commit_count\", count >= 6, \"La storia di Git deve contenere almeno 6 commit dopo l'aggiunta della miglioria (trovati: %d)\" % count):\n\t\treturn\n\n\tvar all_long_enough: bool = true\n\tvar unique_messages: Dictionary = {}\n\tfor msg in commit_messages:\n\t\tunique_messages[msg] = true\n\t\tif msg.length() < 10:\n\t\t\tall_long_enough = false\n\n\tcheck(\"commit_len\", all_long_enough, \"Tutti i messaggi dei commit devono essere descrittivi (almeno 10 caratteri)\")\n\tcheck(\"commit_unique\", unique_messages.size() >= 6, \"I messaggi dei commit devono essere tutti distinti tra loro\")",
-      "descrizione": "La schermata mostra 'Nuovo Record!' quando appropriato e Git contiene almeno 6 commit distinti"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar results_text := source_of(\"res://results.gd\")\n\tcheck(\"results_not_empty\", not results_text.is_empty(), \"Il file res://results.gd deve essere presente\")\n\tcheck(\"results_original\", results_text.contains(\"score_label.text = \\\"Punteggio: \\\" + str(QuizData.score)\"), \"Il file res://results.gd non deve contenere modifiche errate ed essere ripristinato allo stato originale\")",
+      "descrizione": "Il file results.gd non è rimasto modificato con errori ed è stato ripristinato"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar stats_script = load(\"res://quiz_stats.gd\")\n\tif not check(\"script_loaded\", stats_script != null, \"Lo script res://quiz_stats.gd deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar inst = stats_script.new()\n\tif not check(\"inst_not_null\", inst != null, \"La classe QuizStats deve potersi istanziare\"):\n\t\treturn\n\n\tif not check(\"has_func\", has_function(inst, \"calculate_accuracy\"), \"La classe QuizStats deve avere la funzione calculate_accuracy\"):\n\t\treturn\n\n\tvar acc1 = call_if_exists(inst, \"calculate_accuracy\", [3, 4], -1.0)\n\tcheck(\"acc_normal\", typeof(acc1) in [TYPE_FLOAT, TYPE_INT] and absf(float(acc1) - 75.0) < 0.01, \"calculate_accuracy(3, 4) deve restituire 75.0 (restituito: %s)\" % str(acc1))\n\n\tvar acc_zero = call_if_exists(inst, \"calculate_accuracy\", [0, 5], -1.0)\n\tcheck(\"acc_zero\", typeof(acc_zero) in [TYPE_FLOAT, TYPE_INT] and absf(float(acc_zero) - 0.0) < 0.01, \"calculate_accuracy(0, 5) deve restituire 0.0 (restituito: %s)\" % str(acc_zero))\n\n\tvar acc_invalid = call_if_exists(inst, \"calculate_accuracy\", [5, 0], -1.0)\n\tcheck(\"acc_invalid\", typeof(acc_invalid) in [TYPE_FLOAT, TYPE_INT] and absf(float(acc_invalid) - 0.0) < 0.01, \"calculate_accuracy(5, 0) con totale <= 0 deve restituire 0.0 (restituito: %s)\" % str(acc_invalid))",
+      "descrizione": "La classe QuizStats calcola correttamente la percentuale di precisione"
      }
     ],
     "previsioni": [],
@@ -183,12 +199,8 @@
     "soluzione": {
      "file": [
       {
-       "percorso": "results.gd",
-       "contenuto": "extends Control\n\n@onready var score_label: Label = $CenterContainer/VBoxContainer/ScoreLabel\n@onready var high_score_label: Label = $CenterContainer/VBoxContainer/HighScoreLabel\n@onready var restart_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/RestartButton\n@onready var menu_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tscore_label.text = \"Punteggio: \" + str(QuizData.score)\n\tif QuizData.score > 0 and QuizData.score == QuizData.high_score:\n\t\tscore_label.text += \" - Nuovo Record!\"\n\tif QuizData.current_topic_title != \"\":\n\t\tvar topic_rec: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\thigh_score_label.text = \"Record (\" + QuizData.current_topic_title + \"): \" + str(topic_rec)\n\telse:\n\t\thigh_score_label.text = \"Record: \" + str(QuizData.high_score)\n\trestart_button.grab_focus()\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
-      },
-      {
-       "percorso": ".git/logs/HEAD",
-       "contenuto": "0000000000000000000000000000000000000000 1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a Studente <studente@example.com> 1700000001 +0100\tcommit (initial): Configura progetto e file ignorati\n1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a 2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b Studente <studente@example.com> 1700000002 +0100\tcommit: Aggiunge classi di dati Question e QuizTopic\n2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b 3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c Studente <studente@example.com> 1700000003 +0100\tcommit: Aggiunge risorse delle domande e autoload QuizData\n3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c 4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d Studente <studente@example.com> 1700000004 +0100\tcommit: Aggiunge schermate di menu e risultati\n4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d 5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e Studente <studente@example.com> 1700000005 +0100\tcommit: Aggiunge schermata di gioco principale del quiz\n5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e 6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f Studente <studente@example.com> 1700000006 +0100\tcommit: Segnala nuovo record nella schermata dei risultati\n"
+       "percorso": "quiz_stats.gd",
+       "contenuto": "class_name QuizStats\nextends RefCounted\n\n\n# Calcola la percentuale di risposte corrette evitando divisioni per zero\nstatic func calculate_accuracy(correct_answers: int, total_questions: int) -> float:\n\tif total_questions <= 0:\n\t\treturn 0.0\n\treturn (float(correct_answers) / float(total_questions)) * 100.0\n"
       }
      ],
      "progetto": {
@@ -198,7 +210,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Con `git restore results.gd` qualsiasi errore non salvato in un commit viene scartato all'istante, ripristinando il file all'ultimo stato funzionante registrato. Una volta ripristinato il codice sano, si aggiunge il controllo `QuizData.score > 0 and QuizData.score == QuizData.high_score` per aggiornare il testo dell'etichetta e si registra il sesto commit con `git add` e `git commit`.",
+     "spiegazione": "Con `git restore res://results.gd` le modifiche non ancora registrate in un commit vengono cancellate all'istante, ripristinando il file com'era nell'ultimo commit salvato. La nuova classe `QuizStats` estende `RefCounted` e fornisce un metodo statico utile per calcolare la percentuale di risposte corrette. Il file viene poi aggiunto con `git add` e registrato con `git commit` per mantenere la cronologia pulita ed esplicita.",
      "cambiati": [],
      "rimossi": []
     }
@@ -208,7 +220,7 @@
    "semplificato": false,
    "problemi": [],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
@@ -315,5 +327,5 @@
   "es2",
   "test"
  ],
- "restoDaRiscrivere": "es1"
+ "praticaRifatta": true
 }
