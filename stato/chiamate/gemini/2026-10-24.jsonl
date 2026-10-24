@@ -55,3 +55,5 @@
 {"quando":1792836451370,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"trovare-un-errore-con-metodo","ok":false,"contata":true,"durataMs":3180,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792838930204,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"trovare-un-errore-con-metodo","ok":true,"contata":true,"durataMs":39500,"tokenInput":14622,"tokenOutput":2812,"ragionamento":5113}
 {"quando":1792838971349,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"trovare-un-errore-con-metodo","ok":true,"contata":true,"durataMs":74048,"tokenInput":20859,"tokenOutput":8547,"ragionamento":13235}
+{"quando":1792839046902,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"trovare-un-errore-con-metodo","ok":true,"contata":true,"durataMs":21372,"tokenInput":11903,"tokenOutput":5035,"ragionamento":6442}
+{"quando":1792839068278,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"trovare-un-errore-con-metodo","ok":true,"contata":true,"durataMs":14405,"tokenInput":16343,"tokenOutput":4839,"ragionamento":1317}
