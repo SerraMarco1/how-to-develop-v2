@@ -95,17 +95,13 @@
     "tipo": "autonomo",
     "genere": "obiettivo",
     "titolo": "Inizializza Git e configura i file ignorati",
-    "consegna": "Prepara il progetto del Quiz per il controllo di versione e verifica la configurazione.\n\n1. Apri le impostazioni del progetto e assicurati che il nome sia `Quiz` e la scena principale sia `res://menu.tscn`.\n2. Verifica che l'azione di input `pause` sia configurata correttamente.\n3. Controlla che i file di gioco siano presenti nella cartella del progetto.",
+    "consegna": "Genera i metadati per il controllo di versione Git nel progetto del Quiz.\n\n1. Il progetto deve contenere il file `.gitignore` configurato per ignorare la cartella `.godot/`.\n2. Il progetto deve contenere il file `.gitattributes`.",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "quiz",
-    "passiGuida": [
-     "Apri il progetto Quiz nell'editor di Godot.",
-     "Verifica in **Project -> Project Settings** che il nome sia Quiz e la scena principale sia res://menu.tscn.",
-     "Controlla nella Input Map che l'azione pause sia configurata."
-    ],
+    "passiGuida": [],
     "suggerimenti": [
-     "Puoi controllare le impostazioni del progetto dal menu Project -> Project Settings."
+     "In Godot puoi generare i metadati di controllo versione dal menu Project -> Version Control -> Generate Version Control Metadata."
     ],
     "verifiche": [
      {
@@ -113,34 +109,34 @@
       "descrizione": "Nella cartella è presente un progetto di Godot valido"
      },
      {
-      "tipo": "impostazione",
-      "sezione": "application",
-      "chiave": "config/name",
-      "contiene": "Quiz",
-      "descrizione": "Il nome del progetto impostato è Quiz"
+      "tipo": "file_esiste",
+      "percorso": "res://.gitignore",
+      "descrizione": "Il file .gitignore esiste nella radice del progetto"
      },
      {
-      "tipo": "impostazione",
-      "sezione": "application",
-      "chiave": "run/main_scene",
-      "contiene": "res://menu.tscn",
-      "descrizione": "La scena principale è impostata su res://menu.tscn"
+      "tipo": "testo_in_file",
+      "percorso": "res://.gitignore",
+      "regex": "\\.godot/",
+      "descrizione": "Il file .gitignore contiene la regola per ignorare la cartella .godot/"
      },
      {
       "tipo": "file_esiste",
-      "percorso": "res://quiz.tscn",
-      "descrizione": "Il file della scena del quiz esiste nel progetto"
-     },
-     {
-      "tipo": "azione_input",
-      "nome": "pause",
-      "descrizione": "L'azione di input pause è configurata nella Input Map"
+      "percorso": "res://.gitattributes",
+      "descrizione": "Il file .gitattributes esiste nella radice del progetto"
      }
     ],
     "previsioni": [],
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": ".gitignore",
+       "contenuto": "# Godot-specific ignores\n.godot/\n*.translation\n"
+      },
+      {
+       "percorso": ".gitattributes",
+       "contenuto": "# Normalize line endings for text files\n* text=auto\n"
+      },
       {
        "percorso": "results.tscn",
        "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://results.gd\" id=\"1_results\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_results\"]\ndefault_font_size = 22\n\n[node name=\"Results\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_results\")\nscript = ExtResource(\"1_results\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 36\ntext = \"PARTITA TERMINATA\"\nhorizontal_alignment = 1\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Punteggio: 0\"\nhorizontal_alignment = 1\n\n[node name=\"HighScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Record: 0\"\nhorizontal_alignment = 1\n\n[node name=\"ButtonsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Rigioca\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
@@ -254,20 +250,21 @@
        }
       ]
      },
-     "spiegazione": "Il progetto del Quiz è organizzato con scene, script e risorse pronti per essere inseriti in un sistema di controllo versione.",
+     "spiegazione": "In Godot, la generazione dei metadati di controllo versione (dal menu Project -> Version Control -> Generate Version Control Metadata) crea i file `.gitignore` e `.gitattributes` nella radice del progetto. Il file `.gitignore` indica a Git di ignorare la cartella `.godot/` e gli altri file temporanei o generati automaticamente.",
      "cambiati": [],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   },
   "test": {
