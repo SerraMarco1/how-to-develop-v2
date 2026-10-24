@@ -29,19 +29,39 @@
      },
      {
       "tipo": "file_esiste",
-      "percorso": "res://menu.tscn",
-      "descrizione": "Il file menu.tscn è presente nel progetto"
+      "percorso": "res://.gitignore",
+      "descrizione": "Il file .gitignore è presente nella radice del progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://.gitignore",
+      "regex": "\\.godot/",
+      "descrizione": "Il file .gitignore esclude la cartella .godot/"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://.gitignore",
+      "regex": "\\*\\.translation",
+      "descrizione": "Il file .gitignore esclude i file *.translation"
      },
      {
       "tipo": "file_esiste",
-      "percorso": "res://quiz.tscn",
-      "descrizione": "Il file quiz.tscn è presente nel progetto"
+      "percorso": "res://.gitattributes",
+      "descrizione": "Il file .gitattributes è presente nella radice del progetto"
      }
     ],
     "previsioni": [],
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": ".gitignore",
+       "contenuto": "# Godot 4+ specific ignores\n.godot/\n*.translation\n"
+      },
+      {
+       "percorso": ".gitattributes",
+       "contenuto": "# Normalize EOL for all files that Git considers text\n* text=auto eol=lf\n"
+      },
       {
        "percorso": "results.tscn",
        "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://results.gd\" id=\"1_results\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_results\"]\ndefault_font_size = 22\n\n[node name=\"Results\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_results\")\nscript = ExtResource(\"1_results\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 36\ntext = \"PARTITA TERMINATA\"\nhorizontal_alignment = 1\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Punteggio: 0\"\nhorizontal_alignment = 1\n\n[node name=\"HighScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Record: 0\"\nhorizontal_alignment = 1\n\n[node name=\"ButtonsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Rigioca\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
@@ -156,19 +176,23 @@
       ]
      },
      "spiegazione": "Godot genera automaticamente file di configurazione e metadati per il controllo versione tramite il menu **Project → Version Control → Generate Version Control Metadata**. La cartella `.godot/` contiene file di cache e risorse importate che non devono mai essere tracciati. Il comando `git init` crea l'archivio Git, mentre `git add` e `git commit` registrano il primo passo con un messaggio chiaro.",
-     "cambiati": [],
+     "cambiati": [
+      ".gitignore",
+      ".gitattributes"
+     ],
      "rimossi": []
     }
    },
    "genere": "guidato",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "es2": {
@@ -297,7 +321,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Git: la storia del progetto",
