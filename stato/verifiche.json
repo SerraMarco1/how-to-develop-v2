@@ -274,5 +274,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "callable-e-lambda": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }

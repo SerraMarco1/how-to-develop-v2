@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-24T07:40:21.407Z",
+ "aggiornato": "2026-10-24T08:06:29.985Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -493,10 +493,10 @@
    "slug": "callable-e-lambda",
    "numero": "4.5",
    "titolo": "Funzioni come valori: Callable e lambda",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f04-programmare-meglio/callable-e-lambda.json",
-   "sha256": "7b991a7a1df96dbbf29c767cec7b32511c9dd2215a7d8603729324c0afab8a2c",
-   "byte": 109721
+   "sha256": "334189e142bcf7a0316795ec1d4ca3dcda4a8e691c7a56ca78cd09dec586f2d8",
+   "byte": 109658
   }
  ],
  "documentazione": {
