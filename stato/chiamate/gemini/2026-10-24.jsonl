@@ -1,1 +1,2 @@
 {"quando":1792825299466,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":198453,"tokenInput":16553,"tokenOutput":8889,"ragionamento":9117}
+{"quando":1792825517824,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"await-e-coroutine","ok":true,"contata":true,"durataMs":13509,"tokenInput":13104,"tokenOutput":12,"ragionamento":2596}
