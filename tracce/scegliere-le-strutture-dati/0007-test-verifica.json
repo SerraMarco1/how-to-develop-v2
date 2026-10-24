@@ -1,0 +1,85 @@
+{
+ "n": 7,
+ "quando": "2026-10-24T07:53:57.936Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (riordina): approvato",
+ "spiegazione": "«Riordinare: trasformare una mappa da if a dati». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: dungeon_navigator.gd",
+ "richieste": 0,
+ "durataMs": 12184,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "riordina",
+   "titolo": "Riordinare: trasformare una mappa da if a dati",
+   "consegna": "Nel progetto `NavigazioneDungeon`, apri `res://dungeon_navigator.gd`. Lo script gestisce il movimento del giocatore tra le stanze di una fortezza, ma contiene decine di condizioni `if` ed `elif` ripetute in ogni funzione per controllare la stanza corrente e stabilire dove andare.\n\nRiscrivi `DungeonNavigator` eliminando le catene di `if`: i collegamenti e i nomi delle stanze devono essere descritti come dati all'interno di un dizionario o di una costante `ROOMS: Dictionary`:\n- Ogni stanza deve avere il suo nome e un dizionario `exits` che mappa la direzione (`\"north\"`, `\"south\"`, `\"east\"`, `\"west\"`) all'ID della stanza di arrivo.\n- Le stanze della fortezza sono cinque:\n  - `\"entrance\"`: nome `\"Ingresso della Fortezza\"`, uscite: `\"north\" -> \"hall\"`\n  - `\"hall\"`: nome `\"Grande Atrio\"`, uscite: `\"south\" -> \"entrance\"`, `\"east\" -> \"armory\"`, `\"west\" -> \"library\"`, `\"north\" -> \"treasury\"`\n  - `\"armory\"`: nome `\"Armeria Reale\"`, uscite: `\"west\" -> \"hall\"`\n  - `\"library\"`: nome `\"Antica Biblioteca\"`, uscite: `\"east\" -> \"hall\"`\n  - `\"treasury\"`: nome `\"Sala del Tesoro\"`, uscite: `\"south\" -> \"hall\"`\n- Mantieni invariate la variabile `current_room` (inizializzata a `\"entrance\"`) e le firme di tutte le funzioni pubbliche (`get_room_name`, `get_destination`, `can_move`, `move`, `get_available_directions`).\n- Se una stanza cercata non esiste in `ROOMS`, `get_room_name` deve restituire `\"Stanza Sconosciuta\"`.\n- Il comportamento complessivo deve rimanere identico: i controlli verificano il movimento prima e dopo la tua riscrittura.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "navigazione-dungeon",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Dichiara una costante `ROOMS: Dictionary` contenente le 5 stanze: per ciascuna crea un dizionario con la chiave `\"name\"` e la chiave `\"exits\"`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://dungeon_navigator.gd",
+     "descrizione": "Il file res://dungeon_navigator.gd esiste"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar nav_script: GDScript = load(\"res://dungeon_navigator.gd\") as GDScript\n\tif not check(\"script\", nav_script != null, \"res://dungeon_navigator.gd deve compilare senza errori\"):\n\t\treturn\n\tvar nav = nav_script.new()\n\n\tcheck(\"init_room\", str(get_prop(nav, \"current_room\", \"\")) == \"entrance\", \"La stanza iniziale deve essere 'entrance'\")\n\tcheck(\"room_name_entry\", str(call_if_exists(nav, \"get_room_name\", [], \"\")) == \"Ingresso della Fortezza\", \"Il nome della stanza iniziale deve essere 'Ingresso della Fortezza'\")\n\tcheck(\"can_north\", call_if_exists(nav, \"can_move\", [\"north\"], false) == true, \"Dall'ingresso can_move('north') deve essere true\")\n\tcheck(\"cannot_south\", call_if_exists(nav, \"can_move\", [\"south\"], true) == false, \"Dall'ingresso can_move('south') deve essere false\")\n\tcheck(\"dest_north\", str(call_if_exists(nav, \"get_destination\", [\"north\"], \"\")) == \"hall\", \"Dall'ingresso l'uscita 'north' deve portare a 'hall'\")\n\n\tvar dirs_entry = call_if_exists(nav, \"get_available_directions\", [], [])\n\tcheck(\"entry_dirs\", dirs_entry is Array and dirs_entry.has(\"north\"), \"get_available_directions() dall'ingresso deve contenere 'north'\")\n\n\tvar move_north = call_if_exists(nav, \"move\", [\"north\"], false)\n\tcheck(\"move_north\", move_north == true, \"move('north') dall'ingresso deve restituire true\")\n\tcheck(\"room_hall\", str(get_prop(nav, \"current_room\", \"\")) == \"hall\", \"La stanza corrente deve essere diventata 'hall'\")\n\tcheck(\"name_hall\", str(call_if_exists(nav, \"get_room_name\", [], \"\")) == \"Grande Atrio\", \"Il nome della stanza deve essere 'Grande Atrio'\")\n\n\tvar dirs_hall = call_if_exists(nav, \"get_available_directions\", [], [])\n\tcheck(\"hall_count\", dirs_hall is Array and dirs_hall.size() == 4, \"Dall'atrio devono esserci 4 uscite disponibili\")\n\n\tcall_if_exists(nav, \"move\", [\"east\"], false)\n\tcheck(\"room_armory\", str(get_prop(nav, \"current_room\", \"\")) == \"armory\", \"Spostandosi a 'east' si deve arrivare in 'armory'\")\n\tvar move_invalid = call_if_exists(nav, \"move\", [\"north\"], true)\n\tcheck(\"move_invalid\", move_invalid == false, \"Dall'armeria move('north') deve restituire false\")\n\tcheck(\"room_still_armory\", str(get_prop(nav, \"current_room\", \"\")) == \"armory\", \"Un movimento fallito non deve cambiare la stanza\")\n\n\tcall_if_exists(nav, \"move\", [\"west\"], false)\n\tcall_if_exists(nav, \"move\", [\"north\"], false)\n\tcheck(\"room_treasury\", str(get_prop(nav, \"current_room\", \"\")) == \"treasury\", \"Dall'atrio verso 'north' si deve arrivare a 'treasury'\")\n\n\tnav.current_room = \"unknown_room\"\n\tcheck(\"unknown_name\", str(call_if_exists(nav, \"get_room_name\", [], \"\")) == \"Stanza Sconosciuta\", \"Per una stanza non censita get_room_name deve restituire 'Stanza Sconosciuta'\")\n\n\tcheck(\"no_if_chains\", count_in_code(\"res://dungeon_navigator.gd\", \"if\") <= 3, \"Il codice non deve usare catene di if per gestire i collegamenti: usa un dizionario di uscite\")\n\tcheck(\"short_functions\", longest_function_lines(\"res://dungeon_navigator.gd\") <= 8, \"Le funzioni devono essere brevi (massimo 8 righe di codice per funzione)\")\n",
+     "descrizione": "La navigazione tra stanze funziona correttamente senza catene di if"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "NavigazioneDungeon",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"NavigazioneDungeon\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "dungeon_navigator.gd",
+      "contenuto": "class_name DungeonNavigator\nextends RefCounted\n\nvar current_room: String = \"entrance\"\n\n\nfunc get_room_name() -> String:\n\tif current_room == \"entrance\":\n\t\treturn \"Ingresso della Fortezza\"\n\telif current_room == \"hall\":\n\t\treturn \"Grande Atrio\"\n\telif current_room == \"armory\":\n\t\treturn \"Armeria Reale\"\n\telif current_room == \"library\":\n\t\treturn \"Antica Biblioteca\"\n\telif current_room == \"treasury\":\n\t\treturn \"Sala del Tesoro\"\n\treturn \"Stanza Sconosciuta\"\n\n\nfunc get_destination(direction: String) -> String:\n\tif current_room == \"entrance\":\n\t\tif direction == \"north\":\n\t\t\treturn \"hall\"\n\telif current_room == \"hall\":\n\t\tif direction == \"south\":\n\t\t\treturn \"entrance\"\n\t\telif direction == \"east\":\n\t\t\treturn \"armory\"\n\t\telif direction == \"west\":\n\t\t\treturn \"library\"\n\t\telif direction == \"north\":\n\t\t\treturn \"treasury\"\n\telif current_room == \"armory\":\n\t\tif direction == \"west\":\n\t\t\treturn \"hall\"\n\telif current_room == \"library\":\n\t\tif direction == \"east\":\n\t\t\treturn \"hall\"\n\telif current_room == \"treasury\":\n\t\tif direction == \"south\":\n\t\t\treturn \"hall\"\n\treturn \"\"\n\n\nfunc can_move(direction: String) -> bool:\n\tif current_room == \"entrance\":\n\t\tif direction == \"north\":\n\t\t\treturn true\n\telif current_room == \"hall\":\n\t\tif direction == \"south\" or direction == \"east\" or direction == \"west\" or direction == \"north\":\n\t\t\treturn true\n\telif current_room == \"armory\":\n\t\tif direction == \"west\":\n\t\t\treturn true\n\telif current_room == \"library\":\n\t\tif direction == \"east\":\n\t\t\treturn true\n\telif current_room == \"treasury\":\n\t\tif direction == \"south\":\n\t\t\treturn true\n\treturn false\n\n\nfunc move(direction: String) -> bool:\n\tvar dest: String = get_destination(direction)\n\tif dest != \"\":\n\t\tcurrent_room = dest\n\t\treturn true\n\treturn false\n\n\nfunc get_available_directions() -> Array[String]:\n\tif current_room == \"entrance\":\n\t\treturn [\"north\"]\n\telif current_room == \"hall\":\n\t\treturn [\"south\", \"east\", \"west\", \"north\"]\n\telif current_room == \"armory\":\n\t\treturn [\"west\"]\n\telif current_room == \"library\":\n\t\treturn [\"east\"]\n\telif current_room == \"treasury\":\n\t\treturn [\"south\"]\n\treturn []\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"NavigazioneDungeon\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "dungeon_navigator.gd",
+      "contenuto": "class_name DungeonNavigator\nextends RefCounted\n\nvar current_room: String = \"entrance\"\n\nconst ROOMS: Dictionary = {\n\t\"entrance\": {\n\t\t\"name\": \"Ingresso della Fortezza\",\n\t\t\"exits\": {\"north\": \"hall\"}\n\t},\n\t\"hall\": {\n\t\t\"name\": \"Grande Atrio\",\n\t\t\"exits\": {\"south\": \"entrance\", \"east\": \"armory\", \"west\": \"library\", \"north\": \"treasury\"}\n\t},\n\t\"armory\": {\n\t\t\"name\": \"Armeria Reale\",\n\t\t\"exits\": {\"west\": \"hall\"}\n\t},\n\t\"library\": {\n\t\t\"name\": \"Antica Biblioteca\",\n\t\t\"exits\": {\"east\": \"hall\"}\n\t},\n\t\"treasury\": {\n\t\t\"name\": \"Sala del Tesoro\",\n\t\t\"exits\": {\"south\": \"hall\"}\n\t}\n}\n\n\nfunc get_room_name() -> String:\n\tvar room_data: Dictionary = ROOMS.get(current_room, {})\n\treturn str(room_data.get(\"name\", \"Stanza Sconosciuta\"))\n\n\nfunc get_destination(direction: String) -> String:\n\tvar room_data: Dictionary = ROOMS.get(current_room, {})\n\tvar exits: Dictionary = room_data.get(\"exits\", {})\n\treturn str(exits.get(direction, \"\"))\n\n\nfunc can_move(direction: String) -> bool:\n\treturn get_destination(direction) != \"\"\n\n\nfunc move(direction: String) -> bool:\n\tvar dest: String = get_destination(direction)\n\tif dest == \"\":\n\t\treturn false\n\tcurrent_room = dest\n\treturn true\n\n\nfunc get_available_directions() -> Array[String]:\n\tvar room_data: Dictionary = ROOMS.get(current_room, {})\n\tvar exits: Dictionary = room_data.get(\"exits\", {})\n\tvar dirs: Array[String] = []\n\tfor d in exits:\n\t\tdirs.append(str(d))\n\treturn dirs\n"
+     }
+    ],
+    "progetto": {
+     "nome": "NavigazioneDungeon",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Codificare le uscite delle stanze all'interno di istruzioni `if/elif` mescola i dati del mondo con la logica del programma: ogni nuova stanza richiederebbe modifiche a tutte le funzioni. Spostando la topologia della mappa nella costante `ROOMS`, le connessioni diventano puri dati: `get_destination`, `can_move` e `get_available_directions` interrogano direttamente il dizionario `exits` della stanza corrente con una o due righe ciascuna, senza bisogno di alcuna catena di confronti.",
+    "cambiati": [
+     "dungeon_navigator.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
