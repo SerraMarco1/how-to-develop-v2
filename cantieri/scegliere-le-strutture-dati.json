@@ -1,0 +1,81 @@
+{
+ "creato": "2026-10-24T07:40:22.927Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Scegliere come tenere i dati",
+  "sommario": "In questa lezione impari a scegliere la struttura dati più adatta tra Array, Dictionary, classi RefCounted e Resource, valutando velocità di lettura, ricerca e facilità di salvataggio. Scopri come riconoscere le strutture inefficienti piene di cicli e condizioni, e progetti due modelli completi: un inventario con capienza limitata e una mappa di stanze collegate.",
+  "concetti": [
+   "Confronto tra Array, Dictionary, RefCounted e Resource",
+   "Complessità di ricerca e accesso ai dati",
+   "Incapsulamento di strutture complesse in classi",
+   "Rappresentazione di collegamenti tramite identificatori univoci",
+   "Prevenzione dei riferimenti circolari nella memoria"
+  ],
+  "obiettivi": [
+   "Array, Dictionary, classe o Resource: cosa cambia quando leggi, cerchi, salvi",
+   "Dati dentro altri dati, e come descrivere un collegamento (questa stanza porta a quella)",
+   "Riconoscere quando una struttura è sbagliata: troppi if, troppe ricerche"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nel corso dello sviluppo del nostro gioco «Quiz» abbiamo già preso diverse decisioni su come memorizzare le informazioni. In `QuizData` abbiamo memorizzato i punteggi record dei temi in `topic_records`, un `Dictionary`. Per leggere il record di un tema scriviamo direttamente `QuizData.topic_records.get(QuizData.current_topic_title, 0)`: il valore viene trovato all'istante, senza dover sfogliare una lista. Per le domande abbiamo invece creato `Question` e `QuizTopic` come classi che estendono `Resource`, con array tipizzati per le opzioni.\n\nScegliere il contenitore giusto per i dati fa la differenza tra un gioco fluido con codice leggibile e un progetto fragile, dove ogni modifica richiede decine di cicli `for` e condizioni `if`. In questa lezione impari a valutare quale strumento usare in ogni situazione e progetti due modelli di dati concreti: un inventario con limite di posti e una mappa di stanze collegate."
+   },
+   {
+    "tipo": "testo",
+    "md": "In Godot hai a disposizione quattro strumenti principali per conservare i dati. Ognuno ha punti di forza e limiti precisi:\n\n- **Array**: memorizza gli elementi in sequenza ordinata in memoria contigua (uno accanto all'altro). L'accesso tramite indice numerico (`array[0]`) è istantaneo. La ricerca per valore (`array.find(\"spada\")`) è invece lenta: Godot deve confrontare gli elementi uno dopo l'altro dal primo all'ultimo. Aggiungere o togliere elementi in coda (`append`, `pop_back`) è rapido, mentre farlo all'inizio o a metà richiede di spostare tutti gli elementi successivi.\n- **Dictionary**: memorizza coppie composte da una chiave univoca e un valore. La lettura per chiave (`dict[\"spada\"]` o `dict.get(\"spada\")`) è fulminea sia con 10 che con 10.000 elementi, perché il motore calcola direttamente la posizione in memoria senza scorrere la collezione. Di contro, non ha un ordine numerico fisso e non controlla se sbagli a digitare il nome di una chiave.\n- **Classe (`RefCounted`)**: raggruppa proprietà con nomi e tipi certi (`var health: int`) e funzioni che ne garantiscono la coerenza. Evita errori di battitura e impedisce che il codice esterno alteri i dati in modo non valido.\n- **Resource**: è una classe speciale che Godot sa salvare su file (`.tres`), condividere per riferimento e mostrare nell'Inspector per consentirti di creare contenuti senza toccare il codice."
+   },
+   {
+    "tipo": "testo",
+    "md": "Come ci si accorge che una struttura dati è inadatta? Esistono tre segnali d'allarme tipici:\n\n1. **Troppi cicli for con if interni**: se per trovare un dato devi continuamente scrivere `for item in lista:` seguito da `if item.id == cercato:`, quell'elenco doveva essere un `Dictionary` indicizzato per ID.\n2. **Troppi if di controllo sulle chiavi**: se ti ritrovi a scrivere `if dati.has(\"tipo\") and dati[\"tipo\"] == \"arma\":`, stai usando un dizionario generico al posto di una classe dedicata con proprietà tipizzate.\n3. **Catene di if/elif per gestire connessioni**: se per stabilire cosa succede scrivi una serie infinita di confronti (`if stanza == \"sala\" and direzione == \"nord\":`), stai codificando i dati dentro la logica anziché lasciare che sia la struttura a descrivere i collegamenti.\n\nVediamo come applicare questi criteri costruendo il nostro primo modello: un inventario con quantità e limite di posti."
+   },
+   {
+    "tipo": "testo",
+    "md": "Se progettassimo un inventario usando un semplice `Array[String]`, raccogliere tre pozioni creerebbe la lista `[\"pozione\", \"pozione\", \"pozione\"]`. Questo approccio presenta due gravi difetti: un oggetto accumulabile occupa tre posti separati invece di raggrupparsi, e per scoprire quante pozioni possiede il giocatore dovremmo esaminare tutto l'array dall'inizio alla fine.\n\nSe invece usassimo un `Dictionary` libero sparso nel codice, qualunque nodo potrebbe alterare le quantità senza verificare se c'è ancora spazio disponibile o inserire numeri negativi.\n\nLa soluzione solida consiste nel creare una classe `Inventory` che estende `RefCounted`. Al suo interno, un `Dictionary` privato gestisce l'associazione tra l'identificatore dell'oggetto e la sua quantità, mentre le funzioni pubbliche incapsulano le regole di capienza e convalida."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name Inventory\nextends RefCounted\n\nvar max_slots: int = 10\nvar _items: Dictionary = {} # id_oggetto (String) -> quantita (int)\n\n\nfunc _init(p_max_slots: int = 10) -> void:\n\tmax_slots = p_max_slots\n\n\nfunc add_item(item_id: String, amount: int = 1) -> bool:\n\tif amount <= 0:\n\t\treturn false\n\tvar current_amount: int = int(_items.get(item_id, 0))\n\tif current_amount == 0 and _items.size() >= max_slots:\n\t\treturn false # Limite di slot raggiunto per nuovi oggetti\n\t_items[item_id] = current_amount + amount\n\treturn true\n\n\nfunc remove_item(item_id: String, amount: int = 1) -> bool:\n\tif amount <= 0 or not _items.has(item_id):\n\t\treturn false\n\tvar current_amount: int = int(_items[item_id])\n\tif current_amount < amount:\n\t\treturn false # Quantità insufficiente da rimuovere\n\tcurrent_amount -= amount\n\tif current_amount == 0:\n\t\t_items.erase(item_id)\n\telse:\n\t\t_items[item_id] = current_amount\n\treturn true\n\n\nfunc get_quantity(item_id: String) -> int:\n\treturn int(_items.get(item_id, 0))\n\n\nfunc has_item(item_id: String, amount: int = 1) -> bool:\n\treturn get_quantity(item_id) >= amount",
+    "spiegazione": "La classe `Inventory` protegge i dati. All'esterno non si sa né importa come siano memorizzati gli oggetti: si chiamano soltanto `add_item()` e `remove_item()`. L'uso del dizionario interno `_items` permette di verificare la presenza di un oggetto o la sua quantità con `_items.get()` a costo zero, senza alcun ciclo `for`. Quando la quantità scende a zero, `_items.erase()` rimuove la chiave liberando lo slot per un nuovo oggetto."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il secondo modello affronta un'altra esigenza comune: rappresentare dati dentro altri dati e descrivere collegamenti tra entità. Pensa a una mappa di stanze: ogni stanza ha una descrizione e porte che conducono ad altre stanze.\n\nCome si descrive il fatto che \"l'ingresso porta a nord verso il salone\"?\n\nL'errore tipico consiste nel memorizzare solo una lista di nomi e gestire il movimento con una catena di condizioni: `if stanza_corrente == \"ingresso\" and dir == \"nord\": stanza_corrente = \"salone\"`. Con venti stanze, questo codice diventa un incubo da mantenere.\n\nIl modo pulito consiste nel trattare il collegamento come un dato: ogni stanza contiene un proprio `Dictionary` di uscite, dove la chiave è la direzione (`\"north\"`, `\"south\"`) e il valore è l'identificatore della stanza di destinazione."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name Room\nextends RefCounted\n\nvar id: String = \"\"\nvar description: String = \"\"\nvar exits: Dictionary = {} # direzione (String) -> id_stanza (String)\n\n\nfunc _init(p_id: String = \"\", p_description: String = \"\") -> void:\n\tid = p_id\n\tdescription = p_description\n\n\nfunc connect_room(direction: String, target_room_id: String) -> void:\n\texits[direction] = target_room_id\n\n\nfunc get_exit(direction: String) -> String:\n\treturn str(exits.get(direction, \"\"))\n\n\nfunc has_exit(direction: String) -> bool:\n\treturn exits.has(direction)",
+    "spiegazione": "La classe `Room` possiede tutte le informazioni che la riguardano direttamente. Non sa quante altre stanze esistano nel mondo: memorizza solo il proprio identificatore univoco `id`, il testo descrittivo e il dizionario `exits`. Per sapere dove porta una porta, basta interrogare `get_exit(\"north\")`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Ora possiamo mettere alla prova entrambi i modelli mettendoli in relazione. Per gestire l'intero mondo di gioco non serve inventare algoritmi complessi: basta un contenitore generale (un `Dictionary`) che raccoglie tutte le stanze create, usando il loro `id` come chiave.\n\nIn questo modo, quando il giocatore decide di muoversi in una direzione, il sistema esegue tre passaggi lineari:\n1. Chiede alla stanza corrente se possiede quell'uscita con `has_exit()`.\n2. Recupera l'identificatore della destinazione con `get_exit()`.\n3. Recupera la nuova stanza dal dizionario generale delle stanze.\n\nNessuna condizione `if` sul nome della stanza: la logica di spostamento funziona immutata sia con due stanze che con duecento."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "# 1. Mettiamo alla prova l'inventario\nvar inventory := Inventory.new(3) # Limite di 3 tipi di oggetto\ninventory.add_item(\"key\", 1)\ninventory.add_item(\"potion\", 5)\nprint(\"Pozioni disponibili: \", inventory.get_quantity(\"potion\")) # Stampa: 5\n\n# 2. Creiamo le stanze e colleghiamole\nvar world: Dictionary = {} # id (String) -> Room\n\nvar entrance := Room.new(\"entrance\", \"Sei all'ingresso di una vecchia biblioteca.\")\nentrance.connect_room(\"north\", \"hall\")\n\nvar hall := Room.new(\"hall\", \"Ti trovi nel salone principale pieno di scaffali.\")\nhall.connect_room(\"south\", \"entrance\")\n\nworld[entrance.id] = entrance\nworld[hall.id] = hall\n\n# 3. Simuliamo il movimento senza alcuna catena di if\nvar current_room_id: String = \"entrance\"\nvar move_direction: String = \"north\"\n\nvar current_room: Room = world[current_room_id]\nif current_room.has_exit(move_direction):\n\tvar target_id: String = current_room.get_exit(move_direction)\n\tcurrent_room_id = target_id\n\tvar new_room: Room = world[current_room_id]\n\tprint(new_room.description) # Stampa: Ti trovi nel salone principale pieno di scaffali.",
+    "spiegazione": "Nota la semplicità: il giocatore passa dall'ingresso al salone semplicemente leggendo i dati contenuti in `entrance.exits`. Se in seguito vorrai aggiungere una porta verso est che porta al giardino, basterà registrare la nuova stanza in `world` e chiamare `hall.connect_room(\"east\", \"garden\")`. Il codice che esegue lo spostamento non dovrà essere modificato."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Non memorizzare nelle uscite un riferimento diretto all'altro oggetto `Room` (come `entrance.exits[\"north\"] = hall` e `hall.exits[\"south\"] = entrance`). Questa struttura crea un **riferimento circolare**: due oggetti si puntano a vicenda, impedendo a Godot di liberarli dalla memoria RAM quando non servono più. Inoltre, se provi a convertire questi dati in JSON, il motore andrà in errore per ricorsione infinita. Usare sempre identificatori in formato stringa (`\"hall\"`, `\"entrance\"`) risolve il problema alla radice."
+   },
+   {
+    "tipo": "testo",
+    "md": "Ecco la guida rapida per scegliere la struttura corretta ogni volta che progetti un nuovo sistema:\n\n- Scegli un **Array** quando conta l'ordine sequenziale degli elementi o quando devi accedere per posizione numerica (ad esempio la lista delle risposte in `Question.options`).\n- Scegli un **Dictionary** quando devi cercare rapidamente elementi in base a una chiave univoca (come i record per tema in `QuizData.topic_records` o le uscite di una stanza).\n- Scegli una **classe (`RefCounted`)** quando i dati hanno regole interne da rispettare, calcoli o convalide (come i posti massimi in `Inventory`).\n- Scegli una **Resource** quando i dati devono essere creati come file `.tres` nell'Inspector e condivisi tra scene diverse (come le schede dei quiz `QuizTopic`)."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Un Array è ideale per liste ordinate con accesso per indice, ma è lento quando si cerca un valore specifico scorrendo gli elementi.\n- Un Dictionary offre ricerche istantanee tramite chiavi univoche, eliminando la necessità di cicli di ricerca.\n- Le classi personalizzate incapsulano collezioni interne (come dizionari o array) ed espongono funzioni sicure che impediscono dati incoerenti.\n- Per descrivere collegamenti tra entità si usano identificatori univoci in formato stringa, evitando catene di `if` e prevenendo riferimenti circolari in memoria.\n- Le Resource si scelgono quando i dati devono essere serializzati direttamente su file e modificati visivamente nell'Inspector."
+   }
+  ]
+ }
+}
