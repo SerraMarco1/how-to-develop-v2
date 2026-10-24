@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-24T08:09:06.311Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-24T08:20:39.020Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "collaudare-il-proprio-codice",
   "numero": "4.7",
   "titolo": "Collaudare il proprio codice: scrivere i controlli"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.7 riprende da sola appena rispondono.",
- "riprende": "2026-10-24T08:19:06.311Z"
+ "messaggio": "Sta scrivendo la lezione 4.7 «Collaudare il proprio codice: scrivere i controlli».",
+ "riprende": null
 }
