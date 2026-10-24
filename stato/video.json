@@ -751,5 +751,14 @@
    "regole": 2,
    "motivo": "Il salvataggio e il caricamento del record avvengono su file e non modificano elementi visivi sullo schermo."
   }
+ },
+ "collaudare-il-proprio-codice": {
+  "es1": {
+   "impronta": "efb7bd858d3158577d92700697d9dfc2de85c5243d45155866e0ef52bf1c61ed",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il risultato del collaudo viene stampato nel pannello Output e non produce elementi visibili sullo schermo."
+  }
  }
 }
