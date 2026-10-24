@@ -425,8 +425,7 @@
     "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [
-     "Per convertire l'array generico restituito da `source.filter(...)` in un `Array[Question]`, puoi usare il metodo `result.assign(filtered)` su un array tipizzato vuoto `var result: Array[Question] = []`.",
-     "Nel metodo `finish_quiz()` di `quiz.gd`, assegna `QuizData.last_wrong_questions = session.get_wrong_questions()` prima della chiamata a `change_scene_to_file`."
+     "Per convertire l'array generico restituito da `source.filter(...)` in un `Array[Question]`, puoi usare il metodo `result.assign(filtered)` su un array tipizzato vuoto `var result: Array[Question] = []`."
     ],
     "verifiche": [
      {
@@ -437,7 +436,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar q_easy := Question.new(\"Facile?\", [\"Vero\", \"Falso\"], 0)\n\tvar q_diff1 := Question.new(\"Difficile 1?\", [\"A\", \"B\", \"C\", \"D\"], 1)\n\tvar q_diff2 := Question.new(\"Difficile 2?\", [\"X\", \"Y\", \"Z\"], 2)\n\tvar all_questions: Array[Question] = [q_easy, q_diff1, q_diff2]\n\n\tvar diff_result: Array = call_if_exists(QuizData, \"filter_difficult_questions\", [all_questions], [])\n\tif not check(\"filter_diff_count\", diff_result.size() == 2, \"filter_difficult_questions deve restituire solo le 2 domande con più di 2 opzioni (ha restituito %d)\" % diff_result.size()):\n\t\treturn\n\n\tcheck(\"filter_diff_content\", diff_result.has(q_diff1) and diff_result.has(q_diff2), \"Le domande difficili restituite devono essere q_diff1 e q_diff2\")\n\n\tvar wrong_pool: Array[Question] = [q_diff1]\n\tvar wrong_result: Array = call_if_exists(QuizData, \"filter_wrong_questions\", [all_questions, wrong_pool], [])\n\tif not check(\"filter_wrong_count\", wrong_result.size() == 1, \"filter_wrong_questions deve restituire solo 1 domanda (ha restituito %d)\" % wrong_result.size()):\n\t\treturn\n\n\tcheck(\"filter_wrong_content\", wrong_result[0] == q_diff1, \"La domanda sbagliata restituita deve essere q_diff1\")\n\n\tvar session := QuizSession.new([q_easy, q_diff1])\n\tsession.submit_answer(1)\n\tvar recorded_wrong: Array = call_if_exists(session, \"get_wrong_questions\", [], [])\n\tcheck(\"session_wrong_count\", recorded_wrong.size() == 1 and recorded_wrong.has(q_easy), \"QuizSession deve registrare q_easy tra le domande sbagliate dopo una risposta errata\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data := instantiate_script(\"res://quiz_data.gd\")\n\tif not check(\"quiz_data\", quiz_data != null, \"Il file quiz_data.gd deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar q_easy := Question.new(\"Facile?\", [\"Vero\", \"Falso\"], 0)\n\tvar q_diff1 := Question.new(\"Difficile 1?\", [\"A\", \"B\", \"C\", \"D\"], 1)\n\tvar q_diff2 := Question.new(\"Difficile 2?\", [\"X\", \"Y\", \"Z\"], 2)\n\tvar all_questions: Array[Question] = [q_easy, q_diff1, q_diff2]\n\n\tvar diff_result: Array = call_if_exists(quiz_data, \"filter_difficult_questions\", [all_questions], [])\n\tif not check(\"filter_diff_count\", diff_result.size() == 2, \"filter_difficult_questions deve restituire solo le 2 domande con più di 2 opzioni (ha restituito %d)\" % diff_result.size()):\n\t\treturn\n\n\tcheck(\"filter_diff_content\", diff_result.has(q_diff1) and diff_result.has(q_diff2), \"Le domande difficili restituite devono essere q_diff1 e q_diff2\")\n\n\tvar wrong_pool: Array[Question] = [q_diff1]\n\tvar wrong_result: Array = call_if_exists(quiz_data, \"filter_wrong_questions\", [all_questions, wrong_pool], [])\n\tif not check(\"filter_wrong_count\", wrong_result.size() == 1, \"filter_wrong_questions deve restituire solo 1 domanda (ha restituito %d)\" % wrong_result.size()):\n\t\treturn\n\n\tcheck(\"filter_wrong_content\", wrong_result.size() > 0 and wrong_result[0] == q_diff1, \"La domanda sbagliata restituita deve essere q_diff1\")\n\n\tvar session := QuizSession.new([q_easy, q_diff1])\n\tsession.submit_answer(1)\n\tvar recorded_wrong: Array = call_if_exists(session, \"get_wrong_questions\", [], [])\n\tcheck(\"session_wrong_count\", recorded_wrong.size() == 1 and recorded_wrong.has(q_easy), \"QuizSession deve registrare q_easy tra le domande sbagliate dopo una risposta errata\")",
       "descrizione": "I filtri per domande difficili ed errori funzionano correttamente"
      }
     ],
@@ -445,6 +444,50 @@
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": "results.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://results.gd\" id=\"1_results\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_results\"]\ndefault_font_size = 22\n\n[node name=\"Results\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_results\")\nscript = ExtResource(\"1_results\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 36\ntext = \"PARTITA TERMINATA\"\nhorizontal_alignment = 1\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Punteggio: 0\"\nhorizontal_alignment = 1\n\n[node name=\"HighScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Record: 0\"\nhorizontal_alignment = 1\n\n[node name=\"ButtonsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Rigioca\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+      },
+      {
+       "percorso": "true_false_question.gd",
+       "contenuto": "class_name TrueFalseQuestion\nextends Question\n\n\nfunc _init(p_text: String = \"\", is_true: bool = true) -> void:\n\tvar correct: int = 0 if is_true else 1\n\tvar tf_options: Array[String] = [\"Vero\", \"Falso\"]\n\tsuper(p_text, tf_options, correct)\n"
+      },
+      {
+       "percorso": "numeric_question.gd",
+       "contenuto": "class_name NumericQuestion\nextends Question\n\nvar target_value: float = 0.0\nvar tolerance: float = 0.0\n\n\nfunc _init(\n\tp_text: String = \"\",\n\tp_options: Array[String] = [],\n\tp_target: float = 0.0,\n\tp_tolerance: float = 0.0\n) -> void:\n\tvar tol: float = absf(p_tolerance)\n\tvar correct_idx: int = -1\n\tfor i in range(p_options.size()):\n\t\tvar val: float = p_options[i].to_float()\n\t\tif absf(val - p_target) <= tol:\n\t\t\tcorrect_idx = i\n\t\t\tbreak\n\tsuper(p_text, p_options, correct_idx)\n\ttarget_value = p_target\n\ttolerance = tol\n\n\nfunc is_correct(answer_index: int) -> bool:\n\tif answer_index < 0 or answer_index >= options.size():\n\t\treturn false\n\tvar chosen_val: float = options[answer_index].to_float()\n\treturn absf(chosen_val - target_value) <= tolerance\n"
+      },
+      {
+       "percorso": "question.gd",
+       "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n\n\nstatic func from_dict(data: Dictionary) -> Question:\n\tvar q_text: String = str(data.get(\"question\", \"\"))\n\tvar raw_options: Array = data.get(\"options\", [])\n\tvar q_options: Array[String] = []\n\tfor item in raw_options:\n\t\tq_options.append(str(item))\n\tvar q_correct: int = int(data.get(\"correct\", 0))\n\treturn Question.new(q_text, q_options, q_correct)\n"
+      },
+      {
+       "percorso": "quiz_topic.gd",
+       "contenuto": "class_name QuizTopic\nextends Resource\n\n@export var title: String = \"\"\n@export var questions: Array[Question] = []\n\n\nfunc _init(p_title: String = \"\", p_questions: Array[Question] = []) -> void:\n\ttitle = p_title\n\tquestions = p_questions\n"
+      },
+      {
+       "percorso": "general_knowledge.tres",
+       "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuizTopic\" load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz_topic.gd\" id=\"1_topic\"]\n[ext_resource type=\"Script\" path=\"res://question.gd\" id=\"2_question\"]\n\n[sub_resource type=\"Resource\" id=\"Resource_q1\"]\nscript = ExtResource(\"2_question\")\ntext = \"Quale pianeta è detto il Pianeta Rosso?\"\noptions = Array[String]([\"Venere\", \"Marte\", \"Giove\", \"Saturno\"])\ncorrect_index = 1\n\n[sub_resource type=\"Resource\" id=\"Resource_q2\"]\nscript = ExtResource(\"2_question\")\ntext = \"Qual è la capitale d'Italia?\"\noptions = Array[String]([\"Milano\", \"Napoli\", \"Roma\", \"Torino\"])\ncorrect_index = 2\n\n[resource]\nscript = ExtResource(\"1_topic\")\ntitle = \"Cultura Generale\"\nquestions = Array[ExtResource(\"2_question\")]([SubResource(\"Resource_q1\"), SubResource(\"Resource_q2\")])\n"
+      },
+      {
+       "percorso": "videogames.tres",
+       "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuizTopic\" load_steps=4 format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz_topic.gd\" id=\"1_topic\"]\n[ext_resource type=\"Script\" path=\"res://question.gd\" id=\"2_question\"]\n\n[sub_resource type=\"Resource\" id=\"Resource_v1\"]\nscript = ExtResource(\"2_question\")\ntext = \"Chi è l'idraulico baffuto di Nintendo?\"\noptions = Array[String]([\"Mario\", \"Luigi\", \"Wario\", \"Toad\"])\ncorrect_index = 0\n\n[sub_resource type=\"Resource\" id=\"Resource_v2\"]\nscript = ExtResource(\"2_question\")\ntext = \"In quale anno è uscito il primo Pac-Man?\"\noptions = Array[String]([\"1978\", \"1980\", \"1983\", \"1985\"])\ncorrect_index = 1\n\n[resource]\nscript = ExtResource(\"1_topic\")\ntitle = \"Videogiochi\"\nquestions = Array[ExtResource(\"2_question\")]([SubResource(\"Resource_v1\"), SubResource(\"Resource_v2\")])\n"
+      },
+      {
+       "percorso": "results.gd",
+       "contenuto": "extends Control\n\n@onready var score_label: Label = $CenterContainer/VBoxContainer/ScoreLabel\n@onready var high_score_label: Label = $CenterContainer/VBoxContainer/HighScoreLabel\n@onready var restart_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/RestartButton\n@onready var menu_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tscore_label.text = \"Punteggio: \" + str(QuizData.score)\n\tif QuizData.current_topic_title != \"\":\n\t\tvar topic_rec: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\thigh_score_label.text = \"Record (\" + QuizData.current_topic_title + \"): \" + str(topic_rec)\n\telse:\n\t\thigh_score_label.text = \"Record: \" + str(QuizData.high_score)\n\trestart_button.grab_focus()\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
+      },
+      {
+       "percorso": "menu.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -100.0\noffset_top = -20.0\noffset_right = 100.0\noffset_bottom = 20.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntext = \"IL QUIZ\"\nhorizontal_alignment = 1\n"
+      },
+      {
+       "percorso": "menu.gd",
+       "contenuto": "extends Control\n\n\nfunc _ready() -> void:\n\tQuizData.load_topic_records()\n"
+      },
+      {
+       "percorso": "quiz.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz.gd\" id=\"1_quiz\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_quiz\"]\ndefault_font_size = 20\n\n[node name=\"Quiz\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_quiz\")\nscript = ExtResource(\"1_quiz\")\n\n[node name=\"QuestionTimer\" type=\"Timer\" parent=\".\"]\none_shot = true\n\n[node name=\"MarginContainer\" type=\"MarginContainer\" parent=\".\"]\nprocess_mode = 1\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 60\ntheme_override_constants/margin_top = 40\ntheme_override_constants/margin_right = 60\ntheme_override_constants/margin_bottom = 40\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"MarginContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 28\nalignment = 1\n\n[node name=\"TimeBar\" type=\"ProgressBar\" parent=\"MarginContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(0, 20)\nlayout_mode = 2\nmax_value = 5.0\nvalue = 5.0\nshow_percentage = false\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 26\ntext = \"Testo della domanda\"\nhorizontal_alignment = 1\nautowrap_mode = 2\n\n[node name=\"AnswersContainer\" type=\"VBoxContainer\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"Answer0\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 1\"\n\n[node name=\"Answer2\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 2\"\n\n[node name=\"Answer3\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 3\"\n\n[node name=\"PauseMenu\" type=\"ColorRect\" parent=\".\"]\nvisible = false\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ncolor = Color(0, 0, 0, 0.705882)\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\"PauseMenu\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"PauseMenu/CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 20\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 32\ntext = \"PAUSA\"\nhorizontal_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Riprendi\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+      },
       {
        "percorso": "quiz_session.gd",
        "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar wrong_questions: Array[Question] = []\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\twrong_questions = []\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif correct:\n\t\tscore += 1\n\telse:\n\t\twrong_questions.append(current)\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n\n\nfunc get_wrong_questions() -> Array[Question]:\n\treturn wrong_questions\n"
@@ -459,25 +502,59 @@
       }
      ],
      "progetto": {
-      "nome": "",
-      "scenaPrincipale": "",
-      "azioni": [],
-      "autoload": [],
-      "impostazioni": []
+      "nome": "Quiz",
+      "scenaPrincipale": "res://menu.tscn",
+      "azioni": [
+       {
+        "nome": "pause",
+        "tasti": [
+         "Escape"
+        ]
+       }
+      ],
+      "autoload": [
+       {
+        "nome": "QuizData",
+        "percorso": "res://quiz_data.gd"
+       }
+      ],
+      "impostazioni": [
+       {
+        "sezione": "display",
+        "chiave": "window/stretch/mode",
+        "valore": "canvas_items"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/stretch/aspect",
+        "valore": "expand"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_width",
+        "valore": "1152"
+       },
+       {
+        "sezione": "display",
+        "chiave": "window/size/viewport_height",
+        "valore": "648"
+       }
+      ]
      },
-     "spiegazione": "Tracciando gli errori in `QuizSession` memorizziamo le domande risposte in modo non corretto. In `QuizData`, implementiamo due metodi di filtro: `filter_difficult_questions` usa `filter()` con una lambda per scartare le domande semplici con solo 2 opzioni, mentre `filter_wrong_questions` seleziona unicamente le domande presenti nell'elenco degli errori tramite `wrong_pool.has(q)`. Infine, `finish_quiz()` salva la lista delle domande sbagliate nell'Autoload in modo da poter essere riutilizzata nelle partite future.",
+     "spiegazione": "",
      "cambiati": [],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] I filtri per domande difficili ed errori funzionano correttamente: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:10)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:10)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 10: `var diff_result: Array = call_if_exists(QuizData, \"filter_difficult_questions\", [all_questions], [])`"
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
@@ -485,7 +562,8 @@
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-flash-lite-latest",
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Funzioni come valori: Callable e lambda",
