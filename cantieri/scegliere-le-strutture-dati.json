@@ -1,6 +1,216 @@
 {
  "creato": "2026-10-24T07:40:22.927Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "I modelli di dati: inventario e mappa",
+    "consegna": "Nel progetto `Quiz`, crea due classi dedicate per rappresentare due strutture dati fondamentali, senza nodi o elementi di interfaccia:\n\n1. In `res://inventory.gd`, crea la classe `Inventory` (estende `RefCounted`):\n   - Ha una variabile `max_slots: int = 10` e un dizionario interno `_items: Dictionary = {}` (chiave: ID oggetto `String`, valore: quantità `int`).\n   - Il costruttore `_init(p_max_slots: int = 10) -> void` imposta `max_slots`.\n   - `add_item(item_id: String, amount: int = 1) -> bool`: se `amount <= 0`, restituisce `false`. Se l'oggetto non è ancora presente e il numero di slot occupati ha già raggiunto `max_slots`, restituisce `false`. Altrimenti somma `amount` alla quantità corrente e restituisce `true`.\n   - `remove_item(item_id: String, amount: int = 1) -> bool`: se `amount <= 0`, o se l'oggetto non esiste, o se la quantità presente è minore di `amount`, restituisce `false`. Altrimenti sottrae `amount`; se la quantità arriva a 0, cancella la chiave da `_items` con `erase` (liberando lo slot). Restituisce `true`.\n   - `get_quantity(item_id: String) -> int`: restituisce la quantità posseduta (o 0 se assente).\n   - `has_item(item_id: String, amount: int = 1) -> bool`: restituisce `true` se la quantità è maggiore o uguale ad `amount`.\n   - `get_occupied_slots() -> int`: restituisce quanti tipi di oggetti diversi sono presenti (`_items.size()`).\n   - `get_total_items_count() -> int`: restituisce la somma delle quantità di tutti gli oggetti presenti.\n\n2. In `res://room_map.gd`, crea la classe `RoomMap` (estende `RefCounted`):\n   - Ha una variabile `current_room: String = \"\"` e un dizionario interno `_rooms: Dictionary = {}`.\n   - `add_room(room_id: String, description: String) -> void`: registra la stanza con la sua descrizione e un dizionario vuoto di uscite. Se `current_room` è ancora vuota, imposta `current_room = room_id`.\n   - `connect_rooms(from_id: String, direction: String, to_id: String) -> bool`: se `from_id` o `to_id` non esistono in `_rooms`, restituisce `false`. Altrimenti registra l'uscita in quella direzione e restituisce `true`.\n   - `get_room_description(room_id: String) -> String`: restituisce la descrizione della stanza (o `\"\"` se non esiste).\n   - `get_available_directions() -> Array[String]`: restituisce un `Array[String]` con tutte le direzioni disponibili dalla stanza corrente (o array vuoto).\n   - `get_destination(direction: String) -> String`: restituisce l'ID della stanza verso cui porta quella direzione dalla stanza corrente (o `\"\"` se non c'è uscita).\n   - `move(direction: String) -> bool`: se esiste un'uscita in quella direzione dalla stanza corrente, aggiorna `current_room` con la destinazione e restituisce `true`. Altrimenti non cambia stanza e restituisce `false`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `Inventory`, usa `_items.get(item_id, 0)` per leggere la quantità senza rischiare errori di chiave assente. Ricorda che se un oggetto è già presente, aggiungere altre unità non consuma un nuovo slot.",
+     "In `Inventory.remove_item`, quando la quantità scende a zero chiama `_items.erase(item_id)`: in questo modo `_items.size()` rifletterà esattamente il numero di slot occupati.",
+     "In `RoomMap`, ogni stanza registrata in `_rooms[room_id]` può essere un dizionario come `{\"description\": description, \"exits\": {}}`. `connect_rooms` aggiunge la direzione nel sotto-dizionario `exits` della stanza di partenza."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://inventory.gd",
+      "descrizione": "Il file res://inventory.gd esiste nel progetto"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://room_map.gd",
+      "descrizione": "Il file res://room_map.gd esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar inv_script: GDScript = load(\"res://inventory.gd\") as GDScript\n\tif not check(\"inv_script\", inv_script != null, \"Lo script res://inventory.gd deve esistere e compilare senza errori\"):\n\t\treturn\n\tvar inv = inv_script.new(2)\n\tcheck(\"inv_init\", get_prop(inv, \"max_slots\") == 2, \"max_slots deve essere impostato a 2 tramite il costruttore\")\n\n\tvar add_potion = call_if_exists(inv, \"add_item\", [\"potion\", 3], false)\n\tcheck(\"add_potion\", add_potion == true, \"add_item('potion', 3) deve restituire true\")\n\tcheck(\"qty_potion\", call_if_exists(inv, \"get_quantity\", [\"potion\"], 0) == 3, \"get_quantity('potion') deve restituire 3\")\n\tcheck(\"occupied_1\", call_if_exists(inv, \"get_occupied_slots\", [], 0) == 1, \"get_occupied_slots() deve restituire 1\")\n\tcheck(\"total_1\", call_if_exists(inv, \"get_total_items_count\", [], 0) == 3, \"get_total_items_count() deve restituire 3\")\n\n\tvar stack_potion = call_if_exists(inv, \"add_item\", [\"potion\", 2], false)\n\tcheck(\"stack_potion\", stack_potion == true, \"Aggiungere altre pozioni deve riuscire accumulandosi sullo stesso slot\")\n\tcheck(\"qty_potion_stack\", call_if_exists(inv, \"get_quantity\", [\"potion\"], 0) == 5, \"La quantita di pozioni dopo accumulo deve essere 5\")\n\tcheck(\"occupied_still_1\", call_if_exists(inv, \"get_occupied_slots\", [], 0) == 1, \"Gli slot occupati devono rimanere 1 dopo l'accumulo\")\n\n\tvar add_key = call_if_exists(inv, \"add_item\", [\"key\", 1], false)\n\tcheck(\"add_key\", add_key == true, \"Aggiungere un secondo tipo di oggetto deve occupare il secondo slot\")\n\tcheck(\"occupied_2\", call_if_exists(inv, \"get_occupied_slots\", [], 0) == 2, \"Gli slot occupati devono essere 2\")\n\n\tvar add_sword = call_if_exists(inv, \"add_item\", [\"sword\", 1], false)\n\tcheck(\"add_sword_fail\", add_sword == false, \"Aggiungere un terzo oggetto con limite a 2 slot deve restituire false\")\n\n\tvar add_zero = call_if_exists(inv, \"add_item\", [\"potion\", 0], true)\n\tcheck(\"add_zero\", add_zero == false, \"add_item con quantita <= 0 deve restituire false\")\n\n\tvar rem_part = call_if_exists(inv, \"remove_item\", [\"potion\", 2], false)\n\tcheck(\"rem_part\", rem_part == true, \"remove_item('potion', 2) su 5 disponibili deve restituire true\")\n\tcheck(\"qty_after_rem\", call_if_exists(inv, \"get_quantity\", [\"potion\"], 0) == 3, \"Dopo la rimozione devono rimanere 3 pozioni\")\n\n\tvar rem_too_much = call_if_exists(inv, \"remove_item\", [\"potion\", 10], true)\n\tcheck(\"rem_too_much\", rem_too_much == false, \"Rimuovere piu oggetti di quelli posseduti deve restituire false\")\n\n\tvar rem_all_keys = call_if_exists(inv, \"remove_item\", [\"key\", 1], false)\n\tcheck(\"rem_all_keys\", rem_all_keys == true, \"Rimuovere l'unica chiave deve restituire true ed eliminare lo slot\")\n\tcheck(\"key_qty_zero\", call_if_exists(inv, \"get_quantity\", [\"key\"], -1) == 0, \"La quantita della chiave azzerata deve essere 0\")\n\tcheck(\"occupied_back_to_1\", call_if_exists(inv, \"get_occupied_slots\", [], 0) == 1, \"Dopo aver azzerato la chiave gli slot occupati devono tornare a 1\")\n\n\tvar add_sword_retry = call_if_exists(inv, \"add_item\", [\"sword\", 1], false)\n\tcheck(\"add_sword_retry\", add_sword_retry == true, \"Dopo aver liberato uno slot, l'aggiunta della spada deve riuscire\")\n\n\tvar map_script: GDScript = load(\"res://room_map.gd\") as GDScript\n\tif not check(\"map_script\", map_script != null, \"Lo script res://room_map.gd deve esistere e compilare senza errori\"):\n\t\treturn\n\tvar map = map_script.new()\n\tcall_if_exists(map, \"add_room\", [\"entry\", \"Atrio d'ingresso\"])\n\tcheck(\"default_room\", str(get_prop(map, \"current_room\", \"\")) == \"entry\", \"La prima stanza aggiunta deve diventare current_room ('entry')\")\n\n\tcall_if_exists(map, \"add_room\", [\"hall\", \"Salone principale\"])\n\tcheck(\"desc_entry\", str(call_if_exists(map, \"get_room_description\", [\"entry\"], \"\")) == \"Atrio d'ingresso\", \"get_room_description deve restituire la descrizione corretta\")\n\n\tvar conn_ok = call_if_exists(map, \"connect_rooms\", [\"entry\", \"north\", \"hall\"], false)\n\tcheck(\"conn_ok\", conn_ok == true, \"connect_rooms tra due stanze esistenti deve restituire true\")\n\tvar conn_invalid = call_if_exists(map, \"connect_rooms\", [\"entry\", \"south\", \"nonexistent\"], true)\n\tcheck(\"conn_invalid\", conn_invalid == false, \"connect_rooms con stanza inesistente deve restituire false\")\n\n\tvar exits = call_if_exists(map, \"get_available_directions\", [], [])\n\tcheck(\"exits_has_north\", exits is Array and exits.has(\"north\"), \"get_available_directions da 'entry' deve includere 'north'\")\n\tcheck(\"dest_north\", str(call_if_exists(map, \"get_destination\", [\"north\"], \"\")) == \"hall\", \"get_destination('north') deve essere 'hall'\")\n\n\tvar move_ok = call_if_exists(map, \"move\", [\"north\"], false)\n\tcheck(\"move_ok\", move_ok == true, \"move verso un'uscita valida deve restituire true\")\n\tcheck(\"new_room\", str(get_prop(map, \"current_room\", \"\")) == \"hall\", \"Dopo move('north'), current_room deve essere 'hall'\")\n\n\tvar move_fail = call_if_exists(map, \"move\", [\"east\"], true)\n\tcheck(\"move_fail\", move_fail == false, \"move verso una direzione senza uscita deve restituire false\")\n\tcheck(\"room_unchanged\", str(get_prop(map, \"current_room\", \"\")) == \"hall\", \"Un movimento fallito non deve cambiare current_room\")",
+      "descrizione": "I modelli Inventory e RoomMap gestiscono correttamente aggiunte, rimozioni, capienze e collegamenti"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "inventory.gd",
+       "contenuto": "class_name Inventory\nextends RefCounted\n\nvar max_slots: int = 10\nvar _items: Dictionary = {}\n\n\nfunc _init(p_max_slots: int = 10) -> void:\n\tmax_slots = p_max_slots\n\n\nfunc add_item(item_id: String, amount: int = 1) -> bool:\n\tif amount <= 0:\n\t\treturn false\n\tvar current_amount: int = int(_items.get(item_id, 0))\n\tif current_amount == 0 and _items.size() >= max_slots:\n\t\treturn false\n\t_items[item_id] = current_amount + amount\n\treturn true\n\n\nfunc remove_item(item_id: String, amount: int = 1) -> bool:\n\tif amount <= 0 or not _items.has(item_id):\n\t\treturn false\n\tvar current_amount: int = int(_items[item_id])\n\tif current_amount < amount:\n\t\treturn false\n\tcurrent_amount -= amount\n\tif current_amount == 0:\n\t\t_items.erase(item_id)\n\telse:\n\t\t_items[item_id] = current_amount\n\treturn true\n\n\nfunc get_quantity(item_id: String) -> int:\n\treturn int(_items.get(item_id, 0))\n\n\nfunc has_item(item_id: String, amount: int = 1) -> bool:\n\treturn get_quantity(item_id) >= amount\n\n\nfunc get_occupied_slots() -> int:\n\treturn _items.size()\n\n\nfunc get_total_items_count() -> int:\n\tvar total: int = 0\n\tfor item_id in _items:\n\t\ttotal += int(_items[item_id])\n\treturn total\n"
+      },
+      {
+       "percorso": "room_map.gd",
+       "contenuto": "class_name RoomMap\nextends RefCounted\n\nvar current_room: String = \"\"\nvar _rooms: Dictionary = {}\n\n\nfunc add_room(room_id: String, description: String) -> void:\n\t_rooms[room_id] = {\n\t\t\"description\": description,\n\t\t\"exits\": {}\n\t}\n\tif current_room == \"\":\n\t\tcurrent_room = room_id\n\n\nfunc connect_rooms(from_id: String, direction: String, to_id: String) -> bool:\n\tif not _rooms.has(from_id) or not _rooms.has(to_id):\n\t\treturn false\n\tvar exits: Dictionary = _rooms[from_id][\"exits\"]\n\texits[direction] = to_id\n\treturn true\n\n\nfunc get_room_description(room_id: String) -> String:\n\tif not _rooms.has(room_id):\n\t\treturn \"\"\n\treturn str(_rooms[room_id][\"description\"])\n\n\nfunc get_available_directions() -> Array[String]:\n\tif current_room == \"\" or not _rooms.has(current_room):\n\t\treturn []\n\tvar exits: Dictionary = _rooms[current_room][\"exits\"]\n\tvar result: Array[String] = []\n\tfor dir in exits:\n\t\tresult.append(str(dir))\n\treturn result\n\n\nfunc get_destination(direction: String) -> String:\n\tif current_room == \"\" or not _rooms.has(current_room):\n\t\treturn \"\"\n\tvar exits: Dictionary = _rooms[current_room][\"exits\"]\n\treturn str(exits.get(direction, \"\"))\n\n\nfunc move(direction: String) -> bool:\n\tvar dest: String = get_destination(direction)\n\tif dest == \"\":\n\t\treturn false\n\tcurrent_room = dest\n\treturn true\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "In `Inventory`, l'uso di un dizionario privato `_items` permette di associare a ogni ID oggetto la sua quantita in modo istantaneo. La capienza massima `max_slots` controlla il numero di voci distinte (`_items.size()`), consentendo di accumulare oggetti identici senza occupare nuovi slot. Quando la quantita scende a zero, `erase()` elimina la voce liberando lo slot.\n\nIn `RoomMap`, ogni stanza e rappresentata come un dizionario contenente descrizione e uscite (`exits`). I collegamenti tra stanze non richiedono istruzioni `if` hardcodate nel codice: basta registrare la coppia `direzione -> id_destinazione` nel dizionario `exits` della stanza sorgente. La funzione `move` interroga direttamente questo dizionario per verificare se l'uscita esiste e aggiornare `current_room`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "riordina",
+    "titolo": "Riordinare: velocizzare la ricerca nel catalogo",
+    "consegna": "Nel progetto `CatalogoOggetti`, apri `res://item_catalog.gd`. Lo script funziona, ma memorizza gli oggetti in un `Array` non tipizzato e in ogni funzione usa un ciclo `for` con un `if` interno per cercare l'oggetto per ID.\n\nRiscrivi `ItemCatalog` memorizzando gli oggetti in un `Dictionary` in cui la chiave è l'ID dell'oggetto (`String`) e il valore è un dizionario con le proprietà `name` (`String`) e `price` (`int`):\n- Mantieni invariati i nomi e i parametri di tutte le funzioni pubbliche (`add_item`, `has_item`, `get_price`, `get_name`, `remove_item`, `get_item_count`).\n- Elimina tutti i cicli `for`: ogni lettura, verifica o rimozione per ID deve avvenire direttamente tramite le funzioni del `Dictionary` (`has`, `erase`, accesso per chiave).\n- Il comportamento deve rimanere identico a prima: i controlli devono passare sia prima sia dopo la riscrittura.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "catalogo-oggetti",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Sostituisci la variabile `items: Array = []` con un dizionario privato `_items: Dictionary = {}`.",
+     "In `add_item(id, name, price)`, puoi assegnare direttamente `_items[id] = {\"name\": name, \"price\": price}`: se l'oggetto esisteva gia viene sovrascritto, se non c'era viene creato in un solo passaggio.",
+     "In `has_item`, `get_price`, `get_name` e `remove_item`, usa `_items.has(id)` e `_items.erase(id)` per gestire le operazioni istantaneamente senza alcun ciclo."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://item_catalog.gd",
+      "descrizione": "Il file res://item_catalog.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar cat_script: GDScript = load(\"res://item_catalog.gd\") as GDScript\n\tif not check(\"script\", cat_script != null, \"res://item_catalog.gd deve compilare senza errori\"):\n\t\treturn\n\tvar catalog = cat_script.new()\n\n\tcall_if_exists(catalog, \"add_item\", [\"sword\", \"Spada di ferro\", 50])\n\tcall_if_exists(catalog, \"add_item\", [\"shield\", \"Scudo di legno\", 30])\n\tcheck(\"count\", call_if_exists(catalog, \"get_item_count\", [], 0) == 2, \"Il catalogo deve contenere 2 oggetti\")\n\tcheck(\"has_sword\", call_if_exists(catalog, \"has_item\", [\"sword\"], false) == true, \"has_item('sword') deve restituire true\")\n\tcheck(\"has_potion\", call_if_exists(catalog, \"has_item\", [\"potion\"], true) == false, \"has_item('potion') deve restituire false\")\n\tcheck(\"price_sword\", call_if_exists(catalog, \"get_price\", [\"sword\"], 0) == 50, \"get_price('sword') deve restituire 50\")\n\tcheck(\"name_shield\", str(call_if_exists(catalog, \"get_name\", [\"shield\"], \"\")) == \"Scudo di legno\", \"get_name('shield') deve restituire 'Scudo di legno'\")\n\n\tcall_if_exists(catalog, \"add_item\", [\"sword\", \"Spada affilata\", 75])\n\tcheck(\"count_after_update\", call_if_exists(catalog, \"get_item_count\", [], 0) == 2, \"Aggiornare un oggetto esistente non deve aumentare il conteggio\")\n\tcheck(\"updated_price\", call_if_exists(catalog, \"get_price\", [\"sword\"], 0) == 75, \"Il prezzo aggiornato della spada deve essere 75\")\n\n\tvar rem_ok = call_if_exists(catalog, \"remove_item\", [\"shield\"], false)\n\tcheck(\"rem_ok\", rem_ok == true, \"remove_item su un oggetto esistente deve restituire true\")\n\tcheck(\"count_after_rem\", call_if_exists(catalog, \"get_item_count\", [], 0) == 1, \"Dopo la rimozione deve rimanere 1 oggetto\")\n\tvar rem_fail = call_if_exists(catalog, \"remove_item\", [\"nonexistent\"], true)\n\tcheck(\"rem_fail\", rem_fail == false, \"remove_item su un oggetto inesistente deve restituire false\")\n\n\tcheck(\"no_for_loops\", count_in_code(\"res://item_catalog.gd\", \"for\") == 0, \"ItemCatalog non deve usare alcun ciclo for: la ricerca deve avvenire direttamente tramite Dictionary\")\n\tcheck(\"short_functions\", longest_function_lines(\"res://item_catalog.gd\") <= 6, \"Le funzioni devono essere concise e dirette (massimo 6 righe di codice per funzione)\")",
+      "descrizione": "Il catalogo funziona come prima ma sfrutta il Dictionary senza cicli for lenti"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "item_catalog.gd",
+       "contenuto": "class_name ItemCatalog\nextends RefCounted\n\nvar items: Array = []\n\n\nfunc add_item(id: String, name: String, price: int) -> void:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\titem[\"name\"] = name\n\t\t\titem[\"price\"] = price\n\t\t\treturn\n\titems.append({\"id\": id, \"name\": name, \"price\": price})\n\n\nfunc has_item(id: String) -> bool:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\treturn true\n\treturn false\n\n\nfunc get_price(id: String) -> int:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\treturn item[\"price\"]\n\treturn 0\n\n\nfunc get_name(id: String) -> String:\n\tfor item in items:\n\t\tif item[\"id\"] == id:\n\t\t\treturn item[\"name\"]\n\treturn \"\"\n\n\nfunc remove_item(id: String) -> bool:\n\tfor i in range(items.size()):\n\t\tif items[i][\"id\"] == id:\n\t\t\titems.remove_at(i)\n\t\t\treturn true\n\treturn false\n\n\nfunc get_item_count() -> int:\n\treturn items.size()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "CatalogoOggetti",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "item_catalog.gd",
+       "contenuto": "class_name ItemCatalog\nextends RefCounted\n\nvar _items: Dictionary = {}\n\n\nfunc add_item(id: String, name: String, price: int) -> void:\n\t_items[id] = {\"name\": name, \"price\": price}\n\n\nfunc has_item(id: String) -> bool:\n\treturn _items.has(id)\n\n\nfunc get_price(id: String) -> int:\n\tif not _items.has(id):\n\t\treturn 0\n\treturn int(_items[id][\"price\"])\n\n\nfunc get_name(id: String) -> String:\n\tif not _items.has(id):\n\t\treturn \"\"\n\treturn str(_items[id][\"name\"])\n\n\nfunc remove_item(id: String) -> bool:\n\tif not _items.has(id):\n\t\treturn false\n\t_items.erase(id)\n\treturn true\n\n\nfunc get_item_count() -> int:\n\treturn _items.size()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "CatalogoOggetti",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Nel codice di partenza, per cercare, verificare o cancellare un oggetto era necessario scorrere l'intero array con un ciclo `for`. Con centinaia di oggetti, questo approccio rallenta il gioco inutilmente. Riorganizzando i dati in un `Dictionary` indicizzato per ID (`_items[id]`), l'accesso per chiave è istantaneo (tempo costante) e i cicli `for` scompaiono del tutto, rendendo il codice molto più corto, pulito e leggibile.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "riordina",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "riordina",
+    "titolo": "Riordinare: trasformare una mappa da if a dati",
+    "consegna": "Nel progetto `NavigazioneDungeon`, apri `res://dungeon_navigator.gd`. Lo script gestisce il movimento del giocatore tra le stanze di una fortezza, ma contiene decine di condizioni `if` ed `elif` ripetute in ogni funzione per controllare la stanza corrente e stabilire dove andare.\n\nRiscrivi `DungeonNavigator` eliminando le catene di `if`: i collegamenti e i nomi delle stanze devono essere descritti come dati all'interno di un dizionario o di una costante `ROOMS: Dictionary`:\n- Ogni stanza deve avere il suo nome e un dizionario `exits` che mappa la direzione (`\"north\"`, `\"south\"`, `\"east\"`, `\"west\"`) all'ID della stanza di arrivo.\n- Le stanze della fortezza sono cinque:\n  - `\"entrance\"`: nome `\"Ingresso della Fortezza\"`, uscite: `\"north\" -> \"hall\"`\n  - `\"hall\"`: nome `\"Grande Atrio\"`, uscite: `\"south\" -> \"entrance\"`, `\"east\" -> \"armory\"`, `\"west\" -> \"library\"`, `\"north\" -> \"treasury\"`\n  - `\"armory\"`: nome `\"Armeria Reale\"`, uscite: `\"west\" -> \"hall\"`\n  - `\"library\"`: nome `\"Antica Biblioteca\"`, uscite: `\"east\" -> \"hall\"`\n  - `\"treasury\"`: nome `\"Sala del Tesoro\"`, uscite: `\"south\" -> \"hall\"`\n- Mantieni invariate la variabile `current_room` (inizializzata a `\"entrance\"`) e le firme di tutte le funzioni pubbliche (`get_room_name`, `get_destination`, `can_move`, `move`, `get_available_directions`).\n- Se una stanza cercata non esiste in `ROOMS`, `get_room_name` deve restituire `\"Stanza Sconosciuta\"`.\n- Il comportamento complessivo deve rimanere identico: i controlli verificano il movimento prima e dopo la tua riscrittura.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "navigazione-dungeon",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Dichiara una costante `ROOMS: Dictionary` contenente le 5 stanze: per ciascuna crea un dizionario con la chiave `\"name\"` e la chiave `\"exits\"`.",
+     "In `get_destination(direction)`, leggi il sotto-dizionario `exits` della stanza corrente con `ROOMS.get(current_room, {}).get(\"exits\", {})` e restituisci l'uscita con `.get(direction, \"\")`: in questo modo l'intera funzione richiede pochissime righe senza alcun `if/elif`.",
+     "`can_move(direction)` può semplicemente restituire `get_destination(direction) != \"\"`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://dungeon_navigator.gd",
+      "descrizione": "Il file res://dungeon_navigator.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar nav_script: GDScript = load(\"res://dungeon_navigator.gd\") as GDScript\n\tif not check(\"script\", nav_script != null, \"res://dungeon_navigator.gd deve compilare senza errori\"):\n\t\treturn\n\tvar nav = nav_script.new()\n\n\tcheck(\"init_room\", str(get_prop(nav, \"current_room\", \"\")) == \"entrance\", \"La stanza iniziale deve essere 'entrance'\")\n\tcheck(\"room_name_entry\", str(call_if_exists(nav, \"get_room_name\", [], \"\")) == \"Ingresso della Fortezza\", \"Il nome della stanza iniziale deve essere 'Ingresso della Fortezza'\")\n\tcheck(\"can_north\", call_if_exists(nav, \"can_move\", [\"north\"], false) == true, \"Dall'ingresso can_move('north') deve essere true\")\n\tcheck(\"cannot_south\", call_if_exists(nav, \"can_move\", [\"south\"], true) == false, \"Dall'ingresso can_move('south') deve essere false\")\n\tcheck(\"dest_north\", str(call_if_exists(nav, \"get_destination\", [\"north\"], \"\")) == \"hall\", \"Dall'ingresso l'uscita 'north' deve portare a 'hall'\")\n\n\tvar dirs_entry = call_if_exists(nav, \"get_available_directions\", [], [])\n\tcheck(\"entry_dirs\", dirs_entry is Array and dirs_entry.has(\"north\"), \"get_available_directions() dall'ingresso deve contenere 'north'\")\n\n\tvar move_north = call_if_exists(nav, \"move\", [\"north\"], false)\n\tcheck(\"move_north\", move_north == true, \"move('north') dall'ingresso deve restituire true\")\n\tcheck(\"room_hall\", str(get_prop(nav, \"current_room\", \"\")) == \"hall\", \"La stanza corrente deve essere diventata 'hall'\")\n\tcheck(\"name_hall\", str(call_if_exists(nav, \"get_room_name\", [], \"\")) == \"Grande Atrio\", \"Il nome della stanza deve essere 'Grande Atrio'\")\n\n\tvar dirs_hall = call_if_exists(nav, \"get_available_directions\", [], [])\n\tcheck(\"hall_count\", dirs_hall is Array and dirs_hall.size() == 4, \"Dall'atrio devono esserci 4 uscite disponibili\")\n\n\tcall_if_exists(nav, \"move\", [\"east\"], false)\n\tcheck(\"room_armory\", str(get_prop(nav, \"current_room\", \"\")) == \"armory\", \"Spostandosi a 'east' si deve arrivare in 'armory'\")\n\tvar move_invalid = call_if_exists(nav, \"move\", [\"north\"], true)\n\tcheck(\"move_invalid\", move_invalid == false, \"Dall'armeria move('north') deve restituire false\")\n\tcheck(\"room_still_armory\", str(get_prop(nav, \"current_room\", \"\")) == \"armory\", \"Un movimento fallito non deve cambiare la stanza\")\n\n\tcall_if_exists(nav, \"move\", [\"west\"], false)\n\tcall_if_exists(nav, \"move\", [\"north\"], false)\n\tcheck(\"room_treasury\", str(get_prop(nav, \"current_room\", \"\")) == \"treasury\", \"Dall'atrio verso 'north' si deve arrivare a 'treasury'\")\n\n\tnav.current_room = \"unknown_room\"\n\tcheck(\"unknown_name\", str(call_if_exists(nav, \"get_room_name\", [], \"\")) == \"Stanza Sconosciuta\", \"Per una stanza non censita get_room_name deve restituire 'Stanza Sconosciuta'\")\n\n\tcheck(\"no_if_chains\", count_in_code(\"res://dungeon_navigator.gd\", \"if\") <= 3, \"Il codice non deve usare catene di if per gestire i collegamenti: usa un dizionario di uscite\")\n\tcheck(\"short_functions\", longest_function_lines(\"res://dungeon_navigator.gd\") <= 8, \"Le funzioni devono essere brevi (massimo 8 righe di codice per funzione)\")",
+      "descrizione": "La navigazione tra stanze funziona correttamente senza catene di if"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "dungeon_navigator.gd",
+       "contenuto": "class_name DungeonNavigator\nextends RefCounted\n\nvar current_room: String = \"entrance\"\n\n\nfunc get_room_name() -> String:\n\tif current_room == \"entrance\":\n\t\treturn \"Ingresso della Fortezza\"\n\telif current_room == \"hall\":\n\t\treturn \"Grande Atrio\"\n\telif current_room == \"armory\":\n\t\treturn \"Armeria Reale\"\n\telif current_room == \"library\":\n\t\treturn \"Antica Biblioteca\"\n\telif current_room == \"treasury\":\n\t\treturn \"Sala del Tesoro\"\n\treturn \"Stanza Sconosciuta\"\n\n\nfunc get_destination(direction: String) -> String:\n\tif current_room == \"entrance\":\n\t\tif direction == \"north\":\n\t\t\treturn \"hall\"\n\telif current_room == \"hall\":\n\t\tif direction == \"south\":\n\t\t\treturn \"entrance\"\n\t\telif direction == \"east\":\n\t\t\treturn \"armory\"\n\t\telif direction == \"west\":\n\t\t\treturn \"library\"\n\t\telif direction == \"north\":\n\t\t\treturn \"treasury\"\n\telif current_room == \"armory\":\n\t\tif direction == \"west\":\n\t\t\treturn \"hall\"\n\telif current_room == \"library\":\n\t\tif direction == \"east\":\n\t\t\treturn \"hall\"\n\telif current_room == \"treasury\":\n\t\tif direction == \"south\":\n\t\t\treturn \"hall\"\n\treturn \"\"\n\n\nfunc can_move(direction: String) -> bool:\n\tif current_room == \"entrance\":\n\t\tif direction == \"north\":\n\t\t\treturn true\n\telif current_room == \"hall\":\n\t\tif direction == \"south\" or direction == \"east\" or direction == \"west\" or direction == \"north\":\n\t\t\treturn true\n\telif current_room == \"armory\":\n\t\tif direction == \"west\":\n\t\t\treturn true\n\telif current_room == \"library\":\n\t\tif direction == \"east\":\n\t\t\treturn true\n\telif current_room == \"treasury\":\n\t\tif direction == \"south\":\n\t\t\treturn true\n\treturn false\n\n\nfunc move(direction: String) -> bool:\n\tvar dest: String = get_destination(direction)\n\tif dest != \"\":\n\t\tcurrent_room = dest\n\t\treturn true\n\treturn false\n\n\nfunc get_available_directions() -> Array[String]:\n\tif current_room == \"entrance\":\n\t\treturn [\"north\"]\n\telif current_room == \"hall\":\n\t\treturn [\"south\", \"east\", \"west\", \"north\"]\n\telif current_room == \"armory\":\n\t\treturn [\"west\"]\n\telif current_room == \"library\":\n\t\treturn [\"east\"]\n\telif current_room == \"treasury\":\n\t\treturn [\"south\"]\n\treturn []\n"
+      }
+     ],
+     "progetto": {
+      "nome": "NavigazioneDungeon",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "dungeon_navigator.gd",
+       "contenuto": "class_name DungeonNavigator\nextends RefCounted\n\nvar current_room: String = \"entrance\"\n\nconst ROOMS: Dictionary = {\n\t\"entrance\": {\n\t\t\"name\": \"Ingresso della Fortezza\",\n\t\t\"exits\": {\"north\": \"hall\"}\n\t},\n\t\"hall\": {\n\t\t\"name\": \"Grande Atrio\",\n\t\t\"exits\": {\"south\": \"entrance\", \"east\": \"armory\", \"west\": \"library\", \"north\": \"treasury\"}\n\t},\n\t\"armory\": {\n\t\t\"name\": \"Armeria Reale\",\n\t\t\"exits\": {\"west\": \"hall\"}\n\t},\n\t\"library\": {\n\t\t\"name\": \"Antica Biblioteca\",\n\t\t\"exits\": {\"east\": \"hall\"}\n\t},\n\t\"treasury\": {\n\t\t\"name\": \"Sala del Tesoro\",\n\t\t\"exits\": {\"south\": \"hall\"}\n\t}\n}\n\n\nfunc get_room_name() -> String:\n\tvar room_data: Dictionary = ROOMS.get(current_room, {})\n\treturn str(room_data.get(\"name\", \"Stanza Sconosciuta\"))\n\n\nfunc get_destination(direction: String) -> String:\n\tvar room_data: Dictionary = ROOMS.get(current_room, {})\n\tvar exits: Dictionary = room_data.get(\"exits\", {})\n\treturn str(exits.get(direction, \"\"))\n\n\nfunc can_move(direction: String) -> bool:\n\treturn get_destination(direction) != \"\"\n\n\nfunc move(direction: String) -> bool:\n\tvar dest: String = get_destination(direction)\n\tif dest == \"\":\n\t\treturn false\n\tcurrent_room = dest\n\treturn true\n\n\nfunc get_available_directions() -> Array[String]:\n\tvar room_data: Dictionary = ROOMS.get(current_room, {})\n\tvar exits: Dictionary = room_data.get(\"exits\", {})\n\tvar dirs: Array[String] = []\n\tfor d in exits:\n\t\tdirs.append(str(d))\n\treturn dirs\n"
+      }
+     ],
+     "progetto": {
+      "nome": "NavigazioneDungeon",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Codificare le uscite delle stanze all'interno di istruzioni `if/elif` mescola i dati del mondo con la logica del programma: ogni nuova stanza richiederebbe modifiche a tutte le funzioni. Spostando la topologia della mappa nella costante `ROOMS`, le connessioni diventano puri dati: `get_destination`, `can_move` e `get_available_directions` interrogano direttamente il dizionario `exits` della stanza corrente con una o due righe ciascuna, senza bisogno di alcuna catena di confronti.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "riordina",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -77,5 +287,10 @@
     "md": "- Un Array è ideale per liste ordinate con accesso per indice, ma è lento quando si cerca un valore specifico scorrendo gli elementi.\n- Un Dictionary offre ricerche istantanee tramite chiavi univoche, eliminando la necessità di cicli di ricerca.\n- Le classi personalizzate incapsulano collezioni interne (come dizionari o array) ed espongono funzioni sicure che impediscono dati incoerenti.\n- Per descrivere collegamenti tra entità si usano identificatori univoci in formato stringa, evitando catene di `if` e prevenendo riferimenti circolari in memoria.\n- Le Resource si scelgono quando i dati devono essere serializzati direttamente su file e modificati visivamente nell'Inspector."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
