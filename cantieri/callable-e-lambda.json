@@ -436,7 +436,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data := instantiate_script(\"res://quiz_data.gd\")\n\tif not check(\"quiz_data\", quiz_data != null, \"Il file quiz_data.gd deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar q_easy := Question.new(\"Facile?\", [\"Vero\", \"Falso\"], 0)\n\tvar q_diff1 := Question.new(\"Difficile 1?\", [\"A\", \"B\", \"C\", \"D\"], 1)\n\tvar q_diff2 := Question.new(\"Difficile 2?\", [\"X\", \"Y\", \"Z\"], 2)\n\tvar all_questions: Array[Question] = [q_easy, q_diff1, q_diff2]\n\n\tvar diff_result: Array = call_if_exists(quiz_data, \"filter_difficult_questions\", [all_questions], [])\n\tif not check(\"filter_diff_count\", diff_result.size() == 2, \"filter_difficult_questions deve restituire solo le 2 domande con più di 2 opzioni (ha restituito %d)\" % diff_result.size()):\n\t\treturn\n\n\tcheck(\"filter_diff_content\", diff_result.has(q_diff1) and diff_result.has(q_diff2), \"Le domande difficili restituite devono essere q_diff1 e q_diff2\")\n\n\tvar wrong_pool: Array[Question] = [q_diff1]\n\tvar wrong_result: Array = call_if_exists(quiz_data, \"filter_wrong_questions\", [all_questions, wrong_pool], [])\n\tif not check(\"filter_wrong_count\", wrong_result.size() == 1, \"filter_wrong_questions deve restituire solo 1 domanda (ha restituito %d)\" % wrong_result.size()):\n\t\treturn\n\n\tcheck(\"filter_wrong_content\", wrong_result.size() > 0 and wrong_result[0] == q_diff1, \"La domanda sbagliata restituita deve essere q_diff1\")\n\n\tvar session := QuizSession.new([q_easy, q_diff1])\n\tsession.submit_answer(1)\n\tvar recorded_wrong: Array = call_if_exists(session, \"get_wrong_questions\", [], [])\n\tcheck(\"session_wrong_count\", recorded_wrong.size() == 1 and recorded_wrong.has(q_easy), \"QuizSession deve registrare q_easy tra le domande sbagliate dopo una risposta errata\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data = await instantiate_script(\"res://quiz_data.gd\")\n\tif not check(\"quiz_data\", quiz_data != null, \"Il file quiz_data.gd deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar q_easy := Question.new(\"Facile?\", [\"Vero\", \"Falso\"], 0)\n\tvar q_diff1 := Question.new(\"Difficile 1?\", [\"A\", \"B\", \"C\", \"D\"], 1)\n\tvar q_diff2 := Question.new(\"Difficile 2?\", [\"X\", \"Y\", \"Z\"], 2)\n\tvar all_questions: Array[Question] = [q_easy, q_diff1, q_diff2]\n\n\tvar diff_result = call_if_exists(quiz_data, \"filter_difficult_questions\", [all_questions], [])\n\tif not check(\"filter_diff_count\", diff_result is Array and diff_result.size() == 2, \"filter_difficult_questions deve restituire solo le 2 domande con più di 2 opzioni\"):\n\t\treturn\n\n\tcheck(\"filter_diff_content\", diff_result.has(q_diff1) and diff_result.has(q_diff2), \"Le domande difficili restituite devono essere q_diff1 e q_diff2\")\n\n\tvar wrong_pool: Array[Question] = [q_diff1]\n\tvar wrong_result = call_if_exists(quiz_data, \"filter_wrong_questions\", [all_questions, wrong_pool], [])\n\tif not check(\"filter_wrong_count\", wrong_result is Array and wrong_result.size() == 1, \"filter_wrong_questions deve restituire solo 1 domanda\"):\n\t\treturn\n\n\tcheck(\"filter_wrong_content\", wrong_result.size() > 0 and wrong_result[0] == q_diff1, \"La domanda sbagliata restituita deve essere q_diff1\")\n\n\tvar session := QuizSession.new([q_easy, q_diff1])\n\tsession.submit_answer(1)\n\tvar recorded_wrong = call_if_exists(session, \"get_wrong_questions\", [], [])\n\tcheck(\"session_wrong_count\", recorded_wrong is Array and recorded_wrong.size() == 1 and recorded_wrong.has(q_easy), \"QuizSession deve registrare q_easy tra le domande sbagliate dopo una risposta errata\")",
       "descrizione": "I filtri per domande difficili ed errori funzionano correttamente"
      }
     ],
@@ -541,20 +541,25 @@
        }
       ]
      },
-     "spiegazione": "",
-     "cambiati": [],
+     "spiegazione": "Con il metodo `filter()` possiamo passare una funzione lambda come argomento. La funzione lambda esamina ogni elemento dell'array e restituisce `true` per conservarlo o `false` per escluderlo. Usando `assign()` su un nuovo array tipizzato `Array[Question]`, possiamo preservare la tipizzazione statica richiesta dal progetto.",
+     "cambiati": [
+      "quiz_session.gd",
+      "quiz_data.gd",
+      "quiz.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
    "correzioni": 2,
-   "semplificato": false,
+   "semplificato": true,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] I filtri per domande difficili ed errori funzionano correttamente: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var quiz_data := instantiate_script(\"res://quiz_data.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-3.7-flash"
    ]
   }
  },
