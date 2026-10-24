@@ -261,9 +261,10 @@
     "tipo": "test",
     "genere": "obiettivo",
     "titolo": "Annulla un errore con Git e aggiungi la classe QuizStats",
-    "consegna": "Sperimenta il ripristino dei file modificati per errore e aggiungi un nuovo modulo di calcolo delle statistiche al Quiz.\n\n1. Apri lo script `res://results.gd` e modifica temporaneamente la riga dentro `_ready()` che imposta il punteggio visualizzato, scrivendo un testo errato a tua scelta.\n2. Apri il terminale della cartella del progetto e digita `git status` per verificare che Git rileva la modifica non ancora salvata.\n3. Annulla la modifica errata usando il comando `git restore res://results.gd`, riportando il file al suo stato originale pulito.\n4. Crea un nuovo script `res://quiz_stats.gd` con nome classe `QuizStats` che estende `RefCounted`.\n5. Nella classe `QuizStats` aggiungi la seguente funzione statica per calcolare la percentuale di precisione:\n   `static func calculate_accuracy(correct_answers: int, total_questions: int) -> float:`\n   - Se `total_questions <= 0`, restituisci `0.0` per evitare divisioni per zero.\n   - Altrimenti, restituisci la percentuale di risposte corrette calcolata come `(float(correct_answers) / float(total_questions)) * 100.0`.\n6. Aggiungi il nuovo file all'area di staging con `git add res://quiz_stats.gd` e registra un commit con un messaggio chiaro (ad esempio: `\"Aggiunge classe QuizStats per il calcolo delle statistiche\"`).",
+    "consegna": "Sperimenta il ripristino dei file modificati per errore e aggiungi un nuovo modulo di calcolo delle statistiche al Quiz.\n\n1. Apri lo script `res://results.gd` e modifica temporaneamente la riga dentro `_ready()` che imposta il punteggio visualizzato, scrivendo un testo errato a tua scelta.\n2. Apri il terminale della cartella del progetto e digita `git status` per verificare che Git rileva la modifica non ancora salvata.\n3. Annulla la modifica errata usando il comando `git restore res://results.gd`, riportando il file al suo stato originale pulito.\n4. Crea un nuovo script `res://quiz_stats.gd` con nome classe `QuizStats` che estende `Resource`.\n5. Nella classe `QuizStats` aggiungi la seguente funzione per calcolare la percentuale di precisione:\n   `func calculate_accuracy(correct_answers: int, total_questions: int) -> float:`\n   - Se `total_questions <= 0`, restituisci `0.0` per evitare divisioni per zero.\n   - Altrimenti, restituisci la percentuale di risposte corrette calcolata come `(float(correct_answers) / float(total_questions)) * 100.0`.\n6. Aggiungi il nuovo file all'area di staging con `git add res://quiz_stats.gd` e registra un commit con un messaggio chiaro (ad esempio: `\"Aggiunge classe QuizStats per il calcolo delle statistiche\"`).",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [
      "Usa `git restore res://results.gd` nel terminale per annullare la modifica di prova prima di preparare e registrare il commit per `res://quiz_stats.gd`."
@@ -367,7 +368,7 @@
       },
       {
        "percorso": "quiz_stats.gd",
-       "contenuto": "class_name QuizStats\nextends RefCounted\n\n\n# Calcola la percentuale di risposte corrette evitando divisioni per zero\nstatic func calculate_accuracy(correct_answers: int, total_questions: int) -> float:\n\tif total_questions <= 0:\n\t\treturn 0.0\n\treturn (float(correct_answers) / float(total_questions)) * 100.0\n"
+       "contenuto": "class_name QuizStats\nextends Resource\n\n\n# Calcola la percentuale di risposte corrette evitando divisioni per zero\nfunc calculate_accuracy(correct_answers: int, total_questions: int) -> float:\n\tif total_questions <= 0:\n\t\treturn 0.0\n\treturn (float(correct_answers) / float(total_questions)) * 100.0\n"
       }
      ],
      "progetto": {
@@ -410,13 +411,12 @@
        }
       ]
      },
-     "spiegazione": "Con `git restore res://results.gd` le modifiche non ancora registrate in un commit vengono cancellate all'istante, ripristinando il file com'era nell'ultimo commit salvato. La nuova classe `QuizStats` estende `RefCounted` e fornisce un metodo statico utile per calcolare la percentuale di risposte corrette. Il file viene poi aggiunto con `git add` e registrato con `git commit` per mantenere la cronologia pulita ed esplicita.",
+     "spiegazione": "Con `git restore res://results.gd` le modifiche non ancora registrate in un commit vengono cancellate all'istante, ripristinando il file com'era nell'ultimo commit salvato. La nuova classe `QuizStats` estende `Resource` e fornisce un metodo utile per calcolare la percentuale di risposte corrette. Il file viene poi aggiunto con `git add` e registrato con `git commit` per mantenere la cronologia pulita ed esplicita.",
      "cambiati": [
       "quiz_stats.gd"
      ],
      "rimossi": []
     },
-    "cartella": "quiz",
     "id": "test"
    }
   }
@@ -537,6 +537,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
