@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-24T07:27:53.375Z",
+ "aggiornato": "2026-10-24T07:40:22.912Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "callable-e-lambda",
-  "numero": "4.5",
-  "titolo": "Funzioni come valori: Callable e lambda"
+  "slug": "scegliere-le-strutture-dati",
+  "numero": "4.6",
+  "titolo": "Scegliere come tenere i dati"
  },
- "messaggio": "Sta scrivendo la lezione 4.5 «Funzioni come valori: Callable e lambda».",
+ "messaggio": "Sta scrivendo la lezione 4.6 «Scegliere come tenere i dati».",
  "riprende": null
 }
