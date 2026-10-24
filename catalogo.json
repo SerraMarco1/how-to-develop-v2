@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-24T08:30:47.251Z",
+ "aggiornato": "2026-10-24T09:34:41.509Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -515,6 +515,15 @@
    "file": "lezioni/f04-programmare-meglio/collaudare-il-proprio-codice.json",
    "sha256": "528a2c2e4e34f5dccca4e03e939c6c4392e877084b1a781b7c29443e1c52403a",
    "byte": 171074
+  },
+  {
+   "slug": "git",
+   "numero": "4.8",
+   "titolo": "Git: la storia del progetto",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/git.json",
+   "sha256": "2fb347a307254b68c27261f86c23d86d4a7d656782aef828a1c0c9a53bfb2458",
+   "byte": 113154
   }
  ],
  "documentazione": {
