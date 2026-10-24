@@ -159,7 +159,12 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — .gitignore: i file .gitignore non possono far parte di una lezione",
+    "controllo di sicurezza — .gitattributes: i file .gitattributes non possono far parte di una lezione",
+    "controllo di sicurezza — .git/HEAD: i file .git/head non possono far parte di una lezione",
+    "controllo di sicurezza — verifica 4 riga 12: globalize_path non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
