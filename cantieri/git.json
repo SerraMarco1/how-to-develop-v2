@@ -525,5 +525,18 @@
   "es2",
   "test"
  ],
- "praticaRifatta": true
+ "praticaRifatta": true,
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "L'esercizio richiede di creare una classe che estende 'RefCounted' e di definire una funzione statica ('static func calculate_accuracy'). I concetti di 'RefCounted' e 'static func' non sono mai stati spiegati nelle lezioni precedenti (che coprono Resource, FileAccess/JSON e await) né sono stati introdotti nella teoria di questa lezione, incentrata su Git.",
+    "correzione": "Semplificare lo script richiesto facendolo estendere 'Resource' o 'Node' e usando una funzione normale al posto di 'static func', oppure limitare il test alle sole operazioni su Git senza introdurre sintassi GDScript mai viste prima.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
