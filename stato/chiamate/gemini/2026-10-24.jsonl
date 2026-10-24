@@ -34,3 +34,4 @@
 {"quando":1792832013450,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"collaudare-il-proprio-codice","ok":true,"contata":true,"durataMs":6021,"tokenInput":2913,"tokenOutput":772,"ragionamento":1304}
 {"quando":1792832051861,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"collaudare-il-proprio-codice","ok":true,"contata":true,"durataMs":2192,"tokenInput":7860,"tokenOutput":39,"ragionamento":594}
 {"quando":1792832058886,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"git","ok":true,"contata":true,"durataMs":188215,"tokenInput":18204,"tokenOutput":11966,"ragionamento":5712}
+{"quando":1792832248676,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"git","ok":true,"contata":true,"durataMs":45519,"tokenInput":18396,"tokenOutput":1559,"ragionamento":8732}
