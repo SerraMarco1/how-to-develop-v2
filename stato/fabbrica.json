@@ -1,5 +1,10 @@
 {
- "sovraccarico": {},
+ "sovraccarico": {
+  "gemini": {
+   "volte": 1,
+   "fino": 1792835087193
+  }
+ },
  "fermi": {
   "gemini/gemini-flash-latest": {
    "fino": 1792911660074,
@@ -10,7 +15,7 @@
    "errore": "HTTP 429: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash\nPlease retry i"
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1792834299466,
+   "fino": 1792835087193,
    "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-flash-lite-latest": {
@@ -40,5 +45,5 @@
  },
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": null
+ "prossimoTentativo": 1792835087196
 }
