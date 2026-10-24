@@ -642,7 +642,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar quiz_data := get_node(\"/root/QuizData\")\n\tquiz_data.questions = [\n\t\tQuestion.new(\"Domanda Alfa\", [\"1\", \"2\"], 0),\n\t\tQuestion.new(\"Domanda Beta\", [\"3\", \"4\"], 0)\n\t]\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz\", quiz != null, \"La scena quiz.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar margin := quiz.get_node_or_null(\"MarginContainer\") as MarginContainer\n\tvar btn0 := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/AnswersContainer/Answer0\") as Button\n\tvar label := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/QuestionLabel\") as Label\n\tif not check(\"nodes\", margin != null and btn0 != null and label != null, \"I nodi necessari devono essere presenti\"):\n\t\treturn\n\n\tawait click_button(btn0)\n\t# Durante il feedback iniziale (1.0s) l'opacità è ancora piena\n\tawait wait_seconds(0.5)\n\tcheck(\"alpha_before_fade\", margin.modulate.a > 0.9, \"Durante il secondo di feedback il contenitore deve rimanere visibile\")\n\n\t# Arrivati a 1.1s è iniziato il fade out\n\tawait wait_seconds(0.6)\n\t# A 1.25s il fade out (0.2s) è finito e inizia il fade in per la domanda successiva\n\tawait wait_seconds(0.3)\n\tcheck(\"q2_reached\", label.text == \"Domanda Beta\", \"La domanda successiva deve comparire\")\n\tcheck(\"alpha_faded_in\", margin.modulate.a > 0.8, \"Al termine del fade in il contenitore torna opaco\")\n\n\t# Collaudo cambio scena a metà sequenza per verificare assenza di crash\n\tawait click_button(btn0)\n\tawait wait_seconds(0.3)\n\tvar quit_btn := quiz.get_node_or_null(\"PauseMenu/CenterContainer/VBoxContainer/QuitButton\") as Button\n\tif quit_btn != null:\n\t\tcall_if_exists(quiz, \"_on_quit_button_pressed\")\n\t\tawait wait_seconds(1.5)\n\t\tcheck(\"no_errors\", errors_text() == \"\", \"Non deve comparire alcun errore tornando al menu durante la sequenza (Errori: %s)\" % errors_text())",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar quiz_data := get_node(\"/root/QuizData\")\n\tquiz_data.questions.clear()\n\tvar opts1: Array[String] = [\"1\", \"2\"]\n\tvar opts2: Array[String] = [\"3\", \"4\"]\n\tquiz_data.questions.append(Question.new(\"Domanda Alfa\", opts1, 0))\n\tquiz_data.questions.append(Question.new(\"Domanda Beta\", opts2, 0))\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz\", quiz != null, \"La scena quiz.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar margin := quiz.get_node_or_null(\"MarginContainer\") as MarginContainer\n\tvar btn0 := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/AnswersContainer/Answer0\") as Button\n\tvar label := quiz.get_node_or_null(\"MarginContainer/VBoxContainer/QuestionLabel\") as Label\n\tif not check(\"nodes\", margin != null and btn0 != null and label != null, \"I nodi necessari devono essere presenti\"):\n\t\treturn\n\n\tawait click_button(btn0)\n\t# Durante il feedback iniziale (1.0s) l'opacità è ancora piena\n\tawait wait_seconds(0.5)\n\tcheck(\"alpha_before_fade\", margin.modulate.a > 0.9, \"Durante il secondo di feedback il contenitore deve rimanere visibile\")\n\n\t# Arrivati a 1.1s è iniziato il fade out\n\tawait wait_seconds(0.6)\n\t# A 1.25s il fade out (0.2s) è finito e inizia il fade in per la domanda successiva\n\tawait wait_seconds(0.3)\n\tcheck(\"q2_reached\", label.text == \"Domanda Beta\", \"La domanda successiva deve comparire\")\n\tcheck(\"alpha_faded_in\", margin.modulate.a > 0.8, \"Al termine del fade in il contenitore torna opaco\")\n\n\t# Collaudo cambio scena a metà sequenza per verificare assenza di crash\n\tawait click_button(btn0)\n\tawait wait_seconds(0.3)\n\tvar quit_btn := quiz.get_node_or_null(\"PauseMenu/CenterContainer/VBoxContainer/QuitButton\") as Button\n\tif quit_btn != null:\n\t\tcall_if_exists(quiz, \"_on_quit_button_pressed\")\n\t\tawait wait_seconds(1.5)\n\t\tcheck(\"no_errors\", errors_text() == \"\", \"Non deve comparire alcun errore tornando al menu durante la sequenza (Errori: %s)\" % errors_text())",
       "descrizione": "La transizione sfuma il contenitore e un'uscita anticipata al menu non produce errori"
      }
     ],
@@ -748,19 +748,22 @@
       ]
      },
      "spiegazione": "Le funzioni `_fade_out` e `_fade_in` creano un'animazione `Tween` e attendono il segnale `finished`. All'interno di `_show_feedback_and_advance()`, concateniamo con `await` l'attesa del feedback, la dissolvenza in uscita, l'avanzamento della sessione con aggiornamento dei testi e infine la dissolvenza in entrata. Dopo ogni `await`, la guardia `if not is_inside_tree(): return` interrompe la coroutine qualora la scena venga abbandonata durante la transizione, impedendo errori o riferimenti a nodi rimossi.",
-     "cambiati": [],
+     "cambiati": [
+      "quiz.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Invalid assignment of property or key 'questions' with value of type 'Array' on a base object of type 'Node (quiz_data.gd)'. (res://htd/verifica_1.gd:5 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Invalid assignment of property or key 'questions' with value of type 'Array' on a base object of type 'Node (quiz_data.gd)'.\n          at: _run_tests (res://htd/verifica_1.gd:5)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `quiz_data.questions = [`"
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   }
  },
