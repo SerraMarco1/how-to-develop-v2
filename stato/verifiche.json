@@ -284,5 +284,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "collaudare-il-proprio-codice": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
