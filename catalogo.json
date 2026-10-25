@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-25T10:29:17.731Z",
+ "aggiornato": "2026-10-25T10:37:38.590Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -551,6 +551,15 @@
    "file": "lezioni/f04-programmare-meglio/progetto-avventura-2.json",
    "sha256": "98429f1b29845e601cfe370bd970a015c9780893e9c3df93b7b1b366b2ea0ea0",
    "byte": 49137
+  },
+  {
+   "slug": "progetto-avventura-3",
+   "numero": "4.12",
+   "titolo": "Progetto «Avventura testuale» – tappa 3: salvare",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/progetto-avventura-3.json",
+   "sha256": "d83eae8656467500f5c4cdb82a938d6ff6848b6de83d76cbc71b577a01c6da9b",
+   "byte": 59361
   }
  ],
  "documentazione": {
