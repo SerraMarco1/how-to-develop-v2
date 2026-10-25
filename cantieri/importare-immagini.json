@@ -457,7 +457,7 @@
    }
   },
   "test": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -538,7 +538,92 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "test",
+    "genere": "ripara",
+    "titolo": "Riparare il rendering della stazione spaziale",
+    "consegna": "Hai ricevuto il progetto di una simulazione spaziale ad alta risoluzione chiamato `StazioneSpaziale`.\n\nQuando esegui la scena principale (`res://space_station.tscn`), noti due difetti grafici:\n1. Lo sfondo stellare (`Background`, che usa `res://assets/sprites/background.png`) e l'astronave ad alta risoluzione (`Ship`, che usa `res://icon.svg`) appaiono sgranati, frastagliati e seghettati sui bordi anziché morbidi e sfumati.\n2. Al contrario, una capsula retrò in pixel art (`Capsule`, che usa la moneta a 16x16 pixel `res://assets/sprites/coin.png` ingrandita) appare sfuocata e impastata, perdendo la nitidezza dei suoi pixel originali.\n\nCorreggi il progetto in modo che:\n- Il rendering generale dell'intero progetto sia configurato per grafica morbida (Linear).\n- La capsula retrò `Capsule` utilizzi un filtro `Nearest` dedicato per preservare pixel nitidi e spigoli netti.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "stazione-spaziale",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Configura prima il filtro predefinito di tutto il progetto in base al tipo di grafica prevalente, poi gestisci l'eccezione sul singolo nodo della capsula nell'Inspector."
+    ],
+    "verifiche": [
+     {
+      "tipo": "impostazione",
+      "sezione": "rendering",
+      "chiave": "textures/canvas_textures/default_texture_filter",
+      "contiene": "1",
+      "descrizione": "Il filtro predefinito nelle impostazioni del progetto è impostato su Linear"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar default_filter = ProjectSettings.get_setting(\"rendering/textures/canvas_textures/default_texture_filter\")\n\tif not check(\"setting\", default_filter == 1, \"Il filtro predefinito del progetto deve essere Linear (1)\"):\n\t\treturn\n\tvar scene := await instantiate_main_scene()\n\tif not check(\"scene\", scene != null, \"La scena principale space_station.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar bg := find_by_name(scene, \"Background\") as Sprite2D\n\tif not check(\"bg\", bg != null, \"Nella scena deve esserci il nodo Background\"):\n\t\treturn\n\tcheck(\"bg_filter\", bg.texture_filter == CanvasItem.TEXTURE_FILTER_PARENT_NODE or bg.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, \"Lo sfondo deve avere resa morbida (Inherit o Linear)\")\n\tvar ship := find_by_name(scene, \"Ship\") as Sprite2D\n\tif not check(\"ship\", ship != null, \"Nella scena deve esserci il nodo Ship\"):\n\t\treturn\n\tcheck(\"ship_filter\", ship.texture_filter == CanvasItem.TEXTURE_FILTER_PARENT_NODE or ship.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, \"L'astronave deve avere resa morbida (Inherit o Linear)\")\n\tvar capsule := find_by_name(scene, \"Capsule\") as Sprite2D\n\tif not check(\"capsule\", capsule != null, \"Nella scena deve esserci il nodo Capsule\"):\n\t\treturn\n\tcheck(\"capsule_filter\", capsule.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, \"La capsula retrò deve avere il filtro impostato esplicitamente su Nearest (1)\")\n",
+      "descrizione": "Lo sfondo e l'astronave mantengono una resa morbida mentre la capsula retrò usa Nearest"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "StazioneSpaziale",
+      "scenaPrincipale": "res://space_station.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": [
+       {
+        "sezione": "rendering",
+        "chiave": "textures/canvas_textures/default_texture_filter",
+        "valore": "0"
+       }
+      ]
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"StazioneSpaziale\"\nrun/main_scene=\"res://space_station.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[rendering]\n\ntextures/canvas_textures/default_texture_filter=0\n"
+      },
+      {
+       "percorso": "space_station.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/background.png\" id=\"1_bg\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_ship\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/coin.png\" id=\"3_capsule\"]\n\n[node name=\"SpaceStation\" type=\"Node2D\"]\n\n[node name=\"Background\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(400, 300)\nscale = Vector2(2.5, 2.5)\ntexture = ExtResource(\"1_bg\")\n\n[node name=\"Ship\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(400, 250)\ntexture = ExtResource(\"2_ship\")\n\n[node name=\"Capsule\" type=\"Sprite2D\" parent=\".\"]\ntexture_filter = 2\nposition = Vector2(700, 500)\nscale = Vector2(3, 3)\ntexture = ExtResource(\"3_capsule\")\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"StazioneSpaziale\"\nrun/main_scene=\"res://space_station.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[rendering]\n\ntextures/canvas_textures/default_texture_filter=1\n"
+      },
+      {
+       "percorso": "space_station.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/background.png\" id=\"1_bg\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_ship\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/coin.png\" id=\"3_capsule\"]\n\n[node name=\"SpaceStation\" type=\"Node2D\"]\n\n[node name=\"Background\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(400, 300)\nscale = Vector2(2.5, 2.5)\ntexture = ExtResource(\"1_bg\")\n\n[node name=\"Ship\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(400, 250)\ntexture = ExtResource(\"2_ship\")\n\n[node name=\"Capsule\" type=\"Sprite2D\" parent=\".\"]\ntexture_filter = 1\nposition = Vector2(700, 500)\nscale = Vector2(3, 3)\ntexture = ExtResource(\"3_capsule\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "StazioneSpaziale",
+      "scenaPrincipale": "res://space_station.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": [
+       {
+        "sezione": "rendering",
+        "chiave": "textures/canvas_textures/default_texture_filter",
+        "valore": "1"
+       }
+      ]
+     },
+     "spiegazione": "Il progetto è basato su una grafica morbida ad alta risoluzione, quindi l'impostazione globale `rendering/textures/canvas_textures/default_texture_filter` deve essere `Linear` (valore `1`), consentendo allo sfondo e alla nave di apparire senza scalettature. L'elemento retrò `Capsule` rappresenta un'eccezione: selezionando il nodo nell'Inspector e impostando `Texture → Filter` su `Nearest` (valore `1`), i pixel dello sprite a 16x16 rimangono perfettamente nitidi e privi di sfuocatura.",
+     "cambiati": [
+      "space_station.tscn"
+     ],
+     "rimossi": []
+    },
+    "id": "test"
+   }
   }
  },
  "avvisi": [],
