@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-25T08:34:23.108Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-25T08:34:38.980Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "trovare-un-errore-con-metodo",
   "numero": "4.9",
   "titolo": "Trovare un errore con metodo"
  },
- "messaggio": "Sta scrivendo la lezione 4.9 «Trovare un errore con metodo».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.9 riprende da sola appena rispondono.",
+ "riprende": "2026-10-25T09:34:38.980Z"
 }

@@ -1,0 +1,150 @@
+{
+ "n": 38,
+ "quando": "2026-10-25T08:34:29.381Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (ripara): 1 problema",
+ "spiegazione": "«Correggi i bug del Quiz: punteggio e salvataggio», scritto da gemini/gemini-3.7-flash. 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] save_topic_records() salva i record su file e load_topic_records() li rilegge correttamente: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_2.gd:7)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_2.gd:7)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 7: `quiz_data = instantiate_script(\"res://quiz_data.gd\")`\nSuggerimenti:\n  - Le …\nReazione: le correzioni previste sono finite.",
+ "richieste": 0,
+ "durataMs": 6210,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] save_topic_records() salva i record su file e load_topic_records() li rilegge correttamente: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_2.gd:7)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_2.gd:7)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 7: `quiz_data = instantiate_script(\"res://quiz_data.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Correggi i bug del Quiz: punteggio e salvataggio",
+   "consegna": "Nel progetto `Quiz` sono presenti altri due bug di logica che alterano l'esperienza di gioco:\n\n1. **Calcolo del punteggio errato**: Rispondere in modo sbagliato incrementa il punteggio del giocatore anziché lasciarlo invariato, mentre le risposte corrette non aggiungono punti.\n2. **Salvataggio non scritto**: La funzione `save_topic_records()` in `quiz_data.gd` apre il file `user://records.json`, ma non scrive i dati prima di terminare. Di conseguenza, i record non vengono mai memorizzati su disco.\n\nUtilizza i punti di interruzione e la scheda Evaluator nel Debugger per identificare le righe difettose e ripara i file `quiz_session.gd` e `quiz_data.gd`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "quiz-ripara-salvataggio",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Metti un punto di interruzione in `submit_answer()` dentro `quiz_session.gd` e controlla quale ramo del blocco `if/else` modifica la variabile `score`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "progetto_godot",
+     "descrizione": "Il progetto contiene la struttura dei file del Quiz"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar q1 := Question.new(\"Q1\", [\"A\", \"B\"], 0)\n\tvar session_correct := QuizSession.new([q1])\n\tsession_correct.submit_answer(0)\n\tcheck(\"correct_score\", session_correct.score == 1, \"Una risposta corretta deve impostare lo score a 1 (trovato score = %d)\" % session_correct.score)\n\tvar q2 := Question.new(\"Q2\", [\"A\", \"B\"], 0)\n\tvar session_wrong := QuizSession.new([q2])\n\tsession_wrong.submit_answer(1)\n\tcheck(\"wrong_score\", session_wrong.score == 0, \"Una risposta errata deve lasciare lo score a 0 (trovato score = %d)\" % session_wrong.score)\n",
+     "descrizione": "submit_answer() incrementa lo score solo quando la risposta è corretta"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data = get_node_or_null(\"/root/QuizData\")\n\tif quiz_data == null:\n\t\tquiz_data = instantiate_script(\"res://quiz_data.gd\")\n\tif not check(\"quiz_data\", quiz_data != null, \"Lo script res://quiz_data.gd deve poter essere istanziato\"):\n\t\treturn\n\tquiz_data.topic_records = {\"Videogiochi\": 85, \"Cinema\": 40}\n\tquiz_data.save_topic_records()\n\tquiz_data.topic_records = {}\n\tvar loaded = quiz_data.load_topic_records()\n\tcheck(\"file_loaded\", bool(loaded), \"load_topic_records() deve restituire true dopo il salvataggio\")\n\tvar rec = quiz_data.get_topic_record(\"Videogiochi\")\n\tcheck(\"data_saved\", int(rec) == 85, \"Il record salvato per Videogiochi deve essere 85 (trovato %s)\" % str(rec))\n",
+     "descrizione": "save_topic_records() salva i record su file e load_topic_records() li rilegge correttamente"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "Quiz",
+     "scenaPrincipale": "res://menu.tscn",
+     "azioni": [
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "QuizData",
+       "percorso": "res://quiz_data.gd"
+      }
+     ],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Quiz\"\nrun/main_scene=\"res://menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nQuizData=\"*res://quiz_data.gd\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "question.gd",
+      "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n"
+     },
+     {
+      "percorso": "quiz_session.gd",
+      "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar wrong_questions: Array[Question] = []\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\twrong_questions = []\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif not correct:\n\t\tscore += 1\n\telse:\n\t\twrong_questions.append(current)\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n\n\nfunc get_wrong_questions() -> Array[Question]:\n\treturn wrong_questions\n"
+     },
+     {
+      "percorso": "quiz_data.gd",
+      "contenuto": "extends Node\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\nvar questions: Array[Question] = []\nvar last_wrong_questions: Array[Question] = []\n\n\nfunc _ready() -> void:\n\tload_topic_records()\n\tif questions.is_empty():\n\t\tvar q_opts1: Array[String] = [\"A\", \"B\"]\n\t\tvar q_opts2: Array[String] = [\"C\", \"D\"]\n\t\tquestions = [\n\t\t\tQuestion.new(\"Domanda 1\", q_opts1, 0),\n\t\t\tQuestion.new(\"Domanda 2\", q_opts2, 1)\n\t\t]\n\n\nfunc save_high_score() -> void:\n\tpass\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tpass\n\n\nfunc load_topic_records() -> bool:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\t\treturn true\n\n\ttopic_records = {}\n\treturn false\n\n\nfunc get_topic_record(topic_name: String) -> int:\n\tif topic_records.has(topic_name):\n\t\treturn int(topic_records[topic_name])\n\treturn 0\n\n\nfunc get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:\n\tvar target: Dictionary = source if not source.is_empty() else topic_records\n\tvar records_list: Array[Dictionary] = []\n\tfor topic in target:\n\t\trecords_list.append({\n\t\t\t\"topic\": str(topic),\n\t\t\t\"score\": int(target[topic])\n\t\t})\n\trecords_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:\n\t\treturn a[\"score\"] > b[\"score\"]\n\t)\n\treturn records_list\n"
+     },
+     {
+      "percorso": "menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n"
+     },
+     {
+      "percorso": "menu.gd",
+      "contenuto": "extends Control\n\nfunc _ready() -> void:\n\tQuizData.load_topic_records()\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Quiz\"\nrun/main_scene=\"res://menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nQuizData=\"*res://quiz_data.gd\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "question.gd",
+      "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n"
+     },
+     {
+      "percorso": "quiz_session.gd",
+      "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar wrong_questions: Array[Question] = []\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\twrong_questions = []\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif correct:\n\t\tscore += 1\n\telse:\n\t\twrong_questions.append(current)\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n\n\nfunc get_wrong_questions() -> Array[Question]:\n\treturn wrong_questions\n"
+     },
+     {
+      "percorso": "quiz_data.gd",
+      "contenuto": "extends Node\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\nvar questions: Array[Question] = []\nvar last_wrong_questions: Array[Question] = []\n\n\nfunc _ready() -> void:\n\tload_topic_records()\n\tif questions.is_empty():\n\t\tvar q_opts1: Array[String] = [\"A\", \"B\"]\n\t\tvar q_opts2: Array[String] = [\"C\", \"D\"]\n\t\tquestions = [\n\t\t\tQuestion.new(\"Domanda 1\", q_opts1, 0),\n\t\t\tQuestion.new(\"Domanda 2\", q_opts2, 1)\n\t\t]\n\n\nfunc save_high_score() -> void:\n\tpass\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_topic_records() -> bool:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\t\treturn true\n\n\ttopic_records = {}\n\treturn false\n\n\nfunc get_topic_record(topic_name: String) -> int:\n\tif topic_records.has(topic_name):\n\t\treturn int(topic_records[topic_name])\n\treturn 0\n\n\nfunc get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:\n\tvar target: Dictionary = source if not source.is_empty() else topic_records\n\tvar records_list: Array[Dictionary] = []\n\tfor topic in target:\n\t\trecords_list.append({\n\t\t\t\"topic\": str(topic),\n\t\t\t\"score\": int(target[topic])\n\t\t})\n\trecords_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:\n\t\treturn a[\"score\"] > b[\"score\"]\n\t)\n\treturn records_list\n"
+     },
+     {
+      "percorso": "menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n"
+     },
+     {
+      "percorso": "menu.gd",
+      "contenuto": "extends Control\n\nfunc _ready() -> void:\n\tQuizData.load_topic_records()\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Quiz",
+     "scenaPrincipale": "res://menu.tscn",
+     "azioni": [
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "QuizData",
+       "percorso": "res://quiz_data.gd"
+      }
+     ],
+     "impostazioni": []
+    },
+    "spiegazione": "1. In `quiz_session.gd`, la condizione `if not correct:` incrementava lo score per le risposte errate anziché per quelle giuste. Correggendola in `if correct:`, il punteggio si incrementa solo quando la risposta è corretta.\n2. In `quiz_data.gd`, la funzione `save_topic_records()` creava il file con `FileAccess.open()` ma non vi scriveva nulla prima di uscire. Aggiungendo `file.store_string(json_string)`, la stringa JSON dei record viene effettivamente salvata su disco e resa disponibile per le successive letture.",
+    "cambiati": [
+     "quiz_session.gd",
+     "quiz_data.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
