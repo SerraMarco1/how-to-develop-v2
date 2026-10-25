@@ -163,7 +163,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tQuizData.topic_records = {\"Videogiochi\": 85, \"Cinema\": 40}\n\tQuizData.save_topic_records()\n\tQuizData.topic_records = {}\n\tvar loaded: bool = QuizData.load_topic_records()\n\tcheck(\"file_loaded\", loaded, \"load_topic_records() deve restituire true dopo il salvataggio\")\n\tvar rec: int = QuizData.get_topic_record(\"Videogiochi\")\n\tcheck(\"data_saved\", rec == 85, \"Il record salvato per Videogiochi deve essere 85 (trovato %d)\" % rec)",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar quiz_data = get_node_or_null(\"/root/QuizData\")\n\tif quiz_data == null:\n\t\tquiz_data = instantiate_script(\"res://quiz_data.gd\")\n\tif not check(\"quiz_data\", quiz_data != null, \"Lo script res://quiz_data.gd deve poter essere istanziato\"):\n\t\treturn\n\tquiz_data.topic_records = {\"Videogiochi\": 85, \"Cinema\": 40}\n\tquiz_data.save_topic_records()\n\tquiz_data.topic_records = {}\n\tvar loaded = quiz_data.load_topic_records()\n\tcheck(\"file_loaded\", bool(loaded), \"load_topic_records() deve restituire true dopo il salvataggio\")\n\tvar rec = quiz_data.get_topic_record(\"Videogiochi\")\n\tcheck(\"data_saved\", int(rec) == 85, \"Il record salvato per Videogiochi deve essere 85 (trovato %s)\" % str(rec))",
       "descrizione": "save_topic_records() salva i record su file e load_topic_records() li rilegge correttamente"
      }
     ],
@@ -259,19 +259,23 @@
       "impostazioni": []
      },
      "spiegazione": "1. In `quiz_session.gd`, la condizione `if not correct:` incrementava lo score per le risposte errate anziché per quelle giuste. Correggendola in `if correct:`, il punteggio si incrementa solo quando la risposta è corretta.\n2. In `quiz_data.gd`, la funzione `save_topic_records()` creava il file con `FileAccess.open()` ma non vi scriveva nulla prima di uscire. Aggiungendo `file.store_string(json_string)`, la stringa JSON dei record viene effettivamente salvata su disco e resa disponibile per le successive letture.",
-     "cambiati": [],
+     "cambiati": [
+      "quiz_session.gd",
+      "quiz_data.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] save_topic_records() salva i record su file e load_topic_records() li rilegge correttamente: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_2.gd:5)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_2.gd:5)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `QuizData.topic_records = {\"Videogiochi\": 85, \"Cinema\": 40}`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   }
  },
