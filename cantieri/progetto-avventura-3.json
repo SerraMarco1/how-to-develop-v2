@@ -71,7 +71,9 @@
    "genere": "da-zero",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — .gitignore: i file .gitignore non possono far parte di una lezione"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
