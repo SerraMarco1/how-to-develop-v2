@@ -29,3 +29,4 @@
 {"quando":1792924159086,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-avventura-3","ok":true,"contata":true,"durataMs":429647,"tokenInput":14841,"tokenOutput":7127,"ragionamento":29406}
 {"quando":1792924590252,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-avventura-3","ok":true,"contata":true,"durataMs":24745,"tokenInput":17300,"tokenOutput":9644,"ragionamento":2854}
 {"quando":1792924623802,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-avventura-3","ok":true,"contata":true,"durataMs":23467,"tokenInput":4667,"tokenOutput":12,"ragionamento":1810}
+{"quando":1792924648609,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-avventura-3","ok":true,"contata":true,"durataMs":6556,"tokenInput":2744,"tokenOutput":805,"ragionamento":1613}
