@@ -1,1 +1,2 @@
 {"quando":1792911667306,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"trovare-un-errore-con-metodo","ok":true,"contata":true,"durataMs":62882,"tokenInput":12065,"tokenOutput":4623,"ragionamento":3054}
+{"quando":1792911736370,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"trovare-un-errore-con-metodo","ok":true,"contata":true,"durataMs":174529,"tokenInput":12598,"tokenOutput":4730,"ragionamento":8602}
