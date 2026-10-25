@@ -251,7 +251,9 @@
    "genere": "ripara",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "`soluzione.progetto.scenaPrincipale` è \"res://menu.tscn\", ma quel file non è in `soluzione.file`"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
