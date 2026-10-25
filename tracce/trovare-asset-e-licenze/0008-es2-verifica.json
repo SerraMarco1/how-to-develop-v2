@@ -1,0 +1,86 @@
+{
+ "n": 8,
+ "quando": "2026-10-25T10:39:59.083Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (ripara): approvato",
+ "spiegazione": "«Rimuovere asset non commerciali e completare le licenze». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo una correzione.\nFile aggiunti o cambiati: CREDITS.txt",
+ "richieste": 0,
+ "durataMs": 6590,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Rimuovere asset non commerciali e completare le licenze",
+   "consegna": "Nel progetto `CommercialGame`, stai bonificando il registro degli asset prima della pubblicazione commerciale del gioco.\n\nNel file `CREDITS.txt` sono presenti alcune voci non conformi o incomplete:\n1. La voce relativa a `res://assets/audio/enemy_voice.wav` ha licenza `CC BY-NC 4.0` (Non Commerciale), non utilizzabile in un gioco destinato alla vendita.\n2. La voce relativa a `res://assets/sprites/unlicensed_hero.png` non possiede alcuna licenza né indicazione dell'autore.\n3. La voce dell'asset `res://assets/sprites/coin.png` (licenza `CC BY 4.0`) non riporta l'obbligo di attribuzione.\n\nSvolgi le seguenti operazioni in `CREDITS.txt`:\n- Rimuovi completamente le sezioni relative a `res://assets/audio/enemy_voice.wav` e `res://assets/sprites/unlicensed_hero.png`.\n- Aggiorna la voce dell'asset `res://assets/sprites/coin.png` aggiungendo la riga `Obbligo: Attribuzione richiesta`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "commercial-asset-cleanup",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Controlla di aver eliminato interamente le righe descrittive dei due asset non commerciali o non licenziati da CREDITS.txt.",
+    "Verifica che per coin.png sia esattamente presente la riga Obbligo: Attribuzione richiesta."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://CREDITS.txt",
+     "descrizione": "Il file CREDITS.txt esiste nella radice del progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tif not FileAccess.file_exists(\"res://CREDITS.txt\"):\n\t\tcheck(\"credits\", false, \"Il file res://CREDITS.txt deve esistere\")\n\t\treturn\n\n\tvar f := FileAccess.open(\"res://CREDITS.txt\", FileAccess.READ)\n\tif f == null:\n\t\tcheck(\"open\", false, \"Impossibile aprire res://CREDITS.txt\")\n\t\treturn\n\tvar text := f.get_as_text()\n\tf.close()\n\n\tcheck(\"no_hero_log\", not text.contains(\"unlicensed_hero.png\"), \"La voce unlicensed_hero.png deve essere rimossa da CREDITS.txt\")\n\tcheck(\"no_voice_log\", not text.contains(\"enemy_voice.wav\"), \"La voce enemy_voice.wav deve essere rimossa da CREDITS.txt\")\n\tcheck(\"coin_log\", text.contains(\"res://assets/sprites/coin.png\"), \"La voce res://assets/sprites/coin.png deve rimanere in CREDITS.txt\")\n\tcheck(\"attribution_obligation\", text.contains(\"Obbligo: Attribuzione richiesta\"), \"In CREDITS.txt per coin.png deve comparire 'Obbligo: Attribuzione richiesta'\")\n",
+     "descrizione": "Il file CREDITS.txt è stato aggiornato rimuovendo le voci non valide e aggiungendo l'obbligo di attribuzione per la moneta"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "CommercialGame",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CommercialGame\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "CREDITS.txt",
+      "contenuto": "# REGISTRO ASSET COMMERCIALI\n\nFile: res://assets/sprites/background.png\nAutore: Kenney\nFonte: https://kenney.nl\nLicenza: CC0 1.0\nObbligo: Nessuno\n\nFile: res://assets/sprites/unlicensed_hero.png\nAutore: Sconosciuto\nFonte: Sconosciuta\nLicenza: Nessuna\nObbligo: Non specificato\n\nFile: res://assets/sprites/coin.png\nAutore: PixelArtStudio\nFonte: https://open-game-art.org\nLicenza: CC BY 4.0\n\nFile: res://assets/audio/enemy_voice.wav\nAutore: VoiceActor123\nFonte: https://freesound.org\nLicenza: CC BY-NC 4.0\nObbligo: Vietato uso commerciale\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CommercialGame\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "CREDITS.txt",
+      "contenuto": "# REGISTRO ASSET COMMERCIALI\n\nFile: res://assets/sprites/background.png\nAutore: Kenney\nFonte: https://kenney.nl\nLicenza: CC0 1.0\nObbligo: Nessuno\n\nFile: res://assets/sprites/coin.png\nAutore: PixelArtStudio\nFonte: https://open-game-art.org\nLicenza: CC BY 4.0\nObbligo: Attribuzione richiesta\n"
+     }
+    ],
+    "progetto": {
+     "nome": "CommercialGame",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Le licenze recanti la clausola Non Commerciale (NC) o i file privi di licenza esplicita non possono essere usati in giochi destinati alla vendita. Vanno quindi rimosse le relative sezioni dal registro degli asset. Inoltre, per i file con licenza CC BY, occorre esplicitare l'obbligo di attribuzione nei crediti.",
+    "cambiati": [
+     "CREDITS.txt"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
