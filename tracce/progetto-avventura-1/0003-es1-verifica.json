@@ -1,0 +1,68 @@
+{
+ "n": 3,
+ "quando": "2026-10-25T09:46:23.721Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (dati): approvato",
+ "spiegazione": "«Scrivi il mondo dell'avventura in un file JSON». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: adventure.json",
+ "richieste": 0,
+ "durataMs": 8919,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "dati",
+   "titolo": "Scrivi il mondo dell'avventura in un file JSON",
+   "consegna": "Inizia la costruzione del gioco creando la mappa della tua avventura testuale.\n\nCrea nella radice del progetto il file `res://adventure.json`. Il file deve contenere un unico oggetto JSON (un dizionario) con questa struttura:\n\n- `\"title\"`: testo con il titolo dell'avventura.\n- `\"start_room\"`: testo con l'identificatore univoco (ID) della stanza in cui inizia il giocatore (per esempio `\"entrance\"`).\n- `\"rooms\"`: un dizionario in cui ogni chiave è l'ID di una stanza (es. `\"entrance\"`, `\"hall\"`, `\"library\"`), e il valore è un dizionario con i dettagli della stanza.\n\nOgni stanza dentro `\"rooms\"` deve avere obbligatoriamente queste quattro chiavi:\n- `\"name\"`: testo non vuoto con il nome leggibile della stanza (es. `\"Atrio d'Ingresso\"`).\n- `\"description\"`: testo non vuoto con la descrizione dell'ambiente.\n- `\"exits\"`: un dizionario che associa i nomi delle direzioni (es. `\"north\"`, `\"south\"`, `\"east\"`, `\"west\"`) all'ID della stanza di destinazione (es. `{\"north\": \"hall\"}`).\n- `\"items\"`: un array di testi contenente i nomi o ID degli oggetti presenti nella stanza (es. `[\"torcia\", \"chiave\"]`). Se la stanza non ha oggetti, usa un array vuoto `[]`.\n\nRequisiti per i tuoi dati:\n1. Definisci almeno 4 stanze diverse in `\"rooms\"`.\n2. La stanza indicata in `\"start_room\"` deve esistere dentro `\"rooms\"`.\n3. Tutte le destinazioni indicate nei dizionari `\"exits\"` devono puntare a stanze esistenti in `\"rooms\"` (nessun collegamento verso stanze inesistenti).\n4. Tutte le stanze devono essere raggiungibili partendo da `\"start_room\"` seguendo le uscite.\n5. L'avventura deve contenere in totale almeno 2 oggetti distribuiti nelle stanze.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "avventura-testuale",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Ricorda la sintassi di base di JSON: le stringhe usano sempre le virgolette doppie `\"`, le liste usano le parentesi quadre `[...]` e i dizionari le graffe `{...}`. Non mettere la virgola dopo l'ultimo elemento.",
+    "Disegna prima la mappa su carta: posiziona le 4 stanze, collega le uscite bidirezionali (se da A vai a nord verso B, da B vai a sud verso A) e decidi dove poggiare i 2 oggetti.",
+    "Assicurati che la chiave indicata in `start_room` corrisponda esattamente al nome della chiave usata dentro al dizionario `rooms`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://adventure.json",
+     "descrizione": "Il file res://adventure.json esiste nella radice del progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar file := FileAccess.open(\"res://adventure.json\", FileAccess.READ)\n\tif not check(\"file_open\", file != null, \"Il file res://adventure.json deve esistere e potersi aprire in lettura\"):\n\t\treturn\n\tvar text := file.get_as_text()\n\tfile.close()\n\tif not check(\"not_empty\", not text.strip_edges().is_empty(), \"Il file adventure.json non deve essere vuoto\"):\n\t\treturn\n\tvar json = JSON.parse_string(text)\n\tif not check(\"json_valid\", json is Dictionary, \"Il file adventure.json deve contenere un oggetto JSON valido (dizionario con graffe)\"):\n\t\treturn\n\tvar data: Dictionary = json\n\tcheck(\"has_title\", data.get(\"title\") is String and not (data[\"title\"] as String).strip_edges().is_empty(), \"Il file deve contenere la chiave 'title' con un testo non vuoto\")\n\tvar start_room = data.get(\"start_room\")\n\tif not check(\"has_start_room\", start_room is String and not (start_room as String).strip_edges().is_empty(), \"Il file deve contenere la chiave 'start_room' con l'ID della stanza iniziale\"):\n\t\treturn\n\tvar rooms = data.get(\"rooms\")\n\tif not check(\"has_rooms\", rooms is Dictionary, \"Il file deve contenere la chiave 'rooms' di tipo Dictionary\"):\n\t\treturn\n\tvar rooms_dict: Dictionary = rooms\n\tif not check(\"room_count\", rooms_dict.size() >= 4, \"L'avventura deve contenere almeno 4 stanze (trovate %d)\" % rooms_dict.size()):\n\t\treturn\n\tif not check(\"start_room_exists\", rooms_dict.has(start_room), \"La stanza iniziale '%s' specificata in start_room deve esistere dentro rooms\" % str(start_room)):\n\t\treturn\n\n\tvar total_items := 0\n\tvar all_exits_valid := true\n\tvar bad_exit_msg := \"\"\n\n\tfor room_id in rooms_dict:\n\t\tvar room = rooms_dict[room_id]\n\t\tif not (room is Dictionary):\n\t\t\tcheck(\"room_dict_\" + str(room_id), false, \"La stanza '%s' deve essere un Dictionary\" % str(room_id))\n\t\t\treturn\n\t\tvar r: Dictionary = room\n\t\tif not check(\"room_name_\" + str(room_id), r.get(\"name\") is String and not (r[\"name\"] as String).strip_edges().is_empty(), \"La stanza '%s' deve avere un campo 'name' di tipo String non vuoto\" % str(room_id)):\n\t\t\treturn\n\t\tif not check(\"room_desc_\" + str(room_id), r.get(\"description\") is String and not (r[\"description\"] as String).strip_edges().is_empty(), \"La stanza '%s' deve avere un campo 'description' di tipo String non vuoto\" % str(room_id)):\n\t\t\treturn\n\t\tif not check(\"room_exits_\" + str(room_id), r.get(\"exits\") is Dictionary, \"La stanza '%s' deve avere un campo 'exits' di tipo Dictionary\" % str(room_id)):\n\t\t\treturn\n\t\tif not check(\"room_items_\" + str(room_id), r.get(\"items\") is Array, \"La stanza '%s' deve avere un campo 'items' di tipo Array\" % str(room_id)):\n\t\t\treturn\n\n\t\tvar items_arr: Array = r[\"items\"]\n\t\ttotal_items += items_arr.size()\n\n\t\tvar exits_dict: Dictionary = r[\"exits\"]\n\t\tfor dir in exits_dict:\n\t\t\tvar target = exits_dict[dir]\n\t\t\tif not (target is String) or not rooms_dict.has(target):\n\t\t\t\tall_exits_valid = false\n\t\t\t\tbad_exit_msg = \"L'uscita '%s' della stanza '%s' punta a '%s', che non esiste in rooms\" % [str(dir), str(room_id), str(target)]\n\t\t\t\tbreak\n\t\tif not all_exits_valid:\n\t\t\tbreak\n\n\tif not check(\"exits_valid\", all_exits_valid, bad_exit_msg if not bad_exit_msg.is_empty() else \"Tutte le uscite devono puntare a stanze esistenti\"):\n\t\treturn\n\n\tcheck(\"total_items\", total_items >= 2, \"L'avventura deve contenere almeno 2 oggetti in totale tra le varie stanze (trovati %d)\" % total_items)\n\n\tvar visited := {}\n\tvar queue: Array[String] = [start_room as String]\n\twhile not queue.is_empty():\n\t\tvar curr: String = queue.pop_front()\n\t\tif visited.has(curr):\n\t\t\tcontinue\n\t\tvisited[curr] = true\n\t\tvar r_data: Dictionary = rooms_dict[curr]\n\t\tvar exits: Dictionary = r_data[\"exits\"]\n\t\tfor dir in exits:\n\t\t\tvar target_id: String = exits[dir]\n\t\t\tif not visited.has(target_id):\n\t\t\t\tqueue.append(target_id)\n\n\tvar unreachable: Array[String] = []\n\tfor room_id in rooms_dict:\n\t\tif not visited.has(room_id):\n\t\t\tunreachable.append(str(room_id))\n\n\tcheck(\"all_reachable\", unreachable.is_empty(), \"Tutte le stanze devono essere raggiungibili dalla stanza iniziale seguendo le uscite. Stanze isolate: %s\" % str(unreachable))\n",
+     "descrizione": "Il file adventure.json rispetta la struttura, contiene almeno 4 stanze raggiungibili e almeno 2 oggetti"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Avventura testuale\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "adventure.json",
+      "contenuto": "{\n\t\"title\": \"I Segreti del Castello Spettrale\",\n\t\"start_room\": \"entrance\",\n\t\"rooms\": {\n\t\t\"entrance\": {\n\t\t\t\"name\": \"Atrio d'Ingresso\",\n\t\t\t\"description\": \"Un maestoso salone d'ingresso con pavimenti in marmo consumato. Un grande portone di quercia e sprangato alle tue spalle.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"north\": \"great_hall\",\n\t\t\t\t\"east\": \"armory\"\n\t\t\t},\n\t\t\t\"items\": [\n\t\t\t\t\"lanterna\"\n\t\t\t]\n\t\t},\n\t\t\"great_hall\": {\n\t\t\t\"name\": \"Salone delle Feste\",\n\t\t\t\"description\": \"Un immenso salone con un lungo tavolo impolverato e lampadari di cristallo spenti.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"south\": \"entrance\",\n\t\t\t\t\"east\": \"library\"\n\t\t\t},\n\t\t\t\"items\": []\n\t\t},\n\t\t\"armory\": {\n\t\t\t\"name\": \"Armeria\",\n\t\t\t\"description\": \"Rastrelliere arrugginite e armature vuote allineate lungo le pareti di pietra scura.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"west\": \"entrance\",\n\t\t\t\t\"north\": \"library\"\n\t\t\t},\n\t\t\t\"items\": [\n\t\t\t\t\"chiave_di_ferro\"\n\t\t\t]\n\t\t},\n\t\t\"library\": {\n\t\t\t\"name\": \"Antica Biblioteca\",\n\t\t\t\"description\": \"Scaffali alti fino al soffitto traboccanti di tomi antichi. C'e un odore persistente di carta vecchia e incenso.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"west\": \"great_hall\",\n\t\t\t\t\"south\": \"armory\"\n\t\t\t},\n\t\t\t\"items\": [\n\t\t\t\t\"grimorio\"\n\t\t\t]\n\t\t}\n\t}\n}\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Avventura testuale",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Il file descrive un grafo di 4 stanze interconnesse. La radice è un oggetto JSON con il titolo, l'identificatore della stanza di partenza (`entrance`) e il dizionario `rooms`. Ogni stanza ha una chiave testuale univoca che permette ricerche immediate con `rooms[id]`. Nei dizionari `exits`, i valori puntano ad altre chiavi esistenti, consentendo di muoversi avanti e indietro tra le stanze senza creare collegamenti orfani. Gli oggetti sono raccolti in array di stringhe, pronti per essere manipolati dal codice.",
+    "cambiati": [
+     "adventure.json"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
