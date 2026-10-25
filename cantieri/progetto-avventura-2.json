@@ -190,7 +190,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Progetto «Avventura testuale» – tappa 2: giocare",
@@ -217,5 +218,10 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
