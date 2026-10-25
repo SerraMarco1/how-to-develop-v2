@@ -24,3 +24,4 @@
 {"quando":1792922811720,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-avventura-2","ok":false,"contata":true,"durataMs":33303,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792923540203,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-avventura-2","ok":true,"contata":true,"durataMs":413798,"tokenInput":13323,"tokenOutput":8494,"ragionamento":31205}
 {"quando":1792923963174,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-avventura-2","ok":true,"contata":true,"durataMs":20274,"tokenInput":15982,"tokenOutput":8743,"ragionamento":1580}
+{"quando":1792923992345,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"progetto-avventura-2","ok":true,"contata":true,"durataMs":151722,"tokenInput":5215,"tokenOutput":12,"ragionamento":857}
