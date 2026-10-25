@@ -7,18 +7,13 @@
     "tipo": "autonomo",
     "genere": "da-zero",
     "titolo": "Progetto «Avventura testuale» – tappa 3: salvare",
-    "consegna": "Questa è l'ultima tappa del progetto: aggiungi all'avventura la possibilità di salvare la partita su file e di ricaricarla in qualsiasi momento, e traccia il lavoro con Git.\n\n### Requisiti del gioco\n\n1. **Pulsanti nell'interfaccia**:\n   - Nella scena `main.tscn` aggiungi due pulsanti di tipo `Button`:\n     - uno chiamato `SaveButton` con testo `\"Salva\"`;\n     - uno chiamato `LoadButton` con testo `\"Carica\"`.\n   - Posizionali dentro il contenitore verticale principale (ad esempio in un `HBoxContainer` sotto a `MessageLabel`).\n\n2. **Sblocco delle uscite**:\n   - Quando il giocatore tenta di attraversare un'uscita bloccata e possiede l'oggetto necessario, l'uscita viene sbloccata in modo permanente: rimuovi la direzione dal dizionario `locked_exits` della stanza prima di entrare nella stanza successiva.\n\n3. **Salvataggio su file**:\n   - Premendo `SaveButton` (oppure chiamando `save_game(path: String = \"user://savegame.json\") -> bool` in `main.gd`), il gioco deve salvare su `user://savegame.json` tutto lo stato mutevole della partita in formato JSON:\n     - l'identificatore della stanza corrente (`current_room.id`);\n     - l'elenco degli oggetti nell'inventario (`inventory`);\n     - lo stato di ogni stanza del mondo: gli oggetti rimasti (`items`) e le uscite ancora bloccate (`locked_exits`).\n   - A salvataggio riuscito, mostra in `MessageLabel` il testo `\"Partita salvata.\"`.\n\n4. **Caricamento da file**:\n   - Premendo `LoadButton` (oppure chiamando `load_game(path: String = \"user://savegame.json\") -> bool` in `main.gd`), il gioco deve ripristinare la partita da `user://savegame.json`:\n     - se il file non esiste, mostra in `MessageLabel` il testo `\"Nessun salvataggio trovato.\"` senza bloccare il gioco;\n     - se il file esiste, ricarica la struttura del mondo da `res://adventure.json`, ripristina lo stato salvato di ciascuna stanza (oggetti e uscite bloccate), l'inventario e la stanza corrente del giocatore;\n     - aggiorna l'interfaccia (`_update_inventory_ui()` e `_update_room_ui()`) e mostra in `MessageLabel` il testo `\"Partita caricata.\"`;\n     - caricando una partita dopo aver vinto, il gioco deve tornare normalmente giocabile nella stanza e nello stato del salvataggio.\n\n5. **Tracciamento con Git**:\n   - Crea nella radice del progetto il file `.gitignore` che esclude la cartella di cache `.godot/`.\n   - Registra le modifiche con un commit per completare la storia del repository Git con le tre tappe del progetto.",
+    "consegna": "Questa è l'ultima tappa del progetto: aggiungi all'avventura la possibilità di salvare la partita su file e di ricaricarla in qualsiasi momento.\n\n### Requisiti del gioco\n\n1. **Pulsanti nell'interfaccia**:\n   - Nella scena `main.tscn` aggiungi due pulsanti di tipo `Button`:\n     - uno chiamato `SaveButton` con testo `\"Salva\"`;\n     - uno chiamato `LoadButton` con testo `\"Carica\"`.\n   - Posizionali dentro il contenitore verticale principale (ad esempio in un `HBoxContainer` sotto a `MessageLabel`).\n\n2. **Sblocco delle uscite**:\n   - Quando il giocatore tenta di attraversare un'uscita bloccata e possiede l'oggetto necessario, l'uscita viene sbloccata in modo permanente: rimuovi la direzione dal dizionario `locked_exits` della stanza prima di entrare nella stanza successiva.\n\n3. **Salvataggio su file**:\n   - Premendo `SaveButton` (oppure chiamando `save_game(path: String = \"user://savegame.json\") -> bool` in `main.gd`), il gioco deve salvare su `user://savegame.json` tutto lo stato mutevole della partita in formato JSON:\n     - l'identificatore della stanza corrente (`current_room.id`);\n     - l'elenco degli oggetti nell'inventario (`inventory`);\n     - lo stato di ogni stanza del mondo: gli oggetti rimasti (`items`) e le uscite ancora bloccate (`locked_exits`).\n   - A salvataggio riuscito, mostra in `MessageLabel` il testo `\"Partita salvata.\"`.\n\n4. **Caricamento da file**:\n   - Premendo `LoadButton` (oppure chiamando `load_game(path: String = \"user://savegame.json\") -> bool` in `main.gd`), il gioco deve ripristinare la partita da `user://savegame.json`:\n     - se il file non esiste, mostra in `MessageLabel` il testo `\"Nessun salvataggio trovato.\"` senza bloccare il gioco;\n     - se il file esiste, ricarica la struttura del mondo da `res://adventure.json`, ripristina lo stato salvato di ciascuna stanza (oggetti e uscite bloccate), l'inventario e la stanza corrente del giocatore;\n     - aggiorna l'interfaccia (`_update_inventory_ui()` e `_update_room_ui()`) e mostra in `MessageLabel` il testo `\"Partita caricata.\"`;\n     - caricando una partita dopo aver vinto, il gioco deve tornare normalmente giocabile nella stanza e nello stato del salvataggio.",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "avventura-testuale",
     "passiGuida": [],
     "suggerimenti": [],
     "verifiche": [
-     {
-      "tipo": "file_esiste",
-      "percorso": "res://.gitignore",
-      "descrizione": "Il file .gitignore è presente nella cartella del progetto"
-     },
      {
       "tipo": "nodo",
       "scena": "res://main.tscn",
@@ -44,8 +39,16 @@
     "soluzione": {
      "file": [
       {
-       "percorso": ".gitignore",
-       "contenuto": ".godot/\n"
+       "percorso": "adventure.json",
+       "contenuto": "{\n\t\"title\": \"I Segreti del Castello Spettrale\",\n\t\"start_room\": \"entrance\",\n\t\"rooms\": {\n\t\t\"entrance\": {\n\t\t\t\"name\": \"Atrio d'Ingresso\",\n\t\t\t\"description\": \"Un maestoso salone d'ingresso con pavimenti in marmo consumato. Un grande portone di quercia e sprangato alle tue spalle.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"north\": \"great_hall\",\n\t\t\t\t\"east\": \"armory\"\n\t\t\t},\n\t\t\t\"items\": [\n\t\t\t\t\"lanterna\"\n\t\t\t]\n\t\t},\n\t\t\"great_hall\": {\n\t\t\t\"name\": \"Salone delle Feste\",\n\t\t\t\"description\": \"Un immenso salone con un lungo tavolo impolverato e lampadari di cristallo spenti.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"south\": \"entrance\",\n\t\t\t\t\"east\": \"library\"\n\t\t\t},\n\t\t\t\"items\": []\n\t\t},\n\t\t\"armory\": {\n\t\t\t\"name\": \"Armeria\",\n\t\t\t\"description\": \"Rastrelliere arrugginite e armature vuote allineate lungo le pareti di pietra scura.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"west\": \"entrance\",\n\t\t\t\t\"north\": \"library\"\n\t\t\t},\n\t\t\t\"items\": [\n\t\t\t\t\"chiave_di_ferro\"\n\t\t\t]\n\t\t},\n\t\t\"library\": {\n\t\t\t\"name\": \"Antica Biblioteca\",\n\t\t\t\"description\": \"Scaffali alti fino al soffitto traboccanti di tomi antichi. C'e un odore persistente di carta vecchia e incenso.\",\n\t\t\t\"exits\": {\n\t\t\t\t\"west\": \"great_hall\",\n\t\t\t\t\"south\": \"armory\",\n\t\t\t\t\"north\": \"secret_room\"\n\t\t\t},\n\t\t\t\"locked_exits\": {\n\t\t\t\t\"north\": \"chiave_di_ferro\"\n\t\t\t},\n\t\t\t\"items\": [\n\t\t\t\t\"grimorio\"\n\t\t\t]\n\t\t},\n\t\t\"secret_room\": {\n\t\t\t\"name\": \"Santuario Segreto\",\n\t\t\t\"description\": \"Una stanza segreta illuminata da un antico altare. Hai trovato il tesoro e completato l'avventura!\",\n\t\t\t\"exits\": {},\n\t\t\t\"items\": [],\n\t\t\t\"is_end\": true\n\t\t}\n\t}\n}\n"
+      },
+      {
+       "percorso": "room.gd",
+       "contenuto": "class_name Room\nextends RefCounted\n\nvar id: String = \"\"\nvar name: String = \"\"\nvar description: String = \"\"\nvar exits: Dictionary = {}\nvar items: Array[String] = []\nvar locked_exits: Dictionary = {}\nvar is_end: bool = false\n"
+      },
+      {
+       "percorso": "world.gd",
+       "contenuto": "class_name World\nextends RefCounted\n\nvar title: String = \"\"\nvar start_room_id: String = \"\"\nvar rooms: Dictionary = {}\nvar last_error: String = \"\"\n\n\nfunc load_file(file_path: String) -> bool:\n\tlast_error = \"\"\n\trooms.clear()\n\ttitle = \"\"\n\tstart_room_id = \"\"\n\n\tif not FileAccess.file_exists(file_path):\n\t\t_fail(\"Il file '%s' non esiste.\" % file_path)\n\t\treturn false\n\n\tvar file := FileAccess.open(file_path, FileAccess.READ)\n\tif file == null:\n\t\t_fail(\"Impossibile aprire il file '%s'.\" % file_path)\n\t\treturn false\n\n\tvar content := file.get_as_text()\n\tfile.close()\n\n\tvar parsed = JSON.parse_string(content)\n\tif not (parsed is Dictionary):\n\t\t_fail(\"Il file '%s' non contiene un oggetto JSON valido.\" % file_path)\n\t\treturn false\n\n\tvar data: Dictionary = parsed\n\tif not data.has(\"title\") or not (data[\"title\"] is String):\n\t\t_fail(\"Campo obbligatorio 'title' mancante o non valido.\")\n\t\treturn false\n\tif not data.has(\"start_room\") or not (data[\"start_room\"] is String):\n\t\t_fail(\"Campo obbligatorio 'start_room' mancante o non valido.\")\n\t\treturn false\n\tif not data.has(\"rooms\") or not (data[\"rooms\"] is Dictionary):\n\t\t_fail(\"Campo obbligatorio 'rooms' mancante o non valido.\")\n\t\treturn false\n\n\tvar raw_rooms: Dictionary = data[\"rooms\"]\n\tvar target_start: String = data[\"start_room\"]\n\tif not raw_rooms.has(target_start):\n\t\t_fail(\"La stanza iniziale '%s' non esiste nel dizionario 'rooms'.\" % target_start)\n\t\treturn false\n\n\t# Prima passata: validazione difensiva di tutte le stanze e dei loro collegamenti\n\tfor room_id in raw_rooms:\n\t\tvar r_data = raw_rooms[room_id]\n\t\tif not (r_data is Dictionary):\n\t\t\t_fail(\"I dati della stanza '%s' devono essere un Dictionary.\" % str(room_id))\n\t\t\treturn false\n\t\tvar r_dict: Dictionary = r_data\n\t\tif not r_dict.has(\"name\") or not (r_dict[\"name\"] is String):\n\t\t\t_fail(\"La stanza '%s' non ha un campo 'name' di tipo String.\" % str(room_id))\n\t\t\treturn false\n\t\tif not r_dict.has(\"description\") or not (r_dict[\"description\"] is String):\n\t\t\t_fail(\"La stanza '%s' non ha un campo 'description' di tipo String.\" % str(room_id))\n\t\t\treturn false\n\t\tif not r_dict.has(\"exits\") or not (r_dict[\"exits\"] is Dictionary):\n\t\t\t_fail(\"La stanza '%s' non ha un campo 'exits' di tipo Dictionary.\" % str(room_id))\n\t\t\treturn false\n\t\tif not r_dict.has(\"items\") or not (r_dict[\"items\"] is Array):\n\t\t\t_fail(\"La stanza '%s' non ha un campo 'items' di tipo Array.\" % str(room_id))\n\t\t\treturn false\n\t\tif r_dict.has(\"locked_exits\") and not (r_dict[\"locked_exits\"] is Dictionary):\n\t\t\t_fail(\"Il campo 'locked_exits' della stanza '%s' deve essere un Dictionary.\" % str(room_id))\n\t\t\treturn false\n\t\tif r_dict.has(\"is_end\") and not (r_dict[\"is_end\"] is bool):\n\t\t\t_fail(\"Il campo 'is_end' della stanza '%s' deve essere un bool.\" % str(room_id))\n\t\t\treturn false\n\n\t\tvar exits: Dictionary = r_dict[\"exits\"]\n\t\tfor dir in exits:\n\t\t\tvar destination = exits[dir]\n\t\t\tif not (destination is String) or not raw_rooms.has(destination):\n\t\t\t\t_fail(\"L'uscita '%s' della stanza '%s' punta a '%s', che non esiste.\" % [str(dir), str(room_id), str(destination)])\n\t\t\t\treturn false\n\n\t# Seconda passata: instanziazione degli oggetti Room solo a validazione completata\n\ttitle = data[\"title\"]\n\tstart_room_id = target_start\n\n\tfor room_id in raw_rooms:\n\t\tvar r_dict: Dictionary = raw_rooms[room_id]\n\t\tvar room := Room.new()\n\t\troom.id = str(room_id)\n\t\troom.name = r_dict[\"name\"]\n\t\troom.description = r_dict[\"description\"]\n\t\troom.exits = r_dict[\"exits\"].duplicate()\n\t\tvar items_list: Array[String] = []\n\t\tfor item in r_dict[\"items\"]:\n\t\t\titems_list.append(str(item))\n\t\troom.items = items_list\n\t\troom.locked_exits = r_dict.get(\"locked_exits\", {}).duplicate()\n\t\troom.is_end = r_dict.get(\"is_end\", false)\n\t\trooms[room.id] = room\n\n\treturn true\n\n\nfunc get_room(room_id: String) -> Room:\n\tif rooms.has(room_id):\n\t\treturn rooms[room_id] as Room\n\treturn null\n\n\nfunc get_start_room() -> Room:\n\treturn get_room(start_room_id)\n\n\nfunc _fail(message: String) -> void:\n\tlast_error = message\n\tpush_error(message)\n"
       },
       {
        "percorso": "main.tscn",
@@ -57,31 +60,36 @@
       }
      ],
      "progetto": {
-      "nome": "",
-      "scenaPrincipale": "",
+      "nome": "Avventura testuale",
+      "scenaPrincipale": "res://main.tscn",
       "azioni": [],
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "In un'avventura testuale i dati statici (nomi delle stanze, descrizioni e collegamenti) sono già nel file `adventure.json`. Per salvare la partita è sufficiente memorizzare lo **stato mutevole**:\n\n1. **Quale stanza sta esplorando il giocatore**: `current_room.id`.\n2. **Quali oggetti ha raccolto**: l'array `inventory`.\n3. **Cosa è cambiato nel mondo**: per ogni stanza, quali oggetti contiene ancora (`items`) e quali uscite sono rimaste bloccate (`locked_exits`). Quando il giocatore usa la chiave per passare un'uscita, la togliamo da `locked_exits` con `.erase(dir)` in modo che resti aperta.\n\nNel metodo `save_game()` raccogliamo questi tre elementi in un `Dictionary` e lo convertiamo in formato JSON con `JSON.stringify(data, \"\\t\")`, scrivendolo su `user://savegame.json` tramite `FileAccess.open` con la modalità `FileAccess.WRITE`.\n\nNel metodo `load_game()` prima verifichiamo che il file esista con `FileAccess.file_exists()`. Se esiste, leggiamo il testo e lo decodifichiamo con `JSON.parse_string()`. Ricarichiamo prima il mondo originale con `world.load_file(\"res://adventure.json\")` per partire da uno stato pulito, poi sovrascriviamo gli oggetti e i lucchetti di ciascuna stanza con quelli registrati nel salvataggio. Infine ripristiniamo `inventory` e `current_room` e aggiorniamo tutta l'interfaccia.\n\nIl file `.gitignore` con la regola `.godot/` protegge il repository Git escludendo la cache generata da Godot, permettendo di committare solo i file sorgente dell'avventura.",
-     "cambiati": [],
+     "spiegazione": "In un'avventura testuale i dati statici (nomi delle stanze, descrizioni e collegamenti) sono già nel file `adventure.json`. Per salvare la partita è sufficiente memorizzare lo **stato mutevole**:\n\n1. **Quale stanza sta esplorando il giocatore**: `current_room.id`.\n2. **Quali oggetti ha raccolto**: l'array `inventory`.\n3. **Cosa è cambiato nel mondo**: per ogni stanza, quali oggetti contiene ancora (`items`) e quali uscite sono rimaste bloccate (`locked_exits`). Quando il giocatore usa la chiave per passare un'uscita, la togliamo da `locked_exits` con `.erase(dir)` in modo che resti aperta.\n\nNel metodo `save_game()` raccogliamo questi tre elementi in un `Dictionary` e lo convertiamo in formato JSON con `JSON.stringify(data, \"\\t\")`, scrivendolo su `user://savegame.json` tramite `FileAccess.open` con la modalità `FileAccess.WRITE`.\n\nNel metodo `load_game()` prima verifichiamo che il file esista con `FileAccess.file_exists()`. Se esiste, leggiamo il testo e lo decodifichiamo con `JSON.parse_string()`. Ricarichiamo prima il mondo originale con `world.load_file(\"res://adventure.json\")` per partire da uno stato pulito, poi sovrascriviamo gli oggetti e i lucchetti di ciascuna stanza con quelli registrati nel salvataggio. Infine ripristiniamo `inventory` e `current_room` e aggiorniamo tutta l'interfaccia.",
+     "cambiati": [
+      "main.tscn",
+      "main.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "da-zero",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "controllo di sicurezza — .gitignore: i file .gitignore non possono far parte di una lezione"
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Progetto «Avventura testuale» – tappa 3: salvare",
