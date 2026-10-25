@@ -135,7 +135,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "`soluzione.progetto.scenaPrincipale` è \"res://menu.tscn\", ma quel file non è in `soluzione.file`"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] get_sorted_records() restituisce la classifica ordinata dal punteggio più alto al più basso: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_2.gd:5)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_2.gd:5)\nERROR: Failed to load script \"res://htd/verifica_2.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var records := QuizData.get_sorted_records({\"Storia\": 10, \"Scienza\": 50, \"Arte\": 30})`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
