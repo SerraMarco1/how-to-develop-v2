@@ -33,3 +33,4 @@
 {"quando":1792924659985,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"trovare-asset-e-licenze","ok":false,"contata":true,"durataMs":2449,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792924662436,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"trovare-asset-e-licenze","ok":true,"contata":true,"durataMs":39093,"tokenInput":13341,"tokenOutput":2429,"ragionamento":4359}
 {"quando":1792924703142,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"trovare-asset-e-licenze","ok":true,"contata":true,"durataMs":61050,"tokenInput":21089,"tokenOutput":4956,"ragionamento":11047}
+{"quando":1792924774432,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"trovare-asset-e-licenze","ok":true,"contata":true,"durataMs":16503,"tokenInput":8873,"tokenOutput":1716,"ragionamento":6131}
