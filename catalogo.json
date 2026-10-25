@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-24T09:34:41.509Z",
+ "aggiornato": "2026-10-25T09:42:15.617Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -524,6 +524,15 @@
    "file": "lezioni/f04-programmare-meglio/git.json",
    "sha256": "2fb347a307254b68c27261f86c23d86d4a7d656782aef828a1c0c9a53bfb2458",
    "byte": 113154
+  },
+  {
+   "slug": "trovare-un-errore-con-metodo",
+   "numero": "4.9",
+   "titolo": "Trovare un errore con metodo",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/trovare-un-errore-con-metodo.json",
+   "sha256": "8c05575a521035e8be0e298238a45d5226810a51b501e6c5b7040e2ae55ecd0d",
+   "byte": 58442
   }
  ],
  "documentazione": {
