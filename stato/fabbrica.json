@@ -10,8 +10,8 @@
    "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1792925862291,
-   "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
+   "fino": 1792926437451,
+   "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-flash-lite-latest": {
    "fino": 1792755112123,
@@ -31,5 +31,5 @@
  "troncate": {},
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": null
+ "prossimoTentativo": 1792926437456
 }
