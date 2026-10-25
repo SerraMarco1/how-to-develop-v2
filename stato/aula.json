@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-25T10:40:41.627Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-25T10:47:42.295Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "importare-immagini",
   "numero": "5.1",
   "titolo": "Importare immagini"
  },
- "messaggio": "Sta scrivendo la lezione 5.1 «Importare immagini».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.1 riprende da sola appena rispondono.",
+ "riprende": "2026-10-25T10:57:42.294Z"
 }
