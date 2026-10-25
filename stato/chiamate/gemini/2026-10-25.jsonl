@@ -41,3 +41,4 @@
 {"quando":1792924873132,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"importare-immagini","ok":false,"contata":true,"durataMs":2170,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792924962968,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"importare-immagini","ok":true,"contata":true,"durataMs":267844,"tokenInput":20693,"tokenOutput":6482,"ragionamento":21620}
 {"quando":1792925256970,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"importare-immagini","ok":false,"contata":true,"durataMs":5318,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792925970194,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"importare-immagini","ok":true,"contata":true,"durataMs":9468,"tokenInput":11619,"tokenOutput":12,"ragionamento":1730}

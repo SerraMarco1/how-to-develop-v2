@@ -304,5 +304,20 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "progetto-avventura-2": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "progetto-avventura-3": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "trovare-asset-e-licenze": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
