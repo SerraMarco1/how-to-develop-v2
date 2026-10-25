@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://menu.tscn\",\n  \"durata\": 8,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"avatar\",\n      \"cerca\": {\n        \"nome\": \"Avatar\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Avatar\"\n    },\n    {\n      \"id\": \"logo\",\n      \"cerca\": {\n        \"nome\": \"Logo\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Logo\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"L'avatar in pixel art con filtro Nearest\",\n      \"da\": 0.5,\n      \"a\": 3.5,\n      \"soggetto\": \"avatar\"\n    },\n    {\n      \"testo\": \"Il logo con eccezione a filtro Linear\",\n      \"da\": 4.0,\n      \"a\": 7.5,\n      \"soggetto\": \"logo\"\n    }\n  ]\n}",
+ "ragionamento": 1342,
+ "quando": "2026-10-25T11:09:06.061Z",
+ "ruolo": "ritocco"
+}

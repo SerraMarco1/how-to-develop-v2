@@ -319,5 +319,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "importare-immagini": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
