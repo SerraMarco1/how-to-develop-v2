@@ -252,7 +252,14 @@
    "genere": "ripara",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — assets/sprites/background.png: i file .png non possono far parte di una lezione",
+    "controllo di sicurezza — assets/sprites/coin.png: i file .png non possono far parte di una lezione",
+    "controllo di sicurezza — progetto di partenza, assets/sprites/background.png: i file .png non possono far parte di una lezione",
+    "controllo di sicurezza — progetto di partenza, assets/sprites/unlicensed_hero.png: i file .png non possono far parte di una lezione",
+    "controllo di sicurezza — progetto di partenza, assets/sprites/coin.png: i file .png non possono far parte di una lezione",
+    "controllo di sicurezza — progetto di partenza, assets/audio/enemy_voice.wav: i file .wav non possono far parte di una lezione"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
