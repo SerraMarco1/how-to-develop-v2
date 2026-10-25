@@ -94,6 +94,14 @@
       {
        "percorso": "quiz_data.gd",
        "contenuto": "extends Node\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\nvar questions: Array[Question] = []\nvar last_wrong_questions: Array[Question] = []\n\n\nfunc _ready() -> void:\n\tload_topic_records()\n\tif questions.is_empty():\n\t\tvar q_opts1: Array[String] = [\"A\", \"B\"]\n\t\tvar q_opts2: Array[String] = [\"C\", \"D\"]\n\t\tquestions = [\n\t\t\tQuestion.new(\"Domanda 1\", q_opts1, 0),\n\t\t\tQuestion.new(\"Domanda 2\", q_opts2, 1)\n\t\t]\n\n\nfunc save_high_score() -> void:\n\tpass\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_topic_records() -> bool:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\t\treturn true\n\n\ttopic_records = {}\n\treturn false\n\n\nfunc get_topic_record(topic_name: String) -> int:\n\tif topic_records.has(topic_name):\n\t\treturn int(topic_records[topic_name])\n\treturn 0\n\n\nfunc get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:\n\tvar target: Dictionary = source if not source.is_empty() else topic_records\n\tvar records_list: Array[Dictionary] = []\n\tfor topic in target:\n\t\trecords_list.append({\n\t\t\t\"topic\": str(topic),\n\t\t\t\"score\": int(target[topic])\n\t\t})\n\trecords_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:\n\t\treturn a[\"score\"] > b[\"score\"]\n\t)\n\treturn records_list\n"
+      },
+      {
+       "percorso": "menu.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://menu.gd\" id=\"1_menu\"]\n\n[node name=\"Menu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_menu\")\n"
+      },
+      {
+       "percorso": "menu.gd",
+       "contenuto": "extends Control\n\nfunc _ready() -> void:\n\tQuizData.load_topic_records()\n"
       }
      ],
      "progetto": {
@@ -124,14 +132,15 @@
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "`soluzione.progetto.scenaPrincipale` è \"res://menu.tscn\", ma quel file non è in `soluzione.file`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   },
   "test": {
@@ -257,7 +266,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Trovare un errore con metodo",
