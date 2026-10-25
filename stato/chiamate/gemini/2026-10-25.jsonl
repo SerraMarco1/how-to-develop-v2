@@ -47,3 +47,4 @@
 {"quando":1792926023986,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"fogli-di-sprite","ok":true,"contata":true,"durataMs":112896,"tokenInput":20612,"tokenOutput":7580,"ragionamento":12487}
 {"quando":1792926136890,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"fogli-di-sprite","ok":false,"contata":true,"durataMs":560,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792926542225,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"importare-immagini","ok":true,"contata":true,"durataMs":3833,"tokenInput":7959,"tokenOutput":325,"ragionamento":1342}
+{"quando":1792926566963,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"fogli-di-sprite","ok":false,"contata":true,"durataMs":5388,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
