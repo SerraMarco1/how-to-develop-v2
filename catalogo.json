@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-25T10:40:40.250Z",
+ "aggiornato": "2026-10-25T10:59:53.151Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -569,6 +569,15 @@
    "file": "lezioni/f05-asset-e-audio/trovare-asset-e-licenze.json",
    "sha256": "590628150df66274819fd5a01361c8fb50a6f021f414ad62c5efa7648b82eff7",
    "byte": 121641
+  },
+  {
+   "slug": "importare-immagini",
+   "numero": "5.1",
+   "titolo": "Importare immagini",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/importare-immagini.json",
+   "sha256": "e187f450deec72970cdf517639d7380bc691dd7e04ca8204482f082136d3b501",
+   "byte": 129312
   }
  ],
  "documentazione": {
