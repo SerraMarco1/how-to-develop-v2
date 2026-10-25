@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-25T09:42:16.802Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-25T09:50:23.598Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-avventura-1",
   "numero": "4.10",
   "titolo": "Progetto «Avventura testuale» – tappa 1: il mondo come dati"
  },
- "messaggio": "Sta scrivendo la lezione 4.10 «Progetto «Avventura testuale» – tappa 1: il mondo come dati».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 4.10 riprende da sola appena rispondono.",
+ "riprende": "2026-10-25T10:00:23.598Z"
 }
