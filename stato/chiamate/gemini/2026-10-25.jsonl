@@ -17,3 +17,5 @@
 {"quando":1792921617287,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-avventura-1","ok":true,"contata":true,"durataMs":188994,"tokenInput":13998,"tokenOutput":6587,"ragionamento":3988}
 {"quando":1792921816407,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-avventura-1","ok":false,"contata":true,"durataMs":3505,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1792921819917,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-avventura-1","ok":false,"contata":true,"durataMs":3675,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1792922497779,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"progetto-avventura-1","ok":false,"contata":true,"durataMs":280063,"errore":"Nessuna risposta entro 280 secondi"}
+{"quando":1792922777845,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-avventura-1","ok":true,"contata":true,"durataMs":10305,"tokenInput":7654,"tokenOutput":11,"ragionamento":1583}

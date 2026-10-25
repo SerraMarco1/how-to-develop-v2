@@ -294,5 +294,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "trovare-un-errore-con-metodo": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
