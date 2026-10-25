@@ -297,7 +297,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Progetto «Avventura testuale» – tappa 1: il mondo come dati",
@@ -325,5 +326,10 @@
  "ordine": [
   "es1",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
