@@ -223,5 +223,7 @@
   "problemi": [],
   "teoriaCorretta": false,
   "corretti": []
- }
+ },
+ "teoriaRivista": true,
+ "praticaRivista": true
 }
