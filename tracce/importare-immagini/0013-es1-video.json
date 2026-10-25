@@ -1,0 +1,65 @@
+{
+ "n": 13,
+ "quando": "2026-10-25T11:09:25.525Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Avatar» (esserci), «Logo» (esserci). Scritte: «L'avatar in pixel art con filtro Nearest» · «Il logo con eccezione a filtro Linear». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 20 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 23303,
+ "dati": {
+  "copione": {
+   "scena": "res://menu.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "avatar",
+     "cerca": {
+      "nome": "Avatar"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Avatar"
+    },
+    {
+     "id": "logo",
+     "cerca": {
+      "nome": "Logo"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Logo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'avatar in pixel art con filtro Nearest",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "avatar"
+    },
+    {
+     "testo": "Il logo con eccezione a filtro Linear",
+     "da": 4,
+     "a": 7.5,
+     "soggetto": "logo"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "8c3d6c39e5ac9d20579ead8ba34782aa87ef09b29fa2c18f0fb4a1b4100cc040",
+   "estensione": "mp4",
+   "byte": 20712
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (7959 → 325 token)"
+ ]
+}

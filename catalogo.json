@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-25T10:59:53.151Z",
+ "aggiornato": "2026-10-25T11:09:25.536Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -574,10 +574,10 @@
    "slug": "importare-immagini",
    "numero": "5.1",
    "titolo": "Importare immagini",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f05-asset-e-audio/importare-immagini.json",
-   "sha256": "e187f450deec72970cdf517639d7380bc691dd7e04ca8204482f082136d3b501",
-   "byte": 129312
+   "sha256": "f1ac96d9666239f821a725fdcbb248446bbb3801cd16d923385222a5eb595baf",
+   "byte": 129999
   }
  ],
  "documentazione": {

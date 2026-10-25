@@ -760,5 +760,56 @@
    "regole": 2,
    "motivo": "Il risultato del collaudo viene stampato nel pannello Output e non produce elementi visibili sullo schermo."
   }
+ },
+ "importare-immagini": {
+  "es1": {
+   "impronta": "cc8ed28033245e43ce9ad23f2e05f9d29b4dbfcc62e8544c5a2c007730c431f0",
+   "tentativi": 1,
+   "esito": "fatto",
+   "regole": 2,
+   "copione": {
+    "scena": "res://menu.tscn",
+    "durata": 8,
+    "azioni": [],
+    "soggetti": [
+     {
+      "id": "avatar",
+      "cerca": {
+       "nome": "Avatar"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 7.5,
+      "deve": "esserci",
+      "etichetta": "Avatar"
+     },
+     {
+      "id": "logo",
+      "cerca": {
+       "nome": "Logo"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 7.5,
+      "deve": "esserci",
+      "etichetta": "Logo"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "L'avatar in pixel art con filtro Nearest",
+      "da": 0.5,
+      "a": 3.5,
+      "soggetto": "avatar"
+     },
+     {
+      "testo": "Il logo con eccezione a filtro Linear",
+      "da": 4,
+      "a": 7.5,
+      "soggetto": "logo"
+     }
+    ]
+   }
+  }
  }
 }
