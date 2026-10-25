@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-25T10:06:40.017Z",
+ "aggiornato": "2026-10-25T10:29:17.731Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -542,6 +542,15 @@
    "file": "lezioni/f04-programmare-meglio/progetto-avventura-1.json",
    "sha256": "f4fda62577ffc2b6a8f7774135cf410b80f41d23e214c874e923ef9600a40276",
    "byte": 39155
+  },
+  {
+   "slug": "progetto-avventura-2",
+   "numero": "4.11",
+   "titolo": "Progetto «Avventura testuale» – tappa 2: giocare",
+   "versione": 1,
+   "file": "lezioni/f04-programmare-meglio/progetto-avventura-2.json",
+   "sha256": "98429f1b29845e601cfe370bd970a015c9780893e9c3df93b7b1b366b2ea0ea0",
+   "byte": 49137
   }
  ],
  "documentazione": {

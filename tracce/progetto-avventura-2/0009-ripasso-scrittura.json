@@ -1,0 +1,15 @@
+{
+ "n": 9,
+ "quando": "2026-10-25T10:29:17.727Z",
+ "pezzo": "ripasso",
+ "azione": "scrittura",
+ "esito": "ok",
+ "titolo": "Ripasso: voci per il ripasso a intervalli",
+ "spiegazione": "5 voci eseguite in Godot, con le risposte calcolate: garden · 2 · bloccata · true · Il file 'mondo.json' non esiste.",
+ "richieste": 1,
+ "durataMs": 12238,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (2763 → 1054 token)"
+ ]
+}
