@@ -2,7 +2,7 @@
  "creato": "2026-10-24T09:34:43.069Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -257,7 +257,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Correggi i bug del Quiz: sessione e ordinamento\" (ripara) non superava i controlli ed è stato tolto: questa lezione ha solo il test."
+ ],
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-lite-latest",

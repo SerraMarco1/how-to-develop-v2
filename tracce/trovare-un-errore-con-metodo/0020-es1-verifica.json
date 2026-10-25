@@ -1,0 +1,148 @@
+{
+ "n": 20,
+ "quando": "2026-10-25T07:05:15.652Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1 (ripara): 1 problema",
+ "spiegazione": "«Correggi i bug del Quiz: sessione e ordinamento», scritto da gemini/gemini-3.7-flash. 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] L'invio della risposta non salta domande e la classifica dei record è ordinata dal punteggio più alto: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:21)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:21)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 21: `var quiz_data = instantiate_script(\"res://quiz_data.gd\")`\nSugg…\nReazione: le correzioni previste sono finite.",
+ "richieste": 0,
+ "durataMs": 3414,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] L'invio della risposta non salta domande e la classifica dei record è ordinata dal punteggio più alto: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:21)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:21)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 21: `var quiz_data = instantiate_script(\"res://quiz_data.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Correggi i bug del Quiz: sessione e ordinamento",
+   "consegna": "Nel progetto `Quiz` sono stati riscontrati due comportamenti anomali durante l'esecuzione del gioco:\n\n1. **Domanda saltata**: Durante la partita, dopo aver risposto a una domanda, il gioco salta automaticamente la domanda successiva (in un quiz da 4 domande, il giocatore ne vede soltanto 2).\n2. **Ordinamento invertito**: La funzione `get_sorted_records()` in `quiz_data.gd` restituisce i punteggi ordinati dal più basso al più alto, anziché dal più alto al più basso.\n\nUsa gli strumenti del Debugger (punti di interruzione, Step Over e l'Evaluator) per individuare le cause e correggi il codice nei file `quiz_session.gd` e `quiz_data.gd`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "quiz-ripara-sessione",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Metti un punto di interruzione all'inizio di `submit_answer()` in `quiz_session.gd` e segui l'esecuzione passo passo per osservare dove viene modificato l'indice della domanda corrente.",
+    "Esamina la funzione lambda passata a `sort_custom()` in `get_sorted_records()` dentro `quiz_data.gd` per verificare il confronto dei punteggi."
+   ],
+   "verifiche": [
+    {
+     "tipo": "progetto_godot",
+     "descrizione": "Il progetto contiene la struttura dei file del Quiz"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://quiz_session.gd",
+     "descrizione": "Il file quiz_session.gd è presente nel progetto"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://quiz_data.gd",
+     "descrizione": "Il file quiz_data.gd è presente nel progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar question_script = load(\"res://question.gd\")\n\tvar session_script = load(\"res://quiz_session.gd\")\n\tif not check(\"scripts\", question_script != null and session_script != null, \"Gli script di Question e QuizSession devono caricarsi senza errori\"):\n\t\treturn\n\tvar q1 = question_script.new(\"Q1\", [\"A\", \"B\"], 0)\n\tvar q2 = question_script.new(\"Q2\", [\"A\", \"B\"], 0)\n\tvar session = session_script.new([q1, q2])\n\tif not check(\"init_q\", session.get_current_question() == q1, \"All'inizio la domanda corrente deve essere la prima\"):\n\t\treturn\n\tsession.submit_answer(0)\n\tif not check(\"submit_no_skip\", session.get_current_question() == q1, \"Inviare una risposta con submit_answer() non deve far avanzare subito alla domanda successiva\"):\n\t\treturn\n\tsession.advance()\n\tif not check(\"advance_next\", session.get_current_question() == q2, \"Dopo advance() la domanda corrente deve passare alla successiva\"):\n\t\treturn\n\n\tvar quiz_data = instantiate_script(\"res://quiz_data.gd\")\n\tif not check(\"quiz_data_inst\", quiz_data != null, \"Lo script quiz_data.gd deve istanziarsi senza errori\"):\n\t\treturn\n\tvar records = quiz_data.get_sorted_records({\"Storia\": 10, \"Scienza\": 50, \"Arte\": 30})\n\tif not check(\"records_format\", typeof(records) == TYPE_ARRAY and records.size() == 3, \"get_sorted_records() deve restituire 3 elementi\"):\n\t\treturn\n\tvar top_score: int = int(records[0].get(\"score\", 0))\n\tvar top_topic: String = str(records[0].get(\"topic\", \"\"))\n\tcheck(\"records_order\", top_score == 50 and top_topic == \"Scienza\", \"Il primo elemento deve avere il punteggio più alto: Scienza con 50 punti (trovato: %s con %d punti)\" % [top_topic, top_score])\n",
+     "descrizione": "L'invio della risposta non salta domande e la classifica dei record è ordinata dal punteggio più alto"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "Quiz",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "QuizData",
+       "percorso": "res://quiz_data.gd"
+      }
+     ],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Quiz\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nQuizData=\"*res://quiz_data.gd\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "question.gd",
+      "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n"
+     },
+     {
+      "percorso": "quiz_session.gd",
+      "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar wrong_questions: Array[Question] = []\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\twrong_questions = []\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif correct:\n\t\tscore += 1\n\telse:\n\t\twrong_questions.append(current)\n\t_current_index += 1\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n\n\nfunc get_wrong_questions() -> Array[Question]:\n\treturn wrong_questions\n"
+     },
+     {
+      "percorso": "quiz_data.gd",
+      "contenuto": "extends Node\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\nvar questions: Array[Question] = []\nvar last_wrong_questions: Array[Question] = []\n\n\nfunc _ready() -> void:\n\tload_topic_records()\n\tif questions.is_empty():\n\t\tvar q_opts1: Array[String] = [\"A\", \"B\"]\n\t\tvar q_opts2: Array[String] = [\"C\", \"D\"]\n\t\tquestions = [\n\t\t\tQuestion.new(\"Domanda 1\", q_opts1, 0),\n\t\t\tQuestion.new(\"Domanda 2\", q_opts2, 1)\n\t\t]\n\n\nfunc save_high_score() -> void:\n\tpass\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_topic_records() -> bool:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\t\treturn true\n\n\ttopic_records = {}\n\treturn false\n\n\nfunc get_topic_record(topic_name: String) -> int:\n\tif topic_records.has(topic_name):\n\t\treturn int(topic_records[topic_name])\n\treturn 0\n\n\nfunc get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:\n\tvar target: Dictionary = source if not source.is_empty() else topic_records\n\tvar records_list: Array[Dictionary] = []\n\tfor topic in target:\n\t\trecords_list.append({\n\t\t\t\"topic\": str(topic),\n\t\t\t\"score\": int(target[topic])\n\t\t})\n\trecords_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:\n\t\treturn a[\"score\"] < b[\"score\"]\n\t)\n\treturn records_list\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Quiz\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nQuizData=\"*res://quiz_data.gd\"\n\n[input]\n\npause={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194305,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "question.gd",
+      "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc _init(p_text: String = \"\", p_options: Array[String] = [], p_correct_index: int = 0) -> void:\n\ttext = p_text\n\toptions = p_options\n\tcorrect_index = p_correct_index\n\n\nfunc is_correct(answer_index: int) -> bool:\n\treturn answer_index == correct_index\n"
+     },
+     {
+      "percorso": "quiz_session.gd",
+      "contenuto": "class_name QuizSession\nextends RefCounted\n\nvar score: int = 0:\n\tset(value):\n\t\tscore = maxi(0, value)\n\nvar wrong_questions: Array[Question] = []\nvar _questions: Array[Question] = []\nvar _current_index: int = 0\n\n\nfunc _init(questions: Array[Question] = []) -> void:\n\t_questions = questions\n\t_current_index = 0\n\tscore = 0\n\twrong_questions = []\n\n\nfunc get_current_question() -> Question:\n\tif is_finished():\n\t\treturn null\n\treturn _questions[_current_index]\n\n\nfunc get_total_questions() -> int:\n\treturn _questions.size()\n\n\nfunc is_finished() -> bool:\n\treturn _current_index >= _questions.size()\n\n\nfunc submit_answer(selected_index: int) -> bool:\n\tif is_finished():\n\t\treturn false\n\n\tvar current: Question = get_current_question()\n\tif current == null:\n\t\treturn false\n\n\tvar correct: bool = current.is_correct(selected_index)\n\tif correct:\n\t\tscore += 1\n\telse:\n\t\twrong_questions.append(current)\n\treturn correct\n\n\nfunc advance() -> void:\n\t_current_index += 1\n\n\nfunc get_wrong_questions() -> Array[Question]:\n\treturn wrong_questions\n"
+     },
+     {
+      "percorso": "quiz_data.gd",
+      "contenuto": "extends Node\n\nvar score: int = 0\nvar high_score: int = 0\nvar current_topic_title: String = \"\"\nvar topic_records: Dictionary = {}\nvar questions: Array[Question] = []\nvar last_wrong_questions: Array[Question] = []\n\n\nfunc _ready() -> void:\n\tload_topic_records()\n\tif questions.is_empty():\n\t\tvar q_opts1: Array[String] = [\"A\", \"B\"]\n\t\tvar q_opts2: Array[String] = [\"C\", \"D\"]\n\t\tquestions = [\n\t\t\tQuestion.new(\"Domanda 1\", q_opts1, 0),\n\t\t\tQuestion.new(\"Domanda 2\", q_opts2, 1)\n\t\t]\n\n\nfunc save_high_score() -> void:\n\tpass\n\n\nfunc save_topic_records() -> void:\n\tvar json_string: String = JSON.stringify(topic_records)\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_topic_records() -> bool:\n\tif not FileAccess.file_exists(\"user://records.json\"):\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar file: FileAccess = FileAccess.open(\"user://records.json\", FileAccess.READ)\n\tif file == null:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tvar parse_result: Error = json.parse(content)\n\n\tif parse_result != OK:\n\t\ttopic_records = {}\n\t\treturn false\n\n\tif json.data is Dictionary:\n\t\ttopic_records = json.data\n\t\treturn true\n\n\ttopic_records = {}\n\treturn false\n\n\nfunc get_topic_record(topic_name: String) -> int:\n\tif topic_records.has(topic_name):\n\t\treturn int(topic_records[topic_name])\n\treturn 0\n\n\nfunc get_sorted_records(source: Dictionary = {}) -> Array[Dictionary]:\n\tvar target: Dictionary = source if not source.is_empty() else topic_records\n\tvar records_list: Array[Dictionary] = []\n\tfor topic in target:\n\t\trecords_list.append({\n\t\t\t\"topic\": str(topic),\n\t\t\t\"score\": int(target[topic])\n\t\t})\n\trecords_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:\n\t\treturn a[\"score\"] > b[\"score\"]\n\t)\n\treturn records_list\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Quiz",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "pause",
+       "tasti": [
+        "Escape"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "QuizData",
+       "percorso": "res://quiz_data.gd"
+      }
+     ],
+     "impostazioni": []
+    },
+    "spiegazione": "1. In `quiz_session.gd`, la funzione `submit_answer()` incrementava erroneamente `_current_index += 1`. Poiché l'avanzamento alla domanda successiva è gestito separatamente da `advance()`, l'indice aumentava due volte per turno, saltando una domanda. Rimuovendo `_current_index += 1` da `submit_answer()`, l'avanzamento avviene solo quando viene chiamato `advance()`.\n2. In `quiz_data.gd`, nella funzione lambda di `sort_custom()` il confronto usato era `a[\"score\"] < b[\"score\"]`, che ordinava in modo crescente (punteggi minori prima). Sostituendo l'operatore con `>` (`a[\"score\"] > b[\"score\"]`), la lista viene ordinata correttamente in modo decrescente.",
+    "cambiati": [
+     "quiz_session.gd",
+     "quiz_data.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
