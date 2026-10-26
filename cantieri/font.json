@@ -2,5 +2,93 @@
  "creato": "2026-10-26T16:19:41.905Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Personalizzare i font: temi, riserve e contorni",
+  "sommario": "In questa lezione impari ad importare font dinamici nel progetto, ad applicarli all'interfaccia tramite temi e sovrascritture, a regolare contorni e ombre per la massima leggibilità e ad associare font di riserva (fallbacks) per non perdere i caratteri accentati.",
+  "concetti": [
+   "Importazione font dynamic (TTF/OTF)",
+   "Dimensioni font e Theme Overrides",
+   "Contorno e ombra del testo",
+   "Font di riserva (Fallbacks)",
+   "Licenza SIL Open Font License (OFL)"
+  ],
+  "obiettivi": [
+   "Importare file font TTF/OTF nel progetto e usarli nel tema dell'interfaccia",
+   "Regolare dimensioni, contorno, ombra e configurare un font di riserva per i caratteri mancanti",
+   "Rispettare le licenze dei font nei giochi digitali"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nei giochi, la scelta dei font non è solo una questione estetica: determina la leggibilità del testo e la personalità dell'interfaccia. Nel progetto «Quiz», il giocatore legge continuamente domande, opzioni di risposta e punteggi. Se il font scelto non include i caratteri accentati italiani (come 'à', 'è', 'ò') o risulta difficile da leggere a schermo, il gioco perde qualità e stanca la vista."
+   },
+   {
+    "tipo": "testo",
+    "md": "I formati più diffusi per i videogiochi sono i font dinamici **TTF** (TrueType Font) e **OTF** (OpenType Font). Questi file contengono informazioni vettoriali, quindi Godot può ingrandire o rimpicciolire il testo senza che appaia sgranato. Prima di inserire un font nel tuo gioco, devi controllarne la **licenza d'uso**: molti font gratuiti su siti come Google Fonts adottano la licenza **SIL Open Font License (OFL)**, che ti permette di distribuirli liberamente sia in progetti gratuiti sia in giochi commerciali."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Organizzare e importare i font nel progetto",
+    "passi": [
+     "Nel pannello *FileSystem* (file del progetto), crea la cartella `res://assets/fonts/` facendo clic destro sulla cartella principale `res://` e scegliendo **Create Folder…**.",
+     "Trascina i tuoi file font TTF o OTF dentro la nuova cartella (ad esempio `title_font.ttf` per i titoli e `body_font.ttf` per le domande).",
+     "Seleziona uno dei file di font nel pannello *FileSystem* per verficarne l'importazione nella scheda *Import*."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "In Godot 4 le dimensioni del testo non si definiscono dentro il file del font, ma nei singoli nodi dell'interfaccia (come `Label` o `Button`) oppure nelle impostazioni del **Tema**. Questo significa che un singolo file di font può essere riutilizzato in tutto il gioco a grandezze diverse. Se desideri cambiare il font o la dimensione di un singolo nodo senza modificare l'intero tema del progetto, puoi usare la sezione **Theme Overrides** (sovrascritture del tema) nel pannello *Inspector* (ispettore)."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Personalizzare font, dimensione e contorno di una Label",
+    "passi": [
+     "Nel pannello *Scene* seleziona il nodo `Label` da personalizzare.",
+     "Nel pannello *Inspector*, scorri fino alla sezione **Theme Overrides** ed espandi la voce **Fonts**.",
+     "Trascina il file del font (ad esempio `res://assets/fonts/body_font.ttf`) dal pannello *FileSystem* alla casella **Font**.",
+     "Espandi la voce **Theme Overrides > Font Sizes**, attiva la casella accanto a **Font Size** e imposta il valore desiderato (ad esempio 24).",
+     "Per rendere il testo ben visibile su qualsiasi sfondo, espandi **Theme Overrides > Colors**, attiva **Font Outline Color** scegliendo il nero, quindi attiva **Outline Size** e imposta un valore di contorno (ad esempio 4)."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "pannello-inspector",
+    "didascalia": "Nel pannello Inspector puoi configurare le sovrascritture del tema (Theme Overrides) per modificare font, dimensioni, colori e contorni di un singolo nodo d'interfaccia."
+   },
+   {
+    "tipo": "testo",
+    "md": "Se il testo si trova sopra sfondi con colori variabili, oltre al contorno puoi attivare un'ombra nei nodi `Label` e `RichTextLabel` configurando **Font Shadow Color**, **Shadow Offset X** e **Shadow Offset Y**. Per evitare di ripetere manualmente le sovrascritture su decine di nodi simili, puoi creare una risorsa `LabelSettings`: un file di configurazione riutilizzabile che contiene font, dimensione, colore, contorno e ombra, applicabile con un solo clic al campo **Label Settings** di qualsiasi nodo `Label`."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Control\n\n@onready var title_label: Label = $TitleLabel\n\n\nfunc _ready() -> void:\n\tQuizData.load_topic_records()\n\t_setup_title_style()\n\n\nfunc _setup_title_style() -> void:\n\tvar custom_settings := LabelSettings.new()\n\tvar font_res: Font = load(\"res://assets/fonts/title_font.ttf\")\n\tcustom_settings.font = font_res\n\tcustom_settings.font_size = 32\n\tcustom_settings.outline_size = 6\n\tcustom_settings.outline_color = Color.BLACK\n\ttitle_label.label_settings = custom_settings",
+    "spiegazione": "In questo script del menu principale creiamo una risorsa `LabelSettings` da codice, impostando il font, la dimensione e il contorno prima di assegnarla al nodo `title_label`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Molti font decorativi o pensati per i titoli non includono i caratteri accentati (à, è, é, ì, ò, ù) né i simboli speciali. Quando Godot deve mostrare un carattere che non esiste nel font attivo, disegna un rettangolo grigio vuoto chiamato informalmente **tofu**. Per evitare questo problema, Godot permette di definire uno o più **Font Fallbacks** (font di riserva). Quando il font principale non possiede un determinato carattere, il motore lo recupera automaticamente dal font di riserva, garantendo che tutto il testo venga visualizzato correttamente."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Configurare un font di riserva (Font Fallback)",
+    "passi": [
+     "Nel pannello *FileSystem*, seleziona il file del font principale (`title_font.ttf`).",
+     "Apri la scheda *Import* (accanto al pannello *Scene*) e fai clic sul pulsante **Advanced…** in basso per aprire le impostazioni avanzate di importazione.",
+     "Nella colonna di destra della finestra che si apre, individua la sezione **Fallbacks**.",
+     "Fai clic su **Array[Font]** per espandere la proprietà e premi **Add Element** per aggiungere un nuovo elemento.",
+     "Clicca sul menu a tendina del nuovo elemento, scegli **Quick Load** e seleziona il font di riserva (ad esempio `body_font.ttf`, che contiene le lettere accentate).",
+     "Fai clic su **Reimport** per confermare le modifiche."
+    ]
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- **Formati e licenze**: usa font dinamici (TTF/OTF) e verifica sempre la licenza d'uso (come la SIL Open Font License - OFL) per i progetti commerciali.\n- **Dimensioni**: in Godot 4 la dimensione del font si imposta sui nodi d'interfaccia o nel Tema attraverso **Theme Overrides > Font Sizes**.\n- **Contorni e ombre**: imposta **Outline Size** e **Font Outline Color** per garantire che il testo rimanga leggibile su qualsiasi sfondo.\n- **LabelSettings**: usa la risorsa `LabelSettings` per applicare lo stesso stile (font, dimensione, contorno) a più nodi `Label` senza duplicare le impostazioni.\n- **Font Fallbacks**: assegna un font di riserva nelle impostazioni avanzate di importazione per mostrare correttamente le lettere accentate e i simboli assenti nel font principale."
+   }
+  ]
+ }
 }
