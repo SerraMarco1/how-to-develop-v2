@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-26T16:54:18.948Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-26T16:55:15.906Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "font",
   "numero": "5.4",
   "titolo": "Font"
  },
- "messaggio": "Sta scrivendo la lezione 5.4 «Font».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.4 riprende da sola appena rispondono.",
+ "riprende": "2026-10-26T17:05:15.906Z"
 }
