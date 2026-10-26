@@ -2,5 +2,91 @@
  "creato": "2026-10-26T13:04:34.138Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Adattare un'immagine al progetto",
+  "sommario": "In questa lezione impari a preparare risorse grafiche esterne regolando trasparenza e nitidezza, a cambiare colore ai nodi d'interfaccia senza toccare i file su disco tramite modulate e self_modulate, e a creare pannelli di testo ridimensionabili senza distorsioni usando il nodo NinePatchRect.",
+  "concetti": [
+   "Trasparenza PNG e canale alfa",
+   "Filtro di ridimensionamento Nearest Neighbor per la pixel art",
+   "Proprietà modulate e self_modulate di CanvasItem",
+   "Nodo NinePatchRect e tecnica 9-slice",
+   "Proprietà Patch Margin"
+  ],
+  "obiettivi": [
+   "Con un programma di grafica gratuito: ridimensionare senza sfocare, ritagliare, togliere uno sfondo",
+   "Cambiare colore in Godot senza toccare il file",
+   "NinePatchRect: un riquadro che si allarga senza deformare i bordi"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Quando cerchi immagini o icone sul web per il tuo gioco, raramente trovi risorse pronte per essere usate subito. Spesso hanno sfondi opachi indesiderati, dimensioni non adatte o bordi che si deformano quando ingrandisci un pannello dell'interfaccia. In questa lezione impari come adattare le immagini all'esterno prima di importarle e come gestirne colore e ridimensionamento dentro Godot per ottenere una grafica pulita e professionale."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il primo passo nell'adattare un'immagine consiste nel lavorarla in un editor di grafica gratuito (come GIMP o Photopea). Per fare in modo che le icone non abbiano un riquadro bianco attorno, devi sempre salvarle nel formato **PNG**, l'unico formato standard sul web e nei motori di gioco che supporta il canale alfa per la trasparenza. Quando ridimensioni un'immagine in pixel art, devi impostare l'algoritmo di scala su **Nearest Neighbor** (o nessun filtro): in questo modo i pixel mantengono i bordi netti e definiti anziché diventare sfocati."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Come pulire e ridimensionare un'immagine esterna",
+    "passi": [
+     "Apri l'immagine scaricata nel tuo programma di grafica.",
+     "Usa lo strumento di selezione colore o la gomma per rimuovere lo sfondo opaco rendendolo trasparente.",
+     "Ritaglia l'immagine attorno all'oggetto per eliminare lo spazio vuoto in eccesso attorno ai bordi.",
+     "Ridimensiona l'immagine alle dimensioni richieste nel gioco, selezionando la modalità Nearest Neighbor per la pixel art.",
+     "Esporta il file in formato PNG assicurandoti che il canale alfa sia attivo, e salvalo nella cartella del progetto Godot."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Una volta importata un'immagine in Godot, non serve creare più versioni del file se vuoi solo cambiarne la tinta. Tutti i nodi grafici 2D e d'interfaccia che ereditano da `CanvasItem` (come `TextureRect`, `Sprite2D` o `Button`) possiedono due proprietà per colorare l'immagine: `modulate` e `self_modulate`. Entrambe funzionano moltiplicando i pixel dell'immagine per un colore scelto (`Color`). Ad esempio, applicando la tinta verde a un'icona bianca, questa diventerà verde al volo senza dover modificare il file PNG originale."
+   },
+   {
+    "tipo": "testo",
+    "md": "La differenza tra le due proprietà riguarda la gerarchia dei nodi. La proprietà **modulate** applica la tinta al nodo corrente e a **tutti i suoi nodi figli**. La proprietà **self_modulate** applica il colore esclusivamente al nodo corrente, lasciando inalterati i figli. Nel progetto del quiz, questo è fondamentale: impostando `self_modulate` sullo sfondo di una risposta, puoi colorare il riquadro di verde o rosso per evidenziare l'esito senza alterare il colore del testo o dell'icona figli che si trovano all'interno."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends TextureRect\n\n\n# Cambia il colore del solo nodo corrente senza alterare i nodi figli\nfunc set_correct_style() -> void:\n\tself_modulate = Color.GREEN\n\n\nfunc set_wrong_style() -> void:\n\tself_modulate = Color.RED\n\n\nfunc reset_style() -> void:\n\tself_modulate = Color.WHITE",
+    "spiegazione": "Assegnando `Color.GREEN` o `Color.RED` a `self_modulate`, cambi solo il colore dello sfondo del riquadro. Assegnare `Color.WHITE` ripristina la tinta originale dell'immagine. Usare `self_modulate` garantisce che il testo o altre icone figlie mantengano i propri colori originali."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "pannello-inspector",
+    "didascalia": "Nel pannello Inspector, le proprietà Modulate e Self Modulate si trovano all'interno della sezione CanvasItem del nodo selezionato."
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando crei elementi d'interfaccia come il pannello delle domande del quiz, il testo contenuto può cambiare lunghezza da una domanda all'altra. Se ingrandisci una semplice immagine con `TextureRect`, i suoi bordi e gli angoli vengono stirati e sgranati. Per risolvere questo problema si usa il nodo **NinePatchRect**, che sfrutta la tecnica della griglia 9-slice."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il nodo `NinePatchRect` divide virtualmente la trama dell'immagine in 9 sezioni: 4 angoli, 4 bordi e 1 centro. I quattro angoli mantengono sempre la loro dimensione originale in pixel e non vengono mai scalati. I quattro bordi vengono allungati soltanto lungo la propria direzione (orizzontale o verticale), mentre la sezione centrale si espande per riempire l'area interna. Questa suddivisione viene definita dalle quattro proprietà contenute nel gruppo **Patch Margin** (`patch_margin_left`, `patch_margin_top`, `patch_margin_right`, `patch_margin_bottom`)."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Come configurare un pannello ridimensionabile con NinePatchRect",
+    "passi": [
+     "Nel pannello Scene, aggiungi un nodo NinePatchRect alla scena dell'interfaccia.",
+     "Nel pannello Inspector, trascina la tua immagine di cornice nella proprietà Texture.",
+     "Espandi la sezione Patch Margin nell'Inspector.",
+     "Inserisci lo spessore in pixel della cornice originale nei campi Left, Top, Right e Bottom.",
+     "Ingrandisci o rimpicciolisci il nodo NinePatchRect nell'area di lavoro 2D: la cornice manterrà i bordi e gli angoli nitidi e privi di distorsioni."
+    ]
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Se lasci i valori di `Patch Margin` a 0 o li imposti con valori maggiori rispetto alla dimensione reale dell'immagine originale, `NinePatchRect` si comporterà come un'immagine scalata normale, deformando la cornice. Misura sempre quanti pixel dista la cornice dal bordo dell'immagine e inserisci quel valore esatto."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Salvare sempre le grafiche in formato PNG con canale alfa per conservare la trasparenza, ed esportare con l'algoritmo Nearest Neighbor per la pixel art.\n- Usare `modulate` per tingere un nodo e tutti i suoi figli, oppure `self_modulate` per cambiare colore soltanto al nodo corrente.\n- Usare `NinePatchRect` per creare pannelli di testo e finestre dell'interfaccia che possono ingrandirsi senza deformare o sgranare i bordi.\n- I valori di `Patch Margin` indicano a Godot lo spessore fissa in pixel dei 4 bordi dell'immagine."
+   }
+  ]
+ }
 }
