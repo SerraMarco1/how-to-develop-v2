@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-26T13:17:29.211Z",
+ "aggiornato": "2026-10-26T16:19:40.314Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -587,6 +587,15 @@
    "file": "lezioni/f05-asset-e-audio/fogli-di-sprite.json",
    "sha256": "8a8bfe7dfc65a08425dff0c4be4dc7c841b132c13ad4d3473587d436be9bcc32",
    "byte": 205574
+  },
+  {
+   "slug": "adattare-un-immagine",
+   "numero": "5.3",
+   "titolo": "Adattare un'immagine al progetto",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/adattare-un-immagine.json",
+   "sha256": "179374640689e3730c9dd221005ee4db838f2b7f58427e29e50b499347dd5400",
+   "byte": 199017
   }
  ],
  "documentazione": {
