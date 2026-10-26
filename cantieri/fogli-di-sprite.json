@@ -1,9 +1,211 @@
 {
  "creato": "2026-10-25T10:59:54.596Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Icone dei temi da un foglio di sprite",
+    "consegna": "Aggiungi un'icona tematica alla schermata della domanda in `Quiz` estraendola dal foglio di sprite delle tessere `tiles.png`.\n\nSe non l'hai già fatto, copia la cartella `assets` presente in `_asset-del-corso` dentro la cartella del tuo progetto `quiz`, in modo da avere a disposizione `res://assets/sprites/tiles.png`.\n\n1. Nella scena `res://quiz.tscn`, all'interno del contenitore `MarginContainer/VBoxContainer`, aggiungi un nodo `TextureRect` chiamato `TopicIcon`, posizionato subito sopra `QuestionLabel`.\n2. Configura `TopicIcon` con dimensione minima personalizzata di `32x32` pixel, allineamento orizzontale centrato, modalità di espansione `Ignore Size` e ridimensionamento proporzionale centrato (`Keep Aspect Centered`).\n3. Nello script `res://quiz.gd`, crea e assegna a `TopicIcon` una risorsa `AtlasTexture` ritagliata sulla griglia di `tiles.png` (le cui tessere misurano 16x16 pixel):\n   - Se il tema attuale `QuizData.current_topic_title` è `\"Videogiochi\"`, ritaglia la tessera dei mattoni (colonna 3, riga 0, con coordinate `X=48, Y=0, W=16, H=16`).\n   - Per qualsiasi altro tema (o valore predefinito), ritaglia la tessera dell'erba (colonna 0, riga 0, con coordinate `X=0, Y=0, W=16, H=16`).\n   - Imposta il filtro della texture del nodo su `Nearest` per preservare la nitidezza dei pixel.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Assicurati che la cartella `res://assets/sprites/` contenga il file `tiles.png`. In caso contrario, trascina o copia la cartella `assets` da `_asset-del-corso` dentro la cartella `quiz`.",
+     "Apri la scena `res://quiz.tscn` nell'editor. Nel pannello *Scene*, espandi `MarginContainer` e seleziona `VBoxContainer`.",
+     "Fai clic su **+** (Aggiungi nodo figlio), cerca `TextureRect` e rinominalo in `TopicIcon`. Trascinalo nell'albero in modo che stia subito sopra `QuestionLabel` (tra `TimeBar` e `QuestionLabel`).",
+     "Con `TopicIcon` selezionato, vai nel pannello *Inspector*. Nella sezione **Layout → Custom Minimum Size**, imposta `x = 32` e `y = 32`. Nella sezione **Layout → Container Sizing**, imposta **Horizontal** su `Shrink Center`.",
+     "Sempre nell'*Inspector* di `TopicIcon`, imposta **Expand Mode** su `Ignore Size` e **Stretch Mode** su `Keep Aspect Centered`.",
+     "Apri lo script `res://quiz.gd`. In cima, insieme agli altri nodi annotati con `@onready`, aggiungi la riga: `@onready var topic_icon: TextureRect = $MarginContainer/VBoxContainer/TopicIcon`.",
+     "Crea una funzione `func _update_topic_icon() -> void:` in `quiz.gd`. All'interno, istanzia `var atlas_tex := AtlasTexture.new()`, assegna `atlas_tex.atlas = preload(\"res://assets/sprites/tiles.png\")` e imposta `atlas_tex.region` controllando `QuizData.current_topic_title`: se vale `\"Videogiochi\"`, usa `Rect2(48.0, 0.0, 16.0, 16.0)`, altrimenti `Rect2(0.0, 0.0, 16.0, 16.0)`. Assegna `topic_icon.texture = atlas_tex` e `topic_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST`.",
+     "Chiama `_update_topic_icon()` sia all'inizio di `_ready()` che dentro `display_current_question()` prima di mostrare la domanda. Salva la scena e lo script con Ctrl+S."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://quiz.tscn",
+      "descrizione": "Il file della scena res://quiz.tscn è presente nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz.tscn",
+      "tipoNodo": "TextureRect",
+      "nome": "TopicIcon",
+      "genitore": "MarginContainer/VBoxContainer",
+      "descrizione": "In quiz.tscn è presente un TextureRect chiamato TopicIcon dentro MarginContainer/VBoxContainer"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tQuizData.current_topic_title = \"Videogiochi\"\n\tvar quiz := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz_scene\", quiz != null, \"La scena res://quiz.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar icon_node := find_by_name(quiz, \"TopicIcon\") as TextureRect\n\tif not check(\"icon_node\", icon_node != null, \"In quiz.tscn deve esistere un TextureRect chiamato TopicIcon\"):\n\t\treturn\n\n\tvar tex := icon_node.texture as AtlasTexture\n\tif not check(\"atlas_texture\", tex != null, \"TopicIcon.texture deve essere una risorsa AtlasTexture\"):\n\t\treturn\n\n\tcheck(\"atlas_file\", tex.atlas != null and tex.atlas.resource_path.ends_with(\"tiles.png\"), \"L'atlas deve puntare a tiles.png\")\n\tcheck(\"size_16\", tex.region.size == Vector2(16, 16), \"La regione ritagliata deve avere dimensioni esattamente di 16x16 pixel (è %.0fx%.0f)\" % [tex.region.size.x, tex.region.size.y])\n\tcheck(\"vg_region\", tex.region.position == Vector2(48, 0), \"Per il tema Videogiochi la regione deve partire da (48, 0), corrispondente alla cella dei mattoni (è a %.0f, %.0f)\" % [tex.region.position.x, tex.region.position.y])\n\n\tquiz.queue_free()\n\tawait wait_frames(2)\n\n\tQuizData.current_topic_title = \"Cultura Generale\"\n\tvar quiz2 := await instantiate_scene(\"res://quiz.tscn\")\n\tif not check(\"quiz2_scene\", quiz2 != null, \"La scena deve potersi riaprire con un altro tema\"):\n\t\treturn\n\n\tvar icon_node2 := find_by_name(quiz2, \"TopicIcon\") as TextureRect\n\tif not check(\"icon_node2\", icon_node2 != null, \"TopicIcon deve esistere anche nella seconda istanza\"):\n\t\treturn\n\n\tvar tex2 := icon_node2.texture as AtlasTexture\n\tif not check(\"atlas_texture2\", tex2 != null, \"TopicIcon.texture deve essere una AtlasTexture anche per Cultura Generale\"):\n\t\treturn\n\n\tcheck(\"gen_region\", tex2.region.position == Vector2(0, 0), \"Per il tema Cultura Generale la regione deve partire da (0, 0), corrispondente alla cella dell'erba (è a %.0f, %.0f)\" % [tex2.region.position.x, tex2.region.position.y])\n\tcheck(\"size_16_gen\", tex2.region.size == Vector2(16, 16), \"La regione ritagliata deve essere esattamente 16x16 pixel anche per Cultura Generale\")",
+      "descrizione": "TopicIcon riceve una AtlasTexture ritagliata esattamente sulla cella 16x16 corretta a seconda del tema"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz.gd\" id=\"1_quiz\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_quiz\"]\ndefault_font_size = 20\n\n[node name=\"Quiz\" type=\"Control\"]\nprocess_mode = 3\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_quiz\")\nscript = ExtResource(\"1_quiz\")\n\n[node name=\"QuestionTimer\" type=\"Timer\" parent=\".\"]\none_shot = true\n\n[node name=\"MarginContainer\" type=\"MarginContainer\" parent=\".\"]\nprocess_mode = 1\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme_override_constants/margin_left = 60\ntheme_override_constants/margin_top = 40\ntheme_override_constants/margin_right = 60\ntheme_override_constants/margin_bottom = 40\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"MarginContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 28\nalignment = 1\n\n[node name=\"TimeBar\" type=\"ProgressBar\" parent=\"MarginContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(0, 20)\nlayout_mode = 2\nmax_value = 5.0\nvalue = 5.0\nshow_percentage = false\n\n[node name=\"TopicIcon\" type=\"TextureRect\" parent=\"MarginContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(32, 32)\nlayout_mode = 2\nsize_flags_horizontal = 4\nexpand_mode = 1\nstretch_mode = 5\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 26\ntext = \"Testo della domanda\"\nhorizontal_alignment = 1\nautowrap_mode = 2\n\n[node name=\"AnswersContainer\" type=\"VBoxContainer\" parent=\"MarginContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"Answer0\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 1\"\n\n[node name=\"Answer2\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 2\"\n\n[node name=\"Answer3\" type=\"Button\" parent=\"MarginContainer/VBoxContainer/AnswersContainer\"]\ncustom_minimum_size = Vector2(0, 48)\nlayout_mode = 2\ntext = \"Risposta 3\"\n\n[node name=\"PauseMenu\" type=\"ColorRect\" parent=\".\"]\nvisible = false\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ncolor = Color(0, 0, 0, 0.705882)\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\"PauseMenu\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"PauseMenu/CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 20\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 32\ntext = \"PAUSA\"\nhorizontal_alignment = 1\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Riprendi\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\"PauseMenu/CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(200, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+      },
+      {
+       "percorso": "quiz.gd",
+       "contenuto": "extends Control\n\nconst QUESTION_DURATION: float = 5.0\nconst FEEDBACK_DURATION: float = 1.0\nconst FADE_DURATION: float = 0.2\n\nvar session: QuizSession\nvar answering_locked: bool = false\n\n@onready var margin_container: MarginContainer = $MarginContainer\n@onready var question_label: Label = $MarginContainer/VBoxContainer/QuestionLabel\n@onready var time_bar: ProgressBar = $MarginContainer/VBoxContainer/TimeBar\n@onready var question_timer: Timer = $QuestionTimer\n@onready var topic_icon: TextureRect = $MarginContainer/VBoxContainer/TopicIcon\n\n@onready var pause_menu: ColorRect = $PauseMenu\n@onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n@onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n\n@onready var answer_buttons: Array[Button] = [\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer0,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer1,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer2,\n\t$MarginContainer/VBoxContainer/AnswersContainer/Answer3\n]\n\n\nfunc _ready() -> void:\n\tQuizData.score = 0\n\tsession = QuizSession.new(QuizData.questions.duplicate())\n\n\ttime_bar.max_value = QUESTION_DURATION\n\tquestion_timer.timeout.connect(_on_question_timeout)\n\n\tfor i in range(answer_buttons.size()):\n\t\tanswer_buttons[i].pressed.connect(_select_answer.bind(i))\n\n\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\tpause_menu.visible = false\n\t_update_topic_icon()\n\tdisplay_current_question()\n\n\nfunc _process(_delta: float) -> void:\n\tif not answering_locked and not question_timer.is_stopped():\n\t\ttime_bar.value = question_timer.time_left\n\n\tif Input.is_action_just_pressed(\"pause\"):\n\t\ttoggle_pause()\n\n\nfunc _update_topic_icon() -> void:\n\tvar atlas_tex := AtlasTexture.new()\n\tatlas_tex.atlas = preload(\"res://assets/sprites/tiles.png\")\n\tif QuizData.current_topic_title == \"Videogiochi\":\n\t\tatlas_tex.region = Rect2(48.0, 0.0, 16.0, 16.0)\n\telse:\n\t\tatlas_tex.region = Rect2(0.0, 0.0, 16.0, 16.0)\n\ttopic_icon.texture = atlas_tex\n\ttopic_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST\n\n\nfunc toggle_pause() -> void:\n\tvar is_paused: bool = not get_tree().paused\n\tget_tree().paused = is_paused\n\tpause_menu.visible = is_paused\n\tif is_paused:\n\t\tresume_button.grab_focus()\n\telse:\n\t\t_focus_first_active_answer()\n\n\nfunc _focus_first_active_answer() -> void:\n\tfor btn in answer_buttons:\n\t\tif btn.visible and not btn.disabled:\n\t\t\tbtn.grab_focus()\n\t\t\treturn\n\n\nfunc _on_resume_button_pressed() -> void:\n\ttoggle_pause()\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().paused = false\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n\n\nfunc display_current_question() -> void:\n\tif session.is_finished():\n\t\tfinish_quiz()\n\t\treturn\n\n\t_update_topic_icon()\n\tanswering_locked = false\n\tvar current: Question = session.get_current_question()\n\tquestion_label.text = current.text\n\n\tfor i in range(answer_buttons.size()):\n\t\tif i < current.options.size():\n\t\t\tanswer_buttons[i].text = current.options[i]\n\t\t\tanswer_buttons[i].visible = true\n\t\t\tanswer_buttons[i].disabled = false\n\t\telse:\n\t\t\tanswer_buttons[i].visible = false\n\t\t\tanswer_buttons[i].disabled = true\n\n\ttime_bar.value = QUESTION_DURATION\n\tquestion_timer.start(QUESTION_DURATION)\n\tanswer_buttons[0].grab_focus()\n\n\nfunc _select_answer(button_index: int) -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\tquestion_timer.stop()\n\n\tvar current: Question = session.get_current_question()\n\tvar was_correct: bool = session.submit_answer(button_index)\n\n\tif was_correct:\n\t\tanswer_buttons[button_index].text += \"  [GIUSTO!]\"\n\telse:\n\t\tanswer_buttons[button_index].text += \"  [SBAGLIATO]\"\n\t\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\t\tanswer_buttons[current.correct_index].text += \"  [CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _on_question_timeout() -> void:\n\tif answering_locked:\n\t\treturn\n\tanswering_locked = true\n\n\tvar current: Question = session.get_current_question()\n\tif current.correct_index >= 0 and current.correct_index < answer_buttons.size():\n\t\tanswer_buttons[current.correct_index].text += \"  [TEMPO SCADUTO - CORRETTO]\"\n\n\t_show_feedback_and_advance()\n\n\nfunc _fade_out(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 0.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _fade_in(target: CanvasItem) -> void:\n\tvar tween: Tween = create_tween()\n\ttween.tween_property(target, \"modulate:a\", 1.0, FADE_DURATION)\n\tawait tween.finished\n\n\nfunc _show_feedback_and_advance() -> void:\n\tfor btn in answer_buttons:\n\t\tbtn.disabled = true\n\n\tawait get_tree().create_timer(FEEDBACK_DURATION).timeout\n\tif not is_inside_tree():\n\t\treturn\n\n\tawait _fade_out(margin_container)\n\tif not is_inside_tree():\n\t\treturn\n\n\tsession.advance()\n\tdisplay_current_question()\n\n\tif not session.is_finished():\n\t\tawait _fade_in(margin_container)\n\t\tif not is_inside_tree():\n\t\t\treturn\n\n\nfunc finish_quiz() -> void:\n\tQuizData.score = session.score\n\tQuizData.last_wrong_questions = session.get_wrong_questions()\n\tif QuizData.score > QuizData.high_score:\n\t\tQuizData.high_score = QuizData.score\n\t\tQuizData.save_high_score()\n\n\tif QuizData.current_topic_title != \"\":\n\t\tvar current_record: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\tif QuizData.score > current_record:\n\t\t\tQuizData.topic_records[QuizData.current_topic_title] = QuizData.score\n\t\t\tQuizData.save_topic_records()\n\n\tget_tree().change_scene_to_file(\"res://results.tscn\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "I nodi `Control` dell'interfaccia non possiedono le proprietà di animazione a fotogrammi come `Sprite2D`. Per mostrare una singola cella di un foglio di sprite si crea quindi una `AtlasTexture` via codice. Assegnando la risorsa `tiles.png` alla proprietà `atlas` e impostando la proprietà `region` su un rettangolo `Rect2(x, y, w, h)`, Godot ritaglia solo l'area desiderata. In `tiles.png`, le tessere sono disposte su celle di 16x16 pixel: la tessera dell'erba si trova in alto a sinistra a `(0, 0)`, mentre la tessera dei mattoni si trova alla quarta colonna (indice 3), quindi a coordinata `X = 3 * 16 = 48` e `Y = 0`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Calcolare le celle con margini e spazi: SheetGrid",
+    "consegna": "I fogli di sprite distribuiti online non sempre hanno le celle attaccate al bordo o contigue: molti presentano un margine esterno attorno al foglio e uno spazio di separazione (padding) tra una cella e l'altra. Per non dover calcolare a mano i pixel ogni volta, crea una classe di utilità riutilizzabile.\n\nCrea un nuovo file `res://sheet_grid.gd` con la classe `class_name SheetGrid` che estende `RefCounted`:\n1. Dichiara tre proprietà tipizzate:\n   - `cell_size: Vector2` (larghezza e altezza di ciascuna cella in pixel)\n   - `margin: Vector2` (margine esterno iniziale da sinistra e dall'alto, predefinito a `Vector2.ZERO`)\n   - `spacing: Vector2` (spaziatura tra celle adiacenti in orizzontale e in verticale, predefinito a `Vector2.ZERO`)\n2. Nel costruttore `func _init(p_cell_size: Vector2, p_margin: Vector2 = Vector2.ZERO, p_spacing: Vector2 = Vector2.ZERO) -> void` memorizza i tre valori nelle rispettive proprietà.\n3. Scrivi il metodo `func get_cell_rect(column: int, row: int) -> Rect2` che riceve l'indice di colonna e di riga (a partire da 0) e restituisce il `Rect2` della regione corrispondente. L'origine del rettangolo si calcola con le formule:\n   - $X = margin.x + column \\times (cell\\_size.x + spacing.x)$\n   - $Y = margin.y + row \\times (cell\\_size.y + spacing.y)$\n   e le dimensioni del rettangolo sono pari a `cell_size.x` e `cell_size.y`.\n4. Scrivi il metodo `func create_atlas_texture(texture: Texture2D, column: int, row: int) -> AtlasTexture` che istanzia una nuova `AtlasTexture`, assegna la texture ricevuta alla proprietà `atlas`, imposta `region` con il risultato di `get_cell_rect(column, row)` e restituisce la risorsa creata.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per calcolare l'inizio della cella in orizzontale, parti dal margine sinistro `margin.x`. Per ciascuna colonna superata prima di arrivare a quella richiesta, si avanza della larghezza della cella più lo spazio tra le celle: `column * (cell_size.x + spacing.x)`.",
+     "La funzione `Rect2` richiede quattro parametri numerici: `Rect2(x, y, larghezza, altezza)`. La larghezza e l'altezza corrispondono esattamente a `cell_size.x` e `cell_size.y`.",
+     "Nel metodo `create_atlas_texture`, crea l'oggetto con `AtlasTexture.new()`, assegna `atlas` e `region` (ottenuto da `get_cell_rect`), quindi restituisci l'oggetto con `return`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://sheet_grid.gd",
+      "descrizione": "Il file res://sheet_grid.gd esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar grid_script = load(\"res://sheet_grid.gd\")\n\tif not check(\"script_loaded\", grid_script != null, \"Lo script res://sheet_grid.gd deve essere presente e senza errori di sintassi\"):\n\t\treturn\n\n\t# Test 1: Griglia semplice senza margini ne spaziature\n\tvar simple_grid = grid_script.new(Vector2(16.0, 16.0))\n\tvar rect_0_0 = call_if_exists(simple_grid, \"get_cell_rect\", [0, 0], Rect2())\n\tcheck(\"simple_0_0\", rect_0_0 == Rect2(0.0, 0.0, 16.0, 16.0), \"Senza margini ne spaziature, la cella (0, 0) deve essere Rect2(0, 0, 16, 16) (e': %s)\" % str(rect_0_0))\n\n\tvar rect_3_1 = call_if_exists(simple_grid, \"get_cell_rect\", [3, 1], Rect2())\n\tcheck(\"simple_3_1\", rect_3_1 == Rect2(48.0, 16.0, 16.0, 16.0), \"La cella (3, 1) su tessere 16x16 deve essere Rect2(48, 16, 16, 16) (e': %s)\" % str(rect_3_1))\n\n\t# Test 2: Griglia con margine e spaziature\n\t# cella: 32x48, margine: (10, 20), spaziatura: (4, 8)\n\tvar complex_grid = grid_script.new(Vector2(32.0, 48.0), Vector2(10.0, 20.0), Vector2(4.0, 8.0))\n\tvar c_0_0 = call_if_exists(complex_grid, \"get_cell_rect\", [0, 0], Rect2())\n\tcheck(\"complex_0_0\", c_0_0 == Rect2(10.0, 20.0, 32.0, 48.0), \"Con margine (10, 20), la cella (0, 0) deve partire da (10, 20) (e': %s)\" % str(c_0_0))\n\n\tvar c_1_0 = call_if_exists(complex_grid, \"get_cell_rect\", [1, 0], Rect2())\n\tcheck(\"complex_1_0\", c_1_0 == Rect2(46.0, 20.0, 32.0, 48.0), \"La cella (1, 0) deve tenere conto della spaziatura: X = 10 + 1*(32+4) = 46 (e': %s)\" % str(c_1_0))\n\n\tvar c_2_3 = call_if_exists(complex_grid, \"get_cell_rect\", [2, 3], Rect2())\n\tcheck(\"complex_2_3\", c_2_3 == Rect2(82.0, 188.0, 32.0, 48.0), \"La cella (2, 3) deve risultare in Rect2(82, 188, 32, 48) (e': %s)\" % str(c_2_3))\n\n\t# Test 3: Creazione di AtlasTexture\n\tvar test_tex: Texture2D = load(\"res://assets/sprites/tiles.png\") as Texture2D\n\tvar atlas_result = call_if_exists(complex_grid, \"create_atlas_texture\", [test_tex, 2, 3], null)\n\tif check(\"atlas_created\", atlas_result is AtlasTexture, \"create_atlas_texture deve restituire un'istanza di AtlasTexture\"):\n\t\tvar at: AtlasTexture = atlas_result as AtlasTexture\n\t\tcheck(\"atlas_pointer\", at.atlas == test_tex, \"La proprieta atlas deve puntare alla texture fornita\")\n\t\tcheck(\"atlas_region\", at.region == Rect2(82.0, 188.0, 32.0, 48.0), \"La proprieta region deve coincidere con il rettangolo calcolato\")",
+      "descrizione": "SheetGrid calcola le regioni esatte per griglie semplici e con margini e spazi, creando la AtlasTexture corretta"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "sheet_grid.gd",
+       "contenuto": "class_name SheetGrid\nextends RefCounted\n\nvar cell_size: Vector2 = Vector2.ZERO\nvar margin: Vector2 = Vector2.ZERO\nvar spacing: Vector2 = Vector2.ZERO\n\n\nfunc _init(p_cell_size: Vector2, p_margin: Vector2 = Vector2.ZERO, p_spacing: Vector2 = Vector2.ZERO) -> void:\n\tcell_size = p_cell_size\n\tmargin = p_margin\n\tspacing = p_spacing\n\n\nfunc get_cell_rect(column: int, row: int) -> Rect2:\n\tvar x: float = margin.x + float(column) * (cell_size.x + spacing.x)\n\tvar y: float = margin.y + float(row) * (cell_size.y + spacing.y)\n\treturn Rect2(x, y, cell_size.x, cell_size.y)\n\n\nfunc create_atlas_texture(texture: Texture2D, column: int, row: int) -> AtlasTexture:\n\tvar atlas_tex := AtlasTexture.new()\n\tatlas_tex.atlas = texture\n\tatlas_tex.region = get_cell_rect(column, row)\n\treturn atlas_tex\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Quando un foglio di sprite include margini perimetrali o spazi tra le celle, la coordinata d'inizio di ciascuna cella non è un semplice multiplo della dimensione. Il punto iniziale si trova sommando il margine iniziale al prodotto tra il numero della colonna e la distanza totale tra due celle successive (`cell_size + spacing`). Incapsulando questo calcolo nella classe `SheetGrid`, qualsiasi nodo può richiedere un ritaglio senza duplicare la formula e garantendo che il rettangolo `Rect2` contenga solo i pixel della cella scelta, senza sbordare in quelle confinanti.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Il mazzo di carte del quiz: CardDeck e premio finale",
+    "consegna": "Usa la classe `SheetGrid` per costruire un gestore di carte ritagliate da un foglio (`CardDeck`) e mostra una carta premio nella schermata finale di riepilogo `results.tscn` in base al punteggio ottenuto.\n\n1. Crea il file `res://card_deck.gd` con la classe `class_name CardDeck` che estende `RefCounted`:\n   - Costruttore:\n     `func _init(p_texture: Texture2D, p_card_size: Vector2, p_margin: Vector2 = Vector2.ZERO, p_spacing: Vector2 = Vector2.ZERO) -> void`\n     Memorizza la texture ricevuta e inizializza un'istanza interna di `SheetGrid` con le dimensioni, il margine e la spaziatura passati.\n   - Metodo `func get_card_region(column: int, row: int) -> Rect2`:\n     restituisce il rettangolo calcolato dalla griglia interna per la colonna e riga specificate.\n   - Metodo `func get_card_texture(column: int, row: int) -> AtlasTexture`:\n     restituisce una `AtlasTexture` ritagliata per la carta alla colonna e riga specificate.\n   - Metodo `func get_reward_card(score: int) -> AtlasTexture`:\n     restituisce una carta premio a seconda del valore di `score`:\n     - Se `score >= 2`: restituisce la carta alla colonna 3, riga 0 (mattoni d'oro).\n     - Se `score == 1`: restituisce la carta alla colonna 2, riga 0 (pietra d'argento).\n     - Se `score <= 0`: restituisce la carta alla colonna 1, riga 0 (terra di bronzo).\n2. Modifica la schermata finale `res://results.tscn`:\n   - Dentro `CenterContainer/VBoxContainer`, aggiungi un nodo `TextureRect` chiamato `RewardCard`, posizionato tra `TitleLabel` e `ScoreLabel`.\n   - Imposta per `RewardCard`: dimensione minima personalizzata di `64x64` pixel, allineamento orizzontale su Shrink Center (valore 4), `expand_mode` su `Ignore Size` (1) e `stretch_mode` su `Keep Aspect Centered` (5).\n3. Modifica `res://results.gd`:\n   - Aggiungi `@onready var reward_card: TextureRect = $CenterContainer/VBoxContainer/RewardCard`.\n   - In `_ready()`, istanzia un `CardDeck` passando come texture `preload(\"res://assets/sprites/tiles.png\")`, dimensione `Vector2(16, 16)`, margine `Vector2.ZERO` e spaziatura `Vector2.ZERO`.\n   - Chiama `get_reward_card(QuizData.score)` sul mazzo e assegna il risultato a `reward_card.texture`.\n   - Imposta `reward_card.texture_filter` su `CanvasItem.TEXTURE_FILTER_NEAREST` per mantenere la pixel art nitida.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "`CardDeck` può delegare il lavoro a una variabile `var grid: SheetGrid` creata nel suo costruttore: per `get_card_texture`, richiama direttamente `grid.create_atlas_texture(texture, column, row)`.",
+     "In `results.tscn`, ricordati di posizionare il nuovo nodo `RewardCard` tra `TitleLabel` e `ScoreLabel` e di impostare `texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST` da codice o dall'Inspector per evitare sfocature."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://card_deck.gd",
+      "descrizione": "Il file res://card_deck.gd esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://results.tscn",
+      "tipoNodo": "TextureRect",
+      "nome": "RewardCard",
+      "genitore": "CenterContainer/VBoxContainer",
+      "descrizione": "In results.tscn è presente il nodo TextureRect chiamato RewardCard dentro CenterContainer/VBoxContainer"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar deck_script = load(\"res://card_deck.gd\")\n\tif not check(\"deck_script_exists\", deck_script != null, \"Lo script res://card_deck.gd deve essere presente e valido\"):\n\t\treturn\n\n\tvar tiles_tex: Texture2D = load(\"res://assets/sprites/tiles.png\") as Texture2D\n\tif not check(\"tiles_found\", tiles_tex != null, \"tiles.png deve essere accessibile in assets/sprites/\"):\n\t\treturn\n\n\t# Controllo 1: griglia con margini e spazi arbitrari\n\t# Carta 30x40, margine (12, 14), spaziatura (6, 8)\n\tvar custom_deck = deck_script.new(tiles_tex, Vector2(30.0, 40.0), Vector2(12.0, 14.0), Vector2(6.0, 8.0))\n\tvar reg_2_1 = call_if_exists(custom_deck, \"get_card_region\", [2, 1], Rect2())\n\t# X = 12 + 2*(30+6) = 12 + 72 = 84\n\t# Y = 14 + 1*(40+8) = 14 + 48 = 62\n\tcheck(\"custom_deck_region\", reg_2_1 == Rect2(84.0, 62.0, 30.0, 40.0), \"La regione calcolata con margine e spaziatura deve essere Rect2(84, 62, 30, 40) (e': %s)\" % str(reg_2_1))\n\n\tvar card_tex = call_if_exists(custom_deck, \"get_card_texture\", [2, 1], null)\n\tif check(\"custom_card_tex\", card_tex is AtlasTexture, \"get_card_texture deve restituire un'istanza di AtlasTexture\"):\n\t\tvar at: AtlasTexture = card_tex as AtlasTexture\n\t\tcheck(\"custom_card_region\", at.region == Rect2(84.0, 62.0, 30.0, 40.0), \"La texture della carta deve avere la regione corretta\")\n\n\t# Controllo 2: carte premio in base al punteggio\n\tvar tiles_deck = deck_script.new(tiles_tex, Vector2(16.0, 16.0), Vector2.ZERO, Vector2.ZERO)\n\tvar card_high = call_if_exists(tiles_deck, \"get_reward_card\", [3], null) as AtlasTexture\n\tvar card_mid = call_if_exists(tiles_deck, \"get_reward_card\", [1], null) as AtlasTexture\n\tvar card_low = call_if_exists(tiles_deck, \"get_reward_card\", [0], null) as AtlasTexture\n\n\tcheck(\"reward_high\", card_high != null and card_high.region == Rect2(48.0, 0.0, 16.0, 16.0), \"Con punteggio >= 2 la carta premio deve essere la cella (3, 0) Rect2(48, 0, 16, 16)\")\n\tcheck(\"reward_mid\", card_mid != null and card_mid.region == Rect2(32.0, 0.0, 16.0, 16.0), \"Con punteggio == 1 la carta premio deve essere la cella (2, 0) Rect2(32, 0, 16, 16)\")\n\tcheck(\"reward_low\", card_low != null and card_low.region == Rect2(16.0, 0.0, 16.0, 16.0), \"Con punteggio <= 0 la carta premio deve essere la cella (1, 0) Rect2(16, 0, 16, 16)\")\n\n\t# Controllo 3: integrazione nella scena results.tscn\n\tQuizData.score = 2\n\tvar results := await instantiate_scene(\"res://results.tscn\")\n\tif not check(\"results_loaded\", results != null, \"La scena res://results.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\n\tvar reward_node := find_by_name(results, \"RewardCard\") as TextureRect\n\tif not check(\"reward_node\", reward_node != null, \"In results.tscn deve essere presente il nodo TextureRect chiamato RewardCard\"):\n\t\treturn\n\n\tvar res_tex := reward_node.texture as AtlasTexture\n\tif not check(\"res_tex_atlas\", res_tex != null, \"RewardCard.texture deve essere una AtlasTexture assegnata a tempo di esecuzione\"):\n\t\treturn\n\n\tcheck(\"res_tex_region\", res_tex.region == Rect2(48.0, 0.0, 16.0, 16.0), \"Con QuizData.score = 2, RewardCard deve mostrare la carta (3, 0) Rect2(48, 0, 16, 16)\")",
+      "descrizione": "CardDeck calcola le carte con margini/spazi e assegna la carta premio corretta nella schermata Results"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "card_deck.gd",
+       "contenuto": "class_name CardDeck\nextends RefCounted\n\nvar texture: Texture2D\nvar grid: SheetGrid\n\n\nfunc _init(\n\tp_texture: Texture2D,\n\tp_card_size: Vector2,\n\tp_margin: Vector2 = Vector2.ZERO,\n\tp_spacing: Vector2 = Vector2.ZERO\n) -> void:\n\ttexture = p_texture\n\tgrid = SheetGrid.new(p_card_size, p_margin, p_spacing)\n\n\nfunc get_card_region(column: int, row: int) -> Rect2:\n\treturn grid.get_cell_rect(column, row)\n\n\nfunc get_card_texture(column: int, row: int) -> AtlasTexture:\n\treturn grid.create_atlas_texture(texture, column, row)\n\n\nfunc get_reward_card(score: int) -> AtlasTexture:\n\tif score >= 2:\n\t\treturn get_card_texture(3, 0)\n\telif score == 1:\n\t\treturn get_card_texture(2, 0)\n\telse:\n\t\treturn get_card_texture(1, 0)\n"
+      },
+      {
+       "percorso": "results.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://results.gd\" id=\"1_results\"]\n\n[sub_resource type=\"Theme\" id=\"Theme_results\"]\ndefault_font_size = 22\n\n[node name=\"Results\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ntheme = SubResource(\"Theme_results\")\nscript = ExtResource(\"1_results\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 24\nalignment = 1\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_font_sizes/font_size = 36\ntext = \"PARTITA TERMINATA\"\nhorizontal_alignment = 1\n\n[node name=\"RewardCard\" type=\"TextureRect\" parent=\"CenterContainer/VBoxContainer\"]\ncustom_minimum_size = Vector2(64, 64)\nlayout_mode = 2\nsize_flags_horizontal = 4\nexpand_mode = 1\nstretch_mode = 5\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Punteggio: 0\"\nhorizontal_alignment = 1\n\n[node name=\"HighScoreLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Record: 0\"\nhorizontal_alignment = 1\n\n[node name=\"ButtonsContainer\" type=\"VBoxContainer\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntheme_override_constants/separation = 12\n\n[node name=\"RestartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Rigioca\"\n\n[node name=\"MenuButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer/ButtonsContainer\"]\ncustom_minimum_size = Vector2(220, 48)\nlayout_mode = 2\ntext = \"Menu Principale\"\n"
+      },
+      {
+       "percorso": "results.gd",
+       "contenuto": "extends Control\n\n@onready var reward_card: TextureRect = $CenterContainer/VBoxContainer/RewardCard\n@onready var score_label: Label = $CenterContainer/VBoxContainer/ScoreLabel\n@onready var high_score_label: Label = $CenterContainer/VBoxContainer/HighScoreLabel\n@onready var restart_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/RestartButton\n@onready var menu_button: Button = $CenterContainer/VBoxContainer/ButtonsContainer/MenuButton\n\n\nfunc _ready() -> void:\n\tscore_label.text = \"Punteggio: \" + str(QuizData.score)\n\tif QuizData.current_topic_title != \"\":\n\t\tvar topic_rec: int = int(QuizData.topic_records.get(QuizData.current_topic_title, 0))\n\t\thigh_score_label.text = \"Record (\" + QuizData.current_topic_title + \"): \" + str(topic_rec)\n\telse:\n\t\thigh_score_label.text = \"Record: \" + str(QuizData.high_score)\n\n\tvar deck := CardDeck.new(\n\t\tpreload(\"res://assets/sprites/tiles.png\"),\n\t\tVector2(16.0, 16.0),\n\t\tVector2.ZERO,\n\t\tVector2.ZERO\n\t)\n\treward_card.texture = deck.get_reward_card(QuizData.score)\n\treward_card.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST\n\n\trestart_button.grab_focus()\n\trestart_button.pressed.connect(_on_restart_button_pressed)\n\tmenu_button.pressed.connect(_on_menu_button_pressed)\n\n\nfunc _on_restart_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://quiz.tscn\")\n\n\nfunc _on_menu_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://menu.tscn\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La classe `CardDeck` incapsula la risorsa `Texture2D` e un'istanza di `SheetGrid`, esponendo metodi dedicati per accedere alle singole carte. Assegnando la texture premio alla schermata `results.tscn` a tempo di esecuzione con `deck.get_reward_card(QuizData.score)`, la tessera corrispondente viene estratta al volo dal foglio e visualizzata nel nodo `RewardCard` senza frammenti delle celle adiacenti. Con `texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST`, la tessera 16x16 pixel viene ridimensionata a 64x64 pixel preservando i bordi nitidi tipici della pixel art.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Fogli di sprite: un'immagine, tanti pezzi",
@@ -75,5 +277,10 @@
     "md": "- Un foglio di sprite (atlas) raccoglie più immagini in un unico file per ottimizzare memoria e organizzazione.\n- Nel nodo `Sprite2D` puoi mostrare un pezzo dell'immagine usando la proprietà **Region** o dividendo la griglia con **Hframes** e **Vframes**.\n- La risorsa **AtlasTexture** permette di isolare una regione di un atlas e usarla nei nodi dell'interfaccia utente (`Control`).\n- Per leggere fogli creati da altri, calcola le coordinate tenendo conto del margine iniziale e dello spazio tra le celle.\n- In GDScript si crea un ritaglio al volo istanziando `AtlasTexture.new()` e definendo il rettangolo `Rect2(x, y, larghezza, altezza)`."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
