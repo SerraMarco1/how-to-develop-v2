@@ -811,5 +811,39 @@
     ]
    }
   }
+ },
+ "fogli-di-sprite": {
+  "es1": {
+   "impronta": "18c90a34b953e66e5fe9f6c38580e0453856107c5f5f30f60267c0193dd20a88",
+   "tentativi": 1,
+   "esito": "fatto",
+   "regole": 2,
+   "copione": {
+    "scena": "res://quiz.tscn",
+    "durata": 8,
+    "azioni": [],
+    "soggetti": [
+     {
+      "id": "icona",
+      "cerca": {
+       "nome": "TopicIcon"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 7.5,
+      "deve": "esserci",
+      "etichetta": "Icona tema"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "L'icona tematica appare sopra la domanda",
+      "da": 0.5,
+      "a": 7.5,
+      "soggetto": "icona"
+     }
+    ]
+   }
+  }
  }
 }

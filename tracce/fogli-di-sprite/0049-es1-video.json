@@ -1,0 +1,48 @@
+{
+ "n": 49,
+ "quando": "2026-10-26T13:17:29.195Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri quiz.tscn e premi F6, 8 s. Soggetti: «Icona tema» (esserci). Scritte: «L'icona tematica appare sopra la domanda». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 27 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 39754,
+ "dati": {
+  "copione": {
+   "scena": "res://quiz.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "icona",
+     "cerca": {
+      "nome": "TopicIcon"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Icona tema"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'icona tematica appare sopra la domanda",
+     "da": 0.5,
+     "a": 7.5,
+     "soggetto": "icona"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "d664506bad01507205337ad45212b2565727ccb15f10e5628547c590b4127165",
+   "estensione": "mp4",
+   "byte": 27886
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 17 s (8080 → 199 token)"
+ ]
+}
