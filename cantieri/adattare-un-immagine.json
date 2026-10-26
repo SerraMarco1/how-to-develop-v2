@@ -562,7 +562,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Nessun errore durante l'esecuzione: SCRIPT ERROR: Invalid access to property or key 'pressed' on a base object of type 'null instance'.\n          at: _ready (res://quiz.gd:42)\nOutput di Godot:\nERROR: Node not found: \"PauseMenu/CenterContainer/VBoxContainer/ResumeButton\" (relative to \"/root/Quiz\").\n   at: get_node (scene/main/node.cpp:1975)\nERROR: Node not found: \"PauseMenu/CenterContainer/VBoxContainer/QuitButton\" (relative to \"/root/Quiz\").\n   at: get_node (scene/main/node.cpp:1975)\nSCRIPT ERROR: Invalid access to property or key 'pressed' on a base object of type 'null instance'.\n          at: _ready (res://quiz.gd:42)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nRighe citate dagli errori:\n  quiz.gd, riga 42: `resume_button.pressed.connect(_on_resume_button_pressed)`"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
