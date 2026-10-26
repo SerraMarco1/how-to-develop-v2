@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-26T12:55:59.473Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-26T13:04:37.417Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "fogli-di-sprite",
-  "numero": "5.2",
-  "titolo": "Fogli di sprite: un'immagine, tanti pezzi"
+  "slug": "adattare-un-immagine",
+  "numero": "5.3",
+  "titolo": "Adattare un'immagine al progetto"
  },
- "messaggio": "Sta scrivendo la lezione 5.2 «Fogli di sprite: un'immagine, tanti pezzi».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.3 riprende da sola appena rispondono.",
+ "riprende": "2026-10-26T13:14:37.417Z"
 }
