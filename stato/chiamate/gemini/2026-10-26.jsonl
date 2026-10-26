@@ -20,3 +20,4 @@
 {"quando":1793019876897,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"adattare-un-immagine","ok":false,"contata":true,"durataMs":514,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793020609443,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"fogli-di-sprite","ok":true,"contata":true,"durataMs":17214,"tokenInput":8080,"tokenOutput":199,"ragionamento":1240}
 {"quando":1793020650673,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"adattare-un-immagine","ok":false,"contata":true,"durataMs":4145,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793021949245,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"adattare-un-immagine","ok":true,"contata":true,"durataMs":44789,"tokenInput":13546,"tokenOutput":2004,"ragionamento":5409}
