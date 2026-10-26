@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-26T16:31:50.187Z",
+ "aggiornato": "2026-10-26T16:32:47.602Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -592,10 +592,10 @@
    "slug": "adattare-un-immagine",
    "numero": "5.3",
    "titolo": "Adattare un'immagine al progetto",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f05-asset-e-audio/adattare-un-immagine.json",
-   "sha256": "2fbc49c0f02fd666c8c7e1bcab53d7ba8cd48c38937e1aef501df93fdf5f2fc1",
-   "byte": 201279
+   "sha256": "48e877cfd16c916f0ec82ec251dcc57e28027a14d0873849c73453796b10738c",
+   "byte": 201830
   }
  ],
  "documentazione": {

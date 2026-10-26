@@ -845,5 +845,39 @@
     ]
    }
   }
+ },
+ "adattare-un-immagine": {
+  "es1": {
+   "impronta": "d913a09ed6d830614684ba1dbfc1df3c6ec311b772fd751ec15cbcaa3feff0ba",
+   "tentativi": 1,
+   "esito": "fatto",
+   "regole": 2,
+   "copione": {
+    "scena": "res://quiz.tscn",
+    "durata": 8,
+    "azioni": [],
+    "soggetti": [
+     {
+      "id": "question_panel",
+      "cerca": {
+       "nome": "QuestionPanel"
+      },
+      "quanti": 1,
+      "da": 0,
+      "a": 8,
+      "deve": "esserci",
+      "etichetta": "Pannello domanda"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "Il pannello cornice ridimensiona lo sfondo senza distorsioni",
+      "da": 0.5,
+      "a": 7.5,
+      "soggetto": "question_panel"
+     }
+    ]
+   }
+  }
  }
 }
