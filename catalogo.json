@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-25T11:09:25.536Z",
+ "aggiornato": "2026-10-26T13:04:32.513Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -578,6 +578,15 @@
    "file": "lezioni/f05-asset-e-audio/importare-immagini.json",
    "sha256": "f1ac96d9666239f821a725fdcbb248446bbb3801cd16d923385222a5eb595baf",
    "byte": 129999
+  },
+  {
+   "slug": "fogli-di-sprite",
+   "numero": "5.2",
+   "titolo": "Fogli di sprite: un'immagine, tanti pezzi",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/fogli-di-sprite.json",
+   "sha256": "3c465ef1ccb616a21bf4a784f02d75ef290d6832c51485fa86673d712c7924a4",
+   "byte": 205067
   }
  ],
  "documentazione": {
