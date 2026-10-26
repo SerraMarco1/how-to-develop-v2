@@ -508,13 +508,14 @@
     "tipo": "autonomo",
     "genere": "obiettivo",
     "titolo": "Pannello di pausa personalizzato con NinePatchRect e modulazione",
-    "consegna": "Sostituisci la finestra di pausa generica con una finestra con cornice ridimensionabile e tinta personalizzata.\n\n1. In `res://quiz.tscn`, all'interno di `PauseMenu/CenterContainer`, aggiungi un nodo `NinePatchRect` chiamato `PausePanel`.\n2. Assegna a `PausePanel` la texture `res://assets/sprites/background.png`.\n3. Configura tutti e 4 i **Patch Margin** (`left`, `top`, `right`, `bottom`) di `PausePanel` a `16` pixel.\n4. Imposta la dimensione minima `custom_minimum_size` di `PausePanel` a `Vector2(300, 220)`.\n5. Sposta il `VBoxContainer` che contiene il titolo e i pulsanti di pausa dentro `PausePanel` (diventando suo figlio).\n6. Sul `VBoxContainer` dentro `PausePanel`, imposta l'ancoraggio `anchors_preset` a `15` (Full Rect) e tutti e quattro i margini offset a `20` pixel (`offset_left = 20`, `offset_top = 20`, `offset_right = -20`, `offset_bottom = -20`).\n7. Assegna a `PausePanel` la proprietà `self_modulate` con un colore blu scuro `Color(0.2, 0.2, 0.5)` per tingere il pannello di sfondo senza alterare i pulsanti ed il testo figli.",
+    "consegna": "Sostituisci la finestra di pausa generica con una finestra con cornice ridimensionabile e tinta personalizzata.\n\n1. In `res://quiz.tscn`, all'interno di `PauseMenu/CenterContainer`, aggiungi un nodo `NinePatchRect` chiamato `PausePanel`.\n2. Assegna a `PausePanel` la texture `res://assets/sprites/background.png`.\n3. Configura tutti e 4 i **Patch Margin** (`left`, `top`, `right`, `bottom`) di `PausePanel` a `16` pixel.\n4. Imposta la dimensione minima `custom_minimum_size` di `PausePanel` a `Vector2(300, 220)`.\n5. Sposta il `VBoxContainer` che contiene il titolo e i pulsanti di pausa dentro `PausePanel` (diventando suo figlio).\n6. Sul `VBoxContainer` dentro `PausePanel`, imposta l'ancoraggio `anchors_preset` a `15` (Full Rect) e tutti e quattro i margini offset a `20` pixel (`offset_left = 20`, `offset_top = 20`, `offset_right = -20`, `offset_bottom = -20`).\n7. Assegna a `PausePanel` la proprietà `self_modulate` con un colore blu scuro `Color(0.2, 0.2, 0.5)` per tingere il pannello di sfondo senza alterare i pulsanti ed il testo figli.\n8. In `res://quiz.gd`, aggiorna i percorsi delle variabili `@onready` per `resume_button` e `quit_button` includendo `PausePanel` nel percorso (`$PauseMenu/CenterContainer/PausePanel/VBoxContainer/ResumeButton` e `$PauseMenu/CenterContainer/PausePanel/VBoxContainer/QuitButton`).",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [
-     "Assicurati che VBoxContainer sia diventato figlio di PausePanel, e non sia più figlio diretto di CenterContainer."
+     "Assicurati che VBoxContainer sia diventato figlio di PausePanel, e non sia più figlio diretto di CenterContainer.",
+     "Ricorda di aggiornare i percorsi dei nodi in quiz.gd dopo aver spostato il VBoxContainer dentro PausePanel."
     ],
     "verifiche": [
      {
@@ -676,20 +677,24 @@
        }
       ]
      },
-     "spiegazione": "Inserendo un `NinePatchRect` dentro `CenterContainer` e spostandovi all'interno il `VBoxContainer`, creiamo un riquadro con angoli non sgranati. Impostando `self_modulate = Color(0.2, 0.2, 0.5)`, tingiamo lo sfondo di blu scuro senza alterare il colore del testo e dei pulsanti figli.",
-     "cambiati": [],
+     "spiegazione": "Inserendo un `NinePatchRect` dentro `CenterContainer` e spostandovi all'interno il `VBoxContainer`, creiamo un riquadro con angoli non sgranati. Impostando `self_modulate = Color(0.2, 0.2, 0.5)`, tingiamo lo sfondo di blu scuro senza alterare il colore del testo e dei pulsanti figli. In `quiz.gd` aggiorniamo infine i percorsi `@onready` per riflettere la nuova gerarchia dei nodi.",
+     "cambiati": [
+      "quiz.gd",
+      "quiz.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione cambia anche quiz.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  quiz.gd:\n    - riga 21: @onready var resume_button: Button = $PauseMenu/CenterContainer/VBoxContainer/ResumeButton\n    - riga 22: @onready var quit_button: Button = $PauseMenu/CenterContainer/VBoxContainer/QuitButton\n    + riga 21: @onready var resume_button: Button = $PauseMenu/CenterContainer/PausePanel/VBoxContainer/ResumeButton\n    + riga 22: @onready var quit_button: Button = $PauseMenu/CenterContainer/PausePanel/VBoxContainer/QuitButton\nCon quei file com'erano prima falliscono:\n  - Nessun errore durante l'esecuzione: SCRIPT ERROR: Invalid access to property or key 'pressed' on a base object of type 'null instance'.\n          at: _ready (res://quiz.gd:42)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione.\nRighe citate dagli errori:\n  quiz.gd, riga 42: `resume_button.pressed.connect(_on_resume_button_pressed)`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
