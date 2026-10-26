@@ -324,5 +324,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "fogli-di-sprite": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
