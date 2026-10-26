@@ -33,8 +33,7 @@
       "scena": "res://quiz.tscn",
       "tipoNodo": "TextureRect",
       "nome": "TopicIcon",
-      "genitore": "MarginContainer/VBoxContainer",
-      "descrizione": "In quiz.tscn è presente un TextureRect chiamato TopicIcon dentro MarginContainer/VBoxContainer"
+      "descrizione": "In quiz.tscn è presente un TextureRect chiamato TopicIcon"
      },
      {
       "tipo": "script_godot",
@@ -173,19 +172,23 @@
       ]
      },
      "spiegazione": "I nodi `Control` dell'interfaccia non possiedono le proprietà di animazione a fotogrammi come `Sprite2D`. Per mostrare una singola cella di un foglio di sprite si crea quindi una `AtlasTexture` via codice. Assegnando la risorsa `tiles.png` alla proprietà `atlas` e impostando la proprietà `region` su un rettangolo `Rect2(x, y, w, h)`, Godot ritaglia solo l'area desiderata. In `tiles.png`, le tessere sono disposte su celle di 16x16 pixel: la tessera dell'erba si trova in alto a sinistra a `(0, 0)`, mentre la tessera dei mattoni si trova alla quarta colonna (indice 3), quindi a coordinata `X = 3 * 16 = 48` e `Y = 0`.",
-     "cambiati": [],
+     "cambiati": [
+      "quiz.tscn",
+      "quiz.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "guidato",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - In quiz.tscn è presente un TextureRect chiamato TopicIcon dentro MarginContainer/VBoxContainer: Nodi presenti: Quiz (Control), QuestionTimer (Timer), MarginContainer (MarginContainer), VBoxContainer (VBoxContainer), TimeBar (ProgressBar), TopicIcon (TextureRect), QuestionLabel (Label), AnswersContainer (VBoxContainer), Answer0 (Button), Answer1 (Button), Answer2 (Button), Answer3 (Button), PauseMenu (ColorRect), CenterContainer (CenterContainer), VBoxContainer (VBoxContainer), TitleLabel (Label), ResumeButton (Button), QuitButton (Button)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "es2": {
@@ -320,7 +323,8 @@
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Fogli di sprite: un'immagine, tanti pezzi",
