@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-26T11:54:19.627Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-26T12:55:59.473Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "fogli-di-sprite",
   "numero": "5.2",
   "titolo": "Fogli di sprite: un'immagine, tanti pezzi"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.2 riprende da sola appena rispondono.",
- "riprende": "2026-10-26T12:54:19.626Z"
+ "messaggio": "Sta scrivendo la lezione 5.2 «Fogli di sprite: un'immagine, tanti pezzi».",
+ "riprende": null
 }
