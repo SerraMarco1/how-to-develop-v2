@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-26T16:19:25.685Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-26T16:19:44.257Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "adattare-un-immagine",
-  "numero": "5.3",
-  "titolo": "Adattare un'immagine al progetto"
+  "slug": "font",
+  "numero": "5.4",
+  "titolo": "Font"
  },
- "messaggio": "Sta scrivendo la lezione 5.3 «Adattare un'immagine al progetto».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.4 riprende da sola appena rispondono.",
+ "riprende": "2026-10-26T16:29:44.256Z"
 }
