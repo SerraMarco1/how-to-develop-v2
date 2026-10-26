@@ -664,7 +664,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - In results.tscn è presente il nodo TextureRect chiamato RewardCard dentro CenterContainer/VBoxContainer: Nodi presenti: Results (Control), CenterContainer (CenterContainer), VBoxContainer (VBoxContainer), TitleLabel (Label), RewardCard (TextureRect), ScoreLabel (Label), HighScoreLabel (Label), ButtonsContainer (VBoxContainer), RestartButton (Button), MenuButton (Button)\n  - [ERRORE NELLO SCRIPT DI VERIFICA] CardDeck calcola le carte con margini/spazi e assegna la carta premio corretta nella schermata Results: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:37)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Compile Error: Identifier not found: QuizData\n          at: GDScript::reload (res://htd/verifica_1.gd:37)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 37: `QuizData.score = 2`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
