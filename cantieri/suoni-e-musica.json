@@ -580,7 +580,7 @@
    }
   },
   "test": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -674,7 +674,106 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "test",
+    "genere": "ripara",
+    "titolo": "Collaudo finale: Ripristina i canali audio del duello",
+    "consegna": "Nel prototipo «Duello» (`res://duel.tscn`), il comparto audio presenta diversi problemi segnalati nei collaudi:\n- All'avvio la musica parte con un volume assordante e distorto a causa di un valore errato (`20.0` dB).\n- Non appena un giocatore salta o viene colpito, la musica si spegne e scompare.\n- Se un salto e un colpo avvengono contemporaneamente, il salto viene troncato all'istante perché entrambi usano l'unico lettore `ChannelPlayer`.\n- Il colpo viene riprodotto con un'intonazione sgradevolmente rallentata (`0.1`).\n\nRimetti a posto il progetto in modo che:\n1. Nella scena `res://duel.tscn`, elimina il vecchio nodo unico `ChannelPlayer` e crea tre nodi `AudioStreamPlayer` figli di `Duel`:\n   - `MusicPlayer`: stream `res://assets/audio/music_loop.wav`, volume `volume_db` impostato a `-6.0`.\n   - `JumpPlayer`: stream `res://assets/audio/jump.wav`, volume `volume_db` a `0.0`.\n   - `HitPlayer`: stream `res://assets/audio/hit.wav`, volume `volume_db` a `0.0`.\n2. Nello script `duel.gd`:\n   - In `_ready()`, avvia `MusicPlayer`.\n   - Nella funzione `player_jump()`, avvia `JumpPlayer`.\n   - Nella funzione `player_hit()`, imposta `pitch_scale` di `HitPlayer` a `1.0` e avviane la riproduzione.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "collaudo-duello",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Sostituisci il lettore condiviso ChannelPlayer con i tre nodi dedicati nell'albero della scena e collega a ciascuno il rispettivo file audio."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://duel.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "MusicPlayer",
+      "genitore": "Duel",
+      "descrizione": "La scena duel.tscn contiene un AudioStreamPlayer chiamato MusicPlayer come figlio di Duel"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://duel.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "JumpPlayer",
+      "genitore": "Duel",
+      "descrizione": "La scena duel.tscn contiene un AudioStreamPlayer chiamato JumpPlayer come figlio di Duel"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://duel.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "HitPlayer",
+      "genitore": "Duel",
+      "descrizione": "La scena duel.tscn contiene un AudioStreamPlayer chiamato HitPlayer come figlio di Duel"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar duel := await instantiate_main_scene()\n\tif not check(\"duel\", duel != null, \"La scena duel.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tvar music := find_by_name(duel, \"MusicPlayer\") as AudioStreamPlayer\n\tvar jump := find_by_name(duel, \"JumpPlayer\") as AudioStreamPlayer\n\tvar hit := find_by_name(duel, \"HitPlayer\") as AudioStreamPlayer\n\tif not check(\"music_node\", music != null, \"Serve un AudioStreamPlayer chiamato MusicPlayer\"):\n\t\treturn\n\tif not check(\"jump_node\", jump != null, \"Serve un AudioStreamPlayer chiamato JumpPlayer\"):\n\t\treturn\n\tif not check(\"hit_node\", hit != null, \"Serve un AudioStreamPlayer chiamato HitPlayer\"):\n\t\treturn\n\n\tawait wait_frames(2)\n\tcheck(\"music_vol\", music.volume_db <= -5.9 and music.volume_db >= -6.1, \"volume_db di MusicPlayer deve essere impostato a -6.0 dB per evitare distorsioni (valore trovato: %.1f dB)\" % music.volume_db)\n\tcheck(\"music_playing\", music.playing, \"All'avvio MusicPlayer deve essere attivo in riproduzione\")\n\n\tcall_if_exists(duel, \"player_jump\")\n\tcall_if_exists(duel, \"player_hit\")\n\tawait wait_frames(2)\n\n\tcheck(\"both_playing\", jump.playing and hit.playing, \"Salto e colpo simultanei devono suonare insieme su JumpPlayer e HitPlayer senza troncarsi\")\n\tcheck(\"music_safe\", music.playing, \"La musica di sottofondo non deve interrompersi durante le azioni di gioco\")\n\tcheck(\"hit_pitch\", hit.pitch_scale >= 0.99 and hit.pitch_scale <= 1.01, \"pitch_scale di HitPlayer deve essere impostato a 1.0 (valore trovato: %.2f)\" % hit.pitch_scale)\n",
+      "descrizione": "Musica a -6 dB ininterrotta; salto e colpo suonano simultaneamente con intonazione corretta"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "Duello",
+      "scenaPrincipale": "res://duel.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Duello\"\nrun/main_scene=\"res://duel.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "duel.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://duel.gd\" id=\"1_duel\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n\n[node name=\"Duel\" type=\"Node2D\"]\nscript = ExtResource(\"1_duel\")\n\n[node name=\"ChannelPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = 20.0\n"
+      },
+      {
+       "percorso": "duel.gd",
+       "contenuto": "extends Node2D\n\n@onready var channel_player: AudioStreamPlayer = $ChannelPlayer\nvar jump_stream: AudioStream = preload(\"res://assets/audio/jump.wav\")\nvar hit_stream: AudioStream = preload(\"res://assets/audio/hit.wav\")\n\n\nfunc _ready() -> void:\n\tchannel_player.play()\n\n\nfunc player_jump() -> void:\n\tchannel_player.stream = jump_stream\n\tchannel_player.play()\n\n\nfunc player_hit() -> void:\n\tchannel_player.stream = hit_stream\n\tchannel_player.pitch_scale = 0.1\n\tchannel_player.play()\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Duello\"\nrun/main_scene=\"res://duel.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "duel.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://duel.gd\" id=\"1_duel\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/jump.wav\" id=\"3_jump\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/hit.wav\" id=\"4_hit\"]\n\n[node name=\"Duel\" type=\"Node2D\"]\nscript = ExtResource(\"1_duel\")\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -6.0\n\n[node name=\"JumpPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_jump\")\n\n[node name=\"HitPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\n"
+      },
+      {
+       "percorso": "duel.gd",
+       "contenuto": "extends Node2D\n\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var jump_player: AudioStreamPlayer = $JumpPlayer\n@onready var hit_player: AudioStreamPlayer = $HitPlayer\n\n\nfunc _ready() -> void:\n\tmusic_player.play()\n\n\nfunc player_jump() -> void:\n\tjump_player.play()\n\n\nfunc player_hit() -> void:\n\thit_player.pitch_scale = 1.0\n\thit_player.play()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Duello",
+      "scenaPrincipale": "res://duel.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Per collaudare e sistemare il progetto abbiamo corretto tre criticità fondamentali:\n1. Volume e distorsione: valori positivi elevati come 20.0 dB causano clipping e distorsione del segnale. Abbiamo abbassato il volume della musica a -6.0 dB per una resa pulita ed equilibrata.\n2. Troncamento e canale unico: abbiamo eliminato ChannelPlayer e creato tre nodi indipendenti (MusicPlayer, JumpPlayer, HitPlayer). In questo modo la musica prosegue indisturbata e un salto eseguito mentre un giocatore viene colpito non spezza né taglia l'effetto del compagno.\n3. Intonazione naturale: abbiamo ripristinato pitch_scale a 1.0 su HitPlayer, eliminando il rallentamento anomalo a 0.1 che rendeva il colpo irriconoscibile.",
+     "cambiati": [
+      "duel.tscn",
+      "duel.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "test"
+   }
   }
  },
  "avvisi": [],
