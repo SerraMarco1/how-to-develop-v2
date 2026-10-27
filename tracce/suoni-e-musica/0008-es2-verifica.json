@@ -1,0 +1,107 @@
+{
+ "n": 8,
+ "quando": "2026-10-27T08:16:49.528Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (obiettivo): approvato",
+ "spiegazione": "«Colpi, sconfitta e spegnimento musica». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: game.tscn, game.gd",
+ "richieste": 0,
+ "durataMs": 17361,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "Colpi, sconfitta e spegnimento musica",
+   "consegna": "Completa il comparto audio di «Pioggia di stelle» aggiungendo i canali per l'impatto con il sasso e per la fine della partita.\nNel progetto hai la scena `game.tscn` e lo script `game.gd` con musica e stelle già pronte.\n\nCosa deve succedere:\n1. Nella scena `game.tscn`, aggiungi due nuovi nodi `AudioStreamPlayer` come figli di `Game`:\n   - `RockPlayer`: con stream `res://assets/audio/hit.wav`, `volume_db` impostato a `-4.0` e `pitch_scale` impostato a `0.8` (per rendere l'impatto più grave e pesante).\n   - `GameOverPlayer`: con stream `res://assets/audio/hit.wav` e `volume_db` a `0.0`.\n2. Nello script `game.gd`:\n   - Quando la funzione `hit_rock()` viene chiamata, avvia il suono su `RockPlayer`. Se le vite (`lives`) scendono a `0` o meno, chiama subito la funzione `game_over()`.\n   - Quando viene chiamata `game_over()`, interrompi immediatamente la musica di sottofondo (`music_player.stop()`) e avvia il suono di `GameOverPlayer`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "pioggia-effetti",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Dichiara in cima allo script i riferimenti @onready per i due nuovi nodi: rock_player e game_over_player.",
+    "Per interrompere un AudioStreamPlayer usa il metodo stop() sull'istanza del nodo.",
+    "In hit_rock(), dopo aver suonato l'effetto con rock_player.play(), controlla se lives <= 0 per chiamare game_over()."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://game.tscn",
+     "tipoNodo": "AudioStreamPlayer",
+     "nome": "RockPlayer",
+     "genitore": "Game",
+     "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato RockPlayer come figlio di Game"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://game.tscn",
+     "tipoNodo": "AudioStreamPlayer",
+     "nome": "GameOverPlayer",
+     "genitore": "Game",
+     "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato GameOverPlayer come figlio di Game"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar game := await instantiate_main_scene()\n\tif not check(\"game\", game != null, \"La scena game.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tvar music := find_by_name(game, \"MusicPlayer\") as AudioStreamPlayer\n\tvar rock := find_by_name(game, \"RockPlayer\") as AudioStreamPlayer\n\tvar game_over := find_by_name(game, \"GameOverPlayer\") as AudioStreamPlayer\n\tif not check(\"rock_node\", rock != null, \"Serve un AudioStreamPlayer chiamato RockPlayer\"):\n\t\treturn\n\tif not check(\"game_over_node\", game_over != null, \"Serve un AudioStreamPlayer chiamato GameOverPlayer\"):\n\t\treturn\n\n\tcheck(\"rock_vol\", rock.volume_db <= -3.9 and rock.volume_db >= -4.1, \"volume_db di RockPlayer deve essere impostato a -4.0 dB (valore trovato: %.1f dB)\" % rock.volume_db)\n\tcheck(\"rock_pitch\", rock.pitch_scale >= 0.79 and rock.pitch_scale <= 0.81, \"pitch_scale di RockPlayer deve essere impostato a 0.8 (valore trovato: %.2f)\" % rock.pitch_scale)\n\n\tcall_if_exists(game, \"hit_rock\")\n\tawait wait_frames(2)\n\tcheck(\"rock_playing\", rock.playing, \"Chiamando hit_rock(), RockPlayer deve andare in riproduzione\")\n\tcheck(\"music_active\", music.playing, \"Durante un normale colpo con vite residue la musica deve continuare a suonare\")\n\n\tcall_if_exists(game, \"game_over\")\n\tawait wait_frames(2)\n\tcheck(\"music_stopped\", not music.playing, \"In game_over() la musica di sottofondo deve essere interrotta con stop()\")\n\tcheck(\"game_over_playing\", game_over.playing, \"In game_over() deve partire GameOverPlayer\")\n",
+     "descrizione": "RockPlayer suona con intonazione 0.8 all'impatto; a zero vite la musica si ferma e parte GameOverPlayer"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "PioggiaDiStelle",
+     "scenaPrincipale": "res://game.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"PioggiaDiStelle\"\nrun/main_scene=\"res://game.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "game.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n\n[node name=\"LivesLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 50.0\noffset_right = 160.0\noffset_bottom = 76.0\ntext = \"Vite: 3\"\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -8.0\n\n[node name=\"StarPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n"
+     },
+     {
+      "percorso": "game.gd",
+      "contenuto": "extends Node2D\n\nvar score: int = 0\nvar lives: int = 3\n@onready var score_label: Label = $ScoreLabel\n@onready var lives_label: Label = $LivesLabel\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var star_player: AudioStreamPlayer = $StarPlayer\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tmusic_player.play()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\tstar_player.pitch_scale = randf_range(0.9, 1.1)\n\tstar_player.play()\n\n\nfunc hit_rock() -> void:\n\tlives -= 1\n\tupdate_ui()\n\n\nfunc game_over() -> void:\n\tpass\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n\tlives_label.text = \"Vite: %d\" % lives\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"PioggiaDiStelle\"\nrun/main_scene=\"res://game.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "game.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/hit.wav\" id=\"4_hit\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n\n[node name=\"LivesLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 50.0\noffset_right = 160.0\noffset_bottom = 76.0\ntext = \"Vite: 3\"\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -8.0\n\n[node name=\"StarPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n\n[node name=\"RockPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\nvolume_db = -4.0\npitch_scale = 0.8\n\n[node name=\"GameOverPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\n"
+     },
+     {
+      "percorso": "game.gd",
+      "contenuto": "extends Node2D\n\nvar score: int = 0\nvar lives: int = 3\n@onready var score_label: Label = $ScoreLabel\n@onready var lives_label: Label = $LivesLabel\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var star_player: AudioStreamPlayer = $StarPlayer\n@onready var rock_player: AudioStreamPlayer = $RockPlayer\n@onready var game_over_player: AudioStreamPlayer = $GameOverPlayer\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tmusic_player.play()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\tstar_player.pitch_scale = randf_range(0.9, 1.1)\n\tstar_player.play()\n\n\nfunc hit_rock() -> void:\n\tlives -= 1\n\tupdate_ui()\n\trock_player.play()\n\tif lives <= 0:\n\t\tgame_over()\n\n\nfunc game_over() -> void:\n\tmusic_player.stop()\n\tgame_over_player.play()\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n\tlives_label.text = \"Vite: %d\" % lives\n"
+     }
+    ],
+    "progetto": {
+     "nome": "PioggiaDiStelle",
+     "scenaPrincipale": "res://game.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Aggiungiamo `RockPlayer` e `GameOverPlayer` mantenendo la separazione dei canali. Impostando `pitch_scale = 0.8` su `RockPlayer`, il file `hit.wav` viene riprodotto con una tonalità più cupa e lenta, ideale per trasmettere la pesantezza dell'urto con una pietra. In `hit_rock()` avviamo il lettore del sasso e controlliamo se le vite sono esaurite (`lives <= 0`). Quando si entra in `game_over()`, chiamiamo `music_player.stop()` per zittire la musica di sottofondo ed eseguiamo `game_over_player.play()` per segnalare la conclusione della partita.",
+    "cambiati": [
+     "game.tscn",
+     "game.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}

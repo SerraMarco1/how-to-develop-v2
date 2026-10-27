@@ -382,7 +382,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -477,7 +477,107 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Separare i canali audio sovrapposti",
+    "consegna": "Hai ricevuto una versione di prova del mini-gioco «Raccolta rapida» (`res://arcade.tscn`).\nIl gioco presenta gravi difetti audio durante la partita:\n- All'avvio la musica parte regolarmente, ma non appena raccogli una moneta o subisci un colpo, la musica si spegne all'improvviso e non si riattiva mai più.\n- Se raccogli una moneta subito prima di subire un colpo, il suono della moneta viene troncato di netto dopo pochi millisecondi e sostituito dall'urto.\n\nRimetti a posto il progetto in modo che:\n- La musica di sottofondo continui a suonare ininterrottamente anche quando avvengono eventi sonori.\n- La raccolta della moneta e il colpo subito possano farsi sentire contemporaneamente senza mai tagliarsi a vicenda.\n- La scena `res://arcade.tscn` utilizzi tre nodi `AudioStreamPlayer` distinti figli di `Arcade`: `MusicPlayer` (con `res://assets/audio/music_loop.wav`), `CoinPlayer` (con `res://assets/audio/coin.wav`) e `HitPlayer` (con `res://assets/audio/hit.wav`).\n- Nello script `arcade.gd`, ciascuna funzione comandi il lettore corretto.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "audio-tagliato",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Il problema nasce perché un unico nodo AudioStreamPlayer può emettere solo una voce alla volta: riassegnare stream e chiamare play() cancella il suono in corso.",
+     "Sostituisci il vecchio SoundPlayer con tre nodi separati e assegna i relativi file sonori direttamente dall'Inspector."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://arcade.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "MusicPlayer",
+      "genitore": "Arcade",
+      "descrizione": "La scena arcade.tscn contiene un AudioStreamPlayer chiamato MusicPlayer come figlio di Arcade"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://arcade.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "CoinPlayer",
+      "genitore": "Arcade",
+      "descrizione": "La scena arcade.tscn contiene un AudioStreamPlayer chiamato CoinPlayer come figlio di Arcade"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://arcade.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "HitPlayer",
+      "genitore": "Arcade",
+      "descrizione": "La scena arcade.tscn contiene un AudioStreamPlayer chiamato HitPlayer come figlio di Arcade"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar arcade := await instantiate_main_scene()\n\tif not check(\"arcade\", arcade != null, \"La scena arcade.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tvar music := find_by_name(arcade, \"MusicPlayer\") as AudioStreamPlayer\n\tvar coin := find_by_name(arcade, \"CoinPlayer\") as AudioStreamPlayer\n\tvar hit := find_by_name(arcade, \"HitPlayer\") as AudioStreamPlayer\n\tif not check(\"music_node\", music != null, \"Serve un AudioStreamPlayer chiamato MusicPlayer\"):\n\t\treturn\n\tif not check(\"coin_node\", coin != null, \"Serve un AudioStreamPlayer chiamato CoinPlayer\"):\n\t\treturn\n\tif not check(\"hit_node\", hit != null, \"Serve un AudioStreamPlayer chiamato HitPlayer\"):\n\t\treturn\n\n\tawait wait_frames(2)\n\tcheck(\"music_start\", music.playing, \"All'avvio MusicPlayer deve essere attivo in riproduzione\")\n\n\tcall_if_exists(arcade, \"collect_coin\")\n\tawait wait_frames(2)\n\tcheck(\"coin_playing\", coin.playing, \"Chiamando collect_coin(), CoinPlayer deve avviarsi\")\n\tcheck(\"music_continues\", music.playing, \"Raccogliendo una moneta la musica di sottofondo non deve interrompersi\")\n\n\tcall_if_exists(arcade, \"take_hit\")\n\tawait wait_frames(2)\n\tcheck(\"both_playing\", coin.playing and hit.playing, \"CoinPlayer e HitPlayer devono poter suonare insieme senza che uno tronchi l'altro\")\n\tcheck(\"music_still_on\", music.playing, \"La musica deve rimanere attiva anche durante l'impatto con il colpo\")\n",
+      "descrizione": "Musica, monete e colpi suonano su canali dedicati senza cancellarsi o troncarsi"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "RaccoltaRapida",
+      "scenaPrincipale": "res://arcade.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RaccoltaRapida\"\nrun/main_scene=\"res://arcade.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "arcade.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://arcade.gd\" id=\"1_arcade\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n\n[node name=\"Arcade\" type=\"Node2D\"]\nscript = ExtResource(\"1_arcade\")\n\n[node name=\"SoundPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\n"
+      },
+      {
+       "percorso": "arcade.gd",
+       "contenuto": "extends Node2D\n\n@onready var sound_player: AudioStreamPlayer = $SoundPlayer\nvar coin_stream: AudioStream = preload(\"res://assets/audio/coin.wav\")\nvar hit_stream: AudioStream = preload(\"res://assets/audio/hit.wav\")\n\n\nfunc _ready() -> void:\n\tsound_player.play()\n\n\nfunc collect_coin() -> void:\n\tsound_player.stream = coin_stream\n\tsound_player.play()\n\n\nfunc take_hit() -> void:\n\tsound_player.stream = hit_stream\n\tsound_player.play()\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RaccoltaRapida\"\nrun/main_scene=\"res://arcade.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "arcade.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://arcade.gd\" id=\"1_arcade\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/hit.wav\" id=\"4_hit\"]\n\n[node name=\"Arcade\" type=\"Node2D\"]\nscript = ExtResource(\"1_arcade\")\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\n\n[node name=\"CoinPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n\n[node name=\"HitPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\n"
+      },
+      {
+       "percorso": "arcade.gd",
+       "contenuto": "extends Node2D\n\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var coin_player: AudioStreamPlayer = $CoinPlayer\n@onready var hit_player: AudioStreamPlayer = $HitPlayer\n\n\nfunc _ready() -> void:\n\tmusic_player.play()\n\n\nfunc collect_coin() -> void:\n\tcoin_player.play()\n\n\nfunc take_hit() -> void:\n\thit_player.play()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "RaccoltaRapida",
+      "scenaPrincipale": "res://arcade.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Il difetto originale era dovuto all'uso di un unico nodo `SoundPlayer` per tutti i compiti. In Godot, ogni `AudioStreamPlayer` è a voce singola: assegnargli un nuovo `stream` mentre sta suonando interrompe bruscamente il flusso precedente. Abbiamo riparato la scena rimuovendo il nodo cumulativo e istanziando tre nodi dedicati: `MusicPlayer` per la musica, `CoinPlayer` per la moneta e `HitPlayer` per l'impatto. Nello script abbiamo collegato ogni funzione al proprio lettore, consentendo a musica e molteplici effetti di suonare simultaneamente senza alcuna interruzione.",
+     "cambiati": [
+      "arcade.tscn",
+      "arcade.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es3"
+   }
   },
   "test": {
    "stato": "da_fare",
