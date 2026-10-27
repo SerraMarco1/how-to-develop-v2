@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-27T15:11:48.758Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-27T15:12:32.467Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "adattare-l-audio",
   "numero": "5.7",
   "titolo": "Adattare un suono al progetto"
  },
- "messaggio": "Sta scrivendo la lezione 5.7 «Adattare un suono al progetto».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.7 riprende da sola appena rispondono.",
+ "riprende": "2026-10-27T15:22:32.467Z"
 }
