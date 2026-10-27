@@ -961,5 +961,32 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "es1",
+    "problema": "L'esercizio richiede di creare e configurare istanze della classe SystemFont (impostando font_names con PackedStringArray), ma questa classe e la gestione dei font di sistema non sono state spiegate nella teoria, che tratta esclusivamente l'importazione e il caricamento di file di font TTF/OTF tramite load().",
+    "correzione": "Modifica l'esercizio e le relative verifiche per utilizzare il caricamento di file font tramite load(\"res://...\") come mostrato nel blocco 8 della teoria, oppure introduci la classe SystemFont nella parte teorica.",
+    "fonte": ""
+   },
+   {
+    "parte": "pratica",
+    "dove": "es2",
+    "problema": "L'esercizio richiede l'uso di SystemFont e PackedStringArray per impostare i font di riserva da codice, argomenti non trattati nella teoria della lezione.",
+    "correzione": "Adatta l'esercizio all'uso di risorse Font caricate da file di progetto con load(), coerentemente con quanto spiegato nella teoria.",
+    "fonte": ""
+   },
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test finale richiede la creazione di un SystemFont dentro la classe FontHelper, ma la classe SystemFont non è stata spiegata nella teoria.",
+    "correzione": "Aggiorna le specifiche di FontHelper e la verifica per utilizzare risorse Font caricate tramite load() o spieghi SystemFont nella parte teorica.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
