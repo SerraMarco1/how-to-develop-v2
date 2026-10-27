@@ -337,7 +337,7 @@
     "tipo": "autonomo",
     "genere": "obiettivo",
     "titolo": "Muto e salvataggio delle preferenze",
-    "consegna": "Nella scena delle impostazioni audio, aggiungi la gestione del pulsante di silenzioso (`MuteButton`) e salva tutte le preferenze audio su disco (`user://settings.json`), in modo che vengano ripristinate automaticamente all'apertura del menu.\n\n- Aggiungi un `CheckButton` chiamato `MuteButton` con il testo `\"Silenzioso\"` all'interno del `VBoxContainer` in `res://options_menu.tscn`.\n- Quando l'utente modifica i volumi o attiva il muto, le preferenze devono essere salvate automaticamente su disco.\n- All'apertura della scena, se il file di salvataggio esiste, i volumi, lo stato del muto e i bus audio devono essere ripristinati correttamente.",
+    "consegna": "Nella scena `res://options_menu.tscn` e nel relativo script `options_menu.gd`, implementa la gestione del muto e la persistenza delle preferenze audio su disco in `user://settings.json`:\n\n1. In `options_menu.tscn`, aggiungi dentro `VBoxContainer` un nodo `CheckButton` chiamato `MuteButton` con il testo `\"Silenzioso\"`.\n2. In `options_menu.gd`:\n   - Configura i tre slider (`MasterSlider`, `MusicSlider`, `SFXSlider`) con `min_value = 0.0001`, `max_value = 1.0` e `step = 0.01`.\n   - Collega `MuteButton` in modo che la sua commutazione imposti lo stato di muto del bus `Master` tramite `AudioServer.set_bus_mute()`.\n   - Ogni volta che uno dei tre cursori viene modificato o `MuteButton` viene commutato, salva le preferenze nel file `user://settings.json` come dizionario JSON con le chiavi `\"master_volume\"`, `\"music_volume\"`, `\"sfx_volume\"` e `\"is_muted\"`.\n   - All'avvio in `_ready()`, se il file `user://settings.json` esiste, carica i dati salvati ripristinando sia i controlli a schermo sia i volumi e il muto su `AudioServer`. Se non esiste, sincronizza l'interfaccia dallo stato attuale di `AudioServer`.",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "quiz",
@@ -516,19 +516,23 @@
       ]
      },
      "spiegazione": "I valori della UI vengono raccolti in un `Dictionary` e serializzati in JSON con `JSON.stringify()`. Il file `user://settings.json` persiste tra le sessioni di gioco. Quando la schermata si carica, controlliamo l'esistenza del file con `FileAccess.file_exists()`: se presente, leggiamo i dati e applichiamo i volumi ad `AudioServer` convertendo da lineare a decibel tramite `linear_to_db()` e impostando il muto con `AudioServer.set_bus_mute()`.",
-     "cambiati": [],
+     "cambiati": [
+      "options_menu.tscn",
+      "options_menu.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione cambia anche options_menu.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  options_menu.gd:\n    + riga 6: @onready var mute_button: CheckButton = $VBoxContainer/MuteButton\n    - riga 17:   _sync_ui_from_audio_server()\n    + riga 18:   master_slider.min_value = 0.0001\n    + riga 19:   master_slider.max_value = 1.0\n    + riga 20:   master_slider.step = 0.01\n    + riga 22:   music_slider.min_value = 0.0001\n    + riga 23:   music_slider.max_value = 1.0\n    + riga 24:   music_slider.step = 0.01\n    + riga 26:   sfx_slider.min_value = 0.0001\n    + riga 27:   sfx_slider.max_value = 1.0\n    + riga 28:   sfx_slider.step = 0.01\n    + riga 30:   if FileAccess.file_exists(\"user://settings.json\"):\n    + riga 31:     load_audio_settings()\n    + riga 32:   else:\n    + riga 33:     _sync_ui_from_audio_server()\n    + riga 38:   mute_button.toggled.connect(_on_mute_button_toggled)\n    + riga 44:     mute_button.button_pressed = AudioServer.is_bus_mute(_master_bus_idx)\n    - riga 35:     var db_val: float = linear_to_db(value)\n    - riga 36:     AudioServer.set_bus_volume_db(_master_bus_idx, db_val)\n    + riga 53:     AudioServer.set_bus_volume_db(_master_bus_idx, linear_to_db(value))\n    + riga 54:     save_audio_settings()\n    - riga 41:     var db_val: float = linear_to_db(value)\n    - riga 42:     AudioServer.set_bus_volume_db(_music_bus_idx, db_val)\n    + riga 59:     AudioServer.set_bus_volume_db(_music_bus_idx, linear_to_db(value))\n    + riga 60:     save_audio_settings()\n    - riga 47:     var db_val: float = linear_to_db(value)\n    - riga 48:     AudioServer.set_bus_volume_db(_sfx_bus_idx, db_val)\n    + riga 65:     AudioServer.set_bus_volume_db(_sfx_bus_idx, linear_to_db(value))\n    + riga 66:     save_audio_settings()\n    + riga 69: func _on_mute_button_toggled(toggled_on: bool) -> void:\n    … e altre 47 righe diverse\nCon quei file com'erano prima falliscono:\n  - Modificando i cursori o il muto deve essere creato il file user://settings.json\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "test": {
@@ -625,7 +629,8 @@
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Bus audio, volumi e impostazioni",
