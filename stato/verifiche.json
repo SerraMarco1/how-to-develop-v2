@@ -344,5 +344,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "bus-e-volumi": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }

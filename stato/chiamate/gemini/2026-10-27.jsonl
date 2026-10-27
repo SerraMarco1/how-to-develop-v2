@@ -41,3 +41,4 @@
 {"quando":1793111756396,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"bus-e-volumi","ok":true,"contata":true,"durataMs":18734,"tokenInput":14601,"tokenOutput":12,"ragionamento":2551}
 {"quando":1793111777541,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"bus-e-volumi","ok":true,"contata":true,"durataMs":8276,"tokenInput":2971,"tokenOutput":795,"ragionamento":1902}
 {"quando":1793111794569,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"adattare-l-audio","ok":false,"contata":true,"durataMs":3089,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793112582291,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"bus-e-volumi","ok":true,"contata":true,"durataMs":6353,"tokenInput":8208,"tokenOutput":202,"ragionamento":1214}
