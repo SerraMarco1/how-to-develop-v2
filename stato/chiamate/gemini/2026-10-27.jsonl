@@ -16,3 +16,4 @@
 {"quando":1793088390169,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"font","ok":true,"contata":true,"durataMs":8194,"tokenInput":7870,"tokenOutput":55,"ragionamento":2322}
 {"quando":1793088399639,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"suoni-e-musica","ok":true,"contata":true,"durataMs":578042,"tokenInput":21126,"tokenOutput":10375,"ragionamento":38832}
 {"quando":1793089028466,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"suoni-e-musica","ok":true,"contata":true,"durataMs":17375,"tokenInput":12347,"tokenOutput":12,"ragionamento":3297}
+{"quando":1793089047274,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"suoni-e-musica","ok":true,"contata":true,"durataMs":8294,"tokenInput":2938,"tokenOutput":664,"ragionamento":1885}
