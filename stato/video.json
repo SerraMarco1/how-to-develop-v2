@@ -919,5 +919,14 @@
    },
    "motivo": "L'esercizio modifica lo stile di un nodo TitleLabel già esistente assegnandogli una risorsa via codice, senza aggiungere nuovi nodi. Il controllo automatico rileverebbe il soggetto anche prima della modifica."
   }
+ },
+ "suoni-e-musica": {
+  "es1": {
+   "impronta": "52aed932f235194ee27adeb26c8f28abc3512d9ed4033a51f0f93da766e71a2c",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "L'esercizio aggiunge solo musica e suoni, che non hanno una rappresentazione visiva sullo schermo."
+  }
  }
 }
