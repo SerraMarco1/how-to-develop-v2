@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-27T07:49:18.569Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-27T07:53:56.120Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "suoni-e-musica",
   "numero": "5.5",
   "titolo": "Suoni e musica"
  },
- "messaggio": "Sta scrivendo la lezione 5.5 «Suoni e musica».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.5 riprende da sola appena rispondono.",
+ "riprende": "2026-10-27T08:03:56.120Z"
 }
