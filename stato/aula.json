@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-27T14:35:56.371Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-27T14:36:37.665Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "bus-e-volumi",
-  "numero": "5.6",
-  "titolo": "Bus audio, volumi e impostazioni"
+  "slug": "adattare-l-audio",
+  "numero": "5.7",
+  "titolo": "Adattare un suono al progetto"
  },
- "messaggio": "Sta scrivendo la lezione 5.6 «Bus audio, volumi e impostazioni».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.7 riprende da sola appena rispondono.",
+ "riprende": "2026-10-27T14:46:37.664Z"
 }
