@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-26T16:32:47.602Z",
+ "aggiornato": "2026-10-27T07:49:17.202Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -596,6 +596,15 @@
    "file": "lezioni/f05-asset-e-audio/adattare-un-immagine.json",
    "sha256": "48e877cfd16c916f0ec82ec251dcc57e28027a14d0873849c73453796b10738c",
    "byte": 201830
+  },
+  {
+   "slug": "font",
+   "numero": "5.4",
+   "titolo": "Font",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/font.json",
+   "sha256": "f823c3852e971483a6ffe176caf9dd2a4fe093b1f58f53da5ca31a83b991ace8",
+   "byte": 205301
   }
  ],
  "documentazione": {
