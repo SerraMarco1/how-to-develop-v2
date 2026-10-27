@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": false, \"perche\": \"L'esercizio modifica lo stile di un nodo TitleLabel già esistente assegnandogli una risorsa via codice, senza aggiungere nuovi nodi. Il controllo automatico rileverebbe il soggetto anche prima della modifica.\"}",
+ "ragionamento": 2322,
+ "quando": "2026-10-27T08:06:38.365Z",
+ "ruolo": "ritocco"
+}

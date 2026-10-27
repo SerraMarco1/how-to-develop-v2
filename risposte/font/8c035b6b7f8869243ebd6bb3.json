@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://menu.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"titolo\",\n      \"cerca\": {\n        \"nome\": \"TitleLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Titolo\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il titolo usa il font personalizzato con bordo nero\",\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"soggetto\": \"titolo\"\n    }\n  ]\n}",
- "ragionamento": 1444,
- "quando": "2026-10-27T08:06:12.124Z",
- "ruolo": "ritocco"
-}
