@@ -1,0 +1,16 @@
+{
+ "n": 37,
+ "quando": "2026-10-27T08:06:39.609Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Personalizzare il titolo del menu con LabelSettings e Font Fallback» non si vede sullo schermo: L'esercizio modifica lo stile di un nodo TitleLabel già esistente assegnandogli una risorsa via codice, senza aggiungere nuovi nodi. Il controllo automatico rileverebbe il soggetto anche prima della modifica.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9443,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (7870 → 55 token)"
+ ]
+}

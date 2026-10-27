@@ -879,5 +879,45 @@
     ]
    }
   }
+ },
+ "font": {
+  "es1": {
+   "impronta": "e7baba47c676527ff23b9b8cd82c92c35e63236f644e640fbb643b3f7529314e",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://menu.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "titolo",
+       "cerca": {
+        "nome": "TitleLabel"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.5,
+       "deve": "esserci",
+       "etichetta": "Titolo"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il titolo usa il font personalizzato con bordo nero",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "titolo"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio modifica lo stile di un nodo TitleLabel già esistente assegnandogli una risorsa via codice, senza aggiungere nuovi nodi. Il controllo automatico rileverebbe il soggetto anche prima della modifica."
+  }
  }
 }
