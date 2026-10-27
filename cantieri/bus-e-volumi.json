@@ -1,0 +1,76 @@
+{
+ "creato": "2026-10-27T08:17:41.107Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Bus audio, volumi e impostazioni",
+  "sommario": "In questa lezione impari ad organizzare l'audio del tuo gioco tramite i bus audio di Godot. Scoprirai come separare musica ed effetti sonori, come convertire i valori dei cursori HSlider in decibel con linear_to_db e db_to_linear, e come salvare le preferenze del volume su file affinché rimangano salvate tra una sessione di gioco e l'altra.",
+  "concetti": [
+   "Bus audio e canale Master",
+   "Pannello Audio dell'editor",
+   "Proprietà AudioStreamPlayer.bus",
+   "Classe AudioServer e metodi get_bus_index, set_bus_volume_db, set_bus_mute",
+   "Conversione tra scala lineare e decibel: linear_to_db e db_to_linear",
+   "Silenziamento dell'audio (Mute)",
+   "Salvataggio e caricamento delle preferenze con FileAccess e JSON"
+  ],
+  "obiettivi": [
+   "I bus: far passare musica ed effetti da canali separati",
+   "Decibel e cursori: perché un cursore lineare suona sbagliato e come si converte",
+   "Salvare le impostazioni e ritrovarle al prossimo avvio"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nelle lezioni precedenti hai imparato a riprodurre file audio con il nodo `AudioStreamPlayer`. In un gioco reale, tuttavia, ci sono decine di suoni contemporanei: musiche di sottofondo, effetti di interfaccia, risposte corrette o sbagliate. Se un giocatore apre il menu delle opzioni e vuole abbassare la musica senza disattivare gli effetti sonori dei pulsanti, modificare ogni singolo nodo a mano sarebbe impossibile.\n\nPer risolvere questo problema, Godot organizza i suoni attraverso i **bus audio** (audio bus). Un bus audio è un canale virtuale che raccoglie l'audio di più nodi contemporaneamente e ne controlla il volume finale, proprio come i canali di un mixer in uno studio di registrazione."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare i bus audio nell'editor",
+    "passi": [
+     "Nella barra del pannello inferiore dell'editor, clicca sulla scheda **Audio** per aprire l'interfaccia dei bus audio.",
+     "Di default troverai un unico canale chiamato **Master**, che invia l'audio direttamente alle casse del computer.",
+     "Clicca sul pulsante **Add Bus** (Aggiungi bus) in alto a sinistra nel pannello Audio per creare un nuovo canale e rinominalo in `Music`.",
+     "Clicca nuovamente su **Add Bus** per creare un altro canale e rinominalo in `SFX`.",
+     "Verifica che nella colonna *Bus Send* (Invia a) sia di `Music` che di `SFX` sia selezionato `Master`: in questo modo il suono dei due canali confluirà nel canale generale prima di uscire dagli altoparlanti."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Dopo aver creato i bus nell'editor, puoi assegnare qualsiasi nodo `AudioStreamPlayer` a uno specifico canale: seleziona il nodo e, nel pannello Inspector, cambia la proprietà **Bus** scegliendo `\"Music\"` oppure `\"SFX\"` (di base è impostata su `\"Master\"`).\n\nPer modificare il volume dei bus durante la partita non agisci sui singoli nodi, ma usi la classe globale `AudioServer`. Con `AudioServer.get_bus_index(\"Music\")` ottieni l'indice numerico del bus. Successivamente puoi usare `AudioServer.set_bus_volume_db(index, volume_db)` per cambiarne il volume o `AudioServer.set_bus_mute(index, true)` per silenziarlo interamente."
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando crei un menu di opzioni con dei cursori `HSlider`, le loro proprietà `min_value` e `max_value` usano una scala lineare, per esempio da `0.0` (silenzio) a `1.0` (volume massimo). L'orecchio umano, però, non percepisce la potenza del suono in modo lineare, ma logaritmico.\n\nSe applicassi direttamente il valore `0.5` del cursore al volume, per l'orecchio il suono sembrerebbe quasi del tutto spento anziché a metà potenza. Godot misura il volume in **decibel** (dB), dove `0.0 dB` corrisponde al volume originale al 100% e valori negativi come `-10.0 dB` o `-20.0 dB` riducono la potenza sonora.\n\nPer collegare in modo naturale un cursore `HSlider` ai decibel di un bus audio, si usano due funzioni di GDScript:\n- `linear_to_db(valore_lineare)`: converte un valore compreso tra `0.0` e `1.0` nel corrispettivo valore in decibel.\n- `db_to_linear(valore_db)`: esegue l'operazione opposta, convertendo i decibel in un valore da `0.0` a `1.0` per posizionare il cursore dell'interfaccia."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Control\n\n@onready var master_slider: HSlider = $VBoxContainer/MasterSlider\n@onready var music_slider: HSlider = $VBoxContainer/MusicSlider\n@onready var sfx_slider: HSlider = $VBoxContainer/SFXSlider\n@onready var mute_button: CheckButton = $VBoxContainer/MuteButton\n\nvar _master_bus_idx: int = 0\nvar _music_bus_idx: int = 0\nvar _sfx_bus_idx: int = 0\n\n\nfunc _ready() -> void:\n\t_master_bus_idx = AudioServer.get_bus_index(\"Master\")\n\t_music_bus_idx = AudioServer.get_bus_index(\"Music\")\n\t_sfx_bus_idx = AudioServer.get_bus_index(\"SFX\")\n\n\tmaster_slider.min_value = 0.0001\n\tmaster_slider.max_value = 1.0\n\tmusic_slider.min_value = 0.0001\n\tmusic_slider.max_value = 1.0\n\tsfx_slider.min_value = 0.0001\n\tsfx_slider.max_value = 1.0\n\n\t_sync_ui_from_audio_server()\n\n\tmaster_slider.value_changed.connect(_on_master_slider_value_changed)\n\tmusic_slider.value_changed.connect(_on_music_slider_value_changed)\n\tsfx_slider.value_changed.connect(_on_sfx_slider_value_changed)\n\tmute_button.toggled.connect(_on_mute_button_toggled)\n\n\nfunc _sync_ui_from_audio_server() -> void:\n\tvar master_db: float = AudioServer.get_bus_volume_db(_master_bus_idx)\n\tmaster_slider.value = db_to_linear(master_db)\n\n\tvar music_db: float = AudioServer.get_bus_volume_db(_music_bus_idx)\n\tmusic_slider.value = db_to_linear(music_db)\n\n\tvar sfx_db: float = AudioServer.get_bus_volume_db(_sfx_bus_idx)\n\tsfx_slider.value = db_to_linear(sfx_db)\n\n\tmute_button.button_pressed = AudioServer.is_bus_mute(_master_bus_idx)\n\n\nfunc _on_master_slider_value_changed(value: float) -> void:\n\tvar db_val: float = linear_to_db(value)\n\tAudioServer.set_bus_volume_db(_master_bus_idx, db_val)\n\n\nfunc _on_music_slider_value_changed(value: float) -> void:\n\tvar db_val: float = linear_to_db(value)\n\tAudioServer.set_bus_volume_db(_music_bus_idx, db_val)\n\n\nfunc _on_sfx_slider_value_changed(value: float) -> void:\n\tvar db_val: float = linear_to_db(value)\n\tAudioServer.set_bus_volume_db(_sfx_bus_idx, db_val)\n\n\nfunc _on_mute_button_toggled(toggled_on: bool) -> void:\n\tAudioServer.set_bus_mute(_master_bus_idx, toggled_on)",
+    "spiegazione": "Recuperiamo gli indici numerici dei tre bus audio con `AudioServer.get_bus_index()`. Con `_sync_ui_from_audio_server()` leggiamo i decibel attuali dei bus e impostiamo la posizione corretta dei cursori convertendoli con `db_to_linear()`. Quando l'utente muove un cursore, il segnale `value_changed` converte il valore lineare in decibel tramite `linear_to_db()` e lo applica a `AudioServer`. Il pulsante `CheckButton` aziona direttamente la funzione Mute sul canale principale `Master`."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Non passare mai `0.0` alla funzione `linear_to_db()`: matematicamente il logaritmo di zero non è definito e restituirà `-inf` (meno infinito). Per evitare errori, imposta sempre la proprietà `min_value` dei tuoi cursori `HSlider` a un valore leggermente maggiore di zero, ad esempio `0.0001`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando il gioco viene chiuso, le modifiche effettuate ai bus audio con `AudioServer` vanno perse. Per mantenere le preferenze del giocatore anche dopo il riavvio, dobbiamo salvarle su un file locale nella cartella `user://`.\n\nPossiamo racchiudere i valori del volume e dello stato del pulsante Mute in un `Dictionary`, convertirli in formato testo con `JSON.stringify()` e salvarli nel file `user://settings.json` tramite `FileAccess`. All'avvio del gioco faremo il processo inverso per ripristinare i volumi salvati."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "func save_audio_settings() -> void:\n\tvar settings_data: Dictionary = {\n\t\t\"master_volume\": db_to_linear(AudioServer.get_bus_volume_db(_master_bus_idx)),\n\t\t\"music_volume\": db_to_linear(AudioServer.get_bus_volume_db(_music_bus_idx)),\n\t\t\"sfx_volume\": db_to_linear(AudioServer.get_bus_volume_db(_sfx_bus_idx)),\n\t\t\"is_muted\": AudioServer.is_bus_mute(_master_bus_idx)\n\t}\n\n\tvar json_string: String = JSON.stringify(settings_data)\n\tvar file: FileAccess = FileAccess.open(\"user://settings.json\", FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(json_string)\n\n\nfunc load_audio_settings() -> void:\n\tif not FileAccess.file_exists(\"user://settings.json\"):\n\t\treturn\n\n\tvar file: FileAccess = FileAccess.open(\"user://settings.json\", FileAccess.READ)\n\tif file == null:\n\t\treturn\n\n\tvar content: String = file.get_as_text()\n\tvar json: JSON = JSON.new()\n\tif json.parse(content) != OK:\n\t\treturn\n\n\tif json.data is Dictionary:\n\t\tvar data: Dictionary = json.data\n\t\tvar master_val: float = float(data.get(\"master_volume\", 1.0))\n\t\tvar music_val: float = float(data.get(\"music_volume\", 1.0))\n\t\tvar sfx_val: float = float(data.get(\"sfx_volume\", 1.0))\n\t\tvar muted: bool = bool(data.get(\"is_muted\", false))\n\n\t\tAudioServer.set_bus_volume_db(_master_bus_idx, linear_to_db(master_val))\n\t\tAudioServer.set_bus_volume_db(_music_bus_idx, linear_to_db(music_val))\n\t\tAudioServer.set_bus_volume_db(_sfx_bus_idx, linear_to_db(sfx_val))\n\t\tAudioServer.set_bus_mute(_master_bus_idx, muted)",
+    "spiegazione": "La funzione `save_audio_settings()` ricava i valori attuali dei bus da `AudioServer`, li converte in scala lineare e li scrive in `user://settings.json`. La funzione `load_audio_settings()` legge il file JSON, preleva i valori salvati e li converte nuovamente in decibel prima di applicarli con `AudioServer.set_bus_volume_db()`."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- I bus audio raggruppano i suoni del gioco: il bus Master gestisce l'audio globale, mentre bus dedicati come Music ed SFX permettono di regolare separatamente musica ed effetti.\n- Ogni nodo AudioStreamPlayer si collega a un bus specifico tramite la sua proprietà bus nell'Inspector.\n- Con la classe AudioServer si modificano volume e silenzio dei bus usando l'indice ottenuto con AudioServer.get_bus_index().\n- Le funzioni linear_to_db() e db_to_linear() convertono i valori dei cursori HSlider nella scala in decibel usata da Godot.\n- Imposta sempre min_value > 0 negli HSlider per evitare che linear_to_db(0) generi un valore non valido (-inf).\n- Salva i dati dei volumi in formato JSON in user://settings.json per mantenere le preferenze audio anche dopo la chiusura del gioco."
+   }
+  ]
+ }
+}
