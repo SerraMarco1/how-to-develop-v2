@@ -2,7 +2,7 @@
  "creato": "2026-10-27T07:49:18.583Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -96,7 +96,106 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "guidato",
+    "genere": "guidato",
+    "titolo": "La musica di sottofondo e il suono della stella",
+    "consegna": "In «Pioggia di stelle», il gioco funziona ma è completamente muto.\n\nCopia la cartella `assets` che si trova in `_asset-del-corso` dentro la cartella del progetto.\nNel progetto trovi la scena `game.tscn` (con radice `Game` di tipo `Node2D`) e lo script `game.gd`.\n\nSegui i passi della guida per aggiungere i primi due canali audio indipendenti:\n1. Aggiungi a `Game` un nodo `AudioStreamPlayer` chiamato `MusicPlayer` con stream `res://assets/audio/music_loop.wav` e `volume_db` impostato a `-8.0`.\n2. Aggiungi a `Game` un secondo nodo `AudioStreamPlayer` chiamato `StarPlayer` con stream `res://assets/audio/coin.wav`.\n3. Nello script `game.gd`, avvia la musica all'inizio con `music_player.play()`, e ogni volta che si raccoglie una stella in `collect_star()`, varia `pitch_scale` tra `0.9` e `1.1` con `randf_range(0.9, 1.1)` e avvia il suono con `star_player.play()`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "pioggia-suoni",
+    "passiGuida": [
+     "Nel pannello FileSystem verifica di avere la cartella res://assets/audio/ con i file sonori del corso.",
+     "Apri la scena res://game.tscn. Nel pannello Scene seleziona il nodo radice Game, premi il pulsante + per aggiungere un nodo, cerca AudioStreamPlayer e premi Create.",
+     "Fai doppio clic sul nodo appena creato e rinominalo in MusicPlayer.",
+     "Con MusicPlayer selezionato, guarda nell'Inspector: trascina res://assets/audio/music_loop.wav nella casella della proprietà Stream, quindi imposta Volume Db a -8.0.",
+     "Seleziona nuovamente il nodo Game, premi +, crea un altro AudioStreamPlayer e rinominalo in StarPlayer.",
+     "Con StarPlayer selezionato, trascina il file res://assets/audio/coin.wav nella casella Stream.",
+     "Apri lo script res://game.gd. In cima alla classe dichiara i riferimenti ai due nodi: @onready var music_player: AudioStreamPlayer = $MusicPlayer e @onready var star_player: AudioStreamPlayer = $StarPlayer.",
+     "Dentro alla funzione _ready(), scrivi music_player.play() per far partire la musica appena il gioco è pronto.",
+     "Dentro alla funzione collect_star(), aggiungi le due righe per suonare l'effetto: star_player.pitch_scale = randf_range(0.9, 1.1) e subito sotto star_player.play()."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://game.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "MusicPlayer",
+      "genitore": "Game",
+      "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato MusicPlayer come figlio di Game"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://game.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "StarPlayer",
+      "genitore": "Game",
+      "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato StarPlayer come figlio di Game"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar game := await instantiate_main_scene()\n\tif not check(\"game\", game != null, \"La scena principale game.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar music := find_by_name(game, \"MusicPlayer\") as AudioStreamPlayer\n\tif not check(\"music_node\", music != null, \"Nella scena deve esistere un AudioStreamPlayer chiamato MusicPlayer\"):\n\t\treturn\n\tvar star := find_by_name(game, \"StarPlayer\") as AudioStreamPlayer\n\tif not check(\"star_node\", star != null, \"Nella scena deve esistere un AudioStreamPlayer chiamato StarPlayer\"):\n\t\treturn\n\n\tawait wait_frames(2)\n\tcheck(\"music_playing\", music.playing, \"All'avvio in _ready() la musica deve partire chiamando music_player.play()\")\n\tcheck(\"music_vol\", music.volume_db <= -7.9 and music.volume_db >= -8.1, \"Il volume di MusicPlayer deve essere impostato a -8.0 dB (valore trovato: %.1f dB)\" % music.volume_db)\n\n\tcall_if_exists(game, \"collect_star\")\n\tawait wait_frames(2)\n\tcheck(\"star_playing\", star.playing, \"Chiamando collect_star(), StarPlayer deve andare in riproduzione\")\n\tcheck(\"star_pitch_range\", star.pitch_scale >= 0.89 and star.pitch_scale <= 1.11, \"L'intonazione pitch_scale di StarPlayer deve rimanere nell'intervallo tra 0.9 e 1.1 (valore trovato: %.2f)\" % star.pitch_scale)\n",
+      "descrizione": "All'avvio parte la musica attenuata a -8 dB e raccogliendo la stella suona StarPlayer con intonazione variabile"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "PioggiaDiStelle",
+      "scenaPrincipale": "res://game.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"PioggiaDiStelle\"\nrun/main_scene=\"res://game.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "game.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n"
+      },
+      {
+       "percorso": "game.gd",
+       "contenuto": "extends Node2D\n\nvar score: int = 0\n@onready var score_label: Label = $ScoreLabel\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"PioggiaDiStelle\"\nrun/main_scene=\"res://game.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "game.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -8.0\n\n[node name=\"StarPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n"
+      },
+      {
+       "percorso": "game.gd",
+       "contenuto": "extends Node2D\n\nvar score: int = 0\n@onready var score_label: Label = $ScoreLabel\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var star_player: AudioStreamPlayer = $StarPlayer\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tmusic_player.play()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\tstar_player.pitch_scale = randf_range(0.9, 1.1)\n\tstar_player.play()\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n"
+      }
+     ],
+     "progetto": {
+      "nome": "PioggiaDiStelle",
+      "scenaPrincipale": "res://game.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Creiamo due nodi `AudioStreamPlayer` separati per evitare che la riproduzione della musica e degli effetti si ostacolino a vicenda. In `MusicPlayer` impostiamo `volume_db` a `-8.0` in modo che il volume della colonna sonora non copra gli effetti di gioco. In `StarPlayer` colleghiamo il file WAV `coin.wav`. Nello script avviamo la musica all'inizio in `_ready()` con `music_player.play()`. Quando viene raccolta una stella in `collect_star()`, cambiamo `pitch_scale` con un valore casuale tra 0.9 e 1.1 tramite `randf_range()` e chiamiamo `play()`: in questo modo ogni stella produce un trillo con intonazione leggermente diversa senza risultare monotono.",
+     "cambiati": [
+      "game.tscn",
+      "game.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es1"
+   }
   },
   "es2": {
    "stato": "da_fare",
