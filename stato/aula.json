@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-27T11:29:11.284Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-27T11:29:29.418Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "bus-e-volumi",
   "numero": "5.6",
   "titolo": "Bus audio, volumi e impostazioni"
  },
- "messaggio": "Sta scrivendo la lezione 5.6 «Bus audio, volumi e impostazioni».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.6 riprende da sola appena rispondono.",
+ "riprende": "2026-10-27T12:09:29.418Z"
 }
