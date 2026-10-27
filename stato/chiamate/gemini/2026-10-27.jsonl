@@ -17,3 +17,6 @@
 {"quando":1793088399639,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"suoni-e-musica","ok":true,"contata":true,"durataMs":578042,"tokenInput":21126,"tokenOutput":10375,"ragionamento":38832}
 {"quando":1793089028466,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"suoni-e-musica","ok":true,"contata":true,"durataMs":17375,"tokenInput":12347,"tokenOutput":12,"ragionamento":3297}
 {"quando":1793089047274,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"suoni-e-musica","ok":true,"contata":true,"durataMs":8294,"tokenInput":2938,"tokenOutput":664,"ragionamento":1885}
+{"quando":1793089061113,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"bus-e-volumi","ok":false,"contata":true,"durataMs":12089,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793089073206,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"bus-e-volumi","ok":true,"contata":true,"durataMs":50058,"tokenInput":13407,"tokenOutput":3537,"ragionamento":5638}
+{"quando":1793089123268,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"bus-e-volumi","ok":true,"contata":true,"durataMs":50320,"tokenInput":17008,"tokenOutput":3527,"ragionamento":6454}
