@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-27T07:49:17.202Z",
+ "aggiornato": "2026-10-27T08:17:39.929Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -605,6 +605,15 @@
    "file": "lezioni/f05-asset-e-audio/font.json",
    "sha256": "f823c3852e971483a6ffe176caf9dd2a4fe093b1f58f53da5ca31a83b991ace8",
    "byte": 205301
+  },
+  {
+   "slug": "suoni-e-musica",
+   "numero": "5.5",
+   "titolo": "Suoni e musica",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/suoni-e-musica.json",
+   "sha256": "6edabad75ecb8a4ce31fa9b5591fa001d82112eb1db36935705a77899a426de4",
+   "byte": 80415
   }
  ],
  "documentazione": {
