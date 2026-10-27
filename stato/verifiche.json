@@ -334,5 +334,10 @@
   "versione": 3,
   "fragili": [],
   "tentativi": {}
+ },
+ "font": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
