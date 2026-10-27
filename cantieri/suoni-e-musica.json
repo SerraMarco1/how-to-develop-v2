@@ -866,7 +866,7 @@
  ],
  "revisione": {
   "problemi": [],
-  "teoriaCorretta": false,
+  "teoriaCorretta": true,
   "corretti": []
  }
 }
