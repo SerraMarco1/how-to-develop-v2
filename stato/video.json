@@ -928,5 +928,39 @@
    "regole": 2,
    "motivo": "L'esercizio aggiunge solo musica e suoni, che non hanno una rappresentazione visiva sullo schermo."
   }
+ },
+ "bus-e-volumi": {
+  "es1": {
+   "impronta": "13331c9684a45b21aca452d30b5d8cc2329844f4eca13b839564b31174668422",
+   "tentativi": 1,
+   "esito": "fatto",
+   "regole": 2,
+   "copione": {
+    "scena": "res://options_menu.tscn",
+    "durata": 6,
+    "azioni": [],
+    "soggetti": [
+     {
+      "id": "cursore",
+      "cerca": {
+       "nome": "MasterSlider"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 5.5,
+      "deve": "esserci",
+      "etichetta": "Cursore Master"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "I cursori regolano i volumi dei bus audio",
+      "da": 0.5,
+      "a": 5.5,
+      "soggetto": "cursore"
+     }
+    ]
+   }
+  }
  }
 }

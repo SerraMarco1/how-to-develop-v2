@@ -1,0 +1,48 @@
+{
+ "n": 41,
+ "quando": "2026-10-27T14:50:26.257Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri options_menu.tscn e premi F6, 6 s. Soggetti: «Cursore Master» (esserci). Scritte: «I cursori regolano i volumi dei bus audio». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 18 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 43968,
+ "dati": {
+  "copione": {
+   "scena": "res://options_menu.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "cursore",
+     "cerca": {
+      "nome": "MasterSlider"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Cursore Master"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "I cursori regolano i volumi dei bus audio",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "cursore"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "97df07e7bea4aef4f32f080129b8583597a62feadb4d12b75d678f9fc003b597",
+   "estensione": "mp4",
+   "byte": 18789
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (8208 → 202 token)"
+ ]
+}
