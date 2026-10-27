@@ -1,9 +1,394 @@
 {
  "creato": "2026-10-27T07:49:18.583Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "La musica di sottofondo e il suono della stella",
+    "consegna": "In «Pioggia di stelle», il gioco funziona ma è completamente muto.\n\nCopia la cartella `assets` che si trova in `_asset-del-corso` dentro la cartella del progetto.\nNel progetto trovi la scena `game.tscn` (con radice `Game` di tipo `Node2D`) e lo script `game.gd`.\n\nSegui i passi della guida per aggiungere i primi due canali audio indipendenti:\n1. Aggiungi a `Game` un nodo `AudioStreamPlayer` chiamato `MusicPlayer` con stream `res://assets/audio/music_loop.wav` e `volume_db` impostato a `-8.0`.\n2. Aggiungi a `Game` un secondo nodo `AudioStreamPlayer` chiamato `StarPlayer` con stream `res://assets/audio/coin.wav`.\n3. Nello script `game.gd`, avvia la musica all'inizio con `music_player.play()`, e ogni volta che si raccoglie una stella in `collect_star()`, varia `pitch_scale` tra `0.9` e `1.1` con `randf_range(0.9, 1.1)` e avvia il suono con `star_player.play()`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "pioggia-suoni",
+    "passiGuida": [
+     "Nel pannello FileSystem verifica di avere la cartella res://assets/audio/ con i file sonori del corso.",
+     "Apri la scena res://game.tscn. Nel pannello Scene seleziona il nodo radice Game, premi il pulsante + per aggiungere un nodo, cerca AudioStreamPlayer e premi Create.",
+     "Fai doppio clic sul nodo appena creato e rinominalo in MusicPlayer.",
+     "Con MusicPlayer selezionato, guarda nell'Inspector: trascina res://assets/audio/music_loop.wav nella casella della proprietà Stream, quindi imposta Volume Db a -8.0.",
+     "Seleziona nuovamente il nodo Game, premi +, crea un altro AudioStreamPlayer e rinominalo in StarPlayer.",
+     "Con StarPlayer selezionato, trascina il file res://assets/audio/coin.wav nella casella Stream.",
+     "Apri lo script res://game.gd. In cima alla classe dichiara i riferimenti ai due nodi: @onready var music_player: AudioStreamPlayer = $MusicPlayer e @onready var star_player: AudioStreamPlayer = $StarPlayer.",
+     "Dentro alla funzione _ready(), scrivi music_player.play() per far partire la musica appena il gioco è pronto.",
+     "Dentro alla funzione collect_star(), aggiungi le due righe per suonare l'effetto: star_player.pitch_scale = randf_range(0.9, 1.1) e subito sotto star_player.play()."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://game.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "MusicPlayer",
+      "genitore": "Game",
+      "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato MusicPlayer come figlio di Game"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://game.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "StarPlayer",
+      "genitore": "Game",
+      "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato StarPlayer come figlio di Game"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar game := await instantiate_main_scene()\n\tif not check(\"game\", game != null, \"La scena principale game.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\tvar music := find_by_name(game, \"MusicPlayer\") as AudioStreamPlayer\n\tif not check(\"music_node\", music != null, \"Nella scena deve esistere un AudioStreamPlayer chiamato MusicPlayer\"):\n\t\treturn\n\tvar star := find_by_name(game, \"StarPlayer\") as AudioStreamPlayer\n\tif not check(\"star_node\", star != null, \"Nella scena deve esistere un AudioStreamPlayer chiamato StarPlayer\"):\n\t\treturn\n\n\tawait wait_frames(2)\n\tcheck(\"music_playing\", music.playing, \"All'avvio in _ready() la musica deve partire chiamando music_player.play()\")\n\tcheck(\"music_vol\", music.volume_db <= -7.9 and music.volume_db >= -8.1, \"Il volume di MusicPlayer deve essere impostato a -8.0 dB (valore trovato: %.1f dB)\" % music.volume_db)\n\n\tcall_if_exists(game, \"collect_star\")\n\tawait wait_frames(2)\n\tcheck(\"star_playing\", star.playing, \"Chiamando collect_star(), StarPlayer deve andare in riproduzione\")\n\tcheck(\"star_pitch_range\", star.pitch_scale >= 0.89 and star.pitch_scale <= 1.11, \"L'intonazione pitch_scale di StarPlayer deve rimanere nell'intervallo tra 0.9 e 1.1 (valore trovato: %.2f)\" % star.pitch_scale)",
+      "descrizione": "All'avvio parte la musica attenuata a -8 dB e raccogliendo la stella suona StarPlayer con intonazione variabile"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "game.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n"
+      },
+      {
+       "percorso": "game.gd",
+       "contenuto": "extends Node2D\n\nvar score: int = 0\n@onready var score_label: Label = $ScoreLabel\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n"
+      }
+     ],
+     "progetto": {
+      "nome": "PioggiaDiStelle",
+      "scenaPrincipale": "res://game.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "game.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -8.0\n\n[node name=\"StarPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n"
+      },
+      {
+       "percorso": "game.gd",
+       "contenuto": "extends Node2D\n\nvar score: int = 0\n@onready var score_label: Label = $ScoreLabel\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var star_player: AudioStreamPlayer = $StarPlayer\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tmusic_player.play()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\tstar_player.pitch_scale = randf_range(0.9, 1.1)\n\tstar_player.play()\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n"
+      }
+     ],
+     "progetto": {
+      "nome": "PioggiaDiStelle",
+      "scenaPrincipale": "res://game.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Creiamo due nodi `AudioStreamPlayer` separati per evitare che la riproduzione della musica e degli effetti si ostacolino a vicenda. In `MusicPlayer` impostiamo `volume_db` a `-8.0` in modo che il volume della colonna sonora non copra gli effetti di gioco. In `StarPlayer` colleghiamo il file WAV `coin.wav`. Nello script avviamo la musica all'inizio in `_ready()` con `music_player.play()`. Quando viene raccolta una stella in `collect_star()`, cambiamo `pitch_scale` con un valore casuale tra 0.9 e 1.1 tramite `randf_range()` e chiamiamo `play()`: in questo modo ogni stella produce un trillo con intonazione leggermente diversa senza risultare monotono.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Colpi, sconfitta e spegnimento musica",
+    "consegna": "Completa il comparto audio di «Pioggia di stelle» aggiungendo i canali per l'impatto con il sasso e per la fine della partita.\nNel progetto hai la scena `game.tscn` e lo script `game.gd` con musica e stelle già pronte.\n\nCosa deve succedere:\n1. Nella scena `game.tscn`, aggiungi due nuovi nodi `AudioStreamPlayer` come figli di `Game`:\n   - `RockPlayer`: con stream `res://assets/audio/hit.wav`, `volume_db` impostato a `-4.0` e `pitch_scale` impostato a `0.8` (per rendere l'impatto più grave e pesante).\n   - `GameOverPlayer`: con stream `res://assets/audio/hit.wav` e `volume_db` a `0.0`.\n2. Nello script `game.gd`:\n   - Quando la funzione `hit_rock()` viene chiamata, avvia il suono su `RockPlayer`. Se le vite (`lives`) scendono a `0` o meno, chiama subito la funzione `game_over()`.\n   - Quando viene chiamata `game_over()`, interrompi immediatamente la musica di sottofondo (`music_player.stop()`) e avvia il suono di `GameOverPlayer`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "pioggia-effetti",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Dichiara in cima allo script i riferimenti @onready per i due nuovi nodi: rock_player e game_over_player.",
+     "Per interrompere un AudioStreamPlayer usa il metodo stop() sull'istanza del nodo.",
+     "In hit_rock(), dopo aver suonato l'effetto con rock_player.play(), controlla se lives <= 0 per chiamare game_over()."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://game.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "RockPlayer",
+      "genitore": "Game",
+      "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato RockPlayer come figlio di Game"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://game.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "GameOverPlayer",
+      "genitore": "Game",
+      "descrizione": "La scena game.tscn contiene un AudioStreamPlayer chiamato GameOverPlayer come figlio di Game"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar game := await instantiate_main_scene()\n\tif not check(\"game\", game != null, \"La scena game.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tvar music := find_by_name(game, \"MusicPlayer\") as AudioStreamPlayer\n\tvar rock := find_by_name(game, \"RockPlayer\") as AudioStreamPlayer\n\tvar game_over := find_by_name(game, \"GameOverPlayer\") as AudioStreamPlayer\n\tif not check(\"rock_node\", rock != null, \"Serve un AudioStreamPlayer chiamato RockPlayer\"):\n\t\treturn\n\tif not check(\"game_over_node\", game_over != null, \"Serve un AudioStreamPlayer chiamato GameOverPlayer\"):\n\t\treturn\n\n\tcheck(\"rock_vol\", rock.volume_db <= -3.9 and rock.volume_db >= -4.1, \"volume_db di RockPlayer deve essere impostato a -4.0 dB (valore trovato: %.1f dB)\" % rock.volume_db)\n\tcheck(\"rock_pitch\", rock.pitch_scale >= 0.79 and rock.pitch_scale <= 0.81, \"pitch_scale di RockPlayer deve essere impostato a 0.8 (valore trovato: %.2f)\" % rock.pitch_scale)\n\n\tcall_if_exists(game, \"hit_rock\")\n\tawait wait_frames(2)\n\tcheck(\"rock_playing\", rock.playing, \"Chiamando hit_rock(), RockPlayer deve andare in riproduzione\")\n\tcheck(\"music_active\", music.playing, \"Durante un normale colpo con vite residue la musica deve continuare a suonare\")\n\n\tcall_if_exists(game, \"game_over\")\n\tawait wait_frames(2)\n\tcheck(\"music_stopped\", not music.playing, \"In game_over() la musica di sottofondo deve essere interrotta con stop()\")\n\tcheck(\"game_over_playing\", game_over.playing, \"In game_over() deve partire GameOverPlayer\")",
+      "descrizione": "RockPlayer suona con intonazione 0.8 all'impatto; a zero vite la musica si ferma e parte GameOverPlayer"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "game.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n\n[node name=\"LivesLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 50.0\noffset_right = 160.0\noffset_bottom = 76.0\ntext = \"Vite: 3\"\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -8.0\n\n[node name=\"StarPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n"
+      },
+      {
+       "percorso": "game.gd",
+       "contenuto": "extends Node2D\n\nvar score: int = 0\nvar lives: int = 3\n@onready var score_label: Label = $ScoreLabel\n@onready var lives_label: Label = $LivesLabel\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var star_player: AudioStreamPlayer = $StarPlayer\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tmusic_player.play()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\tstar_player.pitch_scale = randf_range(0.9, 1.1)\n\tstar_player.play()\n\n\nfunc hit_rock() -> void:\n\tlives -= 1\n\tupdate_ui()\n\n\nfunc game_over() -> void:\n\tpass\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n\tlives_label.text = \"Vite: %d\" % lives\n"
+      }
+     ],
+     "progetto": {
+      "nome": "PioggiaDiStelle",
+      "scenaPrincipale": "res://game.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "game.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://game.gd\" id=\"1_game\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/hit.wav\" id=\"4_hit\"]\n\n[node name=\"Game\" type=\"Node2D\"]\nscript = ExtResource(\"1_game\")\n\n[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 20.0\noffset_right = 160.0\noffset_bottom = 46.0\ntext = \"Stelle: 0\"\n\n[node name=\"LivesLabel\" type=\"Label\" parent=\".\"]\noffset_left = 20.0\noffset_top = 50.0\noffset_right = 160.0\noffset_bottom = 76.0\ntext = \"Vite: 3\"\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -8.0\n\n[node name=\"StarPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n\n[node name=\"RockPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\nvolume_db = -4.0\npitch_scale = 0.8\n\n[node name=\"GameOverPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\n"
+      },
+      {
+       "percorso": "game.gd",
+       "contenuto": "extends Node2D\n\nvar score: int = 0\nvar lives: int = 3\n@onready var score_label: Label = $ScoreLabel\n@onready var lives_label: Label = $LivesLabel\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var star_player: AudioStreamPlayer = $StarPlayer\n@onready var rock_player: AudioStreamPlayer = $RockPlayer\n@onready var game_over_player: AudioStreamPlayer = $GameOverPlayer\n\n\nfunc _ready() -> void:\n\tupdate_ui()\n\tmusic_player.play()\n\n\nfunc collect_star() -> void:\n\tscore += 1\n\tupdate_ui()\n\tstar_player.pitch_scale = randf_range(0.9, 1.1)\n\tstar_player.play()\n\n\nfunc hit_rock() -> void:\n\tlives -= 1\n\tupdate_ui()\n\trock_player.play()\n\tif lives <= 0:\n\t\tgame_over()\n\n\nfunc game_over() -> void:\n\tmusic_player.stop()\n\tgame_over_player.play()\n\n\nfunc update_ui() -> void:\n\tscore_label.text = \"Stelle: %d\" % score\n\tlives_label.text = \"Vite: %d\" % lives\n"
+      }
+     ],
+     "progetto": {
+      "nome": "PioggiaDiStelle",
+      "scenaPrincipale": "res://game.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Aggiungiamo `RockPlayer` e `GameOverPlayer` mantenendo la separazione dei canali. Impostando `pitch_scale = 0.8` su `RockPlayer`, il file `hit.wav` viene riprodotto con una tonalità più cupa e lenta, ideale per trasmettere la pesantezza dell'urto con una pietra. In `hit_rock()` avviamo il lettore del sasso e controlliamo se le vite sono esaurite (`lives <= 0`). Quando si entra in `game_over()`, chiamiamo `music_player.stop()` per zittire la musica di sottofondo ed eseguiamo `game_over_player.play()` per segnalare la conclusione della partita.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Separare i canali audio sovrapposti",
+    "consegna": "Hai ricevuto una versione di prova del mini-gioco «Raccolta rapida» (`res://arcade.tscn`).\nIl gioco presenta gravi difetti audio durante la partita:\n- All'avvio la musica parte regolarmente, ma non appena raccogli una moneta o subisci un colpo, la musica si spegne all'improvviso e non si riattiva mai più.\n- Se raccogli una moneta subito prima di subire un colpo, il suono della moneta viene troncato di netto dopo pochi millisecondi e sostituito dall'urto.\n\nRimetti a posto il progetto in modo che:\n- La musica di sottofondo continui a suonare ininterrottamente anche quando avvengono eventi sonori.\n- La raccolta della moneta e il colpo subito possano farsi sentire contemporaneamente senza mai tagliarsi a vicenda.\n- La scena `res://arcade.tscn` utilizzi tre nodi `AudioStreamPlayer` distinti figli di `Arcade`: `MusicPlayer` (con `res://assets/audio/music_loop.wav`), `CoinPlayer` (con `res://assets/audio/coin.wav`) e `HitPlayer` (con `res://assets/audio/hit.wav`).\n- Nello script `arcade.gd`, ciascuna funzione comandi il lettore corretto.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "audio-tagliato",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Il problema nasce perché un unico nodo AudioStreamPlayer può emettere solo una voce alla volta: riassegnare stream e chiamare play() cancella il suono in corso.",
+     "Sostituisci il vecchio SoundPlayer con tre nodi separati e assegna i relativi file sonori direttamente dall'Inspector."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://arcade.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "MusicPlayer",
+      "genitore": "Arcade",
+      "descrizione": "La scena arcade.tscn contiene un AudioStreamPlayer chiamato MusicPlayer come figlio di Arcade"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://arcade.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "CoinPlayer",
+      "genitore": "Arcade",
+      "descrizione": "La scena arcade.tscn contiene un AudioStreamPlayer chiamato CoinPlayer come figlio di Arcade"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://arcade.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "HitPlayer",
+      "genitore": "Arcade",
+      "descrizione": "La scena arcade.tscn contiene un AudioStreamPlayer chiamato HitPlayer come figlio di Arcade"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar arcade := await instantiate_main_scene()\n\tif not check(\"arcade\", arcade != null, \"La scena arcade.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tvar music := find_by_name(arcade, \"MusicPlayer\") as AudioStreamPlayer\n\tvar coin := find_by_name(arcade, \"CoinPlayer\") as AudioStreamPlayer\n\tvar hit := find_by_name(arcade, \"HitPlayer\") as AudioStreamPlayer\n\tif not check(\"music_node\", music != null, \"Serve un AudioStreamPlayer chiamato MusicPlayer\"):\n\t\treturn\n\tif not check(\"coin_node\", coin != null, \"Serve un AudioStreamPlayer chiamato CoinPlayer\"):\n\t\treturn\n\tif not check(\"hit_node\", hit != null, \"Serve un AudioStreamPlayer chiamato HitPlayer\"):\n\t\treturn\n\n\tawait wait_frames(2)\n\tcheck(\"music_start\", music.playing, \"All'avvio MusicPlayer deve essere attivo in riproduzione\")\n\n\tcall_if_exists(arcade, \"collect_coin\")\n\tawait wait_frames(2)\n\tcheck(\"coin_playing\", coin.playing, \"Chiamando collect_coin(), CoinPlayer deve avviarsi\")\n\tcheck(\"music_continues\", music.playing, \"Raccogliendo una moneta la musica di sottofondo non deve interrompersi\")\n\n\tcall_if_exists(arcade, \"take_hit\")\n\tawait wait_frames(2)\n\tcheck(\"both_playing\", coin.playing and hit.playing, \"CoinPlayer e HitPlayer devono poter suonare insieme senza che uno tronchi l'altro\")\n\tcheck(\"music_still_on\", music.playing, \"La musica deve rimanere attiva anche durante l'impatto con il colpo\")",
+      "descrizione": "Musica, monete e colpi suonano su canali dedicati senza cancellarsi o troncarsi"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "arcade.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://arcade.gd\" id=\"1_arcade\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n\n[node name=\"Arcade\" type=\"Node2D\"]\nscript = ExtResource(\"1_arcade\")\n\n[node name=\"SoundPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\n"
+      },
+      {
+       "percorso": "arcade.gd",
+       "contenuto": "extends Node2D\n\n@onready var sound_player: AudioStreamPlayer = $SoundPlayer\nvar coin_stream: AudioStream = preload(\"res://assets/audio/coin.wav\")\nvar hit_stream: AudioStream = preload(\"res://assets/audio/hit.wav\")\n\n\nfunc _ready() -> void:\n\tsound_player.play()\n\n\nfunc collect_coin() -> void:\n\tsound_player.stream = coin_stream\n\tsound_player.play()\n\n\nfunc take_hit() -> void:\n\tsound_player.stream = hit_stream\n\tsound_player.play()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "RaccoltaRapida",
+      "scenaPrincipale": "res://arcade.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "arcade.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://arcade.gd\" id=\"1_arcade\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_coin\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/hit.wav\" id=\"4_hit\"]\n\n[node name=\"Arcade\" type=\"Node2D\"]\nscript = ExtResource(\"1_arcade\")\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\n\n[node name=\"CoinPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_coin\")\n\n[node name=\"HitPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\n"
+      },
+      {
+       "percorso": "arcade.gd",
+       "contenuto": "extends Node2D\n\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var coin_player: AudioStreamPlayer = $CoinPlayer\n@onready var hit_player: AudioStreamPlayer = $HitPlayer\n\n\nfunc _ready() -> void:\n\tmusic_player.play()\n\n\nfunc collect_coin() -> void:\n\tcoin_player.play()\n\n\nfunc take_hit() -> void:\n\thit_player.play()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "RaccoltaRapida",
+      "scenaPrincipale": "res://arcade.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Il difetto originale era dovuto all'uso di un unico nodo `SoundPlayer` per tutti i compiti. In Godot, ogni `AudioStreamPlayer` è a voce singola: assegnargli un nuovo `stream` mentre sta suonando interrompe bruscamente il flusso precedente. Abbiamo riparato la scena rimuovendo il nodo cumulativo e istanziando tre nodi dedicati: `MusicPlayer` per la musica, `CoinPlayer` per la moneta e `HitPlayer` per l'impatto. Nello script abbiamo collegato ogni funzione al proprio lettore, consentendo a musica e molteplici effetti di suonare simultaneamente senza alcuna interruzione.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Collaudo finale: Ripristina i canali audio del duello",
+    "consegna": "Nel prototipo «Duello» (`res://duel.tscn`), il comparto audio presenta diversi problemi segnalati nei collaudi:\n- All'avvio la musica parte con un volume assordante e distorto a causa di un valore errato (`20.0` dB).\n- Non appena un giocatore salta o viene colpito, la musica si spegne e scompare.\n- Se un salto e un colpo avvengono contemporaneamente, il salto viene troncato all'istante perché entrambi usano l'unico lettore `ChannelPlayer`.\n- Il colpo viene riprodotto con un'intonazione sgradevolmente rallentata (`0.1`).\n\nRimetti a posto il progetto in modo che:\n1. Nella scena `res://duel.tscn`, elimina il vecchio nodo unico `ChannelPlayer` e crea tre nodi `AudioStreamPlayer` figli di `Duel`:\n   - `MusicPlayer`: stream `res://assets/audio/music_loop.wav`, volume `volume_db` impostato a `-6.0`.\n   - `JumpPlayer`: stream `res://assets/audio/jump.wav`, volume `volume_db` a `0.0`.\n   - `HitPlayer`: stream `res://assets/audio/hit.wav`, volume `volume_db` a `0.0`.\n2. Nello script `duel.gd`:\n   - In `_ready()`, avvia `MusicPlayer`.\n   - Nella funzione `player_jump()`, avvia `JumpPlayer`.\n   - Nella funzione `player_hit()`, imposta `pitch_scale` di `HitPlayer` a `1.0` e avviane la riproduzione.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "collaudo-duello",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Sostituisci il lettore condiviso ChannelPlayer con i tre nodi dedicati nell'albero della scena e collega a ciascuno il rispettivo file audio."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://duel.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "MusicPlayer",
+      "genitore": "Duel",
+      "descrizione": "La scena duel.tscn contiene un AudioStreamPlayer chiamato MusicPlayer come figlio di Duel"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://duel.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "JumpPlayer",
+      "genitore": "Duel",
+      "descrizione": "La scena duel.tscn contiene un AudioStreamPlayer chiamato JumpPlayer come figlio di Duel"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://duel.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "HitPlayer",
+      "genitore": "Duel",
+      "descrizione": "La scena duel.tscn contiene un AudioStreamPlayer chiamato HitPlayer come figlio di Duel"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar duel := await instantiate_main_scene()\n\tif not check(\"duel\", duel != null, \"La scena duel.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\tvar music := find_by_name(duel, \"MusicPlayer\") as AudioStreamPlayer\n\tvar jump := find_by_name(duel, \"JumpPlayer\") as AudioStreamPlayer\n\tvar hit := find_by_name(duel, \"HitPlayer\") as AudioStreamPlayer\n\tif not check(\"music_node\", music != null, \"Serve un AudioStreamPlayer chiamato MusicPlayer\"):\n\t\treturn\n\tif not check(\"jump_node\", jump != null, \"Serve un AudioStreamPlayer chiamato JumpPlayer\"):\n\t\treturn\n\tif not check(\"hit_node\", hit != null, \"Serve un AudioStreamPlayer chiamato HitPlayer\"):\n\t\treturn\n\n\tawait wait_frames(2)\n\tcheck(\"music_vol\", music.volume_db <= -5.9 and music.volume_db >= -6.1, \"volume_db di MusicPlayer deve essere impostato a -6.0 dB per evitare distorsioni (valore trovato: %.1f dB)\" % music.volume_db)\n\tcheck(\"music_playing\", music.playing, \"All'avvio MusicPlayer deve essere attivo in riproduzione\")\n\n\tcall_if_exists(duel, \"player_jump\")\n\tcall_if_exists(duel, \"player_hit\")\n\tawait wait_frames(2)\n\n\tcheck(\"both_playing\", jump.playing and hit.playing, \"Salto e colpo simultanei devono suonare insieme su JumpPlayer e HitPlayer senza troncarsi\")\n\tcheck(\"music_safe\", music.playing, \"La musica di sottofondo non deve interrompersi durante le azioni di gioco\")\n\tcheck(\"hit_pitch\", hit.pitch_scale >= 0.99 and hit.pitch_scale <= 1.01, \"pitch_scale di HitPlayer deve essere impostato a 1.0 (valore trovato: %.2f)\" % hit.pitch_scale)",
+      "descrizione": "Musica a -6 dB ininterrotta; salto e colpo suonano simultaneamente con intonazione corretta"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "duel.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://duel.gd\" id=\"1_duel\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n\n[node name=\"Duel\" type=\"Node2D\"]\nscript = ExtResource(\"1_duel\")\n\n[node name=\"ChannelPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = 20.0\n"
+      },
+      {
+       "percorso": "duel.gd",
+       "contenuto": "extends Node2D\n\n@onready var channel_player: AudioStreamPlayer = $ChannelPlayer\nvar jump_stream: AudioStream = preload(\"res://assets/audio/jump.wav\")\nvar hit_stream: AudioStream = preload(\"res://assets/audio/hit.wav\")\n\n\nfunc _ready() -> void:\n\tchannel_player.play()\n\n\nfunc player_jump() -> void:\n\tchannel_player.stream = jump_stream\n\tchannel_player.play()\n\n\nfunc player_hit() -> void:\n\tchannel_player.stream = hit_stream\n\tchannel_player.pitch_scale = 0.1\n\tchannel_player.play()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Duello",
+      "scenaPrincipale": "res://duel.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "duel.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://duel.gd\" id=\"1_duel\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/jump.wav\" id=\"3_jump\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/hit.wav\" id=\"4_hit\"]\n\n[node name=\"Duel\" type=\"Node2D\"]\nscript = ExtResource(\"1_duel\")\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"2_music\")\nvolume_db = -6.0\n\n[node name=\"JumpPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"3_jump\")\n\n[node name=\"HitPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_hit\")\n"
+      },
+      {
+       "percorso": "duel.gd",
+       "contenuto": "extends Node2D\n\n@onready var music_player: AudioStreamPlayer = $MusicPlayer\n@onready var jump_player: AudioStreamPlayer = $JumpPlayer\n@onready var hit_player: AudioStreamPlayer = $HitPlayer\n\n\nfunc _ready() -> void:\n\tmusic_player.play()\n\n\nfunc player_jump() -> void:\n\tjump_player.play()\n\n\nfunc player_hit() -> void:\n\thit_player.pitch_scale = 1.0\n\thit_player.play()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Duello",
+      "scenaPrincipale": "res://duel.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Per collaudare e sistemare il progetto abbiamo corretto tre criticità fondamentali:\n1. Volume e distorsione: valori positivi elevati come 20.0 dB causano clipping e distorsione del segnale. Abbiamo abbassato il volume della musica a -6.0 dB per una resa pulita ed equilibrata.\n2. Troncamento e canale unico: abbiamo eliminato ChannelPlayer e creato tre nodi indipendenti (MusicPlayer, JumpPlayer, HitPlayer). In questo modo la musica prosegue indisturbata e un salto eseguito mentre un giocatore viene colpito non spezza né taglia l'effetto del compagno.\n3. Intonazione naturale: abbiamo ripristinato pitch_scale a 1.0 su HitPlayer, eliminando il rallentamento anomalo a 0.1 che rendeva il colpo irriconoscibile.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Suoni e musica con AudioStreamPlayer",
@@ -80,5 +465,11 @@
     "md": "- Usa file non compressi `.wav` per gli effetti sonori immediati e file compressi `.ogg` con loop attivo per la musica di sottofondo.\n- Il nodo `AudioStreamPlayer` riproduce una traccia audio nello spazio di gioco globale.\n- `play()` avvia l'esecuzione e `stop()` la arresta immediatamente.\n- `volume_db` si misura in decibel (`0.0` è il volume predefinito, valori negativi attenuano il suono).\n- Modificare `pitch_scale` a valori vicini a `1.0` aggiunge varietà naturale ai suoni frequenti.\n- Ogni `AudioStreamPlayer` esegue una sola voce alla volta: usa nodi dedicati separati per impedire che musica ed effetti si taglino a vicenda."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
