@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-27T08:17:39.929Z",
+ "aggiornato": "2026-10-27T14:36:32.823Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -614,6 +614,15 @@
    "file": "lezioni/f05-asset-e-audio/suoni-e-musica.json",
    "sha256": "6edabad75ecb8a4ce31fa9b5591fa001d82112eb1db36935705a77899a426de4",
    "byte": 80415
+  },
+  {
+   "slug": "bus-e-volumi",
+   "numero": "5.6",
+   "titolo": "Bus audio, volumi e impostazioni",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/bus-e-volumi.json",
+   "sha256": "26bbbffe3465228112c7d2081bb9b9ae5ab790b8b3d86fb0d1d51045813c8c22",
+   "byte": 235257
   }
  ],
  "documentazione": {
