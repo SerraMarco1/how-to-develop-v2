@@ -39,3 +39,4 @@
 {"quando":1793107950673,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"bus-e-volumi","ok":false,"contata":true,"durataMs":1909,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793109251414,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"bus-e-volumi","ok":false,"contata":true,"durataMs":4388,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793111756396,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"bus-e-volumi","ok":true,"contata":true,"durataMs":18734,"tokenInput":14601,"tokenOutput":12,"ragionamento":2551}
+{"quando":1793111777541,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"bus-e-volumi","ok":true,"contata":true,"durataMs":8276,"tokenInput":2971,"tokenOutput":795,"ragionamento":1902}
