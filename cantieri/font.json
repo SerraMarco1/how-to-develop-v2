@@ -683,13 +683,13 @@
     "tipo": "test",
     "genere": "obiettivo",
     "titolo": "Modulo helper FontHelper e personalizzazione della domanda",
-    "consegna": "Crea un gestore centralizzato per i font del gioco e usalo per personalizzare la domanda nella schermata di quiz (`quiz.gd`).\n\n1. Crea il file `res://font_helper.gd` definendo la classe `FontHelper` (tramite `class_name FontHelper`).\n2. In `font_helper.gd`, aggiungi una funzione statica `create_quiz_label_settings(p_font_size: int = 20, p_outline_size: int = 2, p_outline_color: Color = Color.BLACK) -> LabelSettings`:\n   - Crea un `SystemFont` principale con `font_names = PackedStringArray([\"Sans-Serif\"])`.\n   - Crea un `SystemFont` di riserva con `font_names = PackedStringArray([\"Arial\", \"Serif\"])`.\n   - Assegna il font di riserva nei `fallbacks` del font principale.\n   - Crea e restituisce un nuovo `LabelSettings` contenente:\n     - `font`: il font principale\n     - `font_size`: `p_font_size`\n     - `outline_size`: `p_outline_size`\n     - `outline_color`: `p_outline_color`\n     - `font_color`: `Color.WHITE`\n3. Nel file `quiz.gd`, all'interno della funzione `_ready()`, imposta le `label_settings` di `question_label` ($MarginContainer/VBoxContainer/QuestionPanel/QuestionLabel) invocando `FontHelper.create_quiz_label_settings(26, 3, Color.BLACK)`.",
+    "consegna": "In Godot, la classe `SystemFont` permette di utilizzare font vettoriali installati direttamente nel sistema operativo dell'utente, senza dover distribuire file `.ttf` o `.otf` nel progetto. Creando un'istanza con `SystemFont.new()`, si definisce l'elenco dei font da cercare impostando la proprietà `font_names` con un `PackedStringArray`. Se un carattere non è supportato dal font principale, la proprietà `fallbacks` consente di collegare un array di font alternativi di riserva.\n\nCrea un gestore centralizzato per i font del gioco e usalo per personalizzare la domanda nella schermata di quiz (`quiz.gd`).\n\n1. Crea il file `res://font_helper.gd` definendo la classe `FontHelper` (tramite `class_name FontHelper`).\n2. In `font_helper.gd`, aggiungi una funzione statica `create_quiz_label_settings(p_font_size: int = 20, p_outline_size: int = 2, p_outline_color: Color = Color.BLACK) -> LabelSettings` che restituisce un `LabelSettings` configurato come segue:\n   - Usa come `font` un `SystemFont` principale con `font_names` impostato a `PackedStringArray([\"Sans-Serif\"])`.\n   - Assegna ai `fallbacks` del font principale un `SystemFont` di riserva con `font_names` impostato a `PackedStringArray([\"Arial\", \"Serif\"])`.\n   - Imposta `font_size` pari a `p_font_size`.\n   - Imposta `outline_size` pari a `p_outline_size` e `outline_color` pari a `p_outline_color`.\n   - Imposta `font_color` a `Color.WHITE`.\n3. Nel file `quiz.gd`, all'interno della funzione `_ready()`, assegna alle `label_settings` di `question_label` ($MarginContainer/VBoxContainer/QuestionPanel/QuestionLabel) una risorsa creata tramite `FontHelper.create_quiz_label_settings(26, 3, Color.BLACK)`.",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [
-     "In `font_helper.gd` usa la sintassi `static func create_quiz_label_settings(...) -> LabelSettings:` per creare una funzione invocabile direttamente sul nome della classe."
+     "In `font_helper.gd` usa la sintassi `static func create_quiz_label_settings(...) -> LabelSettings:` per definire una funzione accessibile direttamente sul nome della classe."
     ],
     "verifiche": [
      {
@@ -854,7 +854,7 @@
        }
       ]
      },
-     "spiegazione": "Inscatolare la creazione dei `LabelSettings` in una classe helper statica `FontHelper` rende l'applicazione degli stili pulita, coerente e riutilizzabile in qualsiasi scena del progetto. In questo modo si garantisce che tutti i testi condividano le stesse impostazioni di font e fallback, riducendo le duplicazioni.",
+     "spiegazione": "Inscatolare la creazione dei `LabelSettings` in una classe helper statica `FontHelper` rende l'applicazione degli stili pulita, coerente e riutilizzabile in qualsiasi scena del progetto. Usando `SystemFont`, il gioco sfrutta i caratteri disponibili nel sistema operativo senza dover includere file di font esterni, mentre la proprietà `fallbacks` garantisce una riserva qualora il font principale manchi di alcuni caratteri o non sia disponibile.",
      "cambiati": [
       "font_helper.gd",
       "quiz.gd"
@@ -869,7 +869,8 @@
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-lite-latest",
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Personalizzare i font: temi, riserve e contorni",
@@ -987,6 +988,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }

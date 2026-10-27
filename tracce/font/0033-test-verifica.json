@@ -1,0 +1,14 @@
+{
+ "n": 33,
+ "quando": "2026-10-27T07:49:04.822Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test: correzione del revisore accettata",
+ "spiegazione": "La versione corretta supera tutti i controlli e sostituisce la precedente.",
+ "richieste": 0,
+ "dati": {
+  "problemi": []
+ },
+ "chiamate": []
+}
