@@ -623,5 +623,7 @@
   "corretti": [
    "test"
   ]
- }
+ },
+ "teoriaRivista": true,
+ "praticaRivista": true
 }
