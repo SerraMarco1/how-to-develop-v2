@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-28T13:35:03.995Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-28T13:46:18.843Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "ordine-nel-progetto",
   "numero": "5.8",
   "titolo": "Tenere in ordine un progetto"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.8 riprende da sola appena rispondono.",
- "riprende": "2026-10-28T13:45:03.995Z"
+ "messaggio": "Sta scrivendo la lezione 5.8 «Tenere in ordine un progetto».",
+ "riprende": null
 }
