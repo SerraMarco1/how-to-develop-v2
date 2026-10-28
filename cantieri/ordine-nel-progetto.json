@@ -608,5 +608,18 @@
  "ordine": [
   "es1",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test è una copia dell'esercizio 1 con soltanto i nomi dei file cambiati: richiede esattamente le stesse operazioni (creare le cartelle scenes/, scripts/ e data/, spostare e rinominare quattro file corrispondenti e impostare la scena principale).",
+    "correzione": "Riprogetta il test in modo che verifichi gli obiettivi della lezione in un contesto differente, ad esempio fornendo un progetto che contiene un collegamento rotto da individuare e riparare tramite 'Edit Dependencies...' oppure richiedendo l'organizzazione di risorse multimediali nella cartella assets/.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
