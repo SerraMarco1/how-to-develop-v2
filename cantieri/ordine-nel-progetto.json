@@ -176,7 +176,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "controllo di sicurezza — notes/.gdignore: i file .gdignore non possono far parte di una lezione"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La cartella principale res:// non deve contenere file sparsi. Trovati: [\"icon.svg.import\"]\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
