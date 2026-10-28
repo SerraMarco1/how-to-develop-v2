@@ -301,7 +301,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\t# 1. Controllo file sparsi nella radice\n\tvar dir := DirAccess.open(\"res://\")\n\tif check(\"root_accessible\", dir != null, \"La cartella principale res:// deve essere accessibile\"):\n\t\tdir.list_dir_begin()\n\t\tvar fname := dir.get_next()\n\t\tvar loose: Array[String] = []\n\t\twhile fname != \"\":\n\t\t\tif not dir.current_is_dir() and not fname.begins_with(\".\"):\n\t\t\t\tif fname != \"project.godot\" and fname != \"icon.svg\":\n\t\t\t\t\tloose.append(fname)\n\t\t\tfname = dir.get_next()\n\t\tcheck(\"no_loose_files\", loose.is_empty(), \"Non devono esserci file sparsi nella cartella principale res://. Rimasti: %s\" % str(loose))\n\n\t# 2. Controllo riparazione dipendenza su risorsa data/topic_history.tres\n\tvar hist_res = ResourceLoader.load(\"res://data/topic_history.tres\")\n\tif not check(\"history_loaded\", hist_res != null, \"La risorsa data/topic_history.tres deve caricarsi senza errori di dipendenza\"):\n\t\treturn\n\tvar qs: Array = get_prop(hist_res, \"questions\", [])\n\tcheck(\"history_has_questions\", not qs.is_empty(), \"La risorsa data/topic_history.tres deve contenere le sue domande\")\n\n\t# 3. Controllo caricamento di altre risorse dati\n\tvar geo_res = ResourceLoader.load(\"res://data/topic_geography.tres\")\n\tcheck(\"geo_loaded\", geo_res != null, \"La risorsa data/topic_geography.tres deve caricarsi correttamente\")\n\n\t# 4. Controllo riparazione dipendenza su scena scenes/game_play.tscn\n\tvar game_node := await instantiate_scene(\"res://scenes/game_play.tscn\")\n\tif not check(\"game_play_valid\", game_node != null, \"La scena scenes/game_play.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\t# 5. Verifica funzionamento logica e nodi in game_play\n\tvar q_label := find_by_name(game_node, \"QuestionLabel\") as Label\n\tvar ans0 := find_by_name(game_node, \"Answer0\") as Button\n\tvar score_lbl := find_by_name(game_node, \"ScoreLabel\") as Label\n\tif check(\"game_ui_found\", q_label != null and ans0 != null and score_lbl != null, \"I nodi di interfaccia in game_play devono essere presenti\"):\n\t\tawait click_button(ans0)\n\t\tcheck(\"game_score_updated\", score_lbl.text.contains(\"1\"), \"Rispondendo correttamente il punteggio deve salire a 1 (testo: '%s')\" % score_lbl.text)\n\n\t# 6. Verifica menu principale\n\tvar menu := await instantiate_main_scene()\n\tif check(\"menu_valid\", menu != null, \"La scena principale scenes/main_menu.tscn deve avviarsi senza errori\"):\n\t\tvar start_btn := find_by_name(menu, \"StartButton\") as Button\n\t\tvar title_lbl := find_by_name(menu, \"TitleLabel\") as Label\n\t\tif start_btn != null and title_lbl != null:\n\t\t\tawait click_button(start_btn)\n\t\t\tcheck(\"menu_start\", title_lbl.text == \"Avvio Partita...\", \"Premendo StartButton il menu deve mostrare 'Avvio Partita...'\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\t# 1. Controllo file sparsi nella radice\n\tvar dir := DirAccess.open(\"res://\")\n\tif check(\"root_accessible\", dir != null, \"La cartella principale res:// deve essere accessibile\"):\n\t\tdir.list_dir_begin()\n\t\tvar fname := dir.get_next()\n\t\tvar loose: Array[String] = []\n\t\twhile fname != \"\":\n\t\t\tif not dir.current_is_dir() and not fname.begins_with(\".\"):\n\t\t\t\tif fname != \"project.godot\" and fname != \"icon.svg\":\n\t\t\t\t\tloose.append(fname)\n\t\t\tfname = dir.get_next()\n\t\tcheck(\"no_loose_files\", loose.is_empty(), \"Non devono esserci file sparsi nella cartella principale res://. Rimasti: %s\" % str(loose))\n\n\t# 2. Controllo riparazione dipendenza su risorsa data/topic_history.tres\n\tvar hist_res = ResourceLoader.load(\"res://data/topic_history.tres\")\n\tif not check(\"history_loaded\", hist_res != null, \"La risorsa data/topic_history.tres deve caricarsi senza errori di dipendenza\"):\n\t\treturn\n\tvar qs = get_prop(hist_res, \"questions\", [])\n\tcheck(\"history_has_questions\", qs is Array and not (qs as Array).is_empty(), \"La risorsa data/topic_history.tres deve contenere le sue domande\")\n\n\t# 3. Controllo caricamento di altre risorse dati\n\tvar geo_res = ResourceLoader.load(\"res://data/topic_geography.tres\")\n\tcheck(\"geo_loaded\", geo_res != null, \"La risorsa data/topic_geography.tres deve caricarsi correttamente\")\n\n\t# 4. Controllo riparazione dipendenza su scena scenes/game_play.tscn\n\tvar game_node := await instantiate_scene(\"res://scenes/game_play.tscn\")\n\tif not check(\"game_play_valid\", game_node != null, \"La scena scenes/game_play.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\t# 5. Verifica funzionamento logica e nodi in game_play\n\tvar q_label := find_by_name(game_node, \"QuestionLabel\") as Label\n\tvar ans0 := find_by_name(game_node, \"Answer0\") as Button\n\tvar score_lbl := find_by_name(game_node, \"ScoreLabel\") as Label\n\tif check(\"game_ui_found\", q_label != null and ans0 != null and score_lbl != null, \"I nodi di interfaccia in game_play devono essere presenti\"):\n\t\tawait click_button(ans0)\n\t\tcheck(\"game_score_updated\", score_lbl.text.contains(\"1\"), \"Rispondendo correttamente il punteggio deve salire a 1 (testo: '%s')\" % score_lbl.text)\n\n\t# 6. Verifica menu principale\n\tvar menu := await instantiate_main_scene()\n\tif check(\"menu_valid\", menu != null, \"La scena principale scenes/main_menu.tscn deve avviarsi senza errori\"):\n\t\tvar start_btn := find_by_name(menu, \"StartButton\") as Button\n\t\tvar title_lbl := find_by_name(menu, \"TitleLabel\") as Label\n\t\tif start_btn != null and title_lbl != null:\n\t\t\tawait click_button(start_btn)\n\t\t\tcheck(\"menu_start\", title_lbl.text == \"Avvio Partita...\", \"Premendo StartButton il menu deve mostrare 'Avvio Partita...'\")",
       "descrizione": "Nessun file sparso in radice, dipendenze riparate e interazioni di gioco funzionanti"
      }
     ],
@@ -343,7 +343,7 @@
       },
       {
        "percorso": "old_game_session.gd",
-       "contenuto": "class_name GamePlay\nextends Control\n\n@onready var question_label: Label = $VBoxContainer/QuestionLabel\n@onready var answer_button_0: Button = $VBoxContainer/Answer0\n@onready var answer_button_1: Button = $VBoxContainer/Answer1\n@onready var score_label: Label = $VBoxContainer/ScoreLabel\n\nvar session: QuizSession\n\n\nfunc _ready() -> void:\n\tvar q1 := Question.new()\n\tq1.text = \"Capitale della Francia?\"\n\tq1.options = [\"Parigi\", \"Lione\"]\n\tq1.correct_index = 0\n\tsession = QuizSession.new([q1])\n\t_show_question()\n\tif answer_button_0:\n\t\tanswer_button_0.pressed.connect(func() -> void: _submit_answer(0))\n\tif answer_button_1:\n\t\tanswer_button_1.pressed.connect(func() -> void: _submit_answer(1))\n\n\nfunc _show_question() -> void:\n\tif session:\n\t\tvar q := session.get_current_question()\n\t\tif q and question_label:\n\t\t\tquestion_label.text = q.text\n\n\nfunc _submit_answer(index: int) -> void:\n\tif session:\n\t\tvar _ok := session.answer(index)\n\t\tif score_label:\n\t\t\tscore_label.text = \"Punti: %d\" % session.score\n"
+       "contenuto": "extends Control\n\n@onready var question_label: Label = $VBoxContainer/QuestionLabel\n@onready var answer_button_0: Button = $VBoxContainer/Answer0\n@onready var answer_button_1: Button = $VBoxContainer/Answer1\n@onready var score_label: Label = $VBoxContainer/ScoreLabel\n\nvar session: QuizSession\n\n\nfunc _ready() -> void:\n\tvar q1 := Question.new()\n\tq1.text = \"Capitale della Francia?\"\n\tq1.options = [\"Parigi\", \"Lione\"]\n\tq1.correct_index = 0\n\tsession = QuizSession.new([q1])\n\t_show_question()\n\tif answer_button_0:\n\t\tanswer_button_0.pressed.connect(func() -> void: _submit_answer(0))\n\tif answer_button_1:\n\t\tanswer_button_1.pressed.connect(func() -> void: _submit_answer(1))\n\n\nfunc _show_question() -> void:\n\tif session:\n\t\tvar q := session.get_current_question()\n\t\tif q and question_label:\n\t\t\tquestion_label.text = q.text\n\n\nfunc _submit_answer(index: int) -> void:\n\tif session:\n\t\tvar _ok := session.answer(index)\n\t\tif score_label:\n\t\t\tscore_label.text = \"Punti: %d\" % session.score\n"
       },
       {
        "percorso": "ResultsController.gd",
@@ -363,7 +363,7 @@
       },
       {
        "percorso": "base_question_model.gd",
-       "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc is_correct(index: int) -> bool:\n\treturn index == correct_index\n"
+       "contenuto": "extends \"res://QuestionModel.gd\"\n\n\nfunc is_correct(index: int) -> bool:\n\treturn index == correct_index\n"
       },
       {
        "percorso": "QuizTopicModel.gd",
@@ -568,7 +568,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Il progetto è stato completamente ristrutturato secondo lo standard del corso:\n\n1. Creazione delle cartelle `scenes/`, `scripts/`, `data/` e `docs/`.\n2. Ridenominazione e spostamento di tutti i 28 file in formato `snake_case`, eliminando maiuscole, CamelCase e trattini.\n3. Inserimento del file vuoto `.gdignore` dentro `docs/` per escludere bozze e note dall'elaborazione dell'editor.\n4. Riparazione del primo collegamento rotto: la scena `scenes/game_play.tscn` cercava lo script mancante `old_game_session.gd`, ora sostituito con il puntamento a `res://scripts/game_play.gd`.\n5. Riparazione del secondo collegamento rotto: la risorsa `data/topic_history.tres` cercava lo script `base_question_model.gd`, ora corretto con `res://scripts/question.gd`.\n6. Configurazione della scena principale su `res://scenes/main_menu.tscn`.\n\nIn questo modo, la radice del progetto è pulita e priva di file sciolti, le risorse esterne e interne si collegano correttamente e l'intero gioco può essere avviato e giocato senza crash.",
+     "spiegazione": "Il progetto è stato completamente ristrutturato secondo lo standard del corso:\n\n1. Creazione delle cartelle `scenes/`, `scripts/`, `data/` e `docs/`.\n2. Ridenominazione e spostamento di tutti i file in formato `snake_case`, eliminando maiuscole, CamelCase e trattini.\n3. Inserimento del file vuoto `.gdignore` dentro `docs/` per escludere note e bozze dall'elaborazione dell'editor.\n4. Riparazione del collegamento rotto nella scena `scenes/game_play.tscn`, facendola puntare a `res://scripts/game_play.gd`.\n5. Riparazione del collegamento rotto nella risorsa `data/topic_history.tres`, facendola puntare a `res://scripts/question.gd`.\n6. Configurazione della scena principale su `res://scenes/main_menu.tscn`.\n\nIn questo modo la cartella radice rimane pulita, i riferimenti si caricano senza errori e il gioco può essere eseguito correttamente.",
      "cambiati": [
       "scenes/main_menu.tscn",
       "scenes/game_play.tscn",
@@ -608,10 +608,12 @@
       "PAUSE_POPUP.tscn",
       "MainMenuController.gd",
       "GamePlayLogic.gd",
+      "old_game_session.gd",
       "ResultsController.gd",
       "CardComponentLogic.gd",
       "PAUSE_POPUP_LOGIC.gd",
       "QuestionModel.gd",
+      "base_question_model.gd",
       "QuizTopicModel.gd",
       "SessionManager.gd",
       "ScoreKeeperService.gd",
@@ -633,14 +635,15 @@
     }
    },
    "genere": "riordina",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "il progetto di partenza (`partenza`) deve aprirsi e partire senza errori, invece:\n  - Il file res://GamePlayLogic.gd deve caricarsi senza errori: Parse Error: Class \"GamePlay\" hides a global script class. (res://GamePlayLogic.gd:1 in GDScript::reload)\nFailed to load script \"res://GamePlayLogic.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - Il file res://base_question_model.gd deve caricarsi senza errori: Parse Error: Class \"Question\" hides a global script class. (res://base_question_model.gd:1 in GDScript::reload)\nFailed to load script \"res://base_question_model.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - Il file res://topic-history.tres deve caricarsi senza errori: Attempted to assign an object into a TypedArray, that does not inherit from 'GDScript'. (./core/variant/container_type_validate.h:130 in _internal_validate_object)\nUnable to convert array index 0 from \"Object\" to \"Object\". (core/variant/array.cpp:238 in assign)"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
@@ -648,7 +651,8 @@
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-flash-lite-latest",
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Tenere in ordine un progetto",
