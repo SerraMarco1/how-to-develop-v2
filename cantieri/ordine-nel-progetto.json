@@ -7,7 +7,7 @@
     "tipo": "autonomo",
     "genere": "riordina",
     "titolo": "Riorganizzare il modulo inventario e domande",
-    "consegna": "Hai ricevuto il progetto `MiniQuizRiordino` in uno stato disordinato: tutti i file si trovano ammassati direttamente nella radice `res://`, i nomi mischiano maiuscole, minuscole e trattini, e una delle risorse presenta un collegamento rotto che impedisce il caricamento.\n\nRiordina il progetto seguendo queste regole:\n\n1. Crea le seguenti cartelle per funzione:\n   - `scenes/` per le scene `.tscn`\n   - `scripts/` per gli script `.gd`\n   - `data/` per le risorse `.tres`\n   - `notes/` per gli appunti di sviluppo\n2. Sposta e rinomina tutti i file in formato `snake_case` (tutto in minuscolo con trattini bassi):\n   - `MainMenu.tscn` → `scenes/main_menu.tscn`\n   - `QuizCard.tscn` → `scenes/quiz_card.tscn`\n   - `MAIN_CONTROLLER.gd` → `scripts/main_controller.gd`\n   - `CARD_VIEW.gd` → `scripts/card_view.gd`\n   - `QuestionData.gd` → `scripts/question_data.gd`\n   - `ScoreManager.gd` → `scripts/score_manager.gd`\n   - `biology-quiz.tres` → `data/biology_quiz.tres`\n   - `math-quiz.tres` → `data/math_quiz.tres`\n   - `DRAFT_NOTES.txt` → `notes/draft_notes.txt`\n3. Crea un file vuoto chiamato `.gdignore` dentro la cartella `notes/` in modo che Godot la escluda dall'importazione.\n4. Ripara il collegamento rotto: la risorsa `biology_quiz.tres` ha un riferimento a uno script inesistente (`missing_question_data.gd`); correggi la dipendenza associandola allo script `res://scripts/question_data.gd`.\n5. Aggiorna la scena principale del progetto su `res://scenes/main_menu.tscn`.\n\nAl termine, la cartella principale `res://` non deve contenere file sparsi (a parte `project.godot` e l'eventuale `icon.svg`), tutte le risorse devono caricarsi e l'interfaccia deve funzionare esattamente come prima.",
+    "consegna": "Hai ricevuto il progetto `MiniQuizRiordino` in uno stato disordinato: tutti i file si trovano ammassati direttamente nella radice `res://`, i nomi mischiano maiuscole, minuscole e trattini, e una delle risorse presenta un collegamento rotto che impedisce il caricamento.\n\nRiordina il progetto seguendo queste regole:\n\n1. Crea le seguenti cartelle per funzione:\n   - `scenes/` per le scene `.tscn`\n   - `scripts/` per gli script `.gd`\n   - `data/` per le risorse `.tres`\n   - `notes/` per gli appunti di sviluppo\n2. Sposta e rinomina tutti i file in formato `snake_case` (tutto in minuscolo con trattini bassi):\n   - `MainMenu.tscn` → `scenes/main_menu.tscn`\n   - `QuizCard.tscn` → `scenes/quiz_card.tscn`\n   - `MAIN_CONTROLLER.gd` → `scripts/main_controller.gd`\n   - `CARD_VIEW.gd` → `scripts/card_view.gd`\n   - `QuestionData.gd` → `scripts/question_data.gd`\n   - `ScoreManager.gd` → `scripts/score_manager.gd`\n   - `biology-quiz.tres` → `data/biology_quiz.tres`\n   - `math-quiz.tres` → `data/math_quiz.tres`\n   - `DRAFT_NOTES.txt` → `notes/draft_notes.txt`\n3. Ripara il collegamento rotto: la risorsa `biology_quiz.tres` ha un riferimento a uno script inesistente (`missing_question_data.gd`); correggi la dipendenza associandola allo script `res://scripts/question_data.gd`.\n4. Aggiorna la scena principale del progetto su `res://scenes/main_menu.tscn`.\n\nAl termine, la cartella principale `res://` non deve contenere file sparsi (a parte `project.godot` e l'eventuale `icon.svg`), tutte le risorse devono caricarsi e l'interfaccia deve funzionare esattamente come prima.",
     "modalita": "progetto",
     "dove": "a-parte",
     "cartella": "mini-quiz-riordino",
@@ -35,8 +35,8 @@
      },
      {
       "tipo": "file_esiste",
-      "percorso": "res://notes/.gdignore",
-      "descrizione": "La cartella notes/ contiene il file .gdignore per ignorare gli appunti"
+      "percorso": "res://notes/draft_notes.txt",
+      "descrizione": "Il file di testo draft_notes.txt si trova nella cartella notes/"
      },
      {
       "tipo": "script_godot",
@@ -138,10 +138,6 @@
       {
        "percorso": "notes/draft_notes.txt",
        "contenuto": "Note di lavoro:\n- Riorganizzare i percorsi\n- Riparare i collegamenti rotti delle domande\n"
-      },
-      {
-       "percorso": "notes/.gdignore",
-       "contenuto": ""
       }
      ],
      "progetto": {
@@ -151,7 +147,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Per risolvere l'esercizio è necessario organizzare il progetto seguendo la convenzione per cartelle funzionali (`scenes/`, `scripts/`, `data/`, `notes/`) e rinominando tutti i file in `snake_case`. La risorsa `biology-quiz.tres` aveva un collegamento interrotto a `missing_question_data.gd`: riparando la dipendenza su `res://scripts/question_data.gd`, Godot è nuovamente in grado di caricarla correttamente. Infine, aggiungendo `.gdignore` dentro `notes/`, Godot ignora la cartella durante l'importazione, e impostando `res://scenes/main_menu.tscn` come scena principale il gioco torna a partire regolarmente.",
+     "spiegazione": "Per risolvere l'esercizio è necessario organizzare il progetto seguendo la convenzione per cartelle funzionali (`scenes/`, `scripts/`, `data/`, `notes/`) e rinominando tutti i file in `snake_case`. La risorsa `biology-quiz.tres` aveva un collegamento interrotto a `missing_question_data.gd`: riparando la dipendenza su `res://scripts/question_data.gd`, Godot è nuovamente in grado di caricarla correttamente. Infine, impostando `res://scenes/main_menu.tscn` come scena principale il gioco torna a partire regolarmente.",
      "cambiati": [
       "scenes/main_menu.tscn",
       "scenes/quiz_card.tscn",
@@ -161,8 +157,7 @@
       "scripts/score_manager.gd",
       "data/biology_quiz.tres",
       "data/math_quiz.tres",
-      "notes/draft_notes.txt",
-      "notes/.gdignore"
+      "notes/draft_notes.txt"
      ],
      "rimossi": [
       "MainMenu.tscn",
@@ -178,14 +173,15 @@
     }
    },
    "genere": "riordina",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "controllo di sicurezza — notes/.gdignore: i file .gdignore non possono far parte di una lezione"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   },
   "test": {
