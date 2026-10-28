@@ -47,3 +47,4 @@
 {"quando":1793214661191,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-rivesti-1","ok":true,"contata":true,"durataMs":77197,"tokenInput":26260,"tokenOutput":18777,"ragionamento":2775}
 {"quando":1793214753815,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-rivesti-1","ok":true,"contata":true,"durataMs":10348,"tokenInput":2795,"tokenOutput":943,"ragionamento":1672}
 {"quando":1793214769881,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-rivesti-2","ok":true,"contata":true,"durataMs":90966,"tokenInput":19677,"tokenOutput":9578,"ragionamento":13521}
+{"quando":1793214875468,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-rivesti-2","ok":true,"contata":true,"durataMs":59960,"tokenInput":31534,"tokenOutput":23120,"ragionamento":4228}
