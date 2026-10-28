@@ -638,7 +638,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "il progetto di partenza (`partenza`) deve aprirsi e partire senza errori, invece:\n  - Il file res://GamePlayLogic.gd deve caricarsi senza errori: Parse Error: Class \"GamePlay\" hides a global script class. (res://GamePlayLogic.gd:1 in GDScript::reload)\nFailed to load script \"res://GamePlayLogic.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - Il file res://base_question_model.gd deve caricarsi senza errori: Parse Error: Class \"Question\" hides a global script class. (res://base_question_model.gd:1 in GDScript::reload)\nFailed to load script \"res://base_question_model.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - Il file res://topic-history.tres deve caricarsi senza errori: Attempted to assign an object into a TypedArray, that does not inherit from 'GDScript'. (./core/variant/container_type_validate.h:130 in _internal_validate_object)\nUnable to convert array index 0 from \"Object\" to \"Object\". (core/variant/array.cpp:238 in assign)"
+    "controllo di sicurezza — docs/.gdignore: i file .gdignore non possono far parte di una lezione"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
