@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-28T12:29:01.165Z",
+ "aggiornato": "2026-10-28T18:24:37.386Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -632,6 +632,15 @@
    "file": "lezioni/f05-asset-e-audio/adattare-l-audio.json",
    "sha256": "78d5b76b768fecf493ed95811d93e60ac702f5b1d6f53f955dbb1e2fac5617ce",
    "byte": 260969
+  },
+  {
+   "slug": "ordine-nel-progetto",
+   "numero": "5.8",
+   "titolo": "Tenere in ordine un progetto",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/ordine-nel-progetto.json",
+   "sha256": "978898e7b805432cf7b56e102e35216039b3f7dac3df92976837caa52e71d30f",
+   "byte": 74072
   }
  ],
  "documentazione": {
