@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-28T18:22:58.413Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-28T18:24:40.466Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "ordine-nel-progetto",
-  "numero": "5.8",
-  "titolo": "Tenere in ordine un progetto"
+  "slug": "progetto-rivesti-1",
+  "numero": "5.9",
+  "titolo": "Progetto «Rivesti il tuo gioco» – tappa 1: scegliere e preparare"
  },
- "messaggio": "Sta scrivendo la lezione 5.8 «Tenere in ordine un progetto».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.9 riprende da sola appena rispondono.",
+ "riprende": "2026-10-28T18:34:40.466Z"
 }
