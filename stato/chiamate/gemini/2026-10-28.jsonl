@@ -45,3 +45,4 @@
 {"quando":1793213971434,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-rivesti-1","ok":false,"contata":true,"durataMs":2161,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793214649244,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-rivesti-1","ok":true,"contata":true,"durataMs":9966,"tokenInput":2868,"tokenOutput":238,"ragionamento":1621}
 {"quando":1793214661191,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-rivesti-1","ok":true,"contata":true,"durataMs":77197,"tokenInput":26260,"tokenOutput":18777,"ragionamento":2775}
+{"quando":1793214753815,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-rivesti-1","ok":true,"contata":true,"durataMs":10348,"tokenInput":2795,"tokenOutput":943,"ragionamento":1672}
