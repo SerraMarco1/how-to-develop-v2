@@ -12,3 +12,4 @@
 {"quando":1793190542897,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"ordine-nel-progetto","ok":true,"contata":true,"durataMs":368348,"tokenInput":13749,"tokenOutput":1990,"ragionamento":4335}
 {"quando":1793190913009,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"ordine-nel-progetto","ok":false,"contata":true,"durataMs":32181,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793190945193,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"ordine-nel-progetto","ok":false,"contata":true,"durataMs":6074,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793191646962,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"adattare-l-audio","ok":true,"contata":true,"durataMs":56597,"tokenInput":26592,"tokenOutput":20089,"ragionamento":6509}
