@@ -1,1 +1,3 @@
 {"quando":1793170873736,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"adattare-l-audio","ok":true,"contata":true,"durataMs":415439,"tokenInput":21070,"tokenOutput":7203,"ragionamento":31328}
+{"quando":1793171333685,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"adattare-l-audio","ok":false,"contata":true,"durataMs":3699,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793171337389,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"adattare-l-audio","ok":false,"contata":true,"durataMs":4249,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
