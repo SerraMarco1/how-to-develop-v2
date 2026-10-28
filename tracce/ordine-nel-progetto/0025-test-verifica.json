@@ -1,0 +1,139 @@
+{
+ "n": 25,
+ "quando": "2026-10-28T13:52:18.146Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (riordina): approvato",
+ "spiegazione": "«Riorganizzare il progetto SuperQuiz». 6 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo 2 correzioni.\nFile aggiunti o cambiati: scenes/main_menu.tscn, scripts/main_menu.gd, scripts/quiz_question.gd, data/topic_data.tres",
+ "richieste": 0,
+ "durataMs": 12546,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "riordina",
+   "titolo": "Riorganizzare il progetto SuperQuiz",
+   "consegna": "Nel progetto `SuperQuiz` tutti i file sono stati lasciati alla rinfusa nella radice `res://` con nomi in stile CamelCase.\n\nRiordina il progetto seguendo le convenzioni del corso:\n\n1. Crea le seguenti cartelle nella radice del progetto:\n   - `scenes/` per le scene\n   - `scripts/` per gli script\n   - `data/` per le risorse dati\n2. Sposta e rinomina i file in `snake_case` all'interno delle rispettive cartelle:\n   - `MainMenu.tscn` → `scenes/main_menu.tscn`\n   - `MainMenu.gd` → `scripts/main_menu.gd`\n   - `QuizQuestion.gd` → `scripts/quiz_question.gd`\n   - `TopicData.tres` → `data/topic_data.tres`\n3. Assicurati che i collegamenti interni siano aggiornati:\n   - In `scenes/main_menu.tscn`, lo script deve puntare a `res://scripts/main_menu.gd` e la risorsa `topic` a `res://data/topic_data.tres`.\n   - Nella risorsa `data/topic_data.tres`, lo script deve puntare a `res://scripts/quiz_question.gd`.\n4. Imposta la scena principale del progetto su `res://scenes/main_menu.tscn`.\n5. Il comportamento del gioco deve rimanere identico: premendo il pulsante Inizia, il titolo mostra il testo della domanda.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "super-quiz",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Trascina i file direttamente dentro il pannello FileSystem: Godot aggiorna in automatico la maggior parte dei collegamenti."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://scenes/main_menu.tscn",
+     "descrizione": "La scena del menu principale si trova in scenes/main_menu.tscn"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://scripts/main_menu.gd",
+     "descrizione": "Lo script del menu si trova in scripts/main_menu.gd"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://scripts/quiz_question.gd",
+     "descrizione": "Lo script della risorsa si trova in scripts/quiz_question.gd"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://data/topic_data.tres",
+     "descrizione": "La risorsa dati si trova in data/topic_data.tres"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "run/main_scene",
+     "contiene": "scenes/main_menu.tscn",
+     "descrizione": "La scena principale è impostata su res://scenes/main_menu.tscn"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar menu := await instantiate_main_scene()\n\tif not check(\"menu\", menu != null, \"La scena principale deve avviarsi senza errori\"):\n\t\treturn\n\tvar start_button := find_by_name(menu, \"StartButton\") as Button\n\tvar title_label := find_by_name(menu, \"TitleLabel\") as Label\n\tif not check(\"ui\", start_button != null and title_label != null, \"La scena deve contenere StartButton e TitleLabel\"):\n\t\treturn\n\tawait click_button(start_button)\n\tcheck(\"start\", title_label.text == \"Qual è la capitale d'Italia?\", \"Premendo StartButton il titolo deve mostrare la domanda della risorsa (mostra invece: '%s')\" % title_label.text)\n",
+     "descrizione": "Il menu principale si avvia e mostra la domanda quando viene premuto il pulsante Inizia"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "SuperQuiz",
+     "scenaPrincipale": "res://MainMenu.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SuperQuiz\"\nrun/main_scene=\"res://MainMenu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "MainMenu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://MainMenu.gd\" id=\"1_mm\"]\n[ext_resource type=\"Resource\" path=\"res://TopicData.tres\" id=\"2_td\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_mm\")\ntopic = ExtResource(\"2_td\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Super Quiz\"\n\n[node name=\"StartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Inizia\"\n"
+     },
+     {
+      "percorso": "MainMenu.gd",
+      "contenuto": "class_name MainMenu\nextends Control\n\n@export var topic: QuizQuestion\n\n@onready var start_button: Button = $CenterContainer/VBoxContainer/StartButton\n@onready var title_label: Label = $CenterContainer/VBoxContainer/TitleLabel\n\n\nfunc _ready() -> void:\n\tif start_button:\n\t\tstart_button.pressed.connect(_on_start_pressed)\n\n\nfunc _on_start_pressed() -> void:\n\tif topic and title_label:\n\t\ttitle_label.text = topic.question_text\n"
+     },
+     {
+      "percorso": "QuizQuestion.gd",
+      "contenuto": "class_name QuizQuestion\nextends Resource\n\n@export var question_text: String = \"\"\n"
+     },
+     {
+      "percorso": "TopicData.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuizQuestion\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://QuizQuestion.gd\" id=\"1_q\"]\n\n[resource]\nscript = ExtResource(\"1_q\")\nquestion_text = \"Qual è la capitale d'Italia?\"\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SuperQuiz\"\nrun/main_scene=\"res://scenes/main_menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "scenes/main_menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/main_menu.gd\" id=\"1_mm\"]\n[ext_resource type=\"Resource\" path=\"res://data/topic_data.tres\" id=\"2_td\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_mm\")\ntopic = ExtResource(\"2_td\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Super Quiz\"\n\n[node name=\"StartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Inizia\"\n"
+     },
+     {
+      "percorso": "scripts/main_menu.gd",
+      "contenuto": "class_name MainMenu\nextends Control\n\n@export var topic: QuizQuestion\n\n@onready var start_button: Button = $CenterContainer/VBoxContainer/StartButton\n@onready var title_label: Label = $CenterContainer/VBoxContainer/TitleLabel\n\n\nfunc _ready() -> void:\n\tif start_button:\n\t\tstart_button.pressed.connect(_on_start_pressed)\n\n\nfunc _on_start_pressed() -> void:\n\tif topic and title_label:\n\t\ttitle_label.text = topic.question_text\n"
+     },
+     {
+      "percorso": "scripts/quiz_question.gd",
+      "contenuto": "class_name QuizQuestion\nextends Resource\n\n@export var question_text: String = \"\"\n"
+     },
+     {
+      "percorso": "data/topic_data.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuizQuestion\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/quiz_question.gd\" id=\"1_q\"]\n\n[resource]\nscript = ExtResource(\"1_q\")\nquestion_text = \"Qual è la capitale d'Italia?\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "SuperQuiz",
+     "scenaPrincipale": "res://scenes/main_menu.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "I file sono stati suddivisi in cartelle dedicate per tipo di risorsa (`scenes/`, `scripts/`, `data/`) e rinominati in `snake_case`. I collegamenti interni alle risorse e agli script sono stati aggiornati con i nuovi percorsi, e la scena principale è stata registrata su `res://scenes/main_menu.tscn`.",
+    "cambiati": [
+     "scenes/main_menu.tscn",
+     "scripts/main_menu.gd",
+     "scripts/quiz_question.gd",
+     "data/topic_data.tres"
+    ],
+    "rimossi": [
+     "MainMenu.tscn",
+     "MainMenu.gd",
+     "QuizQuestion.gd",
+     "TopicData.tres"
+    ]
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
