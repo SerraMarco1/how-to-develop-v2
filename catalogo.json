@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-27T14:50:26.275Z",
+ "aggiornato": "2026-10-28T12:29:01.165Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -623,6 +623,15 @@
    "file": "lezioni/f05-asset-e-audio/bus-e-volumi.json",
    "sha256": "7618976fbf57ff751e811b0a9de6704887757f91be96e984b7294f1318631718",
    "byte": 235784
+  },
+  {
+   "slug": "adattare-l-audio",
+   "numero": "5.7",
+   "titolo": "Adattare un suono al progetto",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/adattare-l-audio.json",
+   "sha256": "78d5b76b768fecf493ed95811d93e60ac702f5b1d6f53f955dbb1e2fac5617ce",
+   "byte": 260969
   }
  ],
  "documentazione": {
