@@ -1,9 +1,233 @@
 {
  "creato": "2026-10-27T14:36:34.563Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Creare il componente per il feedback sonoro immediato",
+    "consegna": "In un gioco a quiz, la reattività del feedback è fondamentale: se il giocatore seleziona una risposta corretta o errata e il suono parte anche solo con un decimo di secondo di ritardo (a causa del silenzio iniziale non tagliato), l'azione sembra pesante e poco reattiva.\n\nIn questo esercizio costruisci la scena autonoma `quiz_audio_feedback.tscn` con il relativo script `quiz_audio_feedback.gd`.\nIl componente riproduce all'istante l'effetto acustico corrispondente alla risposta data (usando `coin.wav` per la risposta esatta e `hit.wav` per l'errore) instradando l'audio sul bus `SFX`.\n\nAssicurati che nella cartella del progetto sia presente la cartella `assets` (copiata da `_asset-del-corso`), con i file `res://assets/audio/coin.wav` e `res://assets/audio/hit.wav`.\n\nSpecifiche richieste:\n- Scena: `res://quiz_audio_feedback.tscn` con radice di tipo `Node` chiamata `QuizAudioFeedback`.\n- Script collegato alla radice: `res://quiz_audio_feedback.gd` con nome di classe `QuizAudioFeedback`.\n- Nodo figlio: un `AudioStreamPlayer` chiamato `AudioPlayer` con proprietà `bus` impostata su `\"SFX\"`.\n- Nello script `quiz_audio_feedback.gd`:\n  - `@export var correct_sound: AudioStream`\n  - `@export var wrong_sound: AudioStream`\n  - `@export var volume_balance_db: float = 0.0`\n  - `@onready var _audio_player: AudioStreamPlayer = $AudioPlayer`\n  - `func play_feedback(is_correct: bool) -> void`: imposta `_audio_player.stream` con `correct_sound` se `is_correct` è `true`, altrimenti con `wrong_sound`. Assegna `_audio_player.volume_db = volume_balance_db` e chiama `_audio_player.play()`.\n  - `func stop_feedback() -> void`: ferma il player con `_audio_player.stop()`.\n  - `func is_feedback_playing() -> bool`: restituisce `_audio_player.playing`.\n- Nella scena `quiz_audio_feedback.tscn`, assegna nell'*Inspector* a `correct_sound` il file `res://assets/audio/coin.wav` e a `wrong_sound` il file `res://assets/audio/hit.wav`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello *Scene* premi **Altro nodo** (icona **+**), scegli `Node`, premi **Crea** e rinominalo in `QuizAudioFeedback`.",
+     "Con `QuizAudioFeedback` selezionato, premi **+**, cerca `AudioStreamPlayer`, premi **Crea** e rinomina il nodo in `AudioPlayer`.",
+     "Seleziona `AudioPlayer`, vai nell'*Inspector*, trova la proprietà **Bus** e imposta il valore su `SFX`.",
+     "Seleziona il nodo radice `QuizAudioFeedback`, premi l'icona della pergamena in alto a sinistra nel pannello *Scene*, imposta il percorso su `res://quiz_audio_feedback.gd` e premi **Crea**.",
+     "Nello script `quiz_audio_feedback.gd` scrivi la dichiarazione `class_name QuizAudioFeedback`, estendi `Node`, dichiara le variabili `@export` (`correct_sound`, `wrong_sound`, `volume_balance_db`), la variabile `@onready` per `_audio_player` e implementa le funzioni `play_feedback`, `stop_feedback` e `is_feedback_playing`.",
+     "Seleziona `QuizAudioFeedback` nell'albero della scena; nell'*Inspector* trascina `res://assets/audio/coin.wav` dal pannello *FileSystem* dentro lo slot **Correct Sound** e `res://assets/audio/hit.wav` dentro lo slot **Wrong Sound**.",
+     "Salva la scena premendo **Ctrl+S** con il percorso `res://quiz_audio_feedback.tscn`."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://quiz_audio_feedback.tscn",
+      "descrizione": "Il file di scena res://quiz_audio_feedback.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://quiz_audio_feedback.gd",
+      "descrizione": "Il file di script res://quiz_audio_feedback.gd esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz_audio_feedback.tscn",
+      "tipoNodo": "Node",
+      "nome": "QuizAudioFeedback",
+      "descrizione": "La radice della scena è un Node chiamato QuizAudioFeedback"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz_audio_feedback.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "AudioPlayer",
+      "genitore": "QuizAudioFeedback",
+      "descrizione": "QuizAudioFeedback ha un figlio AudioStreamPlayer chiamato AudioPlayer"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene_node: Node = await instantiate_scene(\"res://quiz_audio_feedback.tscn\")\n\tif not check(\"scene_exists\", scene_node != null, \"La scena quiz_audio_feedback.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar feedback := scene_node as QuizAudioFeedback\n\tif not check(\"is_quiz_audio_feedback\", feedback != null, \"La radice deve essere di tipo QuizAudioFeedback con script collegato\"):\n\t\treturn\n\n\tvar player := find_by_name(feedback, \"AudioPlayer\") as AudioStreamPlayer\n\tif not check(\"has_audio_player\", player != null, \"Deve essere presente un nodo AudioStreamPlayer chiamato AudioPlayer\"):\n\t\treturn\n\n\tcheck(\"bus_is_sfx\", player.bus == &\"SFX\" or player.bus == \"SFX\", \"Il bus di AudioPlayer deve essere impostato su 'SFX' (è '%s')\" % str(player.bus))\n\tcheck(\"correct_sound_set\", feedback.correct_sound != null, \"La proprietà correct_sound deve essere assegnata nell'Inspector\")\n\tcheck(\"wrong_sound_set\", feedback.wrong_sound != null, \"La proprietà wrong_sound deve essere assegnata nell'Inspector\")\n\n\tfeedback.play_feedback(true)\n\tawait wait_frames(2)\n\tcheck(\"play_correct_stream\", player.stream == feedback.correct_sound, \"Chiamando play_feedback(true), lo stream del player deve coincidere con correct_sound\")\n\tcheck(\"play_correct_playing\", feedback.is_feedback_playing(), \"Chiamando play_feedback(true), is_feedback_playing() deve restituire true\")\n\n\tfeedback.play_feedback(false)\n\tawait wait_frames(2)\n\tcheck(\"play_wrong_stream\", player.stream == feedback.wrong_sound, \"Chiamando play_feedback(false), lo stream del player deve coincidere con wrong_sound\")\n\n\tfeedback.stop_feedback()\n\tawait wait_frames(2)\n\tcheck(\"stop_feedback_stopped\", not feedback.is_feedback_playing(), \"Chiamando stop_feedback(), la riproduzione deve interrompersi\")",
+      "descrizione": "QuizAudioFeedback riproduce il suono corretto o errato sul bus SFX senza ritardi"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz_audio_feedback.gd",
+       "contenuto": "class_name QuizAudioFeedback\nextends Node\n\n@export var correct_sound: AudioStream\n@export var wrong_sound: AudioStream\n@export var volume_balance_db: float = 0.0\n\n@onready var _audio_player: AudioStreamPlayer = $AudioPlayer\n\n\nfunc play_feedback(is_correct: bool) -> void:\n\tif is_correct:\n\t\t_audio_player.stream = correct_sound\n\telse:\n\t\t_audio_player.stream = wrong_sound\n\t_audio_player.volume_db = volume_balance_db\n\t_audio_player.play()\n\n\nfunc stop_feedback() -> void:\n\t_audio_player.stop()\n\n\nfunc is_feedback_playing() -> bool:\n\treturn _audio_player.playing\n"
+      },
+      {
+       "percorso": "quiz_audio_feedback.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz_audio_feedback.gd\" id=\"1_feedback\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"2_coin\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/hit.wav\" id=\"3_hit\"]\n\n[node name=\"QuizAudioFeedback\" type=\"Node\"]\nscript = ExtResource(\"1_feedback\")\ncorrect_sound = ExtResource(\"2_coin\")\nwrong_sound = ExtResource(\"3_hit\")\n\n[node name=\"AudioPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nbus = &\"SFX\"\n"
+      }
+     ],
+     "spiegazione": "La classe `QuizAudioFeedback` incapsula la logica per trasmettere il segnale acustico al giocatore. Utilizzando un unico `AudioStreamPlayer` dedicato agli effetti rapidi, assegniamo dinamicamente la risorsa `AudioStream` corretta (`correct_sound` o `wrong_sound`) prima di chiamare `play()`. Il bus viene impostato su `SFX` per consentire all'utente di regolare il volume degli effetti separatamente dalla musica, e il parametro `volume_balance_db` permette di compensare eventuali differenze di guadagno iniziale senza dover alterare i file sorgente su disco.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Configurare la musica di sottofondo con ripetizione continua",
+    "consegna": "Una colonna sonora che si ripete durante una partita a quiz deve proseguire senza stacchi né pause ogni volta che il brano ricomincia. Se la traccia audio non ha il ciclo di ripetizione attivo, si fermerà dopo una sola esecuzione.\n\nCrea la scena autonoma `quiz_music_player.tscn` con script `quiz_music_player.gd` per gestire la musica di sottofondo del Quiz.\n\nRequisiti:\n- Scena: `res://quiz_music_player.tscn` con radice di tipo `Node` chiamata `QuizMusicPlayer`.\n- Script: `res://quiz_music_player.gd` con nome di classe `QuizMusicPlayer` (`class_name QuizMusicPlayer`).\n- Figlio: un nodo `AudioStreamPlayer` chiamato `MusicPlayer` con proprietà `bus` impostata su `\"Music\"`.\n- Variabili esportate nello script:\n  - `@export var music_stream: AudioStream = preload(\"res://assets/audio/music_loop.wav\")`\n  - `@export var auto_start: bool = true`\n- Riferimento al player: `@onready var _music_player: AudioStreamPlayer = $MusicPlayer`\n- Funzioni da implementare in `quiz_music_player.gd`:\n  - `func prepare_loop() -> void`: verifica se `music_stream` è un'istanza di `AudioStreamWAV`; in caso affermativo, imposta la sua proprietà `loop_mode` su `AudioStreamWAV.LOOP_FORWARD` (in questo modo il file WAV ripeterà il ciclo senza interrompersi).\n  - `func play_music(from_position: float = 0.0) -> void`: chiama `prepare_loop()`, assegna `music_stream` a `_music_player.stream` (se non è già assegnato) e avvia la riproduzione con `_music_player.play(from_position)`.\n  - `func stop_music() -> void`: ferma `_music_player`.\n  - `func is_music_playing() -> bool`: restituisce `_music_player.playing`.\n  - in `_ready() -> void`: se `auto_start` è vero e `music_stream != null`, avvia la riproduzione chiamando `play_music()`.\n- Nella scena `quiz_music_player.tscn` assegna a `music_stream` la risorsa `res://assets/audio/music_loop.wav`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Crea una scena con radice `Node` chiamata `QuizMusicPlayer`, aggiungi un `AudioStreamPlayer` chiamato `MusicPlayer` e nell'*Inspector* imposta il suo bus su `Music`.",
+     "Nello script, per verificare se la traccia è un file WAV usa `if music_stream is AudioStreamWAV:` e accedi a `(music_stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD`.",
+     "Nel metodo `_ready()`, controlla se `auto_start` è attivo prima di chiamare `play_music()`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://quiz_music_player.tscn",
+      "descrizione": "Il file di scena res://quiz_music_player.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://quiz_music_player.gd",
+      "descrizione": "Il file di script res://quiz_music_player.gd esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz_music_player.tscn",
+      "tipoNodo": "Node",
+      "nome": "QuizMusicPlayer",
+      "descrizione": "La radice della scena è un Node chiamato QuizMusicPlayer"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz_music_player.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "MusicPlayer",
+      "genitore": "QuizMusicPlayer",
+      "descrizione": "QuizMusicPlayer ha un figlio AudioStreamPlayer chiamato MusicPlayer"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene_node: Node = await instantiate_scene(\"res://quiz_music_player.tscn\")\n\tif not check(\"scene_exists\", scene_node != null, \"La scena quiz_music_player.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar music_comp := scene_node as QuizMusicPlayer\n\tif not check(\"is_quiz_music_player\", music_comp != null, \"La radice deve essere di tipo QuizMusicPlayer con script collegato\"):\n\t\treturn\n\n\tvar player := find_by_name(music_comp, \"MusicPlayer\") as AudioStreamPlayer\n\tif not check(\"has_music_player\", player != null, \"Deve essere presente un nodo AudioStreamPlayer chiamato MusicPlayer\"):\n\t\treturn\n\n\tcheck(\"bus_is_music\", player.bus == &\"Music\" or player.bus == \"Music\", \"Il bus di MusicPlayer deve essere 'Music' (è '%s')\" % str(player.bus))\n\tcheck(\"stream_assigned\", music_comp.music_stream != null, \"La proprietà music_stream deve essere valorizzata\")\n\n\tmusic_comp.prepare_loop()\n\tif music_comp.music_stream is AudioStreamWAV:\n\t\tvar wav := music_comp.music_stream as AudioStreamWAV\n\t\tcheck(\"loop_mode_forward\", wav.loop_mode == AudioStreamWAV.LOOP_FORWARD, \"La funzione prepare_loop() deve impostare loop_mode su AudioStreamWAV.LOOP_FORWARD\")\n\n\tmusic_comp.play_music()\n\tawait wait_frames(2)\n\tcheck(\"music_is_playing\", music_comp.is_music_playing(), \"Dopo play_music(), is_music_playing() deve restituire true\")\n\tcheck(\"player_stream_set\", player.stream == music_comp.music_stream, \"MusicPlayer.stream deve contenere music_stream\")\n\n\tmusic_comp.stop_music()\n\tawait wait_frames(2)\n\tcheck(\"music_stopped\", not music_comp.is_music_playing(), \"Dopo stop_music(), is_music_playing() deve restituire false\")",
+      "descrizione": "QuizMusicPlayer abilita il ciclo di ripetizione continua ed esegue la musica sul bus Music"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz_music_player.gd",
+       "contenuto": "class_name QuizMusicPlayer\nextends Node\n\n@export var music_stream: AudioStream = preload(\"res://assets/audio/music_loop.wav\")\n@export var auto_start: bool = true\n\n@onready var _music_player: AudioStreamPlayer = $MusicPlayer\n\n\nfunc _ready() -> void:\n\tif auto_start and music_stream != null:\n\t\tplay_music()\n\n\nfunc prepare_loop() -> void:\n\tif music_stream is AudioStreamWAV:\n\t\tvar wav_stream: AudioStreamWAV = music_stream as AudioStreamWAV\n\t\twav_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD\n\n\nfunc play_music(from_position: float = 0.0) -> void:\n\tprepare_loop()\n\tif _music_player.stream != music_stream:\n\t\t_music_player.stream = music_stream\n\t_music_player.play(from_position)\n\n\nfunc stop_music() -> void:\n\t_music_player.stop()\n\n\nfunc is_music_playing() -> bool:\n\treturn _music_player.playing\n"
+      },
+      {
+       "percorso": "quiz_music_player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz_music_player.gd\" id=\"1_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/music_loop.wav\" id=\"2_loop\"]\n\n[node name=\"QuizMusicPlayer\" type=\"Node\"]\nscript = ExtResource(\"1_music\")\nmusic_stream = ExtResource(\"2_loop\")\n\n[node name=\"MusicPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nbus = &\"Music\"\n"
+      }
+     ],
+     "spiegazione": "La classe `QuizMusicPlayer` gestisce la riproduzione ininterrotta della colonna sonora di sottofondo. Nelle risorse WAV caricate in Godot, la proprietà `loop_mode` è disattivata di fabbrica (`LOOP_DISABLED`): impostandola su `LOOP_FORWARD`, indichiamo al motore audio di riavviare la forma d'onda all'istante appena raggiunge la fine della traccia, garantendo un ciclo continuo senza pause. L'instradamento sul bus `Music` permette inoltre di controllare il volume separatamente dagli effetti sonori dell'interfaccia.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Bilanciare i volumi ed eliminare la monotonia con il Controller Audio",
+    "consegna": "Nell'interfaccia di un quiz, due difetti rovinano l'esperienza audio:\n1. Sbalzi di volume: se il suono di selezione dei pulsanti è stato registrato a un volume più alto rispetto ai suoni di feedback, risulterà sgradevolmente invadente. Si risolve applicando una compensazione di guadagno in decibel (`volume_db`).\n2. Monotonia: riprodurre decine di volte lo stesso clic alla medesima frequenza acustica affatica l'orecchio. Modulare leggermente l'intonazione (`pitch_scale`) a ogni riproduzione rende il suono vivo e piacevole.\n\nCrea la scena `quiz_audio_controller.tscn` con script `quiz_audio_controller.gd`. Il controller unisce la gestione della musica, del feedback delle risposte e del clic dei pulsanti.\n\nRequisiti:\n- Scena: `res://quiz_audio_controller.tscn` con radice di tipo `Node` chiamata `QuizAudioController`.\n- Script collegato: `res://quiz_audio_controller.gd` con nome di classe `QuizAudioController` (`class_name QuizAudioController`).\n- Figli della radice:\n  1. Un'istanza della scena `res://quiz_audio_feedback.tscn`, chiamata `Feedback`.\n  2. Un'istanza della scena `res://quiz_music_player.tscn`, chiamata `Music`, con la proprietà `auto_start` impostata su `false`.\n  3. Un nodo `AudioStreamPlayer` chiamato `ClickPlayer`, con `bus` impostato su `\"SFX\"` e proprietà `stream` impostata su `res://assets/audio/jump.wav`.\n- Nello script `quiz_audio_controller.gd`:\n  - `@export var click_volume_db: float = -4.0` (attenuazione per bilanciare il picco del clic con gli altri suoni)\n  - `@export var min_pitch: float = 0.95`\n  - `@export var max_pitch: float = 1.05`\n  - `@onready var feedback: QuizAudioFeedback = $Feedback`\n  - `@onready var music: QuizMusicPlayer = $Music`\n  - `@onready var click_player: AudioStreamPlayer = $ClickPlayer`\n  - `func play_click() -> void`: calcola un valore casuale tra `min_pitch` e `max_pitch` con `randf_range(min_pitch, max_pitch)`, assegnalo a `click_player.pitch_scale`, imposta `click_player.volume_db = click_volume_db` e avvia la riproduzione con `click_player.play()`.\n  - `func play_answer_feedback(is_correct: bool) -> void`: chiama `feedback.play_feedback(is_correct)`.\n  - `func start_bg_music() -> void`: chiama `music.play_music()`.\n  - `func stop_bg_music() -> void`: chiama `music.stop_music()`.\n  - `func is_click_playing() -> bool`: restituisce `click_player.playing`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Puoi istanziare le scene `quiz_audio_feedback.tscn` e `quiz_music_player.tscn` come figli trascinandole dal pannello FileSystem dentro la scena aperta, oppure usando il pulsante con l'icona della catena sopra l'albero dei nodi.",
+     "Per generare un'intonazione variabile usa la funzione globale `randf_range(min_pitch, max_pitch)` e assegna il risultato a `click_player.pitch_scale`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://quiz_audio_controller.tscn",
+      "descrizione": "Il file di scena res://quiz_audio_controller.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://quiz_audio_controller.gd",
+      "descrizione": "Il file di script res://quiz_audio_controller.gd esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz_audio_controller.tscn",
+      "tipoNodo": "Node",
+      "nome": "QuizAudioController",
+      "descrizione": "La radice della scena è un Node chiamato QuizAudioController"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://quiz_audio_controller.tscn",
+      "tipoNodo": "AudioStreamPlayer",
+      "nome": "ClickPlayer",
+      "genitore": "QuizAudioController",
+      "descrizione": "QuizAudioController contiene il nodo AudioStreamPlayer chiamato ClickPlayer"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene_node: Node = await instantiate_scene(\"res://quiz_audio_controller.tscn\")\n\tif not check(\"scene_exists\", scene_node != null, \"La scena quiz_audio_controller.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar controller := scene_node as QuizAudioController\n\tif not check(\"is_controller\", controller != null, \"La radice deve essere di tipo QuizAudioController con script collegato\"):\n\t\treturn\n\n\tvar click_player := find_by_name(controller, \"ClickPlayer\") as AudioStreamPlayer\n\tif not check(\"has_click_player\", click_player != null, \"Deve essere presente un AudioStreamPlayer chiamato ClickPlayer\"):\n\t\treturn\n\n\tcheck(\"click_bus_sfx\", click_player.bus == &\"SFX\" or click_player.bus == \"SFX\", \"Il bus di ClickPlayer deve essere 'SFX' (è '%s')\" % str(click_player.bus))\n\tcheck(\"click_stream_assigned\", click_player.stream != null, \"ClickPlayer deve avere uno stream assegnato\")\n\n\tif not check(\"has_feedback\", controller.feedback != null, \"La proprietà feedback deve riferirsi al nodo QuizAudioFeedback\"):\n\t\treturn\n\tif not check(\"has_music\", controller.music != null, \"La proprietà music deve riferirsi al nodo QuizMusicPlayer\"):\n\t\treturn\n\n\tcontroller.play_click()\n\tawait wait_frames(2)\n\tcheck(\"click_playing\", controller.is_click_playing(), \"Dopo play_click(), is_click_playing() deve restituire true\")\n\tcheck(\"click_volume\", absf(click_player.volume_db - controller.click_volume_db) < 0.1, \"Il volume di ClickPlayer deve corrispondere a click_volume_db (-4.0 dB)\")\n\tcheck(\"click_pitch_range\", click_player.pitch_scale >= controller.min_pitch - 0.01 and click_player.pitch_scale <= controller.max_pitch + 0.01, \"L'intonazione di ClickPlayer deve rientrare nell'intervallo casuale tra min_pitch e max_pitch (è %.3f)\" % click_player.pitch_scale)\n\n\tcontroller.play_answer_feedback(true)\n\tawait wait_frames(2)\n\tcheck(\"feedback_correct_active\", controller.feedback.is_feedback_playing(), \"Chiamando play_answer_feedback(true), il feedback delle risposte deve attivarsi\")\n\n\tcontroller.start_bg_music()\n\tawait wait_frames(2)\n\tcheck(\"music_started\", controller.music.is_music_playing(), \"Dopo start_bg_music(), la musica di sottofondo deve essere in riproduzione\")\n\n\tcontroller.stop_bg_music()\n\tawait wait_frames(2)\n\tcheck(\"music_stopped\", not controller.music.is_music_playing(), \"Dopo stop_bg_music(), la musica di sottofondo deve fermarsi\")",
+      "descrizione": "QuizAudioController bilancia i volumi, varia l'intonazione del clic e coordina feedback e musica"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "quiz_audio_controller.gd",
+       "contenuto": "class_name QuizAudioController\nextends Node\n\n@export var click_volume_db: float = -4.0\n@export var min_pitch: float = 0.95\n@export var max_pitch: float = 1.05\n\n@onready var feedback: QuizAudioFeedback = $Feedback\n@onready var music: QuizMusicPlayer = $Music\n@onready var click_player: AudioStreamPlayer = $ClickPlayer\n\n\nfunc play_click() -> void:\n\tvar random_pitch: float = randf_range(min_pitch, max_pitch)\n\tclick_player.pitch_scale = random_pitch\n\tclick_player.volume_db = click_volume_db\n\tclick_player.play()\n\n\nfunc play_answer_feedback(is_correct: bool) -> void:\n\tfeedback.play_feedback(is_correct)\n\n\nfunc start_bg_music() -> void:\n\tmusic.play_music()\n\n\nfunc stop_bg_music() -> void:\n\tmusic.stop_music()\n\n\nfunc is_click_playing() -> bool:\n\treturn click_player.playing\n"
+      },
+      {
+       "percorso": "quiz_audio_controller.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://quiz_audio_controller.gd\" id=\"1_controller\"]\n[ext_resource type=\"PackedScene\" path=\"res://quiz_audio_feedback.tscn\" id=\"2_feedback\"]\n[ext_resource type=\"PackedScene\" path=\"res://quiz_music_player.tscn\" id=\"3_music\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/jump.wav\" id=\"4_jump\"]\n\n[node name=\"QuizAudioController\" type=\"Node\"]\nscript = ExtResource(\"1_controller\")\n\n[node name=\"Feedback\" parent=\".\" instance=ExtResource(\"2_feedback\")]\n\n[node name=\"Music\" parent=\".\" instance=ExtResource(\"3_music\")]\nauto_start = false\n\n[node name=\"ClickPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"4_jump\")\nvolume_db = -4.0\nbus = &\"SFX\"\n"
+      }
+     ],
+     "spiegazione": "`QuizAudioController` centralizza tutti gli elementi sonori del gioco unendo i componenti creati negli esercizi precedenti. Per il suono del clic (`ClickPlayer`), abbassa il volume a -4.0 dB per evitare che un effetto secondario copra il feedback delle risposte, e assegna a ogni pressione un'intonazione casuale compresa tra 0.95 e 1.05 tramite `randf_range`: questa micro-variazione evita la ripetitività e rende ogni tocco naturale.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Adattare un suono al progetto",
@@ -78,5 +302,10 @@
     "md": "- Tagliare il silenzio iniziale elimina la latenza e garantisce la riproduzione immediata dell'effetto sonoro.\n- La normalizzazione del picco (Peak Normalization) porta tutti i file sonori allo stesso livello di volume prima di essere importati.\n- La conversione degli effetti sonori in mono dimezza lo spazio occupato su disco senza ridurre la qualità percepita.\n- Il formato WAV va usato per effetti sonori brevi e reattivi; Ogg Vorbis è la scelta migliore per le musiche e le traccie lunghe.\n- L'opzione Loop e la gestione del punto di inizio ciclo (Loop Begin) si configurano nella scheda Import o tramite la finestra di importazione avanzata con doppio clic sul file."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
