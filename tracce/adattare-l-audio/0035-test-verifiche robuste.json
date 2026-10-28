@@ -1,0 +1,54 @@
+{
+ "n": 35,
+ "quando": "2026-10-28T12:48:28.721Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest non supera i controlli:\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] QuizAudioController bilancia i volumi, varia l'intonazione del clic e coordina feedback e musica: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"music_stopped\" variable because the value doesn't have a set type.\n          at: GDScript::reload (res://htd/verifica_1.gd:50)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"music_stopped\" variable because the valu\nReazione: si riprova al prossimo giro.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 61761,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] QuizAudioController bilancia i volumi, varia l'intonazione del clic e coordina feedback e musica: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"music_stopped\" variable because the value doesn't have a set type.\n          at: GDScript::reload (res://htd/verifica_1.gd:50)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Cannot infer the type of \"music_stopped\" variable because the value doesn't have a set type.\n          at: GDScript::reload (res://htd/verifica_1.gd:50)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 50: `var music_stopped := not call_if_exists(music_node, \"is_music_playing\", [], true)`\nSuggerimenti:\n  - `:=` funziona solo se il valore a destra ha un tipo noto. Scrivi `var nome = valore` (con `=`) oppure dichiara il tipo: `var nome: float = valore`. Succede sempre con `get_prop(...)`, `call_if_exists(...)`, `get_node(...)`, `load(...)` e con i valori presi da Array e Dictionary."
+  ],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://quiz_audio_controller.tscn",
+    "descrizione": "Il file di scena res://quiz_audio_controller.tscn esiste nel progetto"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://quiz_audio_controller.gd",
+    "descrizione": "Il file di script res://quiz_audio_controller.gd esiste nel progetto"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://quiz_audio_controller.tscn",
+    "tipoNodo": "Node",
+    "nome": "QuizAudioController",
+    "descrizione": "La radice della scena è un Node chiamato QuizAudioController"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://quiz_audio_controller.tscn",
+    "tipoNodo": "AudioStreamPlayer",
+    "nome": "ClickPlayer",
+    "genitore": "QuizAudioController",
+    "descrizione": "QuizAudioController contiene il nodo AudioStreamPlayer chiamato ClickPlayer"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene_node: Node = await instantiate_scene(\"res://quiz_audio_controller.tscn\")\n\tif not check(\"scene_exists\", scene_node != null, \"La scena quiz_audio_controller.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\n\tvar controller := scene_node as QuizAudioController\n\tif not check(\"is_controller\", controller != null, \"La radice deve essere di tipo QuizAudioController con script collegato\"):\n\t\treturn\n\n\tawait wait_frames(3)\n\n\tvar click_player := find_by_name(controller, \"ClickPlayer\") as AudioStreamPlayer\n\tif not check(\"has_click_player\", click_player != null, \"Deve essere presente un AudioStreamPlayer chiamato ClickPlayer\"):\n\t\treturn\n\n\tcheck(\"click_bus_sfx\", click_player.bus == &\"SFX\" or click_player.bus == \"SFX\", \"Il bus di ClickPlayer deve essere 'SFX' (è '%s')\" % str(click_player.bus))\n\tcheck(\"click_stream_assigned\", click_player.stream != null, \"ClickPlayer deve avere uno stream assegnato\")\n\n\tvar feedback_node = get_prop(controller, \"feedback\")\n\tcheck(\"has_feedback\", feedback_node != null, \"La proprietà feedback deve riferirsi al nodo QuizAudioFeedback\")\n\n\tvar music_node = get_prop(controller, \"music\")\n\tcheck(\"has_music\", music_node != null, \"La proprietà music deve riferirsi al nodo QuizMusicPlayer\")\n\n\tif controller.has_method(\"play_click\"):\n\t\tcontroller.play_click()\n\t\tawait wait_frames(2)\n\t\tcheck(\"click_playing\", call_if_exists(controller, \"is_click_playing\", [], false), \"Dopo play_click(), is_click_playing() deve restituire true\")\n\t\tcheck(\"click_volume\", absf(click_player.volume_db - get_prop(controller, \"click_volume_db\", -4.0)) < 0.2, \"Il volume di ClickPlayer deve corrispondere a click_volume_db\")\n\t\tcheck(\"click_pitch_range\", click_player.pitch_scale >= get_prop(controller, \"min_pitch\", 0.95) - 0.05 and click_player.pitch_scale <= get_prop(controller, \"max_pitch\", 1.05) + 0.05, \"L'intonazione di ClickPlayer deve rientrare nell'intervallo casuale tra min_pitch e max_pitch (è %.3f)\" % click_player.pitch_scale)\n\n\tif controller.has_method(\"play_answer_feedback\") and feedback_node != null:\n\t\tcontroller.play_answer_feedback(true)\n\t\tawait wait_frames(2)\n\t\tvar fb_playing = call_if_exists(feedback_node, \"is_feedback_playing\", [], false)\n\t\tcheck(\"feedback_correct_active\", fb_playing, \"Chiamando play_answer_feedback(true), il feedback delle risposte deve attivarsi\")\n\n\tif controller.has_method(\"start_bg_music\") and music_node != null:\n\t\tcontroller.start_bg_music()\n\t\tawait wait_frames(2)\n\t\tvar music_playing = call_if_exists(music_node, \"is_music_playing\", [], false)\n\t\tcheck(\"music_started\", music_playing, \"Dopo start_bg_music(), la musica di sottofondo deve essere in riproduzione\")\n\n\tif controller.has_method(\"stop_bg_music\") and music_node != null:\n\t\tcontroller.stop_bg_music()\n\t\tawait wait_frames(2)\n\t\tvar music_stopped := not call_if_exists(music_node, \"is_music_playing\", [], true)\n\t\tcheck(\"music_stopped\", music_stopped, \"Dopo stop_bg_music(), la musica di sottofondo deve fermarsi\")\n",
+    "descrizione": "QuizAudioController bilancia i volumi, varia l'intonazione del clic e coordina feedback e musica"
+   }
+  ],
+  "consegna": "Nell'interfaccia di un quiz, due difetti rovinano l'esperienza audio:\n1. Sbalzi di volume: se il suono di selezione dei pulsanti è stato registrato a un volume più alto rispetto ai suoni di feedback, risulterà sgradevolmente invadente. Si risolve applicando una compensazione di guadagno in decibel (`volume_db`).\n2. Monotonia: riprodurre decine di volte lo stesso clic alla medesima frequenza acustica affatica l'orecchio. Modulare leggermente l'intonazione (`pitch_scale`) a ogni riproduzione rende il suono vivo e piacevole.\n\nCrea la scena `quiz_audio_controller.tscn` con script `quiz_audio_controller.gd`. Il controller unisce la gestione della musica, del feedback delle risposte e del clic dei pulsanti.\n\nRequisiti:\n- Scena: `res://quiz_audio_controller.tscn` con radice di tipo `Node` chiamata `QuizAudioController`.\n- Script collegato: `res://quiz_audio_controller.gd` con nome di classe `QuizAudioController` (`class_name QuizAudioController`).\n- Figli della radice:\n  1. Un'istanza della scena `res://quiz_audio_feedback.tscn`, chiamata `Feedback`.\n  2. Un'istanza della scena `res://quiz_music_player.tscn`, chiamata `Music`, con la proprietà `auto_start` impostata su `false`.\n  3. Un nodo `AudioStreamPlayer` chiamato `ClickPlayer`, con `bus` impostato su `\"SFX\"` e proprietà `stream` impostata su `res://assets/audio/jump.wav`.\n- Nello script `quiz_audio_controller.gd`:\n  - `@export var click_volume_db: float = -4.0` (attenuazione per bilanciare il picco del clic con gli altri suoni)\n  - `@export var min_pitch: float = 0.95`\n  - `@export var max_pitch: float = 1.05`\n  - `@onready var feedback: QuizAudioFeedback = $Feedback`\n  - `@onready var music: QuizMusicPlayer = $Music`\n  - `@onready var click_player: AudioStreamPlayer = $ClickPlayer`\n  - `func play_click() -> void`: calcola un valore casuale tra `min_pitch` e `max_pitch` con `randf_range(min_pitch, max_pitch)`, assegnalo a `click_player.pitch_scale`, imposta `click_player.volume_db = click_volume_db` e avvia la riproduzione con `click_player.play()`.\n  - `func play_answer_feedback(is_correct: bool) -> void`: chiama `feedback.play_feedback(is_correct)`.\n  - `func start_bg_music() -> void`: chiama `music.play_music()`.\n  - `func stop_bg_music() -> void`: chiama `music.stop_music()`.\n  - `func is_click_playing() -> bool`: restituisce `click_player.playing`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 57 s (26592 → 20089 token)"
+ ]
+}

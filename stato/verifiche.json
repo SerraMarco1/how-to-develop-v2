@@ -349,5 +349,14 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "adattare-l-audio": {
+  "versione": 1,
+  "fragili": [
+   "test"
+  ],
+  "tentativi": {
+   "test": 1
+  }
  }
 }
