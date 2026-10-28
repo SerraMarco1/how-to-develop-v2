@@ -352,9 +352,7 @@
  },
  "adattare-l-audio": {
   "versione": 1,
-  "fragili": [
-   "test"
-  ],
+  "fragili": [],
   "tentativi": {
    "test": 1
   }
