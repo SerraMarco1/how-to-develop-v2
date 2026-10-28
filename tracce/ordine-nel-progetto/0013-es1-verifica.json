@@ -1,0 +1,192 @@
+{
+ "n": 13,
+ "quando": "2026-10-28T13:27:58.642Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1 (riordina): 1 problema",
+ "spiegazione": "«Riorganizzare il modulo inventario e domande», scritto da gemini/gemini-flash-latest. 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La cartella principale res:// non deve contenere file sparsi. Trovati: [\"icon.svg.import\"]\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: le correzioni previste sono finite.",
+ "richieste": 0,
+ "durataMs": 5836,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La cartella principale res:// non deve contenere file sparsi. Trovati: [\"icon.svg.import\"]\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "riordina",
+   "titolo": "Riorganizzare il modulo inventario e domande",
+   "consegna": "Hai ricevuto il progetto `MiniQuizRiordino` in uno stato disordinato: tutti i file si trovano ammassati direttamente nella radice `res://`, i nomi mischiano maiuscole, minuscole e trattini, e una delle risorse presenta un collegamento rotto che impedisce il caricamento.\n\nRiordina il progetto seguendo queste regole:\n\n1. Crea le seguenti cartelle per funzione:\n   - `scenes/` per le scene `.tscn`\n   - `scripts/` per gli script `.gd`\n   - `data/` per le risorse `.tres`\n   - `notes/` per gli appunti di sviluppo\n2. Sposta e rinomina tutti i file in formato `snake_case` (tutto in minuscolo con trattini bassi):\n   - `MainMenu.tscn` → `scenes/main_menu.tscn`\n   - `QuizCard.tscn` → `scenes/quiz_card.tscn`\n   - `MAIN_CONTROLLER.gd` → `scripts/main_controller.gd`\n   - `CARD_VIEW.gd` → `scripts/card_view.gd`\n   - `QuestionData.gd` → `scripts/question_data.gd`\n   - `ScoreManager.gd` → `scripts/score_manager.gd`\n   - `biology-quiz.tres` → `data/biology_quiz.tres`\n   - `math-quiz.tres` → `data/math_quiz.tres`\n   - `DRAFT_NOTES.txt` → `notes/draft_notes.txt`\n3. Ripara il collegamento rotto: la risorsa `biology_quiz.tres` ha un riferimento a uno script inesistente (`missing_question_data.gd`); correggi la dipendenza associandola allo script `res://scripts/question_data.gd`.\n4. Aggiorna la scena principale del progetto su `res://scenes/main_menu.tscn`.\n\nAl termine, la cartella principale `res://` non deve contenere file sparsi (a parte `project.godot` e l'eventuale `icon.svg`), tutte le risorse devono caricarsi e l'interfaccia deve funzionare esattamente come prima.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "mini-quiz-riordino",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Crea prima le quattro cartelle nel pannello FileSystem, poi trascina i file uno a uno all'interno per lasciare che Godot aggiorni i collegamenti automatici.",
+    "Per riparare biology_quiz.tres, fai clic destro sul file nel FileSystem e usa 'Edit Dependencies...' selezionando res://scripts/question_data.gd come script.",
+    "Ricorda di impostare la nuova scena principale in Project → Project Settings → Application → Run → Main Scene."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://scenes/main_menu.tscn",
+     "descrizione": "La scena principale esiste nel percorso corretto scenes/main_menu.tscn"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://scripts/question_data.gd",
+     "descrizione": "Lo script QuestionData esiste in scripts/question_data.gd con nome in snake_case"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://data/biology_quiz.tres",
+     "descrizione": "La risorsa biology_quiz.tres esiste nella cartella data/"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://notes/draft_notes.txt",
+     "descrizione": "Il file di testo draft_notes.txt si trova nella cartella notes/"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\t# Verifica che la radice non contenga file sparsi\n\tvar dir := DirAccess.open(\"res://\")\n\tif check(\"dir_root\", dir != null, \"Impossibile accedere alla radice res://\"):\n\t\tdir.list_dir_begin()\n\t\tvar fname := dir.get_next()\n\t\tvar loose_files: Array[String] = []\n\t\twhile fname != \"\":\n\t\t\tif not dir.current_is_dir() and not fname.begins_with(\".\"):\n\t\t\t\tif fname != \"project.godot\" and fname != \"icon.svg\":\n\t\t\t\t\tloose_files.append(fname)\n\t\t\tfname = dir.get_next()\n\t\tcheck(\"no_loose\", loose_files.is_empty(), \"La cartella principale res:// non deve contenere file sparsi. Trovati: %s\" % str(loose_files))\n\n\t# Verifica caricamento risorse e riparazione collegamento rotto\n\tvar bio_res = ResourceLoader.load(\"res://data/biology_quiz.tres\")\n\tif not check(\"bio_loaded\", bio_res != null, \"La risorsa res://data/biology_quiz.tres deve caricarsi senza errori di collegamento\"):\n\t\treturn\n\tvar bio_text: String = str(get_prop(bio_res, \"question_text\", \"\"))\n\tcheck(\"bio_data\", bio_text.length() > 0, \"I dati della risorsa biology_quiz.tres devono essere leggibili (trovato: '%s')\" % bio_text)\n\n\tvar math_res = ResourceLoader.load(\"res://data/math_quiz.tres\")\n\tcheck(\"math_loaded\", math_res != null, \"La risorsa res://data/math_quiz.tres deve caricarsi correttamente\")\n\n\t# Verifica avvio scena principale e interazione\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_valid\", main != null, \"La scena principale deve caricarsi e avviarsi senza errori\"):\n\t\treturn\n\n\tvar btn := find_by_name(main, \"PlayButton\") as Button\n\tvar title := find_by_name(main, \"TitleLabel\") as Label\n\tif check(\"elements\", btn != null and title != null, \"La scena principale deve contenere PlayButton e TitleLabel\"):\n\t\tawait click_button(btn)\n\t\tcheck(\"interaction\", title.text == \"Partita Avviata\", \"Premendo PlayButton il testo del titolo deve diventare 'Partita Avviata'\")\n",
+     "descrizione": "Nessun file sparso nella radice, dipendenze riparate e gioco funzionante"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "MiniQuizRiordino",
+     "scenaPrincipale": "res://MainMenu.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"MiniQuizRiordino\"\nrun/main_scene=\"res://MainMenu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "MainMenu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://MAIN_CONTROLLER.gd\" id=\"1_ctrl\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_ctrl\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Mini Quiz\"\n\n[node name=\"PlayButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Gioca\"\n"
+     },
+     {
+      "percorso": "QuizCard.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://CARD_VIEW.gd\" id=\"1_cv\"]\n\n[node name=\"QuizCard\" type=\"PanelContainer\"]\noffset_right = 300.0\noffset_bottom = 150.0\nscript = ExtResource(\"1_cv\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Domanda\"\n\n[node name=\"Answer0\" type=\"Button\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Opzione 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Opzione 1\"\n"
+     },
+     {
+      "percorso": "MAIN_CONTROLLER.gd",
+      "contenuto": "class_name MainController\nextends Control\n\n@onready var play_button: Button = $CenterContainer/VBoxContainer/PlayButton\n@onready var title_label: Label = $CenterContainer/VBoxContainer/TitleLabel\n\nvar score_manager: ScoreManager\n\n\nfunc _ready() -> void:\n\tscore_manager = ScoreManager.new()\n\tif play_button:\n\t\tplay_button.pressed.connect(_on_play_pressed)\n\n\nfunc _on_play_pressed() -> void:\n\tif title_label:\n\t\ttitle_label.text = \"Partita Avviata\"\n"
+     },
+     {
+      "percorso": "CARD_VIEW.gd",
+      "contenuto": "class_name CardView\nextends PanelContainer\n\n@onready var question_label: Label = $VBoxContainer/QuestionLabel\n@onready var answer_0: Button = $VBoxContainer/Answer0\n@onready var answer_1: Button = $VBoxContainer/Answer1\n\nvar current_data: QuestionData\n\n\nfunc set_question(data: QuestionData) -> void:\n\tcurrent_data = data\n\tif question_label and current_data:\n\t\tquestion_label.text = current_data.question_text\n\tif answer_0 and current_data and current_data.options.size() > 0:\n\t\tanswer_0.text = current_data.options[0]\n\tif answer_1 and current_data and current_data.options.size() > 1:\n\t\tanswer_1.text = current_data.options[1]\n"
+     },
+     {
+      "percorso": "QuestionData.gd",
+      "contenuto": "class_name QuestionData\nextends Resource\n\n@export var question_text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n"
+     },
+     {
+      "percorso": "ScoreManager.gd",
+      "contenuto": "class_name ScoreManager\nextends RefCounted\n\nvar score: int = 0\n\n\nfunc add_point() -> void:\n\tscore += 1\n\n\nfunc reset() -> void:\n\tscore = 0\n"
+     },
+     {
+      "percorso": "missing_question_data.gd",
+      "contenuto": "extends Resource\n"
+     },
+     {
+      "percorso": "biology-quiz.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuestionData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://missing_question_data.gd\" id=\"1_qd\"]\n\n[resource]\nscript = ExtResource(\"1_qd\")\nquestion_text = \"Quale organo pompa il sangue?\"\noptions = Array[String]([\"Cuore\", \"Polmoni\"])\ncorrect_index = 0\n"
+     },
+     {
+      "percorso": "math-quiz.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuestionData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://QuestionData.gd\" id=\"1_qd\"]\n\n[resource]\nscript = ExtResource(\"1_qd\")\nquestion_text = \"Quanto fa 7 x 8?\"\noptions = Array[String]([\"54\", \"56\"])\ncorrect_index = 1\n"
+     },
+     {
+      "percorso": "DRAFT_NOTES.txt",
+      "contenuto": "Note di lavoro:\n- Riorganizzare i percorsi\n- Riparare i collegamenti rotti delle domande\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"MiniQuizRiordino\"\nrun/main_scene=\"res://scenes/main_menu.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "scenes/main_menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/main_controller.gd\" id=\"1_ctrl\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_ctrl\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Mini Quiz\"\n\n[node name=\"PlayButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Gioca\"\n"
+     },
+     {
+      "percorso": "scenes/quiz_card.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/card_view.gd\" id=\"1_cv\"]\n\n[node name=\"QuizCard\" type=\"PanelContainer\"]\noffset_right = 300.0\noffset_bottom = 150.0\nscript = ExtResource(\"1_cv\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"QuestionLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Domanda\"\n\n[node name=\"Answer0\" type=\"Button\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Opzione 0\"\n\n[node name=\"Answer1\" type=\"Button\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"Opzione 1\"\n"
+     },
+     {
+      "percorso": "scripts/main_controller.gd",
+      "contenuto": "class_name MainController\nextends Control\n\n@onready var play_button: Button = $CenterContainer/VBoxContainer/PlayButton\n@onready var title_label: Label = $CenterContainer/VBoxContainer/TitleLabel\n\nvar score_manager: ScoreManager\n\n\nfunc _ready() -> void:\n\tscore_manager = ScoreManager.new()\n\tif play_button:\n\t\tplay_button.pressed.connect(_on_play_pressed)\n\n\nfunc _on_play_pressed() -> void:\n\tif title_label:\n\t\ttitle_label.text = \"Partita Avviata\"\n"
+     },
+     {
+      "percorso": "scripts/card_view.gd",
+      "contenuto": "class_name CardView\nextends PanelContainer\n\n@onready var question_label: Label = $VBoxContainer/QuestionLabel\n@onready var answer_0: Button = $VBoxContainer/Answer0\n@onready var answer_1: Button = $VBoxContainer/Answer1\n\nvar current_data: QuestionData\n\n\nfunc set_question(data: QuestionData) -> void:\n\tcurrent_data = data\n\tif question_label and current_data:\n\t\tquestion_label.text = current_data.question_text\n\tif answer_0 and current_data and current_data.options.size() > 0:\n\t\tanswer_0.text = current_data.options[0]\n\tif answer_1 and current_data and current_data.options.size() > 1:\n\t\tanswer_1.text = current_data.options[1]\n"
+     },
+     {
+      "percorso": "scripts/question_data.gd",
+      "contenuto": "class_name QuestionData\nextends Resource\n\n@export var question_text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n"
+     },
+     {
+      "percorso": "scripts/score_manager.gd",
+      "contenuto": "class_name ScoreManager\nextends RefCounted\n\nvar score: int = 0\n\n\nfunc add_point() -> void:\n\tscore += 1\n\n\nfunc reset() -> void:\n\tscore = 0\n"
+     },
+     {
+      "percorso": "data/biology_quiz.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuestionData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/question_data.gd\" id=\"1_qd\"]\n\n[resource]\nscript = ExtResource(\"1_qd\")\nquestion_text = \"Quale organo pompa il sangue?\"\noptions = Array[String]([\"Cuore\", \"Polmoni\"])\ncorrect_index = 0\n"
+     },
+     {
+      "percorso": "data/math_quiz.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"QuestionData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/question_data.gd\" id=\"1_qd\"]\n\n[resource]\nscript = ExtResource(\"1_qd\")\nquestion_text = \"Quanto fa 7 x 8?\"\noptions = Array[String]([\"54\", \"56\"])\ncorrect_index = 1\n"
+     },
+     {
+      "percorso": "notes/draft_notes.txt",
+      "contenuto": "Note di lavoro:\n- Riorganizzare i percorsi\n- Riparare i collegamenti rotti delle domande\n"
+     }
+    ],
+    "progetto": {
+     "nome": "MiniQuizRiordino",
+     "scenaPrincipale": "res://scenes/main_menu.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Per risolvere l'esercizio è necessario organizzare il progetto seguendo la convenzione per cartelle funzionali (`scenes/`, `scripts/`, `data/`, `notes/`) e rinominando tutti i file in `snake_case`. La risorsa `biology-quiz.tres` aveva un collegamento interrotto a `missing_question_data.gd`: riparando la dipendenza su `res://scripts/question_data.gd`, Godot è nuovamente in grado di caricarla correttamente. Infine, impostando `res://scenes/main_menu.tscn` come scena principale il gioco torna a partire regolarmente.",
+    "cambiati": [
+     "scenes/main_menu.tscn",
+     "scenes/quiz_card.tscn",
+     "scripts/main_controller.gd",
+     "scripts/card_view.gd",
+     "scripts/question_data.gd",
+     "scripts/score_manager.gd",
+     "data/biology_quiz.tres",
+     "data/math_quiz.tres",
+     "notes/draft_notes.txt"
+    ],
+    "rimossi": [
+     "MainMenu.tscn",
+     "QuizCard.tscn",
+     "MAIN_CONTROLLER.gd",
+     "CARD_VIEW.gd",
+     "QuestionData.gd",
+     "ScoreManager.gd",
+     "biology-quiz.tres",
+     "math-quiz.tres",
+     "DRAFT_NOTES.txt"
+    ]
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
