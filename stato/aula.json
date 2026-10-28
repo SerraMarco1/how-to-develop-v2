@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-28T18:58:31.525Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-28T18:59:33.604Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-rivesti-1",
   "numero": "5.9",
   "titolo": "Progetto «Rivesti il tuo gioco» – tappa 1: scegliere e preparare"
  },
- "messaggio": "Sta scrivendo la lezione 5.9 «Progetto «Rivesti il tuo gioco» – tappa 1: scegliere e preparare».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 5.9 riprende da sola appena rispondono.",
+ "riprende": "2026-10-28T19:09:33.603Z"
 }
