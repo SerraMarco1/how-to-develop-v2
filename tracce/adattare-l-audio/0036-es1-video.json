@@ -1,0 +1,16 @@
+{
+ "n": 36,
+ "quando": "2026-10-28T12:48:33.898Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Creare il componente per il feedback sonoro immediato» non si vede sullo schermo: Il componente per il feedback sonoro gestisce l'audio e non genera elementi visivi sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 5067,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 3 s (8025 → 32 token)"
+ ]
+}

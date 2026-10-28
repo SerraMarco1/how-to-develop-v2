@@ -962,5 +962,14 @@
     ]
    }
   }
+ },
+ "adattare-l-audio": {
+  "es1": {
+   "impronta": "cd67925ef6bb19a413eebcdecf7883a8decc7903826392dd30672ae386ab68eb",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il componente per il feedback sonoro gestisce l'audio e non genera elementi visivi sullo schermo."
+  }
  }
 }
