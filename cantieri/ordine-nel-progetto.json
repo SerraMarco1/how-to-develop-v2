@@ -310,6 +310,10 @@
     "partenza": {
      "file": [
       {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SuperQuiz\"\nrun/main_scene=\"res://MAIN_MENU_VIEW.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
        "percorso": "MAIN_MENU_VIEW.tscn",
        "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://MainMenuController.gd\" id=\"1_mm\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_mm\")\n\n[node name=\"CenterContainer\" type=\"CenterContainer\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"CenterContainer\"]\nlayout_mode = 2\n\n[node name=\"TitleLabel\" type=\"Label\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Super Quiz\"\n\n[node name=\"StartButton\" type=\"Button\" parent=\"CenterContainer/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Inizia\"\n"
       },
@@ -338,6 +342,10 @@
        "contenuto": "class_name GamePlay\nextends Control\n\n@onready var question_label: Label = $VBoxContainer/QuestionLabel\n@onready var answer_button_0: Button = $VBoxContainer/Answer0\n@onready var answer_button_1: Button = $VBoxContainer/Answer1\n@onready var score_label: Label = $VBoxContainer/ScoreLabel\n\nvar session: QuizSession\n\n\nfunc _ready() -> void:\n\tvar q1 := Question.new()\n\tq1.text = \"Capitale della Francia?\"\n\tq1.options = [\"Parigi\", \"Lione\"]\n\tq1.correct_index = 0\n\tsession = QuizSession.new([q1])\n\t_show_question()\n\tif answer_button_0:\n\t\tanswer_button_0.pressed.connect(func() -> void: _submit_answer(0))\n\tif answer_button_1:\n\t\tanswer_button_1.pressed.connect(func() -> void: _submit_answer(1))\n\n\nfunc _show_question() -> void:\n\tif session:\n\t\tvar q := session.get_current_question()\n\t\tif q and question_label:\n\t\t\tquestion_label.text = q.text\n\n\nfunc _submit_answer(index: int) -> void:\n\tif session:\n\t\tvar _ok := session.answer(index)\n\t\tif score_label:\n\t\t\tscore_label.text = \"Punti: %d\" % session.score\n"
       },
       {
+       "percorso": "old_game_session.gd",
+       "contenuto": "class_name GamePlay\nextends Control\n\n@onready var question_label: Label = $VBoxContainer/QuestionLabel\n@onready var answer_button_0: Button = $VBoxContainer/Answer0\n@onready var answer_button_1: Button = $VBoxContainer/Answer1\n@onready var score_label: Label = $VBoxContainer/ScoreLabel\n\nvar session: QuizSession\n\n\nfunc _ready() -> void:\n\tvar q1 := Question.new()\n\tq1.text = \"Capitale della Francia?\"\n\tq1.options = [\"Parigi\", \"Lione\"]\n\tq1.correct_index = 0\n\tsession = QuizSession.new([q1])\n\t_show_question()\n\tif answer_button_0:\n\t\tanswer_button_0.pressed.connect(func() -> void: _submit_answer(0))\n\tif answer_button_1:\n\t\tanswer_button_1.pressed.connect(func() -> void: _submit_answer(1))\n\n\nfunc _show_question() -> void:\n\tif session:\n\t\tvar q := session.get_current_question()\n\t\tif q and question_label:\n\t\t\tquestion_label.text = q.text\n\n\nfunc _submit_answer(index: int) -> void:\n\tif session:\n\t\tvar _ok := session.answer(index)\n\t\tif score_label:\n\t\t\tscore_label.text = \"Punti: %d\" % session.score\n"
+      },
+      {
        "percorso": "ResultsController.gd",
        "contenuto": "class_name ResultsView\nextends Control\n\n@onready var score_display: Label = $CenterContainer/VBoxContainer/ScoreDisplay\n\n\nfunc set_final_score(val: int) -> void:\n\tif score_display:\n\t\tscore_display.text = \"Punteggio Finale: %d\" % val\n"
       },
@@ -351,6 +359,10 @@
       },
       {
        "percorso": "QuestionModel.gd",
+       "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc is_correct(index: int) -> bool:\n\treturn index == correct_index\n"
+      },
+      {
+       "percorso": "base_question_model.gd",
        "contenuto": "class_name Question\nextends Resource\n\n@export var text: String = \"\"\n@export var options: Array[String] = []\n@export var correct_index: int = 0\n\n\nfunc is_correct(index: int) -> bool:\n\treturn index == correct_index\n"
       },
       {
@@ -557,7 +569,37 @@
       "impostazioni": []
      },
      "spiegazione": "Il progetto è stato completamente ristrutturato secondo lo standard del corso:\n\n1. Creazione delle cartelle `scenes/`, `scripts/`, `data/` e `docs/`.\n2. Ridenominazione e spostamento di tutti i 28 file in formato `snake_case`, eliminando maiuscole, CamelCase e trattini.\n3. Inserimento del file vuoto `.gdignore` dentro `docs/` per escludere bozze e note dall'elaborazione dell'editor.\n4. Riparazione del primo collegamento rotto: la scena `scenes/game_play.tscn` cercava lo script mancante `old_game_session.gd`, ora sostituito con il puntamento a `res://scripts/game_play.gd`.\n5. Riparazione del secondo collegamento rotto: la risorsa `data/topic_history.tres` cercava lo script `base_question_model.gd`, ora corretto con `res://scripts/question.gd`.\n6. Configurazione della scena principale su `res://scenes/main_menu.tscn`.\n\nIn questo modo, la radice del progetto è pulita e priva di file sciolti, le risorse esterne e interne si collegano correttamente e l'intero gioco può essere avviato e giocato senza crash.",
-     "cambiati": [],
+     "cambiati": [
+      "scenes/main_menu.tscn",
+      "scenes/game_play.tscn",
+      "scenes/results_view.tscn",
+      "scenes/question_card.tscn",
+      "scenes/pause_overlay.tscn",
+      "scripts/main_menu.gd",
+      "scripts/game_play.gd",
+      "scripts/results_view.gd",
+      "scripts/question_card.gd",
+      "scripts/pause_overlay.gd",
+      "scripts/question.gd",
+      "scripts/quiz_topic.gd",
+      "scripts/quiz_session.gd",
+      "scripts/score_keeper.gd",
+      "scripts/streak_bonus.gd",
+      "scripts/player_profile.gd",
+      "scripts/audio_helper.gd",
+      "scripts/stats_tracker.gd",
+      "data/topic_geography.tres",
+      "data/topic_history.tres",
+      "data/topic_science.tres",
+      "data/topic_cinema.tres",
+      "data/topic_sports.tres",
+      "data/profile_default.tres",
+      "data/profile_guest.tres",
+      "data/theme_settings.tres",
+      "docs/design_ideas.txt",
+      "docs/todo_list.txt",
+      "docs/.gdignore"
+     ],
      "rimossi": [
       "MAIN_MENU_VIEW.tscn",
       "GamePlayScreen.tscn",
@@ -591,13 +633,14 @@
     }
    },
    "genere": "riordina",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "il progetto di partenza (`partenza`) deve aprirsi e partire senza errori, invece:\n  - Il file res://GamePlayScreen.tscn deve caricarsi senza errori: Attempt to open script 'res://old_game_session.gd' resulted in error 'File not found'. (modules/gdscript/gdscript.cpp:1139 in load_source_code)\nFailed loading resource: res://old_game_session.gd. (core/io/resource_loader.cpp:317 in _load)\nres://GamePlayScreen.tscn:12 - Parse Error: [ext_resource] referenced non-existent resource at: res://old_game_session.gd. (scene/resources/resource_format_text.cpp:41 in _printerr)\n  - Il file res://topic-history.tres deve caricarsi senza errori: Attempt to open script 'res://base_question_model.gd' resulted in error 'File not found'. (modules/gdscript/gdscript.cpp:1139 in load_source_code)\nFailed loading resource: res://base_question_model.gd. (core/io/resource_loader.cpp:317 in _load)\nres://topic-history.tres:7 - Parse Error: [ext_resource] referenced non-existent resource at: res://base_question_model.gd. (scene/resources/resource_format_text.cpp:41 in _printerr)\nres://topic-history.tres:7 - Parse Error: [ext_resource] referenced non-existent resource at: res://base_question_model.gd. (scene/resources/resource_format_text.cpp:41 in "
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
