@@ -81,6 +81,7 @@
     "consegna": "In questa prima tappa del progetto «Rivesti il tuo gioco», organizzerai e preparerai le risorse grafiche, audio e la struttura dei bus del suono per il progetto del quiz.\n\n### Requisiti richiesti:\n\n1. **Organizzazione degli asset**:\n   - Assicurati che le risorse del progetto siano sistemate in modo ordinato nella cartella `res://assets/` usando sottocartelle in `snake_case` (es. `res://assets/sprites/` e `res://assets/audio/`).\n\n2. **Layout dei Bus Audio (`res://default_bus_layout.tres`)**:\n   - Crea la risorsa `res://default_bus_layout.tres` contenente la configurazione dei bus audio.\n   - Oltre al bus predefinito `Master`, configura due bus aggiuntivi chiamati `Music` e `SFX`.\n   - Assicurati che sia `Music` sia `SFX` inviino il loro audio al bus `Master`.\n   - Nelle impostazioni del progetto (`Project Settings`), imposta la chiave `audio/bus_layout/default_bus_layout` con il valore `res://default_bus_layout.tres`.\n\n3. **Registro dei crediti e licenze (`res://CREDITS.txt`)**:\n   - Aggiorna il file `res://CREDITS.txt` includendo la documentazione di tutti gli asset utilizzati nel gioco.\n   - Per ogni file (grafica, musica ed effetti sonori) indica chiaramente il percorso del file, l'autore, la fonte e il tipo di licenza (es. CC0 o CC BY 4.0).",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "quiz",
     "passiGuida": [],
     "suggerimenti": [],
     "verifiche": [
@@ -103,7 +104,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar layout = load(\"res://default_bus_layout.tres\")\n\tif not check(\"layout_exists\", layout != null and layout is AudioBusLayout, \"La risorsa res://default_bus_layout.tres deve essere un AudioBusLayout valido\"):\n\t\treturn\n\t\n\tAudioServer.set_bus_layout(layout as AudioBusLayout)\n\t\n\tvar music_idx: int = AudioServer.get_bus_index(\"Music\")\n\tcheck(\"music_bus\", music_idx != -1, \"Nel layout audio deve essere presente un bus chiamato 'Music'\")\n\t\n\tvar sfx_idx: int = AudioServer.get_bus_index(\"SFX\")\n\tcheck(\"sfx_bus\", sfx_idx != -1, \"Nel layout audio deve essere presente un bus chiamato 'SFX'\")\n\t\n\tif music_idx != -1:\n\t\tvar music_send: StringName = AudioServer.get_bus_send(music_idx)\n\t\tcheck(\"music_send\", music_send == &\"Master\", \"Il bus 'Music' deve inviare il proprio audio a 'Master' (invia a '%s')\" % music_send)\n\t\n\tif sfx_idx != -1:\n\t\tvar sfx_send: StringName = AudioServer.get_bus_send(sfx_idx)\n\t\tcheck(\"sfx_send\", sfx_send == &\"Master\", \"Il bus 'SFX' deve inviare il proprio audio a 'Master' (invia a '%s')\" % sfx_send)\n\t\n\tvar credits_text: String = source_of(\"res://CREDITS.txt\")\n\tcheck(\"credits_not_empty\", credits_text.strip_edges() != \"\", \"Il file res://CREDITS.txt non deve essere vuoto\")\n\tcheck(\"credits_audio\", credits_text.contains(\"audio\") or credits_text.contains(\"wav\"), \"Il file res://CREDITS.txt deve contenere riferimenti agli asset audio\")\n\tcheck(\"credits_license\", credits_text.contains(\"Licenza\") or credits_text.contains(\"License\"), \"Il file res://CREDITS.txt deve specificare la licenza degli asset\")\n",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar layout = load(\"res://default_bus_layout.tres\")\n\tif not check(\"layout_exists\", layout != null and layout is AudioBusLayout, \"La risorsa res://default_bus_layout.tres deve essere un AudioBusLayout valido\"):\n\t\treturn\n\t\n\tAudioServer.set_bus_layout(layout as AudioBusLayout)\n\t\n\tvar music_idx: int = AudioServer.get_bus_index(\"Music\")\n\tcheck(\"music_bus\", music_idx != -1, \"Nel layout audio deve essere presente un bus chiamato 'Music'\")\n\t\n\tvar sfx_idx: int = AudioServer.get_bus_index(\"SFX\")\n\tcheck(\"sfx_bus\", sfx_idx != -1, \"Nel layout audio deve essere presente un bus chiamato 'SFX'\")\n\t\n\tif music_idx != -1:\n\t\tvar music_send: StringName = AudioServer.get_bus_send(music_idx)\n\t\tcheck(\"music_send\", music_send == &\"Master\", \"Il bus 'Music' deve inviare il proprio audio a 'Master' (invia a '%s')\" % music_send)\n\t\n\tif sfx_idx != -1:\n\t\tvar sfx_send: StringName = AudioServer.get_bus_send(sfx_idx)\n\t\tcheck(\"sfx_send\", sfx_send == &\"Master\", \"Il bus 'SFX' deve inviare il proprio audio a 'Master' (invia a '%s')\" % sfx_send)\n\t\n\tvar credits_text: String = source_of(\"res://CREDITS.txt\")\n\tcheck(\"credits_not_empty\", credits_text.strip_edges() != \"\", \"Il file res://CREDITS.txt non deve essere vuoto\")\n\tvar lower_credits: String = credits_text.to_lower()\n\tvar has_audio_ref: bool = lower_credits.contains(\"audio\") or lower_credits.contains(\"wav\") or lower_credits.contains(\"ogg\") or lower_credits.contains(\"mp3\") or lower_credits.contains(\"musica\") or lower_credits.contains(\"suono\") or lower_credits.contains(\"sound\")\n\tcheck(\"credits_audio\", has_audio_ref, \"Il file res://CREDITS.txt deve contenere riferimenti agli asset audio\")\n\tvar has_license_ref: bool = lower_credits.contains(\"licenza\") or lower_credits.contains(\"license\")\n\tcheck(\"credits_license\", has_license_ref, \"Il file res://CREDITS.txt deve specificare la licenza degli asset\")\n",
       "descrizione": "I bus audio Music e SFX sono configurati correttamente e inviano l'audio a Master, e CREDITS.txt documenta gli asset"
      }
     ],
@@ -302,7 +303,6 @@
      ],
      "rimossi": []
     },
-    "cartella": "quiz",
     "id": "test"
    }
   }
@@ -348,6 +348,8 @@
    }
   ],
   "teoriaCorretta": false,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
