@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-28T18:24:37.386Z",
+ "aggiornato": "2026-10-28T18:58:17.097Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -637,10 +637,10 @@
    "slug": "ordine-nel-progetto",
    "numero": "5.8",
    "titolo": "Tenere in ordine un progetto",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f05-asset-e-audio/ordine-nel-progetto.json",
-   "sha256": "978898e7b805432cf7b56e102e35216039b3f7dac3df92976837caa52e71d30f",
-   "byte": 74072
+   "sha256": "935faa9f158469902b035e321278dc546b9371a1c3d277b4c99cb7c68013aaef",
+   "byte": 76166
   }
  ],
  "documentazione": {
