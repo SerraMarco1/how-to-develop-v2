@@ -356,5 +356,10 @@
   "tentativi": {
    "test": 1
   }
+ },
+ "ordine-nel-progetto": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }

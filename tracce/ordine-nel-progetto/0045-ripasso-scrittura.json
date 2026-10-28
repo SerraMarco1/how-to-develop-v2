@@ -1,0 +1,16 @@
+{
+ "n": 45,
+ "quando": "2026-10-28T18:36:16.395Z",
+ "pezzo": "ripasso",
+ "azione": "scrittura",
+ "esito": "saltato",
+ "guasto": "fornitore",
+ "titolo": "Ripasso non scritto",
+ "spiegazione": "Nessun modello disponibile per il ruolo \"ripasso\" (ultimi errori: gemini/gemini-flash-lite-latest: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again lat)\nReazione: si riprova al prossimo giro.",
+ "richieste": 1,
+ "durataMs": 1165,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+ ]
+}
