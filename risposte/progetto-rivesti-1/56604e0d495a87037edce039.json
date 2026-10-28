@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Nel controllo dello script per `CREDITS.txt`, i controlli `.contains(\\\"Licenza\\\")`, `.contains(\\\"License\\\")`, `.contains(\\\"audio\\\")` e `.contains(\\\"wav\\\")` sono sensibili alle maiuscole/minuscole e troppo specifici sul formato audio. Se uno studente scrive 'licenza' con l'iniziale minuscola o usa file '.ogg' senza la parola 'audio' nel percorso, il test fallisce ingiustamente.\",\n      \"correzione\": \"Aggiorna lo script di test per convertire il testo in minuscolo prima del controllo (`var lower_credits: String = credits_text.to_lower()`) e accetta sia 'licenza' che 'license' in minuscolo, oltre a controllare estensioni comuni come 'ogg', 'wav' o la presenza di parole chiave come 'audio' o 'musica'.\"\n    }\n  ]\n}",
+ "ragionamento": 1621,
+ "quando": "2026-10-28T19:10:59.212Z",
+ "ruolo": "revisore"
+}
