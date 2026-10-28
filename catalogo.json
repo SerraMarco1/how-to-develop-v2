@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-28T18:58:17.097Z",
+ "aggiornato": "2026-10-28T19:12:48.276Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -641,6 +641,15 @@
    "file": "lezioni/f05-asset-e-audio/ordine-nel-progetto.json",
    "sha256": "935faa9f158469902b035e321278dc546b9371a1c3d277b4c99cb7c68013aaef",
    "byte": 76166
+  },
+  {
+   "slug": "progetto-rivesti-1",
+   "numero": "5.9",
+   "titolo": "Progetto «Rivesti il tuo gioco» – tappa 1: scegliere e preparare",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/progetto-rivesti-1.json",
+   "sha256": "09b89c9517b51c8e2bed7d2614320e6032ea10bcac7664ace011441512a54942",
+   "byte": 154874
   }
  ],
  "documentazione": {
