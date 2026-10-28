@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Il test è una copia dell'esercizio 1 con soltanto i nomi dei file cambiati: richiede esattamente le stesse operazioni (creare le cartelle scenes/, scripts/ e data/, spostare e rinominare quattro file corrispondenti e impostare la scena principale).\",\n      \"correzione\": \"Riprogetta il test in modo che verifichi gli obiettivi della lezione in un contesto differente, ad esempio fornendo un progetto che contiene un collegamento rotto da individuare e riparare tramite 'Edit Dependencies...' oppure richiedendo l'organizzazione di risorse multimediali nella cartella assets/.\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
+ "ragionamento": 3027,
+ "quando": "2026-10-28T18:11:18.908Z",
+ "ruolo": "revisore"
+}
