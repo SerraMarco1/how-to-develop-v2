@@ -161,7 +161,9 @@
    "genere": "riordina",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "il progetto di partenza (`partenza`) deve aprirsi e partire senza errori, invece:\n  - Il file res://biology-quiz.tres deve caricarsi senza errori: Attempt to open script 'res://missing_question_data.gd' resulted in error 'File not found'. (modules/gdscript/gdscript.cpp:1139 in load_source_code)\nFailed loading resource: res://missing_question_data.gd. (core/io/resource_loader.cpp:317 in _load)\nres://biology-quiz.tres:6 - Parse Error: [ext_resource] referenced non-existent resource at: res://missing_question_data.gd. (scene/resources/resource_format_text.cpp:41 in _printerr)\nres://biology-quiz.tres:6 - Parse Error: [ext_resource] referenced non-existent resource at: res://missing_question_data.gd. (scene/resources/resource_format_text.cpp:"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
