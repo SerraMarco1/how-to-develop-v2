@@ -1,0 +1,104 @@
+{
+ "n": 7,
+ "quando": "2026-10-29T09:44:46.033Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (obiettivo): approvato",
+ "spiegazione": "«Dimensioni stabili e adattamento ai testi lunghi». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: ui/dialogue_box.tscn, ui/dialogue_box.gd",
+ "richieste": 0,
+ "durataMs": 10989,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Dimensioni stabili e adattamento ai testi lunghi",
+   "consegna": "Completa la finestra di dialogo del gioco «Storie» garantendo che abbia dimensioni stabili a schermo e gestisca correttamente testi lunghi e formattati con BBCode:\n\n1. Nella scena `res://ui/dialogue_box.tscn`:\n   - Seleziona `DialogueBox` e imposta la sua proprietà **Custom Minimum Size** (sotto *Control* → *Layout*) con un'altezza minima (**Y**) di almeno `140` pixel (quindi `Vector2(0, 140)`). In questo modo la finestra manterrà un'altezza stabile anche con battute di una sola riga o a riquadro vuoto.\n   - Seleziona `DialogueLabel`, vai nell'*Inspector* e imposta la sua opzione di ridimensionamento verticale **Container Sizing → Vertical** su **Expand** e **Fill** (corrispondente al valore di flag `SIZE_EXPAND_FILL`, pari a 3), affinché l'etichetta occupi tutto lo spazio verticale disponibile nel contenitore.\n   - Verifica che su `DialogueLabel` la proprietà **Scroll Active** sia attiva (`true`).\n2. Nello script `res://ui/dialogue_box.gd`:\n   - Nella funzione `show_line(speaker: String, text: String)`: quando imposti il nuovo testo, fai in modo che la visualizzazione ritorni alla prima riga chiamando `dialogue_label.scroll_to_line(0)` subito dopo aver assegnato `dialogue_label.text = text`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Nell'*Inspector* di `DialogueBox`, trovi **Custom Minimum Size** nella sezione *Control → Layout*: imposta il secondo valore (Y) a `140`. Per `DialogueLabel`, nella sezione *Container Sizing*, assicurati che sotto *Vertical* siano spuntati sia **Fill** sia **Expand**."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://ui/dialogue_box.tscn",
+     "descrizione": "Il file res://ui/dialogue_box.tscn esiste"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://ui/dialogue_box.gd",
+     "descrizione": "Il file res://ui/dialogue_box.gd esiste"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"scene\", box != null, \"La scena res://ui/dialogue_box.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\t\n\tvar speaker := find_by_name(box, \"SpeakerLabel\") as Label\n\tvar dialogue := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\t\n\tif not check(\"nodes\", speaker != null and dialogue != null and indicator != null, \"La scena deve contenere SpeakerLabel, DialogueLabel e ContinueIndicator\"):\n\t\treturn\n\t\n\tcheck(\"min_height\", box.custom_minimum_size.y >= 140.0, \"DialogueBox deve avere custom_minimum_size.y di almeno 140 pixel (attuale: %.1f)\" % box.custom_minimum_size.y)\n\t\n\tvar v_expand: bool = (dialogue.size_flags_vertical & Control.SIZE_EXPAND) != 0\n\tcheck(\"v_expand\", v_expand, \"DialogueLabel deve avere il flag vertical Expand attivo (size_flags_vertical)\")\n\tcheck(\"scroll_active\", dialogue.scroll_active, \"DialogueLabel deve avere scroll_active impostato su true\")\n\t\n\tvar formatted_text := \"Testo con [b]grassetto[/b], [i]corsivo[/i] e [color=yellow]colore[/color].\"\n\tbox.call(\"show_line\", \"Guida\", formatted_text)\n\tawait wait_frames(2)\n\tcheck(\"bbcode_on\", dialogue.bbcode_enabled, \"bbcode_enabled deve essere true\")\n\tvar parsed: String = dialogue.get_parsed_text()\n\tcheck(\"bbcode_parsed\", not parsed.contains(\"[b]\"), \"I tag BBCode devono essere interpretati graficamente e non stampati come testo grezzo\")\n\t\n\tvar long_text := \"Riga 1: Nel cuore della notte.\\nRiga 2: Un passo risuona nel corridoio.\\nRiga 3: La porta socchiusa cigola nel silenzio.\\nRiga 4: Qualcuno si ferma davanti alla soglia.\\nRiga 5: Una voce sussurra il tuo nome.\\nRiga 6: Poi ritorna la quiete.\"\n\tbox.call(\"show_line\", \"Narratore\", long_text)\n\tawait wait_frames(2)\n\tcheck(\"long_shown\", dialogue.text == long_text, \"DialogueLabel deve ricevere correttamente il testo lungo\")\n\tcheck(\"indicator_visible\", indicator.visible, \"L'indicatore ContinueIndicator deve essere visibile anche con testi lunghi\")\n\tcheck(\"fits_box\", box.get_combined_minimum_size().y <= 250.0, \"Con scroll_active attivo, un testo di molte righe non deve far esplodere la dimensione minima del riquadro (è %.1f)\" % box.get_combined_minimum_size().y)\n\t\n\tbox.call(\"show_line\", \"Narratore\", \"Nuova battuta corta.\")\n\tawait wait_frames(2)\n\tcheck(\"reset_text\", dialogue.text == \"Nuova battuta corta.\", \"La nuova battuta deve sostituire la precedente\")\n\t\n\tbox.call(\"clear\")\n\tawait wait_frames(2)\n\tcheck(\"clean_end\", dialogue.text.is_empty() and not speaker.visible and not indicator.visible, \"clear() deve resettare correttamente tutti i nodi\")\n",
+     "descrizione": "DialogueBox mantiene altezza minima, espande DialogueLabel e gestisce testi lunghi e BBCode"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nrun/main_scene=\"res://ui/dialogue_box.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "core/core.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "ui/ui.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/audio/audio.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/fonts/font.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/images/image.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "story/intro.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    \"Benvenuto nel mondo di Storie.\"\n  ]\n}"
+     },
+     {
+      "percorso": "core/systems_map.json",
+      "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+     },
+     {
+      "percorso": "ui/dialogue_box.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\ncustom_minimum_size = Vector2(0, 140)\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nsize_flags_vertical = 3\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+     },
+     {
+      "percorso": "ui/dialogue_box.gd",
+      "contenuto": "extends PanelContainer\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tvar clean_speaker := speaker.strip_edges()\n\tif clean_speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = clean_speaker\n\t\n\tdialogue_label.text = text\n\tdialogue_label.scroll_to_line(0)\n\tset_indicator_visible(true)\n\n\nfunc set_indicator_visible(is_visible: bool) -> void:\n\tcontinue_indicator.visible = is_visible\n\n\nfunc clear() -> void:\n\tdialogue_label.text = \"\"\n\tspeaker_label.text = \"\"\n\tspeaker_label.visible = false\n\tset_indicator_visible(false)\n\n\nfunc is_showing() -> bool:\n\treturn not dialogue_label.text.is_empty()\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Storie",
+     "scenaPrincipale": "res://ui/dialogue_box.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Impostando `custom_minimum_size = Vector2(0, 140)` su `DialogueBox` garantiamo che la finestra mantenga una dimensione visiva stabile ed elegante nella parte inferiore dello schermo senza collassare quando il testo è breve o azzerato. Assegnando `size_flags_vertical = 3` (`SIZE_EXPAND_FILL`) su `DialogueLabel`, l'etichetta occupa tutto lo spazio tra il nome e l'indicatore `▼`. Con `scroll_active = true`, il testo lungo genera una barra di scorrimento verticale anziché deformare il riquadro, e chiamando `dialogue_label.scroll_to_line(0)` ogni nuova battuta riparte sempre dalla prima riga.",
+    "cambiati": [
+     "ui/dialogue_box.tscn",
+     "ui/dialogue_box.gd"
+    ],
+    "rimossi": []
+   },
+   "cartella": "storie",
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
