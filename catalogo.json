@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-29T09:54:32.888Z",
+ "aggiornato": "2026-10-29T10:28:10.618Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -677,6 +677,15 @@
    "file": "lezioni/f06-visual-novel/finestra-di-dialogo.json",
    "sha256": "70e91084e2e7511559e4584d8c3f86e24a909c0a1cfad6451ae7bd022ee1536b",
    "byte": 40901
+  },
+  {
+   "slug": "macchina-da-scrivere",
+   "numero": "6.2",
+   "titolo": "Testo che compare lettera per lettera",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/macchina-da-scrivere.json",
+   "sha256": "e0b73518e80d6392a0a6fff10787d0994d1cef0328958f41da88f814ae4fee9f",
+   "byte": 54990
   }
  ],
  "documentazione": {
