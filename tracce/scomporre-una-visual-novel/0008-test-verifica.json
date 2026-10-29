@@ -1,0 +1,90 @@
+{
+ "n": 8,
+ "quando": "2026-10-29T08:31:37.369Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (obiettivo): approvato",
+ "spiegazione": "«Mappa dei sistemi del motore». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: core/systems_map.json",
+ "richieste": 0,
+ "durataMs": 6771,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "obiettivo",
+   "titolo": "Mappa dei sistemi del motore",
+   "consegna": "Ora che le cartelle del progetto «Storie» sono pronte, definisci la mappa dei sistemi del motore per stabilire le dipendenze e l'ordine di sviluppo.\n\nCrea un file chiamato `systems_map.json` all'interno della cartella `core/`.\n\nIl file deve contenere un oggetto JSON con la chiave `\"systems\"`, associata a un array con esattamente 5 oggetti, uno per ciascuno dei seguenti sistemi:\n1. Interfaccia di dialogo (`id`: `\"dialogue_ui\"`)\n2. Scena visiva (`id`: `\"visual_scene\"`)\n3. Gestore audio (`id`: `\"audio_manager\"`)\n4. Interprete della storia (`id`: `\"story_interpreter\"`)\n5. Stato e salvataggi (`id`: `\"game_state\"`)\n\nOgni oggetto nell'array `\"systems\"` deve avere tre proprietà:\n- `\"id\"`: stringa con l'identificativo del sistema (es. `\"dialogue_ui\"`).\n- `\"order\"`: un numero intero da 1 a 5 che ne indica l'ordine di costruzione logico.\n- `\"dependencies\"`: un array di stringhe contenente gli `\"id\"` degli altri sistemi da cui questo sistema dipende direttamente (usa un array vuoto `[]` se non ha dipendenze).\n\nRispetta l'architettura vista a lezione:\n- `\"dialogue_ui\"`, `\"visual_scene\"` e `\"audio_manager\"` non dipendono da nessun altro sistema (`dependencies: []`).\n- `\"story_interpreter\"` coordina il gioco e dipende da `\"dialogue_ui\"` e `\"visual_scene\"`.\n- `\"game_state\"` salva i progressi e dipende da `\"story_interpreter\"`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Crea il file systems_map.json dentro la cartella core/."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://core/systems_map.json",
+     "descrizione": "Il file systems_map.json existe nella cartella core/"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tif not check('file_exists', FileAccess.file_exists('res://core/systems_map.json'), 'Il file res://core/systems_map.json deve esistere'):\n\t\treturn\n\n\tvar file := FileAccess.open('res://core/systems_map.json', FileAccess.READ)\n\tif not check('file_open', file != null, 'Impossibile aprire res://core/systems_map.json'):\n\t\treturn\n\n\tvar content := file.get_as_text()\n\tfile.close()\n\n\tvar data = JSON.parse_string(content)\n\tif not check('json_valid', data != null and typeof(data) == TYPE_DICTIONARY, 'systems_map.json deve contenere un oggetto JSON valido'):\n\t\treturn\n\n\tvar dict: Dictionary = data\n\tif not check('has_systems', dict.has('systems') and typeof(dict['systems']) == TYPE_ARRAY, 'systems_map.json deve contenere la chiave systems con un array'):\n\t\treturn\n\n\tvar systems: Array = dict['systems']\n\tif not check('count_systems', systems.size() == 5, 'L array systems deve contenere esattamente 5 sistemi'):\n\t\treturn\n\n\tvar required_ids := ['dialogue_ui', 'visual_scene', 'audio_manager', 'story_interpreter', 'game_state']\n\tvar found_ids := {}\n\tvar orders := {}\n\n\tfor item in systems:\n\t\tif typeof(item) != TYPE_DICTIONARY:\n\t\t\tcheck('item_dict', false, 'Ogni elemento in systems deve essere un oggetto JSON')\n\t\t\treturn\n\t\tvar sys: Dictionary = item\n\t\tif not (sys.has('id') and sys.has('order') and sys.has('dependencies')):\n\t\t\tcheck('item_keys', false, 'Ogni sistema deve contenere id, order e dependencies')\n\t\t\treturn\n\t\tvar sys_id = sys['id']\n\t\tif typeof(sys_id) == TYPE_STRING:\n\t\t\tfound_ids[sys_id] = sys\n\t\t\torders[sys_id] = sys['order']\n\n\tfor req_id in required_ids:\n\t\tif not check('req_' + req_id, found_ids.has(req_id), 'Manca il sistema con id ' + req_id):\n\t\t\treturn\n\n\tfor sys_id in found_ids:\n\t\tvar sys: Dictionary = found_ids[sys_id]\n\t\tvar deps = sys['dependencies']\n\t\tvar sys_order = sys['order']\n\t\tif not check('deps_array_' + sys_id, typeof(deps) == TYPE_ARRAY, 'Le dipendenze del sistema ' + sys_id + ' devono essere un array'):\n\t\t\treturn\n\t\tfor dep in deps:\n\t\t\tif not check('dep_exists_' + str(dep), found_ids.has(dep), 'La dipendenza ' + str(dep) + ' non esiste nella mappa'):\n\t\t\t\treturn\n\t\t\tvar dep_order = orders[dep]\n\t\t\tcheck('dep_order_' + sys_id, dep_order < sys_order, 'Il sistema ' + sys_id + ' deve avere un ordine maggiore della sua dipendenza ' + str(dep))\n\n\tvar interpreter_deps: Array = found_ids['story_interpreter']['dependencies']\n\tcheck('interpreter_dep_ui', interpreter_deps.has('dialogue_ui'), 'story_interpreter deve dipendere da dialogue_ui')\n\n\tvar state_deps: Array = found_ids['game_state']['dependencies']\n\tcheck('state_dep_interpreter', state_deps.has('story_interpreter'), 'game_state deve dipendere da story_interpreter')\n",
+     "descrizione": "La mappa dei sistemi definisce tutti e 5 i sistemi con ordine e dipendenze valide"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "core/core.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "ui/ui.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/audio/audio.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/fonts/font.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/images/image.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "story/intro.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    \"Benvenuto nel mondo di Storie.\"\n  ]\n}"
+     },
+     {
+      "percorso": "core/systems_map.json",
+      "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+     }
+    ],
+    "progetto": {
+     "nome": "Storie",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "In `core/systems_map.json` abbiamo tracciato l'architettura completa del motore. I moduli indipendenti (`dialogue_ui`, `visual_scene`, `audio_manager`) vengono realizzati per primi. L'interprete della storia (`story_interpreter`) viene costruito dopo in quanto deve coordinare l'interfaccia e la scena visiva. Infine, lo stato del gioco (`game_state`) viene inserito alla fine perché si limita a registrare ed effettuare il salvataggio dei progressi generati dall'interprete.",
+    "cambiati": [
+     "core/systems_map.json"
+    ],
+    "rimossi": []
+   },
+   "cartella": "storie",
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
