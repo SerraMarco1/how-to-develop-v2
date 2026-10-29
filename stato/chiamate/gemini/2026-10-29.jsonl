@@ -28,3 +28,6 @@
 {"quando":1793267096423,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"finestra-di-dialogo","ok":true,"contata":true,"durataMs":14139,"tokenInput":2402,"tokenOutput":559,"ragionamento":2121}
 {"quando":1793267116739,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":393350,"tokenInput":14297,"tokenOutput":2983,"ragionamento":22252}
 {"quando":1793267649840,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"finestra-di-dialogo","ok":true,"contata":true,"durataMs":7356,"tokenInput":3287,"tokenOutput":205,"ragionamento":1721}
+{"quando":1793267674619,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"macchina-da-scrivere","ok":false,"contata":true,"durataMs":900089,"errore":"Nessuna risposta entro 900 secondi"}
+{"quando":1793268574711,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"macchina-da-scrivere","ok":false,"contata":true,"durataMs":1113,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793268575826,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":291578,"tokenInput":14201,"tokenOutput":8116,"ragionamento":28002}

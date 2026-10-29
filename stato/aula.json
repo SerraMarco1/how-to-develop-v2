@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-29T09:51:51.740Z",
+ "aggiornato": "2026-10-29T09:54:34.602Z",
  "stato": "lavora",
  "lezione": {
   "slug": "macchina-da-scrivere",
   "numero": "6.2",
   "titolo": "Testo che compare lettera per lettera"
  },
- "messaggio": "Sta scrivendo la lezione 6.2 «Testo che compare lettera per lettera»: riprende al prossimo giro.",
+ "messaggio": "Sta scrivendo la lezione 6.2 «Testo che compare lettera per lettera».",
  "riprende": null
 }
