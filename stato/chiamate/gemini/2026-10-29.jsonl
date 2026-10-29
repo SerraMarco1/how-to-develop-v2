@@ -8,3 +8,4 @@
 {"quando":1793259697278,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-rivesti-2","ok":false,"contata":true,"durataMs":9235,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793260990847,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-rivesti-2","ok":true,"contata":true,"durataMs":518198,"tokenInput":29963,"tokenOutput":22244,"ragionamento":2407}
 {"quando":1793261515868,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-rivesti-2","ok":true,"contata":true,"durataMs":7382,"tokenInput":2803,"tokenOutput":792,"ragionamento":1424}
+{"quando":1793261529045,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"scomporre-una-visual-novel","ok":true,"contata":true,"durataMs":546477,"tokenInput":12620,"tokenOutput":2038,"ragionamento":3609}
