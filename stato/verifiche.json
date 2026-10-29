@@ -371,5 +371,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "scomporre-una-visual-novel": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "finestra-di-dialogo": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
