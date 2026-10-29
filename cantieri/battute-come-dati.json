@@ -633,7 +633,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "NON SPIEGATO: la soluzione usa `is_connected()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
