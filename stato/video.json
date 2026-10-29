@@ -1005,5 +1005,14 @@
     ]
    }
   }
+ },
+ "macchina-da-scrivere": {
+  "es1": {
+   "impronta": "06f826c1e4fb36c8c79921f5e38b33545991c3c04f9e9543894cb16d8b67db95",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "La scena principale mostra la casella di dialogo vuota e nessuna funzione avvia un testo all'avvio, quindi l'effetto macchina da scrivere non si vede."
+  }
  }
 }
