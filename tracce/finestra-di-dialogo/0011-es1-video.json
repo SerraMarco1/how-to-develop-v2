@@ -1,0 +1,48 @@
+{
+ "n": 11,
+ "quando": "2026-10-29T09:54:32.882Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 6 s. Soggetti: «Finestra di dialogo» (esserci). Scritte: «La struttura della finestra di dialogo». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 14 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 23044,
+ "dati": {
+  "copione": {
+   "scena": "res://ui/dialogue_box.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "dialogue_box",
+     "cerca": {
+      "nome": "DialogueBox"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Finestra di dialogo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La struttura della finestra di dialogo",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "dialogue_box"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "27a4883731999dcf6a69041bedca5a83735c2739cbee7a4026ef05c84047cc70",
+   "estensione": "mp4",
+   "byte": 14770
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (3287 → 205 token)"
+ ]
+}

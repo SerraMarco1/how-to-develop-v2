@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://ui/dialogue_box.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"dialogue_box\",\n      \"cerca\": {\n        \"nome\": \"DialogueBox\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Finestra di dialogo\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"La struttura della finestra di dialogo\",\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"soggetto\": \"dialogue_box\"\n    }\n  ]\n}",
- "ragionamento": 1721,
- "quando": "2026-10-29T09:54:17.198Z",
- "ruolo": "ritocco"
-}

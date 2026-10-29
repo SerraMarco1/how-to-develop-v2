@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-29T09:45:15.122Z",
+ "aggiornato": "2026-10-29T09:54:32.888Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -673,10 +673,10 @@
    "slug": "finestra-di-dialogo",
    "numero": "6.1",
    "titolo": "La finestra di dialogo",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f06-visual-novel/finestra-di-dialogo.json",
-   "sha256": "2f1ccda7ae813cb520fbfa8adcd283c594266876a26c4935ff01e89aac7fc477",
-   "byte": 40361
+   "sha256": "70e91084e2e7511559e4584d8c3f86e24a909c0a1cfad6451ae7bd022ee1536b",
+   "byte": 40901
   }
  ],
  "documentazione": {

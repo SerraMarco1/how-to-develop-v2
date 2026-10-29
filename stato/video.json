@@ -971,5 +971,39 @@
    "regole": 2,
    "motivo": "Il componente per il feedback sonoro gestisce l'audio e non genera elementi visivi sullo schermo."
   }
+ },
+ "finestra-di-dialogo": {
+  "es1": {
+   "impronta": "646e9c1ea791d062b36f0efa12f0a298263d76ff72fc95c3131fbe03a7a189e8",
+   "tentativi": 1,
+   "esito": "fatto",
+   "regole": 2,
+   "copione": {
+    "scena": "res://ui/dialogue_box.tscn",
+    "durata": 6,
+    "azioni": [],
+    "soggetti": [
+     {
+      "id": "dialogue_box",
+      "cerca": {
+       "nome": "DialogueBox"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 5.5,
+      "deve": "esserci",
+      "etichetta": "Finestra di dialogo"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "La struttura della finestra di dialogo",
+      "da": 0.5,
+      "a": 5.5,
+      "soggetto": "dialogue_box"
+     }
+    ]
+   }
+  }
  }
 }
