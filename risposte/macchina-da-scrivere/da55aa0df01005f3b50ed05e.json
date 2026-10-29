@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\"approvata\": true, \"problemi\": []}",
+ "ragionamento": 3702,
+ "quando": "2026-10-29T10:27:55.305Z",
+ "ruolo": "revisore"
+}
