@@ -1,0 +1,75 @@
+{
+ "creato": "2026-10-29T08:12:09.042Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Com'è fatta una visual novel: scomporre un gioco in pezzi",
+  "sommario": "In questa lezione impari a progettare l'architettura di una visual novel scomponendola nei suoi sistemi fondamentali. Scoprirai la differenza cruciale tra dati (la storia) e programma (il motore), capirai in quale ordine logico sviluppare ogni componente e preparerai la struttura delle cartelle del progetto «Storie».",
+  "concetti": [
+   "Architettura a sistemi indipendenti",
+   "Separazione tra dati (storia) e programma (motore)",
+   "Mappa delle dipendenze di sviluppo",
+   "Struttura modulare delle cartelle del progetto"
+  ],
+  "obiettivi": [
+   "Guardare un gioco finito ed elencare i sistemi che lo compongono",
+   "Decidere cosa è dato (la storia) e cosa è programma (ciò che la esegue)",
+   "Stabilire l'ordine: cosa serve per primo, cosa può aspettare"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Quando giochi a una visual novel completa vedi scorrere dialoghi, ritratti di personaggi che cambiano espressione, sfondi illustrati, scelte interattive e musica d'atmosfera. Se provassi a programmare tutto questo insieme in un unico script o senza una divisione precisa, il progetto diventerebbe ingestibile dopo appena poche scene. Per costruire un gioco solido devi guardare oltre la superficie e chiederti: quali pezzi indipendenti fanno funzionare questa schermata?"
+   },
+   {
+    "tipo": "testo",
+    "md": "In una visual novel si distinguono cinque sistemi fondamentali, ognuno con un compito preciso:\n\n1. **Interfaccia di dialogo**: la finestra che mostra il nome di chi parla, il testo della battuta e i pulsanti per le scelte.\n2. **Scena visiva**: i nodi responsabili di mostrare lo sfondo del luogo attuale e le figure dei personaggi con le loro espressioni facciali.\n3. **Gestore audio**: i canali sonori che controllano la musica di sottofondo e gli effetti sonori (un passo, un colpo di scena, un suono di conferma).\n4. **Interprete della storia**: il coordinatore centrale che legge la sequenza degli eventi e dice agli altri sistemi cosa fare al momento giusto.\n5. **Stato e salvataggi**: la memoria che ricorda le decisioni prese, tiene traccia dei progressi e permette di salvare e riprendere la partita.\n\nCiascuno di questi blocchi deve fare solo il proprio lavoro: la finestra di testo non deve sapere qual è il file musicale in riproduzione, così come il gestore audio non deve sapere quali parole compaiono a schermo."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il passo metodologico più importante per un motore di visual novel è stabilire una separazione netta tra **dati** e **programma**.\n\n- I **dati** sono il contenuto narrativo: le battute dei dialoghi, i nomi dei personaggi, le scelte possibili e le indicazioni su quale musica avviare. I dati non contengono istruzioni di codice; descrivono solo ciò che deve accadere nella storia.\n- Il **programma** è il motore: il codice GDScript e le scene Godot che caricano quei dati, li interpretano e li mostrano a schermo sotto forma di nodi, controlli grafici e flussi audio.\n\nSe mantieni separati dati e programma, cambiare una battuta o aggiungere un intero capitolo non richiederà mai di modificare il codice di gioco. Il motore «Storie» funzionerà come un lettore multimediale: il codice è il lettore, la storia è il disco che inserisci."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "L'errore più comune quando si inizia una visual novel è scrivere i testi direttamente dentro funzioni GDScript piene di `if` e `print()`. Procedere così rende impossibile scrivere racconti lunghi, corregge refusi solo toccando il codice e rende complicatissimo aggiungere salvataggi o traduzioni. La storia deve risiedere nei suoi file di dati dedicati, mai nel codice del motore."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per costruire il motore senza bloccarti devi stabilire la **mappa delle dipendenze**, cioè capire cosa serve prima e cosa può essere aggiunto in seguito. Costruire subito i menu o il sistema di salvataggio non ha senso se il gioco non ha ancora nulla da salvare o da mostrare.\n\nL'ordine logico di costruzione per il progetto «Storie» procede a strati:\n\n1. **La finestra di dialogo**: prima di tutto serve un'interfaccia capace di mostrare del testo e un nome in modo ordinato.\n2. **L'interprete e la storia minima**: una volta che la finestra funziona, creiamo la struttura dati della storia e un interprete essenziale che invia le frasi alla finestra riga per riga.\n3. **Sfondi, personaggi e audio**: quando il testo avanza a comando, aggiungiamo i comandi per cambiare figure a schermo e brani sonori.\n4. **Scelte e ramificazioni**: inseriamo i bivi narrativi e la memoria delle scelte fatte dal giocatore.\n5. **Schermate e persistenza**: solo a motore narrativo completo colleghiamo il menu principale, il salvataggio su file e le schermate accessorie.\n\nCon questo ordine hai un prototipo funzionante e giocabile fin dai primi passi, che si arricchisce a ogni lezione."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per rispecchiare questa scomposizione nell'editor, il progetto «Storie» deve avere una struttura di cartelle ordinata fin dal primo giorno. In questo momento il progetto contiene soltanto `project.godot` e `icon.svg`. Organizzeremo le cartelle con nomi in `snake_case`, separando risorse esterne, interfaccia, dati narrativi e logica centrale."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "pannello-filesystem",
+    "didascalia": "Il pannello FileSystem con la radice res://, dove creeremo le cartelle principali per ospitare i sistemi del gioco."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare la struttura delle cartelle per il progetto «Storie»",
+    "passi": [
+     "Nel pannello *FileSystem* (file del progetto), fai clic destro sulla cartella radice `res://` e seleziona l'opzione per creare una nuova cartella.",
+     "Assegna il nome `assets` alla cartella e premi Invio.",
+     "Fai clic destro sulla cartella `assets` appena creata e crea al suo interno tre sottocartelle: `audio`, `fonts` e `images`.",
+     "Fai di nuovo clic destro su `res://` e crea una cartella chiamata `ui` per le scene e gli script dell'interfaccia utente.",
+     "Fai clic destro su `res://` e crea una cartella chiamata `core` per la logica dell'interprete e il coordinamento generale.",
+     "Fai clic destro su `res://` e crea una cartella chiamata `story` destinata a contenere i file con il testo e gli eventi della storia."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Al termine avrai quattro cartelle principali sotto `res://`: `assets/`, `core/`, `story/` e `ui/`. Ogni sistema che realizzeremo nelle prossime lezioni avrà una collocazione chiara e precisa: la finestra di dialogo starà in `ui/`, l'interprete risiederà in `core/`, mentre i dialoghi e le scelte saranno salvati in `story/`, pronti per essere letti senza interferire con il codice."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Una visual novel è composta da sistemi separati: interfaccia di dialogo, scena visiva (personaggi e sfondi), audio, interprete e salvataggi.\n- I dati (la storia, i dialoghi, i bivi) devono restare rigidamente separati dal programma (il codice che li legge e li mostra).\n- L'ordine di sviluppo deve seguire le dipendenze: prima l'interfaccia di base e l'interprete, poi la grafica e l'audio, infine le scelte, i menu e i salvataggi.\n- La struttura delle cartelle del progetto «Storie» riflette questa architettura dividendo subito risorse (`assets/`), interfaccia (`ui/`), motore logico (`core/`) e testo narrativo (`story/`)."
+   }
+  ]
+ }
+}
