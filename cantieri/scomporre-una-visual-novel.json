@@ -10,6 +10,7 @@
     "consegna": "Nel progetto «Storie», organizza l'architettura creando la struttura delle cartelle e il primo file di dati per separare la storia dal codice del motore.\n\n1. Nel pannello *FileSystem*, crea la seguente struttura di cartelle a partire dalla radice `res://`:\n   - `assets/` (con tre sottocartelle al suo interno: `audio/`, `fonts/` e `images/`)\n   - `ui/`\n   - `core/`\n   - `story/` \n2. Dentro la cartella `story/`, crea un file JSON chiamato `intro.json` per memorizzare la prima battuta del gioco.\n3. Il file `intro.json` deve contenere un oggetto JSON valido con due chiavi principali:\n   - `\"title\"`: una stringa con il titolo della storia (ad esempio `\"Capitolo 1\"`).\n   - `\"lines\"`: un array di stringhe contenente almeno una battuta (ad esempio `[\"Benvenuto nel regno di Storie!\"]`).",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "storie",
     "passiGuida": [],
     "suggerimenti": [
      "Fai clic destro su res:// nel pannello FileSystem per creare le cartelle principali, poi dentro story/ crea il file intro.json.",
@@ -23,7 +24,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends 'res://htd/htd_test.gd'\n\n\nfunc _run_tests() -> void:\n    var dirs := ['res://assets/audio', 'res://assets/fonts', 'res://assets/images', 'res://ui', 'res://core', 'res://story']\n    for d in dirs:\n        if not check('dir_' + d, DirAccess.dir_exists_absolute(d), 'La cartella ' + d + ' deve esistere nel progetto'):\n            return\n\n    if not check('file_intro', FileAccess.file_exists('res://story/intro.json'), 'Il file res://story/intro.json deve esistere'):\n        return\n\n    var file := FileAccess.open('res://story/intro.json', FileAccess.READ)\n    if not check('open_intro', file != null, 'Impossibile aprire res://story/intro.json'):\n        return\n\n    var content := file.get_as_text()\n    file.close()\n\n    var data = JSON.parse_string(content)\n    if not check('json_valid', data != null and typeof(data) == TYPE_DICTIONARY, 'intro.json deve contenere un oggetto JSON valido'):\n        return\n\n    var dict: Dictionary = data\n    check('has_title', dict.has('title') and typeof(dict['title']) == TYPE_STRING, 'intro.json deve contenere la chiave title con una stringa')\n\n    var has_lines := dict.has('lines') and typeof(dict['lines']) == TYPE_ARRAY\n    if check('has_lines', has_lines, 'intro.json deve contenere la chiave lines con un array'):\n        var lines: Array = dict['lines']\n        check('lines_not_empty', lines.size() > 0 and typeof(lines[0]) == TYPE_STRING, 'L array lines deve contenere almeno una stringa')",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar dirs := ['res://assets/audio', 'res://assets/fonts', 'res://assets/images', 'res://ui', 'res://core', 'res://story']\n\tfor d in dirs:\n\t\tif not check('dir_' + d, DirAccess.dir_exists_absolute(d), 'La cartella ' + d + ' deve esistere nel progetto'):\n\t\t\treturn\n\n\tif not check('file_intro', FileAccess.file_exists('res://story/intro.json'), 'Il file res://story/intro.json deve esistere'):\n\t\treturn\n\n\tvar file := FileAccess.open('res://story/intro.json', FileAccess.READ)\n\tif not check('open_intro', file != null, 'Impossibile aprire res://story/intro.json'):\n\t\treturn\n\n\tvar content := file.get_as_text()\n\tfile.close()\n\n\tvar data = JSON.parse_string(content)\n\tif not check('json_valid', data != null and typeof(data) == TYPE_DICTIONARY, 'intro.json deve contenere un oggetto JSON valido'):\n\t\treturn\n\n\tvar dict: Dictionary = data\n\tcheck('has_title', dict.has('title') and typeof(dict['title']) == TYPE_STRING, 'intro.json deve contenere la chiave title con una stringa')\n\n\tvar has_lines := dict.has('lines') and typeof(dict['lines']) == TYPE_ARRAY\n\tif check('has_lines', has_lines, 'intro.json deve contenere la chiave lines con un array'):\n\t\tvar lines: Array = dict['lines']\n\t\tcheck('lines_not_empty', lines.size() > 0 and typeof(lines[0]) == TYPE_STRING, 'L array lines deve contenere almeno una stringa')",
       "descrizione": "La struttura delle cartelle e il file intro.json sono corretti e ben formattati"
      }
     ],
@@ -32,24 +33,24 @@
     "soluzione": {
      "file": [
       {
-       "percorso": "assets/audio/.gitkeep",
-       "contenuto": ""
+       "percorso": "core/core.gd",
+       "contenuto": "extends Node\n"
       },
       {
-       "percorso": "assets/fonts/.gitkeep",
-       "contenuto": ""
+       "percorso": "ui/ui.gd",
+       "contenuto": "extends Node\n"
       },
       {
-       "percorso": "assets/images/.gitkeep",
-       "contenuto": ""
+       "percorso": "assets/audio/audio.gd",
+       "contenuto": "extends Node\n"
       },
       {
-       "percorso": "ui/.gitkeep",
-       "contenuto": ""
+       "percorso": "assets/fonts/font.gd",
+       "contenuto": "extends Node\n"
       },
       {
-       "percorso": "core/.gitkeep",
-       "contenuto": ""
+       "percorso": "assets/images/image.gd",
+       "contenuto": "extends Node\n"
       },
       {
        "percorso": "story/intro.json",
@@ -64,12 +65,19 @@
       "impostazioni": []
      },
      "spiegazione": "Abbiamo creato la struttura delle cartelle per separare le risorse grafiche e audio (`assets/`), l'interfaccia utente (`ui/`), la logica interna del motore (`core/`) e il testo narrativo (`story/`). Nel file `story/intro.json` abbiamo memorizzato la prima battuta del gioco come dati JSON; in questo modo il testo narrativo resta completamente disaccoppiato dal codice GDScript.",
-     "cambiati": [],
+     "cambiati": [
+      "core/core.gd",
+      "ui/ui.gd",
+      "assets/audio/audio.gd",
+      "assets/fonts/font.gd",
+      "assets/images/image.gd",
+      "story/intro.json"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "controllo di sicurezza — assets/audio/.gitkeep: i file .gitkeep non possono far parte di una lezione",
@@ -79,7 +87,8 @@
     "controllo di sicurezza — core/.gitkeep: i file .gitkeep non possono far parte di una lezione"
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
@@ -141,7 +150,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Com'è fatta una visual novel: scomporre un gioco in pezzi",
