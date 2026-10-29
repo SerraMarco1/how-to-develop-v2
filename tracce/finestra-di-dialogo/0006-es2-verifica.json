@@ -1,0 +1,100 @@
+{
+ "n": 6,
+ "quando": "2026-10-29T09:44:35.043Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (obiettivo): approvato",
+ "spiegazione": "«Pulizia e gestione dello stato del dialogo». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: ui/dialogue_box.gd",
+ "richieste": 0,
+ "durataMs": 9649,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "Pulizia e gestione dello stato del dialogo",
+   "consegna": "In una visual novel il motore deve poter ripulire la finestra quando il dialogo finisce e sapere se c'è una battuta attiva a schermo. Inoltre, i dati della storia possono contenere nomi con spazi superflui o stringhe composte solo da spazi.\n\nAggiorna `ui/dialogue_box.gd` con le seguenti funzionalità:\n\n1. In `show_line(speaker: String, text: String)`:\n   - Rimuovi gli spazi vuoti all'inizio e alla fine del nome tramite `speaker.strip_edges()`.\n   - Se dopo la pulizia il nome risulta vuoto (`speaker.strip_edges().is_empty()`), nascondi `speaker_label`.\n   - Altrimenti, rendi visibile `speaker_label` e assegna a `speaker_label.text` il nome ripulito.\n2. Aggiungi la funzione pubblica `set_indicator_visible(is_visible: bool) -> void` che imposta la proprietà `visible` di `continue_indicator` sul valore booleano ricevuto. Modifica `show_line()` in modo che usi questa funzione con `true` per mostrare l'indicatore.\n3. Aggiungi la funzione pubblica `clear() -> void` per azzerare la finestra:\n   - imposta `dialogue_label.text = \"\"`;\n   - imposta `speaker_label.text = \"\"` e nascondi `speaker_label`;\n   - nascondi l'indicatore chiamando `set_indicator_visible(false)`.\n4. Aggiungi la funzione pubblica `is_showing() -> bool` che restituisce `true` se `dialogue_label.text` non è vuoto (`not dialogue_label.text.is_empty()`), altrimenti restituisce `false`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Il metodo `strip_edges()` di una stringa toglie spazi e tabulazioni ai due estremi: memorizza il risultato in una variabile locale prima di fare i controlli.",
+    "Per verificare se c'è testo attivo dentro a `is_showing()`, puoi usare direttamente l'espressione booleana `return not dialogue_label.text.is_empty()`.",
+    "In `clear()`, oltre a svuotare il testo di entrambe le etichette, ricordati di impostare `speaker_label.visible = false` e di chiamare `set_indicator_visible(false)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://ui/dialogue_box.gd",
+     "descrizione": "Lo script res://ui/dialogue_box.gd esiste"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"scene\", box != null, \"La scena res://ui/dialogue_box.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"has_clear\", has_function(box, \"clear\"), \"DialogueBox deve avere la funzione clear()\"):\n\t\treturn\n\tif not check(\"has_is_showing\", has_function(box, \"is_showing\"), \"DialogueBox deve avere la funzione is_showing() -> bool\"):\n\t\treturn\n\tif not check(\"has_set_ind\", has_function(box, \"set_indicator_visible\"), \"DialogueBox deve avere la funzione set_indicator_visible(is_visible: bool)\"):\n\t\treturn\n\t\n\tvar speaker := find_by_name(box, \"SpeakerLabel\") as Label\n\tvar dialogue := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\t\n\tvar showing_init = call_if_exists(box, \"is_showing\")\n\tcheck(\"not_showing_start\", showing_init == false, \"All'avvio is_showing() deve restituire false\")\n\t\n\tbox.call(\"show_line\", \"  Elena  \", \"Prima battuta.\")\n\tawait wait_frames(2)\n\tcheck(\"strip_speaker\", speaker.text == \"Elena\", \"Il nome del personaggio deve essere ripulito dagli spazi con strip_edges (trovato '%s')\" % speaker.text)\n\tcheck(\"showing_true\", call_if_exists(box, \"is_showing\") == true, \"Dopo show_line() is_showing() deve restituire true\")\n\t\n\tbox.call(\"show_line\", \"   \", \"Testo senza nome valido.\")\n\tawait wait_frames(2)\n\tcheck(\"spaces_hidden\", not speaker.visible, \"Una stringa di soli spazi passata come speaker deve nascondere SpeakerLabel\")\n\t\n\tbox.call(\"set_indicator_visible\", false)\n\tawait wait_frames(2)\n\tcheck(\"ind_off\", not indicator.visible, \"set_indicator_visible(false) deve nascondere l'indicatore\")\n\tbox.call(\"set_indicator_visible\", true)\n\tawait wait_frames(2)\n\tcheck(\"ind_on\", indicator.visible, \"set_indicator_visible(true) deve mostrare l'indicatore\")\n\t\n\tbox.call(\"clear\")\n\tawait wait_frames(2)\n\tcheck(\"clear_dialogue\", dialogue.text.is_empty(), \"Dopo clear() dialogue_label.text deve essere vuoto\")\n\tcheck(\"clear_speaker_text\", speaker.text.is_empty(), \"Dopo clear() speaker_label.text deve essere vuoto\")\n\tcheck(\"clear_speaker_vis\", not speaker.visible, \"Dopo clear() speaker_label deve essere nascosto\")\n\tcheck(\"clear_ind\", not indicator.visible, \"Dopo clear() continue_indicator deve essere nascosto\")\n\tcheck(\"clear_is_showing\", call_if_exists(box, \"is_showing\") == false, \"Dopo clear() is_showing() deve restituire false\")\n",
+     "descrizione": "clear, is_showing, set_indicator_visible e strip_edges funzionano correttamente"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nrun/main_scene=\"res://ui/dialogue_box.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "core/core.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "ui/ui.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/audio/audio.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/fonts/font.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/images/image.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "story/intro.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    \"Benvenuto nel mondo di Storie.\"\n  ]\n}"
+     },
+     {
+      "percorso": "core/systems_map.json",
+      "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+     },
+     {
+      "percorso": "ui/dialogue_box.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+     },
+     {
+      "percorso": "ui/dialogue_box.gd",
+      "contenuto": "extends PanelContainer\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tvar clean_speaker := speaker.strip_edges()\n\tif clean_speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = clean_speaker\n\t\n\tdialogue_label.text = text\n\tset_indicator_visible(true)\n\n\nfunc set_indicator_visible(is_visible: bool) -> void:\n\tcontinue_indicator.visible = is_visible\n\n\nfunc clear() -> void:\n\tdialogue_label.text = \"\"\n\tspeaker_label.text = \"\"\n\tspeaker_label.visible = false\n\tset_indicator_visible(false)\n\n\nfunc is_showing() -> bool:\n\treturn not dialogue_label.text.is_empty()\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Storie",
+     "scenaPrincipale": "res://ui/dialogue_box.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Con `speaker.strip_edges()` eliminiamo gli spazi superflui ai bordi del nome: se la stringa conteneva solo spazi, diventerà vuota e `clean_speaker.is_empty()` nasconderà correttamente `SpeakerLabel`. La funzione `set_indicator_visible` centralizza il controllo dell'indicatore. `clear()` ripristina la finestra allo stato iniziale azzerando i testi e nascondendo gli elementi, mentre `is_showing()` fornisce al motore un modo rapido e incapsulato per verificare se la finestra sta mostrando testo.",
+    "cambiati": [
+     "ui/dialogue_box.gd"
+    ],
+    "rimossi": []
+   },
+   "cartella": "storie",
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
