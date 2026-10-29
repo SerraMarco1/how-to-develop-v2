@@ -12,3 +12,4 @@
 {"quando":1793262077248,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"scomporre-una-visual-novel","ok":false,"contata":true,"durataMs":487601,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793262564852,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"scomporre-una-visual-novel","ok":true,"contata":true,"durataMs":64421,"tokenInput":13130,"tokenOutput":3411,"ragionamento":10473}
 {"quando":1793262629275,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"scomporre-una-visual-novel","ok":true,"contata":true,"durataMs":36456,"tokenInput":16603,"tokenOutput":3084,"ragionamento":5114}
+{"quando":1793262667537,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"scomporre-una-visual-novel","ok":true,"contata":true,"durataMs":14614,"tokenInput":9011,"tokenOutput":1491,"ragionamento":4376}
