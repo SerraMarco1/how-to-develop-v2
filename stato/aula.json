@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-29T09:54:34.602Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-29T10:28:14.662Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "macchina-da-scrivere",
-  "numero": "6.2",
-  "titolo": "Testo che compare lettera per lettera"
+  "slug": "battute-come-dati",
+  "numero": "6.3",
+  "titolo": "La storia come dati"
  },
- "messaggio": "Sta scrivendo la lezione 6.2 «Testo che compare lettera per lettera».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.3 riprende da sola appena rispondono.",
+ "riprende": "2026-10-29T10:38:14.662Z"
 }

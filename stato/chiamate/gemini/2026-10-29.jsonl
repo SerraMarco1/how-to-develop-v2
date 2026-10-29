@@ -36,3 +36,4 @@
 {"quando":1793268989430,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":637144,"tokenInput":10853,"tokenOutput":3516,"ragionamento":34864}
 {"quando":1793269640395,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":34909,"tokenInput":13543,"tokenOutput":12,"ragionamento":3702}
 {"quando":1793269677096,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":9296,"tokenInput":2873,"tokenOutput":749,"ragionamento":2197}
+{"quando":1793269692283,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"battute-come-dati","ok":false,"contata":true,"durataMs":2373,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
