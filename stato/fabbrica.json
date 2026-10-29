@@ -1,16 +1,21 @@
 {
- "sovraccarico": {},
+ "sovraccarico": {
+  "gemini": {
+   "volte": 1,
+   "fino": 1793258814303
+  }
+ },
  "fermi": {
   "gemini/gemini-flash-latest": {
-   "fino": 1793214573599,
+   "fino": 1793258814303,
    "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-3.7-flash": {
-   "fino": 1793214573599,
+   "fino": 1793258814303,
    "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1793214573599,
+   "fino": 1793258814303,
    "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-flash-lite-latest": {
@@ -31,5 +36,5 @@
  "troncate": {},
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": 1793257200275
+ "prossimoTentativo": 1793258814308
 }

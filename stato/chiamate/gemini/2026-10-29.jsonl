@@ -1,1 +1,4 @@
 {"quando":1793257309749,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-rivesti-2","ok":true,"contata":true,"durataMs":323841,"tokenInput":29947,"tokenOutput":23045,"ragionamento":6992}
+{"quando":1793257647880,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"progetto-rivesti-2","ok":false,"contata":true,"durataMs":280102,"errore":"Nessuna risposta entro 280 secondi"}
+{"quando":1793257927987,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"progetto-rivesti-2","ok":false,"contata":true,"durataMs":280094,"errore":"Nessuna risposta entro 280 secondi"}
+{"quando":1793258208085,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-rivesti-2","ok":false,"contata":true,"durataMs":6215,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
