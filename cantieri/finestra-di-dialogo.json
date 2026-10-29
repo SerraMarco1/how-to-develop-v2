@@ -1,9 +1,222 @@
 {
  "creato": "2026-10-29T09:16:50.740Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "La prima finestra di dialogo",
+    "consegna": "Costruisci la scena di base della finestra di dialogo per il gioco «Storie».\n\n1. Crea la scena `res://ui/dialogue_box.tscn` con nodo radice di tipo `PanelContainer` e rinominalo in `DialogueBox`.\n2. Aggiungi come figlio di `DialogueBox` un nodo `VBoxContainer`.\n3. Dentro a `VBoxContainer` aggiungi nell'ordine tre nodi:\n   - un nodo `Label` chiamato `SpeakerLabel` (per il nome del personaggio);\n   - un nodo `RichTextLabel` chiamato `DialogueLabel` (per la battuta), con la proprietà `bbcode_enabled` impostata su `true`;\n   - un nodo `Label` chiamato `ContinueIndicator` con la proprietà `text` impostata sul simbolo `▼`.\n4. Crea e collega a `DialogueBox` lo script `res://ui/dialogue_box.gd`:\n   - memorizza i tre nodi figli in variabili con `@onready`;\n   - in `_ready()`, nascondi `ContinueIndicator` impostando `continue_indicator.visible = false`;\n   - crea la funzione pubblica `show_line(speaker: String, text: String) -> void`: se `speaker` è vuoto (`speaker.is_empty()`) nascondi `speaker_label`, altrimenti mostralo e assegna `speaker` a `speaker_label.text`. Assegna quindi `text` a `dialogue_label.text` e rendi visibile `continue_indicator`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello *FileSystem* premi con il tasto destro sulla cartella `ui`, seleziona **Create New → Scene...**, scegli **Other Node**, cerca `PanelContainer` e conferma.",
+     "Nel pannello *Scene* fai doppio clic sulla radice appena creata e rinominala in `DialogueBox`.",
+     "Con `DialogueBox` selezionato, premi il pulsante **+** in alto nel pannello *Scene*, cerca `VBoxContainer` e premi **Create**.",
+     "Con `VBoxContainer` selezionato, premi **+**, cerca `Label`, premi **Create** e rinominalo in `SpeakerLabel`.",
+     "Sempre con `VBoxContainer` selezionato, premi **+**, cerca `RichTextLabel`, premi **Create** e rinominalo in `DialogueLabel`.",
+     "Aggiungi un terzo nodo dentro `VBoxContainer`: premi **+**, cerca `Label`, rinominalo in `ContinueIndicator` e nell'*Inspector* imposta la proprietà **Text** sul carattere `▼`.",
+     "Seleziona `DialogueLabel`, vai nell'*Inspector* e attiva la casella **Bbcode Enabled**.",
+     "Salva la scena premendo **Ctrl+S** nella cartella `res://ui/` con il nome `dialogue_box.tscn`.",
+     "Seleziona `DialogueBox`, premi l'icona del copione per collegare un nuovo script, imposta il percorso su `res://ui/dialogue_box.gd` e premi **Create**.",
+     "Nello script scrivi le variabili `@onready`, nascondi l'indicatore in `_ready()` e implementa la funzione `show_line(speaker: String, text: String) -> void`."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/dialogue_box.tscn",
+      "descrizione": "Il file della scena res://ui/dialogue_box.tscn esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/dialogue_box.gd",
+      "descrizione": "Lo script res://ui/dialogue_box.gd esiste"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://ui/dialogue_box.tscn",
+      "tipoNodo": "PanelContainer",
+      "nome": "DialogueBox",
+      "descrizione": "La radice della scena è un PanelContainer chiamato DialogueBox"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://ui/dialogue_box.tscn",
+      "tipoNodo": "RichTextLabel",
+      "nome": "DialogueLabel",
+      "descrizione": "La scena contiene un RichTextLabel chiamato DialogueLabel"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://ui/dialogue_box.tscn",
+      "nodo": "DialogueBox",
+      "descrizione": "Il nodo DialogueBox ha lo script dialogue_box.gd collegato"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"scene\", box != null, \"La scena res://ui/dialogue_box.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"show_line_func\", has_function(box, \"show_line\"), \"Lo script di DialogueBox deve avere la funzione show_line(speaker, text)\"):\n\t\treturn\n\t\n\tvar speaker := find_by_name(box, \"SpeakerLabel\") as Label\n\tvar dialogue := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\t\n\tif not check(\"nodes\", speaker != null and dialogue != null and indicator != null, \"La scena deve contenere SpeakerLabel, DialogueLabel e ContinueIndicator\"):\n\t\treturn\n\t\n\tcheck(\"bbcode\", dialogue.bbcode_enabled, \"DialogueLabel deve avere bbcode_enabled impostato su true\")\n\tcheck(\"indicator_init\", not indicator.visible, \"All'avvio ContinueIndicator deve essere nascosto\")\n\t\n\tbox.call(\"show_line\", \"Alice\", \"Ciao [b]mondo[/b]!\")\n\tawait wait_frames(2)\n\tcheck(\"speaker_vis\", speaker.visible, \"Con un personaggio valido SpeakerLabel deve essere visibile\")\n\tcheck(\"speaker_text\", speaker.text == \"Alice\", \"SpeakerLabel deve mostrare il nome passato a show_line (mostra '%s')\" % speaker.text)\n\tcheck(\"dialogue_text\", dialogue.text == \"Ciao [b]mondo[/b]!\", \"DialogueLabel deve ricevere il testo passato a show_line\")\n\tcheck(\"indicator_shown\", indicator.visible, \"Dopo show_line ContinueIndicator deve essere visibile\")\n\t\n\tbox.call(\"show_line\", \"\", \"Voce narrante.\")\n\tawait wait_frames(2)\n\tcheck(\"speaker_hidden\", not speaker.visible, \"Quando speaker è una stringa vuota, SpeakerLabel deve essere nascosto\")\n\tcheck(\"dialogue_text_narrator\", dialogue.text == \"Voce narrante.\", \"DialogueLabel deve mostrare il nuovo testo anche senza personaggio\")",
+      "descrizione": "show_line mostra il testo, attiva l'indicatore e gestisce la presenza del nome"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "ui/dialogue_box.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+      },
+      {
+       "percorso": "ui/dialogue_box.gd",
+       "contenuto": "extends PanelContainer\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tif speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = speaker\n\t\n\tdialogue_label.text = text\n\tcontinue_indicator.visible = true\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La scena usa un `PanelContainer` come cornice principale e un `VBoxContainer` per disporre in colonna il nome, la battuta e l'indicatore. In `RichTextLabel` la proprietà `bbcode_enabled` permette di interpretare i tag di formattazione come `[b]`. Nello script, `show_line(speaker, text)` incapsula tutta la logica visiva: controlla se il nome di chi parla è vuoto tramite `is_empty()` per nascondere o mostrare `SpeakerLabel`, aggiorna il testo di `DialogueLabel` e attiva `ContinueIndicator`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Pulizia e gestione dello stato del dialogo",
+    "consegna": "In una visual novel il motore deve poter ripulire la finestra quando il dialogo finisce e sapere se c'è una battuta attiva a schermo. Inoltre, i dati della storia possono contenere nomi con spazi superflui o stringhe composte solo da spazi.\n\nAggiorna `ui/dialogue_box.gd` con le seguenti funzionalità:\n\n1. In `show_line(speaker: String, text: String)`:\n   - Rimuovi gli spazi vuoti all'inizio e alla fine del nome tramite `speaker.strip_edges()`.\n   - Se dopo la pulizia il nome risulta vuoto (`speaker.strip_edges().is_empty()`), nascondi `speaker_label`.\n   - Altrimenti, rendi visibile `speaker_label` e assegna a `speaker_label.text` il nome ripulito.\n2. Aggiungi la funzione pubblica `set_indicator_visible(is_visible: bool) -> void` che imposta la proprietà `visible` di `continue_indicator` sul valore booleano ricevuto. Modifica `show_line()` in modo che usi questa funzione con `true` per mostrare l'indicatore.\n3. Aggiungi la funzione pubblica `clear() -> void` per azzerare la finestra:\n   - imposta `dialogue_label.text = \"\"`;\n   - imposta `speaker_label.text = \"\"` e nascondi `speaker_label`;\n   - nascondi l'indicatore chiamando `set_indicator_visible(false)`.\n4. Aggiungi la funzione pubblica `is_showing() -> bool` che restituisce `true` se `dialogue_label.text` non è vuoto (`not dialogue_label.text.is_empty()`), altrimenti restituisce `false`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Il metodo `strip_edges()` di una stringa toglie spazi e tabulazioni ai due estremi: memorizza il risultato in una variabile locale prima di fare i controlli.",
+     "Per verificare se c'è testo attivo dentro a `is_showing()`, puoi usare direttamente l'espressione booleana `return not dialogue_label.text.is_empty()`.",
+     "In `clear()`, oltre a svuotare il testo di entrambe le etichette, ricordati di impostare `speaker_label.visible = false` e di chiamare `set_indicator_visible(false)`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/dialogue_box.gd",
+      "descrizione": "Lo script res://ui/dialogue_box.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"scene\", box != null, \"La scena res://ui/dialogue_box.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"has_clear\", has_function(box, \"clear\"), \"DialogueBox deve avere la funzione clear()\"):\n\t\treturn\n\tif not check(\"has_is_showing\", has_function(box, \"is_showing\"), \"DialogueBox deve avere la funzione is_showing() -> bool\"):\n\t\treturn\n\tif not check(\"has_set_ind\", has_function(box, \"set_indicator_visible\"), \"DialogueBox deve avere la funzione set_indicator_visible(is_visible: bool)\"):\n\t\treturn\n\t\n\tvar speaker := find_by_name(box, \"SpeakerLabel\") as Label\n\tvar dialogue := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\t\n\tvar showing_init = call_if_exists(box, \"is_showing\")\n\tcheck(\"not_showing_start\", showing_init == false, \"All'avvio is_showing() deve restituire false\")\n\t\n\tbox.call(\"show_line\", \"  Elena  \", \"Prima battuta.\")\n\tawait wait_frames(2)\n\tcheck(\"strip_speaker\", speaker.text == \"Elena\", \"Il nome del personaggio deve essere ripulito dagli spazi con strip_edges (trovato '%s')\" % speaker.text)\n\tcheck(\"showing_true\", call_if_exists(box, \"is_showing\") == true, \"Dopo show_line() is_showing() deve restituire true\")\n\t\n\tbox.call(\"show_line\", \"   \", \"Testo senza nome valido.\")\n\tawait wait_frames(2)\n\tcheck(\"spaces_hidden\", not speaker.visible, \"Una stringa di soli spazi passata come speaker deve nascondere SpeakerLabel\")\n\t\n\tbox.call(\"set_indicator_visible\", false)\n\tawait wait_frames(2)\n\tcheck(\"ind_off\", not indicator.visible, \"set_indicator_visible(false) deve nascondere l'indicatore\")\n\tbox.call(\"set_indicator_visible\", true)\n\tawait wait_frames(2)\n\tcheck(\"ind_on\", indicator.visible, \"set_indicator_visible(true) deve mostrare l'indicatore\")\n\t\n\tbox.call(\"clear\")\n\tawait wait_frames(2)\n\tcheck(\"clear_dialogue\", dialogue.text.is_empty(), \"Dopo clear() dialogue_label.text deve essere vuoto\")\n\tcheck(\"clear_speaker_text\", speaker.text.is_empty(), \"Dopo clear() speaker_label.text deve essere vuoto\")\n\tcheck(\"clear_speaker_vis\", not speaker.visible, \"Dopo clear() speaker_label deve essere nascosto\")\n\tcheck(\"clear_ind\", not indicator.visible, \"Dopo clear() continue_indicator deve essere nascosto\")\n\tcheck(\"clear_is_showing\", call_if_exists(box, \"is_showing\") == false, \"Dopo clear() is_showing() deve restituire false\")",
+      "descrizione": "clear, is_showing, set_indicator_visible e strip_edges funzionano correttamente"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "ui/dialogue_box.gd",
+       "contenuto": "extends PanelContainer\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tvar clean_speaker := speaker.strip_edges()\n\tif clean_speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = clean_speaker\n\t\n\tdialogue_label.text = text\n\tset_indicator_visible(true)\n\n\nfunc set_indicator_visible(is_visible: bool) -> void:\n\tcontinue_indicator.visible = is_visible\n\n\nfunc clear() -> void:\n\tdialogue_label.text = \"\"\n\tspeaker_label.text = \"\"\n\tspeaker_label.visible = false\n\tset_indicator_visible(false)\n\n\nfunc is_showing() -> bool:\n\treturn not dialogue_label.text.is_empty()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Con `speaker.strip_edges()` eliminiamo gli spazi superflui ai bordi del nome: se la stringa conteneva solo spazi, diventerà vuota e `clean_speaker.is_empty()` nasconderà correttamente `SpeakerLabel`. La funzione `set_indicator_visible` centralizza il controllo dell'indicatore. `clear()` ripristina la finestra allo stato iniziale azzerando i testi e nascondendo gli elementi, mentre `is_showing()` fornisce al motore un modo rapido e incapsulato per verificare se la finestra sta mostrando testo.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Dimensioni stabili e adattamento ai testi lunghi",
+    "consegna": "Completa la finestra di dialogo del gioco «Storie» garantendo che abbia dimensioni stabili a schermo e gestisca correttamente testi lunghi e formattati con BBCode:\n\n1. Nella scena `res://ui/dialogue_box.tscn`:\n   - Seleziona `DialogueBox` e imposta la sua proprietà **Custom Minimum Size** (sotto *Control* → *Layout*) con un'altezza minima (**Y**) di almeno `140` pixel (quindi `Vector2(0, 140)`). In questo modo la finestra manterrà un'altezza stabile anche con battute di una sola riga o a riquadro vuoto.\n   - Seleziona `DialogueLabel`, vai nell'*Inspector* e imposta la sua opzione di ridimensionamento verticale **Container Sizing → Vertical** su **Expand** e **Fill** (corrispondente al valore di flag `SIZE_EXPAND_FILL`, pari a 3), affinché l'etichetta occupi tutto lo spazio verticale disponibile nel contenitore.\n   - Verifica che su `DialogueLabel` la proprietà **Scroll Active** sia attiva (`true`).\n2. Nello script `res://ui/dialogue_box.gd`:\n   - Nella funzione `show_line(speaker: String, text: String)`: quando imposti il nuovo testo, fai in modo che la visualizzazione ritorni alla prima riga chiamando `dialogue_label.scroll_to_line(0)` subito dopo aver assegnato `dialogue_label.text = text`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Nell'*Inspector* di `DialogueBox`, trovi **Custom Minimum Size** nella sezione *Control → Layout*: imposta il secondo valore (Y) a `140`. Per `DialogueLabel`, nella sezione *Container Sizing*, assicurati che sotto *Vertical* siano spuntati sia **Fill** sia **Expand**."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/dialogue_box.tscn",
+      "descrizione": "Il file res://ui/dialogue_box.tscn esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/dialogue_box.gd",
+      "descrizione": "Il file res://ui/dialogue_box.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"scene\", box != null, \"La scena res://ui/dialogue_box.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\t\n\tvar speaker := find_by_name(box, \"SpeakerLabel\") as Label\n\tvar dialogue := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\t\n\tif not check(\"nodes\", speaker != null and dialogue != null and indicator != null, \"La scena deve contenere SpeakerLabel, DialogueLabel e ContinueIndicator\"):\n\t\treturn\n\t\n\tcheck(\"min_height\", box.custom_minimum_size.y >= 140.0, \"DialogueBox deve avere custom_minimum_size.y di almeno 140 pixel (attuale: %.1f)\" % box.custom_minimum_size.y)\n\t\n\tvar v_expand: bool = (dialogue.size_flags_vertical & Control.SIZE_EXPAND) != 0\n\tcheck(\"v_expand\", v_expand, \"DialogueLabel deve avere il flag vertical Expand attivo (size_flags_vertical)\")\n\tcheck(\"scroll_active\", dialogue.scroll_active, \"DialogueLabel deve avere scroll_active impostato su true\")\n\t\n\tvar formatted_text := \"Testo con [b]grassetto[/b], [i]corsivo[/i] e [color=yellow]colore[/color].\"\n\tbox.call(\"show_line\", \"Guida\", formatted_text)\n\tawait wait_frames(2)\n\tcheck(\"bbcode_on\", dialogue.bbcode_enabled, \"bbcode_enabled deve essere true\")\n\tvar parsed: String = dialogue.get_parsed_text()\n\tcheck(\"bbcode_parsed\", not parsed.contains(\"[b]\"), \"I tag BBCode devono essere interpretati graficamente e non stampati come testo grezzo\")\n\t\n\tvar long_text := \"Riga 1: Nel cuore della notte.\\nRiga 2: Un passo risuona nel corridoio.\\nRiga 3: La porta socchiusa cigola nel silenzio.\\nRiga 4: Qualcuno si ferma davanti alla soglia.\\nRiga 5: Una voce sussurra il tuo nome.\\nRiga 6: Poi ritorna la quiete.\"\n\tbox.call(\"show_line\", \"Narratore\", long_text)\n\tawait wait_frames(2)\n\tcheck(\"long_shown\", dialogue.text == long_text, \"DialogueLabel deve ricevere correttamente il testo lungo\")\n\tcheck(\"indicator_visible\", indicator.visible, \"L'indicatore ContinueIndicator deve essere visibile anche con testi lunghi\")\n\tcheck(\"fits_box\", box.get_combined_minimum_size().y <= 250.0, \"Con scroll_active attivo, un testo di molte righe non deve far esplodere la dimensione minima del riquadro (è %.1f)\" % box.get_combined_minimum_size().y)\n\t\n\tbox.call(\"show_line\", \"Narratore\", \"Nuova battuta corta.\")\n\tawait wait_frames(2)\n\tcheck(\"reset_text\", dialogue.text == \"Nuova battuta corta.\", \"La nuova battuta deve sostituire la precedente\")\n\t\n\tbox.call(\"clear\")\n\tawait wait_frames(2)\n\tcheck(\"clean_end\", dialogue.text.is_empty() and not speaker.visible and not indicator.visible, \"clear() deve resettare correttamente tutti i nodi\")",
+      "descrizione": "DialogueBox mantiene altezza minima, espande DialogueLabel e gestisce testi lunghi e BBCode"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "ui/dialogue_box.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\ncustom_minimum_size = Vector2(0, 140)\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nsize_flags_vertical = 3\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+      },
+      {
+       "percorso": "ui/dialogue_box.gd",
+       "contenuto": "extends PanelContainer\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tvar clean_speaker := speaker.strip_edges()\n\tif clean_speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = clean_speaker\n\t\n\tdialogue_label.text = text\n\tdialogue_label.scroll_to_line(0)\n\tset_indicator_visible(true)\n\n\nfunc set_indicator_visible(is_visible: bool) -> void:\n\tcontinue_indicator.visible = is_visible\n\n\nfunc clear() -> void:\n\tdialogue_label.text = \"\"\n\tspeaker_label.text = \"\"\n\tspeaker_label.visible = false\n\tset_indicator_visible(false)\n\n\nfunc is_showing() -> bool:\n\treturn not dialogue_label.text.is_empty()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Impostando `custom_minimum_size = Vector2(0, 140)` su `DialogueBox` garantiamo che la finestra mantenga una dimensione visiva stabile ed elegante nella parte inferiore dello schermo senza collassare quando il testo è breve o azzerato. Assegnando `size_flags_vertical = 3` (`SIZE_EXPAND_FILL`) su `DialogueLabel`, l'etichetta occupa tutto lo spazio tra il nome e l'indicatore `▼`. Con `scroll_active = true`, il testo lungo genera una barra di scorrimento verticale anziché deformare il riquadro, e chiamando `dialogue_label.scroll_to_line(0)` ogni nuova battuta riparte sempre dalla prima riga.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "La finestra di dialogo",
@@ -71,5 +284,10 @@
     "md": "- `RichTextLabel` permette di applicare stili diversi all'interno dello stesso blocco di testo tramite i tag BBCode come `[b]`, `[i]` e `[color]`.\n- La proprietà `bbcode_enabled` deve essere attiva affinché i tag vengano interpretati graficamente anziché stampati come testo grezzo.\n- `RichTextLabel` va a capo automaticamente in base alla larghezza del contenitore e permette lo scorrimento verticale del testo lungo grazie a `scroll_active`.\n- Una finestra di dialogo incapsulata espone un'unica funzione pubblica `show_line(speaker, text)`, proteggendo i propri nodi interni e semplificando la comunicazione con il resto del motore."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
