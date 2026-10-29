@@ -178,7 +178,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -269,13 +269,106 @@
    "genere": "obiettivo",
    "correzioni": 1,
    "semplificato": false,
-   "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo advance_dialogue il testo deve diventare subito interamente visibile (visible_ratio = 1.0)\n  - Premendo advance_dialogue l'indicatore deve comparire\n  - Dopo aver completato la battuta is_typing() deve restituire false\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-3.7-flash",
     "gemini/gemini-flash-lite-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Interrompere la scrittura con un clic",
+    "consegna": "Permetti al giocatore di interrompere l'effetto macchina da scrivere con un clic per visualizzare subito l'intera battuta.\n\nRequisiti:\n1. Nelle impostazioni del progetto (`Project Settings -> Input Map`), crea l'azione `advance_dialogue` associandola al tasto sinistro del mouse (`MouseLeft`) e alla barra spaziatrice (`Space`).\n2. In `res://ui/dialogue_box.gd`, aggiungi due funzioni pubbliche:\n   - `is_typing() -> bool`: restituisce `true` se `_tween` esiste ed è attualmente in esecuzione (`_tween.is_running()`), altrimenti `false`.\n   - `complete_line() -> void`: se `_tween` è in esecuzione lo ferma (`kill()`), imposta `dialogue_label.visible_ratio = 1.0` e rende visibile l'indicatore con `set_indicator_visible(true)`.\n3. Gestisci l'input dell'utente implementando `_unhandled_input(event: InputEvent) -> void`:\n   - Se la finestra non sta mostrando alcun testo (`not is_showing()`), non fare nulla.\n   - Se l'evento corrisponde all'azione `advance_dialogue` appena premuta:\n     - Se il testo sta ancora comparendo (`is_typing()`), chiama `complete_line()`.\n     - Comunica a Godot che l'evento è stato gestito tramite `get_viewport().set_input_as_handled()`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "storie",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Apri **Project -> Project Settings -> Input Map**, digita `advance_dialogue` in **Add New Action**, premi **Add** e poi associa il tasto sinistro del mouse e la barra spaziatrice con il pulsante **+**.",
+     "In `complete_line()`, assicurati di chiamare `_tween.kill()` prima di forzare `visible_ratio = 1.0`, altrimenti l'animazione continuerebbe ad avanzare sovrascrivendo il valore.",
+     "In `_unhandled_input(event)`, usa `event.is_action_pressed(\"advance_dialogue\")`. Dopo aver chiamato `complete_line()`, richiama `get_viewport().set_input_as_handled()` affinché nessun altro nodo riceva l'evento."
+    ],
+    "verifiche": [
+     {
+      "tipo": "azione_input",
+      "nome": "advance_dialogue",
+      "descrizione": "L'azione advance_dialogue è configurata nella Input Map del progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"box_loaded\", box != null, \"La scena dialogue_box.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar dialogue_label := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\tif not check(\"nodes\", dialogue_label != null and indicator != null, \"DialogueLabel e ContinueIndicator devono esistere\"):\n\t\treturn\n\t\n\tbox.characters_per_second = 20.0\n\tbox.show_line(\"Guida\", \"Questa è una frase sufficientemente lunga per testare l'interruzione con il tasto di avanzamento.\")\n\tawait wait_frames(2)\n\t\n\tvar is_typing_method = has_function(box, \"is_typing\")\n\tcheck(\"has_is_typing\", is_typing_method, \"Lo script deve avere la funzione is_typing()\")\n\tif is_typing_method:\n\t\tvar typing_val = call_if_exists(box, \"is_typing\")\n\t\tcheck(\"is_typing_true\", typing_val == true, \"Mentre il testo sta comparendo is_typing() deve restituire true\")\n\t\n\tawait wait_seconds(0.3)\n\tcheck(\"typing_midway\", dialogue_label.visible_ratio < 0.9, \"Dopo pochi decimi di secondo il testo non deve essere ancora finito\")\n\t\n\tvar event := InputEventAction.new()\n\tevent.action = \"advance_dialogue\"\n\tevent.pressed = true\n\tbox._unhandled_input(event)\n\tawait wait_frames(2)\n\t\n\tcheck(\"skip_ratio\", dialogue_label.visible_ratio >= 1.0, \"Premendo advance_dialogue il testo deve diventare subito interamente visibile (visible_ratio = 1.0)\")\n\tcheck(\"skip_indicator\", indicator.visible, \"Premendo advance_dialogue l'indicatore deve comparire\")\n\t\n\tif is_typing_method:\n\t\tvar typing_after = call_if_exists(box, \"is_typing\")\n\t\tcheck(\"is_typing_false\", typing_after == false, \"Dopo aver completato la battuta is_typing() deve restituire false\")\n",
+      "descrizione": "Premendo advance_dialogue durante la scrittura, il testo si completa all'istante e si ferma l'animazione"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nrun/main_scene=\"res://ui/dialogue_box.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nadvance_dialogue={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "core/core.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "ui/ui.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/audio/audio.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/fonts/font.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/images/image.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "story/intro.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    \"Benvenuto nel mondo di Storie.\"\n  ]\n}"
+      },
+      {
+       "percorso": "core/systems_map.json",
+       "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+      },
+      {
+       "percorso": "ui/dialogue_box.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\ncustom_minimum_size = Vector2(0, 140)\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nsize_flags_vertical = 3\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+      },
+      {
+       "percorso": "ui/dialogue_box.gd",
+       "contenuto": "extends PanelContainer\n\n@export var characters_per_second: float = 30.0\n\nvar _tween: Tween\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif not is_showing():\n\t\treturn\n\t\n\tif event.is_action_pressed(\"advance_dialogue\"):\n\t\tif is_typing():\n\t\t\tcomplete_line()\n\t\tget_viewport().set_input_as_handled()\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tvar clean_speaker := speaker.strip_edges()\n\tif clean_speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = clean_speaker\n\t\n\tdialogue_label.text = text\n\tdialogue_label.scroll_to_line(0)\n\tdialogue_label.visible_ratio = 0.0\n\tset_indicator_visible(false)\n\t\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\t\n\tvar total_chars := dialogue_label.get_total_character_count()\n\tvar duration := total_chars / characters_per_second\n\t_tween = create_tween()\n\t_tween.tween_property(dialogue_label, \"visible_ratio\", 1.0, duration)\n\t_tween.finished.connect(_on_typing_finished)\n\n\nfunc complete_line() -> void:\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\tdialogue_label.visible_ratio = 1.0\n\tset_indicator_visible(true)\n\n\nfunc is_typing() -> bool:\n\treturn _tween != null and _tween.is_running()\n\n\nfunc set_indicator_visible(is_visible: bool) -> void:\n\tcontinue_indicator.visible = is_visible\n\n\nfunc clear() -> void:\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\tdialogue_label.text = \"\"\n\tspeaker_label.text = \"\"\n\tspeaker_label.visible = false\n\tset_indicator_visible(false)\n\n\nfunc is_showing() -> bool:\n\treturn not dialogue_label.text.is_empty()\n\n\nfunc _on_typing_finished() -> void:\n\tset_indicator_visible(true)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Storie",
+      "scenaPrincipale": "res://ui/dialogue_box.tscn",
+      "azioni": [
+       {
+        "nome": "advance_dialogue",
+        "tasti": [
+         "MouseLeft",
+         "Space"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La funzione `is_typing()` verifica se il riferimento a `_tween` esiste ed è attivo con `_tween.is_running()`. In `complete_line()`, interrompiamo subito l'animazione con `kill()`, forziamo `visible_ratio` a `1.0` e accendiamo l'indicatore con `set_indicator_visible(true)`. In `_unhandled_input(event)`, intercettiamo l'azione `advance_dialogue` solo se ci sono battute a schermo (`is_showing()`): se la scrittura è in corso, chiamiamo `complete_line()` e infine chiamiamo `get_viewport().set_input_as_handled()` per non inoltrare l'evento ad altri elementi di gioco.",
+     "cambiati": [
+      "project.godot",
+      "ui/dialogue_box.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "es3": {
    "stato": "da_fare",
