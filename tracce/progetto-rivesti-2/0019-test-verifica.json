@@ -1,0 +1,16 @@
+{
+ "n": 19,
+ "quando": "2026-10-29T08:11:55.791Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "titolo": "Test: correzione del revisore scartata",
+ "spiegazione": "La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n- i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://options_menu.gd deve caricarsi senza errori: Parse Error: Closing \")\" doesn't have an opening counterpart. (res://options_menu.gd:48 in GDScript::reload)\nFailed to load script \"res://options_menu.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  options_menu.gd, riga 48: `mute_button.button_pressed = AudioServer.is…",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://options_menu.gd deve caricarsi senza errori: Parse Error: Closing \")\" doesn't have an opening counterpart. (res://options_menu.gd:48 in GDScript::reload)\nFailed to load script \"res://options_menu.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  options_menu.gd, riga 48: `mute_button.button_pressed = AudioServer.is_bus_mute(_master_bus_idx))`"
+  ]
+ },
+ "chiamate": []
+}
