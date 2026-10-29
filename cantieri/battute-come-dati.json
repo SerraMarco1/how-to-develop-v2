@@ -29,7 +29,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar dialogue_scene := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"dialogue_scene\", dialogue_scene != null, \"La scena dialogue_box.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar story_player := StoryPlayer.new()\n\tstory_player.dialogue_box = dialogue_scene\n\tstory_player.story_file_path = \"res://story/intro.json\"\n\tdialogue_scene.add_child(story_player)\n\tawait wait_frames(2)\n\t\n\tvar lines_var = story_player.get(\"_lines\")\n\tcheck(\"lines_loaded\", lines_var != null and lines_var.size() > 0, \"StoryPlayer deve caricare le battute dal file JSON in _lines\")\n\t\n\tvar speaker_lbl := dialogue_scene.get_node_or_null(\"VBoxContainer/SpeakerLabel\") as Label\n\tvar dialogue_lbl := dialogue_scene.get_node_or_null(\"VBoxContainer/DialogueLabel\") as RichTextLabel\n\t\n\tcheck(\"speaker_shown\", speaker_lbl != null and speaker_lbl.text == \"Guida\", \"SpeakerLabel deve mostrare 'Guida' (trovato '%s')\" % (speaker_lbl.text if speaker_lbl else \"\"))\n\tcheck(\"dialogue_shown\", dialogue_lbl != null and dialogue_lbl.text == \"Benvenuto nel mondo di Storie.\", \"DialogueLabel deve mostrare 'Benvenuto nel mondo di Storie.' (trovato '%s')\" % (dialogue_lbl.text if dialogue_lbl else \"\"))\n\t\n\tvar signal_emitted := false\n\tstory_player.story_finished.connect(func(): signal_emitted = true)\n\tstory_player.advance()\n\tcheck(\"signal_finished\", signal_emitted, \"Avanzando oltre l'ultima riga, StoryPlayer deve emettere il segnale story_finished\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar dialogue_scene := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"dialogue_scene\", dialogue_scene != null, \"La scena dialogue_box.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar story_player := StoryPlayer.new()\n\tstory_player.dialogue_box = dialogue_scene\n\tstory_player.story_file_path = \"res://story/intro.json\"\n\tdialogue_scene.add_child(story_player)\n\tawait wait_frames(2)\n\t\n\tvar lines_var = story_player.get(\"_lines\")\n\tcheck(\"lines_loaded\", lines_var != null and lines_var.size() > 0, \"StoryPlayer deve caricare le battute dal file JSON in _lines\")\n\t\n\tvar speaker_lbl := dialogue_scene.get_node_or_null(\"VBoxContainer/SpeakerLabel\") as Label\n\tvar dialogue_lbl := dialogue_scene.get_node_or_null(\"VBoxContainer/DialogueLabel\") as RichTextLabel\n\t\n\tcheck(\"speaker_shown\", speaker_lbl != null and speaker_lbl.text == \"Guida\", \"SpeakerLabel deve mostrare 'Guida' (trovato '%s')\" % (speaker_lbl.text if speaker_lbl else \"\"))\n\tcheck(\"dialogue_shown\", dialogue_lbl != null and dialogue_lbl.text == \"Benvenuto nel mondo di Storie.\", \"DialogueLabel deve mostrare 'Benvenuto nel mondo di Storie.' (trovato '%s')\" % (dialogue_lbl.text if dialogue_lbl else \"\"))\n\t\n\tvar state := {\"emitted\": false}\n\tstory_player.story_finished.connect(func(): state.emitted = true)\n\tstory_player.advance()\n\tcheck(\"signal_finished\", state.emitted, \"Avanzando oltre l'ultima riga, StoryPlayer deve emettere il segnale story_finished\")",
       "descrizione": "StoryPlayer carica la storia da intro.json, invia la prima riga alla finestra di dialogo ed emette story_finished al termine"
      }
     ],
@@ -37,6 +37,38 @@
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": "core/core.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "ui/ui.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/audio/audio.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/fonts/font.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/images/image.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "core/systems_map.json",
+       "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+      },
+      {
+       "percorso": "ui/dialogue_box.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\ncustom_minimum_size = Vector2(0, 140)\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nsize_flags_vertical = 3\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+      },
+      {
+       "percorso": "ui/dialogue_box.gd",
+       "contenuto": "extends PanelContainer\n\nsignal line_finished\n\n@export var characters_per_second: float = 30.0\n\nvar _tween: Tween\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif not is_showing():\n\t\treturn\n\t\n\tif event.is_action_pressed(\"advance_dialogue\"):\n\t\tadvance()\n\t\tget_viewport().set_input_as_handled()\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tvar clean_speaker := speaker.strip_edges()\n\tif clean_speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = clean_speaker\n\t\n\tdialogue_label.text = text\n\tdialogue_label.scroll_to_line(0)\n\tdialogue_label.visible_ratio = 0.0\n\tset_indicator_visible(false)\n\t\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\t\n\tvar total_chars := dialogue_label.get_total_character_count()\n\tif total_chars == 0 or characters_per_second <= 0.0:\n\t\tdialogue_label.visible_ratio = 1.0\n\t\tset_indicator_visible(true)\n\t\treturn\n\t\n\tvar duration := total_chars / characters_per_second\n\t_tween = create_tween()\n\t_tween.tween_property(dialogue_label, \"visible_ratio\", 1.0, duration)\n\t_tween.finished.connect(_on_typing_finished)\n\n\nfunc advance() -> void:\n\tif is_typing():\n\t\tcomplete_line()\n\telse:\n\t\tset_indicator_visible(false)\n\t\tline_finished.emit()\n\n\nfunc complete_line() -> void:\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\tdialogue_label.visible_ratio = 1.0\n\tset_indicator_visible(true)\n\n\nfunc is_typing() -> bool:\n\treturn _tween != null and _tween.is_running()\n\n\nfunc set_indicator_visible(is_visible: bool) -> void:\n\tcontinue_indicator.visible = is_visible\n\n\nfunc clear() -> void:\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\tdialogue_label.text = \"\"\n\tspeaker_label.text = \"\"\n\tspeaker_label.visible = false\n\tset_indicator_visible(false)\n\n\nfunc is_showing() -> bool:\n\treturn not dialogue_label.text.is_empty()\n\n\nfunc _on_typing_finished() -> void:\n\tset_indicator_visible(true)\n"
+      },
       {
        "percorso": "story/intro.json",
        "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    {\n      \"speaker\": \"Guida\",\n      \"text\": \"Benvenuto nel mondo di Storie.\"\n    }\n  ]\n}"
@@ -67,13 +99,14 @@
     }
    },
    "genere": "guidato",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Avanzando oltre l'ultima riga, StoryPlayer deve emettere il segnale story_finished\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es2": {
@@ -270,7 +303,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "La storia come dati",
