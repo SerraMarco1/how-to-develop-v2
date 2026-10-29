@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"es1\",\n      \"problema\": \"La consegna del punto 7 chiede genericamente di aggiornare 'story/intro.json', ma il test di verifica controlla valori specifici per speaker ('Guida') e testo ('Benvenuto nel mondo di Storie.') che sono presenti soltanto nei passi guida e non nella consegna.\",\n      \"correzione\": \"Specifica chiaramente nel punto 7 della consegna i valori esatti da inserire in 'story/intro.json' per la prima battuta (speaker: 'Guida', text: 'Benvenuto nel mondo di Storie.').\",\n      \"fonte\": \"\"\n    },\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"es1\",\n      \"problema\": \"Il punto 6 della consegna chiede di implementare le funzioni `_show_current_line()` e `_on_dialogue_box_line_finished()` 'come mostrato nella spiegazione teorica', ma nel blocco 6 della teoria il codice GDScript si interrompe prima di definire tali funzioni.\",\n      \"correzione\": \"Descrivi nella consegna la logica di `_show_current_line()` e `_on_dialogue_box_line_finished()` (oppure completa il blocco di codice teorico con l'implementazione completa delle due funzioni).\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
- "ragionamento": 4782,
- "quando": "2026-10-29T11:19:17.344Z",
- "ruolo": "revisore"
-}
