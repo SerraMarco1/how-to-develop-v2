@@ -71,7 +71,13 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — assets/audio/.gitkeep: i file .gitkeep non possono far parte di una lezione",
+    "controllo di sicurezza — assets/fonts/.gitkeep: i file .gitkeep non possono far parte di una lezione",
+    "controllo di sicurezza — assets/images/.gitkeep: i file .gitkeep non possono far parte di una lezione",
+    "controllo di sicurezza — ui/.gitkeep: i file .gitkeep non possono far parte di una lezione",
+    "controllo di sicurezza — core/.gitkeep: i file .gitkeep non possono far parte di una lezione"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
