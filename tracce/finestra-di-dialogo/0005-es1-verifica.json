@@ -1,0 +1,134 @@
+{
+ "n": 5,
+ "quando": "2026-10-29T09:44:25.393Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«La prima finestra di dialogo». 6 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: project.godot, ui/dialogue_box.tscn, ui/dialogue_box.gd",
+ "richieste": 0,
+ "durataMs": 9593,
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "La prima finestra di dialogo",
+   "consegna": "Costruisci la scena di base della finestra di dialogo per il gioco «Storie».\n\n1. Crea la scena `res://ui/dialogue_box.tscn` con nodo radice di tipo `PanelContainer` e rinominalo in `DialogueBox`.\n2. Aggiungi come figlio di `DialogueBox` un nodo `VBoxContainer`.\n3. Dentro a `VBoxContainer` aggiungi nell'ordine tre nodi:\n   - un nodo `Label` chiamato `SpeakerLabel` (per il nome del personaggio);\n   - un nodo `RichTextLabel` chiamato `DialogueLabel` (per la battuta), con la proprietà `bbcode_enabled` impostata su `true`;\n   - un nodo `Label` chiamato `ContinueIndicator` con la proprietà `text` impostata sul simbolo `▼`.\n4. Crea e collega a `DialogueBox` lo script `res://ui/dialogue_box.gd`:\n   - memorizza i tre nodi figli in variabili con `@onready`;\n   - in `_ready()`, nascondi `ContinueIndicator` impostando `continue_indicator.visible = false`;\n   - crea la funzione pubblica `show_line(speaker: String, text: String) -> void`: se `speaker` è vuoto (`speaker.is_empty()`) nascondi `speaker_label`, altrimenti mostralo e assegna `speaker` a `speaker_label.text`. Assegna quindi `text` a `dialogue_label.text` e rendi visibile `continue_indicator`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [
+    "Nel pannello *FileSystem* premi con il tasto destro sulla cartella `ui`, seleziona **Create New → Scene...**, scegli **Other Node**, cerca `PanelContainer` e conferma.",
+    "Nel pannello *Scene* fai doppio clic sulla radice appena creata e rinominala in `DialogueBox`.",
+    "Con `DialogueBox` selezionato, premi il pulsante **+** in alto nel pannello *Scene*, cerca `VBoxContainer` e premi **Create**.",
+    "Con `VBoxContainer` selezionato, premi **+**, cerca `Label`, premi **Create** e rinominalo in `SpeakerLabel`.",
+    "Sempre con `VBoxContainer` selezionato, premi **+**, cerca `RichTextLabel`, premi **Create** e rinominalo in `DialogueLabel`.",
+    "Aggiungi un terzo nodo dentro `VBoxContainer`: premi **+**, cerca `Label`, rinominalo in `ContinueIndicator` e nell'*Inspector* imposta la proprietà **Text** sul carattere `▼`.",
+    "Seleziona `DialogueLabel`, vai nell'*Inspector* e attiva la casella **Bbcode Enabled**.",
+    "Salva la scena premendo **Ctrl+S** nella cartella `res://ui/` con il nome `dialogue_box.tscn`.",
+    "Seleziona `DialogueBox`, premi l'icona del copione per collegare un nuovo script, imposta il percorso su `res://ui/dialogue_box.gd` e premi **Create**.",
+    "Nello script scrivi le variabili `@onready`, nascondi l'indicatore in `_ready()` e implementa la funzione `show_line(speaker: String, text: String) -> void`."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://ui/dialogue_box.tscn",
+     "descrizione": "Il file della scena res://ui/dialogue_box.tscn esiste"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://ui/dialogue_box.gd",
+     "descrizione": "Lo script res://ui/dialogue_box.gd esiste"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://ui/dialogue_box.tscn",
+     "tipoNodo": "PanelContainer",
+     "nome": "DialogueBox",
+     "descrizione": "La radice della scena è un PanelContainer chiamato DialogueBox"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://ui/dialogue_box.tscn",
+     "tipoNodo": "RichTextLabel",
+     "nome": "DialogueLabel",
+     "descrizione": "La scena contiene un RichTextLabel chiamato DialogueLabel"
+    },
+    {
+     "tipo": "script_collegato",
+     "scena": "res://ui/dialogue_box.tscn",
+     "nodo": "DialogueBox",
+     "descrizione": "Il nodo DialogueBox ha lo script dialogue_box.gd collegato"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"scene\", box != null, \"La scena res://ui/dialogue_box.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tif not check(\"show_line_func\", has_function(box, \"show_line\"), \"Lo script di DialogueBox deve avere la funzione show_line(speaker, text)\"):\n\t\treturn\n\t\n\tvar speaker := find_by_name(box, \"SpeakerLabel\") as Label\n\tvar dialogue := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\t\n\tif not check(\"nodes\", speaker != null and dialogue != null and indicator != null, \"La scena deve contenere SpeakerLabel, DialogueLabel e ContinueIndicator\"):\n\t\treturn\n\t\n\tcheck(\"bbcode\", dialogue.bbcode_enabled, \"DialogueLabel deve avere bbcode_enabled impostato su true\")\n\tcheck(\"indicator_init\", not indicator.visible, \"All'avvio ContinueIndicator deve essere nascosto\")\n\t\n\tbox.call(\"show_line\", \"Alice\", \"Ciao [b]mondo[/b]!\")\n\tawait wait_frames(2)\n\tcheck(\"speaker_vis\", speaker.visible, \"Con un personaggio valido SpeakerLabel deve essere visibile\")\n\tcheck(\"speaker_text\", speaker.text == \"Alice\", \"SpeakerLabel deve mostrare il nome passato a show_line (mostra '%s')\" % speaker.text)\n\tcheck(\"dialogue_text\", dialogue.text == \"Ciao [b]mondo[/b]!\", \"DialogueLabel deve ricevere il testo passato a show_line\")\n\tcheck(\"indicator_shown\", indicator.visible, \"Dopo show_line ContinueIndicator deve essere visibile\")\n\t\n\tbox.call(\"show_line\", \"\", \"Voce narrante.\")\n\tawait wait_frames(2)\n\tcheck(\"speaker_hidden\", not speaker.visible, \"Quando speaker è una stringa vuota, SpeakerLabel deve essere nascosto\")\n\tcheck(\"dialogue_text_narrator\", dialogue.text == \"Voce narrante.\", \"DialogueLabel deve mostrare il nuovo testo anche senza personaggio\")\n",
+     "descrizione": "show_line mostra il testo, attiva l'indicatore e gestisce la presenza del nome"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nrun/main_scene=\"res://ui/dialogue_box.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "core/core.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "ui/ui.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/audio/audio.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/fonts/font.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/images/image.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "story/intro.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    \"Benvenuto nel mondo di Storie.\"\n  ]\n}"
+     },
+     {
+      "percorso": "core/systems_map.json",
+      "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+     },
+     {
+      "percorso": "ui/dialogue_box.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+     },
+     {
+      "percorso": "ui/dialogue_box.gd",
+      "contenuto": "extends PanelContainer\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tif speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = speaker\n\t\n\tdialogue_label.text = text\n\tcontinue_indicator.visible = true\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Storie",
+     "scenaPrincipale": "res://ui/dialogue_box.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "La scena usa un `PanelContainer` come cornice principale e un `VBoxContainer` per disporre in colonna il nome, la battuta e l'indicatore. In `RichTextLabel` la proprietà `bbcode_enabled` permette di interpretare i tag di formattazione come `[b]`. Nello script, `show_line(speaker, text)` incapsula tutta la logica visiva: controlla se il nome di chi parla è vuoto tramite `is_empty()` per nascondere o mostrare `SpeakerLabel`, aggiorna il testo di `DialogueLabel` e attiva `ContinueIndicator`.",
+    "cambiati": [
+     "project.godot",
+     "ui/dialogue_box.tscn",
+     "ui/dialogue_box.gd"
+    ],
+    "rimossi": []
+   },
+   "cartella": "storie",
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
