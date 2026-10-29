@@ -33,3 +33,4 @@
 {"quando":1793268575826,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":291578,"tokenInput":14201,"tokenOutput":8116,"ragionamento":28002}
 {"quando":1793268887818,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":40965,"tokenInput":10686,"tokenOutput":3155,"ragionamento":13689}
 {"quando":1793268949417,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":34711,"tokenInput":10842,"tokenOutput":3302,"ragionamento":9067}
+{"quando":1793268989430,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"macchina-da-scrivere","ok":true,"contata":true,"durataMs":637144,"tokenInput":10853,"tokenOutput":3516,"ragionamento":34864}
