@@ -536,7 +536,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo advance_dialogue durante la scrittura, il testo deve diventare subito visibile e l'indicatore deve accendersi\n  - Premendo advance_dialogue a testo completo deve essere emesso il segnale line_finished\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
