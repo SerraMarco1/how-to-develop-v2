@@ -684,7 +684,8 @@
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Testo che compare lettera per lettera",
@@ -763,5 +764,10 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
