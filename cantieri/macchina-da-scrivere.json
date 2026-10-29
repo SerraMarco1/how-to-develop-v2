@@ -2,7 +2,7 @@
  "creato": "2026-10-29T09:45:16.734Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -72,7 +72,110 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.7-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "guidato",
+    "genere": "guidato",
+    "titolo": "L'effetto macchina da scrivere",
+    "consegna": "Modifica lo script `res://ui/dialogue_box.gd` per mostrare le battute di testo una lettera alla volta attraverso un'animazione fluida.\n\n1. Aggiungi la variabile esportata `characters_per_second: float = 30.0` per regolare la velocità di scrittura.\n2. Salva il riferimento all'animazione attiva in una variabile `_tween: Tween`.\n3. Nella funzione `show_line(speaker: String, text: String)`:\n   - reimposta `visible_ratio` del nodo `dialogue_label` a `0.0`;\n   - nascondi l'indicatore `continue_indicator`;\n   - se c'è un `Tween` già in esecuzione, interrompilo con `kill()`;\n   - calcola il numero di caratteri effettivi con `dialogue_label.get_total_character_count()`;\n   - calcola la durata dividendo i caratteri per `characters_per_second`;\n   - crea un `Tween`, anima `visible_ratio` fino a `1.0` per quella durata e collega il segnale `finished` del tween al metodo `_on_typing_finished`.\n4. Crea il metodo `_on_typing_finished() -> void` che rende visibile `continue_indicator`.\n5. Nella funzione `clear()`, se `_tween` è in esecuzione, fermalo prima di azzerare i testi.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello FileSystem fai doppio clic su `res://ui/dialogue_box.gd` per aprirlo nell'editor di script.",
+     "In cima allo script, subito dopo `extends PanelContainer`, aggiungi le due righe: `@export var characters_per_second: float = 30.0` e `var _tween: Tween`.",
+     "Nella funzione `show_line()`, rimuovi la riga `set_indicator_visible(true)` e inserisci invece `dialogue_label.visible_ratio = 0.0` e `set_indicator_visible(false)`.",
+     "Subito dopo aver azzerato `visible_ratio`, aggiungi il controllo: `if _tween and _tween.is_running(): _tween.kill()` per fermare animazioni precedenti rimaste attive.",
+     "Calcola i caratteri e la durata con: `var total_chars := dialogue_label.get_total_character_count()` e `var duration := total_chars / characters_per_second`.",
+     "Crea e avvia il tween con: `_tween = create_tween()`, poi `_tween.tween_property(dialogue_label, \"visible_ratio\", 1.0, duration)` e infine collegalo con `_tween.finished.connect(_on_typing_finished)`.",
+     "In fondo allo script dichiara la funzione: `func _on_typing_finished() -> void:` e scrivi al suo interno `set_indicator_visible(true)`.",
+     "Nella funzione `clear()`, inserisci come prima istruzione: `if _tween and _tween.is_running(): _tween.kill()` per ripulire l'animazione se il dialogo viene cancellato mentre scrive."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/dialogue_box.gd",
+      "descrizione": "Il file dialogue_box.gd esiste nella cartella ui/"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://ui/dialogue_box.gd",
+      "regex": "@export var characters_per_second",
+      "descrizione": "La variabile characters_per_second è esportata con @export"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://ui/dialogue_box.gd",
+      "regex": "visible_ratio",
+      "descrizione": "Lo script utilizza la proprietà visible_ratio"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar box := await instantiate_scene(\"res://ui/dialogue_box.tscn\")\n\tif not check(\"box_loaded\", box != null, \"La scena dialogue_box.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar dialogue_label := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tvar indicator := find_by_name(box, \"ContinueIndicator\") as Label\n\tif not check(\"nodes\", dialogue_label != null and indicator != null, \"DialogueLabel e ContinueIndicator devono esistere\"):\n\t\treturn\n\t\n\tbox.characters_per_second = 30.0\n\tbox.show_line(\"Narratore\", \"Questa è una frase di prova per verificare che il testo compaia gradualmente con visible_ratio.\")\n\tawait wait_frames(2)\n\tcheck(\"start_hidden\", dialogue_label.visible_ratio < 0.2, \"Subito dopo show_line, visible_ratio deve essere vicino a 0.0 (trovato %.2f)\" % dialogue_label.visible_ratio)\n\tcheck(\"indicator_hidden_at_start\", not indicator.visible, \"All'inizio della battuta l'indicatore continue_indicator deve essere nascosto\")\n\t\n\tawait wait_seconds(0.5)\n\tcheck(\"ratio_growing\", dialogue_label.visible_ratio > 0.05 and dialogue_label.visible_ratio < 0.95, \"Dopo mezzo secondo visible_ratio deve essere cresciuto senza essere ancora completo (trovato %.2f)\" % dialogue_label.visible_ratio)\n\t\n\tawait wait_seconds(3.0)\n\tcheck(\"ratio_complete\", dialogue_label.visible_ratio >= 1.0, \"Al termine dell'animazione visible_ratio deve raggiungere 1.0\")\n\tcheck(\"indicator_shown\", indicator.visible, \"Al termine dell'animazione l'indicatore continue_indicator deve diventare visibile\")\n\t\n\tbox.clear()\n\tawait wait_frames(2)\n\tcheck(\"clear_resets\", dialogue_label.text.is_empty() and not indicator.visible, \"La funzione clear() deve azzerare il testo e nascondere l'indicatore\")\n",
+      "descrizione": "Il testo compare gradualmente nel tempo e l'indicatore si accende solo a fine scrittura"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nrun/main_scene=\"res://ui/dialogue_box.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "core/core.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "ui/ui.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/audio/audio.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/fonts/font.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "assets/images/image.gd",
+       "contenuto": "extends Node\n"
+      },
+      {
+       "percorso": "story/intro.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    \"Benvenuto nel mondo di Storie.\"\n  ]\n}"
+      },
+      {
+       "percorso": "core/systems_map.json",
+       "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+      },
+      {
+       "percorso": "ui/dialogue_box.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/dialogue_box.gd\" id=\"1_script\"]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\ncustom_minimum_size = Vector2(0, 140)\nscript = ExtResource(\"1_script\")\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\".\"]\nlayout_mode = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\n\n[node name=\"DialogueLabel\" type=\"RichTextLabel\" parent=\"VBoxContainer\"]\nlayout_mode = 2\nsize_flags_vertical = 3\nbbcode_enabled = true\n\n[node name=\"ContinueIndicator\" type=\"Label\" parent=\"VBoxContainer\"]\nlayout_mode = 2\ntext = \"▼\"\n"
+      },
+      {
+       "percorso": "ui/dialogue_box.gd",
+       "contenuto": "extends PanelContainer\n\n@export var characters_per_second: float = 30.0\n\nvar _tween: Tween\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\n\nfunc show_line(speaker: String, text: String) -> void:\n\tvar clean_speaker := speaker.strip_edges()\n\tif clean_speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = clean_speaker\n\t\n\tdialogue_label.text = text\n\tdialogue_label.scroll_to_line(0)\n\tdialogue_label.visible_ratio = 0.0\n\tset_indicator_visible(false)\n\t\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\t\n\tvar total_chars := dialogue_label.get_total_character_count()\n\tvar duration := total_chars / characters_per_second\n\t_tween = create_tween()\n\t_tween.tween_property(dialogue_label, \"visible_ratio\", 1.0, duration)\n\t_tween.finished.connect(_on_typing_finished)\n\n\nfunc set_indicator_visible(is_visible: bool) -> void:\n\tcontinue_indicator.visible = is_visible\n\n\nfunc clear() -> void:\n\tif _tween and _tween.is_running():\n\t\t_tween.kill()\n\tdialogue_label.text = \"\"\n\tspeaker_label.text = \"\"\n\tspeaker_label.visible = false\n\tset_indicator_visible(false)\n\n\nfunc is_showing() -> bool:\n\treturn not dialogue_label.text.is_empty()\n\n\nfunc _on_typing_finished() -> void:\n\tset_indicator_visible(true)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Storie",
+      "scenaPrincipale": "res://ui/dialogue_box.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Impostando `visible_ratio = 0.0` all'inizio di `show_line()`, il testo parte completamente invisibile. Con `get_total_character_count()` ricaviamo il numero esatto di lettere visibili (esclusi eventuali tag di formattazione). Dividendo quel numero per `characters_per_second` calcoliamo i secondi necessari, che passiamo al `Tween` tramite `tween_property` per far salire progressivamente `visible_ratio` fino a `1.0`. Quando il tween finisce, il segnale `finished` chiama `_on_typing_finished()` che accende l'indicatore `continue_indicator`.",
+     "cambiati": [
+      "ui/dialogue_box.gd"
+     ],
+     "rimossi": []
+    },
+    "cartella": "storie",
+    "id": "es1"
+   }
   },
   "es2": {
    "stato": "da_fare",
