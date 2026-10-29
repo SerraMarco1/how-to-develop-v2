@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-29T09:16:50.722Z",
+ "aggiornato": "2026-10-29T09:45:16.719Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "finestra-di-dialogo",
-  "numero": "6.1",
-  "titolo": "La finestra di dialogo"
+  "slug": "macchina-da-scrivere",
+  "numero": "6.2",
+  "titolo": "Testo che compare lettera per lettera"
  },
- "messaggio": "Sta scrivendo la lezione 6.1 «La finestra di dialogo».",
+ "messaggio": "Sta scrivendo la lezione 6.2 «Testo che compare lettera per lettera».",
  "riprende": null
 }
