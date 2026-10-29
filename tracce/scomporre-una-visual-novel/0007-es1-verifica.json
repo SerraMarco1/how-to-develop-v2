@@ -1,0 +1,92 @@
+{
+ "n": 7,
+ "quando": "2026-10-29T08:31:30.597Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (obiettivo): approvato",
+ "spiegazione": "«Organizzare le cartelle e i dati della storia». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo una correzione.\nFile aggiunti o cambiati: core/core.gd, ui/ui.gd, assets/audio/audio.gd, assets/fonts/font.gd, assets/images/image.gd, story/intro.json",
+ "richieste": 0,
+ "durataMs": 6762,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "Organizzare le cartelle e i dati della storia",
+   "consegna": "Nel progetto «Storie», organizza l'architettura creando la struttura delle cartelle e il primo file di dati per separare la storia dal codice del motore.\n\n1. Nel pannello *FileSystem*, crea la seguente struttura di cartelle a partire dalla radice `res://`:\n   - `assets/` (con tre sottocartelle al suo interno: `audio/`, `fonts/` e `images/`)\n   - `ui/`\n   - `core/`\n   - `story/` \n2. Dentro la cartella `story/`, crea un file JSON chiamato `intro.json` per memorizzare la prima battuta del gioco.\n3. Il file `intro.json` deve contenere un oggetto JSON valido con due chiavi principali:\n   - `\"title\"`: una stringa con il titolo della storia (ad esempio `\"Capitolo 1\"`).\n   - `\"lines\"`: un array di stringhe contenente almeno una battuta (ad esempio `[\"Benvenuto nel regno di Storie!\"]`).",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "storie",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Fai clic destro su res:// nel pannello FileSystem per creare le cartelle principali, poi dentro story/ crea il file intro.json.",
+    "Nel file intro.json scrivi un oggetto JSON con le chiavi \"title\" e \"lines\", ad esempio: {\"title\": \"Intro\", \"lines\": [\"Ciao!\"]}"
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://story/intro.json",
+     "descrizione": "Il file intro.json esiste nella cartella story/"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar dirs := ['res://assets/audio', 'res://assets/fonts', 'res://assets/images', 'res://ui', 'res://core', 'res://story']\n\tfor d in dirs:\n\t\tif not check('dir_' + d, DirAccess.dir_exists_absolute(d), 'La cartella ' + d + ' deve esistere nel progetto'):\n\t\t\treturn\n\n\tif not check('file_intro', FileAccess.file_exists('res://story/intro.json'), 'Il file res://story/intro.json deve esistere'):\n\t\treturn\n\n\tvar file := FileAccess.open('res://story/intro.json', FileAccess.READ)\n\tif not check('open_intro', file != null, 'Impossibile aprire res://story/intro.json'):\n\t\treturn\n\n\tvar content := file.get_as_text()\n\tfile.close()\n\n\tvar data = JSON.parse_string(content)\n\tif not check('json_valid', data != null and typeof(data) == TYPE_DICTIONARY, 'intro.json deve contenere un oggetto JSON valido'):\n\t\treturn\n\n\tvar dict: Dictionary = data\n\tcheck('has_title', dict.has('title') and typeof(dict['title']) == TYPE_STRING, 'intro.json deve contenere la chiave title con una stringa')\n\n\tvar has_lines := dict.has('lines') and typeof(dict['lines']) == TYPE_ARRAY\n\tif check('has_lines', has_lines, 'intro.json deve contenere la chiave lines con un array'):\n\t\tvar lines: Array = dict['lines']\n\t\tcheck('lines_not_empty', lines.size() > 0 and typeof(lines[0]) == TYPE_STRING, 'L array lines deve contenere almeno una stringa')\n",
+     "descrizione": "La struttura delle cartelle e il file intro.json sono corretti e ben formattati"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "core/core.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "ui/ui.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/audio/audio.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/fonts/font.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/images/image.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "story/intro.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    \"Benvenuto nel mondo di Storie.\"\n  ]\n}"
+     }
+    ],
+    "progetto": {
+     "nome": "Storie",
+     "scenaPrincipale": "",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Abbiamo creato la struttura delle cartelle per separare le risorse grafiche e audio (`assets/`), l'interfaccia utente (`ui/`), la logica interna del motore (`core/`) e il testo narrativo (`story/`). Nel file `story/intro.json` abbiamo memorizzato la prima battuta del gioco come dati JSON; in questo modo il testo narrativo resta completamente disaccoppiato dal codice GDScript.",
+    "cambiati": [
+     "core/core.gd",
+     "ui/ui.gd",
+     "assets/audio/audio.gd",
+     "assets/fonts/font.gd",
+     "assets/images/image.gd",
+     "story/intro.json"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
