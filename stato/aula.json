@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-29T11:01:54.572Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-29T11:07:45.718Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "battute-come-dati",
   "numero": "6.3",
   "titolo": "La storia come dati"
  },
- "messaggio": "Sta scrivendo la lezione 6.3 «La storia come dati».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.3 riprende da sola appena rispondono.",
+ "riprende": "2026-10-29T11:17:45.718Z"
 }
