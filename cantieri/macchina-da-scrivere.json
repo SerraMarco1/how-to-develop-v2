@@ -371,7 +371,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "prevedi",
@@ -428,7 +428,63 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.7-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedere visibilità e durate del testo",
+    "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce, senza eseguirlo.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> int:\n\tvar label := Label.new()\n\tlabel.text = \"Godot\"\n\tlabel.visible_characters = 2\n\treturn label.visible_characters\n",
+      "domanda": "Quanto vale visible_characters?",
+      "risposta": "2",
+      "spiegazione": "La proprietà `visible_characters` è stata impostata direttamente a 2, quindi vengono mostrati a video solo i primi due caratteri della parola (ovvero \"Go\").",
+      "id": "es3p1"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar total_chars := 60\n\tvar speed := 30.0\n\tvar duration: float = total_chars / speed\n\treturn duration\n",
+      "domanda": "Quanto vale duration?",
+      "risposta": "2.0",
+      "spiegazione": "Dividendo 60 caratteri per una velocità di 30.0 caratteri al secondo otteniamo 60 / 30.0 = 2.0 secondi di animazione.",
+      "id": "es3p2"
+     },
+     {
+      "codice": "func run() -> int:\n\tvar label := RichTextLabel.new()\n\tlabel.bbcode_enabled = true\n\tlabel.text = \"[b]Ciao[/b]\"\n\treturn label.get_total_character_count()\n",
+      "domanda": "Che numero restituisce get_total_character_count()?",
+      "risposta": "4",
+      "spiegazione": "La funzione `get_total_character_count()` conta solo i caratteri visibili a schermo ed esclude dal conteggio i tag BBCode come `[b]` e `[/b]`. La parola \"Ciao\" è composta da 4 lettere, quindi restituisce 4.",
+      "id": "es3p3"
+     },
+     {
+      "codice": "func run() -> bool:\n\tvar is_typing := false\n\tvar ratio := 1.0\n\tif ratio < 1.0:\n\t\tis_typing = true\n\telse:\n\t\tis_typing = false\n\treturn is_typing\n",
+      "domanda": "Cosa restituisce la funzione (true o false)?",
+      "risposta": "false",
+      "spiegazione": "Dato che `ratio` vale 1.0, la condizione `ratio < 1.0` è falsa. Viene quindi eseguito il blocco `else`, assegnando `false` a `is_typing`.",
+      "id": "es3p4"
+     },
+     {
+      "codice": "func run() -> String:\n\tvar is_typing := false\n\tvar result := \"\"\n\tif is_typing:\n\t\tresult = \"skip\"\n\telse:\n\t\tresult = \"advance\"\n\treturn result\n",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "advance",
+      "spiegazione": "Quando `is_typing` è `false`, il testo è già tutto visibile. Un nuovo clic non deve completare la battuta (\"skip\"), ma deve far avanzare la scena verso la battuta successiva (\"advance\").",
+      "id": "es3p5"
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es3"
+   }
   },
   "test": {
    "stato": "da_fare",
