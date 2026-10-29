@@ -1,0 +1,75 @@
+{
+ "creato": "2026-10-29T09:16:50.740Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "La finestra di dialogo",
+  "sommario": "Costruisci il primo componente visivo del motore: la finestra di dialogo. Impari a usare RichTextLabel con BBCode per formattare il testo, a gestire l'adattamento delle battute lunghe e a esporre una singola funzione pubblica pulita.",
+  "concetti": [
+   "RichTextLabel",
+   "bbcode_enabled",
+   "Tag BBCode ([b], [i], [color])",
+   "Adattamento e scorrimento del testo (scroll_active)",
+   "Incapsulamento dell'interfaccia con show_line"
+  ],
+  "obiettivi": [
+   "RichTextLabel e BBCode: grassetto, corsivo, colore dentro al testo",
+   "Una scena dell'interfaccia con una sola funzione pubblica per mostrare una battuta",
+   "Testo lungo: andare a capo, adattare, scorrere"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "In una visual novel la finestra di dialogo è l'elemento con cui il giocatore interagisce per tutto il tempo. Nella lezione precedente hai definito l'architettura a sistemi indipendenti del gioco «Storie»: ora inizi a costruire il primo componente concreto della cartella `ui/`, cioè la finestra che riceve una battuta e la mostra a schermo con il nome del personaggio e un indicatore per avanzare."
+   },
+   {
+    "tipo": "testo",
+    "md": "Nei menu hai usato il nodo `Label`, che però presenta un limite importante: applica lo stesso stile e lo stesso colore all'intero blocco di testo. Per evidenziare un indizio in giallo, mostrare un sussurro in corsivo o dare enfasi a una parola in grassetto, Godot mette a disposizione `RichTextLabel` (etichetta di testo formattato). Questo nodo supporta il linguaggio **BBCode** (*Bulletin Board Code*), un sistema di etichette racchiuse tra parentesi quadre che racchiudono la porzione di testo da formattare:\n\n- `[b]testo[/b]` applica il grassetto (*bold*).\n- `[i]testo[/i]` applica il corsivo (*italics*).\n- `[color=yellow]testo[/color]` oppure `[color=#ffaa00]testo[/color]` colora le parole selezionate.\n\nI tag possono essere annidati l'uno dentro l'altro (per esempio `[b][color=red]Attento![/color][/b]`), purché vengano chiusi nell'ordine inverso rispetto a come sono stati aperti."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Affinché i tag vengano interpretati graficamente, la proprietà `bbcode_enabled` del nodo `RichTextLabel` deve essere impostata su `true`. Se resta disattivata, Godot mostrerà i tag come testo visibile, stampando a schermo i caratteri `[b]` e `[/b]` invece di rendere la parola in grassetto."
+   },
+   {
+    "tipo": "testo",
+    "md": "Una battuta può essere una sola parola o un intero paragrafo narrativo. `RichTextLabel` calcola automaticamente lo spazio disponibile e manda a capo le parole che superano la larghezza del nodo. Se il testo eccede anche l'altezza della finestra, la proprietà `scroll_active` (attiva per impostazione predefinita) fa comparire una barra di scorrimento verticale sul lato destro, evitando che le ultime righe finiscano fuori dal riquadro senza poter essere lette."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare la scena dialogue_box.tscn",
+    "passi": [
+     "Nel menu principale in alto a sinistra seleziona **Scene → New Scene**.",
+     "Nel pannello *Scene* premi **Other Node**, cerca **PanelContainer**, premi **Create** e rinomina la radice in `DialogueBox`.",
+     "Con `DialogueBox` selezionato, premi **+** e aggiungi come figlio un nodo **VBoxContainer**.",
+     "Con `VBoxContainer` selezionato, premi **+** e aggiungi un nodo **Label**; rinominalo in `SpeakerLabel`.",
+     "Sempre dentro a `VBoxContainer`, aggiungi un nodo **RichTextLabel** e rinominalo in `DialogueLabel`.",
+     "Aggiungi un ultimo nodo **Label** dentro a `VBoxContainer`, rinominalo in `ContinueIndicator` e nel pannello *Inspector* imposta la sua proprietà **Text** sul simbolo `▼`.",
+     "Seleziona `DialogueLabel`, vai nel pannello *Inspector* e spunta la casella **Bbcode Enabled**.",
+     "Salva la scena premendo **Ctrl+S** nella cartella `res://ui/` con il nome `dialogue_box.tscn`."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "La finestra di dialogo deve rispettare il principio dell'incapsulamento: i sistemi esterni (come il gestore della storia o l'interprete) non devono manipolare direttamente i nodi figli `SpeakerLabel` o `DialogueLabel`. La scena espone un'unica funzione pubblica, chiamata `show_line(speaker, text)`, che riceve i dati necessari, decide se mostrare o nascondere il nome di chi parla (utile quando a parlare è una voce narrante senza nome) e attiva l'indicatore finale."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends PanelContainer\n\n@onready var speaker_label: Label = $VBoxContainer/SpeakerLabel\n@onready var dialogue_label: RichTextLabel = $VBoxContainer/DialogueLabel\n@onready var continue_indicator: Label = $VBoxContainer/ContinueIndicator\n\nfunc _ready() -> void:\n\tcontinue_indicator.visible = false\n\nfunc show_line(speaker: String, text: String) -> void:\n\tif speaker.is_empty():\n\t\tspeaker_label.visible = false\n\telse:\n\t\tspeaker_label.visible = true\n\t\tspeaker_label.text = speaker\n\t\n\tdialogue_label.text = text\n\tcontinue_indicator.visible = true",
+    "spiegazione": "Le variabili `@onready` ottengono i riferimenti ai nodi figli al momento dell'ingresso nell'albero. In `_ready()`, `continue_indicator` viene nascosto perché la finestra non ha ancora un testo pronto. La funzione `show_line` verifica con `speaker.is_empty()` se il nome è vuoto: se non c'è un personaggio parlante nasconde `speaker_label`, altrimenti imposta il nome e lo rende visibile. Infine assegna il testo a `dialogue_label` (che convertirà al volo il BBCode) e accende la freccia di continuazione."
+   },
+   {
+    "tipo": "testo",
+    "md": "Assegnando una stringa direttamente alla proprietà `text` di `RichTextLabel`, Godot analizza il contenuto ed esegue il rendering dei tag formattati. Se invii la riga `\"Benvenuto in [b]Storie[/b]!\"`, la parola «Storie» verrà disegnata con il font in grassetto. Il resto del gioco non ha bisogno di conoscere l'organizzazione interna della finestra: chiama solo `show_line` con il testo formattato desiderato."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- `RichTextLabel` permette di applicare stili diversi all'interno dello stesso blocco di testo tramite i tag BBCode come `[b]`, `[i]` e `[color]`.\n- La proprietà `bbcode_enabled` deve essere attiva affinché i tag vengano interpretati graficamente anziché stampati come testo grezzo.\n- `RichTextLabel` va a capo automaticamente in base alla larghezza del contenitore e permette lo scorrimento verticale del testo lungo grazie a `scroll_active`.\n- Una finestra di dialogo incapsulata espone un'unica funzione pubblica `show_line(speaker, text)`, proteggendo i propri nodi interni e semplificando la comunicazione con il resto del motore."
+   }
+  ]
+ }
+}
