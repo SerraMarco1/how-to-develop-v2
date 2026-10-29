@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.7-flash",
- "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"La verifica controlla `FileAccess.file_exists(\\\"user://settings.json\\\")` subito dopo aver istanziato `settings.tscn` senza interagire con gli slider. Se lo studente implementa il salvataggio collegato al segnale `value_changed` degli `HSlider` (il comportamento standard insegnato nella lezione sui bus audio), all'istanziazione della scena il segnale non viene emesso e il file non viene creato, causando un fallimento ingiusto del test su una soluzione corretta.\",\n      \"correzione\": \"Nello script di verifica, prima di controllare l'esistenza di `user://settings.json`, modifica il valore di uno slider e attendi due fotogrammi in modo da attivare l'eventuale callback di salvataggio collegata a `value_changed`:\\n\\n```gdscript\\n\\t\\tvar sliders := find_all_by_class(settings_sc, \\\"HSlider\\\")\\n\\t\\tcheck(\\\"sliders_count\\\", sliders.size() >= 3, \\\"La scena impostazioni deve contenere almeno 3 HSlider per i volumi\\\")\\n\\t\\tif sliders.size() > 0:\\n\\t\\t\\t(sliders[0] as HSlider).value = 0.5\\n\\t\\t\\tawait wait_frames(2)\\n\\t\\tcheck(\\\"settings_file\\\", FileAccess.file_exists(\\\"user://settings.json\\\"), \\\"Le impostazioni devono essere salvate nel file user://settings.json\\\")\\n```\"\n    }\n  ]\n}",
- "ragionamento": 3162,
- "quando": "2026-10-29T07:29:42.816Z",
- "ruolo": "revisore"
-}

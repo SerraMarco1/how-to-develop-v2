@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-28T19:12:48.276Z",
+ "aggiornato": "2026-10-29T08:12:07.263Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -650,6 +650,15 @@
    "file": "lezioni/f05-asset-e-audio/progetto-rivesti-1.json",
    "sha256": "09b89c9517b51c8e2bed7d2614320e6032ea10bcac7664ace011441512a54942",
    "byte": 154874
+  },
+  {
+   "slug": "progetto-rivesti-2",
+   "numero": "5.10",
+   "titolo": "Progetto «Rivesti il tuo gioco» – tappa 2: dentro al gioco",
+   "versione": 1,
+   "file": "lezioni/f05-asset-e-audio/progetto-rivesti-2.json",
+   "sha256": "edd6c6516b6f1b6da16514fa580411a4226fb0f948a30b61b41596f91dd6bdad",
+   "byte": 174390
   }
  ],
  "documentazione": {
