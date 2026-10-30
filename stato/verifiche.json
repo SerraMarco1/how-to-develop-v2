@@ -386,5 +386,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "battute-come-dati": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
