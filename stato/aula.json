@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-30T10:01:07.868Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-30T10:01:16.389Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "scelte",
   "numero": "6.7",
   "titolo": "Scelte"
  },
- "messaggio": "Sta scrivendo la lezione 6.7 «Scelte».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.7 riprende da sola appena rispondono.",
+ "riprende": "2026-10-30T10:21:16.389Z"
 }
