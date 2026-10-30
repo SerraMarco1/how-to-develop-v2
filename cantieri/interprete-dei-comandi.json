@@ -143,70 +143,49 @@
    "grezzo": {
     "tipo": "autonomo",
     "genere": "estendi",
-    "titolo": "Aggiungi il comando speaker all'interprete",
-    "consegna": "Nel progetto separato `RunnerDialoghi`, un collega ha realizzato la classe `CommandRunner` (`command_runner.gd`) che esegue comandi su due etichette: `speaker_label` e `text_label`. Al momento il runner supporta solo due tipi di comando: `\"say\"` (che scrive il testo) e `\"wait\"` (che attende un timer).\n\nEstendi lo script `command_runner.gd` aggiungendo il supporto per il comando `\"speaker\"` senza modificare il funzionamento dei comandi già esistenti:\n1. Aggiungi il caso `\"speaker\"` all'interno del `match` di `execute_command`.\n2. Crea la funzione privata `_cmd_speaker(cmd: Dictionary) -> void`:\n   - Legge la chiave `\"name\"` dal dizionario (stringa vuota come default).\n   - Se `name` non è vuoto (`not speaker_name.is_empty()`), imposta `speaker_label.text = speaker_name` e imposta `speaker_label.visible = true`.\n   - Se `name` è vuoto, imposta `speaker_label.text = \"\"` e imposta `speaker_label.visible = false`.\n   - Il comando è immediato e non richiede alcuna attesa (`await`).",
+    "titolo": "L'interprete della storia e il comando di scuotimento",
+    "consegna": "Nel progetto «Storie» abbiamo tutti i componenti visivi (`DialogueBox`, `CharacterStage`, `BackgroundDisplay`), ma manca il motore che legge i comandi e coordina i sistemi.\n\n1. Crea lo script `res://story/story_interpreter.gd` con nome di classe `StoryInterpreter` (estende `Node`).\n   - Dichiara il segnale `signal story_finished`.\n   - Dichiara tre proprietà `@export` per collegare i sistemi:\n     - `@export var dialogue_box: PanelContainer`\n     - `@export var character_stage: CharacterStage`\n     - `@export var background_display: BackgroundDisplay`\n   - Dichiara una variabile `var characters_data: Dictionary = {}`.\n   - In `_ready()`, se `characters_data` è vuoto, assegna le due risorse dei personaggi esistenti:\n     - `characters_data[\"elena\"] = preload(\"res://story/elena.tres\")`\n     - `characters_data[\"marco\"] = preload(\"res://story/marco.tres\")`\n   - Scrivi la funzione `func run_story(commands: Array[Dictionary]) -> void:` che scorre i comandi con un ciclo `for`, chiama `await execute_command(command)` per ciascuno e alla fine emette il segnale `story_finished`.\n   - Scrivi la funzione `func execute_command(command: Dictionary) -> void:` che legge `command.get(\"type\", \"\")` e con un `match` gestisce:\n     - `\"line\"`: chiama `dialogue_box.show_line(speaker, text)` e fa `await dialogue_box.line_finished`.\n     - `\"background\"`: carica la texture indicata da `texture` (stringa) e la passa a `background_display.set_background(tex)`.\n     - `\"show\"`: recupera `character` e `position` (default `\"center\"`), trova i dati corrispondenti in `characters_data` e chiama `character_stage.add_character(char_id, data, pos)`.\n     - `\"hide\"`: recupera `character` e chiama `character_stage.remove_character(char_id)`.\n     - `\"expression\"`: recupera `character` ed `expression` (default `\"neutral\"`), ottiene il display con `character_stage.get_character(char_id)` e vi chiama `set_expression(expression)`.\n     - `\"wait\"`: recupera `duration` (default 1.0) e attende con `await get_tree().create_timer(duration).timeout`.\n     - `\"shake\"`: il nuovo comando da aggiungere! Recupera `duration` (default 0.3) e `strength` (default 10.0). Se `character_stage` è presente, salva la sua posizione iniziale `var orig_pos: Vector2 = character_stage.position` e crea un `Tween`: sposta la posizione a `orig_pos + Vector2(strength, 0.0)` in `duration * 0.25`, poi a `orig_pos - Vector2(strength, 0.0)` in `duration * 0.5`, e infine di nuovo a `orig_pos` in `duration * 0.25`. Attendi la fine dell'animazione con `await tween.finished`.\n2. Nella scena `res://story/story_screen.tscn`, sostituisci il nodo `StoryPlayer` con un nodo `Node` chiamato `StoryInterpreter`, collegagli lo script `res://story/story_interpreter.gd` e assegna nell'Inspector i percorsi per `dialogue_box`, `character_stage` e `background_display`.",
     "modalita": "progetto",
-    "dove": "a-parte",
-    "cartella": "runner-dialoghi",
+    "dove": "gioco",
     "passiGuida": [],
     "suggerimenti": [
-     "Nel blocco match di `execute_command`, aggiungi un nuovo ramo per il testo `\"speaker\"` che chiama la funzione privata `_cmd_speaker(cmd)`.",
-     "Ricorda di verificare che `speaker_label` non sia null prima di accedere alle sue proprietà `text` e `visible`."
+     "Ricorda la parola chiave `await` davanti a ogni funzione privata di comando che richiede tempo, come `_cmd_line`, `_cmd_wait` e `_cmd_shake`.",
+     "Nel comando `shake`, per interpolare la proprietà `position` di `character_stage` usa tre chiamate concatenate a `tween_property`: prima a destra, poi a sinistra, poi al centro.",
+     "In `story_screen.tscn`, elimina il nodo `StoryPlayer` e aggiungi un `Node` normale rinominato `StoryInterpreter`, quindi assegna lo script e collega le tre esportazioni ai nodi fratelli."
     ],
     "verifiche": [
      {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_interpreter.gd",
+      "descrizione": "Il file story_interpreter.gd esiste nella cartella story"
+     },
+     {
       "tipo": "nodo",
-      "scena": "res://main.tscn",
+      "scena": "res://story/story_screen.tscn",
       "tipoNodo": "Node",
-      "nome": "CommandRunner",
-      "descrizione": "Il nodo CommandRunner è presente nella scena principale"
+      "nome": "StoryInterpreter",
+      "descrizione": "La scena story_screen.tscn contiene il nodo StoryInterpreter"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_loaded\", main != null, \"La scena principale deve caricarsi\"):\n\t\treturn\n\t\n\tvar runner := find_by_name(main, \"CommandRunner\") as CommandRunner\n\tvar speaker_lbl := find_by_name(main, \"SpeakerLabel\") as Label\n\tvar text_lbl := find_by_name(main, \"TextLabel\") as Label\n\tif not check(\"nodes_found\", runner != null and speaker_lbl != null and text_lbl != null, \"I nodi CommandRunner, SpeakerLabel e TextLabel devono esistere\"):\n\t\treturn\n\t\n\tawait runner.execute_command({\"type\": \"say\", \"text\": \"Test iniziale\"})\n\tcheck(\"say_works\", text_lbl.text == \"Test iniziale\", \"Il comando say esistente deve continuare a impostare il testo\")\n\t\n\tawait runner.execute_command({\"type\": \"speaker\", \"name\": \"Marco\"})\n\tcheck(\"speaker_name\", speaker_lbl.text == \"Marco\", \"Il comando speaker deve impostare il nome sull'etichetta\")\n\tcheck(\"speaker_visible\", speaker_lbl.visible == true, \"Il comando speaker con un nome valido deve rendere visibile l'etichetta\")\n\t\n\tawait runner.execute_command({\"type\": \"speaker\", \"name\": \"\"})\n\tcheck(\"speaker_empty_text\", speaker_lbl.text == \"\", \"Il comando speaker con stringa vuota deve azzerare il testo\")\n\tcheck(\"speaker_hidden\", speaker_lbl.visible == false, \"Il comando speaker con stringa vuota deve nascondere l'etichetta\")\n\t\n\tvar finished := false\n\trunner.runner_finished.connect(func() -> void: finished = true)\n\trunner.run_commands([\n\t\t{\"type\": \"speaker\", \"name\": \"Elena\"},\n\t\t{\"type\": \"say\", \"text\": \"Ciao!\"},\n\t\t{\"type\": \"wait\", \"duration\": 0.05}\n\t])\n\tawait wait_seconds(0.15)\n\tcheck(\"sequence_finished\", finished, \"La sequenza completa con il nuovo comando deve terminare regolarmente\")",
-      "descrizione": "Il runner conserva il funzionamento di say e wait e gestisce correttamente il nuovo comando speaker"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar screen := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"screen\", screen != null, \"La scena story_screen.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar interpreter := screen.get_node_or_null(\"StoryInterpreter\") as StoryInterpreter\n\tif not check(\"interpreter_node\", interpreter != null, \"story_screen.tscn deve avere un nodo StoryInterpreter con lo script collegato\"):\n\t\treturn\n\t\n\tif not check(\"has_run_story\", has_function(interpreter, \"run_story\"), \"StoryInterpreter deve avere la funzione run_story\"):\n\t\treturn\n\t\n\tif not check(\"has_execute_cmd\", has_function(interpreter, \"execute_command\"), \"StoryInterpreter deve avere la funzione execute_command\"):\n\t\treturn\n\t\n\tvar stage := screen.get_node_or_null(\"CharacterStage\") as CharacterStage\n\tvar bg_display := screen.get_node_or_null(\"BackgroundDisplay\") as BackgroundDisplay\n\tvar dbox := screen.get_node_or_null(\"DialogueBox\") as PanelContainer\n\t\n\tvar story_finished_emitted := false\n\tinterpreter.story_finished.connect(func() -> void: story_finished_emitted = true)\n\t\n\tvar commands: Array[Dictionary] = [\n\t\t{\"type\": \"background\", \"texture\": \"res://assets/sprites/background.png\"},\n\t\t{\"type\": \"show\", \"character\": \"elena\", \"position\": \"left\"},\n\t\t{\"type\": \"expression\", \"character\": \"elena\", \"expression\": \"neutral\"},\n\t\t{\"type\": \"shake\", \"duration\": 0.1, \"strength\": 8.0},\n\t\t{\"type\": \"wait\", \"duration\": 0.05},\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Ciao!\"},\n\t\t{\"type\": \"hide\", \"character\": \"elena\"}\n\t]\n\t\n\tinterpreter.run_story(commands)\n\tawait wait_frames(5)\n\t\n\tcheck(\"bg_set\", bg_display != null and bg_display.current_background.texture != null, \"Il comando background deve impostare la texture nello sfondo\")\n\tcheck(\"char_added\", stage != null and stage.get_character(\"elena\") != null, \"Il comando show deve aggiungere il personaggio sul palco\")\n\t\n\tawait wait_seconds(0.25)\n\t\n\tcheck(\"stage_repositioned\", stage != null and absf(stage.position.x) < 0.1, \"Dopo lo shake il palco deve tornare alla posizione originale\")\n\tcheck(\"dialogue_showing\", dbox != null and dbox.is_showing(), \"Il comando line deve mostrare la battuta nel DialogueBox\")\n\t\n\tif dbox != null and dbox.is_typing():\n\t\tdbox.advance()\n\t\tawait wait_frames(2)\n\tif dbox != null:\n\t\tdbox.advance()\n\tawait wait_frames(5)\n\t\n\tcheck(\"char_hidden\", stage != null and stage.get_character(\"elena\") == null, \"Il comando hide deve rimuovere il personaggio dal palco\")\n\tcheck(\"finished_signal\", story_finished_emitted, \"Al termine della storia deve essere emesso il segnale story_finished\")",
+      "descrizione": "L'interprete esegue una sequenza completa di comandi rispettando ordine, effetti visivi e tremolio"
      }
     ],
     "previsioni": [],
     "daTrovare": [],
-    "partenza": {
-     "file": [
-      {
-       "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://command_runner.gd\" id=\"1_script\"]\n\n[node name=\"Main\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 200.0\noffset_bottom = 63.0\n\n[node name=\"TextLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 80.0\noffset_right = 500.0\noffset_bottom = 120.0\n\n[node name=\"CommandRunner\" type=\"Node\" parent=\".\" node_paths=PackedStringArray(\"speaker_label\", \"text_label\")]\nscript = ExtResource(\"1_script\")\nspeaker_label = NodePath(\"../SpeakerLabel\")\ntext_label = NodePath(\"../TextLabel\")\n"
-      },
-      {
-       "percorso": "command_runner.gd",
-       "contenuto": "class_name CommandRunner\nextends Node\n\nsignal runner_finished\n\n@export var speaker_label: Label\n@export var text_label: Label\n\n\nfunc run_commands(commands: Array) -> void:\n\tfor cmd in commands:\n\t\tawait execute_command(cmd)\n\trunner_finished.emit()\n\n\nfunc execute_command(cmd: Dictionary) -> void:\n\tvar cmd_type: String = cmd.get(\"type\", \"\")\n\tmatch cmd_type:\n\t\t\"say\":\n\t\t\t_cmd_say(cmd)\n\t\t\"wait\":\n\t\t\tawait _cmd_wait(cmd)\n\t\t_:\n\t\t\tpush_warning(\"Tipo non riconosciuto: %s\" % cmd_type)\n\n\nfunc _cmd_say(cmd: Dictionary) -> void:\n\tif text_label:\n\t\ttext_label.text = cmd.get(\"text\", \"\")\n\n\nfunc _cmd_wait(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 0.5))\n\tif duration > 0.0:\n\t\tawait get_tree().create_timer(duration).timeout\n"
-      }
-     ],
-     "progetto": {
-      "nome": "RunnerDialoghi",
-      "scenaPrincipale": "res://main.tscn",
-      "azioni": [],
-      "autoload": [],
-      "impostazioni": []
-     }
-    },
     "soluzione": {
      "file": [
       {
-       "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://command_runner.gd\" id=\"1_script\"]\n\n[node name=\"Main\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"SpeakerLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 40.0\noffset_right = 200.0\noffset_bottom = 63.0\n\n[node name=\"TextLabel\" type=\"Label\" parent=\".\"]\nlayout_mode = 0\noffset_left = 40.0\noffset_top = 80.0\noffset_right = 500.0\noffset_bottom = 120.0\n\n[node name=\"CommandRunner\" type=\"Node\" parent=\".\" node_paths=PackedStringArray(\"speaker_label\", \"text_label\")]\nscript = ExtResource(\"1_script\")\nspeaker_label = NodePath(\"../SpeakerLabel\")\ntext_label = NodePath(\"../TextLabel\")\n"
+       "percorso": "story/story_interpreter.gd",
+       "contenuto": "class_name StoryInterpreter\nextends Node\n\nsignal story_finished\n\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n\nvar characters_data: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tif characters_data.is_empty():\n\t\tcharacters_data[\"elena\"] = preload(\"res://story/elena.tres\")\n\t\tcharacters_data[\"marco\"] = preload(\"res://story/marco.tres\")\n\n\nfunc run_story(commands: Array[Dictionary]) -> void:\n\tfor command in commands:\n\t\tawait execute_command(command)\n\tstory_finished.emit()\n\n\nfunc execute_command(command: Dictionary) -> void:\n\tvar command_type: String = command.get(\"type\", \"\")\n\t\n\tmatch command_type:\n\t\t\"line\":\n\t\t\tawait _cmd_line(command)\n\t\t\"background\":\n\t\t\tawait _cmd_background(command)\n\t\t\"show\":\n\t\t\t_cmd_show(command)\n\t\t\"hide\":\n\t\t\t_cmd_hide(command)\n\t\t\"expression\":\n\t\t\t_cmd_expression(command)\n\t\t\"wait\":\n\t\t\tawait _cmd_wait(command)\n\t\t\"shake\":\n\t\t\tawait _cmd_shake(command)\n\t\t_:\n\t\t\tpush_warning(\"Comando sconosciuto: %s\" % command_type)\n\n\nfunc _cmd_line(cmd: Dictionary) -> void:\n\tvar speaker: String = cmd.get(\"speaker\", \"\")\n\tvar text: String = cmd.get(\"text\", \"\")\n\tif dialogue_box:\n\t\tdialogue_box.show_line(speaker, text)\n\t\tawait dialogue_box.line_finished\n\n\nfunc _cmd_background(cmd: Dictionary) -> void:\n\tvar texture_path: String = cmd.get(\"texture\", \"\")\n\tif not texture_path.is_empty():\n\t\tvar tex: Texture2D = load(texture_path) as Texture2D\n\t\tif tex and background_display:\n\t\t\tbackground_display.set_background(tex)\n\n\nfunc _cmd_show(cmd: Dictionary) -> void:\n\tvar char_id: String = cmd.get(\"character\", \"\")\n\tvar pos: String = cmd.get(\"position\", \"center\")\n\tvar data: CharacterData = characters_data.get(char_id, null)\n\tif data and character_stage:\n\t\tcharacter_stage.add_character(char_id, data, pos)\n\n\nfunc _cmd_hide(cmd: Dictionary) -> void:\n\tvar char_id: String = cmd.get(\"character\", \"\")\n\tif character_stage:\n\t\tcharacter_stage.remove_character(char_id)\n\n\nfunc _cmd_expression(cmd: Dictionary) -> void:\n\tvar char_id: String = cmd.get(\"character\", \"\")\n\tvar expression: String = cmd.get(\"expression\", \"neutral\")\n\tif character_stage:\n\t\tvar display: CharacterDisplay = character_stage.get_character(char_id)\n\t\tif display:\n\t\t\tdisplay.set_expression(expression)\n\n\nfunc _cmd_wait(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 1.0))\n\tawait get_tree().create_timer(duration).timeout\n\n\nfunc _cmd_shake(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 0.3))\n\tvar strength: float = float(cmd.get(\"strength\", 10.0))\n\tif character_stage:\n\t\tvar orig_pos: Vector2 = character_stage.position\n\t\tvar tween: Tween = create_tween()\n\t\ttween.tween_property(character_stage, \"position\", orig_pos + Vector2(strength, 0.0), duration * 0.25)\n\t\ttween.tween_property(character_stage, \"position\", orig_pos - Vector2(strength, 0.0), duration * 0.5)\n\t\ttween.tween_property(character_stage, \"position\", orig_pos, duration * 0.25)\n\t\tawait tween.finished\n"
       },
       {
-       "percorso": "command_runner.gd",
-       "contenuto": "class_name CommandRunner\nextends Node\n\nsignal runner_finished\n\n@export var speaker_label: Label\n@export var text_label: Label\n\n\nfunc run_commands(commands: Array) -> void:\n\tfor cmd in commands:\n\t\tawait execute_command(cmd)\n\trunner_finished.emit()\n\n\nfunc execute_command(cmd: Dictionary) -> void:\n\tvar cmd_type: String = cmd.get(\"type\", \"\")\n\tmatch cmd_type:\n\t\t\"say\":\n\t\t\t_cmd_say(cmd)\n\t\t\"wait\":\n\t\t\tawait _cmd_wait(cmd)\n\t\t\"speaker\":\n\t\t\t_cmd_speaker(cmd)\n\t\t_:\n\t\t\tpush_warning(\"Tipo non riconosciuto: %s\" % cmd_type)\n\n\nfunc _cmd_say(cmd: Dictionary) -> void:\n\tif text_label:\n\t\ttext_label.text = cmd.get(\"text\", \"\")\n\n\nfunc _cmd_wait(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 0.5))\n\tif duration > 0.0:\n\t\tawait get_tree().create_timer(duration).timeout\n\n\nfunc _cmd_speaker(cmd: Dictionary) -> void:\n\tif not speaker_label:\n\t\treturn\n\tvar speaker_name: String = cmd.get(\"name\", \"\")\n\tif not speaker_name.is_empty():\n\t\tspeaker_label.text = speaker_name\n\t\tspeaker_label.visible = true\n\telse:\n\t\tspeaker_label.text = \"\"\n\t\tspeaker_label.visible = false\n"
+       "percorso": "story/story_screen.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://story/background_display.tscn\" id=\"1_bg\"]\n[ext_resource type=\"PackedScene\" path=\"res://story/character_stage.tscn\" id=\"2_stage\"]\n[ext_resource type=\"PackedScene\" path=\"res://ui/dialogue_box.tscn\" id=\"3_ui\"]\n[ext_resource type=\"Script\" path=\"res://story/story_interpreter.gd\" id=\"4_interpreter\"]\n\n[node name=\"StoryScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"BackgroundDisplay\" parent=\".\" instance=ExtResource(\"1_bg\")]\nlayout_mode = 1\n\n[node name=\"CharacterStage\" parent=\".\" instance=ExtResource(\"2_stage\")]\nlayout_mode = 1\n\n[node name=\"DialogueBox\" parent=\".\" instance=ExtResource(\"3_ui\")]\nlayout_mode = 1\nanchors_preset = 12\nanchor_top = 1.0\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_top = -160.0\ngrow_horizontal = 2\ngrow_vertical = 0\n\n[node name=\"StoryInterpreter\" type=\"Node\" parent=\".\" node_paths=PackedStringArray(\"dialogue_box\", \"character_stage\", \"background_display\")]\nscript = ExtResource(\"4_interpreter\")\ndialogue_box = NodePath(\"../DialogueBox\")\ncharacter_stage = NodePath(\"../CharacterStage\")\nbackground_display = NodePath(\"../BackgroundDisplay\")\n"
       }
      ],
-     "progetto": {
-      "nome": "RunnerDialoghi",
-      "scenaPrincipale": "res://main.tscn",
-      "azioni": [],
-      "autoload": [],
-      "impostazioni": []
-     },
-     "spiegazione": "Estendere un interprete strutturato con `match` è immediato: basta inserire la nuova parola chiave `\"speaker\"` tra i casi gestiti e creare la funzione privata associata. In questo modo il codice per `\"say\"` e `\"wait\"` non viene modificato né rischia di rompersi.",
+     "spiegazione": "`StoryInterpreter` raccoglie tutti i sistemi del gioco e fa da punto centrale per l'esecuzione della narrazione. Ogni comando è un dizionario con la chiave `type`; leggendola nel blocco `match`, l'interprete delega l'azione al sistema appropriato (`DialogueBox` per le battute, `CharacterStage` per attori ed espressioni, `BackgroundDisplay` per lo sfondo) e attende con `await` ogni operazione che richiede tempo. Il nuovo comando `shake` anima la posizione del palco tramite un `Tween` e attende la fine prima di cedere il controllo al comando successivo, senza toccare nessuno degli altri comandi esistenti.",
      "cambiati": [],
      "rimossi": []
     }
@@ -224,90 +203,38 @@
    "grezzo": {
     "tipo": "autonomo",
     "genere": "collauda",
-    "titolo": "Collauda il comando di attesa",
-    "consegna": "Nel progetto di collaudo `CollaudoInterprete`, devi scrivere una serie di verifiche per accertare che un interprete esegua correttamente il comando asincrono `\"wait\"`.\n\nCompleta lo script `test_wait_command.gd` definendo la classe `TestWaitCommand` con la seguente funzione:\n`func test_wait(runner: Node) -> bool`\n\nLa funzione riceve un nodo interprete che espone il metodo `execute_command(cmd: Dictionary) -> void` e deve verificare due requisiti fondamentali:\n1. Con il comando `{\"type\": \"wait\", \"duration\": 0.1}`, il tempo trascorso durante la chiamata ad `await runner.execute_command(...)` (misurato con `Time.get_ticks_msec()`) deve essere compreso tra 80 e 250 millisecondi.\n2. Con il comando `{\"type\": \"wait\", \"duration\": 0.25}`, il tempo trascorso durante la chiamata ad `await runner.execute_command(...)` deve essere compreso tra 200 e 450 millisecondi.\n\nSe entrambi i controlli sono soddisfatti, la funzione restituisce `true`. Se anche uno solo fallisce (ad esempio perché l'interprete non aspetta affatto o usa un tempo fisso), la funzione deve restituire `false`.\n\nLa piattaforma eseguirà il tuo collaudo su tre versioni dell'interprete: quella corretta (`CorrectWaitRunner`), una che dimentica l'attesa (`BuggyInstantRunner`) e una che attende sempre una durata fissa fittizia (`BuggyFixedRunner`). I tuoi controlli devono restituire `true` SOLO per la versione corretta.",
+    "titolo": "Collauda il comando di scuotimento",
+    "consegna": "Ora che l'interprete supporta il comando `shake`, scrivi uno script di collaudo che verifichi in automatico se un interprete esegue correttamente questo comando.\n\n1. Crea il file `res://story/test_shake.gd` con classe `class_name TestShake` che estende `RefCounted`.\n2. Al suo interno scrivi la funzione:\n   `func test_shake_command(interpreter: StoryInterpreter) -> bool:`\n3. La funzione deve:\n   - Verificare che `interpreter` e il suo `character_stage` non siano nulli (altrimenti restituire `false`).\n   - Salvare la posizione di partenza `var initial_pos: Vector2 = interpreter.character_stage.position` e l'orario d'inizio `var start_time: int = Time.get_ticks_msec()`.\n   - Eseguire il comando con `await interpreter.execute_command({\"type\": \"shake\", \"duration\": 0.2, \"strength\": 10.0})`.\n   - Calcolare i secondi trascorsi: `var elapsed_sec: float = float(Time.get_ticks_msec() - start_time) / 1000.0`.\n   - Restituire `false` se sono passati meno di 0.15 secondi (significa che l'interprete non ha atteso il `Tween` prima di uscire).\n   - Restituire `false` se la posizione del palco alla fine è diversa da `initial_pos` (significa che non ha ripristinato le coordinate originarie).\n   - Restituire `true` se entrambi i controlli sono superati.",
     "modalita": "progetto",
-    "dove": "a-parte",
-    "cartella": "collaudo-interprete",
+    "dove": "gioco",
     "passiGuida": [],
     "suggerimenti": [
-     "Salva il tempo in millisecondi prima della chiamata con `var t_start := Time.get_ticks_msec()` ed esegui `await runner.execute_command(...)`.",
-     "Subito dopo calcola `var elapsed := Time.get_ticks_msec() - t_start`. Se il valore è inferiore al limite minimo o superiore al massimo, fai subito `return false`."
+     "Usa `Time.get_ticks_msec()` prima e dopo la chiamata ad `await interpreter.execute_command(...)` per misurare il tempo effettivo impiegato dal comando.",
+     "Se il comando dimentica la parola chiave `await`, ritornerà nello stesso frame in cui è stato avviato, impiegando una frazione di millisecondo.",
+     "Controlla sia il tempo trascorso sia l'uguaglianza `interpreter.character_stage.position == initial_pos` per garantire che il palco non resti spostato."
     ],
     "verifiche": [
      {
       "tipo": "file_esiste",
-      "percorso": "res://test_wait_command.gd",
-      "descrizione": "Il file res://test_wait_command.gd esiste nel progetto"
-     },
-     {
-      "tipo": "testo_in_file",
-      "percorso": "res://test_wait_command.gd",
-      "regex": "get_ticks_msec",
-      "descrizione": "Lo script misura il tempo trascorso usando get_ticks_msec"
+      "percorso": "res://story/test_shake.gd",
+      "descrizione": "Il file test_shake.gd esiste nella cartella story"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar tester = TestWaitCommand.new()\n\tif not check(\"tester_created\", tester != null, \"La classe TestWaitCommand deve potersi istanziare\"):\n\t\treturn\n\t\n\tvar correct_runner := CorrectWaitRunner.new()\n\tadd_child(correct_runner)\n\tvar buggy_instant := BuggyInstantRunner.new()\n\tadd_child(buggy_instant)\n\tvar buggy_fixed := BuggyFixedRunner.new()\n\tadd_child(buggy_fixed)\n\t\n\tvar res_correct: bool = await tester.test_wait(correct_runner)\n\tcheck(\"promote_correct\", res_correct == true, \"Il collaudo deve promuovere l'interprete corretto (restituendo true)\")\n\t\n\tvar res_instant: bool = await tester.test_wait(buggy_instant)\n\tcheck(\"reject_instant\", res_instant == false, \"Il collaudo deve bocciare l'interprete che non aspetta (restituendo false)\")\n\t\n\tvar res_fixed: bool = await tester.test_wait(buggy_fixed)\n\tcheck(\"reject_fixed\", res_fixed == false, \"Il collaudo deve bocciare l'interprete che aspetta una durata fissa anziché quella richiesta (restituendo false)\")",
-      "descrizione": "I controlli scritti in TestWaitCommand promuovono l'interprete corretto e bocciano entrambe le versioni difettose"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nclass BuggyNoAwait extends \"res://story/story_interpreter.gd\":\n\tfunc execute_command(cmd: Dictionary) -> void:\n\t\tif cmd.get(\"type\", \"\") == \"shake\":\n\t\t\tif character_stage:\n\t\t\t\tvar orig_pos: Vector2 = character_stage.position\n\t\t\t\tvar tween: Tween = create_tween()\n\t\t\t\ttween.tween_property(character_stage, \"position\", orig_pos, 0.2)\n\t\telse:\n\t\t\tawait super.execute_command(cmd)\n\nclass BuggyNoReset extends \"res://story/story_interpreter.gd\":\n\tfunc execute_command(cmd: Dictionary) -> void:\n\t\tif cmd.get(\"type\", \"\") == \"shake\":\n\t\t\tvar duration: float = float(cmd.get(\"duration\", 0.3))\n\t\t\tif character_stage:\n\t\t\t\tcharacter_stage.position += Vector2(15.0, 0.0)\n\t\t\t\tawait get_tree().create_timer(duration).timeout\n\t\telse:\n\t\t\tawait super.execute_command(cmd)\n\n\nfunc _run_tests() -> void:\n\tvar tester = instantiate_script(\"res://story/test_shake.gd\")\n\tif not check(\"tester_instantiated\", tester != null, \"Lo script res://story/test_shake.gd deve esistere e compilare senza errori\"):\n\t\treturn\n\t\n\tif not check(\"has_test_function\", has_function(tester, \"test_shake_command\"), \"test_shake.gd deve contenere la funzione test_shake_command\"):\n\t\treturn\n\t\n\tvar screen := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"screen\", screen != null, \"story_screen.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar stage := screen.get_node_or_null(\"CharacterStage\") as CharacterStage\n\tvar correct_interpreter := screen.get_node_or_null(\"StoryInterpreter\") as StoryInterpreter\n\tif not check(\"correct_interp\", correct_interpreter != null and stage != null, \"StoryInterpreter e CharacterStage devono essere presenti\"):\n\t\treturn\n\t\n\tstage.position = Vector2(0.0, 0.0)\n\tvar res_correct = await tester.test_shake_command(correct_interpreter)\n\tif not check(\"promotes_correct\", res_correct == true, \"I tuoi controlli devono restituire true quando l'interprete esegue il comando shake correttamente\"):\n\t\treturn\n\t\n\tvar buggy_1 := BuggyNoAwait.new()\n\tbuggy_1.character_stage = stage\n\tscreen.add_child(buggy_1)\n\tstage.position = Vector2(0.0, 0.0)\n\tvar res_buggy_1 = await tester.test_shake_command(buggy_1)\n\tbuggy_1.queue_free()\n\tif not check(\"rejects_no_await\", res_buggy_1 == false, \"I tuoi controlli devono restituire false se l'interprete non attende la fine dell'animazione (manca await)\"):\n\t\treturn\n\t\n\tvar buggy_2 := BuggyNoReset.new()\n\tbuggy_2.character_stage = stage\n\tscreen.add_child(buggy_2)\n\tstage.position = Vector2(0.0, 0.0)\n\tvar res_buggy_2 = await tester.test_shake_command(buggy_2)\n\tbuggy_2.queue_free()\n\tcheck(\"rejects_no_reset\", res_buggy_2 == false, \"I tuoi controlli devono restituire false se l'interprete lascia il palco spostato senza ripristinare la posizione iniziale\")",
+      "descrizione": "I tuoi controlli promuovono l'interprete corretto e bocciano le versioni con await mancante o posizione non ripristinata"
      }
     ],
     "previsioni": [],
     "daTrovare": [],
-    "partenza": {
-     "file": [
-      {
-       "percorso": "correct_wait_runner.gd",
-       "contenuto": "class_name CorrectWaitRunner\nextends Node\n\n\nfunc execute_command(cmd: Dictionary) -> void:\n\tif cmd.get(\"type\", \"\") == \"wait\":\n\t\tvar duration: float = float(cmd.get(\"duration\", 1.0))\n\t\tif duration > 0.0:\n\t\t\tawait get_tree().create_timer(duration).timeout\n"
-      },
-      {
-       "percorso": "buggy_instant_runner.gd",
-       "contenuto": "class_name BuggyInstantRunner\nextends Node\n\n\nfunc execute_command(_cmd: Dictionary) -> void:\n\t# Errore: ritorna subito senza attendere il timer\n\tpass\n"
-      },
-      {
-       "percorso": "buggy_fixed_runner.gd",
-       "contenuto": "class_name BuggyFixedRunner\nextends Node\n\n\nfunc execute_command(cmd: Dictionary) -> void:\n\tif cmd.get(\"type\", \"\") == \"wait\":\n\t\t# Errore: attende sempre 1.5 secondi ignorando duration\n\t\tawait get_tree().create_timer(1.5).timeout\n"
-      },
-      {
-       "percorso": "test_wait_command.gd",
-       "contenuto": "class_name TestWaitCommand\nextends RefCounted\n\n\nfunc test_wait(_runner: Node) -> bool:\n\treturn false\n"
-      }
-     ],
-     "progetto": {
-      "nome": "CollaudoInterprete",
-      "scenaPrincipale": "",
-      "azioni": [],
-      "autoload": [],
-      "impostazioni": []
-     }
-    },
     "soluzione": {
      "file": [
       {
-       "percorso": "correct_wait_runner.gd",
-       "contenuto": "class_name CorrectWaitRunner\nextends Node\n\n\nfunc execute_command(cmd: Dictionary) -> void:\n\tif cmd.get(\"type\", \"\") == \"wait\":\n\t\tvar duration: float = float(cmd.get(\"duration\", 1.0))\n\t\tif duration > 0.0:\n\t\t\tawait get_tree().create_timer(duration).timeout\n"
-      },
-      {
-       "percorso": "buggy_instant_runner.gd",
-       "contenuto": "class_name BuggyInstantRunner\nextends Node\n\n\nfunc execute_command(_cmd: Dictionary) -> void:\n\t# Errore: ritorna subito senza attendere il timer\n\tpass\n"
-      },
-      {
-       "percorso": "buggy_fixed_runner.gd",
-       "contenuto": "class_name BuggyFixedRunner\nextends Node\n\n\nfunc execute_command(cmd: Dictionary) -> void:\n\tif cmd.get(\"type\", \"\") == \"wait\":\n\t\t# Errore: attende sempre 1.5 secondi ignorando duration\n\t\tawait get_tree().create_timer(1.5).timeout\n"
-      },
-      {
-       "percorso": "test_wait_command.gd",
-       "contenuto": "class_name TestWaitCommand\nextends RefCounted\n\n\nfunc test_wait(runner: Node) -> bool:\n\tvar start_1 := Time.get_ticks_msec()\n\tawait runner.execute_command({\"type\": \"wait\", \"duration\": 0.1})\n\tvar elapsed_1 := Time.get_ticks_msec() - start_1\n\tif elapsed_1 < 80 or elapsed_1 > 250:\n\t\treturn false\n\t\n\tvar start_2 := Time.get_ticks_msec()\n\tawait runner.execute_command({\"type\": \"wait\", \"duration\": 0.25})\n\tvar elapsed_2 := Time.get_ticks_msec() - start_2\n\tif elapsed_2 < 200 or elapsed_2 > 450:\n\t\treturn false\n\t\n\treturn true\n"
+       "percorso": "story/test_shake.gd",
+       "contenuto": "class_name TestShake\nextends RefCounted\n\n\nfunc test_shake_command(interpreter: StoryInterpreter) -> bool:\n\tif not interpreter or not interpreter.character_stage:\n\t\treturn false\n\t\n\tvar initial_pos: Vector2 = interpreter.character_stage.position\n\tvar start_time: int = Time.get_ticks_msec()\n\t\n\tawait interpreter.execute_command({\n\t\t\"type\": \"shake\",\n\t\t\"duration\": 0.2,\n\t\t\"strength\": 10.0\n\t})\n\t\n\tvar elapsed_sec: float = float(Time.get_ticks_msec() - start_time) / 1000.0\n\t\n\tif elapsed_sec < 0.15:\n\t\treturn false\n\t\n\tif interpreter.character_stage.position != initial_pos:\n\t\treturn false\n\t\n\treturn true\n"
       }
      ],
-     "progetto": {
-      "nome": "CollaudoInterprete",
-      "scenaPrincipale": "",
-      "azioni": [],
-      "autoload": [],
-      "impostazioni": []
-     },
-     "spiegazione": "Per testare un comando asincrono basato sul tempo, misuriamo l'intervallo reale trascorso con `Time.get_ticks_msec()`. Con due test a durate distinte smascheriamo sia chi non attende affatto (impiega 0 ms), sia chi ha inserito una pausa fissa fittizia.",
+     "spiegazione": "Scrivere test automatizzati per comandi asincroni richiede di controllare due aspetti essenziali: la sincronizzazione temporale e gli effetti di stato. Misurando i millisecondi con `Time.get_ticks_msec()` prima e dopo la chiamata ad `await interpreter.execute_command(...)`, il test scopre immediatamente se l'interprete ha dimenticato `await`. Controllando infine `interpreter.character_stage.position == initial_pos`, il test verifica che il nodo non sia rimasto accidentalmente traslato a causa di un'animazione interrotta o incompleta.",
      "cambiati": [],
      "rimossi": []
     }
@@ -325,31 +252,24 @@
    "grezzo": {
     "tipo": "autonomo",
     "genere": "collauda",
-    "titolo": "Aggiungi il comando shake e collaudalo",
-    "consegna": "Nel gioco «Storie», aggiungi da solo un nuovo comando all'interprete: il tremolio dello schermo (`\"shake\"`), e scrivi una suite di controlli automatici che ne accerti il corretto funzionamento.\n\n1. In `story/story_interpreter.gd`, estendi `execute_command` gestendo il comando `\"shake\"`:\n   - Legge `duration` (float, default `0.3`) e `strength` (float, default `10.0`).\n   - Se `character_stage` è collegato:\n     - Salva la posizione originaria del palco: `var orig_pos := character_stage.position`.\n     - Crea un Tween con `create_tween()`.\n     - Sposta `character_stage.position` in 4 tappe successive (ciascuna di durata `duration * 0.25`):\n       1. `orig_pos + Vector2(strength, 0.0)`\n       2. `orig_pos + Vector2(-strength, 0.0)`\n       3. `orig_pos + Vector2(strength * 0.5, 0.0)`\n       4. `orig_pos` (ritorno esatto alla posizione iniziale).\n     - Attende la conclusione del tween con `await tween.finished`.\n\n2. Crea lo script `story/test_shake.gd` con nome di classe `TestShake` che estende `RefCounted`.\n   Implementa la funzione:\n   `func test_shake_command(interpreter: StoryInterpreter) -> bool`\n   che deve:\n   - Registrare la posizione di partenza `var start_pos: Vector2 = interpreter.character_stage.position` e il tempo iniziale con `Time.get_ticks_msec()`.\n   - Eseguire `await interpreter.execute_command({\"type\": \"shake\", \"duration\": 0.2, \"strength\": 8.0})`.\n   - Calcolare il tempo trascorso: deve essere compreso tra 150 e 450 millisecondi.\n   - Verificare che al termine la posizione del palco sia ritornata esattamente a quella iniziale (`distance_to(start_pos) < 0.5`).\n   - Restituire `true` solo se entrambi i controlli hanno successo, altrimenti `false`.\n\nI file `story/buggy_shake_instant.gd` e `story/buggy_shake_offset.gd` contengono due versioni difettose del comando: il tuo test deve promuovere la versione giusta e bocciare entrambe quelle difettose.",
+    "titolo": "Test finale: collauda il comando di attesa",
+    "consegna": "Nella visual novel il comando `wait` è fondamentale per dare ritmo drammatico alle scene prima che appaia un testo o dopo un evento importante. Se l'interprete salta l'attesa o usa una durata fissa ignorando i dati del comando, la narrazione si rovina.\n\nScrivi tu i controlli automatici che provano l'affidabilità del comando `wait`:\n\n1. Crea il file `res://story/test_wait.gd` con classe `class_name TestWait` che estende `RefCounted`.\n2. Al suo interno scrivi la funzione:\n   `func test_wait_command(interpreter: StoryInterpreter) -> bool:`\n3. La funzione deve:\n   - Verificare che `interpreter` non sia nullo (se è nullo, restituisce `false`).\n   - Salvare l'orario iniziale con `var start_time: int = Time.get_ticks_msec()`.\n   - Eseguire il comando con `await interpreter.execute_command({\"type\": \"wait\", \"duration\": 0.2})`.\n   - Calcolare i secondi trascorsi: `var elapsed_sec: float = float(Time.get_ticks_msec() - start_time) / 1000.0`.\n   - Restituire `false` se sono passati meno di 0.15 secondi (l'interprete ha saltato l'attesa).\n   - Restituire `false` se sono passati più di 0.45 secondi (l'interprete ha bloccato il gioco o usato un ritardo fisso non conforme).\n   - Restituire `true` se la durata rientra nell'intervallo corretto.",
     "modalita": "progetto",
     "dove": "gioco",
-    "cartella": "storie",
     "passiGuida": [],
     "suggerimenti": [
-     "In StoryInterpreter usa `await tween.finished` per sospendere l'interprete fino all'ultimo fotogramma dell'animazione."
+     "Misura i millisecondi trascorsi convertendoli in secondi dividendo per 1000.0: con una richiesta di 0.2 secondi, una versione corretta impiegherà poco più di 0.2s."
     ],
     "verifiche": [
      {
       "tipo": "file_esiste",
-      "percorso": "res://story/test_shake.gd",
-      "descrizione": "Il file res://story/test_shake.gd esiste nel progetto"
-     },
-     {
-      "tipo": "testo_in_file",
-      "percorso": "res://story/story_interpreter.gd",
-      "regex": "\"shake\":",
-      "descrizione": "Lo script story_interpreter.gd gestisce il comando shake"
+      "percorso": "res://story/test_wait.gd",
+      "descrizione": "Il file test_wait.gd esiste nella cartella story"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar screen := await instantiate_main_scene()\n\tif not check(\"screen_loaded\", screen != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar interpreter := find_by_name(screen, \"StoryInterpreter\") as StoryInterpreter\n\tif not check(\"interpreter_found\", interpreter != null, \"Nella scena deve esserci il nodo StoryInterpreter\"):\n\t\treturn\n\t\n\tvar dialogue_box := interpreter.dialogue_box\n\tvar stage := interpreter.character_stage\n\tvar bg := interpreter.background_display\n\t\n\tvar story_done := false\n\tinterpreter.story_finished.connect(func() -> void: story_done = true)\n\t\n\tvar full_story: Array = [\n\t\t{\"type\": \"background\", \"texture\": \"res://assets/sprites/background.png\"},\n\t\t{\"type\": \"show\", \"character\": \"elena\", \"position\": \"center\"},\n\t\t{\"type\": \"expression\", \"character\": \"elena\", \"expression\": \"neutral\"},\n\t\t{\"type\": \"shake\", \"duration\": 0.1, \"strength\": 5.0},\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Un terremoto!\"},\n\t\t{\"type\": \"wait\", \"duration\": 0.05},\n\t\t{\"type\": \"hide\", \"character\": \"elena\"}\n\t]\n\t\n\tinterpreter.run_story(full_story)\n\tawait wait_frames(5)\n\t\n\tvar current_bg := bg.get_node_or_null(\"CurrentBackground\") as TextureRect\n\tcheck(\"story_bg\", current_bg != null and current_bg.texture != null, \"Il comando background deve impostare l'immagine di sfondo\")\n\tcheck(\"story_show\", stage.get_character(\"elena\") != null, \"Il comando show deve mostrare Elena sul palco\")\n\t\n\tawait wait_seconds(0.2)\n\tvar label := dialogue_box.get_node_or_null(\"VBoxContainer/DialogueLabel\") as RichTextLabel\n\tcheck(\"story_line\", label != null and label.text == \"Un terremoto!\", \"La battuta deve comparire dopo il tremolio\")\n\t\n\tdialogue_box.advance()\n\tawait wait_frames(2)\n\tdialogue_box.advance()\n\t\n\tawait wait_seconds(0.2)\n\tcheck(\"story_hide\", stage.get_character(\"elena\") == null, \"Il comando hide deve rimuovere il personaggio dal palco\")\n\tcheck(\"story_finished\", story_done, \"Tutti i comandi della storia devono essere eseguiti fino al segnale story_finished\")\n\t\n\tvar tester = TestShake.new()\n\tif not check(\"tester_instantiated\", tester != null, \"La classe TestShake deve esistere e potersi istanziare\"):\n\t\treturn\n\t\n\tvar res_correct: bool = await tester.test_shake_command(interpreter)\n\tcheck(\"promote_correct\", res_correct == true, \"Il tuo test deve promuovere l'interprete corretto (restituendo true)\")\n\t\n\tvar instant_interp := BuggyShakeInstant.new()\n\tinstant_interp.character_stage = stage\n\tadd_child(instant_interp)\n\tvar res_instant: bool = await tester.test_shake_command(instant_interp)\n\tcheck(\"reject_instant\", res_instant == false, \"Il tuo test deve bocciare una versione che non attende il termine del tremolio (restituendo false)\")\n\t\n\tvar offset_interp := BuggyShakeOffset.new()\n\toffset_interp.character_stage = stage\n\tadd_child(offset_interp)\n\tvar res_offset: bool = await tester.test_shake_command(offset_interp)\n\tcheck(\"reject_offset\", res_offset == false, \"Il tuo test deve bocciare una versione che non ripristina la posizione originale del palco (restituendo false)\")",
-      "descrizione": "L'interprete esegue correttamente la storia completa con shake e i controlli promuovono solo la versione corretta"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nclass BuggyNoWait extends \"res://story/story_interpreter.gd\":\n\tfunc execute_command(cmd: Dictionary) -> void:\n\t\tif cmd.get(\"type\", \"\") == \"wait\":\n\t\t\treturn\n\t\tawait super.execute_command(cmd)\n\nclass BuggyWrongDuration extends \"res://story/story_interpreter.gd\":\n\tfunc execute_command(cmd: Dictionary) -> void:\n\t\tif cmd.get(\"type\", \"\") == \"wait\":\n\t\t\tawait get_tree().create_timer(1.0).timeout\n\t\t\treturn\n\t\tawait super.execute_command(cmd)\n\n\nfunc _run_tests() -> void:\n\tvar tester = instantiate_script(\"res://story/test_wait.gd\")\n\tif not check(\"tester_instantiated\", tester != null, \"Lo script res://story/test_wait.gd deve esistere e compilare senza errori\"):\n\t\treturn\n\t\n\tif not check(\"has_test_function\", has_function(tester, \"test_wait_command\"), \"test_wait.gd deve contenere la funzione test_wait_command\"):\n\t\treturn\n\t\n\tvar screen := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"screen\", screen != null, \"story_screen.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar correct_interpreter := screen.get_node_or_null(\"StoryInterpreter\") as StoryInterpreter\n\tif not check(\"correct_interp\", correct_interpreter != null, \"StoryInterpreter deve essere presente nella scena story_screen.tscn\"):\n\t\treturn\n\t\n\tvar res_correct = await tester.test_wait_command(correct_interpreter)\n\tif not check(\"promotes_correct\", res_correct == true, \"I tuoi controlli devono restituire true quando l'interprete esegue il comando wait correttamente\"):\n\t\treturn\n\t\n\tvar buggy_1 := BuggyNoWait.new()\n\tscreen.add_child(buggy_1)\n\tvar res_buggy_1 = await tester.test_wait_command(buggy_1)\n\tbuggy_1.queue_free()\n\tif not check(\"rejects_no_wait\", res_buggy_1 == false, \"I tuoi controlli devono restituire false se l'interprete non attende lo scadere del timer (manca await)\"):\n\t\treturn\n\t\n\tvar buggy_2 := BuggyWrongDuration.new()\n\tscreen.add_child(buggy_2)\n\tvar res_buggy_2 = await tester.test_wait_command(buggy_2)\n\tbuggy_2.queue_free()\n\tcheck(\"rejects_wrong_duration\", res_buggy_2 == false, \"I tuoi controlli devono restituire false se l'interprete ignora il parametro duration e attende troppo a lungo\")",
+      "descrizione": "I tuoi controlli promuovono l'interprete corretto e bocciano le versioni che saltano l'attesa o ignorano la durata"
      }
     ],
     "previsioni": [],
@@ -357,30 +277,11 @@
     "soluzione": {
      "file": [
       {
-       "percorso": "story/buggy_shake_instant.gd",
-       "contenuto": "class_name BuggyShakeInstant\nextends StoryInterpreter\n\n\nfunc execute_command(command: Dictionary) -> void:\n\tif command.get(\"type\", \"\") == \"shake\":\n\t\t# Difetto: ritorna subito senza attendere la fine dell'effetto\n\t\treturn\n\tawait super.execute_command(command)\n"
-      },
-      {
-       "percorso": "story/buggy_shake_offset.gd",
-       "contenuto": "class_name BuggyShakeOffset\nextends StoryInterpreter\n\n\nfunc execute_command(command: Dictionary) -> void:\n\tif command.get(\"type\", \"\") == \"shake\":\n\t\tvar duration: float = float(command.get(\"duration\", 0.3))\n\t\tvar strength: float = float(command.get(\"strength\", 10.0))\n\t\tif character_stage:\n\t\t\tcharacter_stage.position += Vector2(strength, 0.0)\n\t\tif duration > 0.0:\n\t\t\tawait get_tree().create_timer(duration).timeout\n\t\t# Difetto: non ripristina la posizione originale del palco\n\t\treturn\n\tawait super.execute_command(command)\n"
-      },
-      {
-       "percorso": "story/story_interpreter.gd",
-       "contenuto": "class_name StoryInterpreter\nextends Node\n\nsignal story_finished\n\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n\nvar characters_data: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tcharacters_data[\"elena\"] = preload(\"res://story/elena.tres\")\n\tcharacters_data[\"marco\"] = preload(\"res://story/marco.tres\")\n\n\nfunc run_story(commands: Array) -> void:\n\tfor command in commands:\n\t\tawait execute_command(command)\n\tstory_finished.emit()\n\n\nfunc execute_command(command: Dictionary) -> void:\n\tvar command_type: String = command.get(\"type\", \"\")\n\t\n\tmatch command_type:\n\t\t\"line\":\n\t\t\tawait _cmd_line(command)\n\t\t\"background\":\n\t\t\t_cmd_background(command)\n\t\t\"show\":\n\t\t\t_cmd_show(command)\n\t\t\"hide\":\n\t\t\t_cmd_hide(command)\n\t\t\"expression\":\n\t\t\t_cmd_expression(command)\n\t\t\"wait\":\n\t\t\tawait _cmd_wait(command)\n\t\t\"shake\":\n\t\t\tawait _cmd_shake(command)\n\t\t_:\n\t\t\tpush_warning(\"Comando sconosciuto: %s\" % command_type)\n\n\nfunc _cmd_line(cmd: Dictionary) -> void:\n\tvar speaker: String = cmd.get(\"speaker\", \"\")\n\tvar text: String = cmd.get(\"text\", \"\")\n\tif character_stage and not speaker.is_empty():\n\t\tcharacter_stage.focus_character(speaker.to_lower())\n\tif dialogue_box:\n\t\tdialogue_box.show_line(speaker, text)\n\t\tawait dialogue_box.line_finished\n\n\nfunc _cmd_background(cmd: Dictionary) -> void:\n\tvar texture_path: String = cmd.get(\"texture\", \"\")\n\tif not texture_path.is_empty():\n\t\tvar tex: Texture2D = load(texture_path) as Texture2D\n\t\tif tex and background_display:\n\t\t\tbackground_display.set_background(tex)\n\n\nfunc _cmd_show(cmd: Dictionary) -> void:\n\tvar char_id: String = cmd.get(\"character\", \"\")\n\tvar pos: String = cmd.get(\"position\", \"center\")\n\tvar data: CharacterData = characters_data.get(char_id, null)\n\tif data and character_stage:\n\t\tcharacter_stage.add_character(char_id, data, pos)\n\n\nfunc _cmd_hide(cmd: Dictionary) -> void:\n\tvar char_id: String = cmd.get(\"character\", \"\")\n\tif character_stage:\n\t\tcharacter_stage.remove_character(char_id)\n\n\nfunc _cmd_expression(cmd: Dictionary) -> void:\n\tvar char_id: String = cmd.get(\"character\", \"\")\n\tvar expression: String = cmd.get(\"expression\", \"neutral\")\n\tif character_stage:\n\t\tvar display: CharacterDisplay = character_stage.get_character(char_id)\n\t\tif display:\n\t\t\tdisplay.set_expression(expression)\n\n\nfunc _cmd_wait(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 1.0))\n\tif duration > 0.0:\n\t\tawait get_tree().create_timer(duration).timeout\n\n\nfunc _cmd_shake(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 0.3))\n\tvar strength: float = float(cmd.get(\"strength\", 10.0))\n\tif character_stage:\n\t\tvar orig_pos := character_stage.position\n\t\tvar tween := create_tween()\n\t\ttween.tween_property(character_stage, \"position\", orig_pos + Vector2(strength, 0.0), duration * 0.25)\n\t\ttween.tween_property(character_stage, \"position\", orig_pos + Vector2(-strength, 0.0), duration * 0.25)\n\t\ttween.tween_property(character_stage, \"position\", orig_pos + Vector2(strength * 0.5, 0.0), duration * 0.25)\n\t\ttween.tween_property(character_stage, \"position\", orig_pos, duration * 0.25)\n\t\tawait tween.finished\n"
-      },
-      {
-       "percorso": "story/test_shake.gd",
-       "contenuto": "class_name TestShake\nextends RefCounted\n\n\nfunc test_shake_command(interpreter: StoryInterpreter) -> bool:\n\tif not interpreter or not interpreter.character_stage:\n\t\treturn false\n\t\n\tvar start_pos: Vector2 = interpreter.character_stage.position\n\tvar start_time := Time.get_ticks_msec()\n\t\n\tawait interpreter.execute_command({\"type\": \"shake\", \"duration\": 0.2, \"strength\": 8.0})\n\t\n\tvar elapsed := Time.get_ticks_msec() - start_time\n\tif elapsed < 150 or elapsed > 450:\n\t\treturn false\n\t\n\tif interpreter.character_stage.position.distance_to(start_pos) > 0.5:\n\t\treturn false\n\t\n\treturn true\n"
+       "percorso": "story/test_wait.gd",
+       "contenuto": "class_name TestWait\nextends RefCounted\n\n\nfunc test_wait_command(interpreter: StoryInterpreter) -> bool:\n\tif not interpreter:\n\t\treturn false\n\t\n\tvar start_time: int = Time.get_ticks_msec()\n\t\n\tawait interpreter.execute_command({\n\t\t\"type\": \"wait\",\n\t\t\"duration\": 0.2\n\t})\n\t\n\tvar elapsed_sec: float = float(Time.get_ticks_msec() - start_time) / 1000.0\n\t\n\tif elapsed_sec < 0.15:\n\t\treturn false\n\t\n\tif elapsed_sec > 0.45:\n\t\treturn false\n\t\n\treturn true\n"
       }
      ],
-     "progetto": {
-      "nome": "",
-      "scenaPrincipale": "",
-      "azioni": [],
-      "autoload": [],
-      "impostazioni": []
-     },
-     "spiegazione": "L'aggiunta del comando `\"shake\"` dimostra il potere dell'architettura a interprete: per aggiungere un effetto scenico non serve modificare i comandi esistenti. Creando un Tween a quattro oscillazioni e attendendo `await tween.finished`, il palco trema e torna esattamente al suo posto originale prima che l'interprete passi al comando narrativo successivo. La classe `TestShake` certifica sia che l'attesa asincrona rispetti i tempi previsti, sia che lo spostamento venga azzerato al termine.",
+     "spiegazione": "Il comando `wait` dell'interprete crea un timer asincrono con `get_tree().create_timer(duration).timeout`. Collaudare questo comportamento significa verificare sia che l'interprete non proceda immediatamente (cosa che accadrebbe omettendo `await`), sia che non utilizzi un valore fisso arbitrario ignorando il parametro `duration`. Verificando che il tempo trascorso sia compreso tra 0.15s e 0.45s a fronte di una richiesta di 0.2s, il test promuove solo le implementazioni corrette e respinge con sicurezza sia quelle immediate sia quelle con ritardi fissi errati.",
      "cambiati": [],
      "rimossi": []
     }
@@ -467,5 +368,5 @@
   "es3",
   "test"
  ],
- "restoDaRiscrivere": "es1"
+ "praticaRifatta": true
 }
