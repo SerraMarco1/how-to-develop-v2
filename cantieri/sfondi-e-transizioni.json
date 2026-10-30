@@ -782,7 +782,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Expected indented block after \"if\" block. (res://story/story_player.gd:38 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 38: `if transition_type == \"black\":`"
+    "NON SPIEGATO: la soluzione usa `has_node()`, `exists()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
