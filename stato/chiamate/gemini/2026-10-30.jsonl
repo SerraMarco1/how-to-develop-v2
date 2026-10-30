@@ -2,3 +2,4 @@
 {"quando":1793343731792,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"battute-come-dati","ok":true,"contata":true,"durataMs":4927,"tokenInput":4705,"tokenOutput":47,"ragionamento":1471}
 {"quando":1793343738498,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"personaggi","ok":true,"contata":true,"durataMs":114382,"tokenInput":12985,"tokenOutput":193,"ragionamento":3059}
 {"quando":1793343854380,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"personaggi","ok":true,"contata":true,"durataMs":166267,"tokenInput":14256,"tokenOutput":6222,"ragionamento":12197}
+{"quando":1793344026762,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"personaggi","ok":true,"contata":true,"durataMs":6299,"tokenInput":2857,"tokenOutput":811,"ragionamento":1341}
