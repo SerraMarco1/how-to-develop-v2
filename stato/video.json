@@ -1055,5 +1055,14 @@
    },
    "motivo": "La classe StoryPlayer è un nodo logico che non viene inserito nella scena principale e pertanto non mostra alcun risultato visivo all'avvio."
   }
+ },
+ "personaggi": {
+  "es1": {
+   "impronta": "8ae370c852872c2f1a542034a2b0fff9ab13acf9887da63f533f4e19adb05453",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Le risorse e i componenti creati non sono ancora inseriti in una scena attiva e non compaiono a schermo in questo esercizio."
+  }
  }
 }

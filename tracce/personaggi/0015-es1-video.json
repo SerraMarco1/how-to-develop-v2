@@ -1,0 +1,16 @@
+{
+ "n": 15,
+ "quando": "2026-10-30T07:42:18.667Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Creare la risorsa CharacterData e il display del personaggio» non si vede sullo schermo: Le risorse e i componenti creati non sono ancora inseriti in una scena attiva e non compaiono a schermo in questo esercizio.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 5181,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (6450 → 45 token)"
+ ]
+}
