@@ -949,7 +949,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Sfondi e transizioni: dissolvenze e chiusure a nero",
@@ -1025,5 +1026,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test richiede di modificare lo script dell'interprete `story/story_player.gd` (con le funzioni `advance()`, `_show_current_line()` e la lettura di `line_data`), di aggiornare il file `story/intro.json` e di istanziare `res://story/character_stage.tscn`. Nessuno di questi elementi è stato creato nelle lezioni precedenti: l'interprete della storia («Un interprete: far eseguire la storia») è esplicitamente un argomento che il corso tratterà DOPO. Chiedere di modificare file non ancora esistenti blocca lo studente ed esce dai confini della lezione.",
+    "correzione": "Riscrivere la consegna e le verifiche del test focalizzandole unicamente sugli obiettivi della lezione (organizzazione degli strati visivi e attesa del completamento delle transizioni con `await`). Invece di appoggiarsi a `StoryPlayer`, `CharacterStage` e `intro.json`, comporre la scena visiva con gli elementi noti (ad esempio lo sfondo `BackgroundDisplay` e l'interfaccia `DialogueBox`) e collaudare l'attesa asincrona (`await background_display.crossfade_to(...)` e `await background_display.transition_through_black(...)`) verificando che le azioni successive non partano prima del termine della dissolvenza.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
