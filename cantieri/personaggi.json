@@ -616,7 +616,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Personaggi: figure, espressioni, entrate e uscite",
@@ -693,5 +694,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test richiede di modificare `story/story_player.gd` e testa metodi come `load_story()`, `start_story()`, `jump_to_line()` e `_show_current_line()`, ma il lettore/interprete della storia appartiene all'argomento successivo ('Un interprete: far eseguire la storia'). Lo studente non ha ancora questo file né ha mai implementato quel sistema nelle lezioni precedenti.",
+    "correzione": "Riscrivere il test per verificare direttamente i requisiti della lezione sul sistema dei personaggi (ad esempio verificare la gestione completa di entrate, uscite con fade_out, cambi di espressione e scorrimento del focus direttamente su CharacterStage e CharacterDisplay) senza richiedere né importare StoryPlayer.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
