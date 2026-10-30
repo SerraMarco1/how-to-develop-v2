@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-30T09:41:16.064Z",
+ "aggiornato": "2026-10-30T10:24:06.484Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -718,10 +718,10 @@
    "slug": "interprete-dei-comandi",
    "numero": "6.6",
    "titolo": "Un interprete: far eseguire la storia",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f06-visual-novel/interprete-dei-comandi.json",
-   "sha256": "0a8ed1c08abcd7b18be2c0c4f0e5bb3e1c66d8c2adf128c829fc95d539b75413",
-   "byte": 160987
+   "sha256": "a2a53754f25e7d12113ac0044abe02bf433550ceeffa2c87cfd7004f0d96d8da",
+   "byte": 161071
   }
  ],
  "documentazione": {

@@ -1,0 +1,31 @@
+{
+ "n": 40,
+ "quando": "2026-10-30T10:24:00.291Z",
+ "pezzo": "es3",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 3: correzione della lezione pubblicata, 2 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e consegna e soluzione non cambiano.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 69634,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://story/test_shake.gd",
+    "descrizione": "Il file test_shake.gd esiste nella cartella story"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\nclass BuggyNoAwait extends \"res://story/story_interpreter.gd\":\n\tfunc execute_command(cmd: Dictionary) -> void:\n\t\tif cmd.get(\"type\", \"\") == \"shake\":\n\t\t\tif character_stage:\n\t\t\t\tvar orig_pos: Vector2 = character_stage.position\n\t\t\t\tvar tween: Tween = create_tween()\n\t\t\t\ttween.tween_property(character_stage, \"position\", orig_pos, 0.2)\n\t\telse:\n\t\t\tawait super.execute_command(cmd)\n\nclass BuggyNoReset extends \"res://story/story_interpreter.gd\":\n\tfunc execute_command(cmd: Dictionary) -> void:\n\t\tif cmd.get(\"type\", \"\") == \"shake\":\n\t\t\tvar duration: float = float(cmd.get(\"duration\", 0.3))\n\t\t\tif character_stage:\n\t\t\t\tcharacter_stage.position += Vector2(15.0, 0.0)\n\t\t\t\tawait get_tree().create_timer(duration).timeout\n\t\telse:\n\t\t\tawait super.execute_command(cmd)\n\n\nfunc _run_tests() -> void:\n\tvar tester = await instantiate_script(\"res://story/test_shake.gd\")\n\tif not check(\"tester_instantiated\", tester != null, \"Lo script res://story/test_shake.gd deve esistere e compilare senza errori\"):\n\t\treturn\n\t\n\tif not check(\"has_test_function\", has_function(tester, \"test_shake_command\"), \"test_shake.gd deve contenere la funzione test_shake_command\"):\n\t\treturn\n\t\n\tvar screen := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"screen\", screen != null, \"story_screen.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar stage := screen.get_node_or_null(\"CharacterStage\") as CharacterStage\n\tvar correct_interpreter := screen.get_node_or_null(\"StoryInterpreter\") as StoryInterpreter\n\tif not check(\"correct_interp\", correct_interpreter != null and stage != null, \"StoryInterpreter e CharacterStage devono essere presenti\"):\n\t\treturn\n\t\n\tawait wait_frames(2)\n\tstage.position = Vector2(200.0, 200.0)\n\tvar res_correct = await tester.test_shake_command(correct_interpreter)\n\tif not check(\"promotes_correct\", res_correct == true, \"I tuoi controlli devono restituire true quando l'interprete esegue il comando shake correttamente\"):\n\t\treturn\n\t\n\tvar buggy_1 := BuggyNoAwait.new()\n\tbuggy_1.character_stage = stage\n\tscreen.add_child(buggy_1)\n\tawait wait_frames(2)\n\tstage.position = Vector2(200.0, 200.0)\n\tvar res_buggy_1 = await tester.test_shake_command(buggy_1)\n\tbuggy_1.queue_free()\n\tif not check(\"rejects_no_await\", res_buggy_1 == false, \"I tuoi controlli devono restituire false se l'interprete non attende la fine dell'animazione (manca await)\"):\n\t\treturn\n\t\n\tvar buggy_2 := BuggyNoReset.new()\n\tbuggy_2.character_stage = stage\n\tscreen.add_child(buggy_2)\n\tawait wait_frames(2)\n\tstage.position = Vector2(200.0, 200.0)\n\tvar res_buggy_2 = await tester.test_shake_command(buggy_2)\n\tbuggy_2.queue_free()\n\tcheck(\"rejects_no_reset\", res_buggy_2 == false, \"I tuoi controlli devono restituire false se l'interprete lascia il palco spostato senza ripristinare la posizione iniziale\")\n",
+    "descrizione": "I tuoi controlli promuovono l'interprete corretto e bocciano le versioni con await mancante o posizione non ripristinata"
+   }
+  ],
+  "consegna": "Ora che l'interprete supporta il comando `shake`, scrivi uno script di collaudo che verifichi in automatico se un interprete esegue correttamente questo comando.\n\n1. Crea il file `res://story/test_shake.gd` con classe `class_name TestShake` che estende `RefCounted`.\n2. Al suo interno scrivi la funzione:\n   `func test_shake_command(interpreter: StoryInterpreter) -> bool:`\n3. La funzione deve:\n   - Verificare che `interpreter` e il suo `character_stage` non siano nulli (altrimenti restituire `false`).\n   - Salvare la posizione di partenza `var initial_pos: Vector2 = interpreter.character_stage.position` e l'orario d'inizio `var start_time: int = Time.get_ticks_msec()`.\n   - Eseguire il comando con `await interpreter.execute_command({\"type\": \"shake\", \"duration\": 0.2, \"strength\": 10.0})`.\n   - Calcolare i secondi trascorsi: `var elapsed_sec: float = float(Time.get_ticks_msec() - start_time) / 1000.0`.\n   - Restituire `false` se sono passati meno di 0.15 secondi (significa che l'interprete non ha atteso il `Tween` prima di uscire).\n   - Restituire `false` se la posizione del palco alla fine è diversa da `initial_pos` (significa che non ha ripristinato le coordinate originarie).\n   - Restituire `true` se entrambi i controlli sono superati."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 55 s (18769 → 11384 token)"
+ ]
+}
