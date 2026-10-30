@@ -391,5 +391,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "personaggi": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "sfondi-e-transizioni": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
