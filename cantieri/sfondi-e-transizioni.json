@@ -84,7 +84,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/background_display.gd deve caricarsi senza errori: Parse Error: Unexpected identifier \"crossfade_background\" in class body. (res://story/background_display.gd:33 in GDScript::reload)\nFailed to load script \"res://story/background_display.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/background_display.gd, riga 33: `crossfade_background.texture = new_texture`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
