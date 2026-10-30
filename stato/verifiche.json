@@ -403,13 +403,13 @@
   "tentativi": {}
  },
  "interprete-dei-comandi": {
-  "versione": -1,
+  "versione": 2,
   "fragili": [
    "test"
   ],
   "tentativi": {
    "es3": 1,
-   "test": 2
+   "test": 3
   }
  }
 }
