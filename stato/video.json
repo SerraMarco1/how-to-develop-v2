@@ -1064,5 +1064,14 @@
    "regole": 2,
    "motivo": "Le risorse e i componenti creati non sono ancora inseriti in una scena attiva e non compaiono a schermo in questo esercizio."
   }
+ },
+ "sfondi-e-transizioni": {
+  "es1": {
+   "impronta": "41f550c63ca71ef7e199a8a2d943344b364d86eafadbc1f24ee98c6d7e137344",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il nodo BackgroundDisplay non mostra alcun elemento visibile all'avvio perché le texture dei TextureRect sono vuote e l'overlay nero ha trasparenza iniziale azzerata."
+  }
  }
 }

@@ -1,0 +1,16 @@
+{
+ "n": 21,
+ "quando": "2026-10-30T07:42:25.517Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Creare il display per gli sfondi e la dissolvenza incrociata» non si vede sullo schermo: Il nodo BackgroundDisplay non mostra alcun elemento visibile all'avvio perché le texture dei TextureRect sono vuote e l'overlay nero ha trasparenza iniziale azzerata.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 6844,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (8298 → 54 token)"
+ ]
+}
