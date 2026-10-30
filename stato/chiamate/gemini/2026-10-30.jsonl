@@ -7,3 +7,4 @@
 {"quando":1793344160880,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"sfondi-e-transizioni","ok":true,"contata":true,"durataMs":301034,"tokenInput":17782,"tokenOutput":11812,"ragionamento":35384}
 {"quando":1793344466786,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"sfondi-e-transizioni","ok":true,"contata":true,"durataMs":38819,"tokenInput":16755,"tokenOutput":9433,"ragionamento":10697}
 {"quando":1793344523516,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"sfondi-e-transizioni","ok":true,"contata":true,"durataMs":18517,"tokenInput":16156,"tokenOutput":8709,"ragionamento":951}
+{"quando":1793344559139,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"sfondi-e-transizioni","ok":true,"contata":true,"durataMs":25248,"tokenInput":17770,"tokenOutput":10316,"ragionamento":2385}
