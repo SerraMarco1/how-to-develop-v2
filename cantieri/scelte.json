@@ -37,7 +37,7 @@
       "scena": "res://ui/choice_menu.tscn",
       "tipoNodo": "Control",
       "nome": "ChoiceMenu",
-      "descrizione": "La radice di ui/choice_menu.tscn e un Control chiamato ChoiceMenu"
+      "descrizione": "La radice di ui/choice_menu.tscn è un Control chiamato ChoiceMenu"
      },
      {
       "tipo": "nodo",
@@ -49,7 +49,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar menu := await instantiate_scene(\"res://ui/choice_menu.tscn\")\n\tif not check(\"menu\", menu != null, \"La scena ui/choice_menu.tscn deve essere istanziabile\"):\n\t\treturn\n\tcheck(\"visible_ready\", menu.visible == false, \"All'avvio il menu delle opzioni deve essere nascosto\")\n\t\n\tvar received_target := \"\"\n\tmenu.connect(\"choice_selected\", func(target: String) -> void:\n\t\treceived_target = target\n\t)\n\t\n\tvar test_options := [\n\t\t{\"text\": \"Opzione A\", \"target\": \"label_a\"},\n\t\t{\"text\": \"Opzione B\", \"target\": \"label_b\"}\n\t]\n\t\n\tcall_if_exists(menu, \"show_choices\", [test_options])\n\tawait wait_frames(2)\n\t\n\tcheck(\"visible_show\", menu.visible == true, \"Dopo show_choices il menu deve essere visibile\")\n\t\n\tvar container := find_by_name(menu, \"VBoxContainer\") as VBoxContainer\n\tif not check(\"container\", container != null, \"Il menu deve contenere VBoxContainer\"):\n\t\treturn\n\t\n\tvar buttons := container.get_children()\n\tcheck(\"button_count\", buttons.size() == 2, \"Il container deve contenere 2 pulsanti (trovati %d)\" % buttons.size())\n\t\n\tif buttons.size() >= 1 and buttons[0] is Button:\n\t\tvar btn0 := buttons[0] as Button\n\t\tcheck(\"btn0_text\", btn0.text == \"Opzione A\", \"Il primo pulsante deve avere testo 'Opzione A'\")\n\t\tclick_button(btn0)\n\t\tawait wait_frames(2)\n\t\tcheck(\"signal_emitted\", received_target == \"label_a\", \"Facendo clic sul primo pulsante deve essere emetto choice_selected('label_a')\")\n\t\tcheck(\"cleared_after_click\", menu.visible == false, \"Dopo la selezione il menu deve nascondersi\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar menu := await instantiate_scene(\"res://ui/choice_menu.tscn\")\n\tif not check(\"menu\", menu != null, \"La scena ui/choice_menu.tscn deve essere istanziabile\"):\n\t\treturn\n\tcheck(\"visible_ready\", menu.visible == false, \"All'avvio il menu delle opzioni deve essere nascosto\")\n\t\n\tvar received_target := \"\"\n\tmenu.connect(\"choice_selected\", func(target: String) -> void:\n\t\treceived_target = target\n\t)\n\t\n\tvar test_options := [\n\t\t{\"text\": \"Opzione A\", \"target\": \"label_a\"},\n\t\t{\"text\": \"Opzione B\", \"target\": \"label_b\"}\n\t]\n\t\n\tcall_if_exists(menu, \"show_choices\", [test_options])\n\tawait wait_frames(2)\n\t\n\tcheck(\"visible_show\", menu.visible == true, \"Dopo show_choices il menu deve essere visibile\")\n\t\n\tvar container := find_by_name(menu, \"VBoxContainer\") as VBoxContainer\n\tif not check(\"container\", container != null, \"Il menu deve contenere VBoxContainer\"):\n\t\treturn\n\t\n\tvar buttons := container.get_children()\n\tcheck(\"button_count\", buttons.size() == 2, \"Il container deve contenere 2 pulsanti (trovati %d)\" % buttons.size())\n\t\n\tif buttons.size() >= 1 and buttons[0] is Button:\n\t\tvar btn0 := buttons[0] as Button\n\t\tcheck(\"btn0_text\", btn0.text == \"Opzione A\", \"Il primo pulsante deve avere testo 'Opzione A'\")\n\t\tclick_button(btn0)\n\t\tawait wait_frames(2)\n\t\tcheck(\"signal_emitted\", received_target == \"label_a\", \"Facendo clic sul primo pulsante deve essere emesso choice_selected('label_a') (ricevuto '%s')\" % received_target)\n\t\tcheck(\"cleared_after_click\", menu.visible == false, \"Dopo la selezione il menu deve nascondersi\")",
       "descrizione": "ChoiceMenu crea dinamicamente i pulsanti ed emette choice_selected al clic"
      }
     ],
@@ -155,7 +155,7 @@
       },
       {
        "percorso": "ui/choice_menu.gd",
-       "contenuto": "class_name ChoiceMenu\nextends Control\n\nsignal choice_selected(target_label: String)\n\n@onready var container: VBoxContainer = $VBoxContainer\n\n\nfunc _ready() -> void:\n\tclear_choices()\n\n\nfunc show_choices(options: Array) -> void:\n\tclear_choices()\n\tvisible = true\n\t\n\tfor option_data in options:\n\t\tif option_data is Dictionary:\n\t\t\tvar button := Button.new()\n\t\t\tbutton.text = String(option_data.get(\"text\", \"\"))\n\t\t\tvar target := String(option_data.get(\"target\", \"\"))\n\t\t\t\n\t\t\tbutton.pressed.connect(func() -> void:\n\t\t\t\t_on_option_pressed(target)\n\t\t\t)\n\t\t\tcontainer.add_child(button)\n\n\nfunc clear_choices() -> void:\n\tfor child in container.get_children():\n\t\tchild.queue_free()\n\tvisible = false\n\n\nfunc _on_option_pressed(target_label: String) -> void:\n\tclear_choices()\n\tchoice_selected.emit(target_label)\n"
+       "contenuto": "class_name ChoiceMenu\nextends Control\n\nsignal choice_selected(target_label: String)\n\n@onready var container: VBoxContainer = $VBoxContainer\n\n\nfunc _ready() -> void:\n\tclear_choices()\n\n\nfunc show_choices(options: Array) -> void:\n\tclear_choices()\n\tvisible = true\n\t\n\tfor option_data in options:\n\t\tif option_data is Dictionary:\n\t\t\tvar button := Button.new()\n\t\t\tbutton.text = String(option_data.get(\"text\", \"\"))\n\t\t\tvar target := String(option_data.get(\"target\", \"\"))\n\t\t\tbutton.pressed.connect(_on_option_pressed.bind(target))\n\t\t\tcontainer.add_child(button)\n\n\nfunc clear_choices() -> void:\n\tfor child in container.get_children():\n\t\tchild.queue_free()\n\tvisible = false\n\n\nfunc _on_option_pressed(target_label: String) -> void:\n\tchoice_selected.emit(target_label)\n\tclear_choices()\n"
       }
      ],
      "progetto": {
@@ -173,20 +173,24 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Abbiamo creato il componente `ChoiceMenu` con un `VBoxContainer` al centro dello schermo. Quando viene chiamata `show_choices(options)`, il menu svuota i pulsanti precedenti, si rende visibile ed istanzia un nuovo `Button` per ogni opzione contenuta nei dati. Cliccando un pulsante viene emesso il segnale `choice_selected` con il nome dell'etichetta di destinazione, ripulendo e nascondendo l'interfaccia.",
-     "cambiati": [],
+     "spiegazione": "Abbiamo creato il componente `ChoiceMenu` con un `VBoxContainer` al centro dello schermo. Quando viene chiamata `show_choices(options)`, il menu svuota i pulsanti precedenti, si rende visibile ed istanzia un nuovo `Button` per ogni opzione contenuta nei dati. Collegando il segnale `pressed` con `.bind(target)`, al clic del pulsante viene emesso il segnale `choice_selected` trasmettendo l'etichetta corretta prima di nascondere il menu.",
+     "cambiati": [
+      "ui/choice_menu.tscn",
+      "ui/choice_menu.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "guidato",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Facendo clic sul primo pulsante deve essere emetto choice_selected('label_a')\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   },
   "es2": {
