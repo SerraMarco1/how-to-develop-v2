@@ -706,6 +706,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }

@@ -1,0 +1,16 @@
+{
+ "n": 12,
+ "quando": "2026-10-30T07:07:06.690Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "titolo": "Test: correzione del revisore scartata",
+ "spiegazione": "La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n- i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://ui/dialogue_box.gd deve caricarsi senza errori: Parse Error: Function \"complete_line()\" not found in base self. (res://ui/dialogue_box.gd:57 in GDScript::reload)\nFailed to load script \"res://ui/dialogue_box.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  ui/dialogue_box.gd, riga 57: `complete_line()`",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://ui/dialogue_box.gd deve caricarsi senza errori: Parse Error: Function \"complete_line()\" not found in base self. (res://ui/dialogue_box.gd:57 in GDScript::reload)\nFailed to load script \"res://ui/dialogue_box.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  ui/dialogue_box.gd, riga 57: `complete_line()`"
+  ]
+ },
+ "chiamate": []
+}
