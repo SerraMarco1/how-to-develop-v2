@@ -1,6 +1,226 @@
 {
  "creato": "2026-10-30T07:07:19.122Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Creare il display per gli sfondi e la dissolvenza incrociata",
+    "consegna": "In questo esercizio costruisci il componente visivo dedicato agli sfondi del gioco: `BackgroundDisplay`.\n\nNel gioco «Storie», Elena si risveglia in un luogo sconosciuto. Per mostrare gli ambienti servono due immagini sovrapposte capaci di sfumare l'una nell'altra (*crossfade*), oltre a un velo nero per oscurare la scena (*fade to black*).\n\n1. Crea la scena `res://story/background_display.tscn` con un nodo radice di tipo `Control` chiamato `BackgroundDisplay` a tutto schermo (**Full Rect**).\n2. Dentro `BackgroundDisplay` aggiungi tre nodi figli, tutti a tutto schermo (**Full Rect**):\n   - Un `TextureRect` chiamato `CurrentBackground`, con `expand_mode` impostato su `Ignore Size` (valore `1`) e `stretch_mode` su `Keep Aspect Covered` (valore `6`).\n   - Un secondo `TextureRect` chiamato `CrossfadeBackground`, con le stesse identiche impostazioni di ridimensionamento.\n   - Un `ColorRect` chiamato `BlackOverlay`, con colore nero puro (`Color(0, 0, 0, 1)`).\n3. Collega a `BackgroundDisplay` lo script `res://story/background_display.gd` con nome di classe `class_name BackgroundDisplay`.\n4. Nello script dichiara i riferimenti `@onready` ai tre nodi figli e le variabili per i due Tween (`_crossfade_tween` e `_fade_tween`). In `_ready()`, imposta la trasparenza iniziale di `CrossfadeBackground` e `BlackOverlay` a zero (`modulate.a = 0.0`).\n5. Implementa le funzioni pubbliche:\n   - `set_background(texture: Texture2D) -> void`: imposta subito l'immagine su `CurrentBackground` e azzera `CrossfadeBackground`.\n   - `crossfade_to(new_texture: Texture2D, duration: float = 0.5) -> void`: sfuma la nuova immagine su `CrossfadeBackground` portando `modulate:a` a 1.0, attende la fine dell'interpolazione con `await`, poi trasferisce l'immagine su `CurrentBackground` e resetta `CrossfadeBackground`.\n   - `fade_to_black(duration: float = 0.5) -> void`: anima `modulate:a` di `BlackOverlay` fino a 1.0 e ne attende il completamento.\n   - `fade_from_black(duration: float = 0.5) -> void`: anima `modulate:a` di `BlackOverlay` fino a 0.0 e ne attende il completamento.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello *Scene*, premi **+** per creare una nuova scena, seleziona **User Interface** (Control), rinominalo in `BackgroundDisplay` e imposta l'ancoraggio su **Full Rect**.",
+     "Seleziona `BackgroundDisplay`, premi **+** e aggiungi un `TextureRect`. Chiamalo `CurrentBackground`. Nell'Inspector imposta le ancore su **Full Rect**, **Expand Mode** su `Ignore Size` (1) e **Stretch Mode** su `Keep Aspect Covered` (6).",
+     "Aggiungi un secondo `TextureRect` come figlio di `BackgroundDisplay`, chiamalo `CrossfadeBackground` e applicagli le stesse impostazioni di ancore e ridimensionamento.",
+     "Aggiungi un nodo `ColorRect` come terzo figlio di `BackgroundDisplay`, chiamalo `BlackOverlay`, impostalo su **Full Rect** e assicurati che il colore sia nero (`Color(0, 0, 0, 1)`).",
+     "Seleziona `BackgroundDisplay`, premi l'icona dello script per creare `res://story/background_display.gd` con `class_name BackgroundDisplay` e salva la scena premendo Ctrl+S come `res://story/background_display.tscn`.",
+     "Nello script dichiara le variabili `_fade_tween: Tween`, `_crossfade_tween: Tween` e le tre variabili `@onready` per i nodi figli; in `_ready()` azzera l'alfa con `crossfade_background.modulate.a = 0.0` e `black_overlay.modulate.a = 0.0`.",
+     "Scrivi le funzioni `set_background`, `crossfade_to`, `fade_to_black` e `fade_from_black` usando `create_tween()`, `tween_property()` e `await tween.finished` per attendere la fine di ogni animazione."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/background_display.tscn",
+      "descrizione": "Il file della scena res://story/background_display.tscn esiste"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://story/background_display.tscn",
+      "tipoNodo": "Control",
+      "nome": "BackgroundDisplay",
+      "descrizione": "La radice della scena è un Control chiamato BackgroundDisplay"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://story/background_display.tscn",
+      "tipoNodo": "TextureRect",
+      "nome": "CurrentBackground",
+      "genitore": "BackgroundDisplay",
+      "descrizione": "Dentro BackgroundDisplay c'è un TextureRect chiamato CurrentBackground"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://story/background_display.tscn",
+      "tipoNodo": "TextureRect",
+      "nome": "CrossfadeBackground",
+      "genitore": "BackgroundDisplay",
+      "descrizione": "Dentro BackgroundDisplay c'è un TextureRect chiamato CrossfadeBackground"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://story/background_display.tscn",
+      "tipoNodo": "ColorRect",
+      "nome": "BlackOverlay",
+      "genitore": "BackgroundDisplay",
+      "descrizione": "Dentro BackgroundDisplay c'è un ColorRect chiamato BlackOverlay"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bg_scene := await instantiate_scene(\"res://story/background_display.tscn\")\n\tif not check(\"bg_loaded\", bg_scene != null, \"La scena res://story/background_display.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\t\n\tvar bg := bg_scene as BackgroundDisplay\n\tif not check(\"is_bg_display\", bg != null, \"Il nodo radice di background_display.tscn deve avere la classe BackgroundDisplay\"):\n\t\treturn\n\t\n\tvar current := find_by_name(bg, \"CurrentBackground\") as TextureRect\n\tvar crossfade := find_by_name(bg, \"CrossfadeBackground\") as TextureRect\n\tvar black := find_by_name(bg, \"BlackOverlay\") as ColorRect\n\t\n\tif not check(\"nodes_exist\", current != null and crossfade != null and black != null, \"La scena deve contenere CurrentBackground, CrossfadeBackground e BlackOverlay\"):\n\t\treturn\n\t\n\tcheck(\"init_crossfade_alpha\", absf(crossfade.modulate.a) < 0.05, \"All'avvio CrossfadeBackground deve essere trasparente (modulate.a = 0.0)\")\n\tcheck(\"init_black_alpha\", absf(black.modulate.a) < 0.05, \"All'avvio BlackOverlay deve essere trasparente (modulate.a = 0.0)\")\n\t\n\tvar tex_bg: Texture2D = load(\"res://assets/sprites/background.png\")\n\tvar tex_icon: Texture2D = load(\"res://icon.svg\")\n\tbg.set_background(tex_bg)\n\tcheck(\"set_bg\", current.texture == tex_bg, \"set_background() deve impostare la texture su CurrentBackground\")\n\tcheck(\"crossfade_clean\", crossfade.texture == null and absf(crossfade.modulate.a) < 0.05, \"set_background() deve ripulire CrossfadeBackground\")\n\t\n\tbg.crossfade_to(tex_icon, 0.2)\n\tawait wait_seconds(0.08)\n\tcheck(\"crossfade_started\", crossfade.texture == tex_icon and crossfade.modulate.a > 0.1, \"Durante crossfade_to(), CrossfadeBackground deve mostrare la nuova immagine con trasparenza crescente\")\n\tawait wait_seconds(0.25)\n\tcheck(\"crossfade_ended\", current.texture == tex_icon and absf(crossfade.modulate.a) < 0.05, \"Al termine di crossfade_to(), CurrentBackground deve avere la nuova texture e CrossfadeBackground deve tornare trasparente\")\n\t\n\tbg.fade_to_black(0.15)\n\tawait wait_seconds(0.22)\n\tcheck(\"fade_to_black\", absf(black.modulate.a - 1.0) < 0.05, \"Al termine di fade_to_black(), BlackOverlay deve avere modulate.a a 1.0\")\n\t\n\tbg.fade_from_black(0.15)\n\tawait wait_seconds(0.22)\n\tcheck(\"fade_from_black\", absf(black.modulate.a) < 0.05, \"Al termine di fade_from_black(), BlackOverlay deve avere modulate.a a 0.0\")",
+      "descrizione": "set_background, crossfade_to, fade_to_black e fade_from_black gestiscono texture e trasparenze nei tempi corretti"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/background_display.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://story/background_display.gd\" id=\"1_bg\"]\n\n[node name=\"BackgroundDisplay\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_bg\")\n\n[node name=\"CurrentBackground\" type=\"TextureRect\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nexpand_mode = 1\nstretch_mode = 6\n\n[node name=\"CrossfadeBackground\" type=\"TextureRect\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nexpand_mode = 1\nstretch_mode = 6\n\n[node name=\"BlackOverlay\" type=\"ColorRect\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\ncolor = Color(0, 0, 0, 1)\n"
+      },
+      {
+       "percorso": "story/background_display.gd",
+       "contenuto": "class_name BackgroundDisplay\nextends Control\n\nvar _fade_tween: Tween\nvar _crossfade_tween: Tween\n\n@onready var current_background: TextureRect = $CurrentBackground\n@onready var crossfade_background: TextureRect = $CrossfadeBackground\n@onready var black_overlay: ColorRect = $BlackOverlay\n\n\nfunc _ready() -> void:\n\tcrossfade_background.modulate.a = 0.0\n\tblack_overlay.modulate.a = 0.0\n\n\nfunc set_background(texture: Texture2D) -> void:\n\tif _crossfade_tween and _crossfade_tween.is_running():\n\t\t_crossfade_tween.kill()\n\tcurrent_background.texture = texture\n\tcrossfade_background.texture = null\n\tcrossfade_background.modulate.a = 0.0\n\n\nfunc crossfade_to(new_texture: Texture2D, duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tset_background(new_texture)\n\t\treturn\n\t\n\tif _crossfade_tween and _crossfade_tween.is_running():\n\t\t_crossfade_tween.kill()\n\t\ncrossfade_background.texture = new_texture\n\tcrossfade_background.modulate.a = 0.0\n\t\n\t_crossfade_tween = create_tween()\n\t_crossfade_tween.tween_property(crossfade_background, \"modulate:a\", 1.0, duration)\n\tawait _crossfade_tween.finished\n\t\n\tcurrent_background.texture = new_texture\n\tcrossfade_background.texture = null\n\tcrossfade_background.modulate.a = 0.0\n\n\nfunc fade_to_black(duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tblack_overlay.modulate.a = 1.0\n\t\treturn\n\t\n\tif _fade_tween and _fade_tween.is_running():\n\t\t_fade_tween.kill()\n\t\n\t_fade_tween = create_tween()\n\t_fade_tween.tween_property(black_overlay, \"modulate:a\", 1.0, duration)\n\tawait _fade_tween.finished\n\n\nfunc fade_from_black(duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tblack_overlay.modulate.a = 0.0\n\t\treturn\n\t\n\tif _fade_tween and _fade_tween.is_running():\n\t\t_fade_tween.kill()\n\t\n\t_fade_tween = create_tween()\n\t_fade_tween.tween_property(black_overlay, \"modulate:a\", 0.0, duration)\n\tawait _fade_tween.finished\n"
+      }
+     ],
+     "spiegazione": "La scena usa due `TextureRect` identici sovrapposti: `CurrentBackground` mostra lo sfondo attuale, mentre `CrossfadeBackground` riceve la nuova texture trasparente e ne aumenta l'alfa fino a 1.0 con un `Tween`. Con `await _crossfade_tween.finished` il codice attende la fine dell'animazione: a quel punto la nuova texture viene passata a `CurrentBackground` e `CrossfadeBackground` viene ripulito. Per le chiusure a nero, `BlackOverlay` copre l'intera finestra animando la sua trasparenza (`modulate:a`) tra 0.0 e 1.0.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Transizione attraverso il nero e controllo dello stato",
+    "consegna": "In una visual novel, cambiare scena passando dal buio permette di staccare un momento narrativo da un altro. Durante la transizione, inoltre, il motore di gioco deve sapere se un'animazione è attiva per evitare sovrapposizioni sgradite.\n\nModifica lo script `res://story/background_display.gd` aggiungendo due nuove funzioni pubbliche:\n\n1. `is_transitioning() -> bool`: restituisce `true` se `_crossfade_tween` oppure `_fade_tween` è attualmente in esecuzione (`is_running()`), altrimenti restituisce `false`.\n2. `transition_through_black(new_texture: Texture2D, duration: float = 0.5) -> void`:\n   - Se `duration <= 0.0`: se `_fade_tween` sta girando interrompilo con `kill()`, azzera `black_overlay.modulate.a = 0.0`, imposta subito la texture con `set_background(new_texture)` e termina.\n   - Altrimenti calcola la metà della durata totale (`var half_duration := duration * 0.5`).\n   - Esegui `await fade_to_black(half_duration)` per oscurare lo schermo.\n   - A schermo completamente nero, chiama `set_background(new_texture)` per cambiare l'immagine nascosta.\n   - Esegui `await fade_from_black(half_duration)` per svelare il nuovo scenario.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `is_transitioning()`, verifica che le variabili dei Tween non siano nulle prima di interrogare `is_running()` (es. `_crossfade_tween != null and _crossfade_tween.is_running()`).",
+     "In `transition_through_black()`, sfrutta le funzioni `fade_to_black()` e `fade_from_black()` che hai già scritto: usale con `await` passando `duration * 0.5` a ciascuna.",
+     "La funzione `set_background()` modifica solo `CurrentBackground` e `CrossfadeBackground`, lasciando intatto `BlackOverlay`: quando lo schermo è a nero puoi scambiare l'immagine sottostante senza che il giocatore se ne accorga."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/background_display.gd",
+      "regex": "func is_transitioning\\(\\)",
+      "descrizione": "Lo script background_display.gd definisce la funzione is_transitioning()"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/background_display.gd",
+      "regex": "func transition_through_black\\(",
+      "descrizione": "Lo script background_display.gd definisce la funzione transition_through_black()"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bg_scene := await instantiate_scene(\"res://story/background_display.tscn\")\n\tif not check(\"bg_loaded\", bg_scene != null, \"La scena res://story/background_display.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\t\n\tvar bg := bg_scene as BackgroundDisplay\n\tif not check(\"is_bg_display\", bg != null, \"Il nodo radice deve essere BackgroundDisplay\"):\n\t\treturn\n\t\n\tif not check(\"has_is_transitioning\", has_function(bg, \"is_transitioning\"), \"BackgroundDisplay deve avere la funzione is_transitioning()\"):\n\t\treturn\n\tif not check(\"has_transition_black\", has_function(bg, \"transition_through_black\"), \"BackgroundDisplay deve avere la funzione transition_through_black()\"):\n\t\treturn\n\t\n\tcheck(\"init_not_transitioning\", bg.is_transitioning() == false, \"All'avvio is_transitioning() deve essere false\")\n\t\n\tvar current := find_by_name(bg, \"CurrentBackground\") as TextureRect\n\tvar black := find_by_name(bg, \"BlackOverlay\") as ColorRect\n\t\n\tvar tex_bg: Texture2D = load(\"res://assets/sprites/background.png\")\n\tvar tex_icon: Texture2D = load(\"res://icon.svg\")\n\tbg.set_background(tex_bg)\n\t\n\tbg.transition_through_black(tex_icon, 0.3)\n\tcheck(\"transitioning_true\", bg.is_transitioning() == true, \"Subito dopo l'avvio della transizione, is_transitioning() deve essere true\")\n\t\n\tawait wait_seconds(0.16)\n\tcheck(\"midway_black\", black.modulate.a > 0.5, \"A metà transizione, BlackOverlay deve oscurare la scena (modulate.a = %.2f)\" % black.modulate.a)\n\t\n\tawait wait_seconds(0.25)\n\tcheck(\"finish_not_transitioning\", bg.is_transitioning() == false, \"Al termine della transizione, is_transitioning() deve tornare false\")\n\tcheck(\"finish_black_zero\", absf(black.modulate.a) < 0.05, \"Al termine della transizione, BlackOverlay deve tornare trasparente\")\n\tcheck(\"finish_texture_updated\", current.texture == tex_icon, \"Al termine della transizione, CurrentBackground deve mostrare la nuova immagine\")\n\t\n\tbg.transition_through_black(tex_bg, 0.0)\n\tawait wait_frames(2)\n\tcheck(\"instant_texture\", current.texture == tex_bg and absf(black.modulate.a) < 0.05, \"Con durata <= 0, il cambio deve avvenire istantaneamente e il velo nero restare trasparente\")",
+      "descrizione": "transition_through_black oscura la scena, cambia texture e la risvela segnalando correttamente is_transitioning"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/background_display.gd",
+       "contenuto": "class_name BackgroundDisplay\nextends Control\n\nvar _fade_tween: Tween\nvar _crossfade_tween: Tween\n\n@onready var current_background: TextureRect = $CurrentBackground\n@onready var crossfade_background: TextureRect = $CrossfadeBackground\n@onready var black_overlay: ColorRect = $BlackOverlay\n\n\nfunc _ready() -> void:\n\tcrossfade_background.modulate.a = 0.0\n\tblack_overlay.modulate.a = 0.0\n\n\nfunc is_transitioning() -> bool:\n\tvar crossfade_active := _crossfade_tween != null and _crossfade_tween.is_running()\n\tvar fade_active := _fade_tween != null and _fade_tween.is_running()\n\treturn crossfade_active or fade_active\n\n\nfunc set_background(texture: Texture2D) -> void:\n\tif _crossfade_tween and _crossfade_tween.is_running():\n\t\t_crossfade_tween.kill()\n\tcurrent_background.texture = texture\n\tcrossfade_background.texture = null\n\tcrossfade_background.modulate.a = 0.0\n\n\nfunc crossfade_to(new_texture: Texture2D, duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tset_background(new_texture)\n\t\treturn\n\t\n\tif _crossfade_tween and _crossfade_tween.is_running():\n\t\t_crossfade_tween.kill()\n\t\ncrossfade_background.texture = new_texture\n\tcrossfade_background.modulate.a = 0.0\n\t\n\t_crossfade_tween = create_tween()\n\t_crossfade_tween.tween_property(crossfade_background, \"modulate:a\", 1.0, duration)\n\tawait _crossfade_tween.finished\n\t\n\tcurrent_background.texture = new_texture\n\tcrossfade_background.texture = null\n\tcrossfade_background.modulate.a = 0.0\n\n\nfunc fade_to_black(duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tblack_overlay.modulate.a = 1.0\n\t\treturn\n\t\n\tif _fade_tween and _fade_tween.is_running():\n\t\t_fade_tween.kill()\n\t\n\t_fade_tween = create_tween()\n\t_fade_tween.tween_property(black_overlay, \"modulate:a\", 1.0, duration)\n\tawait _fade_tween.finished\n\n\nfunc fade_from_black(duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tblack_overlay.modulate.a = 0.0\n\t\treturn\n\t\n\tif _fade_tween and _fade_tween.is_running():\n\t\t_fade_tween.kill()\n\t\n\t_fade_tween = create_tween()\n\t_fade_tween.tween_property(black_overlay, \"modulate:a\", 0.0, duration)\n\tawait _fade_tween.finished\n\n\nfunc transition_through_black(new_texture: Texture2D, duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tif _fade_tween and _fade_tween.is_running():\n\t\t\t_fade_tween.kill()\n\t\tblack_overlay.modulate.a = 0.0\n\t\tset_background(new_texture)\n\t\treturn\n\t\n\tvar half_duration := duration * 0.5\n\tawait fade_to_black(half_duration)\n\tset_background(new_texture)\n\tawait fade_from_black(half_duration)\n"
+      }
+     ],
+     "spiegazione": "`transition_through_black()` concatena due animazioni consecutive usando `await`: prima attende `fade_to_black(half_duration)` fino al nero totale; poi imposta la nuova texture con `set_background()`; infine attende `fade_from_black(half_duration)` per svelare la scena. La funzione `is_transitioning()` verifica lo stato di `is_running()` di entrambi i Tween, consentendo al motore narrativo di sapere se un cambio di scena è in atto.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "La scena visiva completa e la sincronizzazione con la storia",
+    "consegna": "Unisci tutti i componenti costruiti finora (sfondo, personaggi e finestra di dialogo) assemblando la scena visiva gerarchica del gioco, e fai in modo che `StoryPlayer` sincronizzi l'avanzamento della narrazione con le transizioni visive.\n\n### 1. Aggiorna `story/story_player.gd`\n- Aggiungi la variabile esportata `@export var background_display: BackgroundDisplay`.\n- Aggiungi una variabile interna `var _is_transitioning: bool = false`.\n- Aggiungi la funzione `is_transitioning() -> bool`: restituisce `true` se `_is_transitioning` è vero oppure se `background_display != null and background_display.is_transitioning()`; altrimenti restituisce `false`.\n- Aggiungi la funzione `change_background(new_texture: Texture2D, transition_type: String = \"crossfade\", duration: float = 0.5) -> void`:\n  - Imposta `_is_transitioning = true`.\n  - Se `background_display` è valido:\n    - Se `transition_type == \"black\"`, esegui `await background_display.transition_through_black(new_texture, duration)`.\n    - Altrimenti (es. `\"crossfade\"`), esegui `await background_display.crossfade_to(new_texture, duration)`.\n  - Al termine reimposta `_is_transitioning = false`.\n- In `advance()`: se `is_transitioning()` è `true`, esci subito con `return`. La storia non deve avanzare durante una transizione.\n- In `_show_current_line()`: prima di visualizzare la battuta, controlla se `line_data` possiede la chiave `\"background\"`. Se è presente:\n  - Se `dialogue_box` è valido, puliscilo con `dialogue_box.clear()` per nascondere il testo vecchio.\n  - Carica la texture con `load(line_data[\"background\"]) as Texture2D`.\n  - Se la texture è valida, leggi `line_data.get(\"transition\", \"crossfade\")` e la durata con `float(line_data.get(\"transition_duration\", 0.5))` ed esegui `await change_background(bg_tex, trans_type, trans_dur)`.\n  - Solo dopo che la transizione è terminata, procedi a mostrare il dialogo in `dialogue_box` e a mettere a fuoco il personaggio in `character_stage`.\n\n### 2. Crea la scena principale `res://story/story_screen.tscn`\n- Radice di tipo `Control` chiamata `StoryScreen`, con ancoraggio impostato su **Full Rect**.\n- Aggiungi i nodi figli rispettando scrupolosamente questo ordine gerarchico (dal fondo verso la superficie dello schermo):\n  1. Istanza di `res://story/background_display.tscn` chiamata `BackgroundDisplay` (Full Rect).\n  2. Istanza di `res://story/character_stage.tscn` chiamata `CharacterStage` (Full Rect).\n  3. Istanza di `res://ui/dialogue_box.tscn` chiamata `DialogueBox`, ancorata in basso su tutta la larghezza (**Bottom Wide**, offset superiore `-160`).\n  4. Un nodo di tipo `Node` chiamato `StoryPlayer` con lo script `res://story/story_player.gd` collegato, le cui proprietà esportate `dialogue_box`, `character_stage` e `background_display` puntano ai rispettivi nodi fratelli.\n- Imposta `res://story/story_screen.tscn` come scena principale del progetto.\n\n### 3. Aggiorna `story/intro.json`\nNella prima riga di dialogo di `intro.json` (indice 0), aggiungi le proprietà per la transizione iniziale:\n- `\"background\": \"res://assets/sprites/background.png\"`\n- `\"transition\": \"black\"`\n- `\"transition_duration\": 0.4`",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `_show_current_line()`, usando `await change_background(...)`, l'esecuzione della funzione si arresta finché lo schermo non torna chiaro: il codice successivo (`show_line`) partirà in automatico a transizione conclusa."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_screen.tscn",
+      "descrizione": "La scena res://story/story_screen.tscn esiste"
+     },
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "run/main_scene",
+      "contiene": "story_screen.tscn",
+      "descrizione": "La scena principale del progetto è res://story/story_screen.tscn"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/story_player.gd",
+      "regex": "func change_background\\(",
+      "descrizione": "StoryPlayer possiede la funzione change_background()"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar screen := await instantiate_main_scene()\n\tif not check(\"main_scene\", screen != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\t\n\tvar bg := find_by_name(screen, \"BackgroundDisplay\") as BackgroundDisplay\n\tvar stage := find_by_name(screen, \"CharacterStage\") as CharacterStage\n\tvar box := find_by_name(screen, \"DialogueBox\") as PanelContainer\n\tvar player := find_by_name(screen, \"StoryPlayer\") as StoryPlayer\n\t\n\tif not check(\"nodes_exist\", bg != null and stage != null and box != null and player != null, \"StoryScreen deve contenere BackgroundDisplay, CharacterStage, DialogueBox e StoryPlayer\"):\n\t\treturn\n\t\n\tvar bg_idx := bg.get_index()\n\tvar stage_idx := stage.get_index()\n\tvar box_idx := box.get_index()\n\tcheck(\"layer_order\", bg_idx < stage_idx and stage_idx < box_idx, \"L'ordine dei nodi deve rispettare gli strati visivi: Sfondo (dietro), Personaggi (in mezzo), Interfaccia (sopra)\")\n\t\n\tawait wait_seconds(0.6)\n\tvar dialogue_label := find_by_name(box, \"DialogueLabel\") as RichTextLabel\n\tcheck(\"first_line_showing\", dialogue_label != null and not dialogue_label.text.is_empty(), \"Dopo la transizione iniziale, la prima battuta di dialogo deve comparire a schermo\")\n\tcheck(\"bg_texture_set\", bg.current_background.texture != null, \"Dopo la transizione iniziale, CurrentBackground deve avere la texture impostata da intro.json\")\n\t\n\tvar tex_icon: Texture2D = load(\"res://icon.svg\")\n\tplayer.change_background(tex_icon, \"crossfade\", 0.4)\n\tawait wait_frames(2)\n\tcheck(\"player_transitioning\", player.is_transitioning() == true, \"Durante change_background(), StoryPlayer.is_transitioning() deve essere true\")\n\t\n\tvar text_before := dialogue_label.text\n\tplayer.advance()\n\tawait wait_frames(2)\n\tcheck(\"advance_blocked\", dialogue_label.text == text_before, \"Chiamando advance() durante una transizione, la storia NON deve proseguire\")\n\t\n\tawait wait_seconds(0.45)\n\tcheck(\"player_not_transitioning\", player.is_transitioning() == false, \"A transizione conclusa, StoryPlayer.is_transitioning() deve tornare false\")\n\tcheck(\"tex_changed\", bg.current_background.texture == tex_icon, \"A transizione conclusa, l'immagine di sfondo deve essere aggiornata\")",
+      "descrizione": "Gli strati visivi sono ordinati correttamente, la prima battuta aspetta la transizione e advance() è bloccato durante i cambi di sfondo"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/intro.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1: Il Risveglio\",\n  \"lines\": [\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Dove... dove mi trovo? Tutto questo buio...\",\n      \"background\": \"res://assets/sprites/background.png\",\n      \"transition\": \"black\",\n      \"transition_duration\": 0.4\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"L'ultima cosa che ricordo è la vecchia biblioteca in fondo alla strada.\"\n    },\n    {\n      \"speaker\": \"???\",\n      \"text\": \"Ti sei svegliata, finalmente.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Chi c'è? Chi sta parlando?\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Tranquilla, non c'è motivo di spaventarsi. Sono Marco.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Marco? Non ti conosco. Perché mi trovo qui?\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Hai toccato il tomo rilegato in cuoio sul tavolo centrale, vero?\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Sì... era aperto su una pagina strana. Un simbolo dorato lucidissimo.\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Quel simbolo è un sigillo d'accesso. Anche io sono finito qui nello stesso modo.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Quindi questo posto... non è la biblioteca?\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"No. Questo è l'Archivio delle Storie. Un luogo fuori dal tempo.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Fuori dal tempo? Sembra assurdo... devo subito tornare a casa!\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Non è così semplice. La porta da cui sei entrata si è chiusa dietro di te.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Ci deve essere un'altra uscita per forza. Ho la mia famiglia che mi aspetta!\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Esiste una via di fuga, ma richiede di attraversare i diversi capitoli dell'Archivio.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Capitoli? Che cosa significa esattamente?\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Significa che dovrai vivere le storie custodite qui per sbloccare i passaggi.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Se questo è l'unico modo per tornare indietro, allora sono pronta.\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Bene. Prendi questa lanterna, ti servirà lungo il cammino.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Grazie, Marco. Cominciamo dall'inizio.\"\n    }\n  ]\n}\n"
+      },
+      {
+       "percorso": "story/story_player.gd",
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nsignal story_finished\n\n@export var story_file_path: String = \"res://story/intro.json\"\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n\nvar _lines: Array = []\nvar _current_line_index: int = 0\nvar _is_transitioning: bool = false\n\n\nfunc _ready() -> void:\n\tif not dialogue_box and has_node(\"../DialogueBox\"):\n\t\tdialogue_box = get_node(\"../DialogueBox\")\n\tif not character_stage and has_node(\"../CharacterStage\"):\n\t\tcharacter_stage = get_node(\"../CharacterStage\")\n\tif not background_display and has_node(\"../BackgroundDisplay\"):\n\t\tbackground_display = get_node(\"../BackgroundDisplay\")\n\t\n\tif dialogue_box:\n\t\tdialogue_box.line_finished.connect(_on_dialogue_box_line_finished)\n\t\n\tif load_story(story_file_path):\n\t\tstart_story()\n\n\nfunc is_transitioning() -> bool:\n\treturn _is_transitioning or (background_display != null and background_display.is_transitioning())\n\n\nfunc change_background(new_texture: Texture2D, transition_type: String = \"crossfade\", duration: float = 0.5) -> void:\n\t_is_transitioning = true\n\tif background_display:\n\t\tif transition_type == \"black\":\n\t\tawait background_display.transition_through_black(new_texture, duration)\n\t\telse:\n\t\tawait background_display.crossfade_to(new_texture, duration)\n\t_is_transitioning = false\n\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\tprint(\"Errore: file della storia non trovato: \", path)\n\t\treturn false\n\t\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\tprint(\"Errore durante l'apertura del file: \", path)\n\t\treturn false\n\t\n\tvar json := JSON.new()\n\tvar parse_result := json.parse(file.get_as_text())\n\tif parse_result != OK:\n\t\tprint(\"Errore nel parsing del JSON: \", json.get_error_message())\n\t\treturn false\n\t\n\tvar data: Dictionary = json.data\n\tif not data.has(\"lines\"):\n\t\tprint(\"Errore: la chiave 'lines' non è presente nel file JSON.\")\n\t\treturn false\n\t\n\t_lines = data[\"lines\"]\n\t_current_line_index = 0\n\treturn true\n\n\nfunc start_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc advance() -> void:\n\tif is_transitioning():\n\t\treturn\n\t\n\t_current_line_index += 1\n\tif _current_line_index < _lines.size():\n\t\t_show_current_line()\n\telse:\n\t\tif dialogue_box:\n\t\t\tdialogue_box.clear()\n\t\tstory_finished.emit()\n\n\nfunc get_line_count() -> int:\n\treturn _lines.size()\n\n\nfunc restart_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc jump_to_line(index: int) -> bool:\n\tif index < 0 or index >= get_line_count():\n\t\treturn false\n\t_current_line_index = index\n\t_show_current_line()\n\treturn true\n\n\nfunc is_at_end() -> bool:\n\treturn _current_line_index >= get_line_count()\n\n\nfunc get_character_stage() -> CharacterStage:\n\treturn character_stage\n\n\nfunc get_background_display() -> BackgroundDisplay:\n\treturn background_display\n\n\nfunc _show_current_line() -> void:\n\tif _current_line_index < 0 or _current_line_index >= _lines.size():\n\t\treturn\n\t\n\tvar line_data: Dictionary = _lines[_current_line_index]\n\tvar speaker: String = line_data.get(\"speaker\", \"\")\n\tvar text: String = line_data.get(\"text\", \"\")\n\t\n\tif background_display and line_data.has(\"background\"):\n\t\tvar bg_path: String = line_data[\"background\"]\n\t\tvar bg_tex: Texture2D = load(bg_path) if ResourceLoader.exists(bg_path) else null\n\t\tif bg_tex:\n\t\t\tif dialogue_box:\n\t\t\t\tdialogue_box.clear()\n\t\t\tvar trans_type: String = line_data.get(\"transition\", \"crossfade\")\n\t\t\tvar trans_dur: float = float(line_data.get(\"transition_duration\", 0.5))\n\t\t\tawait change_background(bg_tex, trans_type, trans_dur)\n\t\n\tif dialogue_box:\n\t\tdialogue_box.show_line(speaker, text)\n\t\n\tif character_stage and not speaker.is_empty():\n\t\tcharacter_stage.focus_character(speaker.to_lower())\n\n\nfunc _on_dialogue_box_line_finished() -> void:\n\tadvance()\n"
+      },
+      {
+       "percorso": "story/story_screen.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://story/background_display.tscn\" id=\"1_bg\"]\n[ext_resource type=\"PackedScene\" path=\"res://story/character_stage.tscn\" id=\"2_stage\"]\n[ext_resource type=\"PackedScene\" path=\"res://ui/dialogue_box.tscn\" id=\"3_ui\"]\n[ext_resource type=\"Script\" path=\"res://story/story_player.gd\" id=\"4_player\"]\n\n[node name=\"StoryScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"BackgroundDisplay\" parent=\".\" instance=ExtResource(\"1_bg\")]\nlayout_mode = 1\n\n[node name=\"CharacterStage\" parent=\".\" instance=ExtResource(\"2_stage\")]\nlayout_mode = 1\n\n[node name=\"DialogueBox\" parent=\".\" instance=ExtResource(\"3_ui\")]\nlayout_mode = 1\nanchors_preset = 12\nanchor_top = 1.0\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_top = -160.0\ngrow_horizontal = 2\ngrow_vertical = 0\n\n[node name=\"StoryPlayer\" type=\"Node\" parent=\".\" node_paths=PackedStringArray(\"dialogue_box\", \"character_stage\", \"background_display\")]\nscript = ExtResource(\"4_player\")\nstory_file_path = \"res://story/intro.json\"\ndialogue_box = NodePath(\"../DialogueBox\")\ncharacter_stage = NodePath(\"../CharacterStage\")\nbackground_display = NodePath(\"../BackgroundDisplay\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "res://story/story_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "L'ordine dei nodi in `StoryScreen` determina la gerarchia visiva del disegno: `BackgroundDisplay` si trova in fondo e viene disegnato per primo; sopra di esso compare `CharacterStage` con i personaggi; in primo piano sta `DialogueBox` che rimane leggibile su tutto. In `StoryPlayer`, l'uso di `await change_background(...)` sospende l'avanzamento fino al termine della dissolvenza prima di chiamare `show_line()`, mentre il controllo in `advance()` impedisce al giocatore di saltare avanti durante una transizione visiva.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -74,5 +294,10 @@
     "md": "- L'ordine dei nodi nell'albero della scena stabilisce l'ordine di disegno: lo sfondo sta in cima all'elenco, i personaggi al centro e l'interfaccia utente in fondo.\n- La dissolvenza incrociata diretta richiede due `TextureRect` sovrapposti: l'immagine nuova compare gradualmente sopra quella vecchia prima che quest'ultima venga aggiornata.\n- Il passaggio attraverso il nero sfrutta un `ColorRect` a tutto schermo animato sulla proprietà `modulate:a`.\n- `await tween.finished` permette a una funzione di attendere il termine esatto di una transizione visiva prima di mostrare altro testo o far avanzare la storia."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
