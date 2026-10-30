@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-30T07:26:52.263Z",
+ "aggiornato": "2026-10-30T09:41:16.064Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -713,6 +713,15 @@
    "file": "lezioni/f06-visual-novel/sfondi-e-transizioni.json",
    "sha256": "8688628dff5c4531e08477d806cb0d742a83fc96d11f98501e3bbd604e7cad90",
    "byte": 134968
+  },
+  {
+   "slug": "interprete-dei-comandi",
+   "numero": "6.6",
+   "titolo": "Un interprete: far eseguire la storia",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/interprete-dei-comandi.json",
+   "sha256": "0a8ed1c08abcd7b18be2c0c4f0e5bb3e1c66d8c2adf128c829fc95d539b75413",
+   "byte": 160987
   }
  ],
  "documentazione": {
