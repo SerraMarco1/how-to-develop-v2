@@ -4,3 +4,4 @@
 {"quando":1793343854380,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"personaggi","ok":true,"contata":true,"durataMs":166267,"tokenInput":14256,"tokenOutput":6222,"ragionamento":12197}
 {"quando":1793344026762,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"personaggi","ok":true,"contata":true,"durataMs":6299,"tokenInput":2857,"tokenOutput":811,"ragionamento":1341}
 {"quando":1793344039126,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"sfondi-e-transizioni","ok":true,"contata":true,"durataMs":120268,"tokenInput":14106,"tokenOutput":3382,"ragionamento":9897}
+{"quando":1793344160880,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"sfondi-e-transizioni","ok":true,"contata":true,"durataMs":301034,"tokenInput":17782,"tokenOutput":11812,"ragionamento":35384}
