@@ -1100,7 +1100,7 @@
  "praticaRifatta": true,
  "revisione": {
   "problemi": [],
-  "teoriaCorretta": false,
+  "teoriaCorretta": true,
   "corretti": []
  }
 }
