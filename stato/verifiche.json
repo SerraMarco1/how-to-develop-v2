@@ -401,5 +401,16 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "interprete-dei-comandi": {
+  "versione": 1,
+  "fragili": [
+   "es3",
+   "test"
+  ],
+  "tentativi": {
+   "es3": 1,
+   "test": 1
+  }
  }
 }
