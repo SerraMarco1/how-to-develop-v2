@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-30T07:07:17.252Z",
+ "aggiornato": "2026-10-30T07:26:52.263Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -704,6 +704,15 @@
    "file": "lezioni/f06-visual-novel/personaggi.json",
    "sha256": "218f9f6fd364d86f9addd3be9f567cfadaec47013173e2e7fc00177a4cb38b6d",
    "byte": 96718
+  },
+  {
+   "slug": "sfondi-e-transizioni",
+   "numero": "6.5",
+   "titolo": "Sfondi e transizioni",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/sfondi-e-transizioni.json",
+   "sha256": "8688628dff5c4531e08477d806cb0d742a83fc96d11f98501e3bbd604e7cad90",
+   "byte": 134968
   }
  ],
  "documentazione": {
