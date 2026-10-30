@@ -1,0 +1,78 @@
+{
+ "creato": "2026-10-30T07:07:19.122Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Sfondi e transizioni: dissolvenze e chiusure a nero",
+  "sommario": "In questa lezione impari a organizzare la scena visiva di una visual novel nei suoi strati fondamentali (sfondo, figure dei personaggi e interfaccia). Scoprirai come realizzare dissolvenze incrociate tra due immagini usando due TextureRect sovrapposti e come gestire chiusure e aperture a nero con un ColorRect. Infine vedrai come usare await con i segnali dei Tween per sincronizzare l'avanzamento della narrazione con i tempi delle animazioni visive.",
+  "concetti": [
+   "Ordine di disegno nell'albero dei nodi (tree order)",
+   "Strati visivi: sfondo, personaggi, velo di transizione e interfaccia",
+   "Dissolvenza incrociata (crossfade) con due TextureRect sovrapposti",
+   "Transizione attraverso il nero con ColorRect",
+   "Sospensione asincrona con await tween.finished",
+   "Incapsulamento della scena visiva con BackgroundDisplay"
+  ],
+  "obiettivi": [
+   "Gli strati di una scena: sfondo, figure, interfaccia",
+   "Dissolvenza tra due immagini e passaggio dal nero",
+   "Aspettare che una transizione finisca prima di proseguire"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "In una visual novel il cambio di ambientazione scandisce il tempo e il ritmo narrativo. Nel nostro gioco «Storie», Elena comincia parlando nel buio completo, per poi ricordare la biblioteca e infine trovarsi nell'Archivio. Se cambiassimo l'immagine di sfondo di scatto, l'effetto sarebbe brusco e spezzerebbe l'illusione narrativa. Per creare un'esperienza immersiva servono transizioni graduali: una dissolvenza incrociata (*crossfade*), in cui un'immagine sfuma lentamente nell'altra, e la chiusura a nero (*fade to black*), che stacca un momento narrativo dal successivo. Inoltre, il motore deve poter attendere la fine dell'animazione prima di mostrare le battute successive."
+   },
+   {
+    "tipo": "testo",
+    "md": "In Godot 2D e nell'interfaccia, gli elementi vengono disegnati sullo schermo seguendo il loro *ordine nell'albero* (*tree order*): i nodi posti più in alto nell'elenco del pannello *Scene* (albero dei nodi) vengono disegnati per primi (dietro), mentre i nodi posti più in basso vengono disegnati sopra a quelli precedenti. In una visual novel questo stabilisce una gerarchia visiva ben precisa divisa in quattro livelli:\n\n1. **Sfondo**: l'ambiente illustrato, posizionato alla base di tutto.\n2. **Figure dei personaggi**: i nodi `CharacterDisplay` che mostrano chi parla o chi è presente nella stanza.\n3. **Velo di oscuramento**: un rettangolo nero a schermo intero (`ColorRect`) utilizzato per nascondere o rivelare l'ambiente.\n4. **Interfaccia utente (UI)**: la nostra `DialogueBox` con il testo e i controlli, posizionata in primo piano per restare sempre visibile e leggibile anche durante i cambi di scenario."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare la scena BackgroundDisplay",
+    "passi": [
+     "Nel pannello *Scene* premi **+** (o premi Ctrl+A) e crea un nodo radice di tipo **Control**. Chiamalo `BackgroundDisplay`.",
+     "Con il nodo `BackgroundDisplay` selezionato, nell'area di lavoro 2D usa il menu delle ancore in alto per impostarlo su **Full Rect** (ancore su tutti e quattro i lati a 0 e 1), in modo che occupi l'intera finestra.",
+     "Seleziona `BackgroundDisplay`, premi **+** e aggiungi un nodo **TextureRect**. Rinominalo in `CurrentBackground`. Nel pannello *Inspector* (ispettore) imposta le ancore su **Full Rect**, `expand_mode` su `Ignore Size` (valore 1) e `stretch_mode` su `Keep Aspect Covered` (valore 6) affinché l'immagine copra lo schermo senza deformarsi.",
+     "Aggiungi un secondo **TextureRect** come figlio di `BackgroundDisplay` e nominalo `CrossfadeBackground`. Assegna le stesse impostazioni di ancore e ridimensionamento di `CurrentBackground`.",
+     "Aggiungi come terzo figlio di `BackgroundDisplay` un nodo **ColorRect** e rinominalo in `BlackOverlay`. Imposta le ancore su **Full Rect** e il parametro `color` su nero puro (`Color(0, 0, 0, 1)`).",
+     "Salva la nuova scena premendo Ctrl+S nel percorso `res://story/background_display.tscn`."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Per realizzare una dissolvenza tra due immagini servono due nodi `TextureRect` distinti: se ne usassimo uno solo e cambiassimo la sua proprietà `texture`, Godot sostituirebbe l'immagine in un singolo fotogramma. Se provassimo ad abbassare l'alfa dell'unico nodo, vedremmo lo sfondo vuoto del motore invece della nuova stanza.\n\nCon due immagini sovrapposte il procedimento diventa pulito: `CurrentBackground` mostra lo sfondo di partenza; quando ordiniamo un cambio, assegniamo la nuova immagine a `CrossfadeBackground`, impostiamo la sua trasparenza (`modulate:a`) a zero e usiamo un `Tween` per portarla a 1.0. A quel punto l'immagine superiore copre interamente quella inferiore: possiamo quindi copiare la nuova texture su `CurrentBackground` e reimpostare `CrossfadeBackground` trasparente e vuoto, pronti per la transizione successiva."
+   },
+   {
+    "tipo": "testo",
+    "md": "La transizione attraverso il nero funziona secondo un principio simile ma sfrutta il rettangolo nero `BlackOverlay`. Invece di mescolare due disegni, aumentiamo `modulate:a` di `BlackOverlay` da 0.0 a 1.0 per far calare il buio. Quando lo schermo è completamente nero, cambiamo istantaneamente la texture di `CurrentBackground` senza che il giocatore se ne accorga, e poi riduciamo `modulate:a` del velo nero da 1.0 a 0.0 per riaprire la scena sul nuovo luogo."
+   },
+   {
+    "tipo": "testo",
+    "md": "In Godot le animazioni create con i `Tween` operano in parallelo fotogramma per fotogramma senza bloccare il resto del programma. Se richiamassimo una funzione di transizione e subito dopo mostrassimo una riga di testo, il dialogo apparirebbe all'istante mentre lo schermo è ancora nel bel mezzo della dissolvenza.\n\nPer sincronizzare la narrazione con la grafica usiamo `await`: ogni `Tween` espone il segnale `finished`, emesso nell'istante esatto in cui l'interpolazione si conclude. Scrivendo `await _fade_tween.finished`, sospendiamo l'esecuzione della funzione fino al termine dell'animazione, garantendo che il codice chiamante non prosegua prima del tempo."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name BackgroundDisplay\nextends Control\n\nvar _fade_tween: Tween\nvar _crossfade_tween: Tween\n\n@onready var current_background: TextureRect = $CurrentBackground\n@onready var crossfade_background: TextureRect = $CrossfadeBackground\n@onready var black_overlay: ColorRect = $BlackOverlay\n\n\nfunc _ready() -> void:\n\tcrossfade_background.modulate.a = 0.0\n\tblack_overlay.modulate.a = 0.0\n\n\nfunc set_background(texture: Texture2D) -> void:\n\tif _crossfade_tween and _crossfade_tween.is_running():\n\t\t_crossfade_tween.kill()\n\tcurrent_background.texture = texture\n\tcrossfade_background.texture = null\n\tcrossfade_background.modulate.a = 0.0\n\n\nfunc crossfade_to(new_texture: Texture2D, duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tset_background(new_texture)\n\t\treturn\n\t\n\tif _crossfade_tween and _crossfade_tween.is_running():\n\t\t_crossfade_tween.kill()\n\t\n\tcrossfade_background.texture = new_texture\n\tcrossfade_background.modulate.a = 0.0\n\t\n\t_crossfade_tween = create_tween()\n\t_crossfade_tween.tween_property(crossfade_background, \"modulate:a\", 1.0, duration)\n\tawait _crossfade_tween.finished\n\t\n\tcurrent_background.texture = new_texture\n\tcrossfade_background.texture = null\n\tcrossfade_background.modulate.a = 0.0\n\n\nfunc fade_to_black(duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tblack_overlay.modulate.a = 1.0\n\t\treturn\n\t\n\tif _fade_tween and _fade_tween.is_running():\n\t\t_fade_tween.kill()\n\t\n\t_fade_tween = create_tween()\n\t_fade_tween.tween_property(black_overlay, \"modulate:a\", 1.0, duration)\n\tawait _fade_tween.finished\n\n\nfunc fade_from_black(duration: float = 0.5) -> void:\n\tif duration <= 0.0:\n\t\tblack_overlay.modulate.a = 0.0\n\t\treturn\n\t\n\tif _fade_tween and _fade_tween.is_running():\n\t\t_fade_tween.kill()\n\t\n\t_fade_tween = create_tween()\n\t_fade_tween.tween_property(black_overlay, \"modulate:a\", 0.0, duration)\n\tawait _fade_tween.finished\n\n\nfunc change_background_fade_black(new_texture: Texture2D, duration: float = 0.5) -> void:\n\tvar half_duration := duration * 0.5\n\tawait fade_to_black(half_duration)\n\tset_background(new_texture)\n\tawait fade_from_black(half_duration)",
+    "spiegazione": "- `set_background(texture)`: imposta subito un'immagine senza animazioni, utile all'avvio della partita o per cambi immediati.\n- `crossfade_to(new_texture, duration)`: carica la nuova immagine sul rettangolo superiore e ne anima l'alfa con un `Tween`. La riga `await _crossfade_tween.finished` ferma l'esecuzione finché l'immagine non è completamente opaca; solo allora aggiorna lo sfondo base e resetta il livello superiore.\n- `fade_to_black(duration)` e `fade_from_black(duration)`: interpolano la trasparenza di `black_overlay` e attendono che il buio o la luce siano completi prima di restituire il controllo.\n- `change_background_fade_black(new_texture, duration)`: unisce i passaggi oscurando lo schermo a metà tempo, scambiando l'immagine a schermo coperto e riaprendo con l'altra metà del tempo."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Se avvii un nuovo `Tween` mentre un'animazione precedente è ancora in corso senza prima fermarla con `kill()`, entrambi i `Tween` cercheranno di modificare la proprietà `modulate:a` nello stesso momento. Questo genera sfarfallii e lascia il velo nero a valori di trasparenza imprevedibili: controlla sempre `is_running()` e chiama `kill()` prima di riassegnare la variabile del tween."
+   },
+   {
+    "tipo": "testo",
+    "md": "Grazie all'uso di `await`, collegare la scena visiva con la narrazione diventa immediato. Possiamo orchestrare una sequenza narrativa in cui la storia attende che l'ambiente sia pronto prima di visualizzare il testo:\n\n```gdscript\n# Esempio di coordinamento tra sfondo e dialogo\nfunc play_intro_sequence() -> void:\n\t# Inizia nel buio completo\n\tawait background_display.fade_to_black(0.0)\n\tdialogue_box.show_line(\"Elena\", \"Dove... dove mi trovo? Tutto questo buio...\")\n\tawait dialogue_box.line_finished\n\t\n\t# Dissolvenza verso l'archivio mentre Elena parla\n\tawait background_display.fade_from_black(1.0)\n\tdialogue_box.show_line(\"Marco\", \"Ti sei svegliata, finalmente.\")\n```\n\nIn questo modo la logica narrativa e la presentazione grafica rimangono indipendenti ma perfettamente sincronizzate nel tempo."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- L'ordine dei nodi nell'albero della scena stabilisce l'ordine di disegno: lo sfondo sta in cima all'elenco, i personaggi al centro e l'interfaccia utente in fondo.\n- La dissolvenza incrociata diretta richiede due `TextureRect` sovrapposti: l'immagine nuova compare gradualmente sopra quella vecchia prima che quest'ultima venga aggiornata.\n- Il passaggio attraverso il nero sfrutta un `ColorRect` a tutto schermo animato sulla proprietà `modulate:a`.\n- `await tween.finished` permette a una funzione di attendere il termine esatto di una transizione visiva prima di mostrare altro testo o far avanzare la storia."
+   }
+  ]
+ }
+}
