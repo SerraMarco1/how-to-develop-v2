@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-29T11:24:04.917Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-30T07:02:18.479Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "personaggi",
   "numero": "6.4",
   "titolo": "Personaggi: figure, espressioni, entrate e uscite"
  },
- "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 6.4 riprende quando si azzerano.",
- "riprende": "2026-10-30T07:00:00.916Z"
+ "messaggio": "Sta scrivendo la lezione 6.4 «Personaggi: figure, espressioni, entrate e uscite».",
+ "riprende": null
 }
