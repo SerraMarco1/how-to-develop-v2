@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-29T11:19:32.056Z",
+ "aggiornato": "2026-10-30T07:07:17.252Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -695,6 +695,15 @@
    "file": "lezioni/f06-visual-novel/battute-come-dati.json",
    "sha256": "39dc838341dcf4847963374ec63a571a55673cfc16bac63a96f480d40e5d38d2",
    "byte": 82444
+  },
+  {
+   "slug": "personaggi",
+   "numero": "6.4",
+   "titolo": "Personaggi: figure, espressioni, entrate e uscite",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/personaggi.json",
+   "sha256": "218f9f6fd364d86f9addd3be9f567cfadaec47013173e2e7fc00177a4cb38b6d",
+   "byte": 96718
   }
  ],
  "documentazione": {
