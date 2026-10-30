@@ -1,0 +1,16 @@
+{
+ "n": 43,
+ "quando": "2026-10-30T11:06:27.053Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "attesa",
+ "guasto": "fornitore",
+ "titolo": "Test: correzione della lezione pubblicata, 3 di 3",
+ "spiegazione": "Nessun modello disponibile per il ruolo \"scrittore\" (ultimi errori: gemini/gemini-3.6-flash: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again lat | Google Gemini è sovraccarico: resta fermo 60 minuti (4° giro di fila senza risposta), poi si riprova con una richiesta sola)\nReazione: si riprova al prossimo giro.",
+ "richieste": 1,
+ "durataMs": 1140,
+ "dati": null,
+ "chiamate": [
+  "gemini-3.6-flash: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+ ]
+}

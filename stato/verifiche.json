@@ -403,7 +403,7 @@
   "tentativi": {}
  },
  "interprete-dei-comandi": {
-  "versione": 2,
+  "versione": -1,
   "fragili": [
    "test"
   ],
