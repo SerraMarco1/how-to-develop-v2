@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://ui/dialogue_box.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"testo\",\n      \"cerca\": {\n        \"nome\": \"DialogueLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 5.0,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"Benvenuto\",\n      \"etichetta\": \"Testo\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"La finestra di dialogo mostra la prima battuta della storia\",\n      \"da\": 0.5,\n      \"a\": 5.0,\n      \"soggetto\": \"testo\"\n    }\n  ]\n}",
- "ragionamento": 2842,
- "quando": "2026-10-30T07:01:56.434Z",
- "ruolo": "ritocco"
-}

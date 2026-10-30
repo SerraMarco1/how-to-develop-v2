@@ -1,0 +1,48 @@
+{
+ "n": 26,
+ "quando": "2026-10-30T07:02:11.789Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «testo» (nome = DialogueLabel; almeno 1 da 0.5 a 5 s; deve mostrare il testo «Benvenuto»): il testo «Benvenuto» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 3 s: «DialogueLabel» a (0, 27) 1×113, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 24330,
+ "dati": {
+  "copione": {
+   "scena": "res://ui/dialogue_box.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "testo",
+     "cerca": {
+      "nome": "DialogueLabel"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5,
+     "deve": "mostrare testo",
+     "testo": "Benvenuto",
+     "etichetta": "Testo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La finestra di dialogo mostra la prima battuta della storia",
+     "da": 0.5,
+     "a": 5,
+     "soggetto": "testo"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «testo» (nome = DialogueLabel; almeno 1 da 0.5 a 5 s; deve mostrare il testo «Benvenuto»): il testo «Benvenuto» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 3 s: «DialogueLabel» a (0, 27) 1×113, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (4403 → 215 token)"
+ ]
+}
