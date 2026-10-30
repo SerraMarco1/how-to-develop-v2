@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-30T07:54:38.778Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-30T08:05:55.496Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "interprete-dei-comandi",
   "numero": "6.6",
   "titolo": "Un interprete: far eseguire la storia"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.6 riprende da sola appena rispondono.",
- "riprende": "2026-10-30T08:04:38.778Z"
+ "messaggio": "Sta scrivendo la lezione 6.6 «Un interprete: far eseguire la storia».",
+ "riprende": null
 }
