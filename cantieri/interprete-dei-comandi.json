@@ -2,7 +2,7 @@
  "creato": "2026-10-30T07:26:53.774Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -394,7 +394,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Costruisci l'interprete della storia\" (guidato) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-3.7-flash",
