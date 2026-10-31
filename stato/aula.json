@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-31T07:44:43.148Z",
+ "aggiornato": "2026-10-31T07:50:26.781Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "variabili-e-condizioni",
-  "numero": "6.8",
-  "titolo": "Variabili della storia e condizioni"
+  "slug": "capitoli-e-file",
+  "numero": "6.9",
+  "titolo": "Capitoli: la storia su più file"
  },
- "messaggio": "Sta scrivendo la lezione 6.8 «Variabili della storia e condizioni».",
+ "messaggio": "Sta scrivendo la lezione 6.9 «Capitoli: la storia su più file».",
  "riprende": null
 }
