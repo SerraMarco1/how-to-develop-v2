@@ -1,0 +1,93 @@
+{
+ "creato": "2026-10-31T07:50:26.797Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Capitoli: la storia su più file",
+  "sommario": "Impara a suddividere la sceneggiatura di una visual novel in file JSON separati per ogni capitolo, caricandoli solo quando necessario per ottimizzare l'uso della memoria. Scoprirai come strutturare le cartelle del progetto e come collegare scene distanti tramite indirizzi narrativi stabili composti da file ed etichette.",
+  "concetti": [
+   "Modularità narrativa",
+   "Caricamento on-demand con FileAccess e JSON",
+   "Indirizzi narrativi stabili (file e label)",
+   "Scansione e mappatura delle etichette",
+   "Organizzazione del FileSystem per risorse e capitoli"
+  ],
+  "obiettivi": [
+   "Dividere una storia lunga in file e saltare da uno all'altro",
+   "Dare a ogni punto della storia un indirizzo che non cambia",
+   "Caricare un capitolo solo quando serve"
+  ],
+  "durataMinuti": 40,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "In una visual novel completa il testo raggiunge facilmente decine di migliaia di parole. Raggruppare l'intera storia in un unico file come `intro.json` crea due problemi concreti: il file diventa ingestibile da modificare (un singolo errore di battitura o una virgola mancante bloccherebbe l'intero gioco) e l'applicazione spreca memoria caricando all'avvio battute che il giocatore leggerà solo dopo ore di gioco.\n\nLa soluzione consiste nel suddividere la narrazione in capitoli distinti salvati in file separati. Il motore carica in memoria solo il capitolo in cui si trova il giocatore e passa al capitolo successivo soltanto quando la trama lo richiede."
+   },
+   {
+    "tipo": "testo",
+    "md": "Prima di dividere i testi, è essenziale definire una struttura di cartelle ordinata. Nel progetto «Storie», le risorse visive e sonore si trovano già in cartelle dedicate dentro `res://assets/` (`images`, `audio`, `fonts`).\n\nAllo stesso modo, i file narrativi vanno organizzati separando la logica del codice dai contenuti della trama. Creeremo una cartella `res://story/chapters/` destinata a contenere esclusivamente i file JSON dei singoli capitoli: `chapter_01.json`, `chapter_02.json` e `chapter_03.json`."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "pannello-filesystem",
+    "didascalia": "Il pannello FileSystem, dove organizzare le cartelle per i capitoli della storia e per le risorse del progetto."
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando la storia è distribuita su più file, serve un modo sicuro per saltare da un punto all'altro. Nelle lezioni precedenti abbiamo visto come saltare usando un indice numerico di riga, ma i numeri di riga sono fragili: se aggiungi o togli anche una sola battuta all'inizio del file, tutti i numeri successivi slittano e i salti portano alla riga sbagliata.\n\nPer questo a ogni punto di arrivo assegniamo un **indirizzo stabile**, cioè immutabile nel tempo. Un indirizzo stabile è formato da due informazioni:\n1. Il percorso del file di capitolo (ad esempio `res://story/chapters/chapter_02.json`).\n2. Il nome dell'etichetta (*label*) definita all'interno di quel file (ad esempio `sala_centrale`).\n\nNon importa quante battute aggiungerai prima o dopo l'etichetta: l'interprete cercherà il nome dell'etichetta nel file indicato e troverà sempre il punto esatto."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "json",
+    "codice": "{\n  \"title\": \"Capitolo 1: Il Risveglio\",\n  \"lines\": [\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"La porta alle nostre spalle è chiusa. Dobbiamo andare avanti.\"\n    },\n    {\n      \"type\": \"jump_chapter\",\n      \"target_file\": \"res://story/chapters/chapter_02.json\",\n      \"target_label\": \"sala_centrale\"\n    }\n  ]\n}",
+    "spiegazione": "Nel primo capitolo (`chapter_01.json`) inseriamo un comando con `\"type\": \"jump_chapter\"`. Le due chiavi `target_file` e `target_label` indicano rispettivamente il file del capitolo da aprire e il nome dell'etichetta da raggiungere appena caricato il nuovo file."
+   },
+   {
+    "tipo": "testo",
+    "md": "In `chapter_02.json`, il punto di destinazione viene contrassegnato da una riga di tipo `label` con lo stesso nome dichiarato nel salto.\n\nEcco come si presenta l'inizio del secondo capitolo:"
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "json",
+    "codice": "{\n  \"title\": \"Capitolo 2: L'Archivio\",\n  \"lines\": [\n    {\n      \"type\": \"label\",\n      \"name\": \"sala_centrale\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Eccoci nella sala principale dell'Archivio. Da qui partono i vari corridoi.\"\n    },\n    {\n      \"type\": \"jump_chapter\",\n      \"target_file\": \"res://story/chapters/chapter_03.json\",\n      \"target_label\": \"epilogo\"\n    }\n  ]\n}",
+    "spiegazione": "La riga `label` definisce il punto di arrivo con `name: \"sala_centrale\"`. Subito dopo si trovano le battute di dialogo del capitolo 2, che si concludono a loro volta con un salto verso `chapter_03.json`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per gestire il caricamento su richiesta (**caricamento on-demand**), la classe `StoryPlayer` deve tenere in memoria soltanto l'array delle battute del capitolo attivo.\n\nQuando viene chiamato `load_story()`, memorizziamo le nuove righe e costruiamo un dizionario di etichette (`_labels`). Il dizionario associa a ogni nome di etichetta l'indice della riga in cui compare. Quando si passa a un altro capitolo, `load_story()` sovrascrive `_lines`, liberando automaticamente i dati del capitolo precedente e ripopolando il dizionario delle etichette per il nuovo file."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "var _labels: Dictionary = {}\n\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\tprint(\"Errore: file della storia non trovato: \", path)\n\t\treturn false\n\t\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\tprint(\"Errore durante l'apertura del file: \", path)\n\t\treturn false\n\t\n\tvar json := JSON.new()\n\tvar parse_result := json.parse(file.get_as_text())\n\tif parse_result != OK:\n\t\tprint(\"Errore nel parsing del JSON: \", json.get_error_message())\n\t\treturn false\n\t\n\tvar data: Dictionary = json.data\n\tif not data.has(\"lines\"):\n\t\tprint(\"Errore: la chiave 'lines' non è presente nel file JSON.\")\n\t\treturn false\n\t\n\tstory_file_path = path\n\t_lines = data[\"lines\"]\n\t_current_line_index = 0\n\t_index_labels()\n\treturn true\n\n\nfunc _index_labels() -> void:\n\t_labels.clear()\n\tfor i in range(_lines.size()):\n\t\tvar line_data: Dictionary = _lines[i]\n\t\tif line_data.get(\"type\", \"\") == \"label\" and line_data.has(\"name\"):\n\t\t\t_labels[line_data[\"name\"]] = i\n\n\nfunc jump_to_label(label_name: String) -> bool:\n\tif not _labels.has(label_name):\n\t\tprint(\"Errore: etichetta non trovata: \", label_name)\n\t\treturn false\n\t\n\t_current_line_index = _labels[label_name]\n\tadvance()\n\treturn true\n\n\nfunc jump_to_chapter(file_path: String, target_label: String = \"\") -> bool:\n\tif not load_story(file_path):\n\t\treturn false\n\t\n\tif target_label.is_empty():\n\t\tstart_story()\n\t\treturn true\n\t\n\treturn jump_to_label(target_label)",
+    "spiegazione": "`_index_labels()` scorre l'array `_lines` appena caricato e registra nel dizionario `_labels` la posizione di ogni riga con `type == \"label\"`. `jump_to_label()` imposta `_current_line_index` sulla posizione registrata e chiama `advance()` per saltare il marcatore e mostrare subito la prima battuta utile. `jump_to_chapter()` unisce le due operazioni: carica il nuovo file su richiesta e poi si posiziona sull'etichetta indicata."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "In Godot tutti i percorsi dentro `res://` e i nomi delle chiavi nel codice sono sensibili alle maiuscole e minuscole (*case-sensitive*). Se scrivi `res://story/Chapters/chapter_01.json` con la «C» maiuscola o se crei l'etichetta `\"Epilogo\"` ma nel salto scrivi `\"epilogo\"`, il controllo `FileAccess.file_exists()` fallirà o il dizionario non troverà la chiave, bloccando l'avanzamento della storia."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare la cartella dei capitoli e organizzare i file",
+    "passi": [
+     "Nel pannello *FileSystem*, fai clic con il tasto destro sulla cartella `res://story/` e scegli la voce per creare una nuova cartella, chiamandola `chapters`.",
+     "Trascina il file `intro.json` dentro `res://story/chapters/` oppure crea direttamente al suo interno i file `chapter_01.json`, `chapter_02.json` e `chapter_03.json`.",
+     "Apri `story_player.gd` nell'area di lavoro *Script* e aggiungi i metodi `_index_labels()`, `jump_to_label()` e `jump_to_chapter()` mostrati nel codice.",
+     "Nel metodo `_show_current_line()` di `story_player.gd`, aggiungi il controllo: se `line_data.get(\"type\") == \"jump_chapter\"`, chiama `jump_to_chapter(line_data[\"target_file\"], line_data.get(\"target_label\", \"\"))`.",
+     "Seleziona il nodo radice in `res://story/story_screen.tscn` e imposta nell'*Inspector* il percorso iniziale `story_file_path` su `res://story/chapters/chapter_01.json`."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Eseguendo la scena con F6 (o premendo il pulsante con il ciak per la scena corrente), vedrai Elena parlare nel Capitolo 1. Arrivata all'ultima battuta, `StoryPlayer` esegue il comando `jump_chapter`, scarica il primo file, apre `chapter_02.json` e riprende istantaneamente la narrazione dall'etichetta `sala_centrale`. Il passaggio tra file diversi avviene senza alcun ritardo percettibile per chi gioca."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Dividere una storia in più file JSON evita file giganti, previene errori di sintassi distruttivi e semplifica la scrittura a blocchi compatti.\n- I file narrativi vanno organizzati in cartelle coerenti come `res://story/chapters/`, mantenendoli separati dagli asset grafici e audio.\n- Un indirizzo narrativo stabile è formato dalla coppia file di capitolo ed etichetta (*label*): non cambia mai anche se aggiungi o togli battute.\n- Il caricamento su richiesta (*on-demand*) mantiene in memoria solo il capitolo corrente tramite `load_story()`, liberando i dati passati per risparmiare RAM.\n- `StoryPlayer` mappa le etichette con `_index_labels()` al momento del caricamento e si sposta tra i file tramite `jump_to_chapter()`."
+   }
+  ]
+ }
+}
