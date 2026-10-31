@@ -1076,7 +1076,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Le scelte: diramazioni e salti nella storia",
@@ -1144,5 +1145,10 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
