@@ -13,3 +13,4 @@
 {"quando":1793433305974,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"capitoli-e-file","ok":true,"contata":true,"durataMs":513283,"tokenInput":21152,"tokenOutput":7599,"ragionamento":37764}
 {"quando":1793433824470,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"capitoli-e-file","ok":false,"contata":true,"durataMs":5086,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793433829566,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"capitoli-e-file","ok":true,"contata":true,"durataMs":467992,"tokenInput":19988,"tokenOutput":12157,"ragionamento":16281}
+{"quando":1793434302666,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"capitoli-e-file","ok":true,"contata":true,"durataMs":94546,"tokenInput":20276,"tokenOutput":12776,"ragionamento":4792}
