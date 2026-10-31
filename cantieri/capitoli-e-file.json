@@ -64,7 +64,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Expected indented block after \"if\" block. (res://story/story_player.gd:113 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 113: `if dialogue_box:`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
