@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-30T10:24:06.484Z",
+ "aggiornato": "2026-10-31T07:05:07.585Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -722,6 +722,15 @@
    "file": "lezioni/f06-visual-novel/interprete-dei-comandi.json",
    "sha256": "a2a53754f25e7d12113ac0044abe02bf433550ceeffa2c87cfd7004f0d96d8da",
    "byte": 161071
+  },
+  {
+   "slug": "scelte",
+   "numero": "6.7",
+   "titolo": "Scelte",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/scelte.json",
+   "sha256": "097f6e760f4f29befbaa9e2e40cd7d6b0c7d23dde914502d3b34a525895eccd3",
+   "byte": 162516
   }
  ],
  "documentazione": {
