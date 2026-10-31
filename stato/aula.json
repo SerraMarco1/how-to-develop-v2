@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-31T07:50:26.781Z",
- "stato": "lavora",
+ "aggiornato": "2026-10-31T08:14:17.352Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "capitoli-e-file",
   "numero": "6.9",
   "titolo": "Capitoli: la storia su più file"
  },
- "messaggio": "Sta scrivendo la lezione 6.9 «Capitoli: la storia su più file».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.9 riprende da sola appena rispondono.",
+ "riprende": "2026-10-31T08:24:17.352Z"
 }
