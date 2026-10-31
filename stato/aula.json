@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-30T13:47:42.623Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-31T07:01:13.540Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "scelte",
   "numero": "6.7",
   "titolo": "Scelte"
  },
- "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 6.7 riprende quando si azzerano.",
- "riprende": "2026-10-31T07:00:00.623Z"
+ "messaggio": "Sta scrivendo la lezione 6.7 «Scelte».",
+ "riprende": null
 }
