@@ -1073,5 +1073,14 @@
    "regole": 2,
    "motivo": "Il nodo BackgroundDisplay non mostra alcun elemento visibile all'avvio perché le texture dei TextureRect sono vuote e l'overlay nero ha trasparenza iniziale azzerata."
   }
+ },
+ "scelte": {
+  "es1": {
+   "impronta": "3bce82d4ebb2f638bfc77ea3bed3ab4b3afe6d54c5a2efc54ff01674dc072a2a",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il menu delle scelte è impostato come invisibile all'avvio e nessuna parte del gioco lo mostra ancora a schermo."
+  }
  }
 }

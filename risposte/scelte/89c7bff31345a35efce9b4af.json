@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"Il menu delle scelte è impostato come invisibile all'avvio e nessuna parte del gioco lo mostra ancora a schermo.\"\n}",
- "ragionamento": 1437,
- "quando": "2026-10-31T07:23:32.118Z",
- "ruolo": "ritocco"
-}
