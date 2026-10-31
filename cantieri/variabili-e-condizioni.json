@@ -452,7 +452,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "prevedi",
@@ -509,7 +509,63 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedi lo stato finale delle variabili",
+    "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce, senza eseguirlo.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {}\n\tvariables[\"potions\"] = 1\n\tvariables[\"potions\"] = variables.get(\"potions\", 0) + 3\n\tvariables[\"potions\"] = variables.get(\"potions\", 0) + 2\n\treturn variables.get(\"potions\", 0)\n",
+      "domanda": "Quanto vale la variabile potions alla fine?",
+      "risposta": "6",
+      "spiegazione": "La variabile parte da 1. La prima somma aggiunge 3 (portandola a 4) e la seconda aggiunge 2, per un totale finale di 6.",
+      "id": "es3p1"
+     },
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {\"has_lantern\": false, \"bravery\": 10}\n\tvar condition: Dictionary = {\"variable\": \"has_lantern\", \"operator\": \"==\", \"value\": true}\n\tvar current: Variant = variables.get(condition[\"variable\"], null)\n\tif current == condition[\"value\"]:\n\t\tvariables[\"bravery\"] = variables.get(\"bravery\", 0) + 15\n\telse:\n\t\tvariables[\"bravery\"] = variables.get(\"bravery\", 0) + 5\n\treturn variables.get(\"bravery\", 0)\n",
+      "domanda": "Quanto vale la variabile bravery alla fine?",
+      "risposta": "15",
+      "spiegazione": "has_lantern è false, quindi il confronto current == condition[\"value\"] (false == true) risulta falso. Viene eseguito il ramo else, che aggiunge 5 al valore iniziale 10, ottenendo 15.",
+      "id": "es3p2"
+     },
+     {
+      "codice": "func run() -> String:\n\tvar variables: Dictionary = {}\n\tvar condition: Dictionary = {\"variable\": \"clues_found\", \"operator\": \">=\", \"value\": 3}\n\tvar current: Variant = variables.get(condition[\"variable\"], null)\n\tvar passes: bool = current != null and current >= condition[\"value\"]\n\tif passes:\n\t\treturn \"risolto\"\n\treturn \"sospeso\"\n",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "sospeso",
+      "spiegazione": "La chiave clues_found non è presente nel dizionario, perciò variables.get() restituisce null. Il controllo preliminare current != null evita l'errore di confronto con un intero e fa valere passes come false. La funzione restituisce quindi \"sospeso\".",
+      "id": "es3p3"
+     },
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {\"trust\": 2}\n\tvariables[\"trust\"] = variables.get(\"trust\", 0) + 1\n\tvariables[\"trust\"] = variables.get(\"trust\", 0) + 2\n\tif variables.get(\"trust\", 0) > 4:\n\t\tvariables[\"score\"] = 10\n\telse:\n\t\tvariables[\"score\"] = 0\n\treturn variables.get(\"score\", 0)\n",
+      "domanda": "Quanto vale la variabile score alla fine?",
+      "risposta": "10",
+      "spiegazione": "trust parte da 2, aumenta di 1 (raggiunge 3) e poi di 2 (raggiunge 5). Al controllo finale trust > 4 è vero (5 > 4), quindi score riceve il valore 10.",
+      "id": "es3p4"
+     },
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {}\n\tvariables[\"coins\"] = 50\n\tvariables[\"coins\"] = variables.get(\"coins\", 0) + 20\n\tvariables[\"coins\"] = 10\n\tvariables[\"coins\"] = variables.get(\"coins\", 0) + 5\n\treturn variables.get(\"coins\", 0)\n",
+      "domanda": "Quanto vale la variabile coins alla fine?",
+      "risposta": "15",
+      "spiegazione": "Dopo essere salita a 70 (50 + 20), la variabile subisce un'assegnazione diretta a 10 (un'operazione set), che sovrascrive completamente il conteggio precedente. L'ultima operazione somma 5 a 10, producendo 15.",
+      "id": "es3p5"
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es3"
+   }
   },
   "test": {
    "stato": "da_fare",
