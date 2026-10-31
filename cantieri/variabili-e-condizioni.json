@@ -1,0 +1,74 @@
+{
+ "creato": "2026-10-31T07:05:09.108Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Variabili della storia e condizioni",
+  "sommario": "In questa lezione impari a dotare la tua visual novel di una memoria a lungo termine. Scoprirai come gestire lo stato della storia tramite un dizionario centrale, come eseguire comandi per impostare e incrementare variabili dai file di dati, e come definire e valutare condizioni per mostrare battute o opzioni di scelta solo quando si verificano determinati requisiti.",
+  "concetti": [
+   "Stato della storia (story state)",
+   "Comando 'set' per assegnare variabili",
+   "Comando 'add' per incrementare variabili",
+   "Struttura dati per condizioni (variable, operator, value)",
+   "Valutazione a runtime con evaluate_condition()",
+   "Filtro condizionale di battute e opzioni di scelta"
+  ],
+  "obiettivi": [
+   "Lo stato della storia: un posto solo dove stanno le variabili",
+   "Comandi che cambiano una variabile e condizioni che la leggono",
+   "Descrivere una condizione come dato (variabile, confronto, valore) e valutarla"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nelle visual novel le scelte del giocatore devono avere conseguenze: raccogliere una lanterna all'inizio dell'avventura può cambiare il modo in cui un personaggio reagisce capitoli più avanti. Se provassi a gestire queste conseguenze solo con salti e diramazioni narrative (*branches*), ti troveresti a dover duplicare intere scene per ogni minima variante, portando il progetto a un'esplosione ingestibile di percorsi alternativi.\n\nLa soluzione consiste nel dare al motore una memoria: lo **stato della storia** (*story state*). Invece di moltiplicare i rami narrativi, registriamo le decisioni sotto forma di variabili e permettiamo alle singole battute e scelte di comparire solo quando certe condizioni risultano vere."
+   },
+   {
+    "tipo": "testo",
+    "md": "Lo stato della storia è l'insieme di tutti i fatti decisi o raccolti durante la partita: se il giocatore possiede un oggetto, qual è il livello di fiducia di un compagno o quale indizio ha scoperto. Invece di disperdere queste informazioni in nodi diversi della scena, le raccogliamo in un unico punto: un dizionario `Dictionary` gestito dal riproduttore della storia (`StoryPlayer`).\n\nTenere lo stato in un unico dizionario offre un vantaggio cruciale: la coerenza. Le chiavi sono stringhe che identificano la variabile (come `\"has_lantern\"` o `\"friendship_marco\"`), mentre i valori possono essere booleani, numeri interi o stringhe. Quando dovremo salvare la partita, basterà salvare questo singolo dizionario per conservare l'intera memoria narrativa del giocatore."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "var _variables: Dictionary = {}\n\n\nfunc set_variable(var_name: String, value: Variant) -> void:\n\t_variables[var_name] = value\n\n\nfunc get_variable(var_name: String, default: Variant = null) -> Variant:\n\treturn _variables.get(var_name, default)\n\n\nfunc add_variable(var_name: String, amount: Variant) -> void:\n\tvar current: Variant = _variables.get(var_name, 0)\n\t_variables[var_name] = current + amount",
+    "spiegazione": "La variabile privata `_variables` contiene lo stato della storia. `set_variable()` memorizza o sovrascrive un valore associato a un nome; `get_variable()` legge il valore corrispondente restituendo un valore di riserva (`default`) se la chiave non esiste; `add_variable()` recupera il valore numerico attuale (partendo da `0` se assente) e gli somma l'incremento richiesto."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per modificare queste variabili direttamente dal file della storia senza scrivere codice GDScript per ogni evento narrativo, introduciamo due nuovi comandi nei nostri file JSON:\n\n1. **`set`**: assegna un valore a una variabile, ad esempio `{\"type\": \"set\", \"variable\": \"has_lantern\", \"value\": true}`.\n2. **`add`**: incrementa una variabile numerica, ad esempio `{\"type\": \"add\", \"variable\": \"friendship_marco\", \"value\": 1}`.\n\nQuando l'interprete della storia incontra uno di questi comandi nel flusso narrativo, chiama la funzione corrispondente (`set_variable` o `add_variable`) e passa subito all'azione successiva: trattandosi di un'operazione logica interna, non richiede attese né clic da parte del giocatore."
+   },
+   {
+    "tipo": "testo",
+    "md": "Dopo aver memorizzato i dati, dobbiamo fare in modo che la narrazione li consulti. Poiché la storia è descritta in file JSON e non in codice sorgente, non possiamo usare direttamente le istruzioni `if` di GDScript nei testi. Dobbiamo rappresentare la condizione stessa come un dato strutturato.\n\nUna condizione si descrive come un dizionario composto da tre elementi precisi:\n- **`variable`**: il nome della variabile da controllare nello stato (es. `\"has_lantern\"`).\n- **`operator`**: il confronto da eseguire espresso come testo (`\"==\"`, `\"!=\"`, `\">\"`, `\"<\"`, `\">=\"`, `\"<=\"`).\n- **`value`**: il valore di riferimento con cui effettuare il confronto (es. `true` o `5`).\n\nSe una battuta o un'opzione di scelta include questo blocco di dati, il motore saprà esattamente chi confrontare, come confrontarlo e con quale valore."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "func evaluate_condition(condition: Dictionary) -> bool:\n\tif condition.is_empty():\n\t\treturn true\n\t\n\tvar var_name: String = condition.get(\"variable\", \"\")\n\tvar op: String = condition.get(\"operator\", \"==\")\n\tvar target_value: Variant = condition.get(\"value\", null)\n\tvar current_value: Variant = _variables.get(var_name, null)\n\t\n\tmatch op:\n\t\t\"==\":\n\t\t\treturn current_value == target_value\n\t\t\"!=\":\n\t\t\treturn current_value != target_value\n\t\t\">\":\n\t\t\treturn current_value != null and current_value > target_value\n\t\t\"<\":\n\t\t\treturn current_value != null and current_value < target_value\n\t\t\">=\":\n\t\t\treturn current_value != null and current_value >= target_value\n\t\t\"<=\":\n\t\t\treturn current_value != null and current_value <= target_value\n\t\t_:\n\t\t\treturn false",
+    "spiegazione": "Se il dizionario `condition` è vuoto significa che non vi sono requisiti e la funzione restituisce subito `true`. Altrimenti estrae il nome, l'operatore e il valore di riferimento, recupera il valore memorizzato in `_variables` ed esegue il confronto tramite l'istruzione `match`."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "In GDScript, confrontare un valore `null` con un numero tramite operatori di disuguaglianza (`>`, `<`, `>=`, `<=`) causa un errore a runtime. Nel metodo `evaluate_condition`, il controllo preliminare `current_value != null` evita interruzioni nel caso in cui una condizione numerica interroghi una variabile che non è ancora stata impostata nella partita."
+   },
+   {
+    "tipo": "testo",
+    "md": "Ora che possiamo valutare qualsiasi condizione, l'interprete può applicarla in due punti chiave della narrazione:\n\n1. **Nelle battute di dialogo**: prima di mostrare una battuta, l'interprete verifica se nei suoi dati è presente la chiave `\"condition\"`. Se la condizione esiste e `evaluate_condition()` restituisce `false`, la battuta viene saltata automaticamente e l'interprete passa all'indice successivo senza mostrare nulla a schermo.\n2. **Nei menu di scelta**: quando il gioco costruisce i pulsanti per una decisione, esamina la chiave `\"condition\"` di ogni singola opzione. Le opzioni la cui condizione non è soddisfatta vengono scartate prima di istanziare il nodo `Button`, mostrando al giocatore solo le scelte effettivamente sbloccate."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "json",
+    "codice": "{\n  \"lines\": [\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Prendi questa lanterna, ti servirà lungo il cammino.\"\n    },\n    {\n      \"type\": \"choice\",\n      \"prompt\": \"Accetti la lanterna di Marco?\",\n      \"options\": [\n        {\n          \"text\": \"Prendi la lanterna\",\n          \"target\": \"scelta_lanterna_si\"\n        },\n        {\n          \"text\": \"Rifiuta con cortesia\",\n          \"target\": \"scelta_lanterna_no\"\n        }\n      ]\n    },\n    {\n      \"label\": \"scelta_lanterna_si\"\n    },\n    {\n      \"type\": \"set\",\n      \"variable\": \"has_lantern\",\n      \"value\": true\n    },\n    {\n      \"type\": \"jump\",\n      \"target\": \"corridoio_buio\"\n    },\n    {\n      \"label\": \"scelta_lanterna_no\"\n    },\n    {\n      \"type\": \"set\",\n      \"variable\": \"has_lantern\",\n      \"value\": false\n    },\n    {\n      \"type\": \"jump\",\n      \"target\": \"corridoio_buio\"\n    },\n    {\n      \"label\": \"corridoio_buio\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Grazie alla luce della lanterna riesco a vedere i gradini umidi.\",\n      \"condition\": {\n        \"variable\": \"has_lantern\",\n        \"operator\": \"==\",\n        \"value\": true\n      }\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"È buio pesto... devo avanzare toccando il muro a tentoni.\",\n      \"condition\": {\n        \"variable\": \"has_lantern\",\n        \"operator\": \"==\",\n        \"value\": false\n      }\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"In ogni caso, devo trovare la via d'uscita.\"\n    }\n  ]\n}",
+    "spiegazione": "La scelta iniziale porta a due etichette distinte che impostano la variabile `has_lantern` a `true` o `false` tramite il comando `set`. Subito dopo, entrambe le strade convergono all'etichetta `\"corridoio_buio\"`: delle due battute successive, una sola soddisferà la condizione e verrà mostrata, prima di proseguire con la narrazione comune."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Lo stato della storia è un dizionario centralizzato che tiene traccia di tutte le scelte e i valori narrativi del giocatore.\n- I comandi `set` e `add` permettono di assegnare e incrementare variabili direttamente dai dati JSON senza bloccare l'interfaccia.\n- Una condizione è una struttura di dati definita da tre elementi: nome della variabile, operatore di confronto e valore di riferimento.\n- La funzione `evaluate_condition()` confronta lo stato attuale con i requisiti richiesti e restituisce `true` o `false`.\n- Le condizioni evitano la duplicazione delle scene, consentendo a battute e opzioni di comparire solo quando opportuno."
+   }
+  ]
+ }
+}
