@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-31T07:50:25.589Z",
+ "aggiornato": "2026-10-31T08:50:27.437Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -740,6 +740,15 @@
    "file": "lezioni/f06-visual-novel/variabili-e-condizioni.json",
    "sha256": "32b5e93bbe5b71daebbc6afcd822b2775e35a408335e3c5a57e2016e1992fb05",
    "byte": 168621
+  },
+  {
+   "slug": "capitoli-e-file",
+   "numero": "6.9",
+   "titolo": "Capitoli: la storia su più file",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/capitoli-e-file.json",
+   "sha256": "881b063b4c15585813188bc756a6a0530724101e9c7b487cc5db410da5cb36e5",
+   "byte": 142664
   }
  ],
  "documentazione": {

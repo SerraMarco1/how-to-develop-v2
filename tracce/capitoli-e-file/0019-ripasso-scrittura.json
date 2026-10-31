@@ -1,0 +1,17 @@
+{
+ "n": 19,
+ "quando": "2026-10-31T08:50:27.429Z",
+ "pezzo": "ripasso",
+ "azione": "scrittura",
+ "esito": "saltato",
+ "guasto": "formato",
+ "titolo": "Ripasso non scritto",
+ "spiegazione": "I modelli non hanno prodotto una risposta valida: gemini/gemini-flash-lite-latest: JSON non valido (Expected ',' or '}' after property value in JSON at position 692 (line 10 column 159)) | gemini/gemini-flash-lite-latest: JSON non valido (Expected ',' or '}' after property value in JSON at position 692 (line 10 column 159))\nReazione: la lezione esce senza voci di ripasso; si riprova a scriverle nei giri successivi.",
+ "richieste": 2,
+ "durataMs": 13175,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (2858 → 1026 token)",
+  "gemini-flash-lite-latest: risposta in 5 s (3947 → 1027 token)"
+ ]
+}
