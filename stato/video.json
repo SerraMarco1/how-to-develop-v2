@@ -1082,5 +1082,14 @@
    "regole": 2,
    "motivo": "Il menu delle scelte è impostato come invisibile all'avvio e nessuna parte del gioco lo mostra ancora a schermo."
   }
+ },
+ "variabili-e-condizioni": {
+  "es1": {
+   "impronta": "040314ce6e52921da75d8477a31c9584f9c1344385106b744a5b0491ecae194a",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "L'esercizio aggiunge la logica per le variabili e le condizioni nell'interprete della storia, ma la storia in esecuzione non le utilizza ancora: l'aspetto visivo e il comportamento del gioco rimangono identici."
+  }
  }
 }
