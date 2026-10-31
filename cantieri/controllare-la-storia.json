@@ -2,7 +2,7 @@
  "creato": "2026-10-31T08:50:29.236Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -281,7 +281,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Creare il validatore della storia\" (obiettivo) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-3.7-flash",
   "gemini/gemini-flash-latest",
