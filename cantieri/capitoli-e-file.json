@@ -36,7 +36,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar player := instantiate_script(\"res://story/story_player.gd\") as Node\n\tif not check(\"player_valido\", player != null, \"StoryPlayer deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tif not check(\"has_jump_chapter\", has_function(player, \"jump_to_chapter\"), \"StoryPlayer deve avere la funzione jump_to_chapter(file_path, target_label)\"):\n\t\treturn\n\tif not check(\"has_jump_label\", has_function(player, \"jump_to_label\"), \"StoryPlayer deve avere la funzione jump_to_label(label_name)\"):\n\t\treturn\n\t\n\tvar loaded: bool = bool(player.call(\"load_story\", \"res://story/chapters/chapter_01.json\"))\n\tif not check(\"load_ch1\", loaded, \"load_story deve caricare correttamente res://story/chapters/chapter_01.json\"):\n\t\treturn\n\t\n\tplayer.call(\"start_story\")\n\t# Avanzando dalla prima riga di Elena si attiva il comando jump_chapter\n\tplayer.call(\"advance\")\n\t\n\tvar current_path: String = String(get_prop(player, \"story_file_path\", \"\"))\n\tcheck(\"salto_a_ch2\", current_path == \"res://story/chapters/chapter_02.json\", \"Dopo jump_chapter il percorso attivo deve essere chapter_02.json (attuale: %s)\" % current_path)\n\t\n\tvar line_idx: int = int(get_prop(player, \"_current_line_index\", -1))\n\tcheck(\"indice_riga_marco\", line_idx == 1, \"All'arrivo su sala_centrale l'indice deve puntare alla battuta successiva all'etichetta (indice 1, attuale: %d)\" % line_idx)\n\t\n\tvar fake_jump: bool = bool(player.call(\"jump_to_label\", \"etichetta_fantasma\"))\n\tcheck(\"etichetta_inesistente_false\", fake_jump == false, \"jump_to_label deve restituire false se l'etichetta cercata non esiste\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar player := await instantiate_script(\"res://story/story_player.gd\")\n\tif not check(\"player_valido\", player != null, \"StoryPlayer deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tif not check(\"has_jump_chapter\", has_function(player, \"jump_to_chapter\"), \"StoryPlayer deve avere la funzione jump_to_chapter(file_path, target_label)\"):\n\t\treturn\n\tif not check(\"has_jump_label\", has_function(player, \"jump_to_label\"), \"StoryPlayer deve avere la funzione jump_to_label(label_name)\"):\n\t\treturn\n\t\n\tvar loaded: bool = bool(player.call(\"load_story\", \"res://story/chapters/chapter_01.json\"))\n\tif not check(\"load_ch1\", loaded, \"load_story deve caricare correttamente res://story/chapters/chapter_01.json\"):\n\t\treturn\n\t\n\tplayer.call(\"start_story\")\n\t# Avanzando dalla prima riga di Elena si attiva il comando jump_chapter\n\tplayer.call(\"advance\")\n\t\n\tvar current_path: String = String(get_prop(player, \"story_file_path\", \"\"))\n\tcheck(\"salto_a_ch2\", current_path == \"res://story/chapters/chapter_02.json\", \"Dopo jump_chapter il percorso attivo deve essere chapter_02.json (attuale: %s)\" % current_path)\n\t\n\tvar line_idx: int = int(get_prop(player, \"_current_line_index\", -1))\n\tcheck(\"indice_riga_marco\", line_idx == 1, \"All'arrivo su sala_centrale l'indice deve puntare alla battuta successiva all'etichetta (indice 1, attuale: %d)\" % line_idx)\n\t\n\tvar fake_jump: bool = bool(player.call(\"jump_to_label\", \"etichetta_fantasma\"))\n\tcheck(\"etichetta_inesistente_false\", fake_jump == false, \"jump_to_label deve restituire false se l'etichetta cercata non esiste\")",
       "descrizione": "StoryPlayer carica il capitolo iniziale, mappa le etichette ed esegue il salto al secondo capitolo"
      }
     ],
@@ -182,6 +182,7 @@
      },
      "spiegazione": "Dividere la storia in capitoli permette di caricare in memoria solo le battute attive. Quando `load_story()` legge un file, chiama `_index_labels()` per mappare il nome di ogni etichetta all'indice in cui compare nell'array. In questo modo `jump_to_label()` trova subito la riga desiderata senza dover scansionare il file ad ogni salto. Quando `_show_current_line()` incontra un comando `\"jump_chapter\"`, delega a `jump_to_chapter()` l'apertura del nuovo file e il salto all'etichetta di destinazione. Se incontra invece una riga di tipo `\"label\"`, invoca direttamente `advance()` per procedere alla prima battuta utile.",
      "cambiati": [
+      "story/story_interpreter.gd",
       "story/chapters/chapter_01.json",
       "story/chapters/chapter_02.json",
       "story/story_player.gd"
@@ -190,14 +191,15 @@
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] StoryPlayer carica il capitolo iniziale, mappa le etichette ed esegue il salto al secondo capitolo: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var player := instantiate_script(\"res://story/story_player.gd\") as Node`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-3.6-flash"
    ]
   },
   "test": {
@@ -268,7 +270,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Capitoli: la storia su più file",
