@@ -1,0 +1,233 @@
+{
+ "n": 32,
+ "quando": "2026-10-31T10:23:46.591Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (collauda): approvato",
+ "spiegazione": "«Collauda: Il validatore della storia». 6 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo 2 correzioni.\nFile aggiunti o cambiati: story/story_validator.gd, story/intro.json, story/branching_story.json, story/network_story.json, story/consequence_story.json, story/story_interpreter.gd, ui/dialogue_box.tscn, ui/choice_menu.tscn, story/character_stage.tscn, story/background_display.tscn",
+ "richieste": 0,
+ "durataMs": 12119,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "collauda",
+   "titolo": "Collauda: Il validatore della storia",
+   "consegna": "Crea lo strumento di controllo per verificare la correttezza dei file della storia direttamente dall'editor prima di avviare il gioco.\n\n1. Crea il file `res://story/story_validator.gd`.\n2. Lo script deve iniziare con l'annotazione `@tool`, avere `class_name StoryValidator` ed estendere `EditorScript`.\n3. Implementa la funzione `validate_chapter(file_path: String) -> Array[String]` che analizza il file JSON indicato ed elenca tutti gli errori trovati. Se il capitolo è corretto, la funzione deve restituire un array vuoto (`[]`).\n\nLa funzione deve controllare in due passate:\n- **Prima passata (raccolta definizioni)**:\n  - Scandisci tutti i comandi di `lines`.\n  - Se il comando ha `type == \"label\"`, leggi il nome con `cmd.get(\"id\", cmd.get(\"name\", \"\"))`. Se è vuoto, segnala `\"Etichetta senza nome specificato\"`. Se il nome è già presente tra le etichette registrate, segnala `\"Etichetta duplicata '%s'\"`. Altrimenti memorizza l'etichetta e il suo indice in un dizionario `declared_labels`.\n  - Se il comando ha `type == \"set\"` o `type == \"add\"`, salva il nome della variabile `cmd.get(\"variable\", \"\")` in un array `assigned_variables`.\n- **Seconda passata (verifica comandi e riferimenti)**:\n  - **Personaggio sconosciuto**: se il comando contiene il campo `speaker`, il suo valore deve appartenere all'elenco consentito `[\"Elena\", \"Marco\", \"???\", \"\"]`. Se non vi appartiene, segnala l'errore indicando il nome del personaggio sconosciuto.\n  - **Salto inesistente**: se `type == \"jump\"`, verifica che `target` sia presente in `declared_labels`. In caso contrario, segnala l'errore con il nome del target mancante.\n  - **Scelta inesistente**: se `type == \"choice\"`, per ciascuna opzione in `options` verifica che `target` esista in `declared_labels`. Inoltre, se l'opzione ha una `condition`, verifica che `condition.get(\"variable\", \"\")` sia presente in `assigned_variables`.\n  - **Variabile mai impostata**: per qualsiasi comando che contenga una `condition`, verifica che la variabile controllata sia presente in `assigned_variables`.\n\n4. Implementa `_run() -> void` che controlla i file di storia del gioco (`res://story/intro.json`, `res://story/branching_story.json`, `res://story/network_story.json`, `res://story/consequence_story.json`) e stampa l'esito nel pannello Output.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "storie",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Usa `FileAccess.open` e `JSON.parse_string` per caricare il dizionario dei dati del capitolo.",
+    "Nella prima passata accumula le etichette in `declared_labels` e i comandi `set`/`add` in `assigned_variables`.",
+    "Nella seconda passata verifica che ogni `speaker` sia tra quelli noti, che ogni `target` esista in `declared_labels` e che ogni variabile usata in `condition` sia in `assigned_variables`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://story/story_validator.gd",
+     "descrizione": "Il file res://story/story_validator.gd esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://story/story_validator.gd",
+     "regex": "class_name StoryValidator",
+     "descrizione": "Lo script definisce la classe StoryValidator"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://story/story_validator.gd",
+     "regex": "extends EditorScript",
+     "descrizione": "Lo script estende EditorScript"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://story/story_validator.gd",
+     "regex": "func validate_chapter",
+     "descrizione": "Lo script implementa la funzione validate_chapter"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://story/story_validator.gd",
+     "regex": "func _run",
+     "descrizione": "Lo script implementa la funzione _run"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tcheck(\"main_scene\", main != null, \"La scena principale deve avviarsi senza errori\")\n",
+     "descrizione": "La scena principale si avvia correttamente senza errori"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Storie\"\nrun/main_scene=\"res://story/story_screen.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nadvance_dialogue={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "core/core.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "ui/ui.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/audio/audio.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/fonts/font.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "assets/images/image.gd",
+      "contenuto": "extends Node\n"
+     },
+     {
+      "percorso": "core/systems_map.json",
+      "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"visual_scene\",\n      \"order\": 2,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"audio_manager\",\n      \"order\": 3,\n      \"dependencies\": []\n    },\n    {\n      \"id\": \"story_interpreter\",\n      \"order\": 4,\n      \"dependencies\": [\n        \"dialogue_ui\",\n        \"visual_scene\"\n      ]\n    },\n    {\n      \"id\": \"game_state\",\n      \"order\": 5,\n      \"dependencies\": [\n        \"story_interpreter\"\n      ]\n    }\n  ]\n}"
+     },
+     {
+      "percorso": "story/elena.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"CharacterData\" load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://story/character_data.gd\" id=\"1_data\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player.png\" id=\"2_texture\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\ndisplay_name = \"Elena\"\nname_color = Color(0.2, 0.8, 0.4, 1)\nexpressions = {\n\"neutral\": ExtResource(\"2_texture\")\n}\n"
+     },
+     {
+      "percorso": "story/marco.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"CharacterData\" load_steps=3 format=3]\n\n[ext_resource type=\"Script\" path=\"res://story/character_data.gd\" id=\"1_data\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_texture\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\ndisplay_name = \"Marco\"\nname_color = Color(0.3, 0.6, 0.9, 1)\nexpressions = {\n\"neutral\": ExtResource(\"2_texture\")\n}\n"
+     },
+     {
+      "percorso": "story/test_shake.gd",
+      "contenuto": "class_name TestShake\nextends RefCounted\n\n\nfunc test_shake_command(interpreter: StoryInterpreter) -> bool:\n\tif not interpreter or not interpreter.character_stage:\n\t\treturn false\n\t\n\tvar initial_pos: Vector2 = interpreter.character_stage.position\n\tvar start_time: int = Time.get_ticks_msec()\n\t\n\tawait interpreter.execute_command({\n\t\t\"type\": \"shake\",\n\t\t\"duration\": 0.2,\n\t\t\"strength\": 10.0\n\t})\n\t\n\tvar elapsed_sec: float = float(Time.get_ticks_msec() - start_time) / 1000.0\n\t\n\tif elapsed_sec < 0.15:\n\t\treturn false\n\t\n\tif interpreter.character_stage.position != initial_pos:\n\t\treturn false\n\t\n\treturn true\n"
+     },
+     {
+      "percorso": "story/test_wait.gd",
+      "contenuto": "class_name TestWait\nextends RefCounted\n\n\nfunc test_wait_command(interpreter: StoryInterpreter) -> bool:\n\tif not interpreter:\n\t\treturn false\n\t\n\tvar start_time: int = Time.get_ticks_msec()\n\t\n\tawait interpreter.execute_command({\n\t\t\"type\": \"wait\",\n\t\t\"duration\": 0.2\n\t})\n\t\n\tvar elapsed_sec: float = float(Time.get_ticks_msec() - start_time) / 1000.0\n\t\n\tif elapsed_sec < 0.15:\n\t\treturn false\n\t\n\tif elapsed_sec > 0.45:\n\t\treturn false\n\t\n\treturn true\n"
+     },
+     {
+      "percorso": "story/character_data.gd",
+      "contenuto": "class_name CharacterData\nextends Resource\n\n@export var display_name: String = \"\"\n@export var name_color: Color = Color.WHITE\n@export var expressions: Dictionary = {}\n"
+     },
+     {
+      "percorso": "story/character_display.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://story/character_display.gd\" id=\"1_display\"]\n\n[node name=\"CharacterDisplay\" type=\"TextureRect\"]\ncustom_minimum_size = Vector2(128, 128)\nexpand_mode = 1\nstretch_mode = 5\nscript = ExtResource(\"1_display\")\n"
+     },
+     {
+      "percorso": "story/character_display.gd",
+      "contenuto": "class_name CharacterDisplay\nextends TextureRect\n\nvar character_data: CharacterData\n\n\nfunc setup(data: CharacterData) -> void:\n\tcharacter_data = data\n"
+     },
+     {
+      "percorso": "ui/choice_menu.gd",
+      "contenuto": "class_name ChoiceMenu\nextends Control\n\nsignal choice_selected(target_label: String)\n\n@onready var container: VBoxContainer = $VBoxContainer\n\n\nfunc _ready() -> void:\n\tclear_choices()\n\n\nfunc show_choices(options: Array) -> void:\n\tclear_choices()\n\tvisible = true\n\t\n\tfor option_data in options:\n\t\tif option_data is Dictionary:\n\t\t\tvar button := Button.new()\n\t\t\tvar text: String = String(option_data.get(\"text\", \"\"))\n\t\t\tvar target: String = String(option_data.get(\"target\", \"\"))\n\t\t\tbutton.text = text\n\t\t\tbutton.pressed.connect(_on_option_pressed.bind(target))\n\t\t\tcontainer.add_child(button)\n\n\nfunc clear_choices() -> void:\n\tfor child in container.get_children():\n\t\tchild.queue_free()\n\tvisible = false\n\n\nfunc _on_option_pressed(target_label: String) -> void:\n\tchoice_selected.emit(target_label)\n\tclear_choices()\n"
+     },
+     {
+      "percorso": "ui/dialogue_box.gd",
+      "contenuto": "extends PanelContainer\n\nsignal line_finished\n\n\nfunc show_line(_speaker: String, _text: String) -> void:\n\tline_finished.emit()\n\n\nfunc clear() -> void:\n\tpass\n"
+     },
+     {
+      "percorso": "story/character_stage.gd",
+      "contenuto": "class_name CharacterStage\nextends Control\n"
+     },
+     {
+      "percorso": "story/background_display.gd",
+      "contenuto": "class_name BackgroundDisplay\nextends Control\n"
+     },
+     {
+      "percorso": "story/story_player.gd",
+      "contenuto": "class_name StoryPlayer\nextends Node\n\nsignal story_finished\n\n@export var story_file_path: String = \"res://story/chapters/chapter_01.json\"\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n\nvar _lines: Array = []\nvar _labels: Dictionary = {}\nvar _current_line_index: int = 0\nvar _is_transitioning: bool = false\n\n\nfunc _ready() -> void:\n\tif dialogue_box:\n\t\tdialogue_box.line_finished.connect(_on_dialogue_box_line_finished)\n\t\n\tif load_story(story_file_path):\n\t\tstart_story()\n\n\nfunc is_transitioning() -> bool:\n\treturn _is_transitioning or (background_display != null and background_display.is_transitioning())\n\n\nfunc change_background(new_texture: Texture2D, transition_type: String = \"crossfade\", duration: float = 0.5) -> void:\n\t_is_transitioning = true\n\tif background_display:\n\t\tif transition_type == \"black\":\n\t\t\tawait background_display.transition_through_black(new_texture, duration)\n\t\telse:\n\t\t\tawait background_display.crossfade_to(new_texture, duration)\n\t_is_transitioning = false\n\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\tprint(\"Errore: file della storia non trovato: \", path)\n\t\treturn false\n\t\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\tprint(\"Errore durante l'apertura del file: \", path)\n\t\treturn false\n\t\n\tvar json := JSON.new()\n\tvar parse_result := json.parse(file.get_as_text())\n\tif parse_result != OK:\n\t\tprint(\"Errore nel parsing del JSON: \", json.get_error_message())\n\t\treturn false\n\t\n\tvar data: Dictionary = json.data\n\tif not data.has(\"lines\"):\n\t\tprint(\"Errore: la chiave 'lines' non è presente nel file JSON.\")\n\t\treturn false\n\t\n\tstory_file_path = path\n\t_lines = data[\"lines\"]\n\t_current_line_index = 0\n\t_index_labels()\n\treturn true\n\n\nfunc _index_labels() -> void:\n\t_labels.clear()\n\tfor i in range(_lines.size()):\n\t\tvar line_data: Dictionary = _lines[i]\n\t\tif line_data.get(\"type\", \"\") == \"label\":\n\t\t\tvar label_name: String = line_data.get(\"name\", line_data.get(\"id\", \"\"))\n\t\t\tif not label_name.is_empty():\n\t\t\t\t_labels[label_name] = i\n\n\nfunc jump_to_label(label_name: String) -> bool:\n\tif not _labels.has(label_name):\n\t\tprint(\"Errore: etichetta non trovata: \", label_name)\n\t\treturn false\n\t\n\t_current_line_index = _labels[label_name]\n\tadvance()\n\treturn true\n\n\nfunc jump_to_chapter(file_path: String, target_label: String = \"\") -> bool:\n\tif not load_story(file_path):\n\t\treturn false\n\t\n\tif target_label.is_empty():\n\t\tstart_story()\n\t\treturn true\n\t\n\treturn jump_to_label(target_label)\n\n\nfunc start_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc advance() -> void:\n\tif is_transitioning():\n\t\treturn\n\t\n\t_current_line_index += 1\n\tif _current_line_index < _lines.size():\n\t\t_show_current_line()\n\telse:\n\t\tif dialogue_box:\n\t\t\tdialogue_box.clear()\n\t\tstory_finished.emit()\n\n\nfunc get_line_count() -> int:\n\treturn _lines.size()\n\n\nfunc restart_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc jump_to_line(index: int) -> bool:\n\tif index < 0 or index >= get_line_count():\n\t\treturn false\n\t_current_line_index = index\n\t_show_current_line()\n\treturn true\n\n\nfunc is_at_end() -> bool:\n\treturn _current_line_index >= get_line_count()\n\n\nfunc get_character_stage() -> CharacterStage:\n\treturn character_stage\n\n\nfunc get_background_display() -> BackgroundDisplay:\n\treturn background_display\n\n\nfunc _show_current_line() -> void:\n\tif _current_line_index < 0 or _current_line_index >= _lines.size():\n\t\treturn\n\t\n\tvar line_data: Dictionary = _lines[_current_line_index]\n\tvar cmd_type: String = line_data.get(\"type\", \"\")\n\t\n\tif cmd_type == \"jump_chapter\":\n\t\tvar target_file: String = line_data.get(\"target_file\", \"\")\n\t\tvar target_label: String = line_data.get(\"target_label\", \"\")\n\t\tjump_to_chapter(target_file, target_label)\n\t\treturn\n\t\n\tif cmd_type == \"label\":\n\t\tadvance()\n\t\treturn\n\t\n\tvar speaker: String = line_data.get(\"speaker\", \"\")\n\tvar text: String = line_data.get(\"text\", \"\")\n\t\n\tif background_display and line_data.has(\"background\"):\n\t\tvar bg_path: String = line_data[\"background\"]\n\t\tvar bg_tex: Texture2D = load(bg_path) as Texture2D\n\t\tif bg_tex:\n\t\t\tif dialogue_box:\n\t\t\t\tdialogue_box.clear()\n\t\t\tvar trans_type: String = line_data.get(\"transition\", \"crossfade\")\n\t\t\tvar trans_dur: float = float(line_data.get(\"transition_duration\", 0.5))\n\t\t\tawait change_background(bg_tex, trans_type, trans_dur)\n\t\n\tif dialogue_box:\n\t\tdialogue_box.show_line(speaker, text)\n\t\n\tif character_stage and not speaker.is_empty():\n\t\tcharacter_stage.focus_character(speaker.to_lower())\n\n\nfunc _on_dialogue_box_line_finished() -> void:\n\tadvance()\n"
+     },
+     {
+      "percorso": "story/chapters/chapter_01.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1: Il Risveglio\",\n  \"lines\": [\n    {\n      \"type\": \"label\",\n      \"name\": \"inizio\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"La porta alle nostre spalle è chiusa. Dobbiamo andare avanti.\"\n    },\n    {\n      \"type\": \"jump_chapter\",\n      \"target_file\": \"res://story/chapters/chapter_02.json\",\n      \"target_label\": \"sala_centrale\"\n    }\n  ]\n}\n"
+     },
+     {
+      "percorso": "story/chapters/chapter_02.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 2: L'Archivio\",\n  \"lines\": [\n    {\n      \"type\": \"label\",\n      \"name\": \"sala_centrale\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Eccoci nella sala principale dell'Archivio. Da qui partono i vari corridoi.\"\n    },\n    {\n      \"type\": \"jump_chapter\",\n      \"target_file\": \"res://story/chapters/chapter_03.json\",\n      \"target_label\": \"epilogo\"\n    }\n  ]\n}\n"
+     },
+     {
+      "percorso": "story/chapters/chapter_03.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 3: La Fuga\",\n  \"lines\": [\n    {\n      \"type\": \"label\",\n      \"name\": \"epilogo\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Vedo una luce in lontananza! Forse è l'uscita dall'Archivio.\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Prima di uscire, possiamo tornare indietro a controllare i tomi.\"\n    },\n    {\n      \"type\": \"jump_chapter\",\n      \"target_file\": \"res://story/chapters/chapter_01.json\",\n      \"target_label\": \"inizio\"\n    }\n  ]\n}\n"
+     },
+     {
+      "percorso": "story/story_validator.gd",
+      "contenuto": "@tool\nclass_name StoryValidator\nextends EditorScript\n\n\nfunc _run() -> void:\n\tprint(\"--- Inizio controllo storie ---\")\n\tvar stories: Array[String] = [\n\t\t\"res://story/intro.json\",\n\t\t\"res://story/branching_story.json\",\n\t\t\"res://story/network_story.json\",\n\t\t\"res://story/consequence_story.json\"\n\t]\n\tvar total_errors := 0\n\tfor story_path in stories:\n\t\tvar errors := validate_chapter(story_path)\n\t\tif errors.is_empty():\n\t\t\tprint(\"OK: %s\" % story_path)\n\t\telse:\n\t\t\tfor err in errors:\n\t\t\t\tprinterr(err)\n\t\t\t\ttotal_errors += 1\n\tif total_errors == 0:\n\t\tprint(\"Tutte le storie sono corrette!\")\n\telse:\n\t\tprinterr(\"Trovati %d errori totali.\" % total_errors)\n\tprint(\"--- Controllo terminato ---\")\n\n\nfunc validate_chapter(file_path: String) -> Array[String]:\n\tvar errors: Array[String] = []\n\tif not FileAccess.file_exists(file_path):\n\t\terrors.append(\"%s: File non trovato.\" % file_path)\n\t\treturn errors\n\t\n\tvar file := FileAccess.open(file_path, FileAccess.READ)\n\tif not file:\n\t\terrors.append(\"%s: Impossibile aprire il file.\" % file_path)\n\t\treturn errors\n\t\n\tvar content: String = file.get_as_text()\n\tvar json_data: Variant = JSON.parse_string(content)\n\tif not json_data is Dictionary:\n\t\terrors.append(\"%s: Il file non contiene un oggetto JSON valido.\" % file_path)\n\t\treturn errors\n\t\n\tvar chapter: Dictionary = json_data\n\tif not chapter.has(\"lines\") or not chapter[\"lines\"] is Array:\n\t\terrors.append(\"%s: La chiave 'lines' non è presente o non è una lista.\" % file_path)\n\t\treturn errors\n\t\n\tvar lines: Array = chapter[\"lines\"]\n\tvar known_speakers: Array[String] = [\"Elena\", \"Marco\", \"???\", \"\"]\n\tvar declared_labels: Dictionary = {}\n\tvar assigned_variables: Array[String] = []\n\t\n\t# Prima passata: raccoglie etichette e variabili definite\n\tfor i in range(lines.size()):\n\t\tvar entry: Variant = lines[i]\n\t\tif not entry is Dictionary:\n\t\t\tcontinue\n\t\tvar cmd: Dictionary = entry\n\t\tvar cmd_type: String = String(cmd.get(\"type\", \"\"))\n\t\t\n\t\tif cmd_type == \"label\":\n\t\t\tvar label_name: String = String(cmd.get(\"id\", cmd.get(\"name\", \"\")))\n\t\t\tif label_name.is_empty():\n\t\t\t\terrors.append(\"%s [riga %d]: Etichetta senza nome specificato.\" % [file_path, i])\n\t\t\telif declared_labels.has(label_name):\n\t\t\t\terrors.append(\"%s [riga %d]: Etichetta duplicata '%s'.\" % [file_path, i, label_name])\n\t\t\telse:\n\t\t\t\tdeclared_labels[label_name] = i\n\t\t\n\t\tif cmd_type == \"set\" or cmd_type == \"add\":\n\t\t\tvar var_name: String = String(cmd.get(\"variable\", \"\"))\n\t\t\tif not var_name.is_empty() and not assigned_variables.has(var_name):\n\t\t\t\tassigned_variables.append(var_name)\n\t\n\t# Seconda passata: controlla personaggi, salti, scelte e condizioni\n\tfor i in range(lines.size()):\n\t\tvar entry: Variant = lines[i]\n\t\tif not entry is Dictionary:\n\t\t\terrors.append(\"%s [riga %d]: Elemento non valido nella lista comandi.\" % [file_path, i])\n\t\t\tcontinue\n\t\t\n\t\tvar cmd: Dictionary = entry\n\t\t\n\t\t# Controllo speaker\n\t\tif cmd.has(\"speaker\"):\n\t\t\tvar speaker: String = String(cmd.get(\"speaker\", \"\"))\n\t\t\tif not known_speakers.has(speaker):\n\t\t\t\terrors.append(\"%s [riga %d]: Personaggio sconosciuto '%s'.\" % [file_path, i, speaker])\n\t\t\n\t\t# Controllo salti\n\t\tvar cmd_type: String = String(cmd.get(\"type\", \"\"))\n\t\tif cmd_type == \"jump\":\n\t\t\tvar target: String = String(cmd.get(\"target\", \"\"))\n\t\t\tif target.is_empty() or not declared_labels.has(target):\n\t\t\t\terrors.append(\"%s [riga %d]: Salto verso etichetta inesistente '%s'.\" % [file_path, i, target])\n\t\t\n\t\t# Controllo scelte\n\t\tif cmd_type == \"choice\":\n\t\t\tvar options: Variant = cmd.get(\"options\", [])\n\t\t\tif options is Array:\n\t\t\t\tfor opt_entry in options:\n\t\t\t\t\tif opt_entry is Dictionary:\n\t\t\t\t\t\tvar opt: Dictionary = opt_entry\n\t\t\t\t\t\tvar target: String = String(opt.get(\"target\", \"\"))\n\t\t\t\t\t\tif target.is_empty() or not declared_labels.has(target):\n\t\t\t\t\t\t\terrors.append(\"%s [riga %d]: Scelta con salto verso etichetta inesistente '%s'.\" % [file_path, i, target])\n\t\t\t\t\t\tif opt.has(\"condition\"):\n\t\t\t\t\t\t\tvar cond: Variant = opt.get(\"condition\")\n\t\t\t\t\t\t\tif cond is Dictionary:\n\t\t\t\t\t\t\t\tvar var_name: String = String(cond.get(\"variable\", \"\"))\n\t\t\t\t\t\t\t\tif not var_name.is_empty() and not assigned_variables.has(var_name):\n\t\t\t\t\t\t\t\t\terrors.append(\"%s [riga %d]: Condizione su variabile mai impostata '%s'.\" % [file_path, i, var_name])\n\t\t\n\t\t# Controllo condizioni su comandi generici\n\t\tif cmd.has(\"condition\"):\n\t\t\tvar cond: Variant = cmd.get(\"condition\")\n\t\t\tif cond is Dictionary:\n\t\t\t\tvar var_name: String = String(cond.get(\"variable\", \"\"))\n\t\t\t\tif not var_name.is_empty() and not assigned_variables.has(var_name):\n\t\t\t\t\terrors.append(\"%s [riga %d]: Condizione su variabile mai impostata '%s'.\" % [file_path, i, var_name])\n\t\n\treturn errors\n"
+     },
+     {
+      "percorso": "story/intro.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1: Il Risveglio\",\n  \"lines\": [\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Dove... dove mi trovo? Tutto questo buio...\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"L'ultima cosa che ricordo è la vecchia biblioteca in fondo alla strada.\"\n    },\n    {\n      \"speaker\": \"???\",\n      \"text\": \"Ti sei svegliata, finalmente.\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Chi c'è? Chi sta parlando?\"\n    },\n    {\n      \"speaker\": \"Marco\",\n      \"text\": \"Tranquilla, non c'è motivo di spaventarsi. Sono Marco.\"\n    }\n  ]\n}\n"
+     },
+     {
+      "percorso": "story/branching_story.json",
+      "contenuto": "{\n  \"lines\": [\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"Siamo arrivati a un bivio. Quale strada prendiamo?\"\n    },\n    {\n      \"type\": \"choice\",\n      \"options\": [\n        { \"text\": \"Vai a sinistra\", \"target\": \"sinistra\" },\n        { \"text\": \"Vai a destra\", \"target\": \"destra\" }\n      ]\n    },\n    { \"type\": \"label\", \"id\": \"sinistra\" },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"La strada di sinistra sembra tranquilla.\"\n    },\n    { \"type\": \"jump\", \"target\": \"ricongiungimento\" },\n    { \"type\": \"label\", \"id\": \"destra\" },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"La strada di destra è molto illuminata.\"\n    },\n    { \"type\": \"label\", \"id\": \"ricongiungimento\" },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"I due sentieri si incontrano davanti alla grande porta.\"\n    }\n  ]\n}\n"
+     },
+     {
+      "percorso": "story/network_story.json",
+      "contenuto": "{\n  \"lines\": [\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Marco\",\n      \"text\": \"Siamo all'ingresso dell'Archivio. Da quale portone iniziamo?\"\n    },\n    {\n      \"type\": \"choice\",\n      \"options\": [\n        { \"text\": \"Porta Dorata\", \"target\": \"porta_1\" },\n        { \"text\": \"Porta d'Argento\", \"target\": \"porta_2\" }\n      ]\n    },\n    { \"type\": \"label\", \"id\": \"porta_1\" },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"La Porta Dorata risplende di luce magica.\"\n    },\n    { \"type\": \"jump\", \"target\": \"fine_storia\" },\n    { \"type\": \"label\", \"id\": \"porta_2\" },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"La Porta d'Argento è fredda al tatto.\"\n    },\n    { \"type\": \"label\", \"id\": \"fine_storia\" },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"Abbiamo trovato la via d'uscita!\"\n    }\n  ]\n}\n"
+     },
+     {
+      "percorso": "story/consequence_story.json",
+      "contenuto": "{\n  \"lines\": [\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Marco\",\n      \"text\": \"C'è una vecchia mappa sul tavolo. La prendi?\"\n    },\n    {\n      \"type\": \"choice\",\n      \"options\": [\n        {\n          \"text\": \"Prendi la mappa\",\n          \"target\": \"scelta_mappa_si\"\n        },\n        {\n          \"text\": \"Lascia la mappa\",\n          \"target\": \"scelta_mappa_no\"\n        }\n      ]\n    },\n    {\n      \"type\": \"label\",\n      \"id\": \"scelta_mappa_si\"\n    },\n    {\n      \"type\": \"set\",\n      \"variable\": \"has_map\",\n      \"value\": true\n    },\n    {\n      \"type\": \"jump\",\n      \"target\": \"corridoio\"\n    },\n    {\n      \"type\": \"label\",\n      \"id\": \"scelta_mappa_no\"\n    },\n    {\n      \"type\": \"set\",\n      \"variable\": \"has_map\",\n      \"value\": false\n    },\n    {\n      \"type\": \"jump\",\n      \"target\": \"corridoio\"\n    },\n    {\n      \"type\": \"label\",\n      \"id\": \"corridoio\"\n    },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"Consultando la mappa troviamo subito il passaggio segreto.\",\n      \"condition\": {\n        \"variable\": \"has_map\",\n        \"operator\": \"==\",\n        \"value\": true\n      }\n    },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Marco\",\n      \"text\": \"Siamo arrivati alla fine del corridoio.\"\n    }\n  ]\n}\n"
+     },
+     {
+      "percorso": "story/story_screen.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://story/background_display.tscn\" id=\"1_bg\"]\n[ext_resource type=\"PackedScene\" path=\"res://story/character_stage.tscn\" id=\"2_stage\"]\n[ext_resource type=\"PackedScene\" path=\"res://ui/dialogue_box.tscn\" id=\"3_ui\"]\n[ext_resource type=\"Script\" path=\"res://story/story_interpreter.gd\" id=\"4_interpreter\"]\n[ext_resource type=\"PackedScene\" path=\"res://ui/choice_menu.tscn\" id=\"5_choice\"]\n\n[node name=\"StoryScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"BackgroundDisplay\" parent=\".\" instance=ExtResource(\"1_bg\")]\nlayout_mode = 1\n\n[node name=\"CharacterStage\" parent=\".\" instance=ExtResource(\"2_stage\")]\nlayout_mode = 1\n\n[node name=\"DialogueBox\" parent=\".\" instance=ExtResource(\"3_ui\")]\nlayout_mode = 1\nanchors_preset = 12\nanchor_top = 1.0\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_top = -160.0\ngrow_horizontal = 2\ngrow_vertical = 0\n\n[node name=\"ChoiceMenu\" parent=\".\" instance=ExtResource(\"5_choice\")]\nlayout_mode = 1\n\n[node name=\"StoryInterpreter\" type=\"Node\" parent=\".\" node_paths=PackedStringArray(\"dialogue_box\", \"character_stage\", \"background_display\", \"choice_menu\")]\nscript = ExtResource(\"4_interpreter\")\ndialogue_box = NodePath(\"../DialogueBox\")\ncharacter_stage = NodePath(\"../CharacterStage\")\nbackground_display = NodePath(\"../BackgroundDisplay\")\nchoice_menu = NodePath(\"../ChoiceMenu\")\n"
+     },
+     {
+      "percorso": "story/story_interpreter.gd",
+      "contenuto": "class_name StoryInterpreter\nextends Node\n\n@export var dialogue_box: PanelContainer\n@export var character_stage: Control\n@export var background_display: Control\n@export var choice_menu: Control\n"
+     },
+     {
+      "percorso": "ui/dialogue_box.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"DialogueBox\" type=\"PanelContainer\"]\ncustom_minimum_size = Vector2(0, 140)\n"
+     },
+     {
+      "percorso": "ui/choice_menu.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"ChoiceMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n"
+     },
+     {
+      "percorso": "story/character_stage.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"CharacterStage\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n"
+     },
+     {
+      "percorso": "story/background_display.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"BackgroundDisplay\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Storie",
+     "scenaPrincipale": "res://story/story_screen.tscn",
+     "azioni": [
+      {
+       "nome": "advance_dialogue",
+       "tasti": [
+        "MouseLeft",
+        "Space"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "`EditorScript` con `@tool` consente di eseguire uno script GDScript direttamente dentro l'editor di Godot attraverso il menu *File → Run* dell'editor di script o premendo Ctrl+Shift+X.\n\nL'analisi a due passate garantisce che le etichette e le variabili definite in qualsiasi punto del file JSON vengano registrate prima di verificare i riferimenti incrociati (`jump`, `choice`, `condition`). In questo modo si evitano segnalazioni errate su salti o condizioni che fanno riferimento ad elementi definiti successivamente.",
+    "cambiati": [
+     "story/story_validator.gd",
+     "story/intro.json",
+     "story/branching_story.json",
+     "story/network_story.json",
+     "story/consequence_story.json",
+     "story/story_interpreter.gd",
+     "ui/dialogue_box.tscn",
+     "ui/choice_menu.tscn",
+     "story/character_stage.tscn",
+     "story/background_display.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
