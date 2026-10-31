@@ -411,5 +411,10 @@
    "es3": 1,
    "test": 3
   }
+ },
+ "scelte": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
