@@ -24,3 +24,5 @@
 {"quando":1793436621941,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"capitoli-e-file","ok":true,"contata":true,"durataMs":5486,"tokenInput":3947,"tokenOutput":1027,"ragionamento":1330}
 {"quando":1793436629242,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"controllare-la-storia","ok":false,"contata":true,"durataMs":621,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793436629867,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"controllare-la-storia","ok":false,"contata":true,"durataMs":28582,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793437336491,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"capitoli-e-file","ok":true,"contata":true,"durataMs":11002,"tokenInput":2858,"tokenOutput":773,"ragionamento":1377}
+{"quando":1793437347498,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"capitoli-e-file","ok":true,"contata":true,"durataMs":9115,"tokenInput":3694,"tokenOutput":543,"ragionamento":1002}
