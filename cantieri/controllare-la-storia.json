@@ -221,7 +221,9 @@
    "genere": "collauda",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] StoryValidator rileva con precisione personaggi sconosciuti, salti a etichette mancanti e variabili mai inizializzate, senza segnalare errori sulle storie corrette: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var validator = instantiate_script(\"res://story/story_validator.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
