@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-10-31T07:23:34.556Z",
- "stato": "aspetta",
+ "aggiornato": "2026-10-31T07:44:43.148Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "variabili-e-condizioni",
   "numero": "6.8",
   "titolo": "Variabili della storia e condizioni"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.8 riprende da sola appena rispondono.",
- "riprende": "2026-10-31T07:43:34.556Z"
+ "messaggio": "Sta scrivendo la lezione 6.8 «Variabili della storia e condizioni».",
+ "riprende": null
 }
