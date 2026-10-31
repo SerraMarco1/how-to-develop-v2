@@ -358,7 +358,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/character_display.tscn deve caricarsi senza errori: res://story/character_display.tscn:3 - Parse Error: Unknown tag 'gd_resource' in file. (scene/resources/resource_format_text.cpp:41 in _printerr)\nFailed loading resource: res://story/character_display.tscn. (core/io/resource_loader.cpp:317 in _load)\nRighe citate dagli errori:\n  story/character_display.tscn, riga 3: `[gd_resource type=\"PackedScene\" format=3]`"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Lo script res://story/story_validator.gd deve esistere e potersi istanziare senza errori\nOutput di Godot:\nERROR: Class 'EditorScript' can only be instantiated by editor.\n   at: _instantiate_internal (core/object/class_db.cpp:603)\nERROR: Can't inherit from a virtual class.\n   at: _new (modules/gdscript/gdscript.cpp:239)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
