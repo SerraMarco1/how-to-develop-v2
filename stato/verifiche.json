@@ -421,5 +421,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "capitoli-e-file": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
