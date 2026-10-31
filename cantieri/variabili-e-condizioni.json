@@ -1,6 +1,223 @@
 {
  "creato": "2026-10-31T07:05:09.108Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Aggiungi le variabili e la valutazione delle condizioni all'interprete",
+    "consegna": "Dotiamo la nostra visual novel di una memoria narrativa centrale per ricordare le scelte del giocatore ed eseguire verifiche sui dati.\n\nModifica lo script `story/story_interpreter.gd`:\n1. Dichiara all'inizio dello script la variabile `var _variables: Dictionary = {}` per contenere tutte le variabili della partita.\n2. Implementa i quattro metodi per gestire lo stato:\n   - `set_variable(var_name: String, value: Variant) -> void`: assegna `value` alla chiave `var_name` in `_variables`.\n   - `get_variable(var_name: String, default: Variant = null) -> Variant`: restituisce il valore memorizzato oppure `default` se non esiste.\n   - `add_variable(var_name: String, amount: Variant) -> void`: recupera il valore corrente numerico (con default `0`), somma `amount` e salva il nuovo totale.\n   - `clear_variables() -> void`: svuota il dizionario `_variables` con `.clear()`.\n3. Implementa `evaluate_condition(condition: Dictionary) -> bool`:\n   - Se il dizionario `condition` è vuoto, restituisce `true`.\n   - Estrae `variable` (stringa vuota di default), `operator` (default `\"==\"`) e `value` (default `null`).\n   - Recupera il valore corrente dallo stato tramite `_variables.get(var_name, null)`.\n   - Gestisce gli operatori `\"==\"`, `\"!=\"`, `\">\"`, `\"<\"`, `\">=\"`, `\"<=\"` confrontando il valore corrente con quello di riferimento. Per i quattro operatori di disuguaglianza (`>`, `<`, `>=`, `<=`), verifica prima che `current_value != null` per evitare errori nel caso la variabile non esista ancora; se `current_value == null` restituisce `false`.\n   - Per qualsiasi altro operatore restituisce `false`.\n4. Nel metodo `execute_command(command: Dictionary)`, estendi l'istruzione `match` con i comandi logici:\n   - `\"set\"`: legge `\"variable\"` e `\"value\"` dal comando e invoca `set_variable`.\n   - `\"add\"`: legge `\"variable\"` e `\"value\"` (default `0`) e invoca `add_variable`.\n5. In `run_story(commands: Array[Dictionary])`, prima di smistare il tipo di comando, controlla se `command` possiede la chiave `\"condition\"`: se la condizione valutata tramite `evaluate_condition()` restituisce `false`, salta il comando incrementando `index += 1` e passando subito all'iterazione successiva con `continue`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello *FileSystem* a sinistra, apri la cartella `story` e fai doppio clic su `story_interpreter.gd` per aprirlo nell'editor di script.",
+     "Sotto le dichiarazioni `@export` già presenti in cima al file, aggiungi la riga: `var _variables: Dictionary = {}`.",
+     "Subito sotto scrivi i quattro metodi di gestione dello stato: `get_variable`, `set_variable`, `add_variable` e `clear_variables`.",
+     "Aggiungi la funzione `evaluate_condition(condition: Dictionary) -> bool` estraendo la variabile, l'operatore e il valore bersaglio, gestendo il `match` con i confronti richiesti e il controllo `current_value != null`.",
+     "Scorri fino a `execute_command(command: Dictionary)` e, dentro l'istruzione `match command_type:`, aggiungi i casi `\"set\"` e `\"add\"` che richiamano rispettivamente `set_variable` e `add_variable`.",
+     "All'interno del ciclo `while index < commands.size():` del metodo `run_story`, inserisci subito prima di `var cmd_type: String = ...` la verifica della condizione: se `command.has(\"condition\")` e `evaluate_condition(command[\"condition\"]) == false`, esegui `index += 1` e `continue`.",
+     "Salva lo script con Ctrl+S."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_interpreter.gd",
+      "descrizione": "Il file res://story/story_interpreter.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/story_interpreter.gd",
+      "regex": "evaluate_condition",
+      "descrizione": "StoryInterpreter definisce la funzione evaluate_condition"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"scene_loaded\", main != null, \"La scena story_screen.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar interpreter := find_by_name(main, \"StoryInterpreter\") as StoryInterpreter\n\tif not check(\"interpreter_exists\", interpreter != null, \"StoryInterpreter deve essere presente nella scena\"):\n\t\treturn\n\tif not check(\"has_set_var\", has_function(interpreter, \"set_variable\"), \"StoryInterpreter deve avere il metodo set_variable\"):\n\t\treturn\n\tif not check(\"has_get_var\", has_function(interpreter, \"get_variable\"), \"StoryInterpreter deve avere il metodo get_variable\"):\n\t\treturn\n\tif not check(\"has_add_var\", has_function(interpreter, \"add_variable\"), \"StoryInterpreter deve avere il metodo add_variable\"):\n\t\treturn\n\tif not check(\"has_eval\", has_function(interpreter, \"evaluate_condition\"), \"StoryInterpreter deve avere il metodo evaluate_condition\"):\n\t\treturn\n\t\n\tinterpreter.clear_variables()\n\tinterpreter.set_variable(\"coins\", 50)\n\tvar coins = interpreter.get_variable(\"coins\")\n\tcheck(\"get_set\", coins == 50, \"set_variable deve impostare il valore corretto e get_variable deve restituirlo\")\n\t\n\tinterpreter.add_variable(\"coins\", 25)\n\tcoins = interpreter.get_variable(\"coins\")\n\tcheck(\"add_var\", coins == 75, \"add_variable deve sommare al valore esistente (50 + 25 = 75)\")\n\t\n\tinterpreter.add_variable(\"score\", 10)\n\tvar score = interpreter.get_variable(\"score\")\n\tcheck(\"add_new\", score == 10, \"add_variable su una variabile inesistente deve partire da 0 (0 + 10 = 10)\")\n\t\n\tcheck(\"eval_eq\", interpreter.evaluate_condition({\"variable\": \"coins\", \"operator\": \"==\", \"value\": 75}), \"evaluate_condition deve restituire true per 75 == 75\")\n\tcheck(\"eval_neq\", interpreter.evaluate_condition({\"variable\": \"coins\", \"operator\": \"!=\", \"value\": 0}), \"evaluate_condition deve restituire true per 75 != 0\")\n\tcheck(\"eval_gt\", interpreter.evaluate_condition({\"variable\": \"coins\", \"operator\": \">\", \"value\": 50}), \"evaluate_condition deve restituire true per 75 > 50\")\n\tcheck(\"eval_lt\", not interpreter.evaluate_condition({\"variable\": \"coins\", \"operator\": \"<\", \"value\": 50}), \"evaluate_condition deve restituire false per 75 < 50\")\n\tcheck(\"eval_gte\", interpreter.evaluate_condition({\"variable\": \"coins\", \"operator\": \">=\", \"value\": 75}), \"evaluate_condition deve restituire true per 75 >= 75\")\n\tcheck(\"eval_lte\", interpreter.evaluate_condition({\"variable\": \"coins\", \"operator\": \"<=\", \"value\": 75}), \"evaluate_condition deve restituire true per 75 <= 75\")\n\tcheck(\"eval_missing_safe\", not interpreter.evaluate_condition({\"variable\": \"unknown\", \"operator\": \">\", \"value\": 10}), \"Valutare una variabile non definita con > deve restituire false senza causare errori\")\n\t\n\tvar test_cmds: Array[Dictionary] = [\n\t\t{\"type\": \"set\", \"variable\": \"has_key\", \"value\": true},\n\t\t{\"type\": \"set\", \"variable\": \"door_opened\", \"value\": true, \"condition\": {\"variable\": \"has_key\", \"operator\": \"==\", \"value\": true}},\n\t\t{\"type\": \"set\", \"variable\": \"skipped_flag\", \"value\": true, \"condition\": {\"variable\": \"has_key\", \"operator\": \"==\", \"value\": false}}\n\t]\n\tawait interpreter.run_story(test_cmds)\n\tcheck(\"cmd_cond_true\", interpreter.get_variable(\"door_opened\") == true, \"Il comando con condizione soddisfatta deve essere eseguito\")\n\tcheck(\"cmd_cond_false\", interpreter.get_variable(\"skipped_flag\") == null, \"Il comando con condizione non soddisfatta deve essere saltato\")",
+      "descrizione": "StoryInterpreter memorizza variabili, le modifica con comandi ed esegue controlli condizionali"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/story_interpreter.gd",
+       "contenuto": "class_name StoryInterpreter\nextends Node\n\nsignal story_finished\n\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n@export var choice_menu: ChoiceMenu\n\nvar _variables: Dictionary = {}\n\n\nfunc get_variable(var_name: String, default: Variant = null) -> Variant:\n\treturn _variables.get(var_name, default)\n\n\nfunc set_variable(var_name: String, value: Variant) -> void:\n\t_variables[var_name] = value\n\n\nfunc add_variable(var_name: String, amount: Variant) -> void:\n\tvar current: Variant = _variables.get(var_name, 0)\n\t_variables[var_name] = current + amount\n\n\nfunc clear_variables() -> void:\n\t_variables.clear()\n\n\nfunc evaluate_condition(condition: Dictionary) -> bool:\n\tif condition.is_empty():\n\t\treturn true\n\t\n\tvar var_name: String = condition.get(\"variable\", \"\")\n\tvar op: String = condition.get(\"operator\", \"==\")\n\tvar target_value: Variant = condition.get(\"value\", null)\n\tvar current_value: Variant = _variables.get(var_name, null)\n\t\n\tmatch op:\n\t\t\"==\":\n\t\t\treturn current_value == target_value\n\t\t\"!=\":\n\t\t\treturn current_value != target_value\n\t\t\">\":\n\t\t\treturn current_value != null and current_value > target_value\n\t\t\"<\":\n\t\t\treturn current_value != null and current_value < target_value\n\t\t\">=\":\n\t\t\treturn current_value != null and current_value >= target_value\n\t\t\"<=\":\n\t\t\treturn current_value != null and current_value <= target_value\n\t\t_:\n\t\t\treturn false\n\n\nfunc run_story(commands: Array[Dictionary]) -> void:\n\tvar labels: Dictionary = {}\n\tfor i in range(commands.size()):\n\t\tvar cmd: Dictionary = commands[i]\n\t\tif cmd.get(\"type\", \"\") == \"label\":\n\t\t\tvar label_id := String(cmd.get(\"id\", \"\"))\n\t\t\tif not label_id.is_empty():\n\t\t\t\tlabels[label_id] = i\n\t\n\tvar index := 0\n\twhile index < commands.size():\n\t\tvar command: Dictionary = commands[index]\n\t\t\n\t\tif command.has(\"condition\"):\n\t\t\tvar cond: Variant = command.get(\"condition\")\n\t\t\tif cond is Dictionary and not evaluate_condition(cond):\n\t\t\t\tindex += 1\n\t\t\t\tcontinue\n\t\t\n\t\tvar cmd_type: String = command.get(\"type\", \"\")\n\t\t\n\t\tmatch cmd_type:\n\t\t\t\"label\":\n\t\t\t\tindex += 1\n\t\t\t\"jump\":\n\t\t\t\tvar target: String = command.get(\"target\", \"\")\n\t\t\t\tif labels.has(target):\n\t\t\t\t\tindex = labels[target]\n\t\t\t\telse:\n\t\t\t\t\tindex += 1\n\t\t\t\"choice\":\n\t\t\t\tvar options: Array = command.get(\"options\", [])\n\t\t\t\tif choice_menu:\n\t\t\t\t\tchoice_menu.show_choices(options)\n\t\t\t\t\tvar selected_target: String = await choice_menu.choice_selected\n\t\t\t\t\tif labels.has(selected_target):\n\t\t\t\t\t\tindex = labels[selected_target]\n\t\t\t\t\telse:\n\t\t\t\t\t\tindex += 1\n\t\t\t\telse:\n\t\t\t\t\tindex += 1\n\t\t\t_:\n\t\t\t\tawait execute_command(command)\n\t\t\t\tindex += 1\n\t\n\tstory_finished.emit()\n\n\nfunc execute_command(command: Dictionary) -> void:\n\tvar command_type: String = command.get(\"type\", \"\")\n\t\n\tmatch command_type:\n\t\t\"line\":\n\t\t\tawait _cmd_line(command)\n\t\t\"wait\":\n\t\t\tawait _cmd_wait(command)\n\t\t\"set\":\n\t\t\tvar var_name: String = command.get(\"variable\", \"\")\n\t\t\tvar val: Variant = command.get(\"value\", null)\n\t\t\tset_variable(var_name, val)\n\t\t\"add\":\n\t\t\tvar var_name: String = command.get(\"variable\", \"\")\n\t\t\tvar val: Variant = command.get(\"value\", 0)\n\t\t\tadd_variable(var_name, val)\n\t\t_:\n\t\t\tpass\n\n\nfunc _cmd_line(cmd: Dictionary) -> void:\n\tvar speaker: String = cmd.get(\"speaker\", \"\")\n\tvar text: String = cmd.get(\"text\", \"\")\n\tif dialogue_box and dialogue_box.has_method(\"show_line\"):\n\t\tdialogue_box.show_line(speaker, text)\n\t\tif dialogue_box.has_signal(\"line_finished\"):\n\t\t\tawait dialogue_box.line_finished\n\n\nfunc _cmd_wait(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 0.1))\n\tawait get_tree().create_timer(duration).timeout\n"
+      }
+     ],
+     "spiegazione": "Le variabili narrative vengono raccolte nel dizionario `_variables` dentro `StoryInterpreter`. I metodi `set_variable` e `add_variable` permettono di aggiornarle dai comandi JSON `set` e `add`. La funzione `evaluate_condition` interpreta i dati della condizione confrontando il valore corrente con l'operatore specificato; il controllo `current_value != null` evita errori di esecuzione nel caso in cui una variabile numerica venga interrogata prima della sua inizializzazione. Infine, all'inizio del ciclo `while` di `run_story`, qualsiasi comando dotato di condizione non soddisfatta viene saltato con `index += 1` e `continue`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Filtra le opzioni dei bivi con le condizioni",
+    "consegna": "Rendi dinamici i menu di decisione: le opzioni che contengono una condizione devono comparire solo se il giocatore soddisfa il requisito.\n\nModifica la gestione del comando `\"choice\"` in `story/story_interpreter.gd`:\n1. Prima di passare le opzioni a `choice_menu`, filtra l'array `options`:\n   - Un'opzione senza chiave `\"condition\"` è sempre visibile.\n   - Un'opzione che possiede la chiave `\"condition\"` è visibile solo se `evaluate_condition(opt[\"condition\"])` restituisce `true`.\n2. Raccogli le opzioni valide in un nuovo array.\n3. Se l'array delle opzioni valide non è vuoto e `choice_menu` è valido, passa solo le opzioni visibili a `choice_menu.show_choices()` e attendi la selezione con `await`.\n4. Se l'array delle opzioni valide è vuoto (tutte le scelte sono bloccate), il menu viene saltato avanzando subito al comando successivo (`index += 1`).",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Nel ramo `\"choice\"` crea un array temporaneo, ad esempio `var valid_options: Array = []`, prima di interagire con il menu.",
+     "Scorri ogni elemento di `options` con un ciclo `for`: se l'elemento è un `Dictionary`, verifica se contiene la chiave `\"condition\"` ed eseguine la valutazione con `evaluate_condition()` prima di aggiungerlo alla lista valida con `.append()`.",
+     "Usa `if valid_options.is_empty(): index += 1` per non bloccare l'esecuzione nel caso estremo in cui nessuna opzione sia disponibile."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_interpreter.gd",
+      "descrizione": "Il file res://story/story_interpreter.gd esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"scene_loaded\", main != null, \"La scena story_screen.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar interpreter := find_by_name(main, \"StoryInterpreter\") as StoryInterpreter\n\tvar choice_menu := find_by_name(main, \"ChoiceMenu\") as ChoiceMenu\n\tif not check(\"nodes_exist\", interpreter != null and choice_menu != null, \"StoryInterpreter e ChoiceMenu devono essere presenti\"):\n\t\treturn\n\t\n\tvar container := choice_menu.get_node_or_null(\"VBoxContainer\") as VBoxContainer\n\tif not check(\"container_exists\", container != null, \"ChoiceMenu deve contenere un VBoxContainer\"):\n\t\treturn\n\t\n\tvar test_commands: Array[Dictionary] = [\n\t\t{\"type\": \"choice\", \"options\": [\n\t\t\t{\"text\": \"Opzione Libera\", \"target\": \"dest_libera\"},\n\t\t\t{\"text\": \"Opzione Riservata\", \"target\": \"dest_riservata\", \"condition\": {\"variable\": \"has_badge\", \"operator\": \"==\", \"value\": true}}\n\t\t]},\n\t\t{\"type\": \"label\", \"id\": \"dest_libera\"},\n\t\t{\"type\": \"set\", \"variable\": \"chosen_path\", \"value\": \"libera\"},\n\t\t{\"type\": \"jump\", \"target\": \"fine\"},\n\t\t{\"type\": \"label\", \"id\": \"dest_riservata\"},\n\t\t{\"type\": \"set\", \"variable\": \"chosen_path\", \"value\": \"riservata\"},\n\t\t{\"type\": \"label\", \"id\": \"fine\"}\n\t]\n\t\n\tinterpreter.clear_variables()\n\tinterpreter.run_story(test_commands)\n\tawait wait_frames(3)\n\tcheck(\"one_button\", container.get_child_count() == 1, \"Senza badge deve comparire solo 1 pulsante (trovati: %d)\" % container.get_child_count())\n\tif container.get_child_count() > 0:\n\t\tvar btn := container.get_child(0) as BaseButton\n\t\tif btn:\n\t\t\tawait click_button(btn)\n\tawait wait_frames(2)\n\tcheck(\"path_libera\", interpreter.get_variable(\"chosen_path\") == \"libera\", \"Premendo l'opzione libera la storia deve raggiungere la destinazione prevista\")\n\t\n\tinterpreter.clear_variables()\n\tinterpreter.set_variable(\"has_badge\", true)\n\tinterpreter.run_story(test_commands)\n\tawait wait_frames(3)\n\tcheck(\"two_buttons\", container.get_child_count() == 2, \"Con il badge devono comparire 2 pulsanti (trovati: %d)\" % container.get_child_count())\n\tif container.get_child_count() >= 2:\n\t\tvar btn2 := container.get_child(1) as BaseButton\n\t\tif btn2:\n\t\t\tawait click_button(btn2)\n\tawait wait_frames(2)\n\tcheck(\"path_riservata\", interpreter.get_variable(\"chosen_path\") == \"riservata\", \"Premendo l'opzione riservata sbloccata la storia deve raggiungere il relativo percorso\")",
+      "descrizione": "ChoiceMenu mostra solo i pulsanti delle opzioni le cui condizioni sono soddisfatte"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/story_interpreter.gd",
+       "contenuto": "class_name StoryInterpreter\nextends Node\n\nsignal story_finished\n\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n@export var choice_menu: ChoiceMenu\n\nvar _variables: Dictionary = {}\n\n\nfunc get_variable(var_name: String, default: Variant = null) -> Variant:\n\treturn _variables.get(var_name, default)\n\n\nfunc set_variable(var_name: String, value: Variant) -> void:\n\t_variables[var_name] = value\n\n\nfunc add_variable(var_name: String, amount: Variant) -> void:\n\tvar current: Variant = _variables.get(var_name, 0)\n\t_variables[var_name] = current + amount\n\n\nfunc clear_variables() -> void:\n\t_variables.clear()\n\n\nfunc evaluate_condition(condition: Dictionary) -> bool:\n\tif condition.is_empty():\n\t\treturn true\n\t\n\tvar var_name: String = condition.get(\"variable\", \"\")\n\tvar op: String = condition.get(\"operator\", \"==\")\n\tvar target_value: Variant = condition.get(\"value\", null)\n\tvar current_value: Variant = _variables.get(var_name, null)\n\t\n\tmatch op:\n\t\t\"==\":\n\t\t\treturn current_value == target_value\n\t\t\"!=\":\n\t\t\treturn current_value != target_value\n\t\t\">\":\n\t\t\treturn current_value != null and current_value > target_value\n\t\t\"<\":\n\t\t\treturn current_value != null and current_value < target_value\n\t\t\">=\":\n\t\t\treturn current_value != null and current_value >= target_value\n\t\t\"<=\":\n\t\t\treturn current_value != null and current_value <= target_value\n\t\t_:\n\t\t\treturn false\n\n\nfunc run_story(commands: Array[Dictionary]) -> void:\n\tvar labels: Dictionary = {}\n\tfor i in range(commands.size()):\n\t\tvar cmd: Dictionary = commands[i]\n\t\tif cmd.get(\"type\", \"\") == \"label\":\n\t\t\tvar label_id := String(cmd.get(\"id\", \"\"))\n\t\t\tif not label_id.is_empty():\n\t\t\t\tlabels[label_id] = i\n\t\n\tvar index := 0\n\twhile index < commands.size():\n\t\tvar command: Dictionary = commands[index]\n\t\t\n\t\tif command.has(\"condition\"):\n\t\t\tvar cond: Variant = command.get(\"condition\")\n\t\t\tif cond is Dictionary and not evaluate_condition(cond):\n\t\t\t\tindex += 1\n\t\t\t\tcontinue\n\t\t\n\t\tvar cmd_type: String = command.get(\"type\", \"\")\n\t\t\n\t\tmatch cmd_type:\n\t\t\t\"label\":\n\t\t\t\tindex += 1\n\t\t\t\"jump\":\n\t\t\t\tvar target: String = command.get(\"target\", \"\")\n\t\t\t\tif labels.has(target):\n\t\t\t\t\tindex = labels[target]\n\t\t\t\telse:\n\t\t\t\t\tindex += 1\n\t\t\t\"choice\":\n\t\t\t\tvar options: Array = command.get(\"options\", [])\n\t\t\t\tvar valid_options: Array = []\n\t\t\t\tfor option_data in options:\n\t\t\t\t\tif option_data is Dictionary:\n\t\t\t\t\t\tif option_data.has(\"condition\"):\n\t\t\t\t\t\t\tvar cond: Variant = option_data.get(\"condition\")\n\t\t\t\t\t\t\tif cond is Dictionary and not evaluate_condition(cond):\n\t\t\t\t\t\t\t\tcontinue\n\t\t\t\t\t\tvalid_options.append(option_data)\n\t\t\t\t\n\t\t\t\tif valid_options.is_empty():\n\t\t\t\t\tindex += 1\n\t\t\t\telif choice_menu:\n\t\t\t\t\tchoice_menu.show_choices(valid_options)\n\t\t\t\t\tvar selected_target: String = await choice_menu.choice_selected\n\t\t\t\t\tif labels.has(selected_target):\n\t\t\t\t\t\tindex = labels[selected_target]\n\t\t\t\t\telse:\n\t\t\t\t\t\tindex += 1\n\t\t\t\telse:\n\t\t\t\t\tindex += 1\n\t\t\t_:\n\t\t\t\tawait execute_command(command)\n\t\t\t\tindex += 1\n\t\n\tstory_finished.emit()\n\n\nfunc execute_command(command: Dictionary) -> void:\n\tvar command_type: String = command.get(\"type\", \"\")\n\t\n\tmatch command_type:\n\t\t\"line\":\n\t\t\tawait _cmd_line(command)\n\t\t\"wait\":\n\t\t\tawait _cmd_wait(command)\n\t\t\"set\":\n\t\t\tvar var_name: String = command.get(\"variable\", \"\")\n\t\t\tvar val: Variant = command.get(\"value\", null)\n\t\t\tset_variable(var_name, val)\n\t\t\"add\":\n\t\t\tvar var_name: String = command.get(\"variable\", \"\")\n\t\t\tvar val: Variant = command.get(\"value\", 0)\n\t\t\tadd_variable(var_name, val)\n\t\t_:\n\t\t\tpass\n\n\nfunc _cmd_line(cmd: Dictionary) -> void:\n\tvar speaker: String = cmd.get(\"speaker\", \"\")\n\tvar text: String = cmd.get(\"text\", \"\")\n\tif dialogue_box and dialogue_box.has_method(\"show_line\"):\n\t\tdialogue_box.show_line(speaker, text)\n\t\tif dialogue_box.has_signal(\"line_finished\"):\n\t\t\tawait dialogue_box.line_finished\n\n\nfunc _cmd_wait(cmd: Dictionary) -> void:\n\tvar duration: float = float(cmd.get(\"duration\", 0.1))\n\tawait get_tree().create_timer(duration).timeout\n"
+      }
+     ],
+     "spiegazione": "Prima di mostrare il menu, l'interprete costruisce un array `valid_options` esaminando ogni singola opzione di scelta. Se un'opzione possiede una condizione e `evaluate_condition` restituisce `false`, quell'opzione viene scartata e non raggiunge `ChoiceMenu`. In questo modo `ChoiceMenu` rimane un componente puramente visivo e istanzia solo i nodi `Button` per le opzioni effettivamente sbloccate.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedi lo stato finale delle variabili",
+    "consegna": "Leggi ogni pezzo di codice e scrivi cosa restituisce, senza eseguirlo.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {}\n\tvariables[\"potions\"] = 1\n\tvariables[\"potions\"] = variables.get(\"potions\", 0) + 3\n\tvariables[\"potions\"] = variables.get(\"potions\", 0) + 2\n\treturn variables.get(\"potions\", 0)",
+      "domanda": "Quanto vale la variabile potions alla fine?",
+      "risposta": "",
+      "spiegazione": "La variabile parte da 1. La prima somma aggiunge 3 (portandola a 4) e la seconda aggiunge 2, per un totale finale di 6."
+     },
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {\"has_lantern\": false, \"bravery\": 10}\n\tvar condition: Dictionary = {\"variable\": \"has_lantern\", \"operator\": \"==\", \"value\": true}\n\tvar current: Variant = variables.get(condition[\"variable\"], null)\n\tif current == condition[\"value\"]:\n\t\tvariables[\"bravery\"] = variables.get(\"bravery\", 0) + 15\n\telse:\n\t\tvariables[\"bravery\"] = variables.get(\"bravery\", 0) + 5\n\treturn variables.get(\"bravery\", 0)",
+      "domanda": "Quanto vale la variabile bravery alla fine?",
+      "risposta": "",
+      "spiegazione": "has_lantern è false, quindi il confronto current == condition[\"value\"] (false == true) risulta falso. Viene eseguito il ramo else, che aggiunge 5 al valore iniziale 10, ottenendo 15."
+     },
+     {
+      "codice": "func run() -> String:\n\tvar variables: Dictionary = {}\n\tvar condition: Dictionary = {\"variable\": \"clues_found\", \"operator\": \">=\", \"value\": 3}\n\tvar current: Variant = variables.get(condition[\"variable\"], null)\n\tvar passes: bool = current != null and current >= condition[\"value\"]\n\tif passes:\n\t\treturn \"risolto\"\n\treturn \"sospeso\"",
+      "domanda": "Che testo restituisce la funzione?",
+      "risposta": "",
+      "spiegazione": "La chiave clues_found non è presente nel dizionario, perciò variables.get() restituisce null. Il controllo preliminare current != null evita l'errore di confronto con un intero e fa valere passes come false. La funzione restituisce quindi \"sospeso\"."
+     },
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {\"trust\": 2}\n\tvariables[\"trust\"] = variables.get(\"trust\", 0) + 1\n\tvariables[\"trust\"] = variables.get(\"trust\", 0) + 2\n\tif variables.get(\"trust\", 0) > 4:\n\t\tvariables[\"score\"] = 10\n\telse:\n\t\tvariables[\"score\"] = 0\n\treturn variables.get(\"score\", 0)",
+      "domanda": "Quanto vale la variabile score alla fine?",
+      "risposta": "",
+      "spiegazione": "trust parte da 2, aumenta di 1 (raggiunge 3) e poi di 2 (raggiunge 5). Al controllo finale trust > 4 è vero (5 > 4), quindi score riceve il valore 10."
+     },
+     {
+      "codice": "func run() -> int:\n\tvar variables: Dictionary = {}\n\tvariables[\"coins\"] = 50\n\tvariables[\"coins\"] = variables.get(\"coins\", 0) + 20\n\tvariables[\"coins\"] = 10\n\tvariables[\"coins\"] = variables.get(\"coins\", 0) + 5\n\treturn variables.get(\"coins\", 0)",
+      "domanda": "Quanto vale la variabile coins alla fine?",
+      "risposta": "",
+      "spiegazione": "Dopo essere salita a 70 (50 + 20), la variabile subisce un'assegnazione diretta a 10 (un'operazione set), che sovrascrive completamente il conteggio precedente. L'ultima operazione somma 5 a 10, producendo 15."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Una scena con scelta e conseguenze narrative",
+    "consegna": "Crea una scena a bivi con conseguenze registrate nello stato della storia, creando il file `story/consequence_story.json`.\n\nIl file deve contenere un oggetto JSON con la chiave `\"lines\"` contenente la seguente sequenza narrativa:\n1. Una battuta iniziale (`\"type\": \"line\"`): Marco (`\"speaker\": \"Marco\"`) chiede: `\"C'è una vecchia mappa sul tavolo. La prendi?\"` (`\"text\"`).\n2. Un bivio (`\"type\": \"choice\"`) con due opzioni:\n   - La prima con testo `\"Prendi la mappa\"` e destinazione `\"target\": \"scelta_mappa_si\"`.\n   - La seconda con testo `\"Lascia la mappa\"` e destinazione `\"target\": \"scelta_mappa_no\"`.\n3. L'etichetta `\"scelta_mappa_si\"` (`\"type\": \"label\"`, `\"id\": \"scelta_mappa_si\"`), seguita da:\n   - Un comando `\"set\"` che imposta la variabile `\"has_map\"` a `true`.\n   - Un comando `\"jump\"` verso il target `\"corridoio\"`.\n4. L'etichetta `\"scelta_mappa_no\"` (`\"type\": \"label\"`, `\"id\": \"scelta_mappa_no\"`), seguita da:\n   - Un comando `\"set\"` che imposta la variabile `\"has_map\"` a `false`.\n   - Un comando `\"jump\"` verso il target `\"corridoio\"`.\n5. L'etichetta di ricongiungimento `\"corridoio\"` (`\"type\": \"label\"`, `\"id\": \"corridoio\"`), seguita da tre battute:\n   - Una battuta di Elena (`\"speaker\": \"Elena\"`) con testo `\"Consultando la mappa troviamo subito il passaggio segreto.\"` visibile solo se la condizione `has_map == true` è soddisfatta (chiave `\"condition\"` con `\"variable\": \"has_map\"`, `\"operator\": \"==\"`, `\"value\": true`).\n   - Una battuta di Elena (`\"speaker\": \"Elena\"`) con testo `\"Senza mappa avanziamo a fatica nel buio pesto.\"` visibile solo se la condizione `has_map == false` è soddisfatta (chiave `\"condition\"` con `\"variable\": \"has_map\"`, `\"operator\": \"==\"`, `\"value\": false`).\n   - Una battuta finale di Marco (`\"speaker\": \"Marco\"`) con testo `\"Siamo arrivati alla fine del corridoio.\"` senza alcuna condizione.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Crea il file `consequence_story.json` all'interno della cartella `res://story/`.",
+     "Assicurati che i valori della proprietà `\"id\"` nelle etichette corrispondano esattamente ai `\"target\"` usati nelle opzioni di scelta e nei salti."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/consequence_story.json",
+      "descrizione": "Il file res://story/consequence_story.json esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nclass LineRecorder extends PanelContainer:\n\tsignal line_finished\n\tvar texts: Array[String] = []\n\t\n\tfunc show_line(_speaker: String, text: String) -> void:\n\t\ttexts.append(text)\n\t\tline_finished.emit()\n\t\n\tfunc clear() -> void:\n\t\ttexts.clear()\n\n\nfunc _run_tests() -> void:\n\tvar path := \"res://story/consequence_story.json\"\n\tif not check(\"file_exists\", FileAccess.file_exists(path), \"Il file res://story/consequence_story.json deve esistere\"):\n\t\treturn\n\t\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not check(\"file_open\", file != null, \"Impossibile aprire consequence_story.json\"):\n\t\treturn\n\t\n\tvar json := JSON.new()\n\tvar err := json.parse(file.get_as_text())\n\tif not check(\"json_valid\", err == OK, \"consequence_story.json deve contenere JSON valido: %s\" % json.get_error_message()):\n\t\treturn\n\t\n\tvar data: Variant = json.data\n\tif not check(\"has_lines\", data is Dictionary and data.has(\"lines\"), \"consequence_story.json deve contenere la chiave 'lines'\"):\n\t\treturn\n\t\n\tvar raw_lines: Array = data[\"lines\"]\n\tvar lines: Array[Dictionary] = []\n\tfor item in raw_lines:\n\t\tif item is Dictionary:\n\t\t\tlines.append(item)\n\t\n\tvar main := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"scene_loaded\", main != null, \"La scena story_screen.tscn deve caricarsi correttamente\"):\n\t\treturn\n\t\n\tvar interpreter := find_by_name(main, \"StoryInterpreter\") as StoryInterpreter\n\tvar choice_menu := find_by_name(main, \"ChoiceMenu\") as ChoiceMenu\n\tif not check(\"nodes_exist\", interpreter != null and choice_menu != null, \"StoryInterpreter e ChoiceMenu devono essere presenti\"):\n\t\treturn\n\t\n\tvar container := choice_menu.get_node_or_null(\"VBoxContainer\") as VBoxContainer\n\tif not check(\"container_exists\", container != null, \"ChoiceMenu deve contenere un VBoxContainer\"):\n\t\treturn\n\t\n\tvar recorder := LineRecorder.new()\n\tmain.add_child(recorder)\n\tinterpreter.dialogue_box = recorder\n\t\n\t# Percorso 1: Scelta 'Prendi la mappa' (indice 0)\n\tinterpreter.clear_variables()\n\trecorder.texts.clear()\n\tinterpreter.run_story(lines)\n\tawait wait_frames(3)\n\t\n\tif not check(\"buttons_shown_1\", container.get_child_count() >= 2, \"Il menu di scelta deve mostrare 2 pulsanti\"):\n\t\treturn\n\t\n\tvar btn_yes := container.get_child(0) as BaseButton\n\tawait click_button(btn_yes)\n\tawait wait_frames(5)\n\t\n\tvar has_map_val = interpreter.get_variable(\"has_map\")\n\tcheck(\"map_true\", has_map_val == true, \"Scegliendo di prendere la mappa, has_map deve essere true\")\n\t\n\tvar line_map_found := false\n\tvar line_nomap_found := false\n\tvar line_end_found := false\n\tfor t in recorder.texts:\n\t\tif t.contains(\"Consultando la mappa\"):\n\t\t\tline_map_found = true\n\t\tif t.contains(\"Senza mappa\"):\n\t\t\tline_nomap_found = true\n\t\tif t.contains(\"Siamo arrivati alla fine del corridoio\"):\n\t\t\tline_end_found = true\n\t\n\tcheck(\"line_with_map\", line_map_found, \"Nel percorso con la mappa deve apparire la battuta sul passaggio segreto\")\n\tcheck(\"no_line_without_map\", not line_nomap_found, \"Nel percorso con la mappa NON deve apparire la battuta sul buio\")\n\tcheck(\"end_reached_1\", line_end_found, \"Il percorso 1 deve raggiungere la battuta finale di Marco\")\n\t\n\t# Percorso 2: Scelta 'Lascia la mappa' (indice 1)\n\tinterpreter.clear_variables()\n\trecorder.texts.clear()\n\tinterpreter.run_story(lines)\n\tawait wait_frames(3)\n\t\n\tif not check(\"buttons_shown_2\", container.get_child_count() >= 2, \"Il menu di scelta deve mostrare 2 pulsanti anche al secondo avvio\"):\n\t\treturn\n\t\n\tvar btn_no := container.get_child(1) as BaseButton\n\tawait click_button(btn_no)\n\tawait wait_frames(5)\n\t\n\thas_map_val = interpreter.get_variable(\"has_map\")\n\tcheck(\"map_false\", has_map_val == false, \"Scegliendo di non prendere la mappa, has_map deve essere false\")\n\t\n\tline_map_found = false\n\tline_nomap_found = false\n\tline_end_found = false\n\tfor t in recorder.texts:\n\t\tif t.contains(\"Consultando la mappa\"):\n\t\t\tline_map_found = true\n\t\tif t.contains(\"Senza mappa\"):\n\t\t\tline_nomap_found = true\n\t\tif t.contains(\"Siamo arrivati alla fine del corridoio\"):\n\t\t\tline_end_found = true\n\t\n\tcheck(\"line_without_map\", line_nomap_found, \"Nel percorso senza mappa deve apparire la battuta sul buio\")\n\tcheck(\"no_line_with_map\", not line_map_found, \"Nel percorso senza mappa NON deve apparire la battuta sulla mappa\")\n\tcheck(\"end_reached_2\", line_end_found, \"Il percorso 2 deve raggiungere la battuta finale di Marco\")",
+      "descrizione": "La storia memorizza la scelta della mappa e mostra solo la battuta condizionata corrispondente"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/consequence_story.json",
+       "contenuto": "{\n  \"lines\": [\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Marco\",\n      \"text\": \"C'è una vecchia mappa sul tavolo. La prendi?\"\n    },\n    {\n      \"type\": \"choice\",\n      \"options\": [\n        {\n          \"text\": \"Prendi la mappa\",\n          \"target\": \"scelta_mappa_si\"\n        },\n        {\n          \"text\": \"Lascia la mappa\",\n          \"target\": \"scelta_mappa_no\"\n        }\n      ]\n    },\n    {\n      \"type\": \"label\",\n      \"id\": \"scelta_mappa_si\"\n    },\n    {\n      \"type\": \"set\",\n      \"variable\": \"has_map\",\n      \"value\": true\n    },\n    {\n      \"type\": \"jump\",\n      \"target\": \"corridoio\"\n    },\n    {\n      \"type\": \"label\",\n      \"id\": \"scelta_mappa_no\"\n    },\n    {\n      \"type\": \"set\",\n      \"variable\": \"has_map\",\n      \"value\": false\n    },\n    {\n      \"type\": \"jump\",\n      \"target\": \"corridoio\"\n    },\n    {\n      \"type\": \"label\",\n      \"id\": \"corridoio\"\n    },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"Consultando la mappa troviamo subito il passaggio segreto.\",\n      \"condition\": {\n        \"variable\": \"has_map\",\n        \"operator\": \"==\",\n        \"value\": true\n      }\n    },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Elena\",\n      \"text\": \"Senza mappa avanziamo a fatica nel buio pesto.\",\n      \"condition\": {\n        \"variable\": \"has_map\",\n        \"operator\": \"==\",\n        \"value\": false\n      }\n    },\n    {\n      \"type\": \"line\",\n      \"speaker\": \"Marco\",\n      \"text\": \"Siamo arrivati alla fine del corridoio.\"\n    }\n  ]\n}\n"
+      }
+     ],
+     "spiegazione": "La struttura del file combina le etichette con le variabili e le condizioni. La scelta iniziale indirizza il flusso a due etichette differenti che impostano il booleano `has_map` rispettivamente a `true` o `false`. Entrambi i rami saltano poi alla medesima etichetta `corridoio`: qui l'interprete esamina le condizioni delle due battute alternative ed esegue soltanto quella corrispondente allo stato attuale delle variabili, per poi ricongiungersi sulla battuta conclusiva comune.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -70,5 +287,11 @@
     "md": "- Lo stato della storia è un dizionario centralizzato che tiene traccia di tutte le scelte e i valori narrativi del giocatore.\n- I comandi `set` e `add` permettono di assegnare e incrementare variabili direttamente dai dati JSON senza bloccare l'interfaccia.\n- Una condizione è una struttura di dati definita da tre elementi: nome della variabile, operatore di confronto e valore di riferimento.\n- La funzione `evaluate_condition()` confronta lo stato attuale con i requisiti richiesti e restituisce `true` o `false`.\n- Le condizioni evitano la duplicazione delle scene, consentendo a battute e opzioni di comparire solo quando opportuno."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
