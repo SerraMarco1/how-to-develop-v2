@@ -1,9 +1,201 @@
 {
  "creato": "2026-10-31T08:50:29.236Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Creare il validatore della storia nell'editor",
+    "consegna": "Crea lo script per controllare automaticamente i file della storia direttamente dall'editor di Godot, prima ancora di avviare la partita.\n\n1. Crea il file `res://story/story_validator.gd`.\n2. Lo script deve poter essere eseguito nell'editor: includi in cima l'annotazione `@tool`, assegna il nome di classe `StoryValidator` ed estendi `EditorScript`.\n3. Dichiara la costante `KNOWN_SPEAKERS` di tipo `Array[String]` contenente i parlanti validi: `[\"Elena\", \"Marco\", \"???\", \"\"]`.\n4. Crea il metodo `find_unreachable_labels(commands: Array) -> Array[String]`:\n   - Raccoglie tutte le etichette dichiarate nella lista (comandi con `\"type\": \"label\"` e campo `\"id\"` o `\"name\"`).\n   - Esplora i percorsi a partire dal comando all'indice `0` usando una coda (`queue`) e tenendo traccia degli indici già visitati (`visited_indices`) per non girare all'infinito sui cicli.\n   - Quando incontra un comando normale aggiunge alla coda l'indice successivo (`idx + 1`); quando incontra un `jump` aggiunge l'indice dell'etichetta bersaglio; quando incontra una `choice` aggiunge alla coda i bersagli di tutte le sue opzioni.\n   - Restituisce un `Array[String]` con i nomi delle etichette che non sono mai state visitate.\n5. Crea il metodo `validate_lines(lines: Array, file_path: String = \"storia.json\") -> Array[String]`:\n   - Raccoglie in un dizionario le etichette dichiarate e in un array le variabili impostate da comandi `\"type\": \"set\"`.\n   - Esamina ogni comando e aggiunge un messaggio d'errore descrittivo in formato stringa se rileva:\n     * Un personaggio sconosciuto (campo `speaker` non vuoto e assente da `KNOWN_SPEAKERS`).\n     * Un salto o una scelta verso un'etichetta inesistente (campo `target` assente dalle etichette dichiarate).\n     * Una condizione su una variabile mai impostata (chiave `condition` con `variable` mai apparsa in un comando `set`).\n     * Un'etichetta mai raggiungibile (restituita da `find_unreachable_labels(lines)`).\n   - Restituisce l'elenco dei messaggi di errore trovati (array vuoto se non ci sono errori).\n6. Crea il metodo `validate_chapter(file_path: String) -> Array[String]`:\n   - Apre il file con `FileAccess.open(file_path, FileAccess.READ)` ed effettua il parsing JSON. Se il file non esiste o il contenuto non è un JSON valido, restituisce l'errore opportuno.\n   - Estrae l'array `lines` e restituisce il risultato di `validate_lines(lines, file_path)`.\n7. Implementa `_run() -> void`:\n   - Esegue `validate_chapter` sui quattro capitoli del gioco (`res://story/intro.json`, `res://story/branching_story.json`, `res://story/network_story.json`, `res://story/consequence_story.json`) e stampa i risultati nella scheda Output.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per evitare di rimanere bloccato nei cicli infiniti durante l'esplorazione, memorizza ogni riga esaminata in un array `visited_indices: Array[int] = []`. Se l'indice estratto dalla coda è già presente in quell'array, scartalo subito con `continue`.",
+     "Nel primo passaggio su `lines`, memorizza le etichette in un dizionario `declared_labels` usando come chiave il nome e come valore l'indice del comando. Fai lo stesso per le variabili memorizzandone i nomi ogni volta che incontri `\"type\": \"set\"`.",
+     "In `validate_lines`, controlla sia le condizioni presenti direttamente nel comando sia quelle nidificate all'interno di ciascuna opzione di un comando `\"type\": \"choice\"`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_validator.gd",
+      "descrizione": "Il file story_validator.gd esiste nella cartella res://story/"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/story_validator.gd",
+      "regex": "@tool",
+      "descrizione": "Lo script include l'annotazione @tool"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/story_validator.gd",
+      "regex": "extends EditorScript",
+      "descrizione": "Lo script estende EditorScript"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar validator = instantiate_script(\"res://story/story_validator.gd\")\n\tif not check(\"istanza\", validator != null, \"Lo script story_validator.gd deve potersi istanziare senza errori\"):\n\t\treturn\n\tif not check(\"ha_metodi\", has_function(validator, \"validate_chapter\") and has_function(validator, \"validate_lines\") and has_function(validator, \"find_unreachable_labels\"), \"StoryValidator deve implementare validate_chapter, validate_lines e find_unreachable_labels\"):\n\t\treturn\n\t\n\tvar valid_branching: Array = call_if_exists(validator, \"validate_chapter\", [\"res://story/branching_story.json\"], [\"errore\"])\n\tcheck(\"branching_valido\", valid_branching.is_empty(), \"I file corretti del gioco (es. branching_story.json) non devono generare errori (trovati: %d)\" % valid_branching.size())\n\t\n\tvar bad_speaker: Array = call_if_exists(validator, \"validate_lines\", [[\n\t\t{\"type\": \"line\", \"speaker\": \"OmbraMisteriosa\", \"text\": \"Chi va la'?\"}\n\t], \"test.json\"], [])\n\tcheck(\"trova_speaker\", not bad_speaker.is_empty(), \"Un personaggio non in KNOWN_SPEAKERS deve essere segnalato come errore\")\n\t\n\tvar bad_jump: Array = call_if_exists(validator, \"validate_lines\", [[\n\t\t{\"type\": \"jump\", \"target\": \"porta_inesistente\"}\n\t], \"test.json\"], [])\n\tcheck(\"trova_jump\", not bad_jump.is_empty(), \"Un salto verso un'etichetta non dichiarata deve essere segnalato\")\n\t\n\tvar bad_var: Array = call_if_exists(validator, \"validate_lines\", [[\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Ho la spada!\", \"condition\": {\"variable\": \"ha_spada\", \"operator\": \"==\", \"value\": true}}\n\t], \"test.json\"], [])\n\tcheck(\"trova_variabile\", not bad_var.is_empty(), \"Una condizione su una variabile mai impostata da un comando set deve generare un errore\")\n\t\n\tvar unreach: Array = call_if_exists(validator, \"find_unreachable_labels\", [[\n\t\t{\"type\": \"jump\", \"target\": \"uscita\"},\n\t\t{\"type\": \"label\", \"id\": \"mai_usata\"},\n\t\t{\"type\": \"label\", \"id\": \"uscita\"}\n\t]], [])\n\tcheck(\"trova_irraggiungibile\", unreach.has(\"mai_usata\"), \"find_unreachable_labels deve identificare le etichette scavalcate e mai referenziate\")",
+      "descrizione": "Il validatore rileva correttamente errori di personaggi, salti, variabili e codice orfano"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/story_validator.gd",
+       "contenuto": "@tool\nclass_name StoryValidator\nextends EditorScript\n\nconst KNOWN_SPEAKERS: Array[String] = [\"Elena\", \"Marco\", \"???\", \"\"]\n\n\nfunc _run() -> void:\n\tprint(\"--- Inizio controllo storia ---\")\n\tvar chapters: Array[String] = [\n\t\t\"res://story/intro.json\",\n\t\t\"res://story/branching_story.json\",\n\t\t\"res://story/network_story.json\",\n\t\t\"res://story/consequence_story.json\"\n\t]\n\tvar total_errors: int = 0\n\tfor path in chapters:\n\t\tvar errors := validate_chapter(path)\n\t\tif errors.is_empty():\n\t\t\tprint(\"OK: %s\" % path)\n\t\telse:\n\t\t\tfor err in errors:\n\t\t\t\tprinterr(err)\n\t\t\t\ttotal_errors += 1\n\tprint(\"--- Controllo terminato: %d errori trovati ---\" % total_errors)\n\n\nfunc validate_chapter(file_path: String) -> Array[String]:\n\tif not FileAccess.file_exists(file_path):\n\t\treturn [\"%s: File non trovato.\" % file_path]\n\t\n\tvar file := FileAccess.open(file_path, FileAccess.READ)\n\tif not file:\n\t\treturn [\"%s: Impossibile aprire il file.\" % file_path]\n\t\n\tvar content: String = file.get_as_text()\n\tvar json_data: Variant = JSON.parse_string(content)\n\tif not json_data is Dictionary:\n\t\treturn [\"%s: Il file non contiene un oggetto JSON valido.\" % file_path]\n\t\n\tvar chapter: Dictionary = json_data\n\tvar lines_variant: Variant = chapter.get(\"lines\", [])\n\tif not lines_variant is Array:\n\t\treturn [\"%s: La chiave 'lines' non e' un array.\" % file_path]\n\t\n\tvar lines: Array = lines_variant\n\treturn validate_lines(lines, file_path)\n\n\nfunc validate_lines(lines: Array, file_path: String = \"storia.json\") -> Array[String]:\n\tvar errors: Array[String] = []\n\tvar declared_labels: Dictionary = {}\n\tvar assigned_variables: Array[String] = []\n\t\n\t# 1. Raccoglie etichette e variabili assegnate\n\tfor i in range(lines.size()):\n\t\tvar entry: Variant = lines[i]\n\t\tif not entry is Dictionary:\n\t\t\tcontinue\n\t\tvar cmd: Dictionary = entry\n\t\tvar cmd_type: String = String(cmd.get(\"type\", \"\"))\n\t\t\n\t\tif cmd_type == \"label\":\n\t\t\tvar label_name: String = String(cmd.get(\"id\", cmd.get(\"name\", \"\")))\n\t\t\tif label_name.is_empty():\n\t\t\t\terrors.append(\"%s [riga %d]: Etichetta senza nome specificato.\" % [file_path, i])\n\t\t\telif declared_labels.has(label_name):\n\t\t\t\terrors.append(\"%s [riga %d]: Etichetta duplicata '%s'.\" % [file_path, i, label_name])\n\t\t\telse:\n\t\t\t\tdeclared_labels[label_name] = i\n\t\t\n\t\tif cmd_type == \"set\":\n\t\t\tvar var_name: String = String(cmd.get(\"variable\", \"\"))\n\t\t\tif not var_name.is_empty() and not assigned_variables.has(var_name):\n\t\t\t\tassigned_variables.append(var_name)\n\t\n\t# 2. Controlla personaggi, salti, scelte e condizioni\n\tfor i in range(lines.size()):\n\t\tvar entry: Variant = lines[i]\n\t\tif not entry is Dictionary:\n\t\t\terrors.append(\"%s [riga %d]: Elemento non valido nella lista comandi.\" % [file_path, i])\n\t\t\tcontinue\n\t\t\n\t\tvar cmd: Dictionary = entry\n\t\tvar speaker: String = String(cmd.get(\"speaker\", \"\"))\n\t\tif not speaker.is_empty() and not KNOWN_SPEAKERS.has(speaker):\n\t\t\terrors.append(\"%s [riga %d]: Personaggio sconosciuto '%s'.\" % [file_path, i, speaker])\n\t\t\n\t\tvar cmd_type: String = String(cmd.get(\"type\", \"\"))\n\t\tif cmd_type == \"jump\":\n\t\t\tvar target: String = String(cmd.get(\"target\", \"\"))\n\t\t\tif target.is_empty() or not declared_labels.has(target):\n\t\t\t\terrors.append(\"%s [riga %d]: Salto verso etichetta inesistente '%s'.\" % [file_path, i, target])\n\t\t\n\t\tif cmd_type == \"choice\":\n\t\t\tvar options: Variant = cmd.get(\"options\", [])\n\t\t\tif options is Array:\n\t\t\t\tfor opt in options:\n\t\t\t\t\tif opt is Dictionary:\n\t\t\t\t\t\tvar opt_target: String = String(opt.get(\"target\", \"\"))\n\t\t\t\t\t\tif opt_target.is_empty() or not declared_labels.has(opt_target):\n\t\t\t\t\t\t\terrors.append(\"%s [riga %d]: Scelta con salto verso etichetta inesistente '%s'.\" % [file_path, i, opt_target])\n\t\t\t\t\t\tif opt.has(\"condition\"):\n\t\t\t\t\t\t\tvar cond: Variant = opt.get(\"condition\")\n\t\t\t\t\t\t\tif cond is Dictionary:\n\t\t\t\t\t\t\t\tvar cond_var: String = String(cond.get(\"variable\", \"\"))\n\t\t\t\t\t\t\t\tif not cond_var.is_empty() and not assigned_variables.has(cond_var):\n\t\t\t\t\t\t\t\t\terrors.append(\"%s [riga %d]: Condizione su variabile mai impostata '%s'.\" % [file_path, i, cond_var])\n\t\t\n\t\tif cmd.has(\"condition\"):\n\t\t\tvar cond: Variant = cmd.get(\"condition\")\n\t\t\tif cond is Dictionary:\n\t\t\t\tvar cond_var: String = String(cond.get(\"variable\", \"\"))\n\t\t\t\tif not cond_var.is_empty() and not assigned_variables.has(cond_var):\n\t\t\t\t\terrors.append(\"%s [riga %d]: Condizione su variabile mai impostata '%s'.\" % [file_path, i, cond_var])\n\t\n\t# 3. Controllo etichette non raggiungibili\n\tvar unreachable := find_unreachable_labels(lines)\n\tfor unreach in unreachable:\n\t\tvar line_idx: int = declared_labels.get(unreach, -1)\n\t\terrors.append(\"%s [riga %d]: Etichetta mai raggiungibile '%s'.\" % [file_path, line_idx, unreach])\n\t\n\treturn errors\n\n\nfunc find_unreachable_labels(commands: Array) -> Array[String]:\n\tvar all_labels: Dictionary = {}\n\tfor i in range(commands.size()):\n\t\tvar cmd: Variant = commands[i]\n\t\tif cmd is Dictionary and cmd.get(\"type\", \"\") == \"label\":\n\t\t\tvar lid: String = String(cmd.get(\"id\", cmd.get(\"name\", \"\")))\n\t\tif not lid.is_empty():\n\t\t\tall_labels[lid] = i\n\t\n\tif all_labels.is_empty():\n\t\treturn []\n\t\n\tvar visited_indices: Array[int] = []\n\tvar queue: Array[int] = [0]\n\t\n\twhile not queue.is_empty():\n\t\tvar idx: int = queue.pop_front()\n\t\tif idx < 0 or idx >= commands.size():\n\t\t\tcontinue\n\t\tif visited_indices.has(idx):\n\t\t\tcontinue\n\t\tvisited_indices.append(idx)\n\t\t\n\t\tvar cmd: Variant = commands[idx]\n\t\tif not cmd is Dictionary:\n\t\t\tqueue.append(idx + 1)\n\t\t\tcontinue\n\t\t\n\t\tvar cmd_type: String = String(cmd.get(\"type\", \"\"))\n\t\tmatch cmd_type:\n\t\t\t\"jump\":\n\t\t\t\tvar target: String = String(cmd.get(\"target\", \"\"))\n\t\t\t\tif all_labels.has(target):\n\t\t\t\t\tqueue.append(all_labels[target])\n\t\t\t\"choice\":\n\t\t\t\tvar options: Variant = cmd.get(\"options\", [])\n\t\t\t\tif options is Array:\n\t\t\t\t\tfor opt in options:\n\t\t\t\t\t\tif opt is Dictionary:\n\t\t\t\t\t\t\tvar target: String = String(opt.get(\"target\", \"\"))\n\t\t\t\t\t\t\tif all_labels.has(target):\n\t\t\t\t\t\t\t\tqueue.append(all_labels[target])\n\t\t\t_:\n\t\t\t\tqueue.append(idx + 1)\n\t\n\tvar unreachable: Array[String] = []\n\tfor label_name in all_labels:\n\t\tvar label_idx: int = all_labels[label_name]\n\t\tif not visited_indices.has(label_idx):\n\t\t\tunreachable.append(label_name)\n\t\n\treturn unreachable\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "`StoryValidator` estende `EditorScript` e usa `@tool` per poter essere eseguito dal menu Script dell'editor. Il metodo `validate_lines` scompone l'analisi in tre passaggi: raccoglie prima tutte le etichette e le variabili definite con `set`, poi verifica i comandi uno per uno segnalando parlanti non ammessi, salti a etichette inesistenti e variabili non inizializzate, e infine sfrutta `find_unreachable_labels` per intercettare etichette orfane tramite una scansione a grafo che evita cicli infiniti memorizzando gli indici già visitati.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "collauda",
+    "titolo": "Collaudare i controlli del validatore",
+    "consegna": "Scrivi una suite di test automatici per verificare che `StoryValidator` rilevi correttamente tutti gli errori della storia senza produrre falsi allarmi.\n\n1. Crea lo script `res://story/test_story_validator.gd` con nome di classe `TestStoryValidator` che estende `RefCounted`.\n2. Implementa quattro metodi di collaudo che ricevono un'istanza di `StoryValidator` e restituiscono `true` solo se il test è superato:\n   - `test_valid_story(validator: StoryValidator) -> bool`: passa a `validator.validate_lines(...)` una storia corretta (ad esempio con battute di Elena e Marco e una variabile assegnata prima di usarla in una condizione). Restituisce `true` solo se la lista degli errori è vuota.\n   - `test_detects_unknown_speaker(validator: StoryValidator) -> bool`: passa comandi contenenti un personaggio non valido (ad esempio `\"MagoMisterioso\"`). Restituisce `true` se il validatore segnala almeno un errore contenente il nome del personaggio o la parola sconosciuto.\n   - `test_detects_missing_label(validator: StoryValidator) -> bool`: passa un comando `jump` verso un'etichetta inesistente (ad esempio `\"etichetta_fantasma\"`). Restituisce `true` se viene segnalato un errore per salto inesistente.\n   - `test_detects_unset_variable(validator: StoryValidator) -> bool`: passa una battuta con una condizione su una variabile mai impostata (ad esempio `\"chiave_segreta\"`). Restituisce `true` se viene segnalato l'errore sulla variabile.\n\nLa piattaforma eseguirà la tua suite di test contro la versione corretta di `StoryValidator` e contro versioni difettose (che ignorano gli errori o segnalano falsi allarmi): i tuoi test devono promuovere solo la versione corretta.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In ogni funzione di test crea un piccolo `Array` di dizionari con i comandi minimi necessari a testare quello specifico errore e passalo a `validator.validate_lines(lines, \"test.json\")`.",
+     "Nei test che cercano un errore, scorri i messaggi dell'array restituito con un ciclo `for err in errors:` e verifica che il testo contenga il nome incriminato usando `err.contains(...)` o `err.to_lower().contains(...)`.",
+     "Ricorda di restituire `false` all'inizio di ciascun metodo se `validator` è `null`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/test_story_validator.gd",
+      "descrizione": "Il file test_story_validator.gd esiste nella cartella res://story/"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/test_story_validator.gd",
+      "regex": "class_name TestStoryValidator",
+      "descrizione": "La classe si chiama TestStoryValidator"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nclass MockBlindValidator extends StoryValidator:\n\tfunc validate_lines(_lines: Array, _file: String = \"storia.json\") -> Array[String]:\n\t\treturn []\n\nclass MockParanoidValidator extends StoryValidator:\n\tfunc validate_lines(_lines: Array, file_path: String = \"storia.json\") -> Array[String]:\n\t\treturn [\"%s [riga 0]: Errore forzato.\" % file_path]\n\nclass MockIgnoreSpeakerValidator extends StoryValidator:\n\tfunc validate_lines(lines: Array, file_path: String = \"storia.json\") -> Array[String]:\n\t\tvar all_errs := super.validate_lines(lines, file_path)\n\t\tvar res: Array[String] = []\n\t\tfor e in all_errs:\n\t\t\tif not e.to_lower().contains(\"sconosciuto\"):\n\t\t\t\tres.append(e)\n\t\treturn res\n\nclass MockIgnoreLabelValidator extends StoryValidator:\n\tfunc validate_lines(lines: Array, file_path: String = \"storia.json\") -> Array[String]:\n\t\tvar all_errs := super.validate_lines(lines, file_path)\n\t\tvar res: Array[String] = []\n\t\tfor e in all_errs:\n\t\t\tif not e.to_lower().contains(\"inesistente\"):\n\t\t\t\tres.append(e)\n\t\treturn res\n\nclass MockIgnoreVariableValidator extends StoryValidator:\n\tfunc validate_lines(lines: Array, file_path: String = \"storia.json\") -> Array[String]:\n\t\tvar all_errs := super.validate_lines(lines, file_path)\n\t\tvar res: Array[String] = []\n\t\tfor e in all_errs:\n\t\t\tif not e.to_lower().contains(\"impostata\"):\n\t\t\t\tres.append(e)\n\t\treturn res\n\n\nfunc _run_tests() -> void:\n\tvar tester = instantiate_script(\"res://story/test_story_validator.gd\")\n\tif not check(\"istanza\", tester != null, \"Lo script test_story_validator.gd deve potersi istanziare\"):\n\t\treturn\n\t\n\tvar real_validator := StoryValidator.new()\n\tcheck(\"promuove_valido\", tester.test_valid_story(real_validator) == true, \"test_valid_story deve superare il validatore corretto\")\n\tcheck(\"rileva_speaker\", tester.test_detects_unknown_speaker(real_validator) == true, \"test_detects_unknown_speaker deve passare col validatore corretto\")\n\tcheck(\"rileva_label\", tester.test_detects_missing_label(real_validator) == true, \"test_detects_missing_label deve passare col validatore corretto\")\n\tcheck(\"rileva_var\", tester.test_detects_unset_variable(real_validator) == true, \"test_detects_unset_variable deve passare col validatore corretto\")\n\t\n\tvar blind := MockBlindValidator.new()\n\tcheck(\"boccia_cieco\", tester.test_detects_unknown_speaker(blind) == false or tester.test_detects_missing_label(blind) == false, \"Un validatore che non segnala mai errori deve essere bocciato\")\n\t\n\tvar paranoid := MockParanoidValidator.new()\n\tcheck(\"boccia_paranoico\", tester.test_valid_story(paranoid) == false, \"Un validatore che genera falsi allarmi su storie valide deve essere bocciato\")\n\t\n\tvar ignore_spk := MockIgnoreSpeakerValidator.new()\n\tcheck(\"boccia_ignora_speaker\", tester.test_detects_unknown_speaker(ignore_spk) == false, \"Un validatore che ignora i personaggi sconosciuti deve essere bocciato da test_detects_unknown_speaker\")\n\t\n\tvar ignore_lbl := MockIgnoreLabelValidator.new()\n\tcheck(\"boccia_ignora_label\", tester.test_detects_missing_label(ignore_lbl) == false, \"Un validatore che ignora i salti errati deve essere bocciato da test_detects_missing_label\")\n\t\n\tvar ignore_var := MockIgnoreVariableValidator.new()\n\tcheck(\"boccia_ignora_var\", tester.test_detects_unset_variable(ignore_var) == false, \"Un validatore che ignora variabili mai impostate deve essere bocciato da test_detects_unset_variable\")",
+      "descrizione": "I test promuovono il validatore corretto e bocciano i validatori difettosi"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/test_story_validator.gd",
+       "contenuto": "class_name TestStoryValidator\nextends RefCounted\n\n\nfunc test_valid_story(validator: StoryValidator) -> bool:\n\tif not validator:\n\t\treturn false\n\tvar valid_lines: Array = [\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Ciao!\"},\n\t\t{\"type\": \"line\", \"speaker\": \"Marco\", \"text\": \"Bentornata.\"},\n\t\t{\"type\": \"set\", \"variable\": \"gemme\", \"value\": 5},\n\t\t{\n\t\t\t\"type\": \"line\",\n\t\t\t\"speaker\": \"Elena\",\n\t\t\t\"text\": \"Hai le gemme.\",\n\t\t\t\"condition\": {\"variable\": \"gemme\", \"operator\": \">=\", \"value\": 1}\n\t\t}\n\t]\n\tvar errors := validator.validate_lines(valid_lines, \"test_valid.json\")\n\treturn errors.is_empty()\n\n\nfunc test_detects_unknown_speaker(validator: StoryValidator) -> bool:\n\tif not validator:\n\t\treturn false\n\tvar invalid_lines: Array = [\n\t\t{\"type\": \"line\", \"speaker\": \"MagoMisterioso\", \"text\": \"Chi osa disturbarmi?\"}\n\t]\n\tvar errors := validator.validate_lines(invalid_lines, \"test_speaker.json\")\n\tif errors.is_empty():\n\t\treturn false\n\tfor err in errors:\n\t\tif err.contains(\"MagoMisterioso\") or err.to_lower().contains(\"sconosciuto\"):\n\t\t\treturn true\n\treturn false\n\n\nfunc test_detects_missing_label(validator: StoryValidator) -> bool:\n\tif not validator:\n\t\treturn false\n\tvar invalid_lines: Array = [\n\t\t{\"type\": \"jump\", \"target\": \"etichetta_fantasma\"}\n\t]\n\tvar errors := validator.validate_lines(invalid_lines, \"test_label.json\")\n\tif errors.is_empty():\n\t\treturn false\n\tfor err in errors:\n\t\tif err.contains(\"etichetta_fantasma\") or err.to_lower().contains(\"inesistente\"):\n\t\t\treturn true\n\treturn false\n\n\nfunc test_detects_unset_variable(validator: StoryValidator) -> bool:\n\tif not validator:\n\t\treturn false\n\tvar invalid_lines: Array = [\n\t\t{\n\t\t\t\"type\": \"line\",\n\t\t\t\"speaker\": \"Marco\",\n\t\t\t\"text\": \"Hai la chiave?\",\n\t\t\t\"condition\": {\"variable\": \"chiave_segreta\", \"operator\": \"==\", \"value\": true}\n\t\t}\n\t]\n\tvar errors := validator.validate_lines(invalid_lines, \"test_var.json\")\n\tif errors.is_empty():\n\t\treturn false\n\tfor err in errors:\n\t\tif err.contains(\"chiave_segreta\") or err.to_lower().contains(\"impostata\"):\n\t\t\treturn true\n\treturn false\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Ogni metodo di `TestStoryValidator` costruisce un caso di test mirato: una storia pulita per confermare che non ci siano falsi allarmi, e tre casi errati per personaggi sconosciuti, etichette mancanti e variabili mai assegnate. In questo modo il collaudo promuove solo un validatore completo e accurato, respingendo sia implementazioni cieche sia implementazioni che ignorano specifiche categorie di errore.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "collauda",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "collauda",
+    "titolo": "Collaudare i grafi dei bivi e i percorsi ciclici",
+    "consegna": "Crea la suite di collaudo per l'analisi dei collegamenti narrativi, verificando che il motore sappia riconoscere sia le etichette isolate sia i percorsi che tornano su se stessi senza bloccarsi.\n\n1. Crea il file `res://story/test_story_reachability.gd`.\n2. Assegna il nome di classe `TestStoryReachability` ed estendi `RefCounted`.\n3. Implementa tre funzioni di test che ricevono un'istanza di `StoryValidator` e restituiscono un valore `bool`:\n   - `test_all_labels_reachable(validator: StoryValidator) -> bool`: passa a `validator.find_unreachable_labels(commands)` una struttura narrativa a bivi in cui ogni etichetta è raggiunta da una scelta o da un salto. Restituisce `true` solo se la lista delle etichette irraggiungibili è vuota.\n   - `test_detects_unreachable_label(validator: StoryValidator) -> bool`: passa una sequenza in cui dopo un salto incondizionato si trova un'etichetta isolata (ad esempio `\"etichetta_orfana\"`) a cui nessun salto o scelta conduce. Restituisce `true` solo se la lista restituita contiene `\"etichetta_orfana\"`.\n   - `test_cyclic_network_without_infinite_loop(validator: StoryValidator) -> bool`: passa una sequenza con un ciclo chiuso (due etichette collegate l'una all'altra da comandi `jump`). Restituisce `true` solo se la funzione termina regolarmente e restituisce una lista vuota (entrambe le etichette sono raggiungibili).\n\nLa piattaforma testerà i tuoi controlli contro versioni difettose dell'esploratore di grafi: solo l'algoritmo corretto dovrà superare tutti i test.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per il test ciclico definisci due etichette che rimandano l'una all'altra con un jump: se la funzione non si blocca e restituisce un array vuoto, significa che il controllore ha gestito correttamente il grafo ciclico."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/test_story_reachability.gd",
+      "descrizione": "Il file test_story_reachability.gd esiste nella cartella res://story/"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/test_story_reachability.gd",
+      "regex": "class_name TestStoryReachability",
+      "descrizione": "La classe si chiama TestStoryReachability"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nclass MockBlindReachability extends StoryValidator:\n\tfunc find_unreachable_labels(_commands: Array) -> Array[String]:\n\t\treturn []\n\nclass MockParanoidReachability extends StoryValidator:\n\tfunc find_unreachable_labels(commands: Array) -> Array[String]:\n\t\tvar labels: Array[String] = []\n\t\tfor cmd in commands:\n\t\t\tif cmd is Dictionary and cmd.get(\"type\", \"\") == \"label\":\n\t\t\t\tlabels.append(String(cmd.get(\"id\", cmd.get(\"name\", \"\"))))\n\t\treturn labels\n\nclass MockBrokenCycleReachability extends StoryValidator:\n\tfunc find_unreachable_labels(commands: Array) -> Array[String]:\n\t\tvar unreach := super.find_unreachable_labels(commands)\n\t\tfor cmd in commands:\n\t\t\tif cmd is Dictionary and cmd.get(\"type\", \"\") == \"label\":\n\t\t\t\tvar lid := String(cmd.get(\"id\", cmd.get(\"name\", \"\")))\n\t\t\t\tif not unreach.has(lid):\n\t\t\t\t\tunreach.append(lid)\n\t\treturn unreach\n\n\nfunc _run_tests() -> void:\n\tvar tester = instantiate_script(\"res://story/test_story_reachability.gd\")\n\tif not check(\"istanza\", tester != null, \"Lo script test_story_reachability.gd deve potersi istanziare\"):\n\t\treturn\n\t\n\tvar real_val := StoryValidator.new()\n\tcheck(\"promuove_valido\", tester.test_all_labels_reachable(real_val) == true, \"test_all_labels_reachable deve passare sul validatore corretto\")\n\tcheck(\"rileva_orfana\", tester.test_detects_unreachable_label(real_val) == true, \"test_detects_unreachable_label deve passare sul validatore corretto\")\n\tcheck(\"gestisce_ciclo\", tester.test_cyclic_network_without_infinite_loop(real_val) == true, \"test_cyclic_network_without_infinite_loop deve passare sul validatore corretto\")\n\t\n\tvar blind := MockBlindReachability.new()\n\tcheck(\"boccia_cieco\", tester.test_detects_unreachable_label(blind) == false, \"Un validatore che non trova mai etichette orfane deve essere bocciato\")\n\t\n\tvar paranoid := MockParanoidReachability.new()\n\tcheck(\"boccia_paranoico\", tester.test_all_labels_reachable(paranoid) == false, \"Un validatore che dichiara irraggiungibili anche etichette valide deve essere bocciato\")\n\t\n\tvar broken_cycle := MockBrokenCycleReachability.new()\n\tcheck(\"boccia_ciclo_rotto\", tester.test_cyclic_network_without_infinite_loop(broken_cycle) == false, \"Un validatore che sbaglia sui percorsi ciclici deve essere bocciato\")",
+      "descrizione": "I test identificano correttamente percorsi completi, etichette orfane e anelli ciclici"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/test_story_reachability.gd",
+       "contenuto": "class_name TestStoryReachability\nextends RefCounted\n\n\nfunc test_all_labels_reachable(validator: StoryValidator) -> bool:\n\tif not validator:\n\t\treturn false\n\tvar commands: Array = [\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Iniziamo il bivio.\"},\n\t\t{\n\t\t\t\"type\": \"choice\",\n\t\t\t\"options\": [\n\t\t\t\t{\"text\": \"Opzione A\", \"target\": \"bivio_a\"},\n\t\t\t\t{\"text\": \"Opzione B\", \"target\": \"bivio_b\"}\n\t\t\t]\n\t\t},\n\t\t{\"type\": \"label\", \"id\": \"bivio_a\"},\n\t\t{\"type\": \"jump\", \"target\": \"fine\"},\n\t\t{\"type\": \"label\", \"id\": \"bivio_b\"},\n\t\t{\"type\": \"label\", \"id\": \"fine\"},\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Arrivati alla fine.\"}\n\t]\n\tvar unreachable := validator.find_unreachable_labels(commands)\n\treturn unreachable.is_empty()\n\n\nfunc test_detects_unreachable_label(validator: StoryValidator) -> bool:\n\tif not validator:\n\t\treturn false\n\tvar commands: Array = [\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Andiamo dritti.\"},\n\t\t{\"type\": \"jump\", \"target\": \"destinazione_valida\"},\n\t\t{\"type\": \"label\", \"id\": \"etichetta_orfana\"},\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Questo testo e' isolato.\"},\n\t\t{\"type\": \"label\", \"id\": \"destinazione_valida\"},\n\t\t{\"type\": \"line\", \"speaker\": \"Marco\", \"text\": \"Siamo arrivati.\"}\n\t]\n\tvar unreachable := validator.find_unreachable_labels(commands)\n\treturn unreachable.has(\"etichetta_orfana\")\n\n\nfunc test_cyclic_network_without_infinite_loop(validator: StoryValidator) -> bool:\n\tif not validator:\n\t\treturn false\n\tvar commands: Array = [\n\t\t{\"type\": \"label\", \"id\": \"stanza_nord\"},\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Siamo a nord.\"},\n\t\t{\"type\": \"jump\", \"target\": \"stanza_sud\"},\n\t\t{\"type\": \"label\", \"id\": \"stanza_sud\"},\n\t\t{\"type\": \"line\", \"speaker\": \"Elena\", \"text\": \"Siamo a sud.\"},\n\t\t{\"type\": \"jump\", \"target\": \"stanza_nord\"}\n\t]\n\tvar unreachable := validator.find_unreachable_labels(commands)\n\treturn unreachable.is_empty()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "`TestStoryReachability` collauda l'esplorazione del grafo su tre scenari critici: una rete ramificata corretta dove ogni etichetta è visitata, un flusso con codice orfano scavalcato da un salto incondizionato e un ciclo chiuso continuo dove due etichette saltano l'una all'altra. L'insieme di questi controlli assicura che il validatore percorra tutti i rami senza incorrere in cicli infiniti e intercettando qualsiasi etichetta non raggiungibile.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "collauda",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Uno strumento per te: controllare la storia prima di giocarla",
@@ -74,5 +266,10 @@
     "md": "- Un validatore analizza i file dei dati prima dell'esecuzione, evitando che errori di battitura blocchino la partita.\n- Gli script con `@tool` che estendono `EditorScript` si eseguono direttamente dall'editor tramite il menu *File -> Run* (Ctrl+Shift+X), stampando nel pannello *Output*.\n- Ogni errore segnalato deve indicare il percorso del file e l'indice del comando, così da rendere immediata la correzione.\n- Gli errori tipici includono salti a etichette inesistenti, personaggi non registrati e condizioni su variabili mai impostate.\n- Per verificare i punti irraggiungibili senza finire in cicli infiniti, si memorizzano i nodi già visitati durante l'attraversamento dei rami narrativi."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
