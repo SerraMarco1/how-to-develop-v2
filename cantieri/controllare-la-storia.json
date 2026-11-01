@@ -1017,5 +1017,25 @@
   "es2",
   "test"
  ],
- "praticaRifatta": true
+ "praticaRifatta": true,
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test finale è una copia identica dell'esercizio 'es2' (stessi contenuti, stessa consegna e stesse verifiche), violando la regola per cui il test non deve essere una copia di un esercizio.",
+    "correzione": "Riscrivere il test fornendo uno scenario o una verifica differente rispetto all'esercizio 'es2'.",
+    "fonte": ""
+   },
+   {
+    "parte": "pratica",
+    "dove": "es2",
+    "problema": "La verifica di tipo `script_godot` controlla che la scena principale si avvii correttamente (`instantiate_main_scene()`), ma la consegna richiede soltanto di creare uno script `EditorScript` (`res://story/story_validator.gd`) e non fa alcuna menzione dell'avvio o della creazione di una scena principale.",
+    "correzione": "Rimuovere il controllo `script_godot` oppure sostituirlo con una verifica congruente con quanto richiesto nella consegna.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
