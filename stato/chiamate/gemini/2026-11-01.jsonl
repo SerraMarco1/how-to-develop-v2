@@ -1,0 +1,2 @@
+{"quando":1793516485826,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"controllare-la-storia","ok":false,"contata":true,"durataMs":375,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1793516486207,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"controllare-la-storia","ok":true,"contata":true,"durataMs":12233,"tokenInput":10698,"tokenOutput":234,"ragionamento":2155}
