@@ -1,0 +1,64 @@
+{
+ "creato": "2026-11-01T07:07:09.710Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Musica, effetti e voci nella storia",
+  "sommario": "In questa lezione creiamo un gestore dell'audio per la nostra visual novel. Impariamo a mantenere la musica attiva tra una scena e l'altra, a sfumare i brani in dissolvenza con due AudioStreamPlayer e a riprodurre effetti sonori senza che si interrompano a vicenda.",
+  "concetti": [
+   "Audio Manager persistente",
+   "AudioStreamPlayer e AudioStream",
+   "Volume in decibel (volume_db)",
+   "Dissolvenza incrociata (crossfade) con Tween",
+   "Creazione dinamica di nodi audio per effetti sonori",
+   "Integrazione dei comandi audio nei file JSON della storia"
+  ],
+  "obiettivi": [
+   "Un gestore dell'audio che vive sopra le scene",
+   "Passare da una musica all'altra in dissolvenza",
+   "Effetti che non si interrompono a vicenda"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Una visual novel senza colonna sonora ed effetti audio risulta spoglia e priva di atmosfera. Tuttavia, gestire l'audio in un motore di gioco presenta sfide precise: se la musica viene riprodotta da un nodo inserito dentro una scena specifica, il suono si interromperà bruscamente ogni volta che la scena cambia o si passa a un altro capitolo. Inoltre, riprodurre un effetto sonoro mentre un altro è ancora in corso rischia di interrompere il primo a metà.\n\nIn questa lezione realizziamo un gestore dell'audio dedicato che risiede sopra le singole scene, gestisce transizioni fluide in dissolvenza (crossfade) tra le tracce musicali e permette la sovrapposizione pulita di molteplici effetti sonori."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Un gestore audio separato dalle scene\n\nPer fare in modo che la musica continui a suonare senza interruzioni quando il gioco passa da un capitolo all'altro o carica uno sfondo nuovo, la riproduzione dell'audio non deve dipendere dai nodi della scena di gioco corrente.\n\nIn Godot, una struttura audio persistente vive nell'albero dei nodi a un livello superiore rispetto alle scene dei capitoli. Creiamo uno script `AudioManager` nel file `assets/audio/audio.gd`. Questo gestore conterrà due nodi `AudioStreamPlayer` dedicati alla musica di sottofondo e una funzione per creare al volo canali dedicati agli effetti sonori e ai doppiaggi vocali."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name AudioManager\nextends Node\n\nvar _music_player_a: AudioStreamPlayer\nvar _music_player_b: AudioStreamPlayer\nvar _active_music_player: AudioStreamPlayer\nvar _music_tween: Tween\n\n\nfunc _ready() -> void:\n\t# Creiamo i due riproduttori per consentire la dissolvenza incrociata\n\t_music_player_a = AudioStreamPlayer.new()\n\t_music_player_b = AudioStreamPlayer.new()\n\tadd_child(_music_player_a)\n\tadd_child(_music_player_b)\n\t_music_player_a.volume_db = -80.0\n\t_music_player_b.volume_db = -80.0\n\n\nfunc play_music(stream: AudioStream, fade_duration: float = 1.0) -> void:\n\tif not stream:\n\t\treturn\n\t\n\t# Se il brano richiesto è già in riproduzione sul canale attivo, non facciamo nulla\n\tif _active_music_player and _active_music_player.stream == stream and _active_music_player.playing:\n\t\treturn\n\t\n\t# Alterniamo il canale in ingresso tra A e B\n\tvar incoming_player: AudioStreamPlayer = _music_player_b if _active_music_player == _music_player_a else _music_player_a\n\tvar outgoing_player: AudioStreamPlayer = _active_music_player\n\t\n\tincoming_player.stream = stream\n\tincoming_player.volume_db = -80.0\n\tincoming_player.play()\n\t\n\tif _music_tween and _music_tween.is_running():\n\t\t_music_tween.kill()\n\t\n\t_music_tween = create_tween().set_parallel(true)\n\t_music_tween.tween_property(incoming_player, \"volume_db\", 0.0, fade_duration)\n\t\n\tif outgoing_player and outgoing_player.playing:\n\t\t_music_tween.tween_property(outgoing_player, \"volume_db\", -80.0, fade_duration)\n\t\t_music_tween.chain().tween_callback(outgoing_player.stop)\n\t\n\t_active_music_player = incoming_player\n\n\nfunc stop_music(fade_duration: float = 1.0) -> void:\n\tif not _active_music_player or not _active_music_player.playing:\n\t\treturn\n\t\n\tif _music_tween and _music_tween.is_running():\n\t\t_music_tween.kill()\n\t\n\tvar outgoing: AudioStreamPlayer = _active_music_player\n\t_music_tween = create_tween()\n\t_music_tween.tween_property(outgoing, \"volume_db\", -80.0, fade_duration)\n\t_music_tween.tween_callback(outgoing.stop)\n\t_active_music_player = null\n\n\nfunc play_sfx(stream: AudioStream) -> void:\n\tif not stream:\n\t\treturn\n\t\n\t# Creiamo un nodo dedicato per questo effetto sonoro\n\tvar sfx_player := AudioStreamPlayer.new()\n\tadd_child(sfx_player)\n\tsfx_player.stream = stream\n\tsfx_player.finished.connect(sfx_player.queue_free)\n\tsfx_player.play()",
+    "spiegazione": "Questo script trasforma `AudioManager` nel centro di controllo dell'audio del gioco:\n\n- **Inizializzazione**: `_ready()` istanzia due nodi `AudioStreamPlayer` figli (`_music_player_a` e `_music_player_b`) con volume iniziale a `-80.0` dB (silenzio completo).\n- **Dissolvenza incrociata**: `play_music()` individua quale dei due riproduttori è libero, assegna la nuova risorsa `AudioStream`, ne avvia la riproduzione e usa un `Tween` in parallelo per alzare il volume del nuovo brano a `0.0` dB abbassando contemporaneamente quello vecchio a `-80.0` dB.\n- **Stop graduale**: `stop_music()` riduce progressivamente il volume del brano attivo fino al silenzio prima di fermarlo con `stop()`.\n- **Effetti isolati**: `play_sfx()` crea un nodo `AudioStreamPlayer` temporaneo ad ogni chiamata, collegando il segnale `finished` alla funzione `queue_free()` per eliminare il nodo automaticamente quando il suono finisce."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Dissolvenza incrociata e scala in decibel\n\nIn Godot, la proprietà `volume_db` controlla l'ampiezza dell'audio espressa in decibel.\n\n- Un valore di `0.0` corrisponde al volume originale del file audio (100%).\n- Un valore pari a `-80.0` dB corrisponde al silenzio assoluto.\n\nQuando si cambia brano musicale in una storia, passare istantaneamente da una traccia all'altra produce uno stacco acustico sgradevole. Utilizzando due riproduttori alternati (`_music_player_a` e `_music_player_b`) gestiti da un `Tween`, la nuova traccia parte dal silenzio (`-80.0` dB) ed emerge gradualmente, mentre la vecchia traccia sfuma dolcemente nel silenzio prima di fermarsi."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Effetti sonori che non si interrompono\n\nSe si riproducessero tutti gli effetti sonori (porte che si aprono, passi, tuoni) usando un solo nodo `AudioStreamPlayer`, l'avvio di un nuovo effetto interromperebbe immediatamente quello precedente.\n\nPer evitare questo problema, la funzione `play_sfx()` crea un nuovo nodo `AudioStreamPlayer` per ogni richiesta di suono e lo aggiunge come figlio di `AudioManager`. Poiché ogni suono dispone del proprio nodo autonomo, più effetti sonori possono essere riprodotti contemporaneamente. Grazie al collegamento tra il segnale `finished` del nodo e il metodo `queue_free`, il nodo viene distrutto appena la riproduzione termina, evitando di accumulare nodi inutilizzati nell'albero della scena."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Integrare i comandi audio nella storia JSON\n\nI file di testo dei capitoli (in formato JSON) possono ora contenere comandi dedicati all'audio da inviare all'interprete della storia. Ecco come appaiono le righe dei comandi:\n\n- `{\"type\": \"music\", \"path\": \"res://assets/audio/bgm_theme.ogg\", \"fade\": 1.5}`\n- `{\"type\": \"stop_music\", \"fade\": 2.0}`\n- `{\"type\": \"sfx\", \"path\": \"res://assets/audio/sfx_door.wav\"}`\n\nQuando l'interprete legge uno di questi comandi, carica la risorsa audio specificata tramite `load()` e la invia ai metodi di `AudioManager`."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "func execute_audio_command(command_data: Dictionary, audio_manager: AudioManager) -> void:\n\tvar cmd_type: String = command_data.get(\"type\", \"\")\n\t\n\tmatch cmd_type:\n\t\t\"music\":\n\t\t\tvar path: String = command_data.get(\"path\", \"\")\n\t\t\tvar fade: float = float(command_data.get(\"fade\", 1.0))\n\t\t\tvar stream: AudioStream = load(path) as AudioStream\n\t\t\tif stream and audio_manager:\n\t\t\t\taudio_manager.play_music(stream, fade)\n\t\t\"stop_music\":\n\t\t\tvar fade: float = float(command_data.get(\"fade\", 1.0))\n\t\t\tif audio_manager:\n\t\t\t\taudio_manager.stop_music(fade)\n\t\t\"sfx\":\n\t\t\tvar path: String = command_data.get(\"path\", \"\")\n\t\t\tvar stream: AudioStream = load(path) as AudioStream\n\t\t\tif stream and audio_manager:\n\t\t\t\taudio_manager.play_sfx(stream)",
+    "spiegazione": "Questa funzione legge il dizionario del comando narrativo ed esegue l'operazione audio corretta:\n\n- Estrae la chiave `type` usando la struttura `match` per smistare l'azione.\n- Carica il file audio dal percorso indicato nel JSON tramite `load(path) as AudioStream`.\n- Chiama la funzione corrispondente su `audio_manager` passandogli la traccia caricata e i tempi di dissolvenza desiderati."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Posizionare l'audio in un gestore superiore evita interruzioni musicali durante i cambi di scena o capitolo.\n- L'uso di due nodi `AudioStreamPlayer` alternati consente di eseguire dissolvenze incrociate (crossfade) tra brani musicali.\n- Il volume in Godot si misura in decibel (`volume_db`), dove `0.0` è il volume normale e `-80.0` rappresenta il silenzio.\n- I `Tween` permettono di variare linearmente il volume in decibel per creare dissolvenze in ingresso (fade in) e in uscita (fade out).\n- Creare nodi `AudioStreamPlayer` temporanei per gli effetti sonori e liberarli con `queue_free` al segnale `finished` impedisce ai suoni di sovrascriversi e previene sprechi di memoria."
+   }
+  ]
+ }
+}
