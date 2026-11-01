@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-01T07:07:09.696Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-01T07:25:14.605Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "musica-ed-effetti-nella-storia",
   "numero": "6.11",
   "titolo": "Musica, effetti e voci nella storia"
  },
- "messaggio": "Sta scrivendo la lezione 6.11 «Musica, effetti e voci nella storia».",
- "riprende": null
+ "messaggio": "Per oggi la lezione 6.11 ha usato le richieste che le spettano: riprende domani.",
+ "riprende": "2026-11-02T08:00:00.604Z"
 }
