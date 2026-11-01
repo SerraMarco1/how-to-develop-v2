@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-10-31T09:02:42.211Z",
+ "aggiornato": "2026-11-01T07:07:08.473Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -749,6 +749,15 @@
    "file": "lezioni/f06-visual-novel/capitoli-e-file.json",
    "sha256": "0181d4730580424bbb3f02c2fb41324fb353140e831f980d916f38d2d205cdac",
    "byte": 144258
+  },
+  {
+   "slug": "controllare-la-storia",
+   "numero": "6.10",
+   "titolo": "Uno strumento per te: controllare la storia prima di giocarla",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/controllare-la-storia.json",
+   "sha256": "c6fed017fbbf6145c3e94d8ef41d159bf570e82ae567d6871b047c6af8c67bb1",
+   "byte": 134172
   }
  ],
  "documentazione": {
