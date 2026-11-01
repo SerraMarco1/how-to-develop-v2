@@ -16,3 +16,4 @@
 {"quando":1793517719179,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":49342,"tokenInput":19215,"tokenOutput":11695,"ragionamento":13405}
 {"quando":1793517768524,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":30561,"tokenInput":23361,"tokenOutput":11706,"ragionamento":3573}
 {"quando":1793517804157,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":51075,"tokenInput":19215,"tokenOutput":11679,"ragionamento":4386}
+{"quando":1793517860332,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":48904,"tokenInput":19093,"tokenOutput":2765,"ragionamento":9723}
