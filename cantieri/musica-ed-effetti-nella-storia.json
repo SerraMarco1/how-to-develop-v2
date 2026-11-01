@@ -406,7 +406,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -540,7 +540,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Un canale dedicato per le voci\" (obiettivo) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-3.7-flash"
