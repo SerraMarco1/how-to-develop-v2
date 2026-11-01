@@ -1,0 +1,16 @@
+{
+ "n": 51,
+ "quando": "2026-11-01T07:06:56.925Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "titolo": "Test: correzione del revisore scartata",
+ "spiegazione": "La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - StoryValidator deve poter essere istanziato\nOutput di Godot:\nERROR: Class 'EditorScript' can only be instantiated by editor.\n   at: _instantiate_internal (core/object/class_db.cpp:603)\nERROR: Can't inherit from a virtual class.\n   at: _new (modules/gdscript/gdscript.cpp:239)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la …",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - StoryValidator deve poter essere istanziato\nOutput di Godot:\nERROR: Class 'EditorScript' can only be instantiated by editor.\n   at: _instantiate_internal (core/object/class_db.cpp:603)\nERROR: Can't inherit from a virtual class.\n   at: _new (modules/gdscript/gdscript.cpp:239)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ]
+ },
+ "chiamate": []
+}
