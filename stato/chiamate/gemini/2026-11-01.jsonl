@@ -4,3 +4,6 @@
 {"quando":1793516817021,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"controllare-la-storia","ok":true,"contata":true,"durataMs":7145,"tokenInput":2941,"tokenOutput":1121,"ragionamento":1725}
 {"quando":1793516829716,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":false,"contata":true,"durataMs":1616,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793516831336,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":39436,"tokenInput":14322,"tokenOutput":3104,"ragionamento":7369}
+{"quando":1793516872225,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":68276,"tokenInput":20911,"tokenOutput":6409,"ragionamento":9387}
+{"quando":1793516940508,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":39254,"tokenInput":24838,"tokenOutput":5696,"ragionamento":3840}
+{"quando":1793516979766,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":520687,"tokenInput":20911,"tokenOutput":9042,"ragionamento":20168}
