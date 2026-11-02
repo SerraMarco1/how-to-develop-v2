@@ -550,7 +550,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il comando 'music' deve avviare la riproduzione della traccia specificata\n  - Il comando 'sfx' deve creare un riproduttore dedicato e avviare il suono senza fermare la musica\nOutput di Godot:\nERROR: Resource file not found: res://assets/audio/music_loop.wav (expected type: unknown)\n   at: _load (core/io/resource_loader.cpp:325)\nERROR: Resource file not found: res://assets/audio/jump.wav (expected type: unknown)\n   at: _load (core/io/resource_loader.cpp:325)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
