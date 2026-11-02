@@ -52,3 +52,5 @@
 {"quando":1793619358721,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":16949,"tokenInput":11198,"tokenOutput":12,"ragionamento":3469}
 {"quando":1793619377562,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":6483,"tokenInput":2907,"tokenOutput":769,"ragionamento":1496}
 {"quando":1793619389546,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salvare-lo-stato","ok":true,"contata":true,"durataMs":31687,"tokenInput":16318,"tokenOutput":2543,"ragionamento":3781}
+{"quando":1793619422966,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salvare-lo-stato","ok":true,"contata":true,"durataMs":111489,"tokenInput":21705,"tokenOutput":13222,"ragionamento":13498}
+{"quando":1793619534460,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salvare-lo-stato","ok":true,"contata":true,"durataMs":69460,"tokenInput":25594,"tokenOutput":9679,"ragionamento":6226}
