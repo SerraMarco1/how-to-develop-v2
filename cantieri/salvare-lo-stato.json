@@ -1,6 +1,259 @@
 {
  "creato": "2026-11-02T11:36:29.544Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Creare la classe SaveManager per salvare e caricare JSON",
+    "consegna": "In questo primo esercizio creiamo la classe `SaveManager` che gestisce la scrittura e la lettura su disco dei salvataggi in formato JSON.\n\nCrea lo script `res://core/save_manager.gd` estendendo `RefCounted` con il nome classe `SaveManager`.\n\nLo script deve contenere:\n1. La costante `SAVE_FILE_PATH: String = \"user://savegame.json\"`.\n2. La costante `SAVE_VERSION: int = 1`.\n3. Il metodo statico `create_save_dictionary(version: int, story_file: String, line_index: int, variables: Dictionary, background_path: String, music_path: String) -> Dictionary` che impacchetta questi valori in un unico dizionario con le rispettive chiavi (`\"version\"`, `\"story_file\"`, `\"line_index\"`, `\"variables\"`, `\"background\"`, `\"music\"`).\n4. Il metodo statico `save_to_file(data: Dictionary, path: String = SAVE_FILE_PATH) -> bool` che converte il dizionario in una stringa JSON formattata e la salva su disco con `FileAccess`. Restituisce `true` in caso di successo, `false` se il file non può essere aperto.\n5. Il metodo statico `load_from_file(path: String = SAVE_FILE_PATH) -> Dictionary` che legge e decodifica il JSON. Se il file non esiste, se il parsing fallisce o se il campo `\"version\"` differisce da `SAVE_VERSION`, restituisce un dizionario vuoto `{}`. Altrimenti restituisce il dizionario dei dati caricati.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello FileSystem, fai clic con il tasto destro sulla cartella res://core/ e seleziona **New -> Script...**",
+     "Nomina lo script `save_manager.gd`, imposta **Inherits** a `RefCounted` e premi **Create**.",
+     "Dichiara `class_name SaveManager` in cima allo script e aggiungi le costanti `SAVE_FILE_PATH` e `SAVE_VERSION`.",
+     "Implementa `static func create_save_dictionary(...)` restituendo un dizionario con tutte le chiavi richieste.",
+     "Scrivi `static func save_to_file(...)` usando `FileAccess.open(path, FileAccess.WRITE)` e `JSON.stringify(data, \"\\t\")`.",
+     "Scrivi `static func load_from_file(...)` controllando prima l'esistenza del file con `FileAccess.file_exists()`, effettuando il parsing con `JSON.parse_string()` e verificando la costante `SAVE_VERSION`."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://core/save_manager.gd",
+      "descrizione": "Lo script res://core/save_manager.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar script: GDScript = load(\"res://core/save_manager.gd\") as GDScript\n\tif not check(\"script_loaded\", script != null, \"Lo script res://core/save_manager.gd deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar data: Dictionary = script.call(\"create_save_dictionary\", 1, \"res://story/chapters/chapter_01.json\", 2, {\"key\": true}, \"res://assets/sprites/background.png\", \"res://assets/audio/music_loop.wav\")\n\tcheck(\"version_field\", data.get(\"version\", 0) == 1, \"Il dizionario deve contenere 'version' uguale a 1\")\n\tcheck(\"story_file_field\", data.get(\"story_file\", \"\") == \"res://story/chapters/chapter_01.json\", \"Il dizionario deve contenere 'story_file'\")\n\tcheck(\"line_index_field\", data.get(\"line_index\", -1) == 2, \"Il dizionario deve contenere 'line_index'\")\n\tcheck(\"variables_field\", data.get(\"variables\", {}).get(\"key\", false) == true, \"Il dizionario deve contenere 'variables'\")\n\t\n\tvar test_path := \"user://test_save_ex1.json\"\n\tvar saved: bool = script.call(\"save_to_file\", data, test_path)\n\tcheck(\"save_returns_true\", saved == true, \"save_to_file deve restituire true quando il file viene salvato\")\n\tcheck(\"file_created\", FileAccess.file_exists(test_path), \"Il file JSON deve essere creato su disco\")\n\t\n\tvar loaded: Dictionary = script.call(\"load_from_file\", test_path)\n\tcheck(\"load_correct\", loaded.get(\"version\", 0) == 1, \"load_from_file deve caricare i dati se la versione coincide\")\n\t\n\tvar invalid_data := data.duplicate()\n\tinvalid_data[\"version\"] = 99\n\tscript.call(\"save_to_file\", invalid_data, test_path)\n\tvar loaded_invalid: Dictionary = script.call(\"load_from_file\", test_path)\n\tcheck(\"version_mismatch\", loaded_invalid.is_empty(), \"load_from_file deve restituire un dizionario vuoto se la versione nel file differisce da SAVE_VERSION\")\n\t\n\tif FileAccess.file_exists(test_path):\n\t\tDirAccess.remove_absolute(test_path)",
+      "descrizione": "SaveManager crea il dizionario, salva su disco e rifiuta salvataggi con versione errata"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "core/save_manager.gd",
+       "contenuto": "class_name SaveManager\nextends RefCounted\n\nconst SAVE_FILE_PATH: String = \"user://savegame.json\"\nconst SAVE_VERSION: int = 1\n\n\nstatic func create_save_dictionary(\n\tversion: int,\n\tstory_file: String,\n\tline_index: int,\n\tvariables: Dictionary,\n\tbackground_path: String,\n\tmusic_path: String\n) -> Dictionary:\n\treturn {\n\t\t\"version\": version,\n\t\t\"story_file\": story_file,\n\t\t\"line_index\": line_index,\n\t\t\"variables\": variables,\n\t\t\"background\": background_path,\n\t\t\"music\": music_path\n\t}\n\n\nstatic func save_to_file(data: Dictionary, path: String = SAVE_FILE_PATH) -> bool:\n\tvar file := FileAccess.open(path, FileAccess.WRITE)\n\tif not file:\n\t\treturn false\n\tvar json_text: String = JSON.stringify(data, \"\\t\")\n\tfile.store_string(json_text)\n\treturn true\n\n\nstatic func load_from_file(path: String = SAVE_FILE_PATH) -> Dictionary:\n\tif not FileAccess.file_exists(path):\n\t\treturn {}\n\t\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\t\n\tvar json_text: String = file.get_as_text()\n\tvar parsed: Variant = JSON.parse_string(json_text)\n\tif not parsed is Dictionary:\n\t\treturn {}\n\t\n\tvar data: Dictionary = parsed\n\tif int(data.get(\"version\", 0)) != SAVE_VERSION:\n\t\treturn {}\n\t\n\treturn data\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Storie",
+      "scenaPrincipale": "res://ui/title_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "`SaveManager` impacchetta i dati di gioco in un unico dizionario JSON strutturato con un campo `version`. Usiamo `JSON.stringify` con l'argomento `\"\\t\"` per formattare la stringa e renderla leggibile su disco. Durante la lettura, se la versione salvata non coincide con `SAVE_VERSION`, la funzione restituisce `{}` per proteggere il motore da incomprensioni di formato.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Esportare e ripristinare lo stato in StoryPlayer",
+    "consegna": "Aggiorna lo script `res://story/story_player.gd` per gestire il salvataggio e il caricamento del suo stato.\n\n1. Aggiungi le variabili membro private:\n   - `var _current_background: String = \"\"`\n   - `var _current_music: String = \"\"`\n   - `var _variables: Dictionary = {}`\n2. Aggiorna `_show_current_line()`: quando la riga corrente definisce un nuovo sfondo (chiave `\"background\"`), aggiorna `_current_background`. Se la riga definisce una traccia musicale (chiave `\"music\"`), aggiorna `_current_music`.\n3. Aggiungi il metodo `get_save_data() -> Dictionary` che chiama `SaveManager.create_save_dictionary(...)` usando `SaveManager.SAVE_VERSION`, `story_file_path`, `_current_line_index`, `_variables`, `_current_background` e `_current_music`, e restituisce il dizionario risultante.\n4. Aggiungi il metodo `restore_from_save(data: Dictionary) -> bool`:\n   - Se `data` è vuoto o non contiene `\"story_file\"`, restituisce `false`.\n   - Chiama `load_story(data[\"story_file\"])`. Se fallisce, restituisce `false`.\n   - Imposta `_current_line_index = int(data.get(\"line_index\", 0))`.\n   - Ripristina `_variables = data.get(\"variables\", {}).duplicate()`.\n   - Imposta `_current_background = String(data.get(\"background\", \"\"))`.\n   - Imposta `_current_music = String(data.get(\"music\", \"\"))`.\n   - Restituisce `true`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In get_save_data() puoi richiamare direttamente SaveManager.create_save_dictionary passando i campi di StoryPlayer.",
+     "In restore_from_save() assicurati di verificare se data ha le chiavi necessarie prima di accedervi."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_player.gd",
+      "descrizione": "Lo script res://story/story_player.gd esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar script: GDScript = load(\"res://story/story_player.gd\") as GDScript\n\tif not check(\"script_loaded\", script != null, \"Lo script res://story/story_player.gd deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar player: Node = script.new() as Node\n\tadd_child(player)\n\t\n\tplayer.set(\"story_file_path\", \"res://story/chapters/chapter_01.json\")\n\tplayer.set(\"_current_line_index\", 1)\n\tplayer.set(\"_current_background\", \"res://assets/sprites/background.png\")\n\tplayer.set(\"_current_music\", \"res://assets/audio/music_loop.wav\")\n\t\n\tvar save_data: Variant = call_if_exists(player, \"get_save_data\")\n\tif check(\"get_save_data_exists\", save_data is Dictionary, \"get_save_data() deve restituire un Dictionary\"):\n\t\tvar dict: Dictionary = save_data\n\t\tcheck(\"version\", dict.get(\"version\", 0) == 1, \"La versione nel salvataggio deve essere 1\")\n\t\tcheck(\"story_file\", dict.get(\"story_file\", \"\") == \"res://story/chapters/chapter_01.json\", \"story_file deve corrispondere al percorso attivo\")\n\t\tcheck(\"line_index\", dict.get(\"line_index\", -1) == 1, \"line_index deve corrispondere all'indice corrente\")\n\t\tcheck(\"bg\", dict.get(\"background\", \"\") == \"res://assets/sprites/background.png\", \"background deve contenere lo sfondo attivo\")\n\t\tcheck(\"music\", dict.get(\"music\", \"\") == \"res://assets/audio/music_loop.wav\", \"music deve contenere la traccia attiva\")\n\t\n\tvar dummy_data: Dictionary = {\n\t\t\"version\": 1,\n\t\t\"story_file\": \"res://story/chapters/chapter_01.json\",\n\t\t\"line_index\": 0,\n\t\t\"variables\": {\"test\": 123},\n\t\t\"background\": \"res://assets/sprites/background.png\",\n\t\t\"music\": \"res://assets/audio/music_loop.wav\"\n\t}\n\tvar restore_res: Variant = call_if_exists(player, \"restore_from_save\", [dummy_data])\n\tcheck(\"restore_returns_true\", restore_res == true, \"restore_from_save deve restituire true con dati validi\")\n\tvar empty_res: Variant = call_if_exists(player, \"restore_from_save\", [{}])\n\tcheck(\"restore_returns_false_empty\", empty_res == false, \"restore_from_save deve restituire false con dizionario vuoto\")\n\t\n\tplayer.queue_free()",
+      "descrizione": "StoryPlayer genera il dizionario di salvataggio e accetta il ripristino dei dati"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/story_player.gd",
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nsignal story_finished\n\n@export var story_file_path: String = \"res://story/chapters/chapter_01.json\"\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n\nvar _lines: Array = []\nvar _labels: Dictionary = {}\nvar _current_line_index: int = 0\nvar _is_transitioning: bool = false\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tif dialogue_box:\n\t\tdialogue_box.line_finished.connect(_on_dialogue_box_line_finished)\n\t\n\tif load_story(story_file_path):\n\t\tstart_story()\n\n\nfunc is_transitioning() -> bool:\n\treturn _is_transitioning or (background_display != null and background_display.is_transitioning())\n\n\nfunc change_background(new_texture: Texture2D, transition_type: String = \"crossfade\", duration: float = 0.5, mask: Texture2D = null) -> void:\n\t_is_transitioning = true\n\tif background_display:\n\t\tif transition_type == \"mask\":\n\t\t\tvar used_mask: Texture2D = mask\n\t\t\tif not used_mask:\n\t\t\t\tused_mask = load(\"res://icon.svg\") as Texture2D\n\t\t\tawait background_display.transition_with_mask(new_texture, used_mask, duration)\n\t\telif transition_type == \"black\":\n\t\t\tawait background_display.transition_through_black(new_texture, duration)\n\t\telse:\n\t\t\tawait background_display.crossfade_to(new_texture, duration)\n\t_is_transitioning = false\n\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\tprint(\"Errore: file della storia non trovato: \", path)\n\t\treturn false\n\t\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\tprint(\"Errore durante l'apertura del file: \", path)\n\t\treturn false\n\t\n\tvar json := JSON.new()\n\tvar parse_result := json.parse(file.get_as_text())\n\tif parse_result != OK:\n\t\tprint(\"Errore nel parsing del JSON: \", json.get_error_message())\n\t\treturn false\n\t\n\tvar data: Dictionary = json.data\n\tif not data.has(\"lines\"):\n\t\tprint(\"Errore: la chiave 'lines' non è presente nel file JSON.\")\n\t\treturn false\n\t\n\tstory_file_path = path\n\t_lines = data[\"lines\"]\n\t_current_line_index = 0\n\t_index_labels()\n\treturn true\n\n\nfunc _index_labels() -> void:\n\t_labels.clear()\n\tfor i in range(_lines.size()):\n\t\tvar line_data: Dictionary = _lines[i]\n\t\tif line_data.get(\"type\", \"\") == \"label\":\n\t\t\tvar label_name: String = line_data.get(\"name\", line_data.get(\"id\", \"\"))\n\t\t\tif not label_name.is_empty():\n\t\t\t\t_labels[label_name] = i\n\n\nfunc jump_to_label(label_name: String) -> bool:\n\tif not _labels.has(label_name):\n\t\tprint(\"Errore: etichetta non trovata: \", label_name)\n\t\treturn false\n\t\n\t_current_line_index = _labels[label_name]\n\tadvance()\n\treturn true\n\n\nfunc jump_to_chapter(file_path: String, target_label: String = \"\") -> bool:\n\tif not load_story(file_path):\n\t\treturn false\n\t\n\tif target_label.is_empty():\n\t\tstart_story()\n\t\treturn true\n\t\n\treturn jump_to_label(target_label)\n\n\nfunc start_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc advance() -> void:\n\tif is_transitioning():\n\t\treturn\n\t\n\t_current_line_index += 1\n\tif _current_line_index < _lines.size():\n\t\t_show_current_line()\n\telse:\n\t\tif dialogue_box:\n\t\t\tdialogue_box.clear()\n\t\tstory_finished.emit()\n\n\nfunc get_line_count() -> int:\n\treturn _lines.size()\n\n\nfunc restart_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc jump_to_line(index: int) -> bool:\n\tif index < 0 or index >= get_line_count():\n\t\treturn false\n\t_current_line_index = index\n\t_show_current_line()\n\treturn true\n\n\nfunc is_at_end() -> bool:\n\treturn _current_line_index >= get_line_count()\n\n\nfunc get_character_stage() -> CharacterStage:\n\treturn character_stage\n\n\nfunc get_background_display() -> BackgroundDisplay:\n\treturn background_display\n\n\nfunc get_save_data() -> Dictionary:\n\treturn SaveManager.create_save_dictionary(\n\t\tSaveManager.SAVE_VERSION,\n\t\tstory_file_path,\n\t\t_current_line_index,\n\t\t_variables,\n\t\t_current_background,\n\t\t_current_music\n\t)\n\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\t\n\tvar target_file: String = String(data.get(\"story_file\", \"\"))\n\tif not load_story(target_file):\n\t\treturn false\n\t\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n\n\nfunc _show_current_line() -> void:\n\tif _current_line_index < 0 or _current_line_index >= _lines.size():\n\t\treturn\n\t\n\tvar line_data: Dictionary = _lines[_current_line_index]\n\tvar cmd_type: String = line_data.get(\"type\", \"\")\n\t\n\tif line_data.has(\"background\"):\n\t\t_current_background = line_data[\"background\"]\n\tif line_data.has(\"music\"):\n\t\t_current_music = line_data[\"music\"]\n\t\n\tif cmd_type == \"jump_chapter\":\n\t\tvar target_file: String = line_data.get(\"target_file\", \"\")\n\t\tvar target_label: String = line_data.get(\"target_label\", \"\")\n\t\tjump_to_chapter(target_file, target_label)\n\t\treturn\n\t\n\tif cmd_type == \"label\":\n\t\tadvance()\n\t\treturn\n\t\n\tvar speaker: String = line_data.get(\"speaker\", \"\")\n\tvar text: String = line_data.get(\"text\", \"\")\n\t\n\tif background_display and line_data.has(\"background\"):\n\t\tvar bg_path: String = line_data[\"background\"]\n\t\tvar bg_tex: Texture2D = load(bg_path) as Texture2D\n\t\tif bg_tex:\n\t\t\tif dialogue_box:\n\t\t\t\tdialogue_box.clear()\n\t\t\tvar trans_type: String = line_data.get(\"transition\", \"crossfade\")\n\t\t\tvar trans_dur: float = float(line_data.get(\"transition_duration\", 0.5))\n\t\t\tvar mask_tex: Texture2D = null\n\t\t\tif line_data.has(\"mask\"):\n\t\t\t\tmask_tex = load(line_data[\"mask\"]) as Texture2D\n\t\t\tawait change_background(bg_tex, trans_type, trans_dur, mask_tex)\n\t\n\tif dialogue_box:\n\t\tdialogue_box.show_line(speaker, text)\n\t\n\tif character_stage and not speaker.is_empty():\n\t\tcharacter_stage.focus_character(speaker.to_lower())\n\n\nfunc _on_dialogue_box_line_finished() -> void:\n\tadvance()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Storie",
+      "scenaPrincipale": "res://ui/title_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Colleghiamo le proprietà di `StoryPlayer` al nostro `SaveManager`. In `_show_current_line()` intercettiamo ogni cambio di sfondo o traccia musicale aggiornando le variabili `_current_background` e `_current_music`. In `get_save_data()` le forniamo a `SaveManager.create_save_dictionary()`, e in `restore_from_save()` applichiamo i valori ricevuti per ripristinare pienamente lo stato.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Ripara il ripristino di sfondo e musica nel caricamento",
+    "consegna": "Il sistema di salvataggio del motore in questo progetto presenta un malfunzionamento: quando si carica un salvataggio con `restore_from_save()`, il file di storia e l'indice di riga vengono caricati, ma lo sfondo e la traccia musicale rimangono vuoti (stringa vuota `\"\"`), ignorando le chiavi `\"background\"` e `\"music\"` presenti nel dizionario di salvataggio.\n\nIspeziona lo script `res://story/story_player.gd` e correggi il metodo `restore_from_save()` affinché memorizzi correttamente i valori di `\"background\"` e `\"music\"` dal dizionario ricevuto.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Esamina le ultime righe del metodo restore_from_save() dentro res://story/story_player.gd.",
+     "Verifica dove vengono assegnate _current_background e _current_music."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar script: GDScript = load(\"res://story/story_player.gd\") as GDScript\n\tif not check(\"script_loaded\", script != null, \"Lo script res://story/story_player.gd deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar player: Node = script.new() as Node\n\tadd_child(player)\n\t\n\tvar test_data: Dictionary = {\n\t\t\"version\": 1,\n\t\t\"story_file\": \"res://story/chapters/chapter_01.json\",\n\t\t\"line_index\": 0,\n\t\t\"variables\": {},\n\t\t\"background\": \"res://assets/sprites/background.png\",\n\t\t\"music\": \"res://assets/audio/music_loop.wav\"\n\t}\n\t\n\tcall_if_exists(player, \"restore_from_save\", [test_data])\n\t\n\tvar bg_val: Variant = player.get(\"_current_background\")\n\tvar music_val: Variant = player.get(\"_current_music\")\n\t\n\tcheck(\"bg_restored\", String(bg_val) == \"res://assets/sprites/background.png\", \"_current_background deve contenere lo sfondo passato nel salvataggio\")\n\tcheck(\"music_restored\", String(music_val) == \"res://assets/audio/music_loop.wav\", \"_current_music deve contenere la musica passata nel salvataggio\")\n\t\n\tplayer.queue_free()",
+      "descrizione": "restore_from_save ripristina correttamente lo sfondo e la traccia musicale dal dizionario"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "core/save_manager.gd",
+       "contenuto": "class_name SaveManager\nextends RefCounted\n\nconst SAVE_FILE_PATH: String = \"user://savegame.json\"\nconst SAVE_VERSION: int = 1\n\n\nstatic func create_save_dictionary(v: int, f: String, l: int, vars: Dictionary, bg: String, mus: String) -> Dictionary:\n\treturn {\"version\": v, \"story_file\": f, \"line_index\": l, \"variables\": vars, \"background\": bg, \"music\": mus}\n"
+      },
+      {
+       "percorso": "story/story_player.gd",
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _lines: Array = []\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tvar target_file: String = String(data.get(\"story_file\", \"\"))\n\tif not load_story(target_file):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t# ERRORE: Vengono sovrascritte con stringhe vuote\n\t_current_background = \"\"\n\t_current_music = \"\"\n\treturn true\n"
+      }
+     ],
+     "progetto": {
+      "nome": "StorieRepairs",
+      "scenaPrincipale": "res://ui/title_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/story_player.gd",
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _lines: Array = []\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tvar target_file: String = String(data.get(\"story_file\", \"\"))\n\tif not load_story(target_file):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
+      }
+     ],
+     "progetto": {
+      "nome": "StorieRepairs",
+      "scenaPrincipale": "res://ui/title_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "In `restore_from_save()`, le righe che assegnavano `\"\"` a `_current_background` e `_current_music` sono state corrette per leggere i valori `String(data.get(\"background\", \"\"))` e `String(data.get(\"music\", \"\"))` dal dizionario ricevuto.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Test finale: Riparare il salvataggio e caricamento dello stato completo",
+    "consegna": "In questo progetto, l'implementazione del salvataggio e caricamento dello stato del gioco contiene due errori gravi in `res://story/story_player.gd`:\n1. In `get_save_data()` l'indice di riga salvato viene scritto per errore come `0` fisso invece di passare `_current_line_index`.\n2. In `restore_from_save()` il dizionario `_variables` viene ignorato e sovrascritto con un dizionario vuoto `{}`.\n\nApri lo script `res://story/story_player.gd` e correggi entrambi i metodi per garantire che la partita possa essere salvata a qualsiasi riga e che tutte le variabili di gioco vengano conservate al ricaricamento.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Controlla i parametri passati a SaveManager.create_save_dictionary() dentro get_save_data().",
+     "Controlla l'assegnazione a _variables dentro restore_from_save()."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar script: GDScript = load(\"res://story/story_player.gd\") as GDScript\n\tif not check(\"script_loaded\", script != null, \"Lo script res://story/story_player.gd deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar player: Node = script.new() as Node\n\tadd_child(player)\n\t\n\tplayer.set(\"story_file_path\", \"res://story/chapters/chapter_01.json\")\n\tplayer.set(\"_current_line_index\", 4)\n\t\n\tvar save_dict: Variant = call_if_exists(player, \"get_save_data\")\n\tif check(\"get_save_data_is_dict\", save_dict is Dictionary, \"get_save_data() deve restituire un dizionario\"):\n\t\tvar d: Dictionary = save_dict\n\t\tcheck(\"line_index_correct\", int(d.get(\"line_index\", -1)) == 4, \"line_index nel salvataggio deve valere 4 (non 0)\")\n\t\n\tvar test_data: Dictionary = {\n\t\t\"version\": 1,\n\t\t\"story_file\": \"res://story/chapters/chapter_01.json\",\n\t\t\"line_index\": 2,\n\t\t\"variables\": {\"has_key\": true, \"gold\": 50},\n\t\t\"background\": \"\",\n\t\t\"music\": \"\"\n\t}\n\t\n\tcall_if_exists(player, \"restore_from_save\", [test_data])\n\tvar vars_val: Variant = player.get(\"_variables\")\n\tcheck(\"vars_restored\", vars_val is Dictionary and vars_val.get(\"gold\", 0) == 50, \"_variables deve contenere le variabili ripristinate dal salvataggio\")\n\t\n\tplayer.queue_free()",
+      "descrizione": "get_save_data esporta l'indice riga corrente e restore_from_save ripristina le variabili"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "core/save_manager.gd",
+       "contenuto": "class_name SaveManager\nextends RefCounted\n\nconst SAVE_FILE_PATH: String = \"user://savegame.json\"\nconst SAVE_VERSION: int = 1\n\n\nstatic func create_save_dictionary(v: int, f: String, l: int, vars: Dictionary, bg: String, mus: String) -> Dictionary:\n\treturn {\"version\": v, \"story_file\": f, \"line_index\": l, \"variables\": vars, \"background\": bg, \"music\": mus}\n"
+      },
+      {
+       "percorso": "story/story_player.gd",
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc get_save_data() -> Dictionary:\n\t# ERRORE 1: passa 0 anziché _current_line_index\n\treturn SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, 0, _variables, _current_background, _current_music)\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tif not load_story(String(data[\"story_file\"])):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t# ERRORE 2: azzera _variables anziché ripristinarle dal dizionario data\n\t_variables = {}\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
+      }
+     ],
+     "progetto": {
+      "nome": "StorieTest",
+      "scenaPrincipale": "res://ui/title_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/story_player.gd",
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc get_save_data() -> Dictionary:\n\treturn SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, _current_line_index, _variables, _current_background, _current_music)\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tif not load_story(String(data[\"story_file\"])):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
+      }
+     ],
+     "progetto": {
+      "nome": "StorieTest",
+      "scenaPrincipale": "res://ui/title_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Nel test finale abbiamo individuato e risolto entrambi gli errori: in `get_save_data()` abbiamo passato `_current_line_index` a `SaveManager.create_save_dictionary()` anziché `0`, e in `restore_from_save()` abbiamo assegnato a `_variables` il valore di `data.get(\"variables\", {}).duplicate()` per preservare i progressi del giocatore.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash"
@@ -63,5 +316,11 @@
     "md": "- Lo stato completo di una visual novel comprende il capitolo e la riga della storia, le variabili di gioco, lo sfondo, le figure dei personaggi con espressione/posizione e la musica attiva.\n- I file di salvataggio devono sempre contenere un campo `version` per rilevare modifiche o incompatibilità nel formato dei dati.\n- Ogni sistema del motore definisce i propri metodi `get_save_data()` e `load_save_data()` per garantire l'isolamento e la modularità del codice.\n- Le risorse (come immagini o personaggi) e i tipi complessi si salvano sotto forma di stringhe di percorso (es. `res://...`) per poter essere trasformati in JSON con `JSON.stringify()`."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
