@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-02T08:29:51.423Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-02T08:32:45.971Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "primo-shader-dissolvenza",
   "numero": "6.13",
   "titolo": "Il primo shader: una dissolvenza con una maschera"
  },
- "messaggio": "Sta scrivendo la lezione 6.13 «Il primo shader: una dissolvenza con una maschera».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.13 riprende da sola appena rispondono.",
+ "riprende": "2026-11-02T08:42:45.971Z"
 }
