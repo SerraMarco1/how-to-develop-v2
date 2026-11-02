@@ -431,5 +431,19 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "musica-ed-effetti-nella-storia": {
+  "versione": 1,
+  "fragili": [
+   "test"
+  ],
+  "tentativi": {
+   "test": 1
+  }
+ },
+ "dare-vita-al-testo": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
