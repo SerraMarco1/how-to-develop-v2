@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-02T10:51:02.115Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-02T10:51:16.502Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "menu-e-gestione-delle-scene",
   "numero": "6.14",
   "titolo": "Menu principale e gestione delle scene"
  },
- "messaggio": "Sta scrivendo la lezione 6.14 «Menu principale e gestione delle scene».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.14 riprende da sola appena rispondono.",
+ "riprende": "2026-11-02T11:31:16.502Z"
 }
