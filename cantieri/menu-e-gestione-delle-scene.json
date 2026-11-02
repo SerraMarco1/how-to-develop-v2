@@ -985,5 +985,10 @@
  "ordine": [
   "es1",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
