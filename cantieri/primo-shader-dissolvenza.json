@@ -1,9 +1,228 @@
 {
  "creato": "2026-11-02T08:29:51.441Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Creare lo shader di ritaglio per la dissolvenza",
+    "consegna": "In questo esercizio creiamo il nostro primo shader 2D per la visual novel e lo colleghiamo al sistema degli sfondi in `res://story/background_display.tscn`.\n\n1. Crea un nuovo file shader chiamato `mask_transition.gdshader` dentro la cartella `res://story/`.\n   Nello shader scrivi:\n   - La direttiva di tipo: `shader_type canvas_item;`\n   - Due parametri uniform:\n     - `uniform sampler2D mask_texture;` per la texture in scala di grigi.\n     - `uniform float cutoff : hint_range(0.0, 1.0) = 0.0;` per la soglia di visibilità.\n   - La funzione `fragment()`:\n     - Campiona il colore del punto dello sfondo con `vec4 current_color = texture(TEXTURE, UV);`\n     - Campiona il valore della maschera con `float mask_value = texture(mask_texture, UV).r;`\n     - Se `mask_value < cutoff`, imposta `COLOR = current_color;`\n     - Altrimenti, rendi il punto trasparente con `COLOR = vec4(0.0, 0.0, 0.0, 0.0);`\n\n2. Modifica la scena `res://story/background_display.tscn`:\n   - Alla radice `BackgroundDisplay` collega lo script `res://story/background_display.gd`.\n   - Aggiungi un nodo figlio di tipo `TextureRect` chiamato `TextureRect`.\n   - Imposta il layout di `TextureRect` su Full Rect (`anchors_preset = 15`), `expand_mode = 1` e `stretch_mode = 6`.\n   - Crea un nuovo `ShaderMaterial` nella proprietà `material` di `TextureRect` e assegna lo shader `mask_transition.gdshader`.\n\n3. Nello script `res://story/background_display.gd` scrivi:\n   - Il riferimento `@onready var texture_rect: TextureRect = $TextureRect`\n   - `func set_mask(mask: Texture2D) -> void`: imposta il parametro `\"mask_texture\"` del materiale.\n   - `func set_cutoff(value: float) -> void`: imposta il parametro `\"cutoff\"` del materiale.\n   - `func get_cutoff() -> float`: restituisce il parametro `\"cutoff\"` (o `0.0` se non disponibile).\n   - `func is_transitioning() -> bool`: restituisce temporaneamente `false`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello FileSystem fai clic destro sulla cartella `story`, seleziona **Create New -> File...**, digita `mask_transition.gdshader` e premi **OK**.",
+     "Fai doppio clic sul file `mask_transition.gdshader` nell'editor e scrivi la direttiva `shader_type canvas_item;`, i due uniform `mask_texture` e `cutoff`, e la funzione `fragment()` con il confronto `if (mask_value < cutoff)`. Salva il file.",
+     "Apri la scena `res://story/background_display.tscn` nel pannello Scene.",
+     "Seleziona il nodo radice `BackgroundDisplay`, premi l'icona della pergamena (o imposta Script nell'Inspector) e assegna `res://story/background_display.gd`.",
+     "Con la radice selezionata, premi **+** e aggiungi un nodo figlio `TextureRect`.",
+     "Seleziona `TextureRect`. Nella barra degli strumenti dell'editor 2D imposta le ancore su **Full Rect** (oppure nell'Inspector imposta Layout -> Anchors Preset su Full Rect). Nell'Inspector imposta **Expand Mode** su `Ignore Size` e **Stretch Mode** su `Keep Aspect Covered`.",
+     "Sempre nell'Inspector di `TextureRect`, apri la sezione **CanvasItem -> Material**, seleziona il menu a discesa accanto a **Material** e crea un **New ShaderMaterial**.",
+     "Fai clic sul nuovo `ShaderMaterial` per aprirlo, trascina il file `res://story/mask_transition.gdshader` nella proprietà **Shader** e salva la scena con Ctrl+S.",
+     "Apri lo script `res://story/background_display.gd` e implementa i metodi `set_mask`, `set_cutoff`, `get_cutoff` e `is_transitioning`, quindi salva."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/mask_transition.gdshader",
+      "descrizione": "Il file dello shader res://story/mask_transition.gdshader esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://story/background_display.tscn",
+      "tipoNodo": "TextureRect",
+      "nome": "TextureRect",
+      "genitore": "BackgroundDisplay",
+      "descrizione": "La scena background_display.tscn contiene un TextureRect chiamato TextureRect"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://story/background_display.tscn",
+      "nodo": "BackgroundDisplay",
+      "descrizione": "Il nodo BackgroundDisplay ha collegato lo script background_display.gd"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bg: Control = await instantiate_scene(\"res://story/background_display.tscn\") as Control\n\tif not check(\"bg_exists\", bg != null, \"res://story/background_display.tscn deve esistere e potersi istanziare\"):\n\t\treturn\n\t\n\tvar tex_rect := bg.get_node_or_null(\"TextureRect\") as TextureRect\n\tif not check(\"tex_rect\", tex_rect != null, \"BackgroundDisplay deve contenere un TextureRect chiamato TextureRect\"):\n\t\treturn\n\t\n\tvar mat := tex_rect.material as ShaderMaterial\n\tif not check(\"mat\", mat != null, \"TextureRect deve avere un materiale di tipo ShaderMaterial\"):\n\t\treturn\n\t\n\tvar shader := mat.shader\n\tif not check(\"shader\", shader != null, \"Lo ShaderMaterial deve avere una risorsa Shader assegnata\"):\n\t\treturn\n\t\n\tcheck(\"has_set_mask\", has_function(bg, \"set_mask\"), \"BackgroundDisplay deve avere la funzione set_mask(mask: Texture2D)\")\n\tcheck(\"has_set_cutoff\", has_function(bg, \"set_cutoff\"), \"BackgroundDisplay deve avere la funzione set_cutoff(value: float)\")\n\tcheck(\"has_get_cutoff\", has_function(bg, \"get_cutoff\"), \"BackgroundDisplay deve avere la funzione get_cutoff() -> float\")\n\t\n\tvar test_mask: Texture2D = load(\"res://icon.svg\") as Texture2D\n\tcall_if_exists(bg, \"set_mask\", [test_mask])\n\tvar current_mask = mat.get_shader_parameter(\"mask_texture\")\n\tcheck(\"mask_set\", current_mask == test_mask, \"set_mask deve impostare il parametro mask_texture sullo ShaderMaterial\")\n\t\n\tcall_if_exists(bg, \"set_cutoff\", [0.65])\n\tvar current_cutoff = call_if_exists(bg, \"get_cutoff\")\n\tcheck(\"cutoff_set\", is_equal_approx(float(current_cutoff), 0.65), \"set_cutoff(0.65) deve aggiornare il parametro cutoff (letto: %s)\" % str(current_cutoff))\n\t\n\tbg.queue_free()",
+      "descrizione": "Lo shader compila e i metodi set_mask e set_cutoff aggiornano correttamente i parametri del materiale"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/mask_transition.gdshader",
+       "contenuto": "shader_type canvas_item;\n\nuniform sampler2D mask_texture;\nuniform float cutoff : hint_range(0.0, 1.0) = 0.0;\n\nvoid fragment() {\n\tvec4 current_color = texture(TEXTURE, UV);\n\tfloat mask_value = texture(mask_texture, UV).r;\n\t\n\tif (mask_value < cutoff) {\n\t\tCOLOR = current_color;\n\t} else {\n\t\tCOLOR = vec4(0.0, 0.0, 0.0, 0.0);\n\t}\n}\n"
+      },
+      {
+       "percorso": "story/background_display.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://story/background_display.gd\" id=\"1_bg\"]\n[ext_resource type=\"Shader\" path=\"res://story/mask_transition.gdshader\" id=\"2_shader\"]\n\n[sub_resource type=\"ShaderMaterial\" id=\"ShaderMaterial_mask\"]\nshader = ExtResource(\"2_shader\")\nshader_parameter/cutoff = 0.0\n\n[node name=\"BackgroundDisplay\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_bg\")\n\n[node name=\"TextureRect\" type=\"TextureRect\" parent=\".\"]\nmaterial = SubResource(\"ShaderMaterial_mask\")\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nexpand_mode = 1\nstretch_mode = 6\n"
+      },
+      {
+       "percorso": "story/background_display.gd",
+       "contenuto": "class_name BackgroundDisplay\nextends Control\n\n@onready var texture_rect: TextureRect = $TextureRect\n\n\nfunc is_transitioning() -> bool:\n\treturn false\n\n\nfunc set_mask(mask: Texture2D) -> void:\n\tvar mat := texture_rect.material as ShaderMaterial\n\tif mat:\n\t\tmat.set_shader_parameter(\"mask_texture\", mask)\n\n\nfunc set_cutoff(value: float) -> void:\n\tvar mat := texture_rect.material as ShaderMaterial\n\tif mat:\n\t\tmat.set_shader_parameter(\"cutoff\", value)\n\n\nfunc get_cutoff() -> float:\n\tvar mat := texture_rect.material as ShaderMaterial\n\tif mat:\n\t\tvar val = mat.get_shader_parameter(\"cutoff\")\n\t\tif val != null:\n\t\t\treturn float(val)\n\treturn 0.0\n\n\nfunc crossfade_to(new_texture: Texture2D, _duration: float = 0.5) -> void:\n\ttexture_rect.texture = new_texture\n\n\nfunc transition_through_black(new_texture: Texture2D, _duration: float = 0.5) -> void:\n\ttexture_rect.texture = new_texture\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Uno shader 2D in Godot usa la direttiva `shader_type canvas_item;`. Le uniform dichiarate (`mask_texture` e `cutoff`) compaiono nell'Inspector del rispettivo `ShaderMaterial` e possono essere lette o modificate dal codice GDScript chiamando `get_shader_parameter` e `set_shader_parameter`. Nella funzione `fragment()`, campioniamo il punto della texture con `UV` e confrontiamo il canale rosso della maschera con `cutoff`: se il pixel della maschera è inferiore alla soglia mostriamo il punto, altrimenti lo rendiamo trasparente impostando il canale alpha a 0.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Animare la dissolvenza a tempo con un Tween",
+    "consegna": "Ora che il materiale riceve la maschera e la soglia, implementa la transizione animata completa in `res://story/background_display.gd`.\n\nAggiorna `background_display.gd` con i seguenti requisiti:\n1. Aggiungi la variabile booleana `var _is_transitioning: bool = false` e aggiorna `func is_transitioning() -> bool` per restituire il valore di questa variabile.\n2. Implementa la funzione `func transition_with_mask(new_texture: Texture2D, mask: Texture2D, duration: float = 0.5) -> void:`\n   - Se `is_transitioning()` è già `true`, termina subito con `return` senza fare nulla.\n   - Imposta `_is_transitioning = true`.\n   - Recupera il materiale di `texture_rect` come `ShaderMaterial`. Se non è valido, imposta `_is_transitioning = false` ed esci.\n   - Configura lo shader: imposta il parametro `\"mask_texture\"` su `mask` e il parametro `\"cutoff\"` su `0.0`.\n   - Assegna `new_texture` alla proprietà `texture` di `texture_rect`.\n   - Crea un `Tween` con `create_tween()` e anima la proprietà `\"shader_parameter/cutoff\"` del materiale portandola a `1.0` in `duration` secondi.\n   - Attendi il termine dell'animazione con `await tween.finished`.\n   - Al termine reimposta `_is_transitioning = false`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Il materiale si ottiene con `var mat := texture_rect.material as ShaderMaterial`.",
+     "Per animare una variabile uniform con Tween si usa il percorso `\"shader_parameter/nome_parametro\"` puntando all'istanza di `ShaderMaterial`.",
+     "Assicurati di scrivere `await tween.finished` prima di impostare `_is_transitioning = false`, così lo stato rimane occupato per tutta la durata dell'effetto."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/background_display.gd",
+      "descrizione": "Il file res://story/background_display.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/background_display.gd",
+      "regex": "transition_with_mask",
+      "descrizione": "Lo script background_display.gd dichiara la funzione transition_with_mask"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bg: Control = await instantiate_scene(\"res://story/background_display.tscn\") as Control\n\tif not check(\"bg_exists\", bg != null, \"res://story/background_display.tscn deve esistere e potersi istanziare\"):\n\t\treturn\n\t\n\tcheck(\"has_trans\", has_function(bg, \"transition_with_mask\"), \"BackgroundDisplay deve avere la funzione transition_with_mask\")\n\tcheck(\"has_is_trans\", has_function(bg, \"is_transitioning\"), \"BackgroundDisplay deve avere la funzione is_transitioning\")\n\t\n\tvar is_trans = call_if_exists(bg, \"is_transitioning\")\n\tcheck(\"initially_not_trans\", is_trans == false, \"All'inizio is_transitioning() deve essere false\")\n\t\n\tvar bg_tex: Texture2D = load(\"res://assets/sprites/background.png\") as Texture2D\n\tvar mask_tex: Texture2D = load(\"res://icon.svg\") as Texture2D\n\t\n\t# Avvia la transizione con durata 0.4 secondi senza attendere subito con await\n\tbg.call(\"transition_with_mask\", bg_tex, mask_tex, 0.4)\n\tawait wait_physics_frames(2)\n\t\n\tvar trans_during = call_if_exists(bg, \"is_transitioning\")\n\tcheck(\"trans_running\", trans_during == true, \"Durante la transizione is_transitioning() deve restituire true\")\n\t\n\tvar tex_rect := bg.get_node_or_null(\"TextureRect\") as TextureRect\n\tif not check(\"tex_rect\", tex_rect != null, \"BackgroundDisplay deve contenere un nodo TextureRect\"):\n\t\treturn\n\t\n\tcheck(\"tex_assigned\", tex_rect.texture == bg_tex, \"La nuova texture deve essere assegnata a TextureRect\")\n\t\n\tvar mat := tex_rect.material as ShaderMaterial\n\tif not check(\"mat\", mat != null, \"TextureRect deve avere uno ShaderMaterial\"):\n\t\treturn\n\t\n\tcheck(\"mask_assigned\", mat.get_shader_parameter(\"mask_texture\") == mask_tex, \"La texture della maschera deve essere assegnata al parametro mask_texture\")\n\t\n\t# A metà transizione (0.2s)\n\tawait wait_seconds(0.2)\n\tvar mid_cutoff = float(mat.get_shader_parameter(\"cutoff\"))\n\tcheck(\"mid_cutoff\", mid_cutoff > 0.05 and mid_cutoff < 0.95, \"A metà transizione cutoff deve trovarsi tra 0 e 1 (misurato: %.2f)\" % mid_cutoff)\n\t\n\t# Al termine (ulteriori 0.3s > durata totale 0.4s)\n\tawait wait_seconds(0.3)\n\tvar final_cutoff = float(mat.get_shader_parameter(\"cutoff\"))\n\tcheck(\"final_cutoff\", final_cutoff >= 0.99, \"Al termine della transizione cutoff deve raggiungere 1.0 (misurato: %.2f)\" % final_cutoff)\n\t\n\tvar trans_after = call_if_exists(bg, \"is_transitioning\")\n\tcheck(\"trans_finished\", trans_after == false, \"Dopo la transizione is_transitioning() deve tornare false\")\n\t\n\tbg.queue_free()",
+      "descrizione": "La funzione transition_with_mask porta cutoff da 0.0 a 1.0 nel tempo stabilito e gestisce is_transitioning"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/background_display.gd",
+       "contenuto": "class_name BackgroundDisplay\nextends Control\n\n@onready var texture_rect: TextureRect = $TextureRect\n\nvar _is_transitioning: bool = false\n\n\nfunc is_transitioning() -> bool:\n\treturn _is_transitioning\n\n\nfunc set_mask(mask: Texture2D) -> void:\n\tvar mat := texture_rect.material as ShaderMaterial\n\tif mat:\n\t\tmat.set_shader_parameter(\"mask_texture\", mask)\n\n\nfunc set_cutoff(value: float) -> void:\n\tvar mat := texture_rect.material as ShaderMaterial\n\tif mat:\n\t\tmat.set_shader_parameter(\"cutoff\", value)\n\n\nfunc get_cutoff() -> float:\n\tvar mat := texture_rect.material as ShaderMaterial\n\tif mat:\n\t\tvar val = mat.get_shader_parameter(\"cutoff\")\n\t\tif val != null:\n\t\t\treturn float(val)\n\treturn 0.0\n\n\nfunc transition_with_mask(new_texture: Texture2D, mask: Texture2D, duration: float = 0.5) -> void:\n\tif _is_transitioning:\n\t\treturn\n\t\n\tvar mat := texture_rect.material as ShaderMaterial\n\tif not mat:\n\t\treturn\n\t\n\t_is_transitioning = true\n\tmat.set_shader_parameter(\"mask_texture\", mask)\n\tmat.set_shader_parameter(\"cutoff\", 0.0)\n\ttexture_rect.texture = new_texture\n\t\n\tvar tween := create_tween()\n\ttween.tween_property(mat, \"shader_parameter/cutoff\", 1.0, duration)\n\tawait tween.finished\n\t_is_transitioning = false\n\n\nfunc crossfade_to(new_texture: Texture2D, _duration: float = 0.5) -> void:\n\ttexture_rect.texture = new_texture\n\n\nfunc transition_through_black(new_texture: Texture2D, _duration: float = 0.5) -> void:\n\ttexture_rect.texture = new_texture\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Per animare un parametro uniform con Tween, usiamo il percorso speciale `\"shader_parameter/nome_parametro\"` puntando all'oggetto `ShaderMaterial`. Inizializzando `cutoff` a `0.0`, l'immagine appena assegnata risulta invisibile. Man mano che il Tween incrementa `cutoff` verso `1.0` nel tempo indicato da `duration`, lo shader rivela i punti dello sfondo secondo le tonalità della maschera. Impostando `_is_transitioning = true` prima dell'animazione e `await tween.finished`, garantiamo che nessun altro comando possa sovrascrivere lo sfondo a metà dissolvenza.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Integrare la transizione a maschera nella storia",
+    "consegna": "Collega la nuova transizione con maschera al flusso narrativo principale in `res://story/story_player.gd` e configurala nel capitolo 1.\n\n1. In `res://story/story_player.gd`:\n   - Aggiorna la funzione `change_background` per accettare un quarto parametro facoltativo `mask: Texture2D = null`:\n     `func change_background(new_texture: Texture2D, transition_type: String = \"crossfade\", duration: float = 0.5, mask: Texture2D = null) -> void:`\n   - Nel corpo di `change_background`, aggiungi la gestione di `transition_type == \"mask\"`:\n     - Se `mask` è `null`, assegna come maschera predefinita `load(\"res://icon.svg\") as Texture2D`.\n     - Chiama `await background_display.transition_with_mask(new_texture, used_mask, duration)`.\n   - Nella funzione `_show_current_line()`:\n     - Quando la riga della storia contiene la chiave `\"background\"`, controlla se è presente anche la chiave `\"mask\"`:\n       - Se c'è, carica la risorsa con `load(line_data[\"mask\"]) as Texture2D`.\n       - Altrimenti imposta la maschera a `null`.\n     - Passa la maschera a `change_background(bg_tex, trans_type, trans_dur, mask_tex)`.\n\n2. In `res://story/chapters/chapter_01.json`:\n   - Nella battuta di Elena che segue l'etichetta `\"inizio\"`, aggiungi i campi per la transizione di sfondo:\n     - `\"background\": \"res://assets/sprites/background.png\"`\n     - `\"transition\": \"mask\"`\n     - `\"transition_duration\": 0.4`",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `change_background`, mantieni i valori predefiniti per tutti i parametri opzionali così le chiamate precedenti rimangono valide.",
+     "In `_show_current_line()`, ricordati di attendere la chiamata a `change_background` con `await` per non far scorrere il dialogo durante la transizione."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_player.gd",
+      "descrizione": "Lo script res://story/story_player.gd esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/story_player.gd",
+      "regex": "transition_with_mask",
+      "descrizione": "StoryPlayer chiama transition_with_mask di BackgroundDisplay"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://story/chapters/chapter_01.json",
+      "regex": "\"transition\":\\s*\"mask\"",
+      "descrizione": "Il file chapter_01.json usa la transizione a maschera"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bg_scene: Control = await instantiate_scene(\"res://story/background_display.tscn\") as Control\n\tif not check(\"bg_scene\", bg_scene != null, \"res://story/background_display.tscn deve potersi istanziare\"):\n\t\treturn\n\t\n\tvar player := StoryPlayer.new()\n\tplayer.background_display = bg_scene as BackgroundDisplay\n\tadd_child(player)\n\tawait wait_frames(2)\n\t\n\tcheck(\"has_change_bg\", has_function(player, \"change_background\"), \"StoryPlayer deve avere la funzione change_background\")\n\t\n\tvar bg_tex: Texture2D = load(\"res://assets/sprites/background.png\") as Texture2D\n\tvar mask_tex: Texture2D = load(\"res://icon.svg\") as Texture2D\n\t\n\t# Avvia il cambio sfondo a maschera\n\tplayer.change_background(bg_tex, \"mask\", 0.4, mask_tex)\n\tawait wait_physics_frames(2)\n\t\n\tcheck(\"is_trans\", player.is_transitioning(), \"StoryPlayer.is_transitioning() deve essere true durante la transizione\")\n\t\n\tvar tex_rect := bg_scene.get_node_or_null(\"TextureRect\") as TextureRect\n\tif not check(\"tex_rect\", tex_rect != null, \"BackgroundDisplay deve contenere TextureRect\"):\n\t\treturn\n\t\n\tvar mat := tex_rect.material as ShaderMaterial\n\tif not check(\"mat\", mat != null, \"TextureRect deve avere uno ShaderMaterial\"):\n\t\treturn\n\t\n\tcheck(\"mask_set\", mat.get_shader_parameter(\"mask_texture\") == mask_tex, \"La maschera deve essere passata al materiale\")\n\t\n\t# A metà transizione\n\tawait wait_seconds(0.2)\n\tvar mid_cutoff = float(mat.get_shader_parameter(\"cutoff\"))\n\tcheck(\"mid_cutoff\", mid_cutoff > 0.05 and mid_cutoff < 0.95, \"A metà transizione cutoff deve essere intermedio (misurato: %.2f)\" % mid_cutoff)\n\t\n\t# Al completamento\n\tawait wait_seconds(0.3)\n\tvar end_cutoff = float(mat.get_shader_parameter(\"cutoff\"))\n\tcheck(\"end_cutoff\", end_cutoff >= 0.99, \"A fine transizione cutoff deve essere 1.0 (misurato: %.2f)\" % end_cutoff)\n\tcheck(\"ended\", not player.is_transitioning(), \"StoryPlayer.is_transitioning() deve tornare false\")\n\t\n\tplayer.queue_free()\n\tbg_scene.queue_free()",
+      "descrizione": "StoryPlayer esegue il cambio di sfondo con maschera e rispetta i tempi di transizione"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "story/story_player.gd",
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nsignal story_finished\n\n@export var story_file_path: String = \"res://story/chapters/chapter_01.json\"\n@export var dialogue_box: PanelContainer\n@export var character_stage: CharacterStage\n@export var background_display: BackgroundDisplay\n\nvar _lines: Array = []\nvar _labels: Dictionary = {}\nvar _current_line_index: int = 0\nvar _is_transitioning: bool = false\n\n\nfunc _ready() -> void:\n\tif dialogue_box:\n\t\tdialogue_box.line_finished.connect(_on_dialogue_box_line_finished)\n\t\n\tif load_story(story_file_path):\n\t\tstart_story()\n\n\nfunc is_transitioning() -> bool:\n\treturn _is_transitioning or (background_display != null and background_display.is_transitioning())\n\n\nfunc change_background(new_texture: Texture2D, transition_type: String = \"crossfade\", duration: float = 0.5, mask: Texture2D = null) -> void:\n\t_is_transitioning = true\n\tif background_display:\n\t\tif transition_type == \"mask\":\n\t\t\tvar used_mask: Texture2D = mask\n\t\t\tif not used_mask:\n\t\t\t\tused_mask = load(\"res://icon.svg\") as Texture2D\n\t\t\tawait background_display.transition_with_mask(new_texture, used_mask, duration)\n\t\telif transition_type == \"black\":\n\t\t\tawait background_display.transition_through_black(new_texture, duration)\n\t\telse:\n\t\t\tawait background_display.crossfade_to(new_texture, duration)\n\t_is_transitioning = false\n\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\tprint(\"Errore: file della storia non trovato: \", path)\n\t\treturn false\n\t\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\tprint(\"Errore durante l'apertura del file: \", path)\n\t\treturn false\n\t\n\tvar json := JSON.new()\n\tvar parse_result := json.parse(file.get_as_text())\n\tif parse_result != OK:\n\t\tprint(\"Errore nel parsing del JSON: \", json.get_error_message())\n\t\treturn false\n\t\n\tvar data: Dictionary = json.data\n\tif not data.has(\"lines\"):\n\t\tprint(\"Errore: la chiave 'lines' non è presente nel file JSON.\")\n\t\treturn false\n\t\n\tstory_file_path = path\n\t_lines = data[\"lines\"]\n\t_current_line_index = 0\n\t_index_labels()\n\treturn true\n\n\nfunc _index_labels() -> void:\n\t_labels.clear()\n\tfor i in range(_lines.size()):\n\t\tvar line_data: Dictionary = _lines[i]\n\t\tif line_data.get(\"type\", \"\") == \"label\":\n\t\t\tvar label_name: String = line_data.get(\"name\", line_data.get(\"id\", \"\"))\n\t\tif not label_name.is_empty():\n\t\t\t\t_labels[label_name] = i\n\n\nfunc jump_to_label(label_name: String) -> bool:\n\tif not _labels.has(label_name):\n\t\tprint(\"Errore: etichetta non trovata: \", label_name)\n\t\treturn false\n\t\n\t_current_line_index = _labels[label_name]\n\tadvance()\n\treturn true\n\n\nfunc jump_to_chapter(file_path: String, target_label: String = \"\") -> bool:\n\tif not load_story(file_path):\n\t\treturn false\n\t\n\tif target_label.is_empty():\n\t\tstart_story()\n\t\treturn true\n\t\n\treturn jump_to_label(target_label)\n\n\nfunc start_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc advance() -> void:\n\tif is_transitioning():\n\t\treturn\n\t\n\t_current_line_index += 1\n\tif _current_line_index < _lines.size():\n\t\t_show_current_line()\n\telse:\n\t\tif dialogue_box:\n\t\tdialogue_box.clear()\n\t\tstory_finished.emit()\n\n\nfunc get_line_count() -> int:\n\treturn _lines.size()\n\n\nfunc restart_story() -> void:\n\tif _lines.is_empty():\n\t\treturn\n\t_current_line_index = 0\n\t_show_current_line()\n\n\nfunc jump_to_line(index: int) -> bool:\n\tif index < 0 or index >= get_line_count():\n\t\treturn false\n\t_current_line_index = index\n\t_show_current_line()\n\treturn true\n\n\nfunc is_at_end() -> bool:\n\treturn _current_line_index >= get_line_count()\n\n\nfunc get_character_stage() -> CharacterStage:\n\treturn character_stage\n\n\nfunc get_background_display() -> BackgroundDisplay:\n\treturn background_display\n\n\nfunc _show_current_line() -> void:\n\tif _current_line_index < 0 or _current_line_index >= _lines.size():\n\t\treturn\n\t\n\tvar line_data: Dictionary = _lines[_current_line_index]\n\tvar cmd_type: String = line_data.get(\"type\", \"\")\n\t\n\tif cmd_type == \"jump_chapter\":\n\t\tvar target_file: String = line_data.get(\"target_file\", \"\")\n\t\tvar target_label: String = line_data.get(\"target_label\", \"\")\n\t\tjump_to_chapter(target_file, target_label)\n\t\treturn\n\t\n\tif cmd_type == \"label\":\n\t\tadvance()\n\t\treturn\n\t\n\tvar speaker: String = line_data.get(\"speaker\", \"\")\n\tvar text: String = line_data.get(\"text\", \"\")\n\t\n\tif background_display and line_data.has(\"background\"):\n\t\tvar bg_path: String = line_data[\"background\"]\n\t\tvar bg_tex: Texture2D = load(bg_path) as Texture2D\n\t\tif bg_tex:\n\t\t\tif dialogue_box:\n\t\t\t\tdialogue_box.clear()\n\t\t\tvar trans_type: String = line_data.get(\"transition\", \"crossfade\")\n\t\t\tvar trans_dur: float = float(line_data.get(\"transition_duration\", 0.5))\n\t\t\tvar mask_tex: Texture2D = null\n\t\t\tif line_data.has(\"mask\"):\n\t\t\t\tmask_tex = load(line_data[\"mask\"]) as Texture2D\n\t\t\tawait change_background(bg_tex, trans_type, trans_dur, mask_tex)\n\t\n\tif dialogue_box:\n\t\tdialogue_box.show_line(speaker, text)\n\t\n\tif character_stage and not speaker.is_empty():\n\t\tcharacter_stage.focus_character(speaker.to_lower())\n\n\nfunc _on_dialogue_box_line_finished() -> void:\n\tadvance()\n"
+      },
+      {
+       "percorso": "story/chapters/chapter_01.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1: Il Risveglio\",\n  \"lines\": [\n    {\n      \"type\": \"label\",\n      \"name\": \"inizio\"\n    },\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"La porta alle nostre spalle è chiusa. Dobbiamo andare avanti.\",\n      \"background\": \"res://assets/sprites/background.png\",\n      \"transition\": \"mask\",\n      \"transition_duration\": 0.4\n    },\n    {\n      \"type\": \"jump_chapter\",\n      \"target_file\": \"res://story/chapters/chapter_02.json\",\n      \"target_label\": \"sala_centrale\"\n    }\n  ]\n}\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Integrando la maschera in `StoryPlayer`, colleghiamo i dati narrativi salvati nei file JSON direttamente al rendering della GPU. Quando `_show_current_line()` incontra una riga con un cambio di sfondo di tipo `\"mask\"`, ricava la durata e l'eventuale percorso della maschera (ricadendo su una texture di default se non specificata), quindi attende che `BackgroundDisplay` completi la dissolvenza prima di mostrare il testo a schermo.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Il primo shader: una dissolvenza con una maschera",
@@ -59,5 +278,10 @@
     "md": "- Uno shader è un programma eseguito in parallelo sulla GPU per calcolare il colore di ogni pixel di un oggetto grafico.\n- La direttiva `shader_type canvas_item;` definisce uno shader per nodi 2D e componenti di interfaccia.\n- Le variabili `uniform` permettono di passare dati dall'esterno (da GDScript o dall'Inspector) all'interno dello shader.\n- La funzione `texture(sampler, UV)` legge il colore di una risorsa visiva a determinate coordinate.\n- Da GDScript si modificano i parametri dello shader chiamando `set_shader_parameter(\"nome\", valore)` sul rispettivo `ShaderMaterial`.\n- Puoi animare i parametri uniform con un `Tween` puntando al percorso di proprietà `\"shader_parameter/nome_parametro\"`."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
