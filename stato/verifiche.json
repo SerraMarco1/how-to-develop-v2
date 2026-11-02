@@ -433,10 +433,8 @@
   "tentativi": {}
  },
  "musica-ed-effetti-nella-storia": {
-  "versione": -1,
-  "fragili": [
-   "test"
-  ],
+  "versione": 2,
+  "fragili": [],
   "tentativi": {
    "test": 1
   }

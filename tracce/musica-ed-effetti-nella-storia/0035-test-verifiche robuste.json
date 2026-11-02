@@ -1,0 +1,46 @@
+{
+ "n": 35,
+ "quando": "2026-11-02T09:50:12.922Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 2 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 63074,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "nodo",
+    "scena": "res://story/story_screen.tscn",
+    "tipoNodo": "Node",
+    "nome": "AudioManager",
+    "genitore": "StoryScreen",
+    "descrizione": "La scena story_screen.tscn contiene un nodo AudioManager come figlio di StoryScreen"
+   },
+   {
+    "tipo": "script_collegato",
+    "scena": "res://story/story_screen.tscn",
+    "nodo": "AudioManager",
+    "descrizione": "Il nodo AudioManager ha uno script collegato"
+   },
+   {
+    "tipo": "testo_in_file",
+    "percorso": "res://story/story_interpreter.gd",
+    "regex": "@export var audio_manager",
+    "descrizione": "Lo script story_interpreter.gd dichiara la variabile esportata audio_manager"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar screen = await instantiate_scene(\"res://story/story_screen.tscn\")\n\tif not check(\"scene_loaded\", screen != null, \"La scena res://story/story_screen.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar audio_mgr = find_by_name(screen, \"AudioManager\") as AudioManager\n\tif not check(\"audio_mgr_found\", audio_mgr != null, \"Nella scena story_screen.tscn deve essere presente un nodo AudioManager\"):\n\t\treturn\n\t\n\tvar interpreter = find_by_name(screen, \"StoryInterpreter\") as StoryInterpreter\n\tif not check(\"interpreter_found\", interpreter != null, \"Nella scena story_screen.tscn deve essere presente il nodo StoryInterpreter\"):\n\t\treturn\n\t\n\tcheck(\"audio_mgr_assigned\", interpreter.audio_manager == audio_mgr, \"La proprietà esportata audio_manager di StoryInterpreter deve puntare al nodo AudioManager\")\n\t\n\tif not check(\"has_execute_cmd\", has_function(interpreter, \"execute_command\"), \"StoryInterpreter deve definire la funzione execute_command(command: Dictionary)\"):\n\t\treturn\n\t\n\tawait interpreter.execute_command({\n\t\t\"type\": \"music\",\n\t\t\"path\": \"res://assets/audio/music_loop.wav\",\n\t\t\"fade\": 0.4\n\t})\n\tawait wait_frames(2)\n\t\n\tvar active_player = audio_mgr.get_active_music_player()\n\tcheck(\"music_playing\", active_player != null and active_player.playing, \"Il comando 'music' deve avviare la riproduzione della traccia specificata\")\n\t\n\tif active_player:\n\t\tcheck(\"music_fading_in\", active_player.volume_db < -5.0, \"Durante la dissolvenza il volume deve partire basso (volume rilevato: %.1f dB)\" % active_player.volume_db)\n\t\n\tawait wait_seconds(0.5)\n\tif active_player:\n\t\tcheck(\"music_fade_ended\", active_player.volume_db > -1.0, \"Al termine della dissolvenza il volume deve raggiungere circa 0 dB (volume rilevato: %.1f dB)\" % active_player.volume_db)\n\t\n\tawait interpreter.execute_command({\n\t\t\"type\": \"sfx\",\n\t\t\"path\": \"res://assets/audio/jump.wav\"\n\t})\n\tawait wait_frames(2)\n\t\n\tvar sfx_found := false\n\tfor child in audio_mgr.get_children():\n\t\tif child is AudioStreamPlayer and child != active_player:\n\t\t\tif child.playing:\n\t\t\t\tsfx_found = true\n\t\t\t\tbreak\n\tcheck(\"sfx_playing\", sfx_found, \"Il comando 'sfx' deve creare un riproduttore dedicato e avviare il suono senza fermare la musica\")\n\t\n\tawait interpreter.execute_command({\n\t\t\"type\": \"stop_music\",\n\t\t\"fade\": 0.3\n\t})\n\tawait wait_seconds(0.4)\n\tvar stopped_player = audio_mgr.get_active_music_player()\n\tcheck(\"music_stopped\", stopped_player == null or not stopped_player.playing, \"Il comando 'stop_music' deve arrestare la musica al termine della dissolvenza in uscita\")\n",
+    "descrizione": "StoryInterpreter esegue i comandi music, sfx e stop_music gestendo la dissolvenza e i canali audio"
+   }
+  ],
+  "consegna": "Collega la gestione dell'audio all'interprete della storia, così che i comandi narrativi possano avviare la musica, sfumarla nel silenzio o riprodurre effetti sonori indipendenti.\n\nNel progetto `Storie`:\n1. Nello script `res://story/story_interpreter.gd`:\n   - Dichiara la variabile esportata `@export var audio_manager: AudioManager`. (Nota: per cercare un nodo in sicurezza senza generare errori se manca, puoi usare `get_node_or_null(\"../AudioManager\")` come fallback).\n   - Implementa la funzione `execute_command(command: Dictionary) -> void` in grado di riconoscere i comandi audio tramite la chiave `\"type\"` del dizionario:\n     - `\"music\"`: legge la chiave `\"path\"` (il percorso del file audio) e `\"fade\"` (durata in secondi della dissolvenza, con valore predefinito `1.0` se non presente). Carica la risorsa audio con `load(path) as AudioStream` e chiama `play_music(stream, fade)` su `audio_manager`.\n     - `\"stop_music\"`: legge la chiave `\"fade\"` (durata in secondi, predefinita `1.0`) e chiama `stop_music(fade)` su `audio_manager`.\n     - `\"sfx\"`: legge la chiave `\"path\"`, carica la risorsa audio con `load(path) as AudioStream` e chiama `play_sfx(stream)` su `audio_manager`.\n2. Nella scena `res://story/story_screen.tscn`:\n   - Aggiungi un nodo di tipo `Node` chiamato `AudioManager` come figlio diretto di `StoryScreen`, collegandogli lo script `res://assets/audio/audio.gd`.\n   - Assegna il nuovo nodo `AudioManager` alla proprietà esportata `audio_manager` del nodo `StoryInterpreter`.\n\n*Nota sui file di servizio del progetto:* Il codice di supporto utilizza funzioni avanzate per la generazione automatica dei file audio mancanti, come `get_base_dir()` (per ricavare la cartella da un percorso) e `DirAccess.make_dir_absolute()` (per creare le cartelle). Vengono inoltre usati oggetti come `PackedByteArray()` (un array di byte grezzi manipolato con `resize()`, `append_array()` e `to_utf8_buffer()`) insieme a `FileAccess.store_buffer()` per scrivere dati binari su disco (ad esempio: `var arr = PackedByteArray(); arr.resize(10)` crea un buffer di 10 byte)."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 50 s (22157 → 15027 token)"
+ ]
+}

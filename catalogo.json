@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-02T08:59:05.483Z",
+ "aggiornato": "2026-11-02T09:50:12.933Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -763,10 +763,10 @@
    "slug": "musica-ed-effetti-nella-storia",
    "numero": "6.11",
    "titolo": "Musica, effetti e voci nella storia",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f06-visual-novel/musica-ed-effetti-nella-storia.json",
-   "sha256": "f93ce09bbd82cb37ba4808f8c075126686cb290473cd5a6713982d77a174ed11",
-   "byte": 148392
+   "sha256": "c1605646eddf6019a78224493c1fb0764945b8f8a933b4f41a262019b275c7a6",
+   "byte": 148762
   },
   {
    "slug": "dare-vita-al-testo",
