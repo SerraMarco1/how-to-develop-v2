@@ -247,8 +247,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "core/scene_manager.gd: `change_scene()` è di Godot 3: in Godot 4 si usa `change_scene_to_file()`",
-    "ui/title_screen.gd: `change_scene()` è di Godot 3: in Godot 4 si usa `change_scene_to_file()`"
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://core/scene_manager.gd deve caricarsi senza errori\n  - Il file res://ui/title_screen.gd deve caricarsi senza errori: Parse Error: Cannot call non-static function \"change_scene_to_file()\" on the class \"SceneManager\" directly. Make an instance instead. (res://ui/title_screen.gd:26 in GDScript::reload)\nParse Error: Cannot call non-static function \"change_scene_to_file()\" on the class \"SceneManager\" directly. Make an instance instead. (res://ui/title_screen.gd:30 in GDScript::reload)\nFailed to load script \"res://ui/title_screen.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  ui/title_screen.gd, riga 26: `SceneManager.change_scene_to_file(\"res://story/story_screen.tscn\")`\n  ui/title_screen.gd, riga 30: `SceneManager.change_scene_to_file(\"res://story/story_screen.tscn\")`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
