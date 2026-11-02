@@ -28,3 +28,6 @@
 {"quando":1793609752241,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":179015,"tokenInput":13397,"tokenOutput":18,"ragionamento":1777}
 {"quando":1793609933018,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":7921,"tokenInput":2841,"tokenOutput":697,"ragionamento":2179}
 {"quando":1793609947148,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":533672,"tokenInput":16285,"tokenOutput":3282,"ragionamento":4855}
+{"quando":1793610483603,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":543194,"tokenInput":21516,"tokenOutput":7091,"ragionamento":30426}
+{"quando":1793611026802,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":353255,"tokenInput":25463,"tokenOutput":6515,"ragionamento":19773}
+{"quando":1793611380066,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":100051,"tokenInput":21516,"tokenOutput":5499,"ragionamento":14544}
