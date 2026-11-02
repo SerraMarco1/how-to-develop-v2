@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": false, \"perche\": \"Il sistema audio gestisce la riproduzione di musica ed effetti sonori e non produce elementi visivi sullo schermo.\"}",
- "ragionamento": 610,
- "quando": "2026-11-02T08:45:33.073Z",
- "ruolo": "ritocco"
-}

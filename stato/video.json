@@ -1091,5 +1091,14 @@
    "regole": 2,
    "motivo": "L'esercizio aggiunge la logica per le variabili e le condizioni nell'interprete della storia, ma la storia in esecuzione non le utilizza ancora: l'aspetto visivo e il comportamento del gioco rimangono identici."
   }
+ },
+ "musica-ed-effetti-nella-storia": {
+  "es1": {
+   "impronta": "e724e0c91c476dd96624254063c35715498062adc0d17cbc6c8470193d6e3154",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il sistema audio gestisce la riproduzione di musica ed effetti sonori e non produce elementi visivi sullo schermo."
+  }
  }
 }
