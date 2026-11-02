@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-02T08:29:49.986Z",
+ "aggiornato": "2026-11-02T08:59:05.483Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -776,6 +776,15 @@
    "file": "lezioni/f06-visual-novel/dare-vita-al-testo.json",
    "sha256": "48358228aabe360f137829bd2a70514364c4986f7792c9dc64186afcaf20c45b",
    "byte": 198922
+  },
+  {
+   "slug": "primo-shader-dissolvenza",
+   "numero": "6.13",
+   "titolo": "Il primo shader: una dissolvenza con una maschera",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/primo-shader-dissolvenza.json",
+   "sha256": "925ffc887547f6af7808c86c31634652e448607ab7928db287b8503a98ec60d0",
+   "byte": 218208
   }
  ],
  "documentazione": {
