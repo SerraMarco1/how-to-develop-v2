@@ -572,6 +572,7 @@
     "consegna": "Il sistema di salvataggio del motore in questo progetto presenta un malfunzionamento: quando si carica un salvataggio con `restore_from_save()`, il file di storia e l'indice di riga vengono caricati, ma lo sfondo e la traccia musicale rimangono vuoti (stringa vuota `\"\"`), ignorando le chiavi `\"background\"` e `\"music\"` presenti nel dizionario di salvataggio.\n\nIspeziona lo script `res://story/story_player.gd` e correggi il metodo `restore_from_save()` affinché memorizzi correttamente i valori di `\"background\"` e `\"music\"` dal dizionario ricevuto.",
     "modalita": "progetto",
     "dove": "a-parte",
+    "cartella": "ripara-il-ripristino-di-sfondo-e-musica-",
     "passiGuida": [],
     "suggerimenti": [
      "Esamina le ultime righe del metodo restore_from_save() dentro res://story/story_player.gd.",
@@ -588,6 +589,14 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"StorieRepairs\"\nrun/main_scene=\"res://ui/title_screen.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "ui/title_screen.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"TitleScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n"
+      },
       {
        "percorso": "core/save_manager.gd",
        "contenuto": "class_name SaveManager\nextends RefCounted\n\nconst SAVE_FILE_PATH: String = \"user://savegame.json\"\nconst SAVE_VERSION: int = 1\n\n\nstatic func create_save_dictionary(v: int, f: String, l: int, vars: Dictionary, bg: String, mus: String) -> Dictionary:\n\treturn {\"version\": v, \"story_file\": f, \"line_index\": l, \"variables\": vars, \"background\": bg, \"music\": mus}\n"
@@ -610,6 +619,10 @@
       {
        "percorso": "story/story_player.gd",
        "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _lines: Array = []\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tvar target_file: String = String(data.get(\"story_file\", \"\"))\n\tif not load_story(target_file):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
+      },
+      {
+       "percorso": "ui/title_screen.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"TitleScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n"
       }
      ],
      "progetto": {
@@ -620,18 +633,22 @@
       "impostazioni": []
      },
      "spiegazione": "In `restore_from_save()`, le righe che assegnavano `\"\"` a `_current_background` e `_current_music` sono state corrette per leggere i valori `String(data.get(\"background\", \"\"))` e `String(data.get(\"music\", \"\"))` dal dizionario ricevuto.",
-     "cambiati": [],
+     "cambiati": [
+      "story/story_player.gd",
+      "ui/title_screen.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "`soluzione.progetto.scenaPrincipale` è \"res://ui/title_screen.tscn\", ma quel file non è in `soluzione.file`"
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
@@ -706,7 +723,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Salvare e caricare: lo stato del gioco",
