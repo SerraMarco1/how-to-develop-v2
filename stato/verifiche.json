@@ -443,5 +443,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "primo-shader-dissolvenza": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
