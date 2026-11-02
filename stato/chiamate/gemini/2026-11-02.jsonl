@@ -22,3 +22,4 @@
 {"quando":1793609060029,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":36217,"tokenInput":22157,"tokenOutput":15175,"ragionamento":2511}
 {"quando":1793609130690,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":2377,"tokenInput":8144,"tokenOutput":35,"ragionamento":610}
 {"quando":1793609134585,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":480804,"tokenInput":20813,"tokenOutput":9632,"ragionamento":32900}
+{"quando":1793609626475,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":38476,"tokenInput":23609,"tokenOutput":16451,"ragionamento":2558}
