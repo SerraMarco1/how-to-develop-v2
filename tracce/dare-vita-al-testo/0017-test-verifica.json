@@ -1,0 +1,16 @@
+{
+ "n": 17,
+ "quando": "2026-11-02T08:29:37.776Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "titolo": "Test: correzione del revisore scartata",
+ "spiegazione": "La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n- la consegna o i suggerimenti dicono già \"install_effect\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "la consegna o i suggerimenti dicono già \"install_effect\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo"
+  ]
+ },
+ "chiamate": []
+}
