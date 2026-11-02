@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-02T11:32:43.859Z",
+ "aggiornato": "2026-11-02T11:36:29.532Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "menu-e-gestione-delle-scene",
-  "numero": "6.14",
-  "titolo": "Menu principale e gestione delle scene"
+  "slug": "salvare-lo-stato",
+  "numero": "6.15",
+  "titolo": "Salvare e caricare: lo stato del gioco"
  },
- "messaggio": "Sta scrivendo la lezione 6.14 «Menu principale e gestione delle scene».",
+ "messaggio": "Sta scrivendo la lezione 6.15 «Salvare e caricare: lo stato del gioco».",
  "riprende": null
 }
