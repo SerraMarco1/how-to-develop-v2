@@ -1100,5 +1100,13 @@
    "regole": 2,
    "motivo": "Il sistema audio gestisce la riproduzione di musica ed effetti sonori e non produce elementi visivi sullo schermo."
   }
+ },
+ "primo-shader-dissolvenza": {
+  "es1": {
+   "impronta": "6228c59f0f77988ed96da86d27fdd7682567fefa2c2988abb3c0655496d9b1ff",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
+  }
  }
 }
