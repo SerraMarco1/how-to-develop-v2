@@ -426,5 +426,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "controllare-la-storia": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
