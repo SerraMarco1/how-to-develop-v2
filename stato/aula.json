@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-02T08:45:34.560Z",
+ "aggiornato": "2026-11-02T08:59:07.123Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "primo-shader-dissolvenza",
-  "numero": "6.13",
-  "titolo": "Il primo shader: una dissolvenza con una maschera"
+  "slug": "menu-e-gestione-delle-scene",
+  "numero": "6.14",
+  "titolo": "Menu principale e gestione delle scene"
  },
- "messaggio": "Sta scrivendo la lezione 6.13 «Il primo shader: una dissolvenza con una maschera».",
+ "messaggio": "Sta scrivendo la lezione 6.14 «Menu principale e gestione delle scene».",
  "riprende": null
 }

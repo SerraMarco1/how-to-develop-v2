@@ -27,3 +27,4 @@
 {"quando":1793609742008,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"primo-shader-dissolvenza","ok":false,"contata":true,"durataMs":10228,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793609752241,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":179015,"tokenInput":13397,"tokenOutput":18,"ragionamento":1777}
 {"quando":1793609933018,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":7921,"tokenInput":2841,"tokenOutput":697,"ragionamento":2179}
+{"quando":1793609947148,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":533672,"tokenInput":16285,"tokenOutput":3282,"ragionamento":4855}
