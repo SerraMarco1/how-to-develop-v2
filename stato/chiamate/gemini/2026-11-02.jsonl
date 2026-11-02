@@ -49,3 +49,4 @@
 {"quando":1793616670218,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"menu-e-gestione-delle-scene","ok":false,"contata":true,"durataMs":6278,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793619170197,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":101343,"tokenInput":25640,"tokenOutput":9564,"ragionamento":15108}
 {"quando":1793619291059,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":49990,"tokenInput":23973,"tokenOutput":17059,"ragionamento":2306}
+{"quando":1793619358721,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"menu-e-gestione-delle-scene","ok":true,"contata":true,"durataMs":16949,"tokenInput":11198,"tokenOutput":12,"ragionamento":3469}
