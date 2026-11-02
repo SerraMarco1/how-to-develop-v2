@@ -8,3 +8,4 @@
 {"quando":1793606918362,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"dare-vita-al-testo","ok":true,"contata":true,"durataMs":33697,"tokenInput":16652,"tokenOutput":2244,"ragionamento":3750}
 {"quando":1793606954227,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"dare-vita-al-testo","ok":true,"contata":true,"durataMs":87121,"tokenInput":21184,"tokenOutput":5993,"ragionamento":14076}
 {"quando":1793607082678,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"dare-vita-al-testo","ok":true,"contata":true,"durataMs":60819,"tokenInput":22246,"tokenOutput":15136,"ragionamento":16973}
+{"quando":1793607144960,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"dare-vita-al-testo","ok":true,"contata":true,"durataMs":316836,"tokenInput":22311,"tokenOutput":14578,"ragionamento":3279}
