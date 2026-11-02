@@ -756,7 +756,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "la consegna o i suggerimenti dicono già \"RegEx\", \"compile\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo"
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_validator.gd deve caricarsi senza errori: Parse Error: Expected end of statement after expression, found \"Identifier\" instead. (res://story/story_validator.gd:120 in GDScript::reload)\nFailed to load script \"res://story/story_validator.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_validator.gd, riga 120: `eturn errors`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
