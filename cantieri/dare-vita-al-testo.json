@@ -758,7 +758,7 @@
    "correzioni": 2,
    "semplificato": true,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_validator.gd deve caricarsi senza errori: Parse Error: Expected end of statement after expression, found \"Identifier\" instead. (res://story/story_validator.gd:120 in GDScript::reload)\nFailed to load script \"res://story/story_validator.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_validator.gd, riga 120: `eturn errors`"
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Identifier \"label_name\" not declared in the current scope. (res://story/story_player.gd:73 in GDScript::reload)\nParse Error: Identifier \"label_name\" not declared in the current scope. (res://story/story_player.gd:74 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 73: `if not label_name.is_empty():`\n  story/story_player.gd, riga 74: `_labels[label_name] = i`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
