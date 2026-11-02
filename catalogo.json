@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-02T09:50:12.933Z",
+ "aggiornato": "2026-11-02T11:36:27.844Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -785,6 +785,15 @@
    "file": "lezioni/f06-visual-novel/primo-shader-dissolvenza.json",
    "sha256": "925ffc887547f6af7808c86c31634652e448607ab7928db287b8503a98ec60d0",
    "byte": 218208
+  },
+  {
+   "slug": "menu-e-gestione-delle-scene",
+   "numero": "6.14",
+   "titolo": "Menu principale e gestione delle scene",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/menu-e-gestione-delle-scene.json",
+   "sha256": "d1361f8b7e729c1095d97dc976205a8bf4c4865b7f6344adfe1d096dfd35a27e",
+   "byte": 190203
   }
  ],
  "documentazione": {

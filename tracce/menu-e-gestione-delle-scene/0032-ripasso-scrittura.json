@@ -1,0 +1,15 @@
+{
+ "n": 32,
+ "quando": "2026-11-02T11:36:27.835Z",
+ "pezzo": "ripasso",
+ "azione": "scrittura",
+ "esito": "ok",
+ "titolo": "Ripasso: voci per il ripasso a intervalli",
+ "spiegazione": "5 voci eseguite in Godot, con le risposte calcolate: true · false · false · 100 · SettingsButton",
+ "richieste": 1,
+ "durataMs": 10274,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (2907 → 769 token)"
+ ]
+}
