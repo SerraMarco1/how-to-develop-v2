@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-latest",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Il test finale è una copia identica e duplicata dell'esercizio 'es2' (stesso titolo, identica consegna e medesime verifiche di verifica di RichTextShake e dialogue_box.gd), contravvenendo alla regola secondo cui il test non deve essere una copia di un esercizio.\",\n      \"correzione\": \"Sostituisci il test con una prova autonoma e differente che verifichi gli obiettivi della lezione (ad esempio implementando un effetto BBCode diverso come una dissolvenza o un salto delle lettere, oppure una verifica sintetica/previsione sul funzionamento di visible_characters e get_parsed_text).\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
+ "ragionamento": 1649,
+ "quando": "2026-11-02T08:28:11.585Z",
+ "ruolo": "revisore"
+}
