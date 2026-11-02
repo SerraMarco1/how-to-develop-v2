@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-02T08:08:36.434Z",
+ "aggiornato": "2026-11-02T08:29:49.986Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -767,6 +767,15 @@
    "file": "lezioni/f06-visual-novel/musica-ed-effetti-nella-storia.json",
    "sha256": "f93ce09bbd82cb37ba4808f8c075126686cb290473cd5a6713982d77a174ed11",
    "byte": 148392
+  },
+  {
+   "slug": "dare-vita-al-testo",
+   "numero": "6.12",
+   "titolo": "Dare vita al testo",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/dare-vita-al-testo.json",
+   "sha256": "48358228aabe360f137829bd2a70514364c4986f7792c9dc64186afcaf20c45b",
+   "byte": 198922
   }
  ],
  "documentazione": {
