@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-02T11:36:29.532Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-02T11:40:41.468Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "salvare-lo-stato",
   "numero": "6.15",
   "titolo": "Salvare e caricare: lo stato del gioco"
  },
- "messaggio": "Sta scrivendo la lezione 6.15 «Salvare e caricare: lo stato del gioco».",
- "riprende": null
+ "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 6.15 riprende quando si azzerano.",
+ "riprende": "2026-11-03T08:00:00.467Z"
 }
