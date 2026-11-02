@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-01T07:07:08.473Z",
+ "aggiornato": "2026-11-02T08:08:36.434Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -758,6 +758,15 @@
    "file": "lezioni/f06-visual-novel/controllare-la-storia.json",
    "sha256": "c6fed017fbbf6145c3e94d8ef41d159bf570e82ae567d6871b047c6af8c67bb1",
    "byte": 134172
+  },
+  {
+   "slug": "musica-ed-effetti-nella-storia",
+   "numero": "6.11",
+   "titolo": "Musica, effetti e voci nella storia",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/musica-ed-effetti-nella-storia.json",
+   "sha256": "f93ce09bbd82cb37ba4808f8c075126686cb290473cd5a6713982d77a174ed11",
+   "byte": 148392
   }
  ],
  "documentazione": {
