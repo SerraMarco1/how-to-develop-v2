@@ -487,7 +487,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "story/story_screen.gd: `change_scene()` è di Godot 3: in Godot 4 si usa `change_scene_to_file()`"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
