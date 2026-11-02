@@ -1,1 +1,2 @@
 {"quando":1793606437069,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":281333,"tokenInput":21695,"tokenOutput":3558,"ragionamento":30611}
+{"quando":1793606726133,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"musica-ed-effetti-nella-storia","ok":true,"contata":true,"durataMs":50203,"tokenInput":20570,"tokenOutput":14809,"ragionamento":7482}
