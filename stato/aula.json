@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-02T08:08:37.888Z",
+ "aggiornato": "2026-11-02T08:29:51.423Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "dare-vita-al-testo",
-  "numero": "6.12",
-  "titolo": "Dare vita al testo"
+  "slug": "primo-shader-dissolvenza",
+  "numero": "6.13",
+  "titolo": "Il primo shader: una dissolvenza con una maschera"
  },
- "messaggio": "Sta scrivendo la lezione 6.12 «Dare vita al testo».",
+ "messaggio": "Sta scrivendo la lezione 6.13 «Il primo shader: una dissolvenza con una maschera».",
  "riprende": null
 }

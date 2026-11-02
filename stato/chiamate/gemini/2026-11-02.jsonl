@@ -14,3 +14,5 @@
 {"quando":1793608093188,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"dare-vita-al-testo","ok":false,"contata":true,"durataMs":1419,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793608094611,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"dare-vita-al-testo","ok":true,"contata":true,"durataMs":81605,"tokenInput":21728,"tokenOutput":14648,"ragionamento":5337}
 {"quando":1793608177875,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"dare-vita-al-testo","ok":true,"contata":true,"durataMs":7645,"tokenInput":2871,"tokenOutput":621,"ragionamento":2367}
+{"quando":1793608191446,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":24848,"tokenInput":16090,"tokenOutput":1866,"ragionamento":3590}
+{"quando":1793608216298,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"primo-shader-dissolvenza","ok":true,"contata":true,"durataMs":14570,"tokenInput":18020,"tokenOutput":1866,"ragionamento":2356}
