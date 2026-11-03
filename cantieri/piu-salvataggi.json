@@ -52,7 +52,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Cannot find member \"SAVE_VERSION\" in base \"SaveManager\". (res://story/story_player.gd:159 in GDScript::reload)\nParse Error: Static function \"create_save_dictionary()\" not found in base \"SaveManager\". (res://story/story_player.gd:158 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 159: `SaveManager.SAVE_VERSION,`\n  story/story_player.gd, riga 158: `return SaveManager.create_save_dictionary(`"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
