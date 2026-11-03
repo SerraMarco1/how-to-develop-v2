@@ -453,5 +453,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "salvare-lo-stato": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
