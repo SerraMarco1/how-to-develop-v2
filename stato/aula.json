@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-03T11:19:42.421Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-03T11:34:59.523Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "salvare-lo-stato",
   "numero": "6.15",
   "titolo": "Salvare e caricare: lo stato del gioco"
  },
- "messaggio": "Sta scrivendo la lezione 6.15 «Salvare e caricare: lo stato del gioco».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.15 riprende da sola appena rispondono.",
+ "riprende": "2026-11-03T12:34:59.523Z"
 }
