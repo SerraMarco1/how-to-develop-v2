@@ -1109,5 +1109,14 @@
    "regole": 2,
    "motivo": "Il TextureRect con lo shader viene aggiunto alla scena, ma non mostra alcuna immagine finché non viene caricato uno sfondo, quindi all'avvio del gioco lo schermo appare identico a prima."
   }
+ },
+ "salvare-lo-stato": {
+  "es1": {
+   "impronta": "ae398a3d374100f31772819bbe16fd5b2220a954b5bb1a2953d81931a61ea5b9",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "La classe SaveManager è uno script di utilità per la gestione dei file di salvataggio e non produce alcun elemento visivo sullo schermo."
+  }
  }
 }
