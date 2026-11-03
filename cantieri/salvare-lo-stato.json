@@ -830,7 +830,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Identifier \"SaveManager\" not declared in the current scope. (res://story/story_player.gd:17 in GDScript::reload)\nParse Error: Identifier \"SaveManager\" not declared in the current scope. (res://story/story_player.gd:17 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 17: `return SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, _current_line_index, _variables, _current_background, _current_music)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Expected closing \")\" after call arguments. (res://story/story_player.gd:22 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 22: `if not load_story(String(data[\"story_file\"]):`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
