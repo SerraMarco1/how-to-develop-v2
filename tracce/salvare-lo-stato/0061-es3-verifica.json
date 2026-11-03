@@ -1,0 +1,102 @@
+{
+ "n": 61,
+ "quando": "2026-11-03T20:18:57.376Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3 (ripara): approvato",
+ "spiegazione": "«Ripara il ripristino di sfondo e musica nel caricamento». 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo 2 correzioni.\nFile aggiunti o cambiati: story/story_player.gd",
+ "richieste": 0,
+ "durataMs": 9474,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Ripara il ripristino di sfondo e musica nel caricamento",
+   "consegna": "Il sistema di salvataggio del gioco presenta un problema: quando si carica un salvataggio con `restore_from_save()`, lo sfondo e la traccia musicale rimangono vuoti (stringa vuota `\"\"`), ignorando le chiavi `\"background\"` e `\"music\"` presenti nel dizionario di salvataggio.\n\nIspeziona lo script `res://story/story_player.gd` e correggi il metodo `restore_from_save()` affinché memorizzi correttamente i valori di `\"background\"` e `\"music\"` dal dizionario `data`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "ripara-il-ripristino-di-sfondo-e-musica",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Esamina le ultime righe del metodo restore_from_save() dentro res://story/story_player.gd.",
+    "Verifica quali valori vengono assegnati a _current_background e _current_music e usa data.get(...) per recuperarli dal dizionario."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://story/story_player.gd",
+     "descrizione": "Il file res://story/story_player.gd esiste nel progetto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar player_obj = await instantiate_script(\"res://story/story_player.gd\")\n\tvar player := player_obj as Node\n\tif not check(\"player\", player != null, \"Lo script res://story/story_player.gd deve potersi istanziare\"):\n\t\treturn\n\t\n\tvar test_data: Dictionary = {\n\t\t\"story_file\": \"res://story/chapters/chapter_01.json\",\n\t\t\"variables\": {},\n\t\t\"background\": \"res://assets/sprites/background.png\",\n\t\t\"music\": \"res://assets/audio/music_loop.wav\"\n\t}\n\t\n\tcall_if_exists(player, \"restore_from_save\", [test_data])\n\t\n\tvar bg_val = get_prop(player, \"_current_background\", \"\")\n\tvar music_val = get_prop(player, \"_current_music\", \"\")\n\t\n\tcheck(\"bg_restored\", String(bg_val) == \"res://assets/sprites/background.png\", \"_current_background deve contenere lo sfondo passato nel salvataggio (trovato '%s')\" % String(bg_val))\n\tcheck(\"music_restored\", String(music_val) == \"res://assets/audio/music_loop.wav\", \"_current_music deve contenere la musica passata nel salvataggio (trovato '%s')\" % String(music_val))\n",
+     "descrizione": "restore_from_save ripristina correttamente lo sfondo e la traccia musicale dal dizionario"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "StorieRepairs",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"StorieRepairs\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Node2D\"]\n"
+     },
+     {
+      "percorso": "story/chapters/chapter_01.json",
+      "contenuto": "[]\n"
+     },
+     {
+      "percorso": "story/story_player.gd",
+      "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tvar target_file: String = String(data.get(\"story_file\", \"\"))\n\tif not load_story(target_file):\n\t\treturn false\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t# ERRORE: Vengono sovrascritte con stringhe vuote\n\t_current_background = \"\"\n\t_current_music = \"\"\n\treturn true\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"StorieRepairs\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Node2D\"]\n"
+     },
+     {
+      "percorso": "story/chapters/chapter_01.json",
+      "contenuto": "[]\n"
+     },
+     {
+      "percorso": "story/story_player.gd",
+      "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tvar target_file: String = String(data.get(\"story_file\", \"\"))\n\tif not load_story(target_file):\n\t\treturn false\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
+     }
+    ],
+    "progetto": {
+     "nome": "StorieRepairs",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Nel metodo `restore_from_save()`, le variabili `_current_background` e `_current_music` venivano impostate su stringhe vuote. La correzione consiste nel leggere i valori delle chiavi `\"background\"` e `\"music\"` dal dizionario `data` usando `String(data.get(\"background\", \"\"))` e `String(data.get(\"music\", \"\"))`.",
+    "cambiati": [
+     "story/story_player.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
