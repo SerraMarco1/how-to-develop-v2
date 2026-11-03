@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test finale è un duplicato identico dell'esercizio 3 ('es3'), con lo stesso titolo, la stessa consegna e lo stesso script di verifica anziché essere una prova di valutazione distinta.\", \"correzione\": \"Sostituire il test con una verifica diversa che metta alla prova gli obiettivi della lezione (ad esempio verificare la gestione di un file di salvataggio con numero di versione errato o corrotto).\", \"fonte\": \"\"}]}",
- "ragionamento": 2340,
- "quando": "2026-11-03T23:07:03.595Z",
- "ruolo": "revisore"
-}
