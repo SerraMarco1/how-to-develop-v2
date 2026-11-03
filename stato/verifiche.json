@@ -448,5 +448,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "menu-e-gestione-delle-scene": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
