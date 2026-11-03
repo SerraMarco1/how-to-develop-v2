@@ -752,10 +752,10 @@
     "consegna": "In questo progetto, l'implementazione del salvataggio e caricamento dello stato del gioco contiene due errori gravi in `res://story/story_player.gd`:\n1. In `get_save_data()` l'indice di riga salvato viene scritto per errore come `0` fisso invece di passare `_current_line_index`.\n2. In `restore_from_save()` il dizionario `_variables` viene ignorato e sovrascritto con un dizionario vuoto `{}`.\n\nApri lo script `res://story/story_player.gd` e correggi entrambi i metodi per garantire che la partita possa essere salvata a qualsiasi riga e che tutte le variabili di gioco vengano conservate al ricaricamento.",
     "modalita": "progetto",
     "dove": "a-parte",
+    "cartella": "test-finale-riparare-il-salvataggio-e-ca",
     "passiGuida": [],
     "suggerimenti": [
-     "Controlla i parametri passati a SaveManager.create_save_dictionary() dentro get_save_data().",
-     "Controlla l'assegnazione a _variables dentro restore_from_save()."
+     "Controlla i parametri passati a SaveManager.create_save_dictionary() dentro get_save_data()."
     ],
     "verifiche": [
      {
@@ -768,6 +768,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"StorieTest\"\nrun/main_scene=\"res://ui/title_screen.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
       {
        "percorso": "core/save_manager.gd",
        "contenuto": "class_name SaveManager\nextends RefCounted\n\nconst SAVE_FILE_PATH: String = \"user://savegame.json\"\nconst SAVE_VERSION: int = 1\n\n\nstatic func create_save_dictionary(v: int, f: String, l: int, vars: Dictionary, bg: String, mus: String) -> Dictionary:\n\treturn {\"version\": v, \"story_file\": f, \"line_index\": l, \"variables\": vars, \"background\": bg, \"music\": mus}\n"
@@ -788,6 +792,10 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "ui/title_screen.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"TitleScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\n"
+      },
+      {
        "percorso": "story/story_player.gd",
        "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc get_save_data() -> Dictionary:\n\treturn SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, _current_line_index, _variables, _current_background, _current_music)\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tif not load_story(String(data[\"story_file\"])):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
       }
@@ -800,18 +808,21 @@
       "impostazioni": []
      },
      "spiegazione": "Nel test finale abbiamo individuato e risolto entrambi gli errori: in `get_save_data()` abbiamo passato `_current_line_index` a `SaveManager.create_save_dictionary()` anziché `0`, e in `restore_from_save()` abbiamo assegnato a `_variables` il valore di `data.get(\"variables\", {}).duplicate()` per preservare i progressi del giocatore.",
-     "cambiati": [],
+     "cambiati": [
+      "story/story_player.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "`soluzione.progetto.scenaPrincipale` è \"res://ui/title_screen.tscn\", ma quel file non è in `soluzione.file`"
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
