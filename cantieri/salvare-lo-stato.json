@@ -840,7 +840,7 @@
    "correzioni": 2,
    "semplificato": true,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Expected closing \")\" after call arguments. (res://story/story_player.gd:22 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 22: `if not load_story(String(data[\"story_file\"]):`"
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story_player.gd deve caricarsi senza errori: Parse Error: Expected closing \")\" after call arguments. (res://story_player.gd:23 in GDScript::reload)\nFailed to load script \"res://story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story_player.gd, riga 23: `if not load_story(String(data[\"story_file\"]):`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
