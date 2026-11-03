@@ -769,16 +769,20 @@
     "partenza": {
      "file": [
       {
-       "percorso": "project.godot",
-       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"StorieTest\"\nrun/main_scene=\"res://ui/title_screen.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+       "percorso": "ui/title_screen.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"TitleScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\n"
       },
       {
        "percorso": "core/save_manager.gd",
        "contenuto": "class_name SaveManager\nextends RefCounted\n\nconst SAVE_FILE_PATH: String = \"user://savegame.json\"\nconst SAVE_VERSION: int = 1\n\n\nstatic func create_save_dictionary(v: int, f: String, l: int, vars: Dictionary, bg: String, mus: String) -> Dictionary:\n\treturn {\"version\": v, \"story_file\": f, \"line_index\": l, \"variables\": vars, \"background\": bg, \"music\": mus}\n"
       },
       {
+       "percorso": "story/chapters/chapter_01.json",
+       "contenuto": "{}\n"
+      },
+      {
        "percorso": "story/story_player.gd",
-       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc get_save_data() -> Dictionary:\n\t# ERRORE 1: passa 0 anziché _current_line_index\n\treturn SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, 0, _variables, _current_background, _current_music)\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tif not load_story(String(data[\"story_file\"])):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t# ERRORE 2: azzera _variables anziché ripristinarle dal dizionario data\n\t_variables = {}\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc get_save_data() -> Dictionary:\n\t# ERRORE 1: passa 0 anziché _current_line_index\n\treturn SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, 0, _variables, _current_background, _current_music)\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tif not load_story(String(data[\"story_file\"]):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t# ERRORE 2: azzera _variables anziché ripristinarle dal dizionario data\n\t_variables = {}\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
       }
      ],
      "progetto": {
@@ -796,8 +800,16 @@
        "contenuto": "[gd_scene format=3]\n\n[node name=\"TitleScreen\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\n"
       },
       {
+       "percorso": "core/save_manager.gd",
+       "contenuto": "class_name SaveManager\nextends RefCounted\n\nconst SAVE_FILE_PATH: String = \"user://savegame.json\"\nconst SAVE_VERSION: int = 1\n\n\nstatic func create_save_dictionary(v: int, f: String, l: int, vars: Dictionary, bg: String, mus: String) -> Dictionary:\n\treturn {\"version\": v, \"story_file\": f, \"line_index\": l, \"variables\": vars, \"background\": bg, \"music\": mus}\n"
+      },
+      {
+       "percorso": "story/chapters/chapter_01.json",
+       "contenuto": "{}\n"
+      },
+      {
        "percorso": "story/story_player.gd",
-       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc get_save_data() -> Dictionary:\n\treturn SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, _current_line_index, _variables, _current_background, _current_music)\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tif not load_story(String(data[\"story_file\"])):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
+       "contenuto": "class_name StoryPlayer\nextends Node\n\nvar story_file_path: String = \"res://story/chapters/chapter_01.json\"\nvar _current_line_index: int = 0\nvar _current_background: String = \"\"\nvar _current_music: String = \"\"\nvar _variables: Dictionary = {}\n\nfunc load_story(path: String) -> bool:\n\tif not FileAccess.file_exists(path):\n\t\treturn false\n\tstory_file_path = path\n\treturn true\n\nfunc get_save_data() -> Dictionary:\n\treturn SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, _current_line_index, _variables, _current_background, _current_music)\n\nfunc restore_from_save(data: Dictionary) -> bool:\n\tif data.is_empty() or not data.has(\"story_file\"):\n\t\treturn false\n\tif not load_story(String(data[\"story_file\"]):\n\t\treturn false\n\t_current_line_index = int(data.get(\"line_index\", 0))\n\t_variables = data.get(\"variables\", {}).duplicate()\n\t_current_background = String(data.get(\"background\", \"\"))\n\t_current_music = String(data.get(\"music\", \"\"))\n\treturn true\n"
       }
      ],
      "progetto": {
@@ -815,14 +827,15 @@
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_player.gd deve caricarsi senza errori: Parse Error: Identifier \"SaveManager\" not declared in the current scope. (res://story/story_player.gd:17 in GDScript::reload)\nParse Error: Identifier \"SaveManager\" not declared in the current scope. (res://story/story_player.gd:17 in GDScript::reload)\nFailed to load script \"res://story/story_player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_player.gd, riga 17: `return SaveManager.create_save_dictionary(SaveManager.SAVE_VERSION, story_file_path, _current_line_index, _variables, _current_background, _current_music)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   }
  },
