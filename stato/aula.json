@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-04T21:36:28.500Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-04T21:39:39.562Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "piu-salvataggi",
   "numero": "6.16",
   "titolo": "Più salvataggi, con data e miniatura"
  },
- "messaggio": "Sta scrivendo la lezione 6.16 «Più salvataggi, con data e miniatura».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.16 riprende da sola appena rispondono.",
+ "riprende": "2026-11-04T21:49:39.562Z"
 }
