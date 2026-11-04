@@ -9,3 +9,5 @@
 {"quando":1793815713688,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"piu-salvataggi","ok":false,"contata":true,"durataMs":3681,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793817023824,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"piu-salvataggi","ok":false,"contata":true,"durataMs":2770,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793819513127,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"piu-salvataggi","ok":true,"contata":true,"durataMs":111212,"tokenInput":24353,"tokenOutput":17840,"ragionamento":8619}
+{"quando":1793819642005,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"piu-salvataggi","ok":true,"contata":true,"durataMs":61366,"tokenInput":27808,"tokenOutput":21652,"ragionamento":3236}
+{"quando":1793819703379,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"piu-salvataggi","ok":true,"contata":true,"durataMs":55892,"tokenInput":32039,"tokenOutput":21586,"ragionamento":2498}

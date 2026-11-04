@@ -1007,7 +1007,7 @@
     }
    },
    "genere": "trova",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - ChapterLabel in Slot_03 deve mostrare 'Capitolo Eliminazione' (mostra '')\n  - La finestra ConfirmDialog deve essere mostrata dopo request_delete_slot(3)\n  - Dopo l'eliminazione Slot_03 deve mostrare 'Vuoto' in ChapterLabel\nOutput di Godot:\nERROR: Parameter \"t\" is null.\n   at: texture_2d_get (./servers/rendering/dummy/storage/texture_storage.h:110)\nSCRIPT ERROR: Cannot call method 'resize' on a null value.\n          at: SaveManager.save_game (res://core/save_manager.gd:33)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nRighe citate dagli errori:\n  core/save_manager.gd, riga 33: `image.resize(320, 180)`"
