@@ -40,3 +40,4 @@
 {"quando":1793852672650,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"impostazioni-che-restano","ok":true,"contata":true,"durataMs":95923,"tokenInput":21689,"tokenOutput":6613,"ragionamento":9192}
 {"quando":1793852768580,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"impostazioni-che-restano","ok":true,"contata":true,"durataMs":42505,"tokenInput":25862,"tokenOutput":6410,"ragionamento":4356}
 {"quando":1793852816209,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"impostazioni-che-restano","ok":true,"contata":true,"durataMs":59080,"tokenInput":26332,"tokenOutput":19818,"ragionamento":7117}
+{"quando":1793852902656,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"impostazioni-che-restano","ok":true,"contata":true,"durataMs":11039,"tokenInput":10312,"tokenOutput":12,"ragionamento":1838}
