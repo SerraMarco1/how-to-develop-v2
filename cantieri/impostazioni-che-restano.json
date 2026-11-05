@@ -1,0 +1,68 @@
+{
+ "creato": "2026-11-05T03:06:16.551Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Impostazioni che restano",
+  "sommario": "Impara a usare ConfigFile per memorizzare e caricare le preferenze dell'utente (volumi audio, schermo intero e velocità del testo). Scopri come applicare questi valori all'avvio del gioco prima della visualizzazione delle schermate e come gestire in modo sicuro i valori predefiniti.",
+  "concetti": [
+   "ConfigFile per salvare impostazioni utente",
+   "Struttura a sezioni e chiavi (formato INI)",
+   "Valori di default con get_value()",
+   "DisplayServer per la gestione dello schermo intero",
+   "AudioServer e linear_to_db per la regolazione dei bus audio",
+   "Applicazione immediata e persistente delle opzioni"
+  ],
+  "obiettivi": [
+   "ConfigFile: un file di impostazioni con sezioni e valori",
+   "Applicare le impostazioni all'avvio, prima che si veda qualcosa",
+   "Valori predefiniti quando il file non c'è o è vecchio"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nelle lezioni precedenti hai realizzato un sistema di salvataggio per lo stato della storia. Quei dati appartengono a una partita specifica e cambiano quando il giocatore avanza nel gioco. Le impostazioni dell'utente (come la velocità con cui compare il testo, il volume della musica o la modalità a schermo intero), invece, devono rimanere identiche indipendentemente dal salvataggio caricato e devono mantenersi ad ogni riavvio del gioco.\n\nPer questo tipo di dati, Godot mette a disposizione la classe `ConfigFile`. A differenza di un file JSON generico, `ConfigFile` è pensato appositamente per gestire opzioni di configurazione organizzate in sezioni e chiavi, offrendo un modo semplice e sicuro per definire valori predefiniti quando il file non esiste ancora sul disco."
+   },
+   {
+    "tipo": "testo",
+    "md": "Un file creato con `ConfigFile` usa la sintassi standard dei file di configurazione (formato `.ini`). I dati vengono divisi in **sezioni** tra parentesi quadre e **chiavi** a cui è associato un valore:\n\n```text\n[display]\nfullscreen=true\n\n[audio]\nmaster_volume=0.8\nmusic_volume=0.5\n\n[gameplay]\ntext_speed=35.0\n```\n\nSalviamo questo file nel percorso `user://settings.cfg`. Ricorda che `user://` punta alla cartella di salvataggio riservata al gioco nel sistema operativo dell'utente, dove abbiamo permessi di scrittura sicuri sia su PC che su altre piattaforme."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per gestire le impostazioni in un unico punto del progetto, creiamo uno script chiamato `SettingsManager` (gestore delle impostazioni). Quando il gioco si avvia, il gestore tenta di leggere il file `user://settings.cfg` tramite il metodo `load()` di `ConfigFile`.\n\nIl punto di forza di `ConfigFile` risiede nel metodo `get_value(sezione, chiave, valore_predefinito)`. Se la sezione o la chiave cercata non esistono (ad esempio al primo avvio, o se hai aggiunto una nuova opzione in un aggiornamento), Godot non restituisce un errore ma ritorna direttamente il valore predefinito che gli hai passato come terzo argomento."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "var config := ConfigFile.new()\nvar err := config.load(\"user://settings.cfg\")\n\n# Se il file esiste, leggiamo la velocità del testo. Se non esiste, usiamo 30.0\nvar speed: float = config.get_value(\"gameplay\", \"text_speed\", 30.0)",
+    "spiegazione": "Creiamo un'istanza di `ConfigFile` e proviamo a caricarla. Il metodo `get_value` accetta come terzo parametro un valore di riserva (fallback) usato se la chiave non viene trovata nel file."
+   },
+   {
+    "tipo": "testo",
+    "md": "Una volta letti i valori dal file, occorre applicarli subito ai relativi sistemi del motore:\n\n1. **Schermo intero**: usiamo `DisplayServer.window_set_mode()` passando `DisplayServer.WINDOW_MODE_FULLSCREEN` per la modalità a schermo intero oppure `DisplayServer.WINDOW_MODE_WINDOWED` per la modalità in finestra.\n2. **Volumi audio**: usiamo `AudioServer.set_bus_volume_db()` per impostare il volume del bus desiderato convertendo il valore lineare (da 0.0 a 1.0) in decibel tramite la funzione `linear_to_db()`.\n3. **Velocità del testo**: memorizziamo il valore nel gestore per renderlo accessibile alla nostra interfaccia dei dialoghi (`DialogueUI`), che lo usera per regolare la frequenza di comparsa dei caratteri."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name SettingsManager\nextends Node\n\nconst SAVE_PATH := \"user://settings.cfg\"\n\nvar text_speed: float = 30.0\nvar master_volume: float = 1.0\nvar music_volume: float = 1.0\nvar sfx_volume: float = 1.0\nvar fullscreen: bool = false\n\nvar _config := ConfigFile.new()\n\n\nfunc _ready() -> void:\n\tload_settings()\n\n\nfunc load_settings() -> void:\n\tvar err := _config.load(SAVE_PATH)\n\tif err != OK:\n\t\t# Se il file non esiste ancora, creiamo la configurazione iniziale\n\t\tsave_settings()\n\t\treturn\n\t\n\t# Lettura dei valori con i rispettivi valori di default\n\tfullscreen = _config.get_value(\"display\", \"fullscreen\", false)\n\ttext_speed = _config.get_value(\"gameplay\", \"text_speed\", 30.0)\n\tmaster_volume = _config.get_value(\"audio\", \"master_volume\", 1.0)\n\tmusic_volume = _config.get_value(\"audio\", \"music_volume\", 1.0)\n\tsfx_volume = _config.get_value(\"audio\", \"sfx_volume\", 1.0)\n\t\n\tapply_settings()\n\n\nfunc save_settings() -> void:\n\t_config.set_value(\"display\", \"fullscreen\", fullscreen)\n\t_config.set_value(\"gameplay\", \"text_speed\", text_speed)\n\t_config.set_value(\"audio\", \"master_volume\", master_volume)\n\t_config.set_value(\"audio\", \"music_volume\", music_volume)\n\t_config.set_value(\"audio\", \"sfx_volume\", sfx_volume)\n\t_config.save(SAVE_PATH)\n\n\nfunc apply_settings() -> void:\n\t_apply_fullscreen(fullscreen)\n\t_apply_bus_volume(\"Master\", master_volume)\n\t_apply_bus_volume(\"Music\", music_volume)\n\t_apply_bus_volume(\"SFX\", sfx_volume)\n\n\nfunc set_fullscreen(enabled: bool) -> void:\n\tfullscreen = enabled\n\t_apply_fullscreen(fullscreen)\n\tsave_settings()\n\n\nfunc set_text_speed(speed: float) -> void:\n\ttext_speed = speed\n\tsave_settings()\n\n\nfunc set_volume(bus_name: String, value_linear: float) -> void:\n\tmatch bus_name:\n\t\t\"Master\":\n\t\t\tmaster_volume = value_linear\n\t\t\"Music\":\n\t\t\tmusic_volume = value_linear\n\t\t\"SFX\":\n\t\t\tsfx_volume = value_linear\n\t\n\t_apply_bus_volume(bus_name, value_linear)\n\tsave_settings()\n\n\nfunc _apply_fullscreen(enabled: bool) -> void:\n\tif enabled:\n\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)\n\telse:\n\t\tDisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)\n\n\nfunc _apply_bus_volume(bus_name: String, value_linear: float) -> void:\n\tvar bus_idx := AudioServer.get_bus_index(bus_name)\n\tif bus_idx != -1:\n\t\tAudioServer.set_bus_volume_db(bus_idx, linear_to_db(value_linear))\n\t\tAudioServer.set_bus_mute(bus_idx, value_linear <= 0.0001)",
+    "spiegazione": "La classe `SettingsManager` gestisce la lettura, il salvataggio e l'applicazione immediata di tutte le preferenze. Se il file non esiste, crea la configurazione con i valori predefiniti e la salva su disco. Ogni volta che una preferenza cambia tramite i metodi `set_*`, il valore viene applicato al motore e salvato su disco."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando usi `config.get_value()`, fornisci sempre il terzo argomento con il valore predefinito. Se te ne dimentichi e la chiave non esiste nel file, la funzione restituirà `null`. Questo provocherà errori di tipo quando proverai a passare quel valore a funzioni che si aspettano numeri o valori booleani (come `DisplayServer.window_set_mode` o `linear_to_db`)."
+   },
+   {
+    "tipo": "testo",
+    "md": "Registrando uno script come Autoload o eseguendolo nella primissima fase del ciclo di vita (`_ready()`), ci assicuriamo che la finestra si ridimensioni e che l'audio sia impostato al livello corretto prima ancora che la schermata del titolo venga disegnata a schermo o che parta la prima traccia musicale.\n\nQuando il giocatore interagirà con gli elementi dell'interfaccia (come cursori del volume o caselle di spunta per lo schermo intero), le funzioni del menu chiameranno direttamente i metodi del gestore (es. `SettingsManager.set_volume(\"Music\", 0.7)`), garantendo l'aggiornamento in tempo reale e il salvataggio permanente."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- `ConfigFile` è la classe ideale di Godot per gestire le impostazioni utente in formato sezioni/chiavi.\n- I file delle preferenze vanno salvati nel percorso `user://` (es. `user://settings.cfg`) per garantire i permessi di scrittura.\n- Il terzo argomento di `ConfigFile.get_value()` permette di definire valori predefiniti sicuri nel caso in cui il file o una chiave non esistano.\n- L'applicazione delle impostazioni va eseguita all'avvio nel `_ready()` del gestore per configurare audio e video prima di mostrare l'interfaccia grafica.\n- I cambiamenti di impostazioni da parte dell'utente vanno applicati subito al motore (tramite `AudioServer` o `DisplayServer`) e contestualmente salvati su disco."
+   }
+  ]
+ }
+}
