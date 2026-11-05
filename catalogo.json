@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-03T23:08:17.728Z",
+ "aggiornato": "2026-11-05T03:06:14.824Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -803,6 +803,15 @@
    "file": "lezioni/f06-visual-novel/salvare-lo-stato.json",
    "sha256": "3d1c1ca04c8aeea460a9a08aa4a095949134909cedf2d5af1f19e1ee871cab1d",
    "byte": 210558
+  },
+  {
+   "slug": "piu-salvataggi",
+   "numero": "6.16",
+   "titolo": "Più salvataggi, con data e miniatura",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/piu-salvataggi.json",
+   "sha256": "7204bea5fbf73379d92482027bab166ec8f579b4c3c85fae3ff5f62411a16a60",
+   "byte": 252433
   }
  ],
  "documentazione": {
