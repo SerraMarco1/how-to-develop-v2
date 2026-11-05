@@ -1,25 +1,25 @@
 {
  "sovraccarico": {
   "gemini": {
-   "volte": 7,
-   "fino": 1793912292024
+   "volte": 8,
+   "fino": 1793915998005
   }
  },
  "fermi": {
   "gemini/gemini-flash-latest": {
-   "fino": 1793912292024,
+   "fino": 1793915998005,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.7-flash": {
-   "fino": 1793912292024,
+   "fino": 1793915998005,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1793912292024,
+   "fino": 1793915998005,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-flash-lite-latest": {
-   "fino": 1793908947079,
+   "fino": 1793912692346,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   }
  },
@@ -36,5 +36,5 @@
  "troncate": {},
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": 1793912292027
+ "prossimoTentativo": 1793915998008
 }
