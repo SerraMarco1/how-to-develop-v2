@@ -60,7 +60,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://core/settings_manager.gd deve caricarsi senza errori\n  - Il file res://story/story_screen.tscn deve caricarsi senza errori: Parse Error: Cannot find member \"text_speed\" in base \"SettingsManager\". (res://ui/dialogue_box.gd:24 in GDScript::reload)\nFailed to load script \"res://ui/dialogue_box.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - Il file res://ui/dialogue_box.gd deve caricarsi senza errori\nRighe citate dagli errori:\n  ui/dialogue_box.gd, riga 24: `var delay: float = 1.0 / maxf(SettingsManager.text_speed, 1.0)`"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
