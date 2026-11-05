@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-05T03:06:16.532Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-05T03:09:18.797Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "impostazioni-che-restano",
   "numero": "6.17",
   "titolo": "Impostazioni che restano"
  },
- "messaggio": "Sta scrivendo la lezione 6.17 «Impostazioni che restano».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.17 riprende da sola appena rispondono.",
+ "riprende": "2026-11-05T03:19:18.796Z"
 }
