@@ -1,0 +1,97 @@
+{
+ "n": 67,
+ "quando": "2026-11-05T22:01:34.415Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (estendi): 1 problema",
+ "spiegazione": "«Esportazione dello storico e rilevamento avanzato del salto», scritto da gemini/gemini-3.6-flash. 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- NON SPIEGATO: la soluzione usa `join()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 17084,
+ "dati": {
+  "problemi": [
+   "NON SPIEGATO: la soluzione usa `join()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "estendi",
+   "titolo": "Esportazione dello storico e rilevamento avanzato del salto",
+   "consegna": "Ti viene fornito un progetto contenente lo script `dialogue_logger.gd` che gestisce lo storico e la memoria del testo già letto.\n\nIl tuo compito è estendere `dialogue_logger.gd` aggiungendo tre nuove funzioni di utilità per l'interfaccia e la logica di salto:\n\n1. `export_history_as_text() -> String`:\n   - Restituisce l'intero storico memorizzato in `_entries` formattato come un'unica stringa multilinea con i caratteri a capo (`\\n`).\n   - Per ogni elemento in `_entries`: se la chiave `speaker` non è vuota, la riga formattata deve essere `\"%s: %s\" % [entry[\"speaker\"], entry[\"text\"]]`. Se `speaker` è vuoto, la riga formattata deve essere solo `entry[\"text\"]`.\n   - Se lo storico è vuoto, restituisce una stringa vuota `\"\"`.\n\n2. `get_unread_count_in_chapter(chapter_path: String, total_lines: int) -> int`:\n   - Dati il percorso del capitolo `chapter_path` e il numero totale di righe `total_lines` del capitolo, fa un ciclo dagli indici `0` a `total_lines - 1` e conta quante righe NON sono ancora presenti nel registro `read_lines`.\n   - Restituisce il conteggio delle righe non lette.\n\n3. `can_start_skip(chapter_path: String, start_line: int) -> bool`:\n   - Restituisce `true` soltanto se la riga indicata da `chapter_path` e `start_line` è già stata letta (`is_line_read(chapter_path, start_line)` restituisce `true`). Altrimenti restituisce `false`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per formattare le righe di `export_history_as_text`, puoi creare un array di stringhe formattate e unire gli elementi con `\\n`.join(array_stringhe)."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://dialogue_logger.gd",
+     "descrizione": "Il file dialogue_logger.gd esiste"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar script = load(\"res://dialogue_logger.gd\")\n\tif not check(\"script_exists\", script != null, \"Lo script res://dialogue_logger.gd deve esistere\"):\n\t\treturn\n\t\n\tvar logger = script.new()\n\tcheck(\"export_empty\", logger.export_history_as_text() == \"\", \"export_history_as_text con storico vuoto deve restituire stringa vuota\")\n\t\n\tlogger.add_entry(\"Elena\", \"Ciao!\")\n\tlogger.add_entry(\"\", \"Silenzio nella stanza.\")\n\tvar text_out: String = logger.export_history_as_text()\n\tvar expected_text: String = \"Elena: Ciao!\\nSilenzio nella stanza.\"\n\tcheck(\"export_formatted\", text_out == expected_text, \"export_history_as_text deve formattare correttamente gli elementi (atteso:\\n%s\\nottenuto:\\n%s)\" % [expected_text, text_out])\n\t\n\tlogger.mark_line_as_read(\"res://c1.json\", 0)\n\tlogger.mark_line_as_read(\"res://c1.json\", 2)\n\tvar unread: int = logger.get_unread_count_in_chapter(\"res://c1.json\", 5)\n\tcheck(\"unread_count\", unread == 3, \"get_unread_count_in_chapter su 5 righe totali con indici 0 e 2 letti deve restituire 3 (restituito %d)\" % unread)\n\t\n\tcheck(\"can_skip_true\", logger.can_start_skip(\"res://c1.json\", 0) == true, \"can_start_skip per riga letta deve restituire true\")\n\tcheck(\"can_skip_false\", logger.can_start_skip(\"res://c1.json\", 1) == false, \"can_start_skip per riga mai letta deve restituire false\")\n\tlogger.free()\n",
+     "descrizione": "Le funzioni export_history_as_text, get_unread_count_in_chapter e can_start_skip funzionano correttamente"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "DialogueLoggerTest",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"DialogueLoggerTest\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://dialogue_logger.gd\" id=\"1_logger\"]\n\n[node name=\"Main\" type=\"Node\"]\nscript = ExtResource(\"1_logger\")\n"
+     },
+     {
+      "percorso": "dialogue_logger.gd",
+      "contenuto": "class_name DialogueLogger\nextends Node\n\nconst MAX_ENTRIES: int = 100\n\nvar _entries: Array[Dictionary] = []\nvar read_lines: Dictionary = {}\n\n\nfunc add_entry(speaker: String, text: String) -> void:\n\tvar entry_data := {\n\t\t\"speaker\": speaker,\n\t\t\"text\": text\n\t}\n\t_entries.append(entry_data)\n\tif _entries.size() > MAX_ENTRIES:\n\t\t_entries.pop_front()\n\n\nfunc mark_line_as_read(chapter_path: String, line_index: int) -> void:\n\tvar line_id: String = \"%s#%d\" % [chapter_path, line_index]\n\tread_lines[line_id] = true\n\n\nfunc is_line_read(chapter_path: String, line_index: int) -> bool:\n\tvar line_id: String = \"%s#%d\" % [chapter_path, line_index]\n\treturn read_lines.has(line_id)\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"DialogueLoggerTest\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://dialogue_logger.gd\" id=\"1_logger\"]\n\n[node name=\"Main\" type=\"Node\"]\nscript = ExtResource(\"1_logger\")\n"
+     },
+     {
+      "percorso": "dialogue_logger.gd",
+      "contenuto": "class_name DialogueLogger\nextends Node\n\nconst MAX_ENTRIES: int = 100\n\nvar _entries: Array[Dictionary] = []\nvar read_lines: Dictionary = {}\n\n\nfunc add_entry(speaker: String, text: String) -> void:\n\tvar entry_data := {\n\t\t\"speaker\": speaker,\n\t\t\"text\": text\n\t}\n\t_entries.append(entry_data)\n\tif _entries.size() > MAX_ENTRIES:\n\t\t_entries.pop_front()\n\n\nfunc mark_line_as_read(chapter_path: String, line_index: int) -> void:\n\tvar line_id: String = \"%s#%d\" % [chapter_path, line_index]\n\tread_lines[line_id] = true\n\n\nfunc is_line_read(chapter_path: String, line_index: int) -> bool:\n\tvar line_id: String = \"%s#%d\" % [chapter_path, line_index]\n\treturn read_lines.has(line_id)\n\n\nfunc export_history_as_text() -> String:\n\tif _entries.is_empty():\n\t\treturn \"\"\n\t\n\tvar lines: Array[String] = []\n\tfor entry in _entries:\n\t\tvar speaker: String = String(entry.get(\"speaker\", \"\"))\n\t\tvar text: String = String(entry.get(\"text\", \"\"))\n\t\tif speaker.is_empty():\n\t\t\tlines.append(text)\n\t\telse:\n\t\t\tlines.append(\"%s: %s\" % [speaker, text])\n\t\n\treturn \"\\n\".join(lines)\n\n\nfunc get_unread_count_in_chapter(chapter_path: String, total_lines: int) -> int:\n\tvar count := 0\n\tfor i in range(total_lines):\n\t\tif not is_line_read(chapter_path, i):\n\t\t\tcount += 1\n\treturn count\n\n\nfunc can_start_skip(chapter_path: String, start_line: int) -> bool:\n\treturn is_line_read(chapter_path, start_line)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "DialogueLoggerTest",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Per `export_history_as_text`, cicliamo sugli elementi di `_entries` formattando ciascuna riga in base a se `speaker` è vuoto o meno, per poi unire tutto con `\\n`.join(lines)`. Per `get_unread_count_in_chapter`, eseguiamo un ciclo da `0` a `total_lines - 1` contando le righe per cui `is_line_read` restituisce `false`. Per `can_start_skip`, ritorniamo direttamente il valore booleano restituito da `is_line_read`.",
+    "cambiati": [
+     "dialogue_logger.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test",
+   "cartella": "esportazione-dello-storico-e-rilevamento"
+  }
+ },
+ "chiamate": []
+}
