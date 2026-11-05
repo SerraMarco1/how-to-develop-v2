@@ -463,5 +463,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "impostazioni-che-restano": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
