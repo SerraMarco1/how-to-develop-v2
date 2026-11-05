@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-05T04:24:07.811Z",
+ "aggiornato": "2026-11-05T04:28:37.937Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -812,6 +812,15 @@
    "file": "lezioni/f06-visual-novel/piu-salvataggi.json",
    "sha256": "595258a8074a6c3baf93fd570cd82973eb84d540704c2185e0eea56f914beb58",
    "byte": 254242
+  },
+  {
+   "slug": "impostazioni-che-restano",
+   "numero": "6.17",
+   "titolo": "Impostazioni che restano",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/impostazioni-che-restano.json",
+   "sha256": "41b94de7bdf8944f540f3bc87229d20234aa8ecd245fb31d0baa3a4f2b24cb1c",
+   "byte": 220237
   }
  ],
  "documentazione": {
