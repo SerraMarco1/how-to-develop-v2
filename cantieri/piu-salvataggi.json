@@ -1428,7 +1428,8 @@
  ],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Più salvataggi, con data e miniatura",
@@ -1502,5 +1503,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test finale è una copia identica dell'esercizio es2 (stesso titolo, stessa consegna e medesime verifiche su resize), violando il requisito che impone che il test non sia una copia di un esercizio.",
+    "correzione": "Sostituire la verifica del test con una prova autonoma e distinta legata agli altri obiettivi della lezione (ad esempio una funzione per eliminare un salvataggio cancellando sia il file JSON sia l'immagine PNG tramite DirAccess, oppure una funzione per verificare se uno slot esiste).",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
