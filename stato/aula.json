@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-05T17:53:33.248Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-05T18:55:15.043Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "storico-salto-automatico",
   "numero": "6.18",
   "titolo": "Storico, salto del testo già letto, avanzamento automatico"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.18 riprende da sola appena rispondono.",
- "riprende": "2026-11-05T18:53:33.247Z"
+ "messaggio": "Sta scrivendo la lezione 6.18 «Storico, salto del testo già letto, avanzamento automatico».",
+ "riprende": null
 }
