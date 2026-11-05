@@ -458,5 +458,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "piu-salvataggi": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
