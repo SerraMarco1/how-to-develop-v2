@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-05T04:24:32.627Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-05T04:28:52.112Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "impostazioni-che-restano",
-  "numero": "6.17",
-  "titolo": "Impostazioni che restano"
+  "slug": "storico-salto-automatico",
+  "numero": "6.18",
+  "titolo": "Storico, salto del testo già letto, avanzamento automatico"
  },
- "messaggio": "Sta scrivendo la lezione 6.17 «Impostazioni che restano».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.18 riprende da sola appena rispondono.",
+ "riprende": "2026-11-05T04:38:52.111Z"
 }
