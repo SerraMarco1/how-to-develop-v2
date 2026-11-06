@@ -493,15 +493,9 @@
     "modalita": "progetto",
     "dove": "a-parte",
     "cartella": "esportazione-dello-storico-e-rilevamento",
-    "passiGuida": [
-     "Apri lo script `dialogue_logger.gd` nell'editor.",
-     "Aggiungi la funzione `export_history_as_text() -> String` per raccogliere le righe dello storico in un array e uniscile con `\"\\n\".join(lines)`.",
-     "Aggiungi la funzione `get_unread_count_in_chapter(chapter_path: String, total_lines: int) -> int` usando un ciclo `for i in range(total_lines)`.",
-     "Aggiungi la funzione `can_start_skip(chapter_path: String, start_line: int) -> bool` richiamando `is_line_read(chapter_path, start_line)`."
-    ],
+    "passiGuida": [],
     "suggerimenti": [
-     "Per verificare se lo storico è vuoto puoi usare `_entries.is_empty()`.",
-     "Per `can_start_skip` puoi restituire direttamente il risultato booleano di `is_line_read(chapter_path, start_line)`."
+     "Per verificare se lo storico è vuoto puoi usare `_entries.is_empty()`."
     ],
     "verifiche": [
      {
@@ -511,7 +505,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar logger = instantiate_script(\"res://dialogue_logger.gd\")\n\tif not check(\"logger_exists\", logger != null, \"Lo script res://dialogue_logger.gd deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tcheck(\"export_empty\", logger.export_history_as_text() == \"\", \"export_history_as_text con storico vuoto deve restituire una stringa vuota\")\n\t\n\tlogger.add_entry(\"Elena\", \"Ciao!\")\n\tlogger.add_entry(\"\", \"Silenzio nella stanza.\")\n\tvar text_out: String = logger.export_history_as_text()\n\tvar expected_text: String = \"Elena: Ciao!\\nSilenzio nella stanza.\"\n\tcheck(\"export_formatted\", text_out == expected_text, \"export_history_as_text deve formattare correttamente gli elementi dello storico\")\n\t\n\tlogger.mark_line_as_read(\"res://c1.json\", 0)\n\tlogger.mark_line_as_read(\"res://c1.json\", 2)\n\tvar unread: int = logger.get_unread_count_in_chapter(\"res://c1.json\", 5)\n\tcheck(\"unread_count\", unread == 3, \"get_unread_count_in_chapter su 5 righe totali con 2 lette deve restituire 3 (restituito %d)\" % unread)\n\t\n\tcheck(\"can_skip_true\", logger.can_start_skip(\"res://c1.json\", 0) == true, \"can_start_skip per riga già letta deve restituire true\")\n\tcheck(\"can_skip_false\", logger.can_start_skip(\"res://c1.json\", 1) == false, \"can_start_skip per riga non letta deve restituire false\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar logger = await instantiate_script(\"res://dialogue_logger.gd\")\n\tif not check(\"logger_exists\", logger != null, \"Lo script res://dialogue_logger.gd deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tcheck(\"export_empty\", logger.export_history_as_text() == \"\", \"export_history_as_text con storico vuoto deve restituire una stringa vuota\")\n\t\n\tlogger.add_entry(\"Elena\", \"Ciao!\")\n\tlogger.add_entry(\"\", \"Silenzio nella stanza.\")\n\tvar text_out: String = logger.export_history_as_text()\n\tvar expected_text: String = \"Elena: Ciao!\\nSilenzio nella stanza.\"\n\tcheck(\"export_formatted\", text_out == expected_text, \"export_history_as_text deve formattare correttamente gli elementi dello storico\")\n\t\n\tlogger.mark_line_as_read(\"res://c1.json\", 0)\n\tlogger.mark_line_as_read(\"res://c1.json\", 2)\n\tvar unread: int = logger.get_unread_count_in_chapter(\"res://c1.json\", 5)\n\tcheck(\"unread_count\", unread == 3, \"get_unread_count_in_chapter su 5 righe totali con 2 lette deve restituire 3 (restituito %d)\" % unread)\n\t\n\tcheck(\"can_skip_true\", logger.can_start_skip(\"res://c1.json\", 0) == true, \"can_start_skip per riga già letta deve restituire true\")\n\tcheck(\"can_skip_false\", logger.can_start_skip(\"res://c1.json\", 1) == false, \"can_start_skip per riga non letta deve restituire false\")",
       "descrizione": "Le funzioni export_history_as_text, get_unread_count_in_chapter e can_start_skip funzionano correttamente"
      }
     ],
@@ -555,17 +549,20 @@
       "impostazioni": []
      },
      "spiegazione": "`export_history_as_text()` scorre `_entries` per creare un array di righe formattate e le unisce usando `\"\\n\".join(lines)`. `get_unread_count_in_chapter()` esegue un ciclo da `0` a `total_lines - 1` incrementando il contatore per ogni riga in cui `is_line_read()` restituisce `false`. `can_start_skip()` restituisce direttamente il risultato di `is_line_read()` per la riga specificata.",
-     "cambiati": [],
+     "cambiati": [
+      "dialogue_logger.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "estendi",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Le funzioni export_history_as_text, get_unread_count_in_chapter e can_start_skip funzionano correttamente: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var logger = instantiate_script(\"res://dialogue_logger.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
