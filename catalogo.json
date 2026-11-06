@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-06T20:50:43.843Z",
+ "aggiornato": "2026-11-06T21:11:15.698Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -839,6 +839,15 @@
    "file": "lezioni/f06-visual-novel/piu-lingue.json",
    "sha256": "554e7099435978827cd922c9b80843f3e05b6bdf4de2043db34655634466c4fb",
    "byte": 287407
+  },
+  {
+   "slug": "galleria-e-finali",
+   "numero": "6.20",
+   "titolo": "Galleria e finali sbloccati",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/galleria-e-finali.json",
+   "sha256": "d6315c6b212be322ac5966e384180ec502afa079a7b4c0f5d5b8787f8c9f6938",
+   "byte": 240113
   }
  ],
  "documentazione": {
