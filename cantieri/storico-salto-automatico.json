@@ -724,5 +724,7 @@
   "problemi": [],
   "teoriaCorretta": true,
   "corretti": []
- }
+ },
+ "teoriaRivista": true,
+ "praticaRivista": true
 }
