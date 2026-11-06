@@ -2,5 +2,79 @@
  "creato": "2026-11-06T03:18:47.271Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Più lingue: internazionalizzazione e traduzione dinamica",
+  "sommario": "Impara a preparare la tua visual novel per più lingue sostituendo i testi fissi con chiavi di traduzione. Scoprirai come configurare le tabelle di localizzazione in Godot 4.7, come usare tr() e TranslationServer per cambiare lingua a gioco aperto e come strutturare i file JSON della storia separando i comandi logici dai testi traducibili.",
+  "concetti": [
+   "Chiavi di traduzione al posto del testo diretto",
+   "Tabelle CSV di localizzazione in Godot 4.7",
+   "Scheda Localization nelle Project Settings",
+   "Traduzione via codice con la funzione tr()",
+   "Cambio di lingua a runtime con TranslationServer.set_locale()",
+   "Separazione tra dati di struttura JSON e testo traducibile"
+  ],
+  "obiettivi": [
+   "Sostituire le frasi dirette con chiavi di traduzione lette da una tabella multi-lingua",
+   "Usare tr() e TranslationServer per cambiare lingua istantaneamente mentre il gioco gira",
+   "Distinguere nei file della storia i testi da tradurre dai comandi di controllo"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Se scrivi i dialoghi e le voci di menu direttamente in italiano dentro i nodi o nei file JSON, tradurre il gioco in un'altra lingua richiederà di duplicare l'intero progetto o riscrivere ampie porzioni di codice. La soluzione corretta consiste nell'usare l'**internazionalizzazione** (spesso abbreviata in i18n): al posto delle frasi definitive inserisci delle **chiavi di traduzione**, ovvero etichette univoche come `KEY_MENU_START` o `KEY_CH01_LINE_01`.\n\nDurante l'esecuzione, Godot legge la lingua impostata e sostituisce ogni chiave con la frase corrispondente consultando una tabella delle traduzioni. In questo modo puoi aggiungere qualsiasi nuova lingua al gioco aggiungendo semplicemente una colonna a un file di testo, senza modificare una singola riga di codice."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il formato più semplice e diffuso in Godot per definire le traduzioni è il file **CSV** (Comma-Separated Values). Si tratta di un file di testo in cui ogni riga rappresenta un elemento e le colonne sono separate da virgole.\n\nLa prima riga del file CSV definisce l'intestazione: la prima colonna deve chiamarsi obbligatoriamente `keys`, mentre le colonne successive contengono i codici delle lingue ordinate secondo lo standard ISO (ad esempio `en` per l'inglese, `it` per l'italiano). Ecco un esempio:\n\n`keys,en,it`\n`KEY_START,Start Game,Inizia Partita`\n`KEY_OPTIONS,Options,Impostazioni`\n`KEY_MARCO_INTRO,'Hello, welcome to the Archive!','Ciao, benvenuto nell'Archivio!'`\n\nQuando salvi un file CSV nella cartella del progetto, Godot lo riconosce automaticamente e genera un file con estensione `.translation` per ciascuna lingua presente nella tabella."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Registrare la tabella di traduzione nel progetto",
+    "passi": [
+     "Apri le impostazioni del progetto dal menu **Project → Project Settings**.",
+     "Seleziona la scheda **Localization** in alto nella finestra.",
+     "Rimani nella sottoscheda **Translations** e premi il pulsante **Add...** sul lato destro.",
+     "Seleziona i file `.translation` generati da Godot (ad esempio `dialogues.en.translation` e `dialogues.it.translation`) e conferma.",
+     "Chiudi la finestra premendo il pulsante **Close** in basso."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "project-settings",
+    "didascalia": "La finestra Project Settings contiene la scheda Localization per collegare i file di traduzione al progetto."
+   },
+   {
+    "tipo": "testo",
+    "md": "I nodi di interfaccia standard di Godot (come `Label` o `Button`) traducono automaticamente il testo assegnato alla proprietà `text` se quella stringa corrisponde a una chiave registrata nelle traduzioni del progetto.\n\nQuando invece manipoli le stringhe da codice GDScript — per esempio quando l'interprete della visual novel legge una riga da un file JSON — devi richiedere esplicitamente la traduzione tramite la funzione globale `tr()`.\n\nLa funzione `tr('NOME_CHIAVE')` accetta come argomento la chiave di traduzione e restituisce la stringa tradotta nella lingua attualmente attiva. Se la chiave non viene trovata nella tabella, `tr()` restituisce semplicemente la stringa originale senza interrompere l'esecuzione."
+   },
+   {
+    "tipo": "testo",
+    "md": "Nei file JSON della storia è fondamentale stabilire con precisione **cosa tradurre e cosa no**.\n\nDevi convertire in chiavi di traduzione tutti i testi destinati alla lettura: il contenuto delle battute (`text`), i nomi visualizzati dei personaggi e le opzioni di scelta. Non devi **mai** tradurre la struttura e i comandi di controllo della storia: i tipi di comando (`'type': 'jump'`), le etichette di destinazione (`'target': 'sala_centrale'`), le variabili di gioco e i percorsi dei file devono rimanere rigorosamente in inglese e invariati.\n\nSe traducessi la parola `'jump'` in `'salto'`, l'interprete della storia non riconoscerebbe più il comando e il gioco si fermerebbe con un errore."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Node\n\n# Memorizza il codice della lingua corrente (es. \"it\" o \"en\")\nvar current_language: String = \"it\"\n\n\nfunc _ready() -> void:\n\tapply_language(current_language)\n\n\nfunc set_language(lang_code: String) -> void:\n\tcurrent_language = lang_code\n\tapply_language(lang_code)\n\n\nfunc apply_language(lang_code: String) -> void:\n\t# TranslationServer imposta la lingua attiva in tutto il motore Godot\n\tTranslationServer.set_locale(lang_code)",
+    "spiegazione": "La classe singleton TranslationServer gestisce la localizzazione globale di Godot. Chiamando TranslationServer.set_locale('en') o TranslationServer.set_locale('it'), il motore aggiorna immediatamente la lingua attiva per tutti i nodi di interfaccia e per le successive chiamate a tr()."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name DialogueUI\nextends Control\n\n@onready var text_label: Label = $DialogueBox/TextLabel\n@onready var speaker_label: Label = $DialogueBox/SpeakerLabel\n\nvar _current_line_data: Dictionary = {}\n\n\nfunc show_line(line_data: Dictionary) -> void:\n\t_current_line_data = line_data\n\t_update_dialogue_display()\n\n\nfunc _update_dialogue_display() -> void:\n\tif _current_line_data.is_empty():\n\t\treturn\n\t\n\t# Estrae le chiavi dai dati del comando e le traduce con tr()\n\tvar speaker_key: String = String(_current_line_data.get(\"speaker\", \"\"))\n\tvar text_key: String = String(_current_line_data.get(\"text\", \"\"))\n\t\n\tspeaker_label.text = tr(speaker_key)\n\ttext_label.text = tr(text_key)\n\n\nfunc refresh_language() -> void:\n\t# Rinfresca il testo attualmente a schermo quando il giocatore cambia lingua\n\t_update_dialogue_display()",
+    "spiegazione": "Salvando i dati della battuta corrente (_current_line_data), l'interfaccia può ri-eseguire tr() e aggiornare il testo a schermo in tempo reale non appena l'utente modifica la lingua nelle impostazioni, senza dover riavviare la scena."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Non usare mai spazi o caratteri speciali non standard nelle chiavi di traduzione e mantieni una convenzione costante (ad esempio tutto in MAIUSCOLO separato da underscore). Se commetti un errore di battitura nella chiave all'interno del file JSON o del file CSV, tr() non troverà la corrispondenza e mostrerà direttamente la chiave grezza a schermo."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- L'internazionalizzazione sostituisce le frasi scritte a mano con chiavi univoche collegate a una tabella di traduzione.\n- I file CSV organizzano le traduzioni in colonne: la prima colonna deve chiamarsi 'keys', seguita dalle colonne con i codici lingua ('en', 'it').\n- I file .translation generati dal CSV vanno registrati in Project → Project Settings → Localization.\n- TranslationServer.set_locale(codice) cambia la lingua attiva del motore durante l'esecuzione.\n- La funzione tr('CHIAVE') restituisce la stringa tradotta nella lingua corrente.\n- Nei file JSON della storia si traducono solo i testi visibili (battute, opzioni, titoli), mai i nomi dei comandi, le etichette di salto o le variabili."
+   }
+  ]
+ }
 }
