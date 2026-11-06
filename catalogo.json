@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-05T04:40:34.108Z",
+ "aggiornato": "2026-11-06T03:18:45.366Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -821,6 +821,15 @@
    "file": "lezioni/f06-visual-novel/impostazioni-che-restano.json",
    "sha256": "00cd9891ddbb6dcc51c064f282c868969b7f19e77ad403bdc582d80ae828c1b9",
    "byte": 222295
+  },
+  {
+   "slug": "storico-salto-automatico",
+   "numero": "6.18",
+   "titolo": "Storico, salto del testo già letto, avanzamento automatico",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/storico-salto-automatico.json",
+   "sha256": "da92912e11d856df1b899de244110781d4b48dcaa4920ffddc76107b0a59ee91",
+   "byte": 195366
   }
  ],
  "documentazione": {
