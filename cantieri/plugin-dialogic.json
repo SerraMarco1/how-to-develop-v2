@@ -745,7 +745,7 @@
    }
   },
   "test": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -831,7 +831,96 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "test",
+    "genere": "obiettivo",
+    "titolo": "Progetto di prova con runner di dialogo e registro asset",
+    "consegna": "Crea un progetto di prova completo chiamato `ProgettoDialogoPlugin` per verificare un runner di dialoghi fornito sotto forma di plugin.\n\n1. In `res://addons/dialogue_runner/` crea il file `plugin.cfg`:\n```ini\n[plugin]\n\nname=\"DialogueRunner\"\ndescription=\"Runner per scene di dialogo\"\nauthor=\"StorieTeam\"\nversion=\"1.0.0\"\nscript=\"plugin.gd\"\n```\n2. In `res://addons/dialogue_runner/plugin.gd` crea lo script dell'editor plugin con `@tool` ed `extends EditorPlugin`.\n3. In `res://addons/dialogue_runner/dialogue_runner_node.gd` crea la classe `DialogueRunnerNode` (estende `Node`):\n- `@export var dialogue_lines: Array[Dictionary] = []`\n- `var current_index: int = 0`\n- Metodo `get_current_line() -> Dictionary`: restituisce la battuta corrente se `current_index` è valido (da `0` a `dialogue_lines.size() - 1`), altrimenti un dizionario vuoto `{}`.\n- Metodo `advance() -> bool`: incrementa `current_index` di 1 e restituisce `true` se il nuovo indice è ancora un indice valido nell'array, altrimenti `false`.\n\n4. Crea la scena principale `res://main.tscn` con radice `Control` chiamata `Main` e impostala in Project Settings. Aggiungi a `Main` un nodo `DialogueRunnerNode` chiamato `DialogueRunner` precompilato con le battute:\n- Indice 0: `{\"speaker\": \"Elena\", \"text\": \"La porta alle nostre spalle è chiusa. Dobbiamo andare avanti.\"}`\n- Indice 1: `{\"speaker\": \"Marco\", \"text\": \"Eccoci nella sala principale dell'Archivio. Da qui partono i vari corridoi.\"}`\n\n5. Salva in `res://assets/plugin_register.json` la scheda del plugin valutato con licenza `\"MIT\"`, versione Godot `\"4.7\"`, data `\"2025-02-15\"` e `has_documentation`: `true`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "progetto-dialogo-plugin",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Verifica l'indice con current_index >= 0 and current_index < dialogue_lines.size() prima di accedere all'array."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://addons/dialogue_runner/plugin.cfg",
+      "descrizione": "Il file plugin.cfg del runner esiste in res://addons/dialogue_runner/"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://addons/dialogue_runner/dialogue_runner_node.gd",
+      "descrizione": "Lo script DialogueRunnerNode esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://assets/plugin_register.json",
+      "descrizione": "Il registro del plugin esiste in res://assets/"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node",
+      "nome": "DialogueRunner",
+      "descrizione": "La scena principale contiene il nodo DialogueRunner"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar runner := find_by_name(main, \"DialogueRunner\")\n\tif not check(\"runner_node\", runner != null, \"La scena deve contenere il nodo DialogueRunner\"):\n\t\treturn\n\t\n\tvar line0: Dictionary = call_if_exists(runner, \"get_current_line\", [], {})\n\tcheck(\"line0_speaker\", line0.get(\"speaker\", \"\") == \"Elena\", \"La prima battuta deve essere di Elena (trovato: %s)\" % line0.get(\"speaker\", \"\"))\n\tcheck(\"line0_text\", String(line0.get(\"text\", \"\")).contains(\"chiusa\"), \"La prima battuta deve contenere il testo iniziale della storia\")\n\t\n\tvar adv1: bool = call_if_exists(runner, \"advance\", [], false)\n\tcheck(\"advance_success\", adv1 == true, \"advance deve restituire true quando si passa alla seconda battuta valida\")\n\t\n\tvar line1: Dictionary = call_if_exists(runner, \"get_current_line\", [], {})\n\tcheck(\"line1_speaker\", line1.get(\"speaker\", \"\") == \"Marco\", \"La seconda battuta deve essere di Marco (trovato: %s)\" % line1.get(\"speaker\", \"\"))\n\t\n\tvar adv2: bool = call_if_exists(runner, \"advance\", [], true)\n\tcheck(\"advance_end\", adv2 == false, \"advance deve restituire false quando la storia finisce\")\n\t\n\tvar line_end: Dictionary = call_if_exists(runner, \"get_current_line\", [], {\"dummy\": 1})\n\tcheck(\"line_empty\", line_end.is_empty(), \"get_current_line deve restituire un dizionario vuoto alla fine della storia\")\n\t\n\tvar reg_exists := FileAccess.file_exists(\"res://assets/plugin_register.json\")\n\tcheck(\"reg_file\", reg_exists, \"Il file res://assets/plugin_register.json deve esistere\")\n\tif reg_exists:\n\t\tvar file := FileAccess.open(\"res://assets/plugin_register.json\", FileAccess.READ)\n\t\tif file:\n\t\t\tvar content := file.get_as_text()\n\t\t\tvar json_data: Variant = JSON.parse_string(content)\n\t\t\tif check(\"reg_json\", json_data is Dictionary, \"Il registro deve contenere un JSON valido\"):\n\t\t\t\tvar dict: Dictionary = json_data\n\t\t\t\tcheck(\"reg_lic\", dict.get(\"license\", \"\") == \"MIT\", \"La licenza nel registro deve essere MIT\")\n\t\t\t\tcheck(\"reg_ver\", dict.get(\"godot_version\", \"\") == \"4.7\", \"La versione Godot nel registro deve essere 4.7\")\n\t\t\t\tcheck(\"reg_docs\", bool(dict.get(\"has_documentation\", false)) == true, \"has_documentation deve essere true nel registro\")\n",
+      "descrizione": "DialogueRunnerNode avanza correttamente nelle battute e il registro certifica le 4 condizioni di sicurezza"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ProgettoDialogoPlugin\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://addons/dialogue_runner/dialogue_runner_node.gd\" id=\"1_runner\"]\n\n[node name=\"Main\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"DialogueRunner\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"1_runner\")\ndialogue_lines = [{\n\"speaker\": \"Elena\",\n\"text\": \"La porta alle nostre spalle è chiusa. Dobbiamo andare avanti.\"\n}, {\n\"speaker\": \"Marco\",\n\"text\": \"Eccoci nella sala principale dell'Archivio. Da qui partono i vari corridoi.\"\n}]\n"
+      },
+      {
+       "percorso": "addons/dialogue_runner/plugin.cfg",
+       "contenuto": "[plugin]\n\nname=\"DialogueRunner\"\ndescription=\"Runner per scene di dialogo\"\nauthor=\"StorieTeam\"\nversion=\"1.0.0\"\nscript=\"plugin.gd\"\n"
+      },
+      {
+       "percorso": "addons/dialogue_runner/plugin.gd",
+       "contenuto": "@tool\nextends EditorPlugin\n\n\nfunc _enter_tree() -> void:\n\tpass\n\n\nfunc _exit_tree() -> void:\n\tpass\n"
+      },
+      {
+       "percorso": "addons/dialogue_runner/dialogue_runner_node.gd",
+       "contenuto": "class_name DialogueRunnerNode\nextends Node\n\n@export var dialogue_lines: Array[Dictionary] = []\n\nvar current_index: int = 0\n\n\nfunc get_current_line() -> Dictionary:\n\tif current_index >= 0 and current_index < dialogue_lines.size():\n\t\treturn dialogue_lines[current_index]\n\treturn {}\n\n\nfunc advance() -> bool:\n\tcurrent_index += 1\n\treturn current_index >= 0 and current_index < dialogue_lines.size()\n"
+      },
+      {
+       "percorso": "assets/plugin_register.json",
+       "contenuto": "{\n  \"plugin_name\": \"DialogueRunner\",\n  \"license\": \"MIT\",\n  \"godot_version\": \"4.7\",\n  \"last_update\": \"2025-02-15\",\n  \"has_documentation\": true\n}\n"
+      }
+     ],
+     "progetto": {
+      "nome": "ProgettoDialogoPlugin",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "In un progetto dedicato si installa la struttura del plugin nella cartella `addons/dialogue_runner/` e si registra la scheda di affidabilità del pacchetto in `assets/plugin_register.json`. Il nodo `DialogueRunnerNode` permette di riprodurre la sequenza di dialoghi della prima scena in modo modulare e sicuro.",
+     "cambiati": [
+      "main.tscn",
+      "addons/dialogue_runner/plugin.cfg",
+      "addons/dialogue_runner/plugin.gd",
+      "addons/dialogue_runner/dialogue_runner_node.gd",
+      "assets/plugin_register.json"
+     ],
+     "rimossi": []
+    },
+    "id": "test"
+   }
   }
  },
  "avvisi": [],
