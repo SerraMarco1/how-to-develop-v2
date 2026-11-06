@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": false, \"perche\": \"I pulsanti del menu principale sono nascosti all'avvio della scena e non risultano visibili sullo schermo.\"}",
- "ragionamento": 2073,
- "quando": "2026-11-06T21:25:00.020Z",
- "ruolo": "ritocco"
-}

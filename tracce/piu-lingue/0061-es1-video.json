@@ -1,0 +1,16 @@
+{
+ "n": 61,
+ "quando": "2026-11-06T21:25:01.540Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Tabella di traduzione e supporto lingua in SettingsManager» non si vede sullo schermo: I pulsanti del menu principale sono nascosti all'avvio della scena e non risultano visibili sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 8727,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (8362 → 35 token)"
+ ]
+}

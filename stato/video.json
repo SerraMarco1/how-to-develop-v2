@@ -1118,5 +1118,46 @@
    "regole": 2,
    "motivo": "La classe SaveManager è uno script di utilità per la gestione dei file di salvataggio e non produce alcun elemento visivo sullo schermo."
   }
+ },
+ "piu-lingue": {
+  "es1": {
+   "impronta": "fb92519ad93f7bfe5590e4133bbe87476f895e888915b323112466ef0e0e66c6",
+   "tentativi": 3,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://ui/title_screen.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "pulsante",
+       "cerca": {
+        "nome": "ContinueButton"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.5,
+       "deve": "mostrare testo",
+       "testo": "Continua",
+       "etichetta": "Pulsante tradotto"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il pulsante mostra il testo tradotto tramite la tabella CSV",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "pulsante"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «pulsante» (nome = ContinueButton; almeno 1 da 0.5 a 5.5 s; deve mostrare il testo «Continua»): il testo «Continua» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 0 nodi. A 1 s: «ContinueButton» a (476, 224) 79×31, nascosto, testo «KEY_CONTINUE». Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "I pulsanti del menu principale sono nascosti all'avvio della scena e non risultano visibili sullo schermo."
+  }
  }
 }

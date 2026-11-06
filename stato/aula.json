@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-06T21:11:18.592Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-06T21:25:01.545Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "plugin-dialogic",
   "numero": "6.21",
   "titolo": "Usare il lavoro degli altri: i plugin"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.21 riprende da sola appena rispondono.",
- "riprende": "2026-11-06T21:21:18.592Z"
+ "messaggio": "Sta scrivendo la lezione 6.21 «Usare il lavoro degli altri: i plugin».",
+ "riprende": null
 }
