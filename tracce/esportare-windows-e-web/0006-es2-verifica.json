@@ -1,0 +1,139 @@
+{
+ "n": 6,
+ "quando": "2026-11-06T21:30:58.306Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (ripara): approvato",
+ "spiegazione": "«Riparare il progetto ArchivioStorie esportato». 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: export_presets.cfg, story_loader.gd, save_system.gd",
+ "richieste": 0,
+ "durataMs": 11993,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "ripara",
+   "titolo": "Riparare il progetto ArchivioStorie esportato",
+   "consegna": "Il progetto `ArchivioStorie` funziona senza problemi nell'editor di Godot, ma presenta tre gravi problemi una volta esportato per Windows o Web:\n1. All'avvio della partita il capitolo non viene caricato e il gioco mostra un errore di file JSON mancante.\n2. Nei log di sistema compare un errore che indica che la risorsa `res://Story/Chapters/chapter_01.json` non è stata trovata (attenzione alle maiuscole/minuscole dei percorsi!).\n3. Quando il giocatore tenta di salvare i progressi, il gioco prova a scrivere su `res://saves/progress.json` sollevando un errore di sola lettura.\n\nIspeziona il progetto e correggi i tre problemi:\n- Assicurati che in `export_presets.cfg` sia configurato il filtro per includere tutti i file `*.json`.\n- Correggi il percorso in `story_loader.gd` rispettando le maiuscole e minuscole della cartella reale (`res://story/chapters/chapter_01.json`).\n- Nel file `save_system.gd`, modifica il percorso di salvataggio in modo che scriva nella directory di sistema scrivibile `user://progress.json` anziché in `res://`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Apri export_presets.cfg e controlla la riga include_filter: deve essere include_filter=\"*.json\".",
+    "In story_loader.gd controlla il testo del percorso: la cartella reale è story/chapters in minuscolo.",
+    "In save_system.gd sostituisci il prefisso res:// con user:// per consentire la scrittura su disco a gioco esportato."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "export_presets.cfg",
+     "descrizione": "Il file export_presets.cfg esiste nel progetto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "export_presets.cfg",
+     "regex": "include_filter=.*\\*\\.json",
+     "descrizione": "export_presets.cfg contiene include_filter=\"*.json\""
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "story_loader.gd",
+     "regex": "res://story/chapters/chapter_01\\.json",
+     "descrizione": "story_loader.gd usa il percorso corretto res://story/chapters/chapter_01.json"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "save_system.gd",
+     "regex": "user://progress\\.json",
+     "descrizione": "save_system.gd salva nel percorso user://progress.json"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar loader_script: GDScript = load(\"res://story_loader.gd\")\n\tif check(\"loader_exists\", loader_script != null, \"Lo script story_loader.gd deve essere valido\"):\n\t\tvar loader = loader_script.new()\n\t\tif check(\"loader_method\", has_function(loader, \"load_first_chapter\"), \"story_loader.gd deve contenere load_first_chapter()\"):\n\t\t\tvar chapter: Dictionary = call_if_exists(loader, \"load_first_chapter\", [], {})\n\t\t\tcheck(\"chapter_loaded\", not chapter.is_empty(), \"load_first_chapter() deve caricare correttamente il capitolo JSON\")\n\t\n\tvar save_script: GDScript = load(\"res://save_system.gd\")\n\tif check(\"save_exists\", save_script != null, \"Lo script save_system.gd deve essere valido\"):\n\t\tvar saver = save_script.new()\n\t\tif check(\"save_method\", has_function(saver, \"save_progress\"), \"save_system.gd deve contenere save_progress()\"):\n\t\t\tvar ok: bool = call_if_exists(saver, \"save_progress\", [{\"chapter\": 1}], false)\n\t\t\tcheck(\"save_success\", ok, \"save_progress() deve restituire true salvando in user://\")\n\t\t\tcheck(\"user_file_exists\", FileAccess.file_exists(\"user://progress.json\"), \"Il file salvato deve trovarsi in user://progress.json\")\n",
+     "descrizione": "Esegue story_loader.gd e save_system.gd verificando caricamento e salvataggio"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "ArchivioStorie",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ArchivioStorie\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "export_presets.cfg",
+      "contenuto": "[preset.0]\n\nname=\"Windows Desktop\"\nplatform=\"Windows Desktop\"\nrunnable=true\ndedicated_server=false\ncustom_features=\"\"\nexport_filter=\"all_resources\"\ninclude_filter=\"\"\nexclude_filter=\"\"\nexport_path=\"\"\nencryption_include_filters=\"\"\nencryption_exclude_filters=\"\"\nencrypt_pck=false\nencrypt_directory=false\n\n[preset.0.options]\n\nbinary_format/embed_pck=true\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Node2D\"]\n"
+     },
+     {
+      "percorso": "story_loader.gd",
+      "contenuto": "class_name StoryLoader\nextends RefCounted\n\n\nfunc load_first_chapter() -> Dictionary:\n\t# Errore di maiuscole/minuscole nel percorso\n\tvar path := \"res://Story/Chapters/chapter_01.json\"\n\tif not FileAccess.file_exists(path):\n\t\treturn {}\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\tvar json_data: Variant = JSON.parse_string(file.get_as_text())\n\tif json_data is Dictionary:\n\t\treturn json_data\n\treturn {}\n"
+     },
+     {
+      "percorso": "save_system.gd",
+      "contenuto": "class_name SaveSystem\nextends RefCounted\n\n\nfunc save_progress(data: Dictionary) -> bool:\n\t# Errore: scrittura nella cartella res:// vietata nel gioco esportato\n\tvar path := \"res://saves/progress.json\"\n\tvar file := FileAccess.open(path, FileAccess.WRITE)\n\tif not file:\n\t\treturn false\n\tfile.store_string(JSON.stringify(data))\n\tfile.close()\n\treturn true\n"
+     },
+     {
+      "percorso": "story/chapters/chapter_01.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Inizio dell'avventura.\"\n    }\n  ]\n}\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ArchivioStorie\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "export_presets.cfg",
+      "contenuto": "[preset.0]\n\nname=\"Windows Desktop\"\nplatform=\"Windows Desktop\"\nrunnable=true\ndedicated_server=false\ncustom_features=\"\"\nexport_filter=\"all_resources\"\ninclude_filter=\"*.json\"\nexclude_filter=\"\"\nexport_path=\"\"\nencryption_include_filters=\"\"\nencryption_exclude_filters=\"\"\nencrypt_pck=false\nencrypt_directory=false\n\n[preset.0.options]\n\nbinary_format/embed_pck=true\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Node2D\"]\n"
+     },
+     {
+      "percorso": "story_loader.gd",
+      "contenuto": "class_name StoryLoader\nextends RefCounted\n\n\nfunc load_first_chapter() -> Dictionary:\n\tvar path := \"res://story/chapters/chapter_01.json\"\n\tif not FileAccess.file_exists(path):\n\t\treturn {}\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\tvar json_data: Variant = JSON.parse_string(file.get_as_text())\n\tif json_data is Dictionary:\n\t\treturn json_data\n\treturn {}\n"
+     },
+     {
+      "percorso": "save_system.gd",
+      "contenuto": "class_name SaveSystem\nextends RefCounted\n\n\nfunc save_progress(data: Dictionary) -> bool:\n\tvar path := \"user://progress.json\"\n\tvar file := FileAccess.open(path, FileAccess.WRITE)\n\tif not file:\n\t\treturn false\n\tfile.store_string(JSON.stringify(data))\n\tfile.close()\n\treturn true\n"
+     },
+     {
+      "percorso": "story/chapters/chapter_01.json",
+      "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Inizio dell'avventura.\"\n    }\n  ]\n}\n"
+     }
+    ],
+    "progetto": {
+     "nome": "ArchivioStorie",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "I tre problemi sono stati risolti secondo le regole dell'esportazione:\n1. In `export_presets.cfg`, impostare `include_filter=\"*.json\"` assicura che Godot impacchetti i file JSON nel file di gioco.\n2. In `story_loader.gd`, correggere il percorso in `res://story/chapters/chapter_01.json` evita errori dovuti alla sensibilità alle maiuscole/minuscole.\n3. In `save_system.gd`, cambiare il percorso di salvataggio in `user://progress.json` consente la scrittura di dati utente, dato che `res://` diventa in sola lettura nel pacchetto esportato.",
+    "cambiati": [
+     "export_presets.cfg",
+     "story_loader.gd",
+     "save_system.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "es2",
+   "cartella": "riparare-il-progetto-archiviostorie-espo"
+  }
+ },
+ "chiamate": []
+}
