@@ -613,7 +613,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] GalleryScreen popola la griglia e calcola correttamente il numero di elementi sbloccati: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Compile Error: Identifier not found: UnlockManager\n          at: GDScript::reload (res://htd/verifica_1.gd:16)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Compile Error: Identifier not found: UnlockManager\n          at: GDScript::reload (res://htd/verifica_1.gd:16)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Compilation failed\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 16: `if UnlockManager:`"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
