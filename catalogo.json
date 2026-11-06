@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-06T21:11:15.698Z",
+ "aggiornato": "2026-11-06T21:22:48.728Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -835,10 +835,10 @@
    "slug": "piu-lingue",
    "numero": "6.19",
    "titolo": "Più lingue",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f06-visual-novel/piu-lingue.json",
-   "sha256": "554e7099435978827cd922c9b80843f3e05b6bdf4de2043db34655634466c4fb",
-   "byte": 287407
+   "sha256": "bef7451e0bc1b250fba7ac50c6d849e84b97a9edd9e90af3b87151ad7562b397",
+   "byte": 289119
   },
   {
    "slug": "galleria-e-finali",
