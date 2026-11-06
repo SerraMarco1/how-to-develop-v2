@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"es2\",\n      \"problema\": \"La verifica effettua un cast rigido `as RichTextLabel` sul nodo `TextLabel` (e fallisce se il nodo non è di quel tipo), ma la consegna dell'esercizio non specifica il tipo di nodo da usare per `TextLabel` (mentre nella teoria del blocco 8 viene mostrato come un normale nodo `Label`). Se uno studente utilizza un `Label`, il cast `as RichTextLabel` restituisce `null` e la verifica fallisce.\",\n      \"correzione\": \"Specifica chiaramente nella consegna dell'esercizio 2 che il nodo `TextLabel` in `DialogueBox` deve essere di tipo `RichTextLabel`, oppure modifica il codice di verifica per accettare sia `Label` che `RichTextLabel` senza fallire su un tipo di nodo non specificato.\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
+ "ragionamento": 3760,
+ "quando": "2026-11-06T20:50:34.518Z",
+ "ruolo": "revisore"
+}
