@@ -468,5 +468,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "storico-salto-automatico": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
