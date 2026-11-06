@@ -37,7 +37,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar checker_script := instantiate_script(\"res://plugin_checker.gd\")\n\tif not check(\"checker_script\", checker_script != null, \"Lo script res://plugin_checker.gd deve potersi istanziare\"):\n\t\treturn\n\t\n\tvar valid_res: bool = call_if_exists(checker_script, \"verify_plugin_register\", [\"res://assets/plugin_register.json\"], false)\n\tcheck(\"valid_register\", valid_res == true, \"verify_plugin_register deve restituire true per il registro valido creato\")\n\t\n\tvar non_existing_res: bool = call_if_exists(checker_script, \"verify_plugin_register\", [\"res://assets/non_existing.json\"], true)\n\tcheck(\"file_not_found\", non_existing_res == false, \"verify_plugin_register deve restituire false se il file non esiste\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar checker_script := await instantiate_script(\"res://plugin_checker.gd\")\n\tif not check(\"checker_script\", checker_script != null, \"Lo script res://plugin_checker.gd deve potersi istanziare\"):\n\t\treturn\n\t\n\tvar valid_res: bool = call_if_exists(checker_script, \"verify_plugin_register\", [\"res://assets/plugin_register.json\"], false)\n\tcheck(\"valid_register\", valid_res == true, \"verify_plugin_register deve restituire true per il registro valido creato\")\n\t\n\tvar non_existing_res: bool = call_if_exists(checker_script, \"verify_plugin_register\", [\"res://assets/non_existing.json\"], true)\n\tcheck(\"file_not_found\", non_existing_res == false, \"verify_plugin_register deve restituire false se il file non esiste\")",
       "descrizione": "PluginChecker legge e controlla correttamente i dati di sicurezza del plugin"
      }
     ],
@@ -75,13 +75,14 @@
     }
    },
    "genere": "guidato",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] PluginChecker legge e controlla correttamente i dati di sicurezza del plugin: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_script()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var checker_script := instantiate_script(\"res://plugin_checker.gd\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es2": {
@@ -242,7 +243,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Usare il lavoro degli altri: i plugin",
