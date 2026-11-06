@@ -32,3 +32,4 @@
 {"quando":1793998698522,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"galleria-e-finali","ok":false,"contata":true,"durataMs":2847,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1793998701373,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"galleria-e-finali","ok":true,"contata":true,"durataMs":53234,"tokenInput":21681,"tokenOutput":5610,"ragionamento":6706}
 {"quando":1793998759761,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"galleria-e-finali","ok":true,"contata":true,"durataMs":50933,"tokenInput":27742,"tokenOutput":21508,"ragionamento":4725}
+{"quando":1793998815887,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"galleria-e-finali","ok":true,"contata":true,"durataMs":104470,"tokenInput":27803,"tokenOutput":21524,"ragionamento":5993}
