@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-06T14:31:53.075Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-06T14:49:35.574Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "piu-lingue",
   "numero": "6.19",
   "titolo": "Più lingue"
  },
- "messaggio": "Sta scrivendo la lezione 6.19 «Più lingue».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.19 riprende da sola appena rispondono.",
+ "riprende": "2026-11-06T14:59:35.573Z"
 }
