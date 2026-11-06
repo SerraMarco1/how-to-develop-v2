@@ -1677,5 +1677,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "es2",
+    "problema": "La verifica effettua un cast rigido `as RichTextLabel` sul nodo `TextLabel` (e fallisce se il nodo non è di quel tipo), ma la consegna dell'esercizio non specifica il tipo di nodo da usare per `TextLabel` (mentre nella teoria del blocco 8 viene mostrato come un normale nodo `Label`). Se uno studente utilizza un `Label`, il cast `as RichTextLabel` restituisce `null` e la verifica fallisce.",
+    "correzione": "Specifica chiaramente nella consegna dell'esercizio 2 che il nodo `TextLabel` in `DialogueBox` deve essere di tipo `RichTextLabel`, oppure modifica il codice di verifica per accettare sia `Label` che `RichTextLabel` senza fallire su un tipo di nodo non specificato.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
