@@ -473,5 +473,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "piu-lingue": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "galleria-e-finali": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
