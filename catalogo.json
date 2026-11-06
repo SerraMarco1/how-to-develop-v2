@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-06T21:22:48.728Z",
+ "aggiornato": "2026-11-06T21:28:43.651Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -848,6 +848,15 @@
    "file": "lezioni/f06-visual-novel/galleria-e-finali.json",
    "sha256": "d6315c6b212be322ac5966e384180ec502afa079a7b4c0f5d5b8787f8c9f6938",
    "byte": 240113
+  },
+  {
+   "slug": "plugin-dialogic",
+   "numero": "6.21",
+   "titolo": "Usare il lavoro degli altri: i plugin",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/plugin-dialogic.json",
+   "sha256": "1ec4478215d99195794e8d00d5536214ca1d333e448425558919f2d2764a4f19",
+   "byte": 203418
   }
  ],
  "documentazione": {
