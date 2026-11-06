@@ -34,3 +34,4 @@
 {"quando":1793998759761,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"galleria-e-finali","ok":true,"contata":true,"durataMs":50933,"tokenInput":27742,"tokenOutput":21508,"ragionamento":4725}
 {"quando":1793998815887,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"galleria-e-finali","ok":true,"contata":true,"durataMs":104470,"tokenInput":27803,"tokenOutput":21524,"ragionamento":5993}
 {"quando":1793998925359,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"galleria-e-finali","ok":true,"contata":true,"durataMs":445688,"tokenInput":27907,"tokenOutput":21618,"ragionamento":5772}
+{"quando":1793999388531,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"galleria-e-finali","ok":true,"contata":true,"durataMs":45497,"tokenInput":28555,"tokenOutput":22453,"ragionamento":2459}
