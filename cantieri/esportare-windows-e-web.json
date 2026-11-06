@@ -1,6 +1,326 @@
 {
  "creato": "2026-11-06T21:28:45.307Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Configurare l'esportazione di Storie",
+    "consegna": "Configura il progetto `Storie` per l'esportazione creando una preimpostazione per **Windows Desktop**.\n\n1. Aggiungi la preimpostazione **Windows Desktop** nelle opzioni di esportazione del progetto.\n2. Nella preimpostazione Windows Desktop, attiva l'opzione **Embed PCK** per unire i file di gioco all'eseguibile.\n3. Nella scheda **Resources**, aggiungi `*.json` nel campo **Filters to export non-resource files/folders**, garantendo che tutti i capitoli della storia vengano impacchettati.\n4. Chiudi la finestra di esportazione per fare in modo che Godot generi e salvi il file di configurazione `export_presets.cfg` nella radice del progetto.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Apri il menu principale **Project → Export...**.",
+     "Nella finestra di esportazione premi il pulsante **Add...** in cima e seleziona **Windows Desktop**.",
+     "Nel pannello delle opzioni a destra per Windows Desktop, trova la voce **Binary Format → Embed PCK** e impostala su **On** (attivata).",
+     "Spostati nella scheda **Resources** situata nella parte superiore della finestra di esportazione.",
+     "Nel campo di testo **Filters to export non-resource files/folders**, scrivi `*.json`.",
+     "Premi il pulsante **Close** in basso a destra per salvare la configurazione nel file `export_presets.cfg`."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "export_presets.cfg",
+      "descrizione": "Il file export_presets.cfg deve esistere nella radice del progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "export_presets.cfg",
+      "regex": "include_filter=.*\\*\\.json",
+      "descrizione": "Il filtro di esportazione per i file non-risorsa deve includere *.json"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "export_presets.cfg",
+      "regex": "Windows Desktop",
+      "descrizione": "È presente la preimpostazione per Windows Desktop"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tcheck(\"preset_exists\", FileAccess.file_exists(\"res://export_presets.cfg\"), \"Il file res://export_presets.cfg deve esistere\")\n\tvar f := FileAccess.open(\"res://export_presets.cfg\", FileAccess.READ)\n\tif check(\"open_preset\", f != null, \"Impossibile leggere export_presets.cfg\"):\n\t\tvar content := f.get_as_text()\n\t\tcheck(\"has_filter\", content.contains(\"*.json\"), \"export_presets.cfg deve contenere il filtro *.json per i file non-risorsa\")",
+      "descrizione": "Verifica che il file export_presets.cfg sia stato creato con le impostazioni corrette"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "export_presets.cfg",
+       "contenuto": "[preset.0]\n\nname=\"Windows Desktop\"\nplatform=\"Windows Desktop\"\nrunnable=true\ndedicated_server=false\ncustom_features=\"\"\nexport_filter=\"all_resources\"\ninclude_filter=\"*.json\"\nexclude_filter=\"\"\nexport_path=\"\"\nencryption_include_filters=\"\"\nencryption_exclude_filters=\"\"\nencrypt_pck=false\nencrypt_directory=false\n\n[preset.0.options]\n\ncustom_template/release=\"\"\ncustom_template/debug=\"\"\nbinary_format/embed_pck=true\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Storie",
+      "scenaPrincipale": "res://ui/title_screen.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La finestra di esportazione di Godot salva tutte le preimpostazioni create e i filtri di inclusione delle risorse nel file `export_presets.cfg` situato nella radice del progetto. Inserendo `*.json` nel campo dei filtri delle risorse non-risorsa, indichiamo a Godot di impacchettare i file JSON dei capitoli della storia nel file `.pck` finale.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Riparare il progetto ArchivioStorie esportato",
+    "consegna": "Il progetto `ArchivioStorie` funziona senza problemi nell'editor di Godot, ma presenta tre gravi problemi una volta esportato per Windows o Web:\n1. All'avvio della partita il capitolo non viene caricato e il gioco mostra un errore di file JSON mancante.\n2. Nei log di sistema compare un errore che indica che la risorsa `res://Story/Chapters/chapter_01.json` non è stata trovata (attenzione alle maiuscole/minuscole dei percorsi!).\n3. Quando il giocatore tenta di salvare i progressi, il gioco prova a scrivere su `res://saves/progress.json` sollevando un errore di sola lettura.\n\nIspeziona il progetto e correggi i tre problemi:\n- Assicurati che in `export_presets.cfg` sia configurato il filtro per includere tutti i file `*.json`.\n- Correggi il percorso in `story_loader.gd` rispettando le maiuscole e minuscole della cartella reale (`res://story/chapters/chapter_01.json`).\n- Nel file `save_system.gd`, modifica il percorso di salvataggio in modo che scriva nella directory di sistema scrivibile `user://progress.json` anziché in `res://`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Apri export_presets.cfg e controlla la riga include_filter: deve essere include_filter=\"*.json\".",
+     "In story_loader.gd controlla il testo del percorso: la cartella reale è story/chapters in minuscolo.",
+     "In save_system.gd sostituisci il prefisso res:// con user:// per consentire la scrittura su disco a gioco esportato."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "export_presets.cfg",
+      "descrizione": "Il file export_presets.cfg esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "export_presets.cfg",
+      "regex": "include_filter=.*\\*\\.json",
+      "descrizione": "export_presets.cfg contiene include_filter=\"*.json\""
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "story_loader.gd",
+      "regex": "res://story/chapters/chapter_01\\.json",
+      "descrizione": "story_loader.gd usa il percorso corretto res://story/chapters/chapter_01.json"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "save_system.gd",
+      "regex": "user://progress\\.json",
+      "descrizione": "save_system.gd salva nel percorso user://progress.json"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar loader_script: GDScript = load(\"res://story_loader.gd\")\n\tif check(\"loader_exists\", loader_script != null, \"Lo script story_loader.gd deve essere valido\"):\n\t\tvar loader = loader_script.new()\n\t\tif check(\"loader_method\", has_function(loader, \"load_first_chapter\"), \"story_loader.gd deve contenere load_first_chapter()\"):\n\t\t\tvar chapter: Dictionary = call_if_exists(loader, \"load_first_chapter\", [], {})\n\t\t\tcheck(\"chapter_loaded\", not chapter.is_empty(), \"load_first_chapter() deve caricare correttamente il capitolo JSON\")\n\t\n\tvar save_script: GDScript = load(\"res://save_system.gd\")\n\tif check(\"save_exists\", save_script != null, \"Lo script save_system.gd deve essere valido\"):\n\t\tvar saver = save_script.new()\n\t\tif check(\"save_method\", has_function(saver, \"save_progress\"), \"save_system.gd deve contenere save_progress()\"):\n\t\t\tvar ok: bool = call_if_exists(saver, \"save_progress\", [{\"chapter\": 1}], false)\n\t\t\tcheck(\"save_success\", ok, \"save_progress() deve restituire true salvando in user://\")\n\t\t\tcheck(\"user_file_exists\", FileAccess.file_exists(\"user://progress.json\"), \"Il file salvato deve trovarsi in user://progress.json\")",
+      "descrizione": "Esegue story_loader.gd e save_system.gd verificando caricamento e salvataggio"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "export_presets.cfg",
+       "contenuto": "[preset.0]\n\nname=\"Windows Desktop\"\nplatform=\"Windows Desktop\"\nrunnable=true\ndedicated_server=false\ncustom_features=\"\"\nexport_filter=\"all_resources\"\ninclude_filter=\"\"\nexclude_filter=\"\"\nexport_path=\"\"\nencryption_include_filters=\"\"\nencryption_exclude_filters=\"\"\nencrypt_pck=false\nencrypt_directory=false\n\n[preset.0.options]\n\nbinary_format/embed_pck=true\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Node2D\"]\n"
+      },
+      {
+       "percorso": "story_loader.gd",
+       "contenuto": "class_name StoryLoader\nextends RefCounted\n\n\nfunc load_first_chapter() -> Dictionary:\n\t# Errore di maiuscole/minuscole nel percorso\n\tvar path := \"res://Story/Chapters/chapter_01.json\"\n\tif not FileAccess.file_exists(path):\n\t\treturn {}\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\tvar json_data: Variant = JSON.parse_string(file.get_as_text())\n\tif json_data is Dictionary:\n\t\treturn json_data\n\treturn {}\n"
+      },
+      {
+       "percorso": "save_system.gd",
+       "contenuto": "class_name SaveSystem\nextends RefCounted\n\n\nfunc save_progress(data: Dictionary) -> bool:\n\t# Errore: scrittura nella cartella res:// vietata nel gioco esportato\n\tvar path := \"res://saves/progress.json\"\n\tvar file := FileAccess.open(path, FileAccess.WRITE)\n\tif not file:\n\t\treturn false\n\tfile.store_string(JSON.stringify(data))\n\tfile.close()\n\treturn true\n"
+      },
+      {
+       "percorso": "story/chapters/chapter_01.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Inizio dell'avventura.\"\n    }\n  ]\n}\n"
+      }
+     ],
+     "progetto": {
+      "nome": "ArchivioStorie",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "export_presets.cfg",
+       "contenuto": "[preset.0]\n\nname=\"Windows Desktop\"\nplatform=\"Windows Desktop\"\nrunnable=true\ndedicated_server=false\ncustom_features=\"\"\nexport_filter=\"all_resources\"\ninclude_filter=\"*.json\"\nexclude_filter=\"\"\nexport_path=\"\"\nencryption_include_filters=\"\"\nencryption_exclude_filters=\"\"\nencrypt_pck=false\nencrypt_directory=false\n\n[preset.0.options]\n\nbinary_format/embed_pck=true\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"Main\" type=\"Node2D\"]\n"
+      },
+      {
+       "percorso": "story_loader.gd",
+       "contenuto": "class_name StoryLoader\nextends RefCounted\n\n\nfunc load_first_chapter() -> Dictionary:\n\tvar path := \"res://story/chapters/chapter_01.json\"\n\tif not FileAccess.file_exists(path):\n\t\treturn {}\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\tvar json_data: Variant = JSON.parse_string(file.get_as_text())\n\tif json_data is Dictionary:\n\t\treturn json_data\n\treturn {}\n"
+      },
+      {
+       "percorso": "save_system.gd",
+       "contenuto": "class_name SaveSystem\nextends RefCounted\n\n\nfunc save_progress(data: Dictionary) -> bool:\n\tvar path := \"user://progress.json\"\n\tvar file := FileAccess.open(path, FileAccess.WRITE)\n\tif not file:\n\t\treturn false\n\tfile.store_string(JSON.stringify(data))\n\tfile.close()\n\treturn true\n"
+      },
+      {
+       "percorso": "story/chapters/chapter_01.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": [\n    {\n      \"speaker\": \"Elena\",\n      \"text\": \"Inizio dell'avventura.\"\n    }\n  ]\n}\n"
+      }
+     ],
+     "progetto": {
+      "nome": "ArchivioStorie",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "I tre problemi sono stati risolti secondo le regole dell'esportazione:\n1. In `export_presets.cfg`, impostare `include_filter=\"*.json\"` assicura che Godot impacchetti i file JSON nel file di gioco.\n2. In `story_loader.gd`, correggere il percorso in `res://story/chapters/chapter_01.json` evita errori dovuti alla sensibilità alle maiuscole/minuscole.\n3. In `save_system.gd`, cambiare il percorso di salvataggio in `user://progress.json` consente la scrittura di dati utente, dato che `res://` diventa in sola lettura nel pacchetto esportato.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Diagnosi e ripristino dell'esportazione di StorieEsportate",
+    "consegna": "Il progetto `StorieEsportate` è stato preparato per la pubblicazione su Web e Windows. Tuttavia, durante il collaudo della build esportata sono emersi i seguenti problemi:\n1. All'avvio della schermata di gioco, i file JSON di dati non vengono trovati nel pacchetto esportato perché manca il filtro dedicato.\n2. L'interprete tenta di caricare la mappa dei sistemi tramite il percorso `res://Core/Systems_Map.json`, causando un crash su sistemi sensibili alle maiuscole/minuscole (la cartella reale è `core/` e il file `systems_map.json`).\n3. L'opzione di salvataggio tenta di scrivere le opzioni in `res://settings.cfg`, fallendo per via dei permessi di sola lettura del pacchetto esportato.\n\nSistemare l'intero progetto affinché funzioni sia nell'editor sia nel gioco esportato:\n- Modifica `export_presets.cfg` per includere `*.json` nei filtri delle risorse non-risorsa (`include_filter=\"*.json\"`).\n- Nel file `game_launcher.gd`, correggi il percorso di caricamento della mappa dei sistemi in `res://core/systems_map.json` (tutto in minuscolo).\n- Nel file `settings_saver.gd`, aggiorna il percorso del file di configurazione impostando `user://settings.cfg` al posto di `res://settings.cfg`.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Verifica sia il filtro in export_presets.cfg sia i percorsi res:// e user:// nei due script del progetto."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "export_presets.cfg",
+      "descrizione": "Il file export_presets.cfg esiste nel progetto"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "export_presets.cfg",
+      "regex": "include_filter=.*\\*\\.json",
+      "descrizione": "export_presets.cfg include *.json nel filtro di esportazione"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "game_launcher.gd",
+      "regex": "res://core/systems_map\\.json",
+      "descrizione": "game_launcher.gd usa il percorso res://core/systems_map.json"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "settings_saver.gd",
+      "regex": "user://settings\\.cfg",
+      "descrizione": "settings_saver.gd salva nel percorso user://settings.cfg"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar launcher_script: GDScript = load(\"res://game_launcher.gd\")\n\tif check(\"launcher_exists\", launcher_script != null, \"Lo script game_launcher.gd deve caricarsi senza errori\"):\n\t\tvar launcher = launcher_script.new()\n\t\tif check(\"launcher_method\", has_function(launcher, \"load_systems_map\"), \"game_launcher.gd deve avere load_systems_map()\"):\n\t\t\tvar map_data: Dictionary = call_if_exists(launcher, \"load_systems_map\", [], {})\n\t\t\tcheck(\"map_loaded\", not map_data.is_empty() and map_data.has(\"systems\"), \"load_systems_map() deve caricare res://core/systems_map.json\")\n\t\n\tvar settings_script: GDScript = load(\"res://settings_saver.gd\")\n\tif check(\"settings_exists\", settings_script != null, \"Lo script settings_saver.gd deve caricarsi senza errori\"):\n\t\tvar saver = settings_script.new()\n\t\tif check(\"saver_method\", has_function(saver, \"save_user_settings\"), \"settings_saver.gd deve avere save_user_settings()\"):\n\t\t\tvar ok: bool = call_if_exists(saver, \"save_user_settings\", [{\"volume\": 80}], false)\n\t\t\tcheck(\"save_ok\", ok, \"save_user_settings() deve restituire true\")\n\t\t\tcheck(\"user_settings_created\", FileAccess.file_exists(\"user://settings.cfg\"), \"Il file di configurazione deve trovarsi in user://settings.cfg\")",
+      "descrizione": "Verifica il corretto caricamento della mappa sistemi e la scrittura delle impostazioni in user://"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "export_presets.cfg",
+       "contenuto": "[preset.0]\n\nname=\"Windows Desktop\"\nplatform=\"Windows Desktop\"\nrunnable=true\ndedicated_server=false\ncustom_features=\"\"\nexport_filter=\"all_resources\"\ninclude_filter=\"\"\nexclude_filter=\"\"\nexport_path=\"\"\nencryption_include_filters=\"\"\nencryption_exclude_filters=\"\"\nencrypt_pck=false\nencrypt_directory=false\n\n[preset.0.options]\n\nbinary_format/embed_pck=true\n"
+      },
+      {
+       "percorso": "title.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"Title\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\n"
+      },
+      {
+       "percorso": "game_launcher.gd",
+       "contenuto": "class_name GameLauncher\nextends RefCounted\n\n\nfunc load_systems_map() -> Dictionary:\n\t# Percorso con maiuscole errare\n\tvar path := \"res://Core/Systems_Map.json\"\n\tif not FileAccess.file_exists(path):\n\t\treturn {}\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\tvar json_data: Variant = JSON.parse_string(file.get_as_text())\n\tif json_data is Dictionary:\n\t\treturn json_data\n\treturn {}\n"
+      },
+      {
+       "percorso": "settings_saver.gd",
+       "contenuto": "class_name SettingsSaver\nextends RefCounted\n\n\nfunc save_user_settings(settings_data: Dictionary) -> bool:\n\t# Tentativo di scrittura illegale in res:// nel gioco esportato\n\tvar path := \"res://settings.cfg\"\n\tvar config := ConfigFile.new()\n\tfor key in settings_data:\n\t\tconfig.set_value(\"settings\", key, settings_data[key])\n\tvar err := config.save(path)\n\treturn err == OK\n"
+      },
+      {
+       "percorso": "core/systems_map.json",
+       "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1\n    }\n  ]\n}\n"
+      },
+      {
+       "percorso": "story/chapters/chapter_01.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": []\n}\n"
+      }
+     ],
+     "progetto": {
+      "nome": "StorieEsportate",
+      "scenaPrincipale": "res://title.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "export_presets.cfg",
+       "contenuto": "[preset.0]\n\nname=\"Windows Desktop\"\nplatform=\"Windows Desktop\"\nrunnable=true\ndedicated_server=false\ncustom_features=\"\"\nexport_filter=\"all_resources\"\ninclude_filter=\"*.json\"\nexclude_filter=\"\"\nexport_path=\"\"\nencryption_include_filters=\"\"\nencryption_exclude_filters=\"\"\nencrypt_pck=false\nencrypt_directory=false\n\n[preset.0.options]\n\nbinary_format/embed_pck=true\n"
+      },
+      {
+       "percorso": "title.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[node name=\"Title\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\n"
+      },
+      {
+       "percorso": "game_launcher.gd",
+       "contenuto": "class_name GameLauncher\nextends RefCounted\n\n\nfunc load_systems_map() -> Dictionary:\n\tvar path := \"res://core/systems_map.json\"\n\tif not FileAccess.file_exists(path):\n\t\treturn {}\n\tvar file := FileAccess.open(path, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\tvar json_data: Variant = JSON.parse_string(file.get_as_text())\n\tif json_data is Dictionary:\n\t\treturn json_data\n\treturn {}\n"
+      },
+      {
+       "percorso": "settings_saver.gd",
+       "contenuto": "class_name SettingsSaver\nextends RefCounted\n\n\nfunc save_user_settings(settings_data: Dictionary) -> bool:\n\tvar path := \"user://settings.cfg\"\n\tvar config := ConfigFile.new()\n\tfor key in settings_data:\n\t\tconfig.set_value(\"settings\", key, settings_data[key])\n\tvar err := config.save(path)\n\treturn err == OK\n"
+      },
+      {
+       "percorso": "core/systems_map.json",
+       "contenuto": "{\n  \"systems\": [\n    {\n      \"id\": \"dialogue_ui\",\n      \"order\": 1\n    }\n  ]\n}\n"
+      },
+      {
+       "percorso": "story/chapters/chapter_01.json",
+       "contenuto": "{\n  \"title\": \"Capitolo 1\",\n  \"lines\": []\n}\n"
+      }
+     ],
+     "progetto": {
+      "nome": "StorieEsportate",
+      "scenaPrincipale": "res://title.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Per garantire la corretta esecuzione del gioco esportato:\n1. Si imposta `include_filter=\"*.json\"` in `export_presets.cfg` per includere la mappa dei sistemi e le storie JSON nel pacchetto `.pck`.\n2. In `game_launcher.gd` si inserisce il percorso esatto `res://core/systems_map.json` in minuscolo, rispettando la sensibilità dei sistemi del gioco esportato.\n3. In `settings_saver.gd` si usa il percorso `user://settings.cfg`, la sola cartella in cui è garantita la possibilità di scrivere file in fase di gioco.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash"
@@ -74,5 +394,10 @@
     "md": "- I modelli di esportazione (*export templates*) forniscono il motore precompilato senza editor su cui impacchettare il gioco.\n- Con l'opzione Embed PCK è possibile unire il codice di gioco e l'eseguibile Windows in un solo file `.exe` autonomo.\n- I file di dati non nativi (come i capitoli in formato `.json`) non vengono inclusi automaticamente: occorre aggiungerli nei filtri della scheda Resources con `*.json`.\n- Nel pacchetto esportato, tutti i percorsi dei file in `res://` richiedono l'esatta corrispondenza tra maiuscole e minuscole.\n- La directory `res://` diventa in sola lettura nel gioco esportato: tutti i salvataggi e file utente devono essere scritti in `user://`."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
