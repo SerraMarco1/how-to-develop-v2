@@ -50,3 +50,4 @@
 {"quando":1794000498753,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"plugin-dialogic","ok":true,"contata":true,"durataMs":11367,"tokenInput":12410,"tokenOutput":12,"ragionamento":2185}
 {"quando":1794000511808,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"plugin-dialogic","ok":true,"contata":true,"durataMs":7156,"tokenInput":2882,"tokenOutput":830,"ragionamento":1765}
 {"quando":1794000525312,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":33661,"tokenInput":15300,"tokenOutput":1759,"ragionamento":5298}
+{"quando":1794000560484,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":70044,"tokenInput":21165,"tokenOutput":6716,"ragionamento":9246}
