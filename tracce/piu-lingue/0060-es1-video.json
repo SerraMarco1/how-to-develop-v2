@@ -1,0 +1,48 @@
+{
+ "n": 60,
+ "quando": "2026-11-06T21:24:52.812Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 2 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «pulsante» (nome = ContinueButton; almeno 1 da 0.5 a 5.5 s; deve mostrare il testo «Continua»): il testo «Continua» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 0 nodi. A 1 s: «ContinueButton» a (476, 224) 79×31, nascosto, testo «KEY_CONTINUE». Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 23846,
+ "dati": {
+  "copione": {
+   "scena": "res://ui/title_screen.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "pulsante",
+     "cerca": {
+      "nome": "ContinueButton"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "mostrare testo",
+     "testo": "Continua",
+     "etichetta": "Pulsante tradotto"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il pulsante mostra il testo tradotto tramite la tabella CSV",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "pulsante"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «pulsante» (nome = ContinueButton; almeno 1 da 0.5 a 5.5 s; deve mostrare il testo «Continua»): il testo «Continua» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 0 nodi. A 1 s: «ContinueButton» a (476, 224) 79×31, nascosto, testo «KEY_CONTINUE». Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 12 s (8288 → 218 token)"
+ ]
+}
