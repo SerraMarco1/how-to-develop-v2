@@ -30,7 +30,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar unlock_mgr := get_node_or_null(\"/root/UnlockManager\")\n\tif not check(\"autoload\", unlock_mgr != null, \"UnlockManager deve essere registrato come Autoload globale\"):\n\t\treturn\n\t\n\tunlock_mgr.call(\"unlocked_endings\").clear()\n\tunlock_mgr.call(\"unlocked_images\").clear()\n\t\n\tunlock_mgr.call(\"unlock_ending\", \"test_ending_01\")\n\tvar end_unlocked = unlock_mgr.call(\"is_ending_unlocked\", \"test_ending_01\")\n\tcheck(\"end_unlocked\", end_unlocked, \"unlock_ending deve aggiungere l'id ai finali sbloccati\")\n\t\n\tunlock_mgr.call(\"unlock_image\", \"test_image_01\")\n\tvar img_unlocked = unlock_mgr.call(\"is_image_unlocked\", \"test_image_01\")\n\tcheck(\"img_unlocked\", img_unlocked, \"unlock_image deve aggiungere l'id alle immagini sbloccate\")\n\t\n\tvar interp := await instantiate_script(\"res://story/story_interpreter.gd\")\n\tif check(\"interp_load\", interp != null, \"Lo script story_interpreter.gd deve essere valido\"):\n\t\tinterp.call(\"execute_command\", {\"type\": \"unlock_ending\", \"id\": \"cmd_ending\"})\n\t\tvar cmd_end_unlocked = unlock_mgr.call(\"is_ending_unlocked\", \"cmd_ending\")\n\t\tcheck(\"interp_end\", cmd_end_unlocked, \"Il comando unlock_ending in StoryInterpreter deve sbloccare il finale indicato\")\n\t\tinterp.call(\"execute_command\", {\"type\": \"unlock_image\", \"id\": \"cmd_image\"})\n\t\tvar cmd_img_unlocked = unlock_mgr.call(\"is_image_unlocked\", \"cmd_image\")\n\t\tcheck(\"interp_img\", cmd_img_unlocked, \"Il comando unlock_image in StoryInterpreter deve sbloccare l'immagine indicata\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar unlock_mgr := get_node_or_null(\"/root/UnlockManager\")\n\tif not check(\"autoload\", unlock_mgr != null, \"UnlockManager deve essere registrato come Autoload globale\"):\n\t\treturn\n\t\n\tvar endings = get_prop(unlock_mgr, \"unlocked_endings\")\n\tif endings is Array:\n\t\tendings.clear()\n\tvar images = get_prop(unlock_mgr, \"unlocked_images\")\n\tif images is Array:\n\t\timages.clear()\n\t\n\tcall_if_exists(unlock_mgr, \"unlock_ending\", [\"test_ending_01\"])\n\tvar end_unlocked = call_if_exists(unlock_mgr, \"is_ending_unlocked\", [\"test_ending_01\"], false)\n\tcheck(\"end_unlocked\", end_unlocked == true, \"unlock_ending deve aggiungere l'id ai finali sbloccati\")\n\t\n\tcall_if_exists(unlock_mgr, \"unlock_image\", [\"test_image_01\"])\n\tvar img_unlocked = call_if_exists(unlock_mgr, \"is_image_unlocked\", [\"test_image_01\"], false)\n\tcheck(\"img_unlocked\", img_unlocked == true, \"unlock_image deve aggiungere l'id alle immagini sbloccate\")\n\t\n\tvar interp := await instantiate_script(\"res://story/story_interpreter.gd\")\n\tif check(\"interp_load\", interp != null, \"Lo script story_interpreter.gd deve essere valido\"):\n\t\tcall_if_exists(interp, \"execute_command\", [{\"type\": \"unlock_ending\", \"id\": \"cmd_ending\"}])\n\t\tvar cmd_end_unlocked = call_if_exists(unlock_mgr, \"is_ending_unlocked\", [\"cmd_ending\"], false)\n\t\tcheck(\"interp_end\", cmd_end_unlocked == true, \"Il comando unlock_ending in StoryInterpreter deve sbloccare il finale indicato\")\n\t\tcall_if_exists(interp, \"execute_command\", [{\"type\": \"unlock_image\", \"id\": \"cmd_image\"}])\n\t\tvar cmd_img_unlocked = call_if_exists(unlock_mgr, \"is_image_unlocked\", [\"cmd_image\"], false)\n\t\tcheck(\"interp_img\", cmd_img_unlocked == true, \"Il comando unlock_image in StoryInterpreter deve sbloccare l'immagine indicata\")",
       "descrizione": "UnlockManager registra gli sblocchi e StoryInterpreter esegue i comandi unlock_ending e unlock_image"
      }
     ],
@@ -261,7 +261,7 @@
        }
       ]
      },
-     "spiegazione": "`UnlockManager` viene registrato come singleton Autoload in `project.godot`. In GDScript, non bisogna dichiarare `class_name UnlockManager` nello script di un Autoload, altrimenti il nome globale si riferirà alla classe anziché all'istanza. Rimuovendo `class_name UnlockManager` da `core/unlock_manager.gd`, il nome `UnlockManager` farà riferimento direttamente all'istanza Autoload globale, permettendo chiamate ad istanza come `UnlockManager.unlock_ending(item_id)`.",
+     "spiegazione": "`UnlockManager` viene registrato come singleton Autoload in `project.godot`. In GDScript, non bisogna dichiarare `class_name UnlockManager` nello script di un Autoload, altrimenti il nome globale si riferirà alla classe anziché all'istanza. Senza `class_name`, il nome `UnlockManager` fa riferimento direttamente al nodo singleton aggiunto alla radice dell'albero, consentendo chiamate come `UnlockManager.unlock_ending(item_id)`.",
      "cambiati": [
       "project.godot",
       "core/unlock_manager.gd",
@@ -272,14 +272,15 @@
    },
    "genere": "obiettivo",
    "correzioni": 2,
-   "semplificato": false,
+   "semplificato": true,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Invalid call. Nonexistent function 'unlocked_endings (via call)' in base 'Node (unlock_manager.gd)'. (res://htd/verifica_1.gd:9 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Invalid call. Nonexistent function 'unlocked_endings (via call)' in base 'Node (unlock_manager.gd)'.\n          at: _run_tests (res://htd/verifica_1.gd:9)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 9: `unlock_mgr.call(\"unlocked_endings\").clear()`\nSuggerimenti:\n  - Stai chiamando un metodo che quell'oggetto non ha in Godot 4.7 (spesso è un metodo di Godot 3 o inventato). Usa solo metodi che compaiono negli estratti della documentazione."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
     "gemini/gemini-flash-lite-latest",
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "test": {
@@ -352,7 +353,8 @@
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Galleria e finali sbloccati",
