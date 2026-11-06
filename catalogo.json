@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-06T03:18:45.366Z",
+ "aggiornato": "2026-11-06T20:50:43.843Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -830,6 +830,15 @@
    "file": "lezioni/f06-visual-novel/storico-salto-automatico.json",
    "sha256": "da92912e11d856df1b899de244110781d4b48dcaa4920ffddc76107b0a59ee91",
    "byte": 195366
+  },
+  {
+   "slug": "piu-lingue",
+   "numero": "6.19",
+   "titolo": "Più lingue",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/piu-lingue.json",
+   "sha256": "554e7099435978827cd922c9b80843f3e05b6bdf4de2043db34655634466c4fb",
+   "byte": 287407
   }
  ],
  "documentazione": {
