@@ -483,5 +483,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "plugin-dialogic": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
