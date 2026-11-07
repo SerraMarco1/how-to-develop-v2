@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test è una copia identica dell'esercizio 2 (es2) a cui sono stati soltanto cambiati i nomi dei file e delle funzioni. Entrambi gli esercizi chiedono di correggere esattamente i medesimi tre problemi (il filtro include_filter in export_presets.cfg, un percorso res:// con maiuscole errate e una scrittura su res:// da cambiare in user://), violando la regola che vieta di creare un test che sia la copia di un esercizio con i nomi modificati.\", \"correzione\": \"Riprogetta il test in modo che verifichi le competenze della lezione con una struttura differente o un caso d'uso diverso, anziché replicare la stessa identica sequenza di tre correzioni di es2.\", \"fonte\": \"\"}]}",
- "ragionamento": 4092,
- "quando": "2026-11-07T08:13:06.981Z",
- "ruolo": "revisore"
-}

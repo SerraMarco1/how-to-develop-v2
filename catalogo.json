@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-06T21:28:43.651Z",
+ "aggiornato": "2026-11-07T08:14:25.118Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -857,6 +857,15 @@
    "file": "lezioni/f06-visual-novel/plugin-dialogic.json",
    "sha256": "1ec4478215d99195794e8d00d5536214ca1d333e448425558919f2d2764a4f19",
    "byte": 203418
+  },
+  {
+   "slug": "esportare-windows-e-web",
+   "numero": "6.22",
+   "titolo": "Esportare: Windows e Web",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/esportare-windows-e-web.json",
+   "sha256": "178e59e90639db683bb3330c43f40b9ab87449fdbd353713f88dfe9713f71ec1",
+   "byte": 203574
   }
  ],
  "documentazione": {
