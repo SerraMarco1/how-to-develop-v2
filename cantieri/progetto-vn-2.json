@@ -49,7 +49,9 @@
    "genere": "dati",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://story/story_validator.gd deve caricarsi senza errori: Parse Error: Identifier \"var_name\" not declared in the current scope. (res://story/story_validator.gd:115 in GDScript::reload)\nParse Error: Identifier \"var_name\" not declared in the current scope. (res://story/story_validator.gd:115 in GDScript::reload)\nParse Error: Identifier \"var_name\" not declared in the current scope. (res://story/story_validator.gd:116 in GDScript::reload)\nFailed to load script \"res://story/story_validator.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  story/story_validator.gd, riga 115: `if not var_name.is_empty() and not assigned_variables.has(var_name):`\n  story/story_validator.gd, riga 116: `errors.append(\"%s [riga %d]: Condizione su variabile mai impostata '%s'.\" % [file_path, i, var_name])`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
