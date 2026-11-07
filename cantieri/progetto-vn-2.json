@@ -2,7 +2,7 @@
  "creato": "2026-11-07T09:25:41.765Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "dati",
@@ -407,7 +407,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Scrivi il primo capitolo ramificato\" (dati) non superava i controlli ed è stato tolto: questa lezione ha solo il test."
+ ],
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-3.7-flash"
