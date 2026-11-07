@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-07T09:04:13.069Z",
+ "aggiornato": "2026-11-07T09:10:06.873Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "pubblicare",
-  "numero": "6.23",
-  "titolo": "Pubblicare su itch.io"
+  "slug": "collaudo",
+  "numero": "6.24",
+  "titolo": "Collaudo: far provare il gioco e correggere"
  },
- "messaggio": "Sta scrivendo la lezione 6.23 «Pubblicare su itch.io».",
+ "messaggio": "Sta scrivendo la lezione 6.24 «Collaudo: far provare il gioco e correggere».",
  "riprende": null
 }
