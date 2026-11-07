@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-07T09:10:05.439Z",
+ "aggiornato": "2026-11-07T09:18:08.770Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -875,6 +875,15 @@
    "file": "lezioni/f06-visual-novel/pubblicare.json",
    "sha256": "2a59390948293a0ed204afa90fee0699199d44171ba3667e6859e85401d8ff56",
    "byte": 278217
+  },
+  {
+   "slug": "collaudo",
+   "numero": "6.24",
+   "titolo": "Collaudo: far provare il gioco e correggere",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/collaudo.json",
+   "sha256": "f81f601ba4dcc55e546688d0868346b8a7b3a38bfe1526e03adb8e8363d57e70",
+   "byte": 359367
   }
  ],
  "documentazione": {
