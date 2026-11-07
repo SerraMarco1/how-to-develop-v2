@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-07T09:50:15.601Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-07T09:56:34.913Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-vn-2",
   "numero": "6.26",
   "titolo": "Progetto «La tua visual novel» – tappa 2: scrivere la storia"
  },
- "messaggio": "Sta scrivendo la lezione 6.26 «Progetto «La tua visual novel» – tappa 2: scrivere la storia».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.26 riprende da sola appena rispondono.",
+ "riprende": "2026-11-07T10:06:34.912Z"
 }
