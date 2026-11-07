@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-07T10:17:15.628Z",
+ "aggiornato": "2026-11-07T10:37:34.469Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -902,6 +902,15 @@
    "file": "lezioni/f06-visual-novel/progetto-vn-2.json",
    "sha256": "d05f688399b6eb697008674a86ae71c298e65175feedaacaafeeacbb4b32136a",
    "byte": 270717
+  },
+  {
+   "slug": "progetto-vn-3",
+   "numero": "6.27",
+   "titolo": "Progetto «La tua visual novel» – tappa 3: tre funzioni tue",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/progetto-vn-3.json",
+   "sha256": "fbb7ef9f6d412726f47f563d3e0484d13392a44954cb5f170e8c4cb142b7cd55",
+   "byte": 393909
   }
  ],
  "documentazione": {
