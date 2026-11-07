@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"es1\", \"problema\": \"La consegna specifica di restituire 'un dizionario con chiavi intere \\\"major\\\", \\\"minor\\\" e \\\"patch\\\"', la qual cosa è fuorviante e scorretta: le chiavi del dizionario sono le stringhe \\\"major\\\", \\\"minor\\\" e \\\"patch\\\", mentre sono i valori associati a dover essere numeri interi (int), come controllato dallo script di verifica con parsed.get(\\\"major\\\", -1).\", \"correzione\": \"Sostituire 'con chiavi intere \\\"major\\\", \\\"minor\\\" e \\\"patch\\\"' con 'con chiavi stringa \\\"major\\\", \\\"minor\\\" e \\\"patch\\\" aventi come valori i rispettivi numeri interi'.\", \"fonte\": \"\"}]}",
- "ragionamento": 2848,
- "quando": "2026-11-07T09:09:51.769Z",
- "ruolo": "revisore"
-}

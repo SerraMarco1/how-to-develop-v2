@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-07T08:14:25.118Z",
+ "aggiornato": "2026-11-07T09:10:05.439Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -866,6 +866,15 @@
    "file": "lezioni/f06-visual-novel/esportare-windows-e-web.json",
    "sha256": "178e59e90639db683bb3330c43f40b9ab87449fdbd353713f88dfe9713f71ec1",
    "byte": 203574
+  },
+  {
+   "slug": "pubblicare",
+   "numero": "6.23",
+   "titolo": "Pubblicare su itch.io",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/pubblicare.json",
+   "sha256": "2a59390948293a0ed204afa90fee0699199d44171ba3667e6859e85401d8ff56",
+   "byte": 278217
   }
  ],
  "documentazione": {
