@@ -47,3 +47,5 @@
 {"quando":1794046443908,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":75647,"tokenInput":42233,"tokenOutput":36130,"ragionamento":5437}
 {"quando":1794046519561,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":72898,"tokenInput":46777,"tokenOutput":36145,"ragionamento":473}
 {"quando":1794046603138,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":15706,"tokenInput":5035,"tokenOutput":12,"ragionamento":3108}
+{"quando":1794046620348,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":7027,"tokenInput":2774,"tokenOutput":602,"ragionamento":1902}
+{"quando":1794046627376,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":4820,"tokenInput":3440,"tokenOutput":506,"ragionamento":1356}
