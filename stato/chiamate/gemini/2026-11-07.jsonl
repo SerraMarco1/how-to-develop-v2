@@ -30,3 +30,4 @@
 {"quando":1794042885011,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"collaudo","ok":true,"contata":true,"durataMs":46088,"tokenInput":33868,"tokenOutput":26897,"ragionamento":1329}
 {"quando":1794042945964,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"collaudo","ok":true,"contata":true,"durataMs":128718,"tokenInput":11767,"tokenOutput":11,"ragionamento":1384}
 {"quando":1794043076264,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"collaudo","ok":true,"contata":true,"durataMs":8201,"tokenInput":2894,"tokenOutput":1021,"ragionamento":1819}
+{"quando":1794043090218,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-vn-1","ok":true,"contata":true,"durataMs":393260,"tokenInput":20169,"tokenOutput":7895,"ragionamento":37420}
