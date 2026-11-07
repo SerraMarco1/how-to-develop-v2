@@ -39,3 +39,5 @@
 {"quando":1794043840338,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":216494,"tokenInput":35842,"tokenOutput":28496,"ragionamento":4282}
 {"quando":1794044062264,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-vn-2","ok":false,"contata":true,"durataMs":1633,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794044063901,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":323475,"tokenInput":35833,"tokenOutput":29153,"ragionamento":8421}
+{"quando":1794044392785,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-vn-2","ok":false,"contata":true,"durataMs":3265,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794044396053,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-vn-2","ok":true,"contata":true,"durataMs":433664,"tokenInput":36511,"tokenOutput":29465,"ragionamento":18285}
