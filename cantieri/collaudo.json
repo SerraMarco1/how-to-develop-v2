@@ -1960,7 +1960,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Collaudo: far provare il gioco e correggere",
@@ -2030,5 +2031,10 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
