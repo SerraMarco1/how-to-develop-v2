@@ -3,3 +3,4 @@
 {"quando":1794039164812,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":22166,"tokenInput":11158,"tokenOutput":194,"ragionamento":4092}
 {"quando":1794039188643,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"esportare-windows-e-web","ok":false,"contata":true,"durataMs":364,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794039189011,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":51957,"tokenInput":10401,"tokenOutput":2416,"ragionamento":8095}
+{"quando":1794039253773,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":6795,"tokenInput":2919,"tokenOutput":773,"ragionamento":2178}
