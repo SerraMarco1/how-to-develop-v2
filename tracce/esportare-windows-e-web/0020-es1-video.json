@@ -1,0 +1,16 @@
+{
+ "n": 20,
+ "quando": "2026-11-07T08:46:02.202Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Configurare l'esportazione di Storie» non si vede sullo schermo: L'esercizio configura le opzioni di esportazione del gioco e salva il file di configurazione, ma non produce alcuna modifica visiva sullo schermo durante l'esecuzione.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 5794,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (7715 → 45 token)"
+ ]
+}

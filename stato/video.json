@@ -1163,9 +1163,10 @@
  "esportare-windows-e-web": {
   "es1": {
    "impronta": "ba9b3eb2b9b0f8b836564e22086868f6472a9b29cf0a62071777248e0dab48fa",
-   "tentativi": 0,
-   "esito": "in corso",
-   "regole": 2
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "L'esercizio configura le opzioni di esportazione del gioco e salva il file di configurazione, ma non produce alcuna modifica visiva sullo schermo durante l'esecuzione."
   }
  }
 }
