@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-07T09:25:40.257Z",
+ "aggiornato": "2026-11-07T10:17:15.628Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -893,6 +893,15 @@
    "file": "lezioni/f06-visual-novel/progetto-vn-1.json",
    "sha256": "8a004f86e64d52a70e45f84de2715a3c053fcee24d5bd48aadd74d60d209d5b1",
    "byte": 303718
+  },
+  {
+   "slug": "progetto-vn-2",
+   "numero": "6.26",
+   "titolo": "Progetto «La tua visual novel» – tappa 2: scrivere la storia",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/progetto-vn-2.json",
+   "sha256": "d05f688399b6eb697008674a86ae71c298e65175feedaacaafeeacbb4b32136a",
+   "byte": 270717
   }
  ],
  "documentazione": {
