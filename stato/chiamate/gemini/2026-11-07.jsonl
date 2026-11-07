@@ -32,3 +32,5 @@
 {"quando":1794043076264,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"collaudo","ok":true,"contata":true,"durataMs":8201,"tokenInput":2894,"tokenOutput":1021,"ragionamento":1819}
 {"quando":1794043090218,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-vn-1","ok":true,"contata":true,"durataMs":393260,"tokenInput":20169,"tokenOutput":7895,"ragionamento":37420}
 {"quando":1794043513041,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-vn-1","ok":true,"contata":true,"durataMs":11873,"tokenInput":7282,"tokenOutput":11,"ragionamento":2615}
+{"quando":1794043526226,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-vn-1","ok":true,"contata":true,"durataMs":6066,"tokenInput":2788,"tokenOutput":691,"ragionamento":2293}
+{"quando":1794043532294,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-vn-1","ok":true,"contata":true,"durataMs":3889,"tokenInput":3543,"tokenOutput":592,"ragionamento":1215}
