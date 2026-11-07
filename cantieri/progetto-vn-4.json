@@ -503,5 +503,18 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "La consegna del test non specifica che il nodo radice della scena `ui/title_screen.tscn` deve essere di tipo `Control` e chiamarsi `TitleScreen`, requisiti che vengono invece verificati nel controllo automatico (`nodo`).",
+    "correzione": "Modifica il punto 3 della consegna rendendo espliciti il tipo e il nome del nodo radice: '3. Nella scena principale `ui/title_screen.tscn` (con nodo radice `TitleScreen` di tipo `Control`), assicurati che l'interfaccia permetta di avviare il gioco, cambiare lingua tramite le impostazioni e uscire. Assegna a questa scena lo script `ui/title_screen.gd` per gestire le interazioni dei pulsanti.'",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
