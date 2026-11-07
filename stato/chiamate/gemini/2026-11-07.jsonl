@@ -25,3 +25,4 @@
 {"quando":1794042606897,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collaudo","ok":true,"contata":true,"durataMs":48776,"tokenInput":14763,"tokenOutput":1864,"ragionamento":1976}
 {"quando":1794042655676,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collaudo","ok":true,"contata":true,"durataMs":33748,"tokenInput":16691,"tokenOutput":1906,"ragionamento":2399}
 {"quando":1794042690885,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collaudo","ok":true,"contata":true,"durataMs":62430,"tokenInput":21257,"tokenOutput":4768,"ragionamento":7432}
+{"quando":1794042758353,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"collaudo","ok":true,"contata":true,"durataMs":44411,"tokenInput":33066,"tokenOutput":26080,"ragionamento":2181}
