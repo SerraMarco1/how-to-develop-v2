@@ -5,3 +5,5 @@
 {"quando":1794039189011,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":51957,"tokenInput":10401,"tokenOutput":2416,"ragionamento":8095}
 {"quando":1794039253773,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":6795,"tokenInput":2919,"tokenOutput":773,"ragionamento":2178}
 {"quando":1794039266471,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"pubblicare","ok":true,"contata":true,"durataMs":45750,"tokenInput":15702,"tokenOutput":2277,"ragionamento":3305}
+{"quando":1794039313601,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"pubblicare","ok":false,"contata":true,"durataMs":896,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794039314500,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"pubblicare","ok":false,"contata":true,"durataMs":14755,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
