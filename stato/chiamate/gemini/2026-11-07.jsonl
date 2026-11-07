@@ -12,3 +12,4 @@
 {"quando":1794040418146,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"pubblicare","ok":true,"contata":true,"durataMs":51353,"tokenInput":31852,"tokenOutput":23769,"ragionamento":2316}
 {"quando":1794040482530,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"pubblicare","ok":false,"contata":true,"durataMs":3611,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794040486144,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"pubblicare","ok":false,"contata":true,"durataMs":5201,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794041156410,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"esportare-windows-e-web","ok":true,"contata":true,"durataMs":4256,"tokenInput":7715,"tokenOutput":45,"ragionamento":488}
