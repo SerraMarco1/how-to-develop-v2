@@ -1,8 +1,162 @@
 {
  "creato": "2026-11-07T10:17:17.163Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "trova",
+    "titolo": "Un indicatore visivo con barra di avanzamento",
+    "consegna": "Nel gioco vogliamo mostrare graficamente l'intesa con i compagni o il completamento di una sezione tramite una barra orizzontale.\n\n1. Crea la nuova scena `res://ui/affinity_bar.tscn` con nodo radice di tipo `Control` chiamato `AffinityBar`.\n2. Aggiungi come figlio di `AffinityBar` il nodo nativo di interfaccia di Godot progettato specificamente per visualizzare barre orizzontali riempite in percentuale (cercalo nell'albero dei tipi derivati da `Control` o nella documentazione). Rinomina questo nodo figlio in `Bar`.\n3. Configura le proprietà del nodo `Bar` nell'Inspector:\n   - Estremo inferiore dell'intervallo: `0.0`\n   - Estremo superiore dell'intervallo: `100.0`\n   - Riempimento iniziale: `50.0`\n4. Collega alla radice `AffinityBar` lo script `res://ui/affinity_bar.gd` con due metodi:\n   - `set_affinity(amount: float) -> void`: imposta il livello visualizzato da `Bar`.\n   - `get_affinity() -> float`: restituisce il livello corrente visualizzato da `Bar`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "la-mia-visual-novel",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Apri la finestra di creazione dei nodi premendo **+** ed esplora i nodi di interfaccia grafica derivati da `Range`, oppure digita termini legati all'avanzamento visivo.",
+     "Nella documentazione di Godot, sotto i nodi `Control`, c'è un elemento grafico specializzato nel disegnare una barra rettangolare colorata proporzionale a un numero.",
+     "Le proprietà per stabilire gli estremi numerici e il livello visualizzato si trovano raggruppate nella sezione dell'Inspector dedicata alla gestione degli intervalli."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/affinity_bar.tscn",
+      "descrizione": "La scena res://ui/affinity_bar.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://ui/affinity_bar.tscn",
+      "tipoNodo": "Control",
+      "nome": "AffinityBar",
+      "descrizione": "La radice della scena è un Control chiamato AffinityBar"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://ui/affinity_bar.tscn",
+      "tipoNodo": "ProgressBar",
+      "nome": "Bar",
+      "genitore": "AffinityBar",
+      "descrizione": "All'interno di AffinityBar c'è un nodo ProgressBar chiamato Bar"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://ui/affinity_bar.tscn",
+      "nodo": "AffinityBar",
+      "descrizione": "Il nodo AffinityBar ha uno script collegato"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://ui/affinity_bar.tscn\")\n\tif not check(\"scene_instantiated\", scene != null, \"La scena res://ui/affinity_bar.tscn deve potersi istanziare senza errori\"):\n\t\treturn\n\t\n\tvar bar := find_by_name(scene, \"Bar\") as ProgressBar\n\tif not check(\"bar_node\", bar != null, \"All'interno di AffinityBar deve esserci un nodo ProgressBar chiamato Bar\"):\n\t\treturn\n\t\n\tcheck(\"min_value\", absf(bar.min_value - 0.0) < 0.01, \"Il limite minimo della barra deve essere 0.0 (è %.1f)\" % bar.min_value)\n\tcheck(\"max_value\", absf(bar.max_value - 100.0) < 0.01, \"Il limite massimo della barra deve essere 100.0 (è %.1f)\" % bar.max_value)\n\tcheck(\"initial_value\", absf(bar.value - 50.0) < 0.01, \"Il valore iniziale della barra deve essere 50.0 (è %.1f)\" % bar.value)\n\t\n\tcall_if_exists(scene, \"set_affinity\", [80.0])\n\tvar read_val = call_if_exists(scene, \"get_affinity\")\n\tcheck(\"get_set_affinity\", read_val != null and absf(float(read_val) - 80.0) < 0.01, \"Dopo aver chiamato set_affinity(80.0), get_affinity() deve restituire 80.0\")",
+      "descrizione": "La barra ha i limiti corretti e set_affinity/get_affinity ne aggiornano il valore"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [
+     "ProgressBar",
+     "value",
+     "max_value"
+    ],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "ui/affinity_bar.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/affinity_bar.gd\" id=\"1_bar_script\"]\n\n[node name=\"AffinityBar\" type=\"Control\"]\ncustom_minimum_size = Vector2(200, 24)\nlayout_mode = 3\nanchors_preset = 0\noffset_right = 200.0\noffset_bottom = 24.0\nscript = ExtResource(\"1_bar_script\")\n\n[node name=\"Bar\" type=\"ProgressBar\" parent=\".\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nmin_value = 0.0\nmax_value = 100.0\nvalue = 50.0\n"
+      },
+      {
+       "percorso": "ui/affinity_bar.gd",
+       "contenuto": "class_name AffinityBar\nextends Control\n\n@onready var bar: ProgressBar = $Bar\n\n\nfunc set_affinity(amount: float) -> void:\n\tif not bar:\n\t\tbar = get_node_or_null(\"Bar\") as ProgressBar\n\tif bar:\n\t\tbar.value = amount\n\n\nfunc get_affinity() -> float:\n\tif not bar:\n\t\tbar = get_node_or_null(\"Bar\") as ProgressBar\n\tif bar:\n\t\treturn bar.value\n\treturn 0.0\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "In Godot il nodo per mostrare barre di avanzamento orizzontali è `ProgressBar`, che eredita da `Range`. Attraverso le proprietà `min_value`, `max_value` e `value` è possibile configurare l'intervallo di valori consentiti e il riempimento corrente della barra. Nello script `ui/affinity_bar.gd`, assegnare o leggere la proprietà `value` del nodo figlio aggiorna istantaneamente sia il dato numerico sia il riempimento grafico a schermo.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "trova",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "da-zero",
+    "titolo": "Progetto «La tua visual novel» – tappa 3: tre funzioni tue",
+    "consegna": "Questa è la tappa in cui arricchisci il motore della tua visual novel con tre funzioni a scelta costruite da te in piena autonomia.\n\nScegli ed esegui con successo **almeno 3 delle 4 funzioni** elencate di seguito. Ciascuna funzione deve rispettare esattamente il percorso del file e la firma dei metodi indicati:\n\n### Opzione A — Gestore dell'Affinità (`res://core/affinity_manager.gd`)\nCrea lo script `res://core/affinity_manager.gd` (estende `RefCounted` o `Node`) per tracciare il rapporto con i personaggi:\n- `set_affinity(character_id: String, value: int) -> void`: imposta l'affinità del personaggio al valore specificato.\n- `get_affinity(character_id: String) -> int`: restituisce l'affinità attuale del personaggio. Se il personaggio non è mai stato registrato, restituisce `0`.\n- `add_affinity(character_id: String, amount: int) -> void`: somma `amount` (positivo o negativo) all'affinità del personaggio. Se non era registrato, parte da `0`.\n- `has_character(character_id: String) -> bool`: restituisce `true` se il personaggio è presente nel registro dell'affinità, altrimenti `false`.\n\n### Opzione B — Salvataggio Rapido (`res://core/quick_save_manager.gd`)\nCrea lo script `res://core/quick_save_manager.gd` (estende `RefCounted` o `Node`) che memorizza e carica un file su disco in `user://quicksave.json`:\n- `quick_save(data: Dictionary) -> bool`: serializza il dizionario in formato JSON e lo scrive nel file `user://quicksave.json`. Restituisce `true` se l'operazione ha avuto successo, altrimenti `false`.\n- `quick_load() -> Dictionary`: legge e analizza `user://quicksave.json` e restituisce il dizionario. Se il file non esiste o il contenuto non è un dizionario valido, restituisce `{}`.\n- `has_quick_save() -> bool`: restituisce `true` se il file `user://quicksave.json` esiste già su disco, altrimenti `false`.\n\n### Opzione C — Diario della Storia (`res://core/journal_manager.gd`)\nCrea lo script `res://core/journal_manager.gd` (estende `RefCounted` o `Node`) per raccogliere le note scoperte durante la trama:\n- `add_entry(entry_id: String, text: String) -> void`: inserisce una nuova voce. Se una voce con lo stesso `entry_id` è già presente, la richiesta viene ignorata senza duplicati.\n- `has_entry(entry_id: String) -> bool`: restituisce `true` se la voce con quell'identificativo esiste nel diario, altrimenti `false`.\n- `get_entries() -> Array[Dictionary]`: restituisce l'elenco delle voci. Ogni voce deve essere un dizionario contenente almeno le chiavi `\"id\"` (String) e `\"text\"` (String).\n- `clear_journal() -> void`: svuota tutte le voci del diario.\n\n### Opzione D — Mappa dei Luoghi (`res://core/map_manager.gd`)\nCrea lo script `res://core/map_manager.gd` (estende `RefCounted` o `Node`) per sbloccare e consultare le aree esplorabili:\n- `unlock_location(location_id: String) -> void`: sblocca la località indicata senza creare duplicati.\n- `is_unlocked(location_id: String) -> bool`: restituisce `true` se la località risulta sbloccata, altrimenti `false`.\n- `get_unlocked_locations() -> Array[String]`: restituisce l'elenco degli id di tutti i luoghi sbloccati finora.\n- `reset_locations() -> void`: azzera l'elenco delle località sbloccate.\n\n### Integrità del motore\nLa scena di gioco `res://story/story_screen.tscn` deve continuare a caricarsi e funzionare regolarmente insieme a tutti i sistemi preesistenti.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "la-mia-visual-novel",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "progetto_godot",
+      "descrizione": "Il progetto contiene una configurazione valida di Godot 4"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://story/story_screen.tscn",
+      "descrizione": "La scena della storia res://story/story_screen.tscn è presente nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar passed_features: int = 0\n\t\n\t# Controllo Opzione A: AffinityManager\n\tif FileAccess.file_exists(\"res://core/affinity_manager.gd\"):\n\t\tvar aff_script = load(\"res://core/affinity_manager.gd\")\n\t\tif aff_script:\n\t\t\tvar aff = aff_script.new()\n\t\t\tif aff and has_function(aff, \"set_affinity\") and has_function(aff, \"get_affinity\") and has_function(aff, \"add_affinity\") and has_function(aff, \"has_character\"):\n\t\t\t\tvar initial_val = call_if_exists(aff, \"get_affinity\", [\"elena\"], -999)\n\t\t\t\tcall_if_exists(aff, \"set_affinity\", [\"elena\", 10])\n\t\t\t\tvar set_val = call_if_exists(aff, \"get_affinity\", [\"elena\"], -999)\n\t\t\t\tcall_if_exists(aff, \"add_affinity\", [\"elena\", 5])\n\t\t\t\tvar add_val = call_if_exists(aff, \"get_affinity\", [\"elena\"], -999)\n\t\t\t\tvar has_char = call_if_exists(aff, \"has_character\", [\"elena\"], false)\n\t\t\t\tvar has_fake = call_if_exists(aff, \"has_character\", [\"sconosciuto\"], true)\n\t\t\t\tif initial_val == 0 and set_val == 10 and add_val == 15 and has_char == true and has_fake == false:\n\t\t\t\t\tpassed_features += 1\n\t\t\tif aff is Node:\n\t\t\t\taff.free()\n\t\n\t# Controllo Opzione B: QuickSaveManager\n\tif FileAccess.file_exists(\"res://core/quick_save_manager.gd\"):\n\t\tvar qs_script = load(\"res://core/quick_save_manager.gd\")\n\t\tif qs_script:\n\t\t\tvar qs = qs_script.new()\n\t\t\tif qs and has_function(qs, \"quick_save\") and has_function(qs, \"quick_load\") and has_function(qs, \"has_quick_save\"):\n\t\t\t\tvar test_data: Dictionary = {\"chapter\": 2, \"speaker\": \"Elena\"}\n\t\t\t\tvar save_ok = call_if_exists(qs, \"quick_save\", [test_data], false)\n\t\t\t\tvar has_file = call_if_exists(qs, \"has_quick_save\", [], false)\n\t\t\t\tvar loaded = call_if_exists(qs, \"quick_load\", [], {})\n\t\t\t\tif save_ok == true and has_file == true and loaded is Dictionary and int(loaded.get(\"chapter\", 0)) == 2:\n\t\t\t\t\tpassed_features += 1\n\t\t\tif qs is Node:\n\t\t\t\tqs.free()\n\t\n\t# Controllo Opzione C: JournalManager\n\tif FileAccess.file_exists(\"res://core/journal_manager.gd\"):\n\t\tvar jm_script = load(\"res://core/journal_manager.gd\")\n\t\tif jm_script:\n\t\t\tvar jm = jm_script.new()\n\t\t\tif jm and has_function(jm, \"add_entry\") and has_function(jm, \"has_entry\") and has_function(jm, \"get_entries\") and has_function(jm, \"clear_journal\"):\n\t\t\t\tcall_if_exists(jm, \"clear_journal\", [])\n\t\t\t\tcall_if_exists(jm, \"add_entry\", [\"indizio_1\", \"Una vecchia chiave\"])\n\t\t\t\tcall_if_exists(jm, \"add_entry\", [\"indizio_1\", \"Duplicato\"])\n\t\t\t\tvar has_indizio = call_if_exists(jm, \"has_entry\", [\"indizio_1\"], false)\n\t\t\t\tvar has_mancante = call_if_exists(jm, \"has_entry\", [\"nessuno\"], true)\n\t\t\t\tvar entries = call_if_exists(jm, \"get_entries\", [], [])\n\t\t\t\tif has_indizio == true and has_mancante == false and entries is Array and entries.size() == 1:\n\t\t\t\t\tvar first_entry = entries[0]\n\t\t\t\t\tif first_entry is Dictionary and String(first_entry.get(\"id\", \"\")) == \"indizio_1\" and String(first_entry.get(\"text\", \"\")) == \"Una vecchia chiave\":\n\t\t\t\t\t\tpassed_features += 1\n\t\t\tif jm is Node:\n\t\t\t\tjm.free()\n\t\n\t# Controllo Opzione D: MapManager\n\tif FileAccess.file_exists(\"res://core/map_manager.gd\"):\n\t\tvar map_script = load(\"res://core/map_manager.gd\")\n\t\tif map_script:\n\t\t\tvar mm = map_script.new()\n\t\t\tif mm and has_function(mm, \"unlock_location\") and has_function(mm, \"is_unlocked\") and has_function(mm, \"get_unlocked_locations\") and has_function(mm, \"reset_locations\"):\n\t\t\t\tcall_if_exists(mm, \"reset_locations\", [])\n\t\t\t\tcall_if_exists(mm, \"unlock_location\", [\"archivio\"])\n\t\t\t\tcall_if_exists(mm, \"unlock_location\", [\"archivio\"])\n\t\t\t\tvar is_arch = call_if_exists(mm, \"is_unlocked\", [\"archivio\"], false)\n\t\t\t\tvar is_falso = call_if_exists(mm, \"is_unlocked\", [\"giardino\"], true)\n\t\t\t\tvar locs = call_if_exists(mm, \"get_unlocked_locations\", [], [])\n\t\t\t\tif is_arch == true and is_falso == false and locs is Array and locs.size() == 1 and String(locs[0]) == \"archivio\":\n\t\t\t\t\tpassed_features += 1\n\t\t\tif mm is Node:\n\t\t\t\tmm.free()\n\t\n\tcheck(\"tre_funzioni_valide\", passed_features >= 3, \"Devi aver implementato e reso funzionanti almeno 3 funzioni tra quelle dell'elenco (funzioni corrette riscontrate: %d/3)\" % passed_features)\n\t\n\tvar story := await instantiate_scene(\"res://story/story_screen.tscn\")\n\tcheck(\"story_screen_ok\", story != null, \"La scena res://story/story_screen.tscn deve potersi istanziare senza errori\")",
+      "descrizione": "Almeno tre funzioni dell'elenco sono state completate con successo e il motore continua a funzionare"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "core/affinity_manager.gd",
+       "contenuto": "class_name AffinityManager\nextends RefCounted\n\nvar _affinity_data: Dictionary = {}\n\n\nfunc set_affinity(character_id: String, value: int) -> void:\n\t_affinity_data[character_id] = value\n\n\nfunc get_affinity(character_id: String) -> int:\n\treturn int(_affinity_data.get(character_id, 0))\n\n\nfunc add_affinity(character_id: String, amount: int) -> void:\n\tvar current: int = get_affinity(character_id)\n\tset_affinity(character_id, current + amount)\n\n\nfunc has_character(character_id: String) -> bool:\n\treturn _affinity_data.has(character_id)\n"
+      },
+      {
+       "percorso": "core/quick_save_manager.gd",
+       "contenuto": "class_name QuickSaveManager\nextends RefCounted\n\nconst SAVE_PATH: String = \"user://quicksave.json\"\n\n\nfunc quick_save(data: Dictionary) -> bool:\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)\n\tif not file:\n\t\treturn false\n\tvar json_string := JSON.stringify(data)\n\tfile.store_string(json_string)\n\tfile.close()\n\treturn true\n\n\nfunc quick_load() -> Dictionary:\n\tif not has_quick_save():\n\t\treturn {}\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.READ)\n\tif not file:\n\t\treturn {}\n\tvar content := file.get_as_text()\n\tfile.close()\n\tvar json := JSON.new()\n\tvar err := json.parse(content)\n\tif err != OK or not (json.data is Dictionary):\n\t\treturn {}\n\treturn json.data as Dictionary\n\n\nfunc has_quick_save() -> bool:\n\treturn FileAccess.file_exists(SAVE_PATH)\n"
+      },
+      {
+       "percorso": "core/journal_manager.gd",
+       "contenuto": "class_name JournalManager\nextends RefCounted\n\nvar _entries: Array[Dictionary] = []\n\n\nfunc add_entry(entry_id: String, text: String) -> void:\n\tif has_entry(entry_id):\n\t\treturn\n\t_entries.append({\n\t\t\"id\": entry_id,\n\t\t\"text\": text\n\t})\n\n\nfunc has_entry(entry_id: String) -> bool:\n\tfor item in _entries:\n\t\tif item.get(\"id\", \"\") == entry_id:\n\t\t\treturn true\n\treturn false\n\n\nfunc get_entries() -> Array[Dictionary]:\n\treturn _entries.duplicate()\n\n\nfunc clear_journal() -> void:\n\t_entries.clear()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La soluzione implementa tre moduli indipendenti scelti dall'elenco:\n1. `AffinityManager` gestisce una tabella chiave-valore di punteggi d'intesa per personaggio, restituendo 0 di default e consentendo incrementi o verifiche di esistenza.\n2. `QuickSaveManager` salva e carica lo stato del gioco su `user://quicksave.json` tramite `FileAccess` e la classe `JSON`, gestendo in sicurezza i casi in cui il file non esiste o è illeggibile.\n3. `JournalManager` memorizza le voci del diario come una lista di dizionari ordinati, prevenendo l'inserimento di id duplicati e fornendo una copia pulita dell'elenco con `duplicate()`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "da-zero",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  }
+ },
  "avvisi": [],
- "modelli": [],
+ "modelli": [
+  "gemini/gemini-3.7-flash"
+ ],
  "teoria": {
   "titolo": "Progetto «La tua visual novel» – tappa 3: tre funzioni tue",
   "sommario": "Tre funzioni scelte da un elenco e costruite da solo: per esempio un indicatore di affinità con un personaggio, il salvataggio rapido, un diario che si riempie, un minigioco dentro la storia, una mappa da cui scegliere la scena.",
@@ -25,5 +179,9 @@
     "md": "- Nessun passo e nessun suggerimento: decidi tu scene, script e nomi, tranne quelli che la consegna fissa.\n- La piattaforma esegue il tuo progetto e controlla cosa succede.\n- Se ti blocchi, riapri la lezione della fase che tratta quel punto: non c'è fretta."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "test"
+ ]
 }
