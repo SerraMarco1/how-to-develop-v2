@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-07T10:37:35.857Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-07T10:38:41.404Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-vn-4",
   "numero": "6.28",
   "titolo": "Progetto «La tua visual novel» – tappa 4: finire"
  },
- "messaggio": "Sta scrivendo la lezione 6.28 «Progetto «La tua visual novel» – tappa 4: finire».",
- "riprende": null
+ "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 6.28 riprende quando si azzerano.",
+ "riprende": "2026-11-08T08:00:00.404Z"
 }
