@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-07T09:18:08.770Z",
+ "aggiornato": "2026-11-07T09:25:40.257Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -884,6 +884,15 @@
    "file": "lezioni/f06-visual-novel/collaudo.json",
    "sha256": "f81f601ba4dcc55e546688d0868346b8a7b3a38bfe1526e03adb8e8363d57e70",
    "byte": 359367
+  },
+  {
+   "slug": "progetto-vn-1",
+   "numero": "6.25",
+   "titolo": "Progetto «La tua visual novel» – tappa 1: storia e materiali",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/progetto-vn-1.json",
+   "sha256": "8a004f86e64d52a70e45f84de2715a3c053fcee24d5bd48aadd74d60d209d5b1",
+   "byte": 303718
   }
  ],
  "documentazione": {
