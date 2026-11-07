@@ -53,3 +53,4 @@
 {"quando":1794046644231,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-vn-3","ok":false,"contata":true,"durataMs":2157,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794047326241,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-vn-3","ok":true,"contata":true,"durataMs":478776,"tokenInput":20001,"tokenOutput":6105,"ragionamento":28365}
 {"quando":1794047833375,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-vn-3","ok":true,"contata":true,"durataMs":8150,"tokenInput":5988,"tokenOutput":12,"ragionamento":1426}
+{"quando":1794047842922,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-vn-3","ok":true,"contata":true,"durataMs":7412,"tokenInput":2809,"tokenOutput":724,"ragionamento":2015}
