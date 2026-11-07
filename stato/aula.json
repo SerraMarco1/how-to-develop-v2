@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-07T08:46:02.204Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-07T08:52:49.165Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "pubblicare",
   "numero": "6.23",
   "titolo": "Pubblicare su itch.io"
  },
- "messaggio": "Sta scrivendo la lezione 6.23 «Pubblicare su itch.io».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.23 riprende da sola appena rispondono.",
+ "riprende": "2026-11-07T09:02:49.165Z"
 }
