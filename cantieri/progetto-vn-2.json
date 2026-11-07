@@ -1020,7 +1020,8 @@
  "modelli": [
   "gemini/gemini-flash-latest",
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Progetto «La tua visual novel» – tappa 2: scrivere la storia",
@@ -1049,5 +1050,10 @@
   "es1",
   "test"
  ],
- "praticaRifatta": true
+ "praticaRifatta": true,
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
