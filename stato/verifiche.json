@@ -493,5 +493,20 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "pubblicare": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "collaudo": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "progetto-vn-1": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
