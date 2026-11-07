@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-07T08:01:33.396Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-07T08:12:44.773Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "esportare-windows-e-web",
   "numero": "6.22",
   "titolo": "Esportare: Windows e Web"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 6.22 riprende da sola appena rispondono.",
- "riprende": "2026-11-07T08:11:33.395Z"
+ "messaggio": "Sta scrivendo la lezione 6.22 «Esportare: Windows e Web».",
+ "riprende": null
 }
