@@ -800,7 +800,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Progetto «La tua visual novel» – tappa 1: storia e materiali",
@@ -828,5 +829,10 @@
  "ordine": [
   "es1",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
