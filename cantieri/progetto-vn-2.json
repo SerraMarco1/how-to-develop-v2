@@ -411,7 +411,9 @@
    "genere": "da-zero",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Invalid call. Nonexistent function 'has_method' in base 'Nil'. (res://htd/verifica_1.gd:15 in _run_tests)\nOutput di Godot:\nERROR: Class 'EditorScript' can only be instantiated by editor.\n   at: _instantiate_internal (core/object/class_db.cpp:603)\nERROR: Can't inherit from a virtual class.\n   at: _new (modules/gdscript/gdscript.cpp:239)\nSCRIPT ERROR: Invalid call. Nonexistent function 'has_method' in base 'Nil'.\n          at: _run_tests (res://htd/verifica_1.gd:15)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 15: `if validator.has_method(\"validate_chapter\"):`\nSuggerimenti:\n  - Stai chiamando un metodo che quell'oggetto non ha in Godot 4.7 (spesso è un metodo di Godot 3 o inventato). Usa solo metodi che compaiono negli estratti della documentazione."
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
