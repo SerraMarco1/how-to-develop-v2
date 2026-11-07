@@ -488,5 +488,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "esportare-windows-e-web": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
