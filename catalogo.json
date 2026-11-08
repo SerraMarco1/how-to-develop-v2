@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-08T08:06:24.119Z",
+ "aggiornato": "2026-11-08T08:17:24.222Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -920,6 +920,15 @@
    "file": "lezioni/f06-visual-novel/progetto-vn-4.json",
    "sha256": "85c249e80bdbb1cf804ec524755c64c4d604e59f55053fe25783884d3d2347f6",
    "byte": 294582
+  },
+  {
+   "slug": "vettori-per-il-movimento",
+   "numero": "7.0",
+   "titolo": "Vettori per il movimento",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/vettori-per-il-movimento.json",
+   "sha256": "4740d9b9d26834ba39c7b5cb85a99afeb0cb24fbb5d990af4e1df416cc0a59bf",
+   "byte": 42772
   }
  ],
  "documentazione": {
