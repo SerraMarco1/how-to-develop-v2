@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-08T08:17:24.222Z",
+ "aggiornato": "2026-11-08T08:27:16.829Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -929,6 +929,15 @@
    "file": "lezioni/f07-azione-2d/vettori-per-il-movimento.json",
    "sha256": "4740d9b9d26834ba39c7b5cb85a99afeb0cb24fbb5d990af4e1df416cc0a59bf",
    "byte": 42772
+  },
+  {
+   "slug": "characterbody2d",
+   "numero": "7.1",
+   "titolo": "CharacterBody2D e move_and_slide()",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/characterbody2d.json",
+   "sha256": "7659bbd996cb485a01ddb83016946b0bf6bceb1101319ff7a5f77e414032e575",
+   "byte": 53915
   }
  ],
  "documentazione": {
