@@ -717,7 +717,9 @@
    "genere": "imita",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il pavimento Ground deve avere tessere (2,0) per l'intera griglia da (0,0) a (9,9)\n  - I muri su Walls devono coprire il perimetro lasciando libero solo il varco in (5,9)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
