@@ -629,7 +629,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si apre senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar guard := find_by_name(main, \"Guard\") as CharacterBody2D\n\tvar chest := find_by_name(main, \"Chest\") as StaticBody2D\n\t\n\tif not check(\"player\", player != null, \"Manca il nodo Player\"): return\n\tif not check(\"guard\", guard != null, \"Manca il nodo Guard\"): return\n\tif not check(\"chest\", chest != null, \"Manca il nodo Chest\"): return\n\t\n\t# Player prova a salire verso la cassa a (200, 100)\n\tplayer.global_position = Vector2(200, 200)\n\tchest.global_position = Vector2(200, 100)\n\tawait hold_action(\"move_up\", 30)\n\tcheck(\"player_chest\", player.global_position.y > 110.0, \"Player deve fermarsi contro Chest (pos y: %.1f)\" % player.global_position.y)\n\t\n\t# Guard si muove verso la cassa a (200, 100)\n\tguard.global_position = Vector2(200, 200)\n\tguard.target_position = Vector2(200, 50)\n\tawait wait_physics_frames(75)\n\tcheck(\"guard_chest\", guard.global_position.y < 90.0, \"Guard deve attraversare Chest senza fermarsi (pos y: %.1f)\" % guard.global_position.y)",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si apre senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar guard := find_by_name(main, \"Guard\") as CharacterBody2D\n\tvar chest := find_by_name(main, \"Chest\") as StaticBody2D\n\t\n\tif not check(\"player\", player != null, \"Manca il nodo Player\"): return\n\tif not check(\"guard\", guard != null, \"Manca il nodo Guard\"): return\n\tif not check(\"chest\", chest != null, \"Manca il nodo Chest\"): return\n\t\n\tcheck(\"chest_layer\", chest.collision_layer == 8, \"Il Collision Layer di Chest deve essere il Layer 4 Items (valore 8)\")\n\tcheck(\"chest_mask\", chest.collision_mask == 0, \"La Collision Mask di Chest deve essere disattivata (valore 0)\")\n\tcheck(\"player_mask\", player.collision_mask == 14, \"La Collision Mask di Player deve essere 14 (Layer 2 + 3 + 4)\")\n\tcheck(\"guard_mask\", guard.collision_mask == 2, \"La Collision Mask di Guard deve essere 2 (solo Layer 2)\")\n\t\n\t# Player prova a salire verso la cassa a (200, 100) partendo da ridosso a (200, 160)\n\tchest.global_position = Vector2(200, 100)\n\tplayer.global_position = Vector2(200, 160)\n\tplayer.velocity = Vector2.ZERO\n\tawait hold_action(\"move_up\", 30)\n\tcheck(\"player_chest\", player.global_position.y > 145.0, \"Player deve fermarsi contro Chest (pos y: %.1f)\" % player.global_position.y)\n\t\n\t# Guard si muove verso l'alto attraversando la cassa\n\tguard.global_position = Vector2(200, 155)\n\tguard.velocity = Vector2.ZERO\n\tguard.target_position = Vector2(200, 50)\n\tvar guard_speed = get_prop(guard, \"speed\", 120.0)\n\tvar frames: int = clampi(int(ceil(60.0 * (60.0 / maxf(float(guard_speed), 10.0)))) + 10, 30, 90)\n\tawait wait_physics_frames(frames)\n\tcheck(\"guard_chest\", guard.global_position.y < 140.0, \"Guard deve attraversare Chest senza fermarsi (pos y: %.1f)\" % guard.global_position.y)",
       "descrizione": "Player si ferma contro la cassa, mentre Guard la attraversa"
      }
     ],
@@ -721,14 +721,15 @@
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "VERIFICHE FRAGILI: le verifiche bocciano una soluzione giusta. Nella soluzione sono cambiati solo valori che il testo dell'esercizio non impone, quindi chi lo fa può sceglierli diversi:\n  - guard.gd: `speed` da 120.0 a 60.0\n  - guard.gd: `acceleration` da 800.0 a 400.0\n  - guard.gd: `friction` da 600.0 a 300.0\n  - player.gd: `acceleration` da 1200.0 a 600.0\n  - player.gd: `friction` da 1000.0 a 500.0\n  - player.gd: `sprint_multiplier` da 1.5 a 0.75\nCon questi valori non passano più:\n  - Guard deve attraversare Chest senza fermarsi (pos y: 125.9)\nCorreggi le VERIFICHE, non la soluzione: devono accettare qualunque valore che la consegna lascia libero. Per esempio: prima di misurare un movimento metti il nodo in un punto noto (`nodo.position = Vector2(400, 300)`); per controllare un limite porta il nodo oltre il limite e tieni premuta l'azione per pochi frame, invece di aspettare che ci arrivi da solo in un tempo fisso; confronta con valori letti dal gioco (`get_prop` legge anche le costanti) invece che scritti nella verifica. Se invece uno di quei valori fa davvero parte del compito, scrivilo in cifre nella consegna."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   },
   "test": {
@@ -835,7 +836,8 @@
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-lite-latest",
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Muri, forme, layer e maschere",
