@@ -436,8 +436,7 @@
     "cartella": "il-custode",
     "passiGuida": [],
     "suggerimenti": [
-     "Puoi aggiungere l'azione `sprint` aprendo *Project -> Project Settings -> Input Map*, scrivendo `sprint` e associando il tasto Shift.",
-     "Dentro `update_velocity()`, puoi calcolare la velocità massima attuale memorizzandola in una variabile locale: `var current_max_speed: float = max_speed`, ed eventualmente moltiplicandola per `sprint_multiplier` se `Input.is_action_pressed(\"sprint\")` è vero."
+     "Puoi aggiungere l'azione `sprint` aprendo *Project -> Project Settings -> Input Map*, scrivendo `sprint` e associando il tasto Shift."
     ],
     "verifiche": [
      {
@@ -453,7 +452,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player_exists\", player != null, \"Il nodo Player deve essere un CharacterBody2D nella scena main.tscn\"):\n\t\treturn\n\t\n\tplayer.position = Vector2(400.0, 300.0)\n\tplayer.velocity = Vector2.ZERO\n\t\n\tvar max_speed: float = get_prop(player, \"max_speed\", 200.0)\n\tvar sprint_mult: float = get_prop(player, \"sprint_multiplier\", 1.5)\n\t\n\tawait hold_action(\"move_right\", 30)\n\tcheck(\"normal_speed\", absf(player.velocity.x - max_speed) < 2.0, \"Senza scatto la velocità massima orizzontale deve essere pari a max_speed (trovata velocity.x = %.1f, atteso %.1f)\" % [player.velocity.x, max_speed])\n\t\n\tawait wait_physics_frames(25)\n\tcheck(\"brake_to_zero\", player.velocity.length() < 1.0, \"Rilasciando i tasti la velocità deve azzerarsi per la frenata (trovata velocità = %.1f)\" % player.velocity.length())\n\t\n\tplayer.position = Vector2(400.0, 300.0)\n\tplayer.velocity = Vector2.ZERO\n\tInput.action_press(\"sprint\")\n\tawait hold_action(\"move_right\", 30)\n\tInput.action_release(\"sprint\")\n\tvar expected_sprint: float = max_speed * sprint_mult\n\tcheck(\"sprint_speed\", absf(player.velocity.x - expected_sprint) < 3.0, \"Con lo scatto attivo la velocità X deve raggiungere max_speed * sprint_multiplier (trovata velocity.x = %.1f, atteso %.1f)\" % [player.velocity.x, expected_sprint])\n\t\n\tplayer.position = Vector2(400.0, 300.0)\n\tplayer.velocity = Vector2.ZERO\n\tInput.action_press(\"move_right\")\n\tInput.action_press(\"move_down\")\n\tawait wait_physics_frames(35)\n\tInput.action_release(\"move_right\")\n\tInput.action_release(\"move_down\")\n\tvar diag_speed: float = player.velocity.length()\n\tcheck(\"diagonal_speed\", absf(diag_speed - max_speed) < 3.0, \"In diagonale la lunghezza della velocità deve rimanere pari a max_speed (trovata velocità = %.1f, atteso %.1f)\" % [diag_speed, max_speed])",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player_exists\", player != null, \"Il nodo Player deve essere un CharacterBody2D nella scena main.tscn\"):\n\t\treturn\n\t\n\tplayer.position = Vector2(400.0, 300.0)\n\tplayer.velocity = Vector2.ZERO\n\t\n\tvar max_speed: float = get_prop(player, \"max_speed\", 200.0)\n\tvar sprint_mult: float = get_prop(player, \"sprint_multiplier\", 1.5)\n\t\n\tInput.action_press(\"move_right\")\n\tawait wait_physics_frames(30)\n\tcheck(\"normal_speed\", absf(player.velocity.x - max_speed) < 2.0, \"Senza scatto la velocità massima orizzontale deve essere pari a max_speed (trovata velocity.x = %.1f, atteso %.1f)\" % [player.velocity.x, max_speed])\n\tInput.action_release(\"move_right\")\n\t\n\tawait wait_physics_frames(25)\n\tcheck(\"brake_to_zero\", player.velocity.length() < 1.0, \"Rilasciando i tasti la velocità deve azzerarsi per la frenata (trovata velocità = %.1f)\" % player.velocity.length())\n\t\n\tplayer.position = Vector2(400.0, 300.0)\n\tplayer.velocity = Vector2.ZERO\n\tInput.action_press(\"sprint\")\n\tInput.action_press(\"move_right\")\n\tawait wait_physics_frames(30)\n\tvar expected_sprint: float = max_speed * sprint_mult\n\tcheck(\"sprint_speed\", absf(player.velocity.x - expected_sprint) < 3.0, \"Con lo scatto attivo la velocità X deve raggiungere max_speed * sprint_multiplier (trovata velocity.x = %.1f, atteso %.1f)\" % [player.velocity.x, expected_sprint])\n\tInput.action_release(\"sprint\")\n\tInput.action_release(\"move_right\")\n\t\n\tawait wait_physics_frames(10)\n\tplayer.position = Vector2(400.0, 300.0)\n\tplayer.velocity = Vector2.ZERO\n\tInput.action_press(\"move_right\")\n\tInput.action_press(\"move_down\")\n\tawait wait_physics_frames(35)\n\tvar diag_speed: float = player.velocity.length()\n\tcheck(\"diagonal_speed\", absf(diag_speed - max_speed) < 3.0, \"In diagonale la lunghezza della velocità deve rimanere pari a max_speed (trovata velocità = %.1f, atteso %.1f)\" % [diag_speed, max_speed])\n\tInput.action_release(\"move_right\")\n\tInput.action_release(\"move_down\")",
       "descrizione": "Il custode risponde alle azioni di movimento con accelerazione, frenata, scatto con Shift e velocità diagonale normalizzata"
      }
     ],
@@ -461,6 +460,14 @@
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": "guard.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 120.0\n@export var acceleration: float = 800.0\n@export var friction: float = 600.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 4.0:\n\t\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\tif direction != Vector2.ZERO:\n\t\t\trotation = direction.angle()\n\t\tvar target_velocity: Vector2 = direction * speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\t\n\tmove_and_slide()\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n"
+      },
       {
        "percorso": "player.gd",
        "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n"
@@ -514,12 +521,13 @@
     }
    },
    "genere": "obiettivo",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Senza scatto la velocità massima orizzontale deve essere pari a max_speed (trovata velocity.x = 183.3, atteso 200.0)\n  - Con lo scatto attivo la velocità X deve raggiungere max_speed * sprint_multiplier (trovata velocity.x = 283.3, atteso 300.0)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
   }
