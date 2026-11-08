@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-08T08:43:11.241Z",
+ "aggiornato": "2026-11-08T08:58:41.822Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -938,6 +938,15 @@
    "file": "lezioni/f07-azione-2d/characterbody2d.json",
    "sha256": "b0b556ac4ebc7974803c6377554a7175e18c24eefef895b0bd08b13f2006c510",
    "byte": 54671
+  },
+  {
+   "slug": "muri-layer-e-maschere",
+   "numero": "7.2",
+   "titolo": "Muri, forme, layer e maschere",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/muri-layer-e-maschere.json",
+   "sha256": "3a22d04ea602976d93529fd52fcfbed40d084e13f6c441d2cc7b38fcb5995611",
+   "byte": 72511
   }
  ],
  "documentazione": {
