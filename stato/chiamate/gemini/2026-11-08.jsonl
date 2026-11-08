@@ -13,3 +13,6 @@
 {"quando":1794126005715,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"characterbody2d","ok":true,"contata":true,"durataMs":27859,"tokenInput":9880,"tokenOutput":2568,"ragionamento":4737}
 {"quando":1794126072657,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"characterbody2d","ok":false,"contata":true,"durataMs":4101,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794126076764,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"characterbody2d","ok":true,"contata":true,"durataMs":34258,"tokenInput":10096,"tokenOutput":2783,"ragionamento":7219}
+{"quando":1794126135400,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"characterbody2d","ok":false,"contata":true,"durataMs":280099,"errore":"Nessuna risposta entro 280 secondi"}
+{"quando":1794126415504,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"characterbody2d","ok":false,"contata":true,"durataMs":451,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794126415960,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"characterbody2d","ok":true,"contata":true,"durataMs":8785,"tokenInput":12548,"tokenOutput":18,"ragionamento":2331}
