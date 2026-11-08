@@ -29,3 +29,4 @@
 {"quando":1794127760795,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":233450,"tokenInput":10614,"tokenOutput":2965,"ragionamento":12366}
 {"quando":1794128015705,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":20235,"tokenInput":10458,"tokenOutput":3129,"ragionamento":6715}
 {"quando":1794128047436,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":259972,"tokenInput":14543,"tokenOutput":12,"ragionamento":4327}
+{"quando":1794128308995,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":8610,"tokenInput":2524,"tokenOutput":710,"ragionamento":2728}
