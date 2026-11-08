@@ -1,0 +1,133 @@
+{
+ "n": 9,
+ "quando": "2026-11-08T08:20:50.382Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Convertire il custode in CharacterBody2D». 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo 2 correzioni.\nFile aggiunti o cambiati: player.gd, main.tscn",
+ "richieste": 0,
+ "durataMs": 15366,
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Convertire il custode in CharacterBody2D",
+   "consegna": "Converti il nodo `Player` in un corpo fisico `CharacterBody2D` per permettergli di usare il motore fisico di Godot 2D.\n\n1. Apri la scena `main.tscn` e modifica il nodo `Player` trasformandolo in un `CharacterBody2D`. Aggiungi al suo interno un nodo figlio `Sprite2D` per mantenere visibile l'icona del personaggio (`res://icon.svg`).\n2. Modifica lo script `res://player.gd` in modo che erediti da `CharacterBody2D`.\n3. Nel codice di `player.gd`, sostituisci la variabile `speed` con tre proprietà esportate:\n   - `@export var max_speed: float = 200.0`\n   - `@export var acceleration: float = 1200.0`\n   - `@export var friction: float = 1000.0`\n4. Sostituisci la funzione `_process(delta)` con `_physics_process(delta)`.\n5. Dentro `_physics_process(delta)`, calcola la velocità con `velocity.move_toward()` gestendo accelerazione e frenata, e chiama `move_and_slide()`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "il-custode",
+   "passiGuida": [
+    "Apri il progetto `Il custode` nell'editor di Godot 4.7.",
+    "Nel pannello Scene, seleziona la scena `main.tscn`. Fai clic destro sul nodo `Player` e seleziona **Change Type**, poi scegli **CharacterBody2D**.",
+    "Con il nodo `Player` selezionato, premi il pulsante **+** (Add Child Node), aggiungi un nodo di tipo `Sprite2D` e rinominalo `Sprite2D` se necessario.",
+    "Seleziona il nodo figlio `Sprite2D` e trascina la risorsa `res://icon.svg` nella proprietà **Texture** dell'Inspector.",
+    "Apri lo script `res://player.gd` dal pannello FileSystem e modifica la prima riga in `extends CharacterBody2D`.",
+    "Sostituisci la variabile `@export var speed` con tre variabili esportate: `@export var max_speed: float = 200.0`, `@export var acceleration: float = 1200.0` e `@export var friction: float = 1000.0`.",
+    "Sostituisci la funzione `_process(delta)` con `_physics_process(delta)`. Aggiorna `velocity` usando `velocity.move_toward(target_velocity, acceleration * delta)` quando c'è input e `velocity.move_toward(Vector2.ZERO, friction * delta)` quando non c'è input. Chiama `move_and_slide()` alla fine.",
+    "Salva tutti i file (Ctrl+Shift+S) ed esegui il gioco con F5 per verificare il movimento con accelerazione e frenata."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "CharacterBody2D",
+     "nome": "Player",
+     "descrizione": "La scena main.tscn contiene un nodo CharacterBody2D chiamato Player"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "Sprite2D",
+     "nome": "Sprite2D",
+     "genitore": "Player",
+     "descrizione": "Il nodo Player contiene un nodo figlio Sprite2D"
+    },
+    {
+     "tipo": "script_collegato",
+     "scena": "res://main.tscn",
+     "nodo": "Player",
+     "descrizione": "Il nodo Player ha lo script player.gd collegato"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://player.gd",
+     "regex": "move_and_slide\\(",
+     "descrizione": "Lo script player.gd chiama la funzione integrata move_and_slide()"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player_exists\", player != null, \"Il nodo Player deve essere di tipo CharacterBody2D nella scena main.tscn\"):\n\t\treturn\n\t\n\tplayer.position = Vector2(200.0, 200.0)\n\tplayer.velocity = Vector2.ZERO\n\t\n\tvar start_x: float = player.position.x\n\tawait hold_action(\"move_right\", 20)\n\tcheck(\"moved\", player.position.x > start_x + 5.0, \"Tenendo premuto a destra il personaggio deve spostarsi (pos x = %.1f, attesa > %.1f)\" % [player.position.x, start_x + 5.0])\n\t\n\tawait wait_physics_frames(25)\n\tcheck(\"friction\", absf(player.velocity.x) < 50.0, \"Rilasciando i tasti la velocità deve diminuire per la frenata (trovata velocity.x = %.1f)\" % player.velocity.x)\n",
+     "descrizione": "Il giocatore si muove con accelerazione e frena quando non si premono tasti"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Il custode\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "guard.gd",
+      "contenuto": "extends Sprite2D\n\n@export var speed: float = 120.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _process(delta: float) -> void:\n\tvar direction: Vector2 = get_direction_to_target(target_position)\n\tif direction != Vector2.ZERO:\n\t\trotation = direction.angle()\n\tglobal_position = step_toward(target_position, speed * delta)\n\n\nfunc get_direction_to_target(target: Vector2) -> Vector2:\n\treturn global_position.direction_to(target)\n\n\nfunc step_toward(target: Vector2, delta_distance: float) -> Vector2:\n\treturn global_position.move_toward(target, delta_distance)\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar target_velocity: Vector2 = direction * max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"Guard\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 100)\ntexture = ExtResource(\"1_icon\")\nscript = ExtResource(\"3_guard\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Il custode",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Abbiamo convertito il nodo `Player` in un `CharacterBody2D` mantenendo l'aspetto visivo con un figlio `Sprite2D`. Nel codice abbiamo sostituito `_process()` con `_physics_process()`, usando la proprietà integrata `velocity` di `CharacterBody2D` e chiamando `move_and_slide()` senza moltiplicare per `delta`. Per rendere il movimento morbido, usiamo `move_toward()` applicando `acceleration` quando il giocatore preme una direzione e `friction` quando rilascia i tasti.",
+    "cambiati": [
+     "player.gd",
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
