@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-08T08:43:12.713Z",
+ "aggiornato": "2026-11-08T08:58:43.158Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "muri-layer-e-maschere",
-  "numero": "7.2",
-  "titolo": "Muri, forme, layer e maschere"
+  "slug": "tilemap",
+  "numero": "7.3",
+  "titolo": "Livelli a tessere: TileSet e TileMapLayer"
  },
- "messaggio": "Sta scrivendo la lezione 7.2 «Muri, forme, layer e maschere».",
+ "messaggio": "Sta scrivendo la lezione 7.3 «Livelli a tessere: TileSet e TileMapLayer».",
  "riprende": null
 }
