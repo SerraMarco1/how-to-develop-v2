@@ -1,17 +1,22 @@
 {
- "sovraccarico": {},
+ "sovraccarico": {
+  "gemini": {
+   "volte": 1,
+   "fino": 1794127216659
+  }
+ },
  "fermi": {
   "gemini/gemini-flash-latest": {
-   "fino": 1794126769817,
-   "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+   "fino": 1794127216659,
+   "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-3.7-flash": {
-   "fino": 1794126715957,
-   "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+   "fino": 1794127216659,
+   "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1794124860397,
-   "errore": "HTTP 429: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Gener"
+   "fino": 1794127216659,
+   "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-flash-lite-latest": {
    "fino": 1794126376759,
@@ -31,5 +36,5 @@
  "troncate": {},
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": null
+ "prossimoTentativo": 1794127216662
 }

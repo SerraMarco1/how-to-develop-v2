@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-08T08:27:18.170Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-08T08:30:16.663Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "muri-layer-e-maschere",
   "numero": "7.2",
   "titolo": "Muri, forme, layer e maschere"
  },
- "messaggio": "Sta scrivendo la lezione 7.2 «Muri, forme, layer e maschere».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.2 riprende da sola appena rispondono.",
+ "riprende": "2026-11-08T08:40:16.662Z"
 }
