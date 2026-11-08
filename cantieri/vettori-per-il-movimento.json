@@ -1,6 +1,255 @@
 {
  "creato": "2026-11-08T08:06:25.496Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Prevedere i calcoli vettoriali",
+    "consegna": "Leggi con attenzione ciascuno dei sei script GDScript e scrivi il valore esatto restituito dalla funzione `run()`, senza eseguire il codice nell'editor.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> Vector2:\n\tvar position: Vector2 = Vector2(100.0, 150.0)\n\tvar displacement: Vector2 = Vector2(40.0, -30.0)\n\treturn position + displacement",
+      "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "La somma tra due vettori somma separatamente le rispettive componenti: per l'asse X calcola 100.0 + 40.0 = 140.0, mentre per l'asse Y calcola 150.0 + (-30.0) = 120.0. Il risultato finale è Vector2(140, 120)."
+     },
+     {
+      "codice": "func run() -> Vector2:\n\tvar direction: Vector2 = Vector2(0.0, 1.0)\n\tvar speed: float = 180.0\n\tvar delta: float = 0.5\n\treturn direction * speed * delta",
+      "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "La moltiplicazione di un vettore per uno scalare moltiplica ogni componente per quel numero: lungo X abbiamo 0.0 * 180.0 * 0.5 = 0.0, mentre lungo Y abbiamo 1.0 * 180.0 * 0.5 = 90.0. Il vettore risultante è Vector2(0, 90)."
+     },
+     {
+      "codice": "func run() -> Vector2:\n\tvar velocity: Vector2 = Vector2(3.0, 4.0)\n\treturn velocity.normalized()",
+      "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "La lunghezza della freccia (3, 4) si ottiene con la radice quadrata di (3² + 4²), cioè la radice di 25, che vale 5.0. Il metodo normalized() divide ogni coordinata per 5.0: 3.0 / 5.0 = 0.6 e 4.0 / 5.0 = 0.8. Il risultato è Vector2(0.6, 0.8)."
+     },
+     {
+      "codice": "func run() -> Vector2:\n\tvar from_pos: Vector2 = Vector2(200.0, 100.0)\n\tvar to_pos: Vector2 = Vector2(200.0, 350.0)\n\treturn from_pos.direction_to(to_pos)",
+      "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "direction_to(target) calcola il vettore che va da from_pos a to_pos e lo normalizza. Poiché la coordinata X è identica (200.0) e la Y aumenta di 250 pixel verso il basso, la freccia punta puramente verso il basso lungo l'asse Y positivo. Il vettore normalizzato è Vector2(0, 1)."
+     },
+     {
+      "codice": "func run() -> Vector2:\n\tvar current_pos: Vector2 = Vector2(50.0, 100.0)\n\tvar target_pos: Vector2 = Vector2(90.0, 100.0)\n\tvar step: float = 60.0\n\treturn current_pos.move_toward(target_pos, step)",
+      "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "La distanza tra (50, 100) e (90, 100) è di 40 pixel sull'asse orizzontale. Poiché il passo consentito (60.0) è maggiore della distanza residua, move_toward() non supera mai il traguardo ma vi si arresta con precisione, restituendo Vector2(90, 100)."
+     },
+     {
+      "codice": "func run() -> float:\n\tvar diagonal_input: Vector2 = Vector2(1.0, 1.0)\n\tvar normalized_dir: Vector2 = diagonal_input.normalized()\n\treturn normalized_dir.length()",
+      "domanda": "Che valore numerico di tipo float restituisce la funzione run()?",
+      "risposta": "",
+      "spiegazione": "Senza normalizzazione, il vettore diagonale (1, 1) ha una lunghezza di circa 1.414 pixel. Il metodo normalized() accorcia la freccia lasciando intatta la direzione diagonale, impostando la sua lunghezza complessiva esattamente a 1.0."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "I vettori bidimensionali combinano grandezza e orientamento: le somme muovono punti nello spazio, la moltiplicazione per scalari adatta la velocità ai singoli fotogrammi con delta, mentre normalized() garantisce che la velocità non subisca aumenti anomali lungo le diagonali. direction_to() e move_toward() permettono poi di gestire tracciamento e inseguimenti lineari senza superare i bersagli.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Il movimento bilanciato del custode",
+    "consegna": "Nel progetto `Il custode`, crea la scena principale e imposta il movimento bidimensionale del protagonista gestendo la normalizzazione dei tasti.\n\n1. Nelle impostazioni del progetto (**Project Settings** → **Input Map**), definisci quattro azioni di movimento:\n   - `move_left` con il tasto A o Freccia Sinistra\n   - `move_right` con il tasto D o Freccia Destra\n   - `move_up` con il tasto W o Freccia Su\n   - `move_down` con il tasto S o Freccia Giù\n\n2. Crea la scena `res://main.tscn` con una radice di tipo `Node2D` chiamata `Main`, e impostala come scena principale del progetto.\n\n3. All'interno di `Main`, aggiungi un nodo figlio di tipo `Sprite2D` chiamato `Player`. Assegna alla sua proprietà **Texture** l'immagine `res://icon.svg` e collegagli lo script `res://player.gd`.\n\n4. Nello script `res://player.gd` implementa:\n   - Una variabile esportata `@export var speed: float = 200.0`.\n   - La funzione `get_input_direction() -> Vector2` che legge l'input tramite `Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")` e restituisce il vettore risultante.\n   - La funzione `calculate_velocity(direction: Vector2, move_speed: float) -> Vector2` che prende una direzione e una velocità e restituisce il vettore velocità: deve applicare `.normalized()` alla direzione e moltiplicarla per `move_speed`.\n   - La funzione `_process(delta: float) -> void` che ricava la direzione con `get_input_direction()`, calcola la velocità con `calculate_velocity()` e incrementa `position` del vettore velocità scalato per `delta`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In Project Settings -> Input Map puoi creare le azioni digitando il nome e premendo Add, per poi associare i tasti con il pulsante +.",
+     "Input.get_vector() prende i nomi delle quattro azioni nell'ordine: sinistra, destra, su, giù, restituendo un vettore bilanciato con lunghezza massima 1.0.",
+     "Nella funzione calculate_velocity(), moltiplica direction.normalized() per move_speed: se direction è Vector2.ZERO, normalized() restituisce in modo sicuro Vector2.ZERO senza causare errori."
+    ],
+    "verifiche": [
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "run/main_scene",
+      "contiene": "main.tscn",
+      "descrizione": "La scena principale del progetto è impostata su res://main.tscn"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Sprite2D",
+      "nome": "Player",
+      "genitore": "Main",
+      "descrizione": "La scena main.tscn contiene un nodo Sprite2D chiamato Player dentro Main"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://main.tscn",
+      "nodo": "Player",
+      "descrizione": "Il nodo Player ha lo script player.gd collegato"
+     },
+     {
+      "tipo": "azione_input",
+      "nome": "move_right",
+      "descrizione": "La Input Map contiene l'azione move_right"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_scene\", main != null, \"La scena principale res://main.tscn deve essere impostata e caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\")\n\tif not check(\"player_node\", player != null, \"Nella scena principale deve essere presente un nodo chiamato Player\"):\n\t\treturn\n\n\tif not check(\"has_calc\", has_function(player, \"calculate_velocity\"), \"Lo script di Player deve contenere la funzione calculate_velocity(direction, move_speed)\"):\n\t\treturn\n\tif not check(\"has_input\", has_function(player, \"get_input_direction\"), \"Lo script di Player deve contenere la funzione get_input_direction()\"):\n\t\treturn\n\n\t# Controllo calcolo velocita su vettore diagonale non normalizzato\n\tvar vel_diag = call_if_exists(player, \"calculate_velocity\", [Vector2(1.0, 1.0), 200.0], Vector2.ZERO)\n\tif check(\"diag_type\", vel_diag is Vector2, \"calculate_velocity deve restituire un Vector2\"):\n\t\tvar diag_len: float = (vel_diag as Vector2).length()\n\t\tcheck(\"diag_norm\", absf(diag_len - 200.0) < 0.1, \"Con direzione diagonale (1, 1) e velocita 200.0 la lunghezza risultante deve essere 200.0 (misurata: %.1f)\" % diag_len)\n\n\t# Controllo con vettore fermo\n\tvar vel_zero = call_if_exists(player, \"calculate_velocity\", [Vector2.ZERO, 200.0], Vector2(10, 10))\n\tcheck(\"zero_vel\", vel_zero == Vector2.ZERO, \"Con direzione Vector2.ZERO calculate_velocity deve restituire Vector2.ZERO\")\n\n\t# Controllo direzione di input a riposo\n\tvar dir_idle = call_if_exists(player, \"get_input_direction\", [], Vector2(99, 99))\n\tcheck(\"idle_dir\", dir_idle == Vector2.ZERO, \"Senza tasti premuti get_input_direction deve restituire Vector2.ZERO\")\n\n\t# Controllo spostamento effettivo nel _process\n\tplayer.position = Vector2(200.0, 200.0)\n\tawait hold_action(\"move_right\", 10)\n\tcheck(\"moves_right\", player.position.x > 200.5, \"Tenendo premuta l'azione move_right il Player deve avanzare verso destra (partito da 200.0, arrivato a %.1f)\" % player.position.x)",
+      "descrizione": "Player calcola la direzione, normalizza le diagonali e si sposta con i tasti"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 200)\ntexture = ExtResource(\"1_icon\")\nscript = ExtResource(\"2_player\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends Sprite2D\n\n@export var speed: float = 200.0\n\n\nfunc _process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tvar velocity: Vector2 = calculate_velocity(input_direction, speed)\n\tposition += velocity * delta\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc calculate_velocity(direction: Vector2, move_speed: float) -> Vector2:\n\treturn direction.normalized() * move_speed\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La funzione `get_input_direction()` sfrutta `Input.get_vector()` per leggere contemporaneamente i quattro assi configurati nella Input Map, producendo una direzione con coordinate bilanciate. `calculate_velocity()` prende questa direzione e garantisce che la sua lunghezza sia normalizzata prima di scalarla con la velocità scelta. Infine, in `_process()`, moltiplicare la velocità per `delta` determina il giusto incremento di `position` per ciascun fotogramma indipendentemente dal framerate.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "La guardia che punta e insegue",
+    "consegna": "Aggiungi al gioco «Il custode» una guardia capace di calcolare la rotta verso una coordinata, ruotare orientandosi verso di essa e avanzare senza mai superare il bersaglio.\n\n1. Nella scena `res://main.tscn`, aggiungi come figlio di `Main` un secondo `Sprite2D` chiamato `Guard`. Assegna alla sua proprietà **Texture** l'immagine `res://icon.svg` e collegagli lo script `res://guard.gd`.\n\n2. Nello script `res://guard.gd`, definisci:\n   - Due variabili esportate: `@export var speed: float = 120.0` e `@export var target_position: Vector2 = Vector2.ZERO`.\n   - La funzione `get_direction_to_target(target: Vector2) -> Vector2` che calcola e restituisce il vettore normalizzato dalla posizione globale della guardia (`global_position`) verso `target` usando il metodo `direction_to()`.\n   - La funzione `step_toward(target: Vector2, delta_distance: float) -> Vector2` che calcola e restituisce la nuova posizione avanzata verso `target` di al massimo `delta_distance` pixel usando il metodo `move_toward()`.\n   - La funzione `_process(delta: float) -> void`: ricava la direzione verso `target_position` con `get_direction_to_target()`; se questa direzione è diversa da `Vector2.ZERO`, imposta `rotation` pari ad `angle()` di tale direzione; infine aggiorna `global_position` chiamando `step_toward(target_position, speed * delta)`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Ricorda di usare global_position.direction_to(target) per trovare la freccia direzionale verso il bersaglio e global_position.move_toward(target, delta_distance) per far avanzare la posizione senza oltrepassare il punto d'arrivo."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Sprite2D",
+      "nome": "Guard",
+      "genitore": "Main",
+      "descrizione": "La scena main.tscn contiene un nodo Sprite2D chiamato Guard dentro Main"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://guard.gd",
+      "descrizione": "Il file res://guard.gd esiste nel progetto"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://main.tscn",
+      "nodo": "Guard",
+      "descrizione": "Il nodo Guard ha lo script guard.gd collegato"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_scene\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar guard := find_by_name(main, \"Guard\")\n\tif not check(\"guard_node\", guard != null, \"Nella scena deve essere presente un nodo chiamato Guard\"):\n\t\treturn\n\n\tif not check(\"has_dir\", has_function(guard, \"get_direction_to_target\"), \"Lo script di Guard deve contenere la funzione get_direction_to_target(target)\"):\n\t\treturn\n\tif not check(\"has_step\", has_function(guard, \"step_toward\"), \"Lo script di Guard deve contenere la funzione step_toward(target, delta_distance)\"):\n\t\treturn\n\n\t# Controllo get_direction_to_target verso il basso\n\tguard.global_position = Vector2(100.0, 100.0)\n\tvar dir_down = call_if_exists(guard, \"get_direction_to_target\", [Vector2(100.0, 300.0)], Vector2.ZERO)\n\tif check(\"dir_type\", dir_down is Vector2, \"get_direction_to_target deve restituire un Vector2\"):\n\t\tvar v_dir: Vector2 = dir_down as Vector2\n\t\tcheck(\"dir_val\", absf(v_dir.x) < 0.01 and absf(v_dir.y - 1.0) < 0.01, \"Verso un punto situato in basso (100, 300) la direzione deve essere (0, 1) (misurata: %.2f, %.2f)\" % [v_dir.x, v_dir.y])\n\n\t# Controllo step_toward con passo parziale\n\tguard.global_position = Vector2(100.0, 100.0)\n\tvar step_pos = call_if_exists(guard, \"step_toward\", [Vector2(100.0, 200.0), 30.0], Vector2.ZERO)\n\tif check(\"step_type\", step_pos is Vector2, \"step_toward deve restituire un Vector2\"):\n\t\tvar v_step: Vector2 = step_pos as Vector2\n\t\tcheck(\"step_val\", absf(v_step.x - 100.0) < 0.1 and absf(v_step.y - 130.0) < 0.1, \"Avanzando di 30 pixel verso (100, 200) la nuova posizione deve essere (100, 130) (misurata: %.1f, %.1f)\" % [v_step.x, v_step.y])\n\n\t# Controllo step_toward che non oltrepassa il bersaglio\n\tvar clamp_pos = call_if_exists(guard, \"step_toward\", [Vector2(150.0, 100.0), 200.0], Vector2.ZERO)\n\tif clamp_pos is Vector2:\n\t\tvar v_clamp: Vector2 = clamp_pos as Vector2\n\t\tcheck(\"step_clamp\", absf(v_clamp.x - 150.0) < 0.1 and absf(v_clamp.y - 100.0) < 0.1, \"Se il passo supera la distanza rimanente, step_toward deve arrestarsi con precisione su target (150, 100)\")\n\n\t# Controllo rotazione e spostamento continuo in _process\n\tguard.global_position = Vector2(100.0, 100.0)\n\tguard.set(\"target_position\", Vector2(100.0, 300.0))\n\tawait wait_physics_frames(10)\n\tcheck(\"rotation_down\", absf(guard.rotation - PI * 0.5) < 0.1, \"Puntando verso il basso la guardia deve ruotare di circa 1.57 radianti (misurata: %.2f)\" % guard.rotation)\n\tcheck(\"moved_down\", guard.global_position.y > 105.0, \"Nel tempo la guardia deve muoversi verso target_position (partita da 100.0, arrivata a y: %.1f)\" % guard.global_position.y)",
+      "descrizione": "La guardia calcola la direzione, ruota verso il bersaglio e avanza con move_toward"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(200, 200)\ntexture = ExtResource(\"1_icon\")\nscript = ExtResource(\"2_player\")\n\n[node name=\"Guard\" type=\"Sprite2D\" parent=\".\"]\nposition = Vector2(100, 100)\ntexture = ExtResource(\"1_icon\")\nscript = ExtResource(\"3_guard\")\n"
+      },
+      {
+       "percorso": "guard.gd",
+       "contenuto": "extends Sprite2D\n\n@export var speed: float = 120.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _process(delta: float) -> void:\n\tvar direction: Vector2 = get_direction_to_target(target_position)\n\tif direction != Vector2.ZERO:\n\t\trotation = direction.angle()\n\tglobal_position = step_toward(target_position, speed * delta)\n\n\nfunc get_direction_to_target(target: Vector2) -> Vector2:\n\treturn global_position.direction_to(target)\n\n\nfunc step_toward(target: Vector2, delta_distance: float) -> Vector2:\n\treturn global_position.move_toward(target, delta_distance)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La guardia orienta la propria freccia direzionale verso `target_position` attraverso `global_position.direction_to(target)`. Controllando che la direzione non sia nulla (`!= Vector2.ZERO`), si evita che la rotazione scatti a 0 quando il nodo è fermo sul posto. Infine `move_toward()` calcola a ogni fotogramma la nuova coordinata senza oltrepassare il punto bersaglio, garantendo un arrivo pulito e senza oscillazioni.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest"
@@ -78,5 +327,10 @@
     "md": "- Un `Vector2` contiene due coordinate (X e Y) e descrive sia punti nello spazio sia frecce dotate di direzione e lunghezza.\n- Sommare un vettore alla posizione determina uno spostamento; moltiplicare un vettore per uno scalare (`speed * delta`) ne controlla la distanza percorsa al secondo.\n- Muoversi in diagonale sommando due assi produce una velocità superiore del 41%: il metodo `normalized()` o la funzione `Input.get_vector()` riportano la lunghezza massima a `1.0`.\n- `direction_to(target)` restituisce il vettore normalizzato che punta direttamente verso un punto bersaglio.\n- `angle()` trasforma un vettore direzionale in un angolo in radianti, pronto per essere assegnato alla proprietà `rotation`.\n- `move_toward(target, passo)` sposta una posizione verso un traguardo senza mai oltrepassarlo."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
