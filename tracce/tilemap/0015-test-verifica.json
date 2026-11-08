@@ -1,0 +1,158 @@
+{
+ "n": 15,
+ "quando": "2026-11-08T10:00:40.605Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (imita): 1 problema",
+ "spiegazione": "«Riproduci la stanza di riferimento cella per cella», scritto da gemini/gemini-flash-lite-latest. 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- NON SPIEGATO: la soluzione usa `set_cell()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 8768,
+ "dati": {
+  "problemi": [
+   "NON SPIEGATO: la soluzione usa `set_cell()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "imita",
+   "titolo": "Riproduci la stanza di riferimento cella per cella",
+   "consegna": "Nel progetto `il-custode`, componi la prima stanza di gioco sui tre strati seguendo esattamente queste direttive:\n\n1. **Strato `Ground`**: dipingi la tessera di pietra `Vector2i(2, 0)` in un rettangolo di 10x10 celle, che va dalla cella `Vector2i(0, 0)` alla cella `Vector2i(9, 9)` comprese.\n2. **Strato `Walls`**: dipingi la tessera dei mattoni solidi `Vector2i(3, 0)` lungo tutto il perimetro esterno della stanza (righe `y=0` e `y=9`, colonne `x=0` e `x=9`), lasciando vuota soltanto la cella `Vector2i(5, 9)` (il varco di uscita in basso).\n3. **Strato `Decoration`**: dipingi una tessera di legno `Vector2i(2, 1)` nella cella `Vector2i(3, 3)`.\n4. Posiziona il nodo `Player` al centro della stanza, impostando la sua proprietà **Position** a `Vector2(80, 80)`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "il-custode",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Ricorda che le celle vanno da (0,0) a (9,9). Il perimetro è formato dalle celle in cui x è 0 o 9, oppure y è 0 o 9."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "TileMapLayer",
+     "nome": "Ground",
+     "genitore": "Main",
+     "descrizione": "Il nodo Ground è presente nella scena main.tscn"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "TileMapLayer",
+     "nome": "Walls",
+     "genitore": "Main",
+     "descrizione": "Il nodo Walls è presente nella scena main.tscn"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "TileMapLayer",
+     "nome": "Decoration",
+     "genitore": "Main",
+     "descrizione": "Il nodo Decoration è presente nella scena main.tscn"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar ground := find_by_name(main, \"Ground\") as TileMapLayer\n\tvar walls := find_by_name(main, \"Walls\") as TileMapLayer\n\tvar dec := find_by_name(main, \"Decoration\") as TileMapLayer\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"nodes\", ground != null and walls != null and dec != null and player != null, \"Tutti i nodi richiesti devono essere presenti nella scena\"):\n\t\treturn\n\t\n\tvar ground_ok := true\n\tfor x in range(10):\n\t\tfor y in range(10):\n\t\t\tif ground.get_cell_atlas_coords(Vector2i(x, y)) != Vector2i(2, 0):\n\t\t\t\tground_ok = false\n\t\t\t\tbreak\n\tcheck(\"ground_grid\", ground_ok, \"Il pavimento Ground deve avere tessere (2,0) per l'intera griglia da (0,0) a (9,9)\")\n\t\n\tvar walls_ok := true\n\tfor x in range(10):\n\t\tfor y in range(10):\n\t\t\tvar expected := Vector2i(-1, -1)\n\t\t\tif (x == 0 or x == 9 or y == 0 or y == 9) and not (x == 5 and y == 9):\n\t\t\t\texpected = Vector2i(3, 0)\n\t\t\tif walls.get_cell_atlas_coords(Vector2i(x, y)) != expected:\n\t\t\t\twalls_ok = false\n\t\t\t\tbreak\n\tcheck(\"walls_perim\", walls_ok, \"I muri su Walls devono coprire il perimetro lasciando libero solo il varco in (5,9)\")\n\tcheck(\"dec_tile\", dec.get_cell_atlas_coords(Vector2i(3, 3)) == Vector2i(2, 1), \"La decorazione (2,1) deve trovarsi esattamente nella cella (3,3)\")\n\tcheck(\"player_pos\", player.position == Vector2(80, 80), \"La posizione del Player deve essere Vector2(80, 80) (trovata %s)\" % str(player.position))\n",
+     "descrizione": "La stanza rispetta la griglia 10x10 su Ground, i muri perimetrali con varco in (5,9) su Walls e la decorazione in (3,3)"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Il custode\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[layer_names]\n\n2d_physics/layer_1=\"Player\"\n2d_physics/layer_2=\"Environment\"\n2d_physics/layer_3=\"Enemies\"\n2d_physics/layer_4=\"Items\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nsprint={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194325,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "guard.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 120.0\n@export var acceleration: float = 800.0\n@export var friction: float = 600.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 4.0:\n\t\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\tif direction != Vector2.ZERO:\n\t\t\trotation = direction.angle()\n\t\t\tvar target_velocity: Vector2 = direction * speed\n\t\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\t\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node2D\n\n@onready var ground: TileMapLayer = $Ground\n@onready var walls: TileMapLayer = $Walls\n@onready var decoration: TileMapLayer = $Decoration\n\n\nfunc _ready() -> void:\n\tfor x in range(10):\n\t\tfor y in range(10):\n\t\t\tground.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))\n\t\n\tfor x in range(10):\n\t\tfor y in range(10):\n\t\t\tif (x == 0 or x == 9 or y == 0 or y == 9) and not (x == 5 and y == 9):\n\t\t\t\twalls.set_cell(Vector2i(x, y), 0, Vector2i(3, 0))\n\t\t\telse:\n\t\t\t\twalls.set_cell(Vector2i(x, y), -1)\n\t\n\tdecoration.set_cell(Vector2i(3, 3), 0, Vector2i(2, 1))\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"5_main\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n3:0/0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)\n2:1/0 = 0\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_guard\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_chest\"]\nsize = Vector2(40, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"5_main\")\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(80, 80)\ncollision_layer = 1\ncollision_mask = 14\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_guard\")\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n\n[node name=\"Chest\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 8\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Chest\"]\nshape = SubResource(\"RectangleShape2D_chest\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Il custode",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "sprint",
+       "tasti": [
+        "Shift"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": [
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_1",
+       "valore": "Player"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_2",
+       "valore": "Environment"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_3",
+       "valore": "Enemies"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_4",
+       "valore": "Items"
+      }
+     ]
+    },
+    "spiegazione": "Componendo la stanza sui tre strati `TileMapLayer` (`Ground`, `Walls`, `Decoration`), abbiamo costruito il primo ambiente del dungeon: un pavimento 10x10, muri di perimetro solidi con la porta aperta in (5,9) e un dettaglio decorativo al centro, posizionando poi il `Player` al centro in coordinate `Vector2(80, 80)`.",
+    "cambiati": [
+     "main.gd",
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
