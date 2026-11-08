@@ -1,0 +1,138 @@
+{
+ "n": 16,
+ "quando": "2026-11-08T08:49:20.788Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 3 (obiettivo): 1 problema",
+ "spiegazione": "«Aggiungere la cassa e aggiornare le maschere di collisione», scritto da gemini/gemini-flash-lite-latest. 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- VERIFICHE FRAGILI: le verifiche bocciano una soluzione giusta. Nella soluzione sono cambiati solo valori che il testo dell'esercizio non impone, quindi chi lo fa può sceglierli diversi:\n  - guard.gd: `speed` da 120.0 a 60.0\n  - guard.gd: `acceleration` da 800.0 a 400.0\n  - guard.gd: `friction` da 600.0 a 300.0\n  - player.gd: `acceleration` da 1200.0 a 600.0\n  - player.gd: `friction` da 1000.0 a 500.0\n  - player.gd: `sprint_multiplier` da 1.5 a 0.75\nCon questi valori non passano più:\n  - Guard deve attraversare Chest senza fermarsi (pos y: 125.9)\nCorreggi le VERIFICHE, non la soluzione: devono accettare qualunque valore che la consegna lascia libero. Per esempio: prima di misurare un movimento metti il nodo in un punto noto (`nodo.position = Vector2(400, 300)`); per controllare un limite porta il nodo oltre il limite e tieni premuta l'azione per pochi frame, invece di aspettare che ci arrivi da solo in un tempo fisso; confronta con valori letti dal gioco (`get_prop` legge anche le costanti) invece che scritti nella verifica. Se invece uno di quei valori fa davvero parte del compito, scrivilo in cifre nella consegna.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 17044,
+ "dati": {
+  "problemi": [
+   "VERIFICHE FRAGILI: le verifiche bocciano una soluzione giusta. Nella soluzione sono cambiati solo valori che il testo dell'esercizio non impone, quindi chi lo fa può sceglierli diversi:\n  - guard.gd: `speed` da 120.0 a 60.0\n  - guard.gd: `acceleration` da 800.0 a 400.0\n  - guard.gd: `friction` da 600.0 a 300.0\n  - player.gd: `acceleration` da 1200.0 a 600.0\n  - player.gd: `friction` da 1000.0 a 500.0\n  - player.gd: `sprint_multiplier` da 1.5 a 0.75\nCon questi valori non passano più:\n  - Guard deve attraversare Chest senza fermarsi (pos y: 125.9)\nCorreggi le VERIFICHE, non la soluzione: devono accettare qualunque valore che la consegna lascia libero. Per esempio: prima di misurare un movimento metti il nodo in un punto noto (`nodo.position = Vector2(400, 300)`); per controllare un limite porta il nodo oltre il limite e tieni premuta l'azione per pochi frame, invece di aspettare che ci arrivi da solo in un tempo fisso; confronta con valori letti dal gioco (`get_prop` legge anche le costanti) invece che scritti nella verifica. Se invece uno di quei valori fa davvero parte del compito, scrivilo in cifre nella consegna."
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "Aggiungere la cassa e aggiornare le maschere di collisione",
+   "consegna": "Nel progetto `il-custode`, aggiungi una cassa e aggiorna le maschere dei personaggi.\n\n1. Apri `main.tscn` e aggiungi un nodo `StaticBody2D` chiamato `Chest` alla posizione `(200, 100)`.\n2. Aggiungi a `Chest` un figlio `CollisionShape2D` con una risorsa `RectangleShape2D` (dimensione 40x40).\n3. Imposta il **Collision Layer** di `Chest` sul Layer 4 (`Items`) e lascia la sua **Collision Mask** disattivata.\n4. Aggiorna la **Collision Mask** di `Player` in modo che includa anche il Layer 4 (`Items`), oltre a Layer 2 (`Environment`) e Layer 3 (`Enemies`). Il valore numerico della maschera sarà 14 (bit 2 + bit 3 + bit 4 = 2 + 4 + 8).\n5. Assicurati che la **Collision Mask** di `Guard` contenga SOLO il Layer 2 (`Environment`), affinché la guardia possa passare attraverso la cassa senza fermarsi.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "il-custode",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Nell'Inspector di Player, spunta le caselle corrispondenti ai layer 2 (Environment), 3 (Enemies) e 4 (Items) sotto la voce Collision -> Mask.",
+    "Per Guard, lascia spuntata solo la casella del layer 2 (Environment) nella maschera."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "StaticBody2D",
+     "nome": "Chest",
+     "genitore": "Main",
+     "descrizione": "Nella scena main.tscn è presente il nodo StaticBody2D Chest"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si apre senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar guard := find_by_name(main, \"Guard\") as CharacterBody2D\n\tvar chest := find_by_name(main, \"Chest\") as StaticBody2D\n\t\n\tif not check(\"player\", player != null, \"Manca il nodo Player\"): return\n\tif not check(\"guard\", guard != null, \"Manca il nodo Guard\"): return\n\tif not check(\"chest\", chest != null, \"Manca il nodo Chest\"): return\n\t\n\t# Player prova a salire verso la cassa a (200, 100)\n\tplayer.global_position = Vector2(200, 200)\n\tchest.global_position = Vector2(200, 100)\n\tawait hold_action(\"move_up\", 30)\n\tcheck(\"player_chest\", player.global_position.y > 110.0, \"Player deve fermarsi contro Chest (pos y: %.1f)\" % player.global_position.y)\n\t\n\t# Guard si muove verso la cassa a (200, 100)\n\tguard.global_position = Vector2(200, 200)\n\tguard.target_position = Vector2(200, 50)\n\tawait wait_physics_frames(75)\n\tcheck(\"guard_chest\", guard.global_position.y < 90.0, \"Guard deve attraversare Chest senza fermarsi (pos y: %.1f)\" % guard.global_position.y)\n",
+     "descrizione": "Player si ferma contro la cassa, mentre Guard la attraversa"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Il custode\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[layer_names]\n\n2d_physics/layer_1=\"Player\"\n2d_physics/layer_2=\"Environment\"\n2d_physics/layer_3=\"Enemies\"\n2d_physics/layer_4=\"Items\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nsprint={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194325,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "guard.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 120.0\n@export var acceleration: float = 800.0\n@export var friction: float = 600.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 4.0:\n\t\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\tif direction != Vector2.ZERO:\n\t\t\trotation = direction.angle()\n\t\tvar target_velocity: Vector2 = direction * speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\t\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_guard\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_chest\"]\nsize = Vector2(40, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 1\ncollision_mask = 14\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_guard\")\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n\n[node name=\"Chest\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 8\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Chest\"]\nshape = SubResource(\"RectangleShape2D_chest\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Il custode",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "sprint",
+       "tasti": [
+        "Shift"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": [
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_1",
+       "valore": "Player"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_2",
+       "valore": "Environment"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_3",
+       "valore": "Enemies"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_4",
+       "valore": "Items"
+      }
+     ]
+    },
+    "spiegazione": "Aggiungendo il nodo `Chest` con `collision_layer = 8` (Layer 4 Items) e impostando la `collision_mask` di `Player` a 14 (Layer 2 Environment + Layer 3 Enemies + Layer 4 Items), il giocatore ora si scontra sia con i muri, sia con le guardie, sia con le casse. La guardia, avendo mask = 2 (solo Environment), ignora il layer 4 della cassa e la attraversa.",
+    "cambiati": [
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
