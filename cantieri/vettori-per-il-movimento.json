@@ -1,0 +1,82 @@
+{
+ "creato": "2026-11-08T08:06:25.496Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Vettori per il movimento",
+  "sommario": "Scopri come usare la classe Vector2 per descrivere posizioni, direzioni e velocità nello spazio bidimensionale. Imparerai perché il movimento in diagonale rischia di essere più veloce e come normalizzarlo, oltre a orientare e muovere nodi verso un punto con direction_to(), angle() e move_toward().",
+  "concetti": [
+   "Vector2",
+   "Somma e moltiplicazione scalare di vettori",
+   "Lunghezza e normalized()",
+   "Input.get_vector()",
+   "direction_to()",
+   "angle()",
+   "move_toward()"
+  ],
+  "obiettivi": [
+   "Un vettore è una direzione con una lunghezza: sommare, sottrarre, moltiplicare",
+   "normalized(): perché in diagonale si va più veloci, e come si evita",
+   "direction_to(), angle(), move_toward()"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nel nostro nuovo gioco, «Il custode», il protagonista deve esplorare stanze muovendosi in tutte le direzioni, mentre le guardie devono individuarlo, voltarsi verso di lui e inseguirlo. Per realizzare queste azioni serve capire come Godot descrive lo spazio 2D.\n\nIn uno schermo bidimensionale, ogni punto è individuato da due coordinate: **X** (la posizione orizzontale) e **Y** (la posizione verticale, che in Godot aumenta scendendo verso il basso). La classe che raggruppa questi due valori si chiama **Vector2**. Un vettore non rappresenta soltanto un punto fisso sulla griglia: descrive anche uno spostamento, cioè una freccia che possiede una **direzione** (verso dove punta) e una **lunghezza** (quanto è lunga la freccia)."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per muovere un elemento con precisione, manipoliamo questa freccia attraverso operazioni matematiche sui vettori:\n\n- **Somma**: aggiunge uno spostamento a una posizione di partenza. Se il custode si trova in `(100, 100)` e gli sommi il vettore `(10, 0)`, la sua nuova posizione diventa `(110, 100)`: si è mosso verso destra.\n- **Sottrazione**: calcola la distanza e la rotta tra due punti. Se sottrai la posizione del custode da quella di una porta (`porta - custode`), ottieni il vettore che parte dal custode e punta dritto verso la porta.\n- **Moltiplicazione per un numero (scalare)**: allunga o accorcia il vettore lasciando intatta la direzione. Se hai una direzione unitaria di valore `(1, 0)` e la moltiplichi per una velocità di `200.0`, ottieni un vettore di spostamento pari a `(200.0, 0.0)`. Moltiplicando poi questo risultato per il parametro `delta` della funzione `_process()`, ottieni esattamente i pixel da percorrere in quel singolo fotogramma indipendentemente dalla frequenza di aggiornamento dello schermo."
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando gestisci il movimento da tastiera con quattro tasti (sinistra, destra, su, giù), sorge un problema geometrico classico: l'**eccesso di velocità in diagonale**.\n\nSe il tasto Destra produce il vettore `(1, 0)` (lunghezza 1) e il tasto Giù produce `(0, 1)` (lunghezza 1), premendoli insieme il programma somma i due vettori ottenendo `(1, 1)`. Per il teorema di Pitagora, la lunghezza di questo vettore non è 1, ma circa `1.414` (la radice quadrata di 1² + 1²). Il personaggio che si muove in diagonale risulterebbe quindi circa il 41% più veloce rispetto a quando cammina dritto.\n\nPer risolvere questo problema si ricorre alla **normalizzazione**: un'operazione che riduce la lunghezza totale del vettore esattamente a `1.0` preservando la direzione verso cui punta. In GDScript si usa il metodo `.normalized()`. Godot include anche la funzione `Input.get_vector()`, che legge quattro azioni contemporaneamente e restituisce già un vettore con lunghezza limitata a 1."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Configurare le quattro azioni di movimento nelle Project Settings",
+    "passi": [
+     "Apri il menu **Project** in alto a sinistra e fai clic su **Project Settings**.",
+     "Nella finestra che si apre, seleziona la scheda **Input Map** in alto.",
+     "Fai clic sul campo di testo sotto **Add New Action**, scrivi `move_left` e premi il pulsante **Add**.",
+     "Ripeti il passaggio precedente creando altre tre azioni: `move_right`, `move_up` e `move_down`.",
+     "Nella riga di ogni azione appena creata, premi il pulsante **+** a destra per assegnare il tasto corrispondente (per esempio: tasto A per `move_left`, D per `move_right`, W per `move_up` e S per `move_down`).",
+     "Premi il pulsante **Close** in basso a destra per salvare e chiudere la finestra."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "project-settings-input-map",
+    "didascalia": "La scheda Input Map nelle Project Settings dove puoi definire le azioni move_left, move_right, move_up e move_down."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Sprite2D\n\n@export var speed: float = 250.0\n\nfunc _process(delta: float) -> void:\n\t# Legge l'input orizzontale e verticale restituendo un vettore bilanciato\n\tvar input_direction: Vector2 = Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\t\n\t# Moltiplica la direzione normalizzata per la velocita desiderata\n\tvar velocity: Vector2 = input_direction * speed\n\t\n\t# Applica lo spostamento scalato con delta alla posizione del nodo\n\tposition += velocity * delta",
+    "spiegazione": "La funzione `Input.get_vector()` riceve i nomi delle quattro azioni nell'ordine negativo/positivo per X e negativo/positivo per Y (sinistra, destra, su, giù). Restituisce un `Vector2` la cui lunghezza non supera mai 1.0, anche premendo due tasti contemporaneamente. Moltiplicando `input_direction` per `speed` otteniamo la velocità in pixel al secondo, che poi sommiamo a `position` dopo averla moltiplicata per `delta`."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Non chiamare mai `.angle()` su un vettore con coordinate `(0, 0)` aspettandoti una rotazione valida: se nessun tasto è premuto, il vettore non ha una direzione e il suo angolo risulterà `0.0` (rivolto a destra per convenzione), facendo scattare visivamente il tuo personaggio. Prima di aggiornare la rotazione, controlla sempre che il vettore di movimento sia diverso da `Vector2.ZERO`."
+   },
+   {
+    "tipo": "testo",
+    "md": "In un gioco con vista dall'alto, i personaggi non si muovono solo tramite tastiera: i nemici devono orientarsi verso il custode e avvicinarsi a lui. Per gestire queste situazioni, `Vector2` mette a disposizione tre metodi fondamentali:\n\n1. **direction_to(target)**: calcola la direzione dal punto attuale al punto `target`. Restituisce un vettore già normalizzato (lunghezza 1.0), equivalente a scrivere `(target - global_position).normalized()`.\n2. **angle()**: restituisce l'angolo in radianti formato dal vettore rispetto all'asse orizzontale positivo X. Assegnando questo valore alla proprietà `rotation` di un nodo 2D, il nodo ruoterà puntando esattamente nella direzione del movimento.\n3. **move_toward(target, delta_distanza)**: fa avanzare la posizione verso il punto `target` percorrendo al massimo la distanza indicata. Se la distanza rimanente dal bersaglio è inferiore al passo, si ferma esattamente su di esso senza oltrepassarlo né oscillare."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Sprite2D\n\n@export var speed: float = 120.0\n@export var target_position: Vector2 = Vector2(300.0, 200.0)\n\nfunc _process(delta: float) -> void:\n\t# Calcola la direzione verso la destinazione\n\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\n\t# Ruota il nodo solo se non ha ancora raggiunto la destinazione\n\tif direction != Vector2.ZERO:\n\t\trotation = direction.angle()\n\t\n\t# Fa avanzare la posizione senza superare il punto finale\n\tglobal_position = global_position.move_toward(target_position, speed * delta)",
+    "spiegazione": "`direction_to(target_position)` fornisce la freccia unitaria che punta al bersaglio. Verifichiamo che non sia nulla (`Vector2.ZERO`) prima di assegnare `direction.angle()` alla proprietà `rotation`. Infine, `move_toward()` sposta `global_position` verso `target_position` a una velocità costante di `speed * delta` pixel per fotogramma, fermando il nodo con precisione appena arriva a destinazione."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Un `Vector2` contiene due coordinate (X e Y) e descrive sia punti nello spazio sia frecce dotate di direzione e lunghezza.\n- Sommare un vettore alla posizione determina uno spostamento; moltiplicare un vettore per uno scalare (`speed * delta`) ne controlla la distanza percorsa al secondo.\n- Muoversi in diagonale sommando due assi produce una velocità superiore del 41%: il metodo `normalized()` o la funzione `Input.get_vector()` riportano la lunghezza massima a `1.0`.\n- `direction_to(target)` restituisce il vettore normalizzato che punta direttamente verso un punto bersaglio.\n- `angle()` trasforma un vettore direzionale in un angolo in radianti, pronto per essere assegnato alla proprietà `rotation`.\n- `move_toward(target, passo)` sposta una posizione verso un traguardo senza mai oltrepassarlo."
+   }
+  ]
+ }
+}
