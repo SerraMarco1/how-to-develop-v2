@@ -35,3 +35,4 @@
 {"quando":1794129227109,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"tilemap","ok":true,"contata":true,"durataMs":409083,"tokenInput":14483,"tokenOutput":7095,"ragionamento":23101}
 {"quando":1794129636193,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"tilemap","ok":false,"contata":true,"durataMs":6339,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794129642536,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"tilemap","ok":true,"contata":true,"durataMs":83486,"tokenInput":14483,"tokenOutput":10506,"ragionamento":11210}
+{"quando":1794129878338,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":7388,"tokenInput":3990,"tokenOutput":50,"ragionamento":2348}
