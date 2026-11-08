@@ -2,3 +2,4 @@
 {"quando":1794125173600,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-vn-4","ok":true,"contata":true,"durataMs":6376,"tokenInput":2808,"tokenOutput":863,"ragionamento":1709}
 {"quando":1794125185501,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"vettori-per-il-movimento","ok":true,"contata":true,"durataMs":174011,"tokenInput":13382,"tokenOutput":2425,"ragionamento":4479}
 {"quando":1794125360913,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"vettori-per-il-movimento","ok":true,"contata":true,"durataMs":413065,"tokenInput":13093,"tokenOutput":6293,"ragionamento":26304}
+{"quando":1794125801782,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"vettori-per-il-movimento","ok":true,"contata":true,"durataMs":11312,"tokenInput":12858,"tokenOutput":415,"ragionamento":2206}
