@@ -1,0 +1,77 @@
+{
+ "n": 5,
+ "quando": "2026-11-08T08:16:18.341Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (prevedi): approvato",
+ "spiegazione": "«Prevedere i calcoli vettoriali». 6 previsioni eseguite in Godot per ricavarne la risposta giusta. Approvato al primo colpo.\nRisposte calcolate: (140.0, 120.0) · (0.0, 90.0) · (0.6, 0.8) · (0.0, 1.0) · (90.0, 100.0) · 0.99999994039536",
+ "richieste": 0,
+ "durataMs": 3098,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "prevedi",
+   "titolo": "Prevedere i calcoli vettoriali",
+   "consegna": "Leggi con attenzione ciascuno dei sei script GDScript e scrivi il valore esatto restituito dalla funzione `run()`, senza eseguire il codice nell'editor.",
+   "modalita": "previsioni",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [],
+   "previsioni": [
+    {
+     "codice": "func run() -> Vector2:\n\tvar position: Vector2 = Vector2(100.0, 150.0)\n\tvar displacement: Vector2 = Vector2(40.0, -30.0)\n\treturn position + displacement\n",
+     "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+     "risposta": "(140.0, 120.0)",
+     "spiegazione": "La somma tra due vettori somma separatamente le rispettive componenti: per l'asse X calcola 100.0 + 40.0 = 140.0, mentre per l'asse Y calcola 150.0 + (-30.0) = 120.0. Il risultato finale è Vector2(140, 120).",
+     "id": "es1p1"
+    },
+    {
+     "codice": "func run() -> Vector2:\n\tvar direction: Vector2 = Vector2(0.0, 1.0)\n\tvar speed: float = 180.0\n\tvar delta: float = 0.5\n\treturn direction * speed * delta\n",
+     "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+     "risposta": "(0.0, 90.0)",
+     "spiegazione": "La moltiplicazione di un vettore per uno scalare moltiplica ogni componente per quel numero: lungo X abbiamo 0.0 * 180.0 * 0.5 = 0.0, mentre lungo Y abbiamo 1.0 * 180.0 * 0.5 = 90.0. Il vettore risultante è Vector2(0, 90).",
+     "id": "es1p2"
+    },
+    {
+     "codice": "func run() -> Vector2:\n\tvar velocity: Vector2 = Vector2(3.0, 4.0)\n\treturn velocity.normalized()\n",
+     "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+     "risposta": "(0.6, 0.8)",
+     "spiegazione": "La lunghezza della freccia (3, 4) si ottiene con la radice quadrata di (3² + 4²), cioè la radice di 25, che vale 5.0. Il metodo normalized() divide ogni coordinata per 5.0: 3.0 / 5.0 = 0.6 e 4.0 / 5.0 = 0.8. Il risultato è Vector2(0.6, 0.8).",
+     "id": "es1p3"
+    },
+    {
+     "codice": "func run() -> Vector2:\n\tvar from_pos: Vector2 = Vector2(200.0, 100.0)\n\tvar to_pos: Vector2 = Vector2(200.0, 350.0)\n\treturn from_pos.direction_to(to_pos)\n",
+     "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+     "risposta": "(0.0, 1.0)",
+     "spiegazione": "direction_to(target) calcola il vettore che va da from_pos a to_pos e lo normalizza. Poiché la coordinata X è identica (200.0) e la Y aumenta di 250 pixel verso il basso, la freccia punta puramente verso il basso lungo l'asse Y positivo. Il vettore normalizzato è Vector2(0, 1).",
+     "id": "es1p4"
+    },
+    {
+     "codice": "func run() -> Vector2:\n\tvar current_pos: Vector2 = Vector2(50.0, 100.0)\n\tvar target_pos: Vector2 = Vector2(90.0, 100.0)\n\tvar step: float = 60.0\n\treturn current_pos.move_toward(target_pos, step)\n",
+     "domanda": "Che valore di tipo Vector2 restituisce la funzione run()?",
+     "risposta": "(90.0, 100.0)",
+     "spiegazione": "La distanza tra (50, 100) e (90, 100) è di 40 pixel sull'asse orizzontale. Poiché il passo consentito (60.0) è maggiore della distanza residua, move_toward() non supera mai il traguardo ma vi si arresta con precisione, restituendo Vector2(90, 100).",
+     "id": "es1p5"
+    },
+    {
+     "codice": "func run() -> float:\n\tvar diagonal_input: Vector2 = Vector2(1.0, 1.0)\n\tvar normalized_dir: Vector2 = diagonal_input.normalized()\n\treturn normalized_dir.length()\n",
+     "domanda": "Che valore numerico di tipo float restituisce la funzione run()?",
+     "risposta": "0.99999994039536",
+     "spiegazione": "Senza normalizzazione, il vettore diagonale (1, 1) ha una lunghezza di circa 1.414 pixel. Il metodo normalized() accorcia la freccia lasciando intatta la direzione diagonale, impostando la sua lunghezza complessiva esattamente a 1.0.",
+     "id": "es1p6"
+    }
+   ],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [],
+    "spiegazione": "I vettori bidimensionali combinano grandezza e orientamento: le somme muovono punti nello spazio, la moltiplicazione per scalari adatta la velocità ai singoli fotogrammi con delta, mentre normalized() garantisce che la velocità non subisca aumenti anomali lungo le diagonali. direction_to() e move_toward() permettono poi di gestire tracciamento e inseguimenti lineari senza superare i bersagli.",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
