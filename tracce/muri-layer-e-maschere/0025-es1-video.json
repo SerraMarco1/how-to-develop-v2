@@ -1,0 +1,16 @@
+{
+ "n": 25,
+ "quando": "2026-11-08T09:24:47.287Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Muri, tavolo e layer di fisica nel dungeon» non si vede sullo schermo: I nodi Wall e Table aggiunti non hanno un componente visivo come uno Sprite2D, quindi le collisioni sono invisibili sullo schermo e non possono essere misurate dal sistema video.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 8951,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (3990 → 50 token)"
+ ]
+}

@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-08T09:22:06.029Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-08T09:44:57.385Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "tilemap",
   "numero": "7.3",
   "titolo": "Livelli a tessere: TileSet e TileMapLayer"
  },
- "messaggio": "Sta scrivendo la lezione 7.3 «Livelli a tessere: TileSet e TileMapLayer»: riprende al prossimo giro.",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.3 riprende da sola appena rispondono.",
+ "riprende": "2026-11-08T09:54:57.385Z"
 }

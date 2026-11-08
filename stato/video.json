@@ -1222,5 +1222,14 @@
     ]
    }
   }
+ },
+ "muri-layer-e-maschere": {
+  "es1": {
+   "impronta": "a00f12ff2a466db090e2f07bb4043d34564e88fa97fd42a2d628c2ea083862be",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "I nodi Wall e Table aggiunti non hanno un componente visivo come uno Sprite2D, quindi le collisioni sono invisibili sullo schermo e non possono essere misurate dal sistema video."
+  }
  }
 }
