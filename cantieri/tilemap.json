@@ -1,9 +1,282 @@
 {
  "creato": "2026-11-08T08:58:43.175Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Configurare TileSet e i tre strati TileMapLayer",
+    "consegna": "Nel progetto `il-custode`:\n\n1. Copia la cartella `assets` da `_asset-del-corso` nella cartella del progetto (`res://assets/`).\n2. Apri `main.tscn` e aggiungi tre nodi di tipo `TileMapLayer` come figli del nodo radice `Main`, chiamati rispettivamente `Ground`, `Walls` e `Decoration` (posizionali nell'albero prima del nodo `Player`).\n3. Crea un nuovo `TileSet` per il nodo `Ground` con dimensione delle tessere `16x16` (`Vector2i(16, 16)`).\n4. Nel `TileSet`, aggiungi un **Physics Layer** (Physics Layer 0) e imposta il suo **Collision Layer** sul valore **2** (lo strato assegnato ai muri).\n5. Assegna questo stesso `TileSet` a tutti e tre i nodi `TileMapLayer` (`Ground`, `Walls`, `Decoration`).",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Copia la cartella `assets` contenente le risorse nella cartella del progetto `il-custode`.",
+     "Apri la scena `main.tscn` nell'editor di Godot.",
+     "Seleziona il nodo radice `Main`, premi il pulsante **+** e aggiungi un nodo **TileMapLayer**. Rinominalo in `Ground`.",
+     "Aggiungi altri due nodi **TileMapLayer** come figli di `Main` e rinominali in `Walls` e `Decoration`. Trascinali in alto nel pannello Scene per posizionarli prima di `Player`.",
+     "Seleziona `Ground`, vai nell'Inspector, clicca sulla proprietà **TileSet** e scegli **New TileSet**.",
+     "Clicca sul `TileSet` appena creato per aprirne le proprietà nell'Inspector e imposta **Tile Size** a `x: 16, y: 16`.",
+     "Espandi la sezione **Physics Layers**, premi **Add Element** per aggiungere `Physics Layer 0` e imposta il campo **Collision Layer** a `2`.",
+     "Seleziona i nodi `Walls` e `Decoration` e assegna la stessa risorsa `TileSet` alla loro proprietà **TileSet**."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Ground",
+      "genitore": "Main",
+      "descrizione": "Nella scena main.tscn è presente un TileMapLayer chiamato Ground come figlio di Main"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Walls",
+      "genitore": "Main",
+      "descrizione": "Nella scena main.tscn è presente un TileMapLayer chiamato Walls come figlio di Main"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Decoration",
+      "genitore": "Main",
+      "descrizione": "Nella scena main.tscn è presente un TileMapLayer chiamato Decoration come figlio di Main"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar walls := find_by_name(main, \"Walls\") as TileMapLayer\n\tif not check(\"walls_exists\", walls != null, \"Nella scena serve un nodo TileMapLayer chiamato Walls\"):\n\t\treturn\n\tvar ts = get_prop(walls, \"tile_set\") as TileSet\n\tif not check(\"tileset_exists\", ts != null, \"Il nodo Walls deve avere un TileSet assegnato\"):\n\t\treturn\n\tcheck(\"tile_size\", ts.tile_size == Vector2i(16, 16), \"La dimensione tessere del TileSet deve essere Vector2i(16, 16)\")\n\tvar col_layer: int = ts.get_physics_layer_collision_layer(0)\n\tcheck(\"physics_layer\", col_layer == 2, \"Il Physics Layer 0 del TileSet deve avere Collision Layer impostato a 2 (trovato %d)\" % col_layer)",
+      "descrizione": "I tre strati condividono un TileSet con tessere 16x16 e Physics Layer 0 impostato su Collision Layer 2"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_guard\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_chest\"]\nsize = Vector2(40, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 1\ncollision_mask = 14\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_guard\")\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n\n[node name=\"Chest\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 8\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Chest\"]\nshape = SubResource(\"RectangleShape2D_chest\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "il-custode",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Abbiamo aggiunto i tre nodi `TileMapLayer` (`Ground`, `Walls`, `Decoration`) e configurato la risorsa `TileSet` con tessere di dimensione `16x16` e `Physics Layer 0` associato al `Collision Layer 2`. Assegnando lo stesso `TileSet` a tutti e tre i nodi, tutti gli strati condivideranno la stessa griglia e le stesse proprietà delle tessere.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Aggiungere l'atlas e la collisione ai muri",
+    "consegna": "Nel progetto `il-custode`:\n\n1. Apri la risorsa `TileSet` condivisa sui nodi `TileMapLayer` e aggiungi come sorgente **Atlas** l'immagine `res://assets/sprites/tiles.png` (sorgente con ID 0).\n2. Seleziona la tessera dei mattoni alle coordinate atlas `Vector2i(3, 0)` e aggiungi in **Physics Layer 0** una sagoma di collisione rettangolare completa (`(-8, -8)` a `(8, 8)`).\n3. Sul nodo `Walls`, dipingi una riga di muri con la tessera dei mattoni (`Vector2i(3, 0)`) dalla cella di griglia `Vector2i(10, 10)` alla cella `Vector2i(14, 10)` comprese.\n4. Verifica che spostando il `Player` verso l'alto (`move_up`), il personaggio venga bloccato dalla riga di muri.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Nel pannello *TileSet* in basso, trascina `res://assets/sprites/tiles.png` per aggiungere l'Atlas.",
+     "Seleziona la tessera a coordinate (3, 0) nella griglia dell'Atlas, espandi la sezione *Physics Layer 0* nell'Inspector del TileSet e premi la tastiera **F** per generare l'intero rettangolo.",
+     "Seleziona il nodo `Walls`, attiva lo strumento matita e disegna da (10, 10) a (14, 10)."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Walls",
+      "genitore": "Main",
+      "descrizione": "Il nodo Walls è presente nella scena main.tscn"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar walls := find_by_name(main, \"Walls\") as TileMapLayer\n\tif not check(\"walls\", walls != null, \"Nella scena serve il nodo Walls\"):\n\t\treturn\n\tvar cell_tile: Vector2i = walls.get_cell_atlas_coords(Vector2i(10, 10))\n\tcheck(\"cell_painted\", cell_tile == Vector2i(3, 0), \"La cella (10, 10) di Walls deve contenere la tessera (3, 0) (trovata %s)\" % str(cell_tile))\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena deve esserci il Player\"):\n\t\treturn\n\tplayer.position = Vector2(168, 200)\n\tawait hold_action(\"move_up\", 30)\n\tcheck(\"wall_solid\", player.position.y > 175.0, \"Il personaggio deve fermarsi contro il muro a tessere e non attraversarlo (Y = %.1f)\" % player.position.y)",
+      "descrizione": "Le celle da (10,10) a (14,10) di Walls contengono la tessera solida (3,0) che blocca il personaggio"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n3:0/0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_guard\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_chest\"]\nsize = Vector2(40, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\ntile_map_data = PackedByteArray(0, 0, 10, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 11, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 12, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 13, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 14, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0)\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 1\ncollision_mask = 14\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_guard\")\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n\n[node name=\"Chest\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 8\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Chest\"]\nshape = SubResource(\"RectangleShape2D_chest\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "il-custode",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Abbiamo aggiunto la texture `tiles.png` come sorgente Atlas con ID 0 nel `TileSet`. Abbiamo definito per la tessera dei mattoni `(3, 0)` un rettangolo di collisione in `Physics Layer 0`, per poi dipingerla nel nodo `Walls` lungo le coordinate da (10, 10) a (14, 10). Il `Player` che ha la `collision_mask` impostata sullo strato 2 non può attraversare queste celle.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "imita",
+    "titolo": "Dipingere pavimento e decorazioni su più strati",
+    "consegna": "Nel progetto `il-custode`, dipingi pavimento e decorazioni organizzandoli sui rispettivi strati `TileMapLayer`:\n\n1. Sul nodo **`Ground`**, dipingi la tessera di pietra (`Vector2i(2, 0)`) in un rettangolo continuo di celle che va da `Vector2i(5, 5)` a `Vector2i(15, 15)` compresi gli estremi.\n2. Sul nodo **`Decoration`**, dipingi due tessere di legno (`Vector2i(2, 1)`) esattamente nelle celle `Vector2i(7, 7)` e `Vector2i(12, 12)`.\n3. Assicurati che le decorazioni stiano sullo strato `Decoration` e non cancellino la tessera di pavimento sottostante presente in `Ground`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Seleziona il nodo `Ground`, usa lo strumento rettangolo nella scheda TileMapLayer per coprire da (5,5) a (15,15) con la tessera (2,0).",
+     "Seleziona il nodo `Decoration` prima di collocare le tessere (2,1) nelle celle (7,7) e (12,12), così da mantenerle su un layer separato."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Ground",
+      "genitore": "Main",
+      "descrizione": "Il nodo Ground è presente nella scena main.tscn"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar ground := find_by_name(main, \"Ground\") as TileMapLayer\n\tvar dec := find_by_name(main, \"Decoration\") as TileMapLayer\n\tif not check(\"nodes\", ground != null and dec != null, \"Servono i nodi Ground e Decoration\"):\n\t\treturn\n\tcheck(\"ground_corner\", ground.get_cell_atlas_coords(Vector2i(5, 5)) == Vector2i(2, 0) and ground.get_cell_atlas_coords(Vector2i(15, 15)) == Vector2i(2, 0), \"Ground deve avere la tessera (2, 0) negli angoli (5,5) e (15,15)\")\n\tcheck(\"dec_7_7\", dec.get_cell_atlas_coords(Vector2i(7, 7)) == Vector2i(2, 1), \"Decoration deve avere la tessera (2, 1) in (7, 7)\")\n\tcheck(\"dec_12_12\", dec.get_cell_atlas_coords(Vector2i(12, 12)) == Vector2i(2, 1), \"Decoration deve avere la tessera (2, 1) in (12, 12)\")",
+      "descrizione": "Ground ha la pietra (2,0) da (5,5) a (15,15) e Decoration ha le tessere di legno (2,1) in (7,7) e (12,12)"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n3:0/0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)\n2:1/0 = 0\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_guard\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_chest\"]\nsize = Vector2(40, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\ntile_map_data = PackedByteArray(0, 0, 5, 0, 5, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 6, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 7, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 8, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 9, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 10, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 11, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 12, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 13, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 14, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 15, 0, 0, 0, 2, 0, 0, 0, 0, 0, 15, 0, 15, 0, 0, 0, 2, 0, 0, 0, 0, 0)\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\ntile_map_data = PackedByteArray(0, 0, 10, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 11, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 12, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 13, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0, 14, 0, 10, 0, 0, 0, 3, 0, 0, 0, 0, 0)\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\ntile_map_data = PackedByteArray(0, 0, 7, 0, 7, 0, 0, 0, 2, 0, 1, 0, 0, 0, 12, 0, 12, 0, 0, 0, 2, 0, 1, 0, 0, 0)\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 1\ncollision_mask = 14\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_guard\")\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n\n[node name=\"Chest\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 8\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Chest\"]\nshape = SubResource(\"RectangleShape2D_chest\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "il-custode",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Disegnando la tessera di pietra sul nodo `Ground` e quelle di legno sul nodo `Decoration`, le decorazioni rimangono visivamente in primo piano senza sovrascrivere o cancellare le tessere sottostanti.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "imita",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "imita",
+    "titolo": "Riproduci la stanza di riferimento cella per cella",
+    "consegna": "Nel progetto `il-custode`, componi la prima stanza di gioco sui tre strati seguendo esattamente queste direttive:\n\n1. **Strato `Ground`**: dipingi la tessera di pietra `Vector2i(2, 0)` in un rettangolo di 10x10 celle, che va dalla cella `Vector2i(0, 0)` alla cella `Vector2i(9, 9)` comprese.\n2. **Strato `Walls`**: dipingi la tessera dei mattoni solidi `Vector2i(3, 0)` lungo tutto il perimetro esterno della stanza (righe `y=0` e `y=9`, colonne `x=0` e `x=9`), lasciando vuota soltanto la cella `Vector2i(5, 9)` (il varco di uscita in basso).\n3. **Strato `Decoration`**: dipingi una tessera di legno `Vector2i(2, 1)` nella cella `Vector2i(3, 3)`.\n4. Posiziona il nodo `Player` al centro della stanza, impostando la sua proprietà **Position** a `Vector2(80, 80)`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Ricorda che le celle vanno da (0,0) a (9,9). Il perimetro è formato dalle celle in cui x è 0 o 9, oppure y è 0 o 9.",
+     "La cella (5,9) sul nodo Walls deve rimanere vuota per permettere il passaggio del custode."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Ground",
+      "genitore": "Main",
+      "descrizione": "Il nodo Ground è presente nella scena main.tscn"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Walls",
+      "genitore": "Main",
+      "descrizione": "Il nodo Walls è presente nella scena main.tscn"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "TileMapLayer",
+      "nome": "Decoration",
+      "genitore": "Main",
+      "descrizione": "Il nodo Decoration è presente nella scena main.tscn"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar ground := find_by_name(main, \"Ground\") as TileMapLayer\n\tvar walls := find_by_name(main, \"Walls\") as TileMapLayer\n\tvar dec := find_by_name(main, \"Decoration\") as TileMapLayer\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"nodes\", ground != null and walls != null and dec != null and player != null, \"Tutti i nodi richiesti devono essere presenti nella scena\"):\n\t\treturn\n\t\n\tvar ground_ok := true\n\tfor x in range(10):\n\t\tfor y in range(10):\n\t\t\tif ground.get_cell_atlas_coords(Vector2i(x, y)) != Vector2i(2, 0):\n\t\t\t\tground_ok = false\n\t\t\t\tbreak\n\tcheck(\"ground_grid\", ground_ok, \"Il pavimento Ground deve avere tessere (2,0) per l'intera griglia da (0,0) a (9,9)\")\n\t\n\tvar walls_ok := true\n\tfor x in range(10):\n\t\tfor y in range(10):\n\t\t\tvar expected := Vector2i(-1, -1)\n\t\t\tif (x == 0 or x == 9 or y == 0 or y == 9) and not (x == 5 and y == 9):\n\t\t\t\texpected = Vector2i(3, 0)\n\t\t\tif walls.get_cell_atlas_coords(Vector2i(x, y)) != expected:\n\t\t\t\twalls_ok = false\n\t\t\t\tbreak\n\tcheck(\"walls_perim\", walls_ok, \"I muri su Walls devono coprire il perimetro lasciando libero solo il varco in (5,9)\")\n\tcheck(\"dec_tile\", dec.get_cell_atlas_coords(Vector2i(3, 3)) == Vector2i(2, 1), \"La decorazione (2,1) deve trovarsi esattamente nella cella (3,3)\")\n\tcheck(\"player_pos\", player.position == Vector2(80, 80), \"La posizione del Player deve essere Vector2(80, 80) (trovata %s)\" % str(player.position))",
+      "descrizione": "La stanza rispetta la griglia 10x10 su Ground, i muri perimetrali con varco in (5,9) su Walls e la decorazione in (3,3)"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n3:0/0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)\n2:1/0 = 0\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_guard\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_chest\"]\nsize = Vector2(40, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\ntile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 9, 0, 9, 0, 0, 0, 2, 0, 0, 0, 0, 0)\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\ntile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 9, 0, 8, 0, 0, 0, 3, 0, 0, 0, 0, 0)\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\ntile_map_data = PackedByteArray(0, 0, 3, 0, 3, 0, 0, 0, 2, 0, 1, 0, 0, 0)\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(80, 80)\ncollision_layer = 1\ncollision_mask = 14\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_guard\")\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n\n[node name=\"Chest\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 8\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Chest\"]\nshape = SubResource(\"RectangleShape2D_chest\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "il-custode",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Componendo la stanza sui tre strati `TileMapLayer` (`Ground`, `Walls`, `Decoration`), abbiamo costruito il primo ambiente del dungeon: un pavimento 10x10, muri di perimetro solidi con la porta aperta in (5,9) e un dettaglio decorativo al centro, posizionando poi il `Player` al centro in coordinate `Vector2(80, 80)`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "imita",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Livelli a tessere: TileSet e TileMapLayer",
@@ -89,5 +362,11 @@
     "md": "- `TileMapLayer` è il nodo che disegna una griglia di tessere nel mondo di gioco; `TileSet` è la risorsa che ne definisce immagini, dimensioni e proprietà.\n- L'uso di più nodi `TileMapLayer` (`Ground`, `Walls`, `Decoration`) consente di sovrapporre elementi visivi e separare le superfici calpestabili dagli ostacoli fisici.\n- Per rendere solide le tessere si aggiunge un **Physics Layer** al `TileSet`, assegnandogli il layer di collisione corretto e tracciando la sagoma (tasto rapido F per un rettangolo pieno).\n- I **Terrain Sets** automatizzano il posizionamento delle varianti di bordo e angolo: colorando i lati delle tessere e dipingendo in modalità **Connect**, le giunzioni si collegano da sole."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
