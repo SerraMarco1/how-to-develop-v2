@@ -1168,5 +1168,59 @@
    "regole": 2,
    "motivo": "L'esercizio configura le opzioni di esportazione del gioco e salva il file di configurazione, ma non produce alcuna modifica visiva sullo schermo durante l'esecuzione."
   }
+ },
+ "characterbody2d": {
+  "es1": {
+   "impronta": "14a4f0dcdc6fcca7e25c155991902628aeeff4186243f536d83b1757c3a9a1d0",
+   "tentativi": 2,
+   "esito": "fatto",
+   "regole": 2,
+   "copione": {
+    "scena": "res://main.tscn",
+    "durata": 8,
+    "azioni": [
+     {
+      "azione": "move_right",
+      "inizio": 1,
+      "fine": 4,
+      "tasto": "D"
+     },
+     {
+      "azione": "move_down",
+      "inizio": 4.5,
+      "fine": 7.5,
+      "tasto": "S"
+     }
+    ],
+    "soggetti": [
+     {
+      "id": "player",
+      "cerca": {
+       "script": "res://player.gd",
+       "classe": "CharacterBody2D"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 7.8,
+      "deve": "muoversi",
+      "etichetta": "Custode"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "Il custode usa il motore fisico CharacterBody2D",
+      "da": 1,
+      "a": 4,
+      "soggetto": "player"
+     },
+     {
+      "testo": "Il movimento risponde ai comandi della tastiera",
+      "da": 4.5,
+      "a": 7.5,
+      "soggetto": "player"
+     }
+    ]
+   }
+  }
  }
 }

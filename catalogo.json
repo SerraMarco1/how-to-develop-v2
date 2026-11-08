@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-08T08:27:16.829Z",
+ "aggiornato": "2026-11-08T08:43:11.241Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -934,10 +934,10 @@
    "slug": "characterbody2d",
    "numero": "7.1",
    "titolo": "CharacterBody2D e move_and_slide()",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f07-azione-2d/characterbody2d.json",
-   "sha256": "7659bbd996cb485a01ddb83016946b0bf6bceb1101319ff7a5f77e414032e575",
-   "byte": 53915
+   "sha256": "b0b556ac4ebc7974803c6377554a7175e18c24eefef895b0bd08b13f2006c510",
+   "byte": 54671
   }
  ],
  "documentazione": {

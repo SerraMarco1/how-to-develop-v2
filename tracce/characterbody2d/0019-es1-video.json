@@ -1,0 +1,68 @@
+{
+ "n": 19,
+ "quando": "2026-11-08T08:43:11.232Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Custode» (muoversi). Scritte: «Il custode usa il motore fisico CharacterBody2D» · «Il movimento risponde ai comandi della tastiera». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 63 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 22259,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 4,
+     "tasto": "D"
+    },
+    {
+     "azione": "move_down",
+     "inizio": 4.5,
+     "fine": 7.5,
+     "tasto": "S"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "script": "res://player.gd",
+      "classe": "CharacterBody2D"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.8,
+     "deve": "muoversi",
+     "etichetta": "Custode"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il custode usa il motore fisico CharacterBody2D",
+     "da": 1,
+     "a": 4,
+     "soggetto": "player"
+    },
+    {
+     "testo": "Il movimento risponde ai comandi della tastiera",
+     "da": 4.5,
+     "a": 7.5,
+     "soggetto": "player"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "9f6533267544eb8179736cce0174262f9ce54a0d6373cbc1b13f4cd3cd51d837",
+   "estensione": "mp4",
+   "byte": 64924
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 10 s (3532 → 242 token)"
+ ]
+}
