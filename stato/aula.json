@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-08T08:17:25.498Z",
+ "aggiornato": "2026-11-08T08:27:18.170Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "characterbody2d",
-  "numero": "7.1",
-  "titolo": "CharacterBody2D e move_and_slide()"
+  "slug": "muri-layer-e-maschere",
+  "numero": "7.2",
+  "titolo": "Muri, forme, layer e maschere"
  },
- "messaggio": "Sta scrivendo la lezione 7.1 «CharacterBody2D e move_and_slide()».",
+ "messaggio": "Sta scrivendo la lezione 7.2 «Muri, forme, layer e maschere».",
  "riprende": null
 }
