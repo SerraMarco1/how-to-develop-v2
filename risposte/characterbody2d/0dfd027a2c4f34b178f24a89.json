@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://main.tscn\", \"durata\": 8, \"azioni\": [{\"azione\": \"move_right\", \"inizio\": 1, \"fine\": 4, \"tasto\": \"D\"}, {\"azione\": \"move_down\", \"inizio\": 4.5, \"fine\": 7.5, \"tasto\": \"S\"}], \"soggetti\": [{\"id\": \"player\", \"cerca\": {\"script\": \"res://player.gd\", \"classe\": \"CharacterBody2D\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 7.8, \"deve\": \"muoversi\", \"etichetta\": \"Custode\"}], \"scritte\": [{\"testo\": \"Il custode usa il motore fisico CharacterBody2D\", \"da\": 1, \"a\": 4, \"soggetto\": \"player\"}, {\"testo\": \"Il movimento risponde ai comandi della tastiera\", \"da\": 4.5, \"a\": 7.5, \"soggetto\": \"player\"}]}",
+ "ragionamento": 3238,
+ "quando": "2026-11-08T08:42:58.945Z",
+ "ruolo": "ritocco"
+}
