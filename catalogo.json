@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-07T10:37:34.469Z",
+ "aggiornato": "2026-11-08T08:06:24.119Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -911,6 +911,15 @@
    "file": "lezioni/f06-visual-novel/progetto-vn-3.json",
    "sha256": "fbb7ef9f6d412726f47f563d3e0484d13392a44954cb5f170e8c4cb142b7cd55",
    "byte": 393909
+  },
+  {
+   "slug": "progetto-vn-4",
+   "numero": "6.28",
+   "titolo": "Progetto «La tua visual novel» – tappa 4: finire",
+   "versione": 1,
+   "file": "lezioni/f06-visual-novel/progetto-vn-4.json",
+   "sha256": "85c249e80bdbb1cf804ec524755c64c4d604e59f55053fe25783884d3d2347f6",
+   "byte": 294582
   }
  ],
  "documentazione": {
