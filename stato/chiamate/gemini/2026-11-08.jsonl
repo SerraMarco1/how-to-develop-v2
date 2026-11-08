@@ -22,3 +22,4 @@
 {"quando":1794126469819,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":100810,"tokenInput":13825,"tokenOutput":10463,"ragionamento":12850}
 {"quando":1794126587974,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":18871,"tokenInput":11049,"tokenOutput":4102,"ragionamento":5617}
 {"quando":1794126612997,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"muri-layer-e-maschere","ok":false,"contata":true,"durataMs":3660,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794127350274,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"characterbody2d","ok":true,"contata":true,"durataMs":4399,"tokenInput":3220,"tokenOutput":347,"ragionamento":1465}

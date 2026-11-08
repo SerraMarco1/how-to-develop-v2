@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main.tscn\",\n  \"durata\": 8,\n  \"azioni\": [\n    {\n      \"azione\": \"move_right\",\n      \"inizio\": 1.0,\n      \"fine\": 4.0,\n      \"tasto\": \"D\"\n    },\n    {\n      \"azione\": \"move_down\",\n      \"inizio\": 4.5,\n      \"fine\": 7.5,\n      \"tasto\": \"S\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"player\",\n      \"cerca\": {\n        \"script\": \"res://player.gd\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.8,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Custode\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il custode accelera e frena usando la fisica\",\n      \"da\": 1.0,\n      \"a\": 4.0,\n      \"soggetto\": \"player\"\n    },\n    {\n      \"testo\": \"Il movimento risponde ai comandi della tastiera\",\n      \"da\": 4.5,\n      \"a\": 7.5,\n      \"soggetto\": \"player\"\n    }\n  ]\n}",
+ "ragionamento": 1465,
+ "quando": "2026-11-08T08:42:34.675Z",
+ "ruolo": "ritocco"
+}

@@ -518,5 +518,20 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "progetto-vn-4": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "vettori-per-il-movimento": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "characterbody2d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
