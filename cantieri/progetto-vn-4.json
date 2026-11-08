@@ -102,9 +102,10 @@
     "tipo": "test",
     "genere": "da-zero",
     "titolo": "Progetto «La tua visual novel» – tappa 4: completamento e consegna",
-    "consegna": "Rifinisci e completa la tua visual novel inserendo il supporto alla gestione delle impostazioni, alla lingua dell'interfaccia e allo sblocco dei finali, assicurandoti che l'intero progetto sia pronto per il collaudo e la pubblicazione.\n\n1. In `core/settings_manager.gd` (Autoload `SettingsManager`), implementa la gestione delle impostazioni e della lingua. Aggiungi le funzioni `set_language(lang: String) -> void` e `get_language() -> String` per salvare e recuperare la lingua corrente (es. `\"it\"` o `\"en\"`), salvando le preferenze su `user://settings.json`.\n2. In `core/unlock_manager.gd` (Autoload `UnlockManager`), gestisci lo sblocco dei contenuti e dei finali mediante le funzioni `unlock(id: String) -> void` e `is_unlocked(id: String) -> bool`, salvando lo stato su `user://unlocks.json`.\n3. Nella scena principale `ui/title_screen.tscn`, assicurati che l'interfaccia permetta di avviare il gioco, cambiare lingua tramite le impostazioni e uscire. Assegna a questa scena lo script `ui/title_screen.gd` per gestire le interazioni dei pulsanti.",
+    "consegna": "Rifinisci e completa la tua visual novel inserendo il supporto alla gestione delle impostazioni, alla lingua dell'interfaccia e allo sblocco dei finali, assicurandoti che l'intero progetto sia pronto per il collaudo e la pubblicazione.\n\n1. In `core/settings_manager.gd` (Autoload `SettingsManager`), implementa la gestione delle impostazioni e della lingua. Aggiungi le funzioni `set_language(lang: String) -> void` e `get_language() -> String` per salvare e recuperare la lingua corrente (es. `\"it\"` o `\"en\"`), salvando le preferenze su `user://settings.json`.\n2. In `core/unlock_manager.gd` (Autoload `UnlockManager`), gestisci lo sblocco dei contenuti e dei finali mediante le funzioni `unlock(id: String) -> void` e `is_unlocked(id: String) -> bool`, salvando lo stato su `user://unlocks.json`.\n3. Nella scena principale `ui/title_screen.tscn` (con nodo radice `TitleScreen` di tipo `Control`), assicurati che l'interfaccia permetta di avviare il gioco, cambiare lingua tramite le impostazioni e uscire. Assegna a questa scena lo script `ui/title_screen.gd` per gestire le interazioni dei pulsanti.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "la-mia-visual-novel",
     "passiGuida": [],
     "suggerimenti": [],
     "verifiche": [
@@ -469,14 +470,14 @@
      ],
      "rimossi": []
     },
-    "cartella": "la-mia-visual-novel",
     "id": "test"
    }
   }
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Progetto «La tua visual novel» – tappa 4: finire",
@@ -515,6 +516,8 @@
    }
   ],
   "teoriaCorretta": false,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
