@@ -31,3 +31,7 @@
 {"quando":1794128047436,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":259972,"tokenInput":14543,"tokenOutput":12,"ragionamento":4327}
 {"quando":1794128308995,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":8610,"tokenInput":2524,"tokenOutput":710,"ragionamento":2728}
 {"quando":1794128323181,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"tilemap","ok":true,"contata":true,"durataMs":192573,"tokenInput":14488,"tokenOutput":2571,"ragionamento":6276}
+{"quando":1794128517136,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"tilemap","ok":true,"contata":true,"durataMs":709971,"tokenInput":14483,"tokenOutput":6347,"ragionamento":47649}
+{"quando":1794129227109,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"tilemap","ok":true,"contata":true,"durataMs":409083,"tokenInput":14483,"tokenOutput":7095,"ragionamento":23101}
+{"quando":1794129636193,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"tilemap","ok":false,"contata":true,"durataMs":6339,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794129642536,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"tilemap","ok":true,"contata":true,"durataMs":83486,"tokenInput":14483,"tokenOutput":10506,"ragionamento":11210}
