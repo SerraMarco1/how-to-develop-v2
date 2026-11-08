@@ -628,7 +628,7 @@
     "fonte": "3. move_toward(target, delta_distanza): fa avanzare la posizione verso il punto target percorrendo al massimo la distanza indicata."
    }
   ],
-  "teoriaCorretta": false,
+  "teoriaCorretta": true,
   "corretti": []
  }
 }
