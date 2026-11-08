@@ -516,7 +516,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Senza scatto la velocità massima orizzontale deve essere pari a max_speed (trovata velocity.x = 183.3, atteso 200.0)\n  - Con lo scatto attivo la velocità X deve raggiungere max_speed * sprint_multiplier (trovata velocity.x = 283.3, atteso 300.0)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
