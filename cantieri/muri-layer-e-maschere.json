@@ -1,0 +1,82 @@
+{
+ "creato": "2026-11-08T08:27:18.187Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Muri, forme, layer e maschere",
+  "sommario": "Impara a creare ostacoli fissi con StaticBody2D e CollisionShape2D, a mostrare le sagome di collisione durante il gioco per trovare i problemi, e a organizzare le interazioni fisiche usando layer e maschere di collisione.",
+  "concetti": [
+   "StaticBody2D",
+   "CollisionShape2D",
+   "Visible Collision Shapes",
+   "Collision Layer",
+   "Collision Mask",
+   "Nomi dei layer 2D Physics"
+  ],
+  "obiettivi": [
+   "StaticBody2D e le forme di collisione",
+   "Layer e maschere: su quale strato sto e quali strati vedo",
+   "Rendere visibili le collisioni mentre il gioco gira"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nel gioco «Il custode», il personaggio e la guardia si muovono nello schermo. Tuttavia, se provi ad aggiungere una parete o un tavolo nella stanza, i personaggi li attraverseranno come se non esistessero. Nel motore fisico di Godot, muovere un nodo non basta a fermarlo davanti agli ostacoli: servono nodi dedicati all'ambiente immobile e forme geometriche che dicano al motore quali sono i confini degli oggetti.\n\nIn questa lezione scoprirai come creare muri e ostacoli fissi con `StaticBody2D`, come associare una sagoma di collisione a ogni elemento e come usare il sistema di **layer** (strati) e **maschere** per decidere chi può urtare chi."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il nodo `StaticBody2D` (corpo statico 2D) serve a rappresentare oggetti che fanno parte dell'ambiente e non si spostano mai a causa delle forze o degli urti: muri, recinzioni, alberi o tavoli. Partecipa al calcolo delle collisioni bloccando i corpi in movimento (come i `CharacterBody2D`), ma il motore fisico non ne altera la posizione.\n\nDa solo, però, un `StaticBody2D` non ha una dimensione fisica. Per definire la sua area di impatto devi aggiungere come suo nodo figlio un `CollisionShape2D`. Questo nodo possiede la proprietà **Shape** (forma) nell'Inspector, in cui inserisci una risorsa geometrica come `RectangleShape2D` (un rettangolo) o `CircleShape2D` (un cerchio). Ogni nodo fisico del gioco ha bisogno di almeno un `CollisionShape2D` per interagire con il mondo."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Non ridimensionare mai un `CollisionShape2D` con la proprietà **Scale** del pannello Inspector o usando le maniglie generali di trasformazione! Scalare il nodo altera la matrice di trasformazione e rende inaffidabili i calcoli della fisica. Modifica sempre le dimensioni usando le maniglie arancioni che compaiono sulla forma nella vista 2D, oppure cambiando le proprietà `size` o `radius` della risorsa `Shape` nell'Inspector."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Aggiungere un muro immobile e le forme di collisione",
+    "passi": [
+     "Nel pannello *Scene*, seleziona il nodo radice **Main** e premi **+** per aggiungere un nodo **StaticBody2D**, poi rinominalo in `Wall`.",
+     "Con `Wall` selezionato, premi **+** e aggiungi un nodo figlio **CollisionShape2D**.",
+     "Seleziona `CollisionShape2D` e, nel pannello *Inspector*, clicca sul campo vuoto della proprietà **Shape** e scegli **New RectangleShape2D**.",
+     "Nella vista 2D, trascina le maniglie arancioni ai bordi del rettangolo per dargli la forma di un muro lungo l'estremità della stanza.",
+     "Aggiungi un nodo figlio **CollisionShape2D** con forma rettangolare anche a `Player` e a `Guard`, adattando la sagoma al loro aspetto visuale."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Le forme di collisione sono visibili nell'editor per permetterti di disegnarle, ma quando avvii il gioco scompaiono per non rovinare la grafica. Se un personaggio si blocca dove non dovrebbe o attraversa un ostacolo, capire cosa stia succedendo a occhi chiusi è difficile.\n\nGodot permette di mostrare le forme fisiche direttamente mentre il gioco gira. Dal menu in alto nell'editor seleziona **Debug → Visible Collision Shapes**. Quando questa voce è attiva, ogni volta che esegui la scena con **F5** o **F6**, le forme di collisione verranno sovrapposte agli sprite con un bordo colorato. In questo modo puoi verificare subito se le sagome si toccano o si sovrappongono correttamente."
+   },
+   {
+    "tipo": "testo",
+    "md": "Man mano che il gioco cresce, avrai elementi diversi: il custode, la guardia, i muri, i proiettili o le chiavi. Non tutti devono urtarsi tra loro: un proiettile potrebbe dover colpire la guardia ma non raccogliere un oggetto da terra.\n\nGodot organizza queste regole tramite due proprietà presenti in ogni oggetto di collisione:\n- **Collision Layer** (*su quale strato sto*): indica la categoria o lo strato a cui appartiene l'oggetto.\n- **Collision Mask** (*quali strati vedo*): indica quali strati l'oggetto controlla durante il movimento. Se uno strato non è presente nella sua maschera, l'oggetto lo ignorerà del tutto, passandoci attraverso.\n\nPerché due oggetti si urtino, occorre che la maschera di almeno uno dei due includa lo strato dell'altro."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "project-settings",
+    "didascalia": "La finestra Project Settings, dove nella sezione Layer Names è possibile assegnare nomi leggibili ai layer di collisione 2D."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Dare un nome ai layer di collisione del progetto",
+    "passi": [
+     "Apri il menu **Project → Project Settings** in alto a sinistra.",
+     "Nella scheda *General*, scorri la colonna delle sezioni a sinistra fino a **Layer Names**, quindi clicca su **2D Physics**.",
+     "Nella colonna di destra, assegna i nomi ai primi quattro strati: chiama il Layer 1 `Player`, il Layer 2 `Environment`, il Layer 3 `Enemies` e il Layer 4 `Items`.",
+     "Premi **Close** in basso per chiudere la finestra."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Ora che i layer hanno un nome chiaro, puoi configurarli nell'Inspector di ogni nodo sotto la voce **Collision**:\n\n- **Player** (`CharacterBody2D`): imposta il suo `Collision Layer` su **Player** (Layer 1). Nella sua `Collision Mask` attiva **Environment** (Layer 2) per non attraversare i muri ed **Enemies** (Layer 3) per urtare le guardie.\n- **Wall** (`StaticBody2D`): imposta il suo `Collision Layer` su **Environment** (Layer 2). Poiché il muro è statico e non si muove da solo, la sua `Collision Mask` può rimanere disattivata o impostata su **Environment**.\n- **Guard** (`CharacterBody2D`): imposta il suo `Collision Layer` su **Enemies** (Layer 3) e la sua `Collision Mask` su **Environment** (Layer 2) per impedirle di attraversare i muri."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- `StaticBody2D` è il nodo per elementi fissi dell'ambiente come muri e ostacoli che non devono muoversi quando spinti.\n- Ogni corpo fisico richiede un nodo figlio `CollisionShape2D` con una risorsa `Shape` per definire i suoi confini fisici.\n- Non scalare mai `CollisionShape2D` tramite la proprietà **Scale**: modifica i punti arancioni della forma o le dimensioni nell'Inspector.\n- L'opzione del menu **Debug → Visible Collision Shapes** permette di vedere i contorni della fisica mentre il gioco è in esecuzione.\n- `Collision Layer` indica a quale strato appartiene un oggetto, mentre `Collision Mask` indica quali strati quell'oggetto rileva e blocca."
+   }
+  ]
+ }
+}
