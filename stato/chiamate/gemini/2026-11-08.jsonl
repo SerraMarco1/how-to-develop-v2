@@ -1,1 +1,2 @@
 {"quando":1794124877711,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-vn-4","ok":true,"contata":true,"durataMs":281107,"tokenInput":41174,"tokenOutput":33587,"ragionamento":1194}
+{"quando":1794125173600,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-vn-4","ok":true,"contata":true,"durataMs":6376,"tokenInput":2808,"tokenOutput":863,"ragionamento":1709}
