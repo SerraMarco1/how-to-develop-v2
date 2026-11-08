@@ -724,7 +724,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Guard deve attraversare Chest senza fermarsi (pos y: 111.8)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "VERIFICHE FRAGILI: le verifiche bocciano una soluzione giusta. Nella soluzione sono cambiati solo valori che il testo dell'esercizio non impone, quindi chi lo fa può sceglierli diversi:\n  - guard.gd: `speed` da 120.0 a 60.0\n  - guard.gd: `acceleration` da 800.0 a 400.0\n  - guard.gd: `friction` da 600.0 a 300.0\n  - player.gd: `acceleration` da 1200.0 a 600.0\n  - player.gd: `friction` da 1000.0 a 500.0\n  - player.gd: `sprint_multiplier` da 1.5 a 0.75\nCon questi valori non passano più:\n  - Guard deve attraversare Chest senza fermarsi (pos y: 125.9)\nCorreggi le VERIFICHE, non la soluzione: devono accettare qualunque valore che la consegna lascia libero. Per esempio: prima di misurare un movimento metti il nodo in un punto noto (`nodo.position = Vector2(400, 300)`); per controllare un limite porta il nodo oltre il limite e tieni premuta l'azione per pochi frame, invece di aspettare che ci arrivi da solo in un tempo fisso; confronta con valori letti dal gioco (`get_prop` legge anche le costanti) invece che scritti nella verifica. Se invece uno di quei valori fa davvero parte del compito, scrivilo in cifre nella consegna."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
