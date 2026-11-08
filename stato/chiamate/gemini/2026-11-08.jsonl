@@ -9,3 +9,5 @@
 {"quando":1794125845520,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"characterbody2d","ok":true,"contata":true,"durataMs":25451,"tokenInput":13668,"tokenOutput":2044,"ragionamento":4780}
 {"quando":1794125872539,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"characterbody2d","ok":true,"contata":true,"durataMs":99475,"tokenInput":13150,"tokenOutput":6467,"ragionamento":16431}
 {"quando":1794125978215,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"characterbody2d","ok":true,"contata":true,"durataMs":19031,"tokenInput":9969,"tokenOutput":2594,"ragionamento":6129}
+{"quando":1794126003368,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"characterbody2d","ok":false,"contata":true,"durataMs":2344,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794126005715,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"characterbody2d","ok":true,"contata":true,"durataMs":27859,"tokenInput":9880,"tokenOutput":2568,"ragionamento":4737}
