@@ -1,0 +1,164 @@
+{
+ "n": 5,
+ "quando": "2026-11-08T08:29:47.920Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Muri, tavolo e layer di fisica nel dungeon». 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: project.godot, main.tscn",
+ "richieste": 0,
+ "durataMs": 16001,
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Muri, tavolo e layer di fisica nel dungeon",
+   "consegna": "Nel progetto `il-custode`, aggiungi i muri e un tavolo nella stanza e definisci le forme di collisione e i layer di fisica.\n\n1. Apri **Project → Project Settings → Layer Names → 2D Physics** e dai un nome ai primi 4 layer:\n   - Layer 1: `Player`\n   - Layer 2: `Environment`\n   - Layer 3: `Enemies`\n   - Layer 4: `Items` \n2. In `main.tscn`, aggiungi un nodo figlio `CollisionShape2D` a `Player` e uno a `Guard`, assegnando a ciascuno una forma rettangolare `RectangleShape2D` di dimensione 64x64.\n3. Configura le collisioni di `Player` (`CharacterBody2D`):\n   - **Collision Layer**: seleziona solo **Player** (Layer 1).\n   - **Collision Mask**: seleziona **Environment** (Layer 2) ed **Enemies** (Layer 3).\n4. Configura le collisioni di `Guard` (`CharacterBody2D`):\n   - **Collision Layer**: seleziona solo **Enemies** (Layer 3).\n   - **Collision Mask**: seleziona solo **Environment** (Layer 2).\n5. Nella scena `main.tscn`, aggiungi un nodo `StaticBody2D` chiamato `Wall` alla posizione `(400, 200)` con un nodo figlio `CollisionShape2D` (forma rettangolare 32x200). Imposta il suo **Collision Layer** su **Environment** (Layer 2) e svuota la sua **Collision Mask**.\n6. Nella scena `main.tscn`, aggiungi un altro `StaticBody2D` chiamato `Table` alla posizione `(200, 400)` con un nodo figlio `CollisionShape2D` (forma rettangolare 100x50). Imposta il suo **Collision Layer** su **Environment** (Layer 2) e svuota la sua **Collision Mask**.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "il-custode",
+   "passiGuida": [
+    "Apri il menu **Project → Project Settings**, seleziona **Layer Names → 2D Physics** e imposta i nomi: Layer 1 = `Player`, Layer 2 = `Environment`, Layer 3 = `Enemies`, Layer 4 = `Items`. Clicca su **Close**.",
+    "Apri la scena `res://main.tscn` dal pannello *FileSystem*.",
+    "Seleziona il nodo `Player`, aggiungi un nodo figlio `CollisionShape2D`. Nell'Inspector seleziona **Shape → New RectangleShape2D** e imposta `size` a `Vector2(64, 64)`.",
+    "Seleziona il nodo `Guard`, aggiungi un nodo figlio `CollisionShape2D` con una risorsa `RectangleShape2D` di dimensione `Vector2(64, 64)`.",
+    "Seleziona `Player` e nella sezione **Collision** dell'Inspector imposta Layer = Layer 1 (`Player`) e Mask = Layer 2 (`Environment`) + Layer 3 (`Enemies`).",
+    "Seleziona `Guard` e imposta Layer = Layer 3 (`Enemies`) e Mask = Layer 2 (`Environment`).",
+    "Seleziona il nodo radice `Main`, aggiungi un nodo `StaticBody2D` chiamato `Wall` con posizione `(400, 200)`. Aggiungi a `Wall` un `CollisionShape2D` rettangolare `(32, 200)`. Imposta il suo Layer su Layer 2 (`Environment`) e deseleziona tutte le caselle della Mask.",
+    "Aggiungi a `Main` un altro `StaticBody2D` chiamato `Table` con posizione `(200, 400)`. Aggiungi un `CollisionShape2D` rettangolare `(100, 50)`. Imposta Layer = Layer 2 (`Environment`) e Mask vuota.",
+    "Salva la scena con **Ctrl+S** e premi **F5** per provare il movimento contro gli ostacoli."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "impostazione",
+     "sezione": "layer_names",
+     "chiave": "2d_physics/layer_1",
+     "contiene": "Player",
+     "descrizione": "Il Layer 1 di fisica 2D si chiama Player"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "layer_names",
+     "chiave": "2d_physics/layer_2",
+     "contiene": "Environment",
+     "descrizione": "Il Layer 2 di fisica 2D si chiama Environment"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "StaticBody2D",
+     "nome": "Wall",
+     "genitore": "Main",
+     "descrizione": "Nella scena main.tscn è presente lo StaticBody2D Wall"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "StaticBody2D",
+     "nome": "Table",
+     "genitore": "Main",
+     "descrizione": "Nella scena main.tscn è presente lo StaticBody2D Table"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si apre senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar wall := find_by_name(main, \"Wall\") as StaticBody2D\n\tvar table := find_by_name(main, \"Table\") as StaticBody2D\n\t\n\tif not check(\"player\", player != null, \"Serve un CharacterBody2D chiamato Player\"):\n\t\treturn\n\tif not check(\"wall\", wall != null, \"Serve uno StaticBody2D chiamato Wall\"):\n\t\treturn\n\tif not check(\"table\", table != null, \"Serve uno StaticBody2D chiamato Table\"):\n\t\treturn\n\t\n\t# Spinta verso Wall (muro a destra)\n\tplayer.global_position = Vector2(300, 200)\n\twall.global_position = Vector2(400, 200)\n\tawait hold_action(\"move_right\", 30)\n\tcheck(\"wall_stop\", player.global_position.x < 390.0, \"Il giocatore si ferma contro Wall (pos x: %.1f)\" % player.global_position.x)\n\t\n\t# Spinta verso Table (tavolo in basso)\n\tplayer.global_position = Vector2(200, 300)\n\ttable.global_position = Vector2(200, 400)\n\tawait hold_action(\"move_down\", 30)\n\tcheck(\"table_stop\", player.global_position.y < 390.0, \"Il giocatore si ferma contro Table (pos y: %.1f)\" % player.global_position.y)\n",
+     "descrizione": "Il giocatore si blocca quando viene spinto contro Wall e Table"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Il custode\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[layer_names]\n\n2d_physics/layer_1=\"Player\"\n2d_physics/layer_2=\"Environment\"\n2d_physics/layer_3=\"Enemies\"\n2d_physics/layer_4=\"Items\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nsprint={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194325,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "guard.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 120.0\n@export var acceleration: float = 800.0\n@export var friction: float = 600.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 4.0:\n\t\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\tif direction != Vector2.ZERO:\n\t\t\trotation = direction.angle()\n\t\tvar target_velocity: Vector2 = direction * speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\t\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_guard\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 1\ncollision_mask = 6\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_guard\")\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Il custode",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "sprint",
+       "tasti": [
+        "Shift"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": [
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_1",
+       "valore": "Player"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_2",
+       "valore": "Environment"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_3",
+       "valore": "Enemies"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_4",
+       "valore": "Items"
+      }
+     ]
+    },
+    "spiegazione": "Abbiamo configurato i layer fisici nelle Project Settings. Poi abbiamo assegnato a ciascun corpo fisico (`Player`, `Guard`, `Wall`, `Table`) un nodo `CollisionShape2D` con una risorsa `RectangleShape2D`. Infine abbiamo impostato `collision_layer` (lo strato a cui l'oggetto appartiene) e `collision_mask` (gli strati che l'oggetto rileva). La maschera di `Player` è 6 (Layer 2 Environment + Layer 3 Enemies), consentendogli di collidere sia con i muri sia con la guardia.",
+    "cambiati": [
+     "project.godot",
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}

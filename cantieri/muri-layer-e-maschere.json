@@ -416,7 +416,10 @@
    "genere": "ripara",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "main.tscn riga 4: la scena usa \"res://hero.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile).",
+    "main.tscn riga 5: la scena usa \"res://ghost.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile)."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
