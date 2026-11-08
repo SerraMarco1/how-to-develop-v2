@@ -266,7 +266,7 @@
     "tipo": "autonomo",
     "genere": "ripara",
     "titolo": "Ripara le collisioni del fantasma e del cavaliere",
-    "consegna": "Nel progetto allegato `FisicaRiparata`, ci sono tre nodi nella scena principale: `Hero` (`CharacterBody2D`), `Rock` (`StaticBody2D`) e `Ghost` (`CharacterBody2D`).\n\nSintomi del problema:\nQuando muovi il cavaliere `Hero` verso la roccia `Rock`, le passa attraverso come se fosse incosistente. Al contrario, il fantasma `Ghost`, muovendosi verso la roccia, rimane bloccato contro di essa anziché attraversarla!\n\nObiettivo:\n1. Nelle impostazioni del progetto (`Project Settings → Layer Names → 2D Physics`), definisci i primi 3 strati:\n   - Layer 1: `Heroes`\n   - Layer 2: `Obstacles`\n   - Layer 3: `Ghosts`\n2. Correggi i layer e le maschere di collisione dei tre nodi in `main.tscn` affinché:\n   - `Hero` sia sul Layer 1 (`Heroes`) e rilevi gli ostacoli (`Obstacles`, Layer 2).\n   - `Rock` sia sul Layer 2 (`Obstacles`).\n   - `Ghost` sia sul Layer 3 (`Ghosts`) e NON rilevi gli ostacoli (`Obstacles`), consentendogli di attraversare la roccia.",
+    "consegna": "Nel progetto allegato `FisicaRiparata`, ci sono tre nodi nella scena principale: `Hero` (`CharacterBody2D`), `Rock` (`StaticBody2D`) e `Ghost` (`CharacterBody2D`).\n\nSintomi del problema:\nQuando muovi il cavaliere `Hero` verso la roccia `Rock`, le passa attraverso come se fosse inconsistente. Al contrario, il fantasma `Ghost`, muovendosi verso la roccia, rimane bloccato contro di essa anziché attraversarla!\n\nObiettivo:\n1. Nelle impostazioni del progetto (`Project Settings → Layer Names → 2D Physics`), definisci i primi 3 strati:\n   - Layer 1: `Heroes`\n   - Layer 2: `Obstacles`\n   - Layer 3: `Ghosts`\n2. Correggi i layer e le maschere di collisione dei tre nodi in `main.tscn` affinché:\n   - `Hero` sia sul Layer 1 (`Heroes`) e rilevi gli ostacoli (`Obstacles`, Layer 2).\n   - `Rock` sia sul Layer 2 (`Obstacles`).\n   - `Ghost` sia sul Layer 3 (`Ghosts`) e NON rilevi gli ostacoli (`Obstacles`), consentendogli di attraversare la roccia.",
     "modalita": "progetto",
     "dove": "a-parte",
     "cartella": "fisica-riparata",
@@ -299,7 +299,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si apre senza errori\"):\n\t\treturn\n\tvar hero := find_by_name(main, \"Hero\") as CharacterBody2D\n\tvar rock := find_by_name(main, \"Rock\") as StaticBody2D\n\tvar ghost := find_by_name(main, \"Ghost\") as CharacterBody2D\n\t\n\tif not check(\"hero\", hero != null, \"Manca il nodo Hero\"):\n\t\treturn\n\tif not check(\"rock\", rock != null, \"Manca il nodo Rock\"):\n\t\treturn\n\tif not check(\"ghost\", ghost != null, \"Manca il nodo Ghost\"):\n\t\treturn\n\t\n\t# Hero va a destra verso Rock\n\thero.global_position = Vector2(100, 200)\n\trock.global_position = Vector2(200, 200)\n\tawait hold_action(\"move_right\", 30)\n\tcheck(\"hero_blocked\", hero.global_position.x < 190.0, \"Hero si deve fermare contro Rock (pos x: %.1f)\" % hero.global_position.x)\n\t\n\t# Ghost avanza a destra verso Rock\n\tghost.global_position = Vector2(100, 200)\n\tawait wait_physics_frames(40)\n\tcheck(\"ghost_passed\", ghost.global_position.x > 210.0, \"Ghost deve attraversare la roccia senza bloccarsi (pos x: %.1f)\" % ghost.global_position.x)",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si apre senza errori\"):\n\t\treturn\n\tvar hero := find_by_name(main, \"Hero\") as CharacterBody2D\n\tvar rock := find_by_name(main, \"Rock\") as StaticBody2D\n\tvar ghost := find_by_name(main, \"Ghost\") as CharacterBody2D\n\n\tif not check(\"hero\", hero != null, \"Manca il nodo Hero\"):\n\t\treturn\n\tif not check(\"rock\", rock != null, \"Manca il nodo Rock\"):\n\t\treturn\n\tif not check(\"ghost\", ghost != null, \"Manca il nodo Ghost\"):\n\t\treturn\n\n\t# Hero va a destra verso Rock\n\trock.global_position = Vector2(200, 200)\n\thero.global_position = Vector2(140, 200)\n\tawait hold_action(\"move_right\", 35)\n\tcheck(\"hero_blocked\", hero.global_position.x < 165.0, \"Hero si deve fermare contro Rock (pos x: %.1f)\" % hero.global_position.x)\n\n\t# Ghost avanza a destra verso Rock\n\tghost.global_position = Vector2(150, 200)\n\tawait wait_physics_frames(60)\n\tcheck(\"ghost_passed\", ghost.global_position.x > 200.0, \"Ghost deve attraversare la roccia senza bloccarsi (pos x: %.1f)\" % ghost.global_position.x)",
       "descrizione": "Hero si ferma contro Rock e Ghost attraversa Rock"
      }
     ],
@@ -307,10 +307,6 @@
     "daTrovare": [],
     "partenza": {
      "file": [
-      {
-       "percorso": "project.godot",
-       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"FisicaRiparata\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
-      },
       {
        "percorso": "main.tscn",
        "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://hero.gd\" id=\"2_hero\"]\n[ext_resource type=\"Script\" path=\"res://ghost.gd\" id=\"3_ghost\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hero\"]\nsize = Vector2(40, 40)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_rock\"]\nsize = Vector2(50, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_ghost\"]\nsize = Vector2(40, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Hero\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 200)\ncollision_layer = 1\ncollision_mask = 1\nscript = ExtResource(\"2_hero\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Hero\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Hero\"]\nshape = SubResource(\"RectangleShape2D_hero\")\n\n[node name=\"Rock\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Rock\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Rock\"]\nshape = SubResource(\"RectangleShape2D_rock\")\n\n[node name=\"Ghost\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 200)\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"3_ghost\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Ghost\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Ghost\"]\nshape = SubResource(\"RectangleShape2D_ghost\")\n"
@@ -422,22 +418,21 @@
      },
      "spiegazione": "`Hero` aveva la mask impostata sul Layer 1 (se stesso) anziché sul Layer 2 (`Obstacles`), quindi passava attraverso la roccia. `Ghost` aveva invece la mask impostata sul Layer 2 (`Obstacles`), venendo bloccato. Impostando `collision_mask = 2` su `Hero` e `collision_mask = 0` su `Ghost`, il cavaliere si scontra con la roccia mentre il fantasma la attraversa liberamente.",
      "cambiati": [
-      "main.tscn",
-      "hero.gd",
-      "ghost.gd"
+      "main.tscn"
      ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Ghost deve attraversare la roccia senza bloccarsi (pos x: 180.0)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "es3": {
@@ -602,7 +597,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Muri, forme, layer e maschere",
