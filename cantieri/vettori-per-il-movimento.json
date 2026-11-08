@@ -569,7 +569,7 @@
     "passi": [
      "Apri il menu **Project** in alto a sinistra e fai clic su **Project Settings**.",
      "Nella finestra che si apre, seleziona la scheda **Input Map** in alto.",
-     "Fai clic sul campo di testo sotto **Add New Action**, scrivi `move_left` e premi il pulsante **Add**.",
+     "Fai clic sul campo di testo **Add New Action**, scrivi `move_left` e premi il pulsante **Add**.",
      "Ripeti il passaggio precedente creando altre tre azioni: `move_right`, `move_up` e `move_down`.",
      "Nella riga di ogni azione appena creata, premi il pulsante **+** a destra per assegnare il tasto corrispondente (per esempio: tasto A per `move_left`, D per `move_right`, W per `move_up` e S per `move_down`).",
      "Premi il pulsante **Close** in basso a destra per salvare e chiudere la finestra."
@@ -602,7 +602,7 @@
    },
    {
     "tipo": "riepilogo",
-    "md": "- Un `Vector2` contiene due coordinate (X e Y) e descrive sia punti nello spazio sia frecce dotate di direzione e lunghezza.\n- Sommare un vettore alla posizione determina uno spostamento; moltiplicare un vettore per uno scalare (`speed * delta`) ne controlla la distanza percorsa al secondo.\n- Muoversi in diagonale sommando due assi produce una velocità superiore del 41%: il metodo `normalized()` o la funzione `Input.get_vector()` riportano la lunghezza massima a `1.0`.\n- `direction_to(target)` restituisce il vettore normalizzato che punta direttamente verso un punto bersaglio.\n- `angle()` trasforma un vettore direzionale in un angolo in radianti, pronto per essere assegnato alla proprietà `rotation`.\n- `move_toward(target, passo)` sposta una posizione verso un traguardo senza mai oltrepassarlo."
+    "md": "- Un `Vector2` contiene due coordinate (X e Y) e descrive sia punti nello spazio sia frecce dotate di direzione e lunghezza.\n- Sommare un vettore alla posizione determina uno spostamento; moltiplicare un vettore per uno scalare (`speed * delta`) ne controlla la distanza percorrere al secondo.\n- Muoversi in diagonale sommando due assi produce una velocità superiore del 41%: il metodo `normalized()` o la funzione `Input.get_vector()` riportano la lunghezza massima a `1.0`.\n- `direction_to(target)` restituisce il vettore normalizzato che punta direttamente verso un punto bersaglio.\n- `angle()` trasforma un vettore direzionale in un angolo in radianti, pronto per essere assegnato alla proprietà `rotation`.\n- `move_toward(target, passo)` sposta una posizione verso un traguardo senza mai oltrepassarlo."
    }
   ]
  },
