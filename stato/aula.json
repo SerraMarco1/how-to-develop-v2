@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-08T08:06:25.476Z",
+ "aggiornato": "2026-11-08T08:17:25.498Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "vettori-per-il-movimento",
-  "numero": "7.0",
-  "titolo": "Vettori per il movimento"
+  "slug": "characterbody2d",
+  "numero": "7.1",
+  "titolo": "CharacterBody2D e move_and_slide()"
  },
- "messaggio": "Sta scrivendo la lezione 7.0 «Vettori per il movimento».",
+ "messaggio": "Sta scrivendo la lezione 7.1 «CharacterBody2D e move_and_slide()».",
  "riprende": null
 }
