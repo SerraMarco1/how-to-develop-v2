@@ -44,7 +44,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player_exists\", player != null, \"Il nodo Player deve essere di tipo CharacterBody2D nella scena main.tscn\"):\n\t\treturn\n\t\n\tplayer.position = Vector2(200.0, 200.0)\n\tplayer.velocity = Vector2.ZERO\n\t\n\tawait hold_action(\"move_right\", 5)\n\tvar max_speed: float = get_prop(player, \"max_speed\", 200.0)\n\tcheck(\"accel\", player.velocity.x > 0.0 and player.velocity.x <= max_speed + 1.0, \"Premendo move_right la velocità X deve aumentare verso max_speed (trovata velocity.x = %.1f)\" % player.velocity.x)\n\tcheck(\"moved\", player.position.x > 200.0, \"Il giocatore deve essersi mosso a destra rispetto alla posizione iniziale (x = %.1f)\" % player.position.x)\n\t\n\tawait hold_action(\"move_right\", 30)\n\tcheck(\"max_vel\", absf(player.velocity.x - max_speed) < 2.0, \"Tenendo premuto, la velocità X deve raggiungere max_speed (trovata velocity.x = %.1f, atteso %.1f)\" % [player.velocity.x, max_speed])\n\t\n\tawait wait_physics_frames(25)\n\tcheck(\"friction\", player.velocity.x < max_speed * 0.5, \"Rilasciando i tasti la velocità deve diminuire gradualmente per la frenata (trovata velocity.x = %.1f)\" % player.velocity.x)",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player_exists\", player != null, \"Il nodo Player deve essere di tipo CharacterBody2D nella scena main.tscn\"):\n\t\treturn\n\t\n\tplayer.position = Vector2(200.0, 200.0)\n\tplayer.velocity = Vector2.ZERO\n\t\n\tvar max_speed: float = get_prop(player, \"max_speed\", 200.0)\n\t\n\tawait hold_action(\"move_right\", 40)\n\tcheck(\"max_vel\", player.velocity.x >= max_speed - 2.0, \"Tenendo premuto, la velocità X deve raggiungere max_speed (trovata velocity.x = %.1f, atteso %.1f)\" % [player.velocity.x, max_speed])\n\tcheck(\"moved\", player.position.x > 200.0, \"Il giocatore deve essersi mosso a destra rispetto alla posizione iniziale (x = %.1f)\" % player.position.x)\n\t\n\tawait wait_physics_frames(25)\n\tcheck(\"friction\", player.velocity.x < max_speed * 0.5, \"Rilasciando i tasti la velocità deve diminuire gradualmente per la frenata (trovata velocity.x = %.1f)\" % player.velocity.x)",
       "descrizione": "Il giocatore muove il corpo fisico in physics_process con accelerazione e frenata graduali"
      }
     ],
@@ -52,6 +52,10 @@
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": "guard.gd",
+       "contenuto": "extends Sprite2D\n\n@export var speed: float = 120.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _process(delta: float) -> void:\n\tvar direction: Vector2 = get_direction_to_target(target_position)\n\tif direction != Vector2.ZERO:\n\t\trotation = direction.angle()\n\tglobal_position = step_toward(target_position, speed * delta)\n\n\nfunc get_direction_to_target(target: Vector2) -> Vector2:\n\treturn global_position.direction_to(target)\n\n\nfunc step_toward(target: Vector2, delta_distance: float) -> Vector2:\n\treturn global_position.move_toward(target, delta_distance)\n"
+      },
       {
        "percorso": "player.gd",
        "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar target_velocity: Vector2 = direction * max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n"
@@ -62,25 +66,58 @@
       }
      ],
      "progetto": {
-      "nome": "",
-      "scenaPrincipale": "",
-      "azioni": [],
+      "nome": "Il custode",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
       "autoload": [],
       "impostazioni": []
      },
      "spiegazione": "Abbiamo convertito il nodo `Player` in un `CharacterBody2D` mantenendo l'aspetto visivo con un figlio `Sprite2D`. Nel codice abbiamo sostituito `_process()` con `_physics_process()`, usando la proprietà integrata `velocity` di `CharacterBody2D` e chiamando `move_and_slide()` senza moltiplicare per `delta`. Per rendere il movimento morbido, usiamo `move_toward()` applicando `acceleration` quando il giocatore preme una direzione e `friction` quando rilascia i tasti.",
-     "cambiati": [],
+     "cambiati": [
+      "player.gd",
+      "main.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "guidato",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Tenendo premuto, la velocità X deve raggiungere max_speed (trovata velocity.x = 183.3, atteso 200.0)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es2": {
@@ -258,7 +295,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "CharacterBody2D e move_and_slide()",
