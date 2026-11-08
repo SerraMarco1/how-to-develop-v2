@@ -18,3 +18,5 @@
 {"quando":1794126415960,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"characterbody2d","ok":true,"contata":true,"durataMs":8785,"tokenInput":12548,"tokenOutput":18,"ragionamento":2331}
 {"quando":1794126426182,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"characterbody2d","ok":true,"contata":true,"durataMs":6298,"tokenInput":2547,"tokenOutput":980,"ragionamento":1773}
 {"quando":1794126438191,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":27901,"tokenInput":13467,"tokenOutput":2023,"ragionamento":4150}
+{"quando":1794126467350,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"muri-layer-e-maschere","ok":false,"contata":true,"durataMs":2466,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794126469819,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"muri-layer-e-maschere","ok":true,"contata":true,"durataMs":100810,"tokenInput":13825,"tokenOutput":10463,"ragionamento":12850}
