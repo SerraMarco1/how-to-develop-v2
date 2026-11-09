@@ -750,7 +750,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -846,7 +846,107 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Proiettili infiniti e blocco della memoria",
+    "consegna": "In questo progetto i proiettili non vengono mai eliminati quando volano nel vuoto e, se colpiscono un muro, il gioco va in arresto anomalo. Correggi lo script `res://bullet.gd` in modo che:\n1. Usi `queue_free()` invece di `free()` nella gestione delle collisioni.\n2. Colleghi il segnale `timeout` di `LifetimeTimer` per eliminare il proiettile allo scadere del tempo.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "proiettili-infiniti",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://bullet.gd",
+      "regex": "queue_free\\(\\)",
+      "descrizione": "Lo script bullet.gd usa queue_free() per rimuovere il nodo"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bullet_scene: PackedScene = load(\"res://bullet.tscn\")\n\tif not check(\"exists\", bullet_scene != null, \"bullet.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar b := bullet_scene.instantiate() as Area2D\n\tvar main := await instantiate_main_scene()\n\tmain.add_child(b)\n\tb.global_position = Vector2(100, 100)\n\tawait wait_seconds(2.2)\n\tcheck(\"timer_cleanup\", not is_instance_valid(b), \"Dopo il tempo di sopravvivenza (2s) il proiettile deve essere stato rimosso con queue_free()\")\n",
+      "descrizione": "Il proiettile scompare al contatto con l'ostacolo e dopo il timeout senza errori"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "Proiettili Infiniti",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Proiettili Infiniti\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 10.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 2\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.15, 0.15)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_bullet\")\n\n[node name=\"LifetimeTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\none_shot = true\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 400.0\nvar direction: Vector2 = Vector2.RIGHT\n\n@onready var lifetime_timer: Timer = $LifetimeTimer\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\t# ERRORE: Il timer non viene avviato né collegato al timeout\n\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n\n\nfunc _on_body_entered(_body: Node2D) -> void:\n\t# ERRORE: free() causa arresto anomalo durante le collisioni fisiche\n\tfree()\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://bullet.tscn\" id=\"2_bullet\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 400)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(500, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Proiettili Infiniti\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 10.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 2\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.15, 0.15)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_bullet\")\n\n[node name=\"LifetimeTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\none_shot = true\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 400.0\nvar direction: Vector2 = Vector2.RIGHT\n\n@onready var lifetime_timer: Timer = $LifetimeTimer\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tlifetime_timer.timeout.connect(_on_lifetime_timer_timeout)\n\tlifetime_timer.start()\n\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n\n\nfunc _on_body_entered(_body: Node2D) -> void:\n\tqueue_free()\n\n\nfunc _on_lifetime_timer_timeout() -> void:\n\tqueue_free()\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://bullet.tscn\" id=\"2_bullet\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 400)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(500, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Proiettili Infiniti",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "",
+     "cambiati": [
+      "bullet.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "es3"
+   }
   },
   "test": {
    "stato": "da_fare",
