@@ -1,0 +1,134 @@
+{
+ "n": 32,
+ "quando": "2026-11-09T14:44:29.206Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (ripara): 1 problema",
+ "spiegazione": "«Proiettili legati al giocatore e raffica incontrollata», scritto da gemini/gemini-3.6-flash. 1 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - I proiettili devono essere aggiunti direttamente alla scena principale\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 3833,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - I proiettili devono essere aggiunti direttamente alla scena principale\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Proiettili legati al giocatore e raffica incontrollata",
+   "consegna": "In questo progetto il sistema di sparo presenta due gravi difetti:\n1. I proiettili sparati vengono aggiunti come figli del nodo `Player`: se il giocatore si muove, anche i proiettili già in volo cambiano posizione trascinandosi dietro.\n2. Tenendo premuto il tasto di sparo, il tempo di ricarica `shoot_cooldown` viene ignorato e il giocatore spara un proiettile a ogni fotogramma.\n\nApri lo script `res://player.gd` e correggerlo in modo che:\n- I proiettili vengano aggiunti all'albero della scena principale tramite `get_tree().current_scene.add_child(bullet_instance)`.\n- La variabile `_time_since_last_shot` venga azzerata ad ogni colpo effettuato, rispettando il cooldown.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "proiettili-trascinati",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Verifica dove viene fatta la chiamata add_child(): invece di usare self.add_child(...) o add_child(...), usa get_tree().current_scene.add_child(...)."
+   ],
+   "verifiche": [
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\t\n\tawait tap_action(\"shoot\")\n\tawait wait_physics_frames(2)\n\t\n\tvar player_bullets := player.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"not_child_of_player\", player_bullets.size() == 0, \"I proiettili NON devono essere aggiunti come nodi figli del Player\")\n\t\n\tvar main_bullets := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"child_of_main\", main_bullets.size() > 0, \"I proiettili devono essere aggiunti direttamente alla scena principale\")\n\t\n\tawait wait_physics_frames(2)\n\tvar bullet_count_1 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tawait wait_physics_frames(5)\n\tvar bullet_count_2 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tcheck(\"cooldown_works\", bullet_count_1 == bullet_count_2, \"Il proiettile non deve essere sparato a ogni singolo fotogramma durante il cooldown\")\n",
+     "descrizione": "I proiettili vengono aggiunti alla scena principale e rispettano il cooldown"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "Proiettili Trascinati",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D"
+       ]
+      },
+      {
+       "nome": "shoot",
+       "tasti": [
+        "MouseLeft"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Proiettili Trascinati\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "bullet.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 8.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.1, 0.1)\ntexture = ExtResource(\"2_icon\")\n"
+     },
+     {
+      "percorso": "bullet.gd",
+      "contenuto": "extends Area2D\n\n@export var speed: float = 300.0\nvar direction: Vector2 = Vector2.RIGHT\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n@export var shoot_cooldown: float = 0.3\n\nvar _time_since_last_shot: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\t_time_since_last_shot += delta\n\t\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tvelocity.x = 200.0\n\telse:\n\t\tvelocity.x = 0.0\n\tmove_and_slide()\n\t\n\tif Input.is_action_pressed(\"shoot\") and _time_since_last_shot >= shoot_cooldown:\n\t\tshoot()\n\n\nfunc shoot() -> void:\n\t# ERRORE 1: Mancata azzeramento di _time_since_last_shot\n\t\n\tvar bullet := bullet_scene.instantiate() as Node2D\n\tbullet.global_position = global_position\n\t\n\t# ERRORE 2: Aggiunge il proiettile a se stesso (Player) anziché alla scena principale\n\tadd_child(bullet)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Proiettili Trascinati\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "bullet.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 8.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.1, 0.1)\ntexture = ExtResource(\"2_icon\")\n"
+     },
+     {
+      "percorso": "bullet.gd",
+      "contenuto": "extends Area2D\n\n@export var speed: float = 300.0\nvar direction: Vector2 = Vector2.RIGHT\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n@export var shoot_cooldown: float = 0.3\n\nvar _time_since_last_shot: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\t_time_since_last_shot += delta\n\t\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tvelocity.x = 200.0\n\telse:\n\t\tvelocity.x = 0.0\n\tmove_and_slide()\n\t\n\tif Input.is_action_pressed(\"shoot\") and _time_since_last_shot >= shoot_cooldown:\n\t\tshoot()\n\n\nfunc shoot() -> void:\n\t_time_since_last_shot = 0.0\n\t\n\tvar bullet := bullet_scene.instantiate() as Node2D\n\tbullet.global_position = global_position\n\t\n\tget_tree().current_scene.add_child(bullet)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Proiettili Trascinati",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D"
+       ]
+      },
+      {
+       "nome": "shoot",
+       "tasti": [
+        "MouseLeft"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "",
+    "cambiati": [
+     "player.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
