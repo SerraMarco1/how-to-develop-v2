@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-09T08:17:42.798Z",
+ "aggiornato": "2026-11-09T08:29:05.861Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "camera2d",
-  "numero": "7.4",
-  "titolo": "La telecamera"
+  "slug": "area2d-oggetti",
+  "numero": "7.5",
+  "titolo": "Area2D: oggetti da raccogliere e zone"
  },
- "messaggio": "Sta scrivendo la lezione 7.4 «La telecamera».",
+ "messaggio": "Sta scrivendo la lezione 7.5 «Area2D: oggetti da raccogliere e zone».",
  "riprende": null
 }

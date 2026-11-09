@@ -7,3 +7,5 @@
 {"quando":1794212623169,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"camera2d","ok":true,"contata":true,"durataMs":252159,"tokenInput":14997,"tokenOutput":8007,"ragionamento":12632}
 {"quando":1794212917853,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"camera2d","ok":true,"contata":true,"durataMs":15348,"tokenInput":11719,"tokenOutput":11,"ragionamento":2931}
 {"quando":1794212934686,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"camera2d","ok":true,"contata":true,"durataMs":5705,"tokenInput":2915,"tokenOutput":825,"ragionamento":1452}
+{"quando":1794212945878,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"area2d-oggetti","ok":false,"contata":true,"durataMs":1999,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794212947881,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"area2d-oggetti","ok":true,"contata":true,"durataMs":26138,"tokenInput":13780,"tokenOutput":1899,"ragionamento":3765}
