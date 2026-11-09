@@ -1045,5 +1045,18 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test richiede di generare le tessere via codice GDScript usando il metodo `set_cell()` dentro `_ready()` e impone la presenza dello script collegato a `Main`, ma `set_cell()` e la gestione di `TileMapLayer` da codice non sono mai stati spiegati nella teoria della lezione (incentrata sull'uso degli strumenti di disegno nell'editor) né nelle lezioni precedenti.",
+    "correzione": "Riscrivere la consegna del test chiedendo di dipingere la stanza a mano nell'editor usando gli strumenti di disegno di TileMapLayer sui tre nodi (`Ground`, `Walls`, `Decoration`), rimuovere il riferimento a `main.gd` e `set_cell()`, ed eliminare la verifica `script_collegato` lasciando invariati i controlli sulle coordinate delle celle dipinte e sulla posizione del `Player`.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
