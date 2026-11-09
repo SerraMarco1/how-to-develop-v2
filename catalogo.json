@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-08T08:58:41.822Z",
+ "aggiornato": "2026-11-09T08:17:41.397Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -947,6 +947,15 @@
    "file": "lezioni/f07-azione-2d/muri-layer-e-maschere.json",
    "sha256": "3a22d04ea602976d93529fd52fcfbed40d084e13f6c441d2cc7b38fcb5995611",
    "byte": 72511
+  },
+  {
+   "slug": "tilemap",
+   "numero": "7.3",
+   "titolo": "Livelli a tessere: TileSet e TileMapLayer",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/tilemap.json",
+   "sha256": "e61dfd249f16d089d16a44645ed2644a4fc8446f9e78eacd06995c40c61a4c5c",
+   "byte": 84832
   }
  ],
  "documentazione": {
