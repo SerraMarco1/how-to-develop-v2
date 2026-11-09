@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-09T08:17:41.397Z",
+ "aggiornato": "2026-11-09T08:29:04.499Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -956,6 +956,15 @@
    "file": "lezioni/f07-azione-2d/tilemap.json",
    "sha256": "e61dfd249f16d089d16a44645ed2644a4fc8446f9e78eacd06995c40c61a4c5c",
    "byte": 84832
+  },
+  {
+   "slug": "camera2d",
+   "numero": "7.4",
+   "titolo": "La telecamera",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/camera2d.json",
+   "sha256": "4003e0d5fcbb56d524d1a5aea3fedd077792619ff80b3e8e0724030670bc62d3",
+   "byte": 74540
   }
  ],
  "documentazione": {
