@@ -944,7 +944,9 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo aver raccolto la chiave e premuto interact, Door1 deve aprirsi\n  - Attivando MainSwitch entrambe le porte Gate2A e Gate2B devono aprirsi contemporaneamente\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
