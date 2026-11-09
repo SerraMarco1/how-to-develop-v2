@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-latest",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Il test richiede di generare le tessere via codice GDScript usando il metodo `set_cell()` dentro `_ready()` e impone la presenza dello script collegato a `Main`, ma `set_cell()` e la gestione di `TileMapLayer` da codice non sono mai stati spiegati nella teoria della lezione (incentrata sull'uso degli strumenti di disegno nell'editor) né nelle lezioni precedenti.\",\n      \"correzione\": \"Riscrivere la consegna del test chiedendo di dipingere la stanza a mano nell'editor usando gli strumenti di disegno di TileMapLayer sui tre nodi (`Ground`, `Walls`, `Decoration`), rimuovere il riferimento a `main.gd` e `set_cell()`, ed eliminare la verifica `script_collegato` lasciando invariati i controlli sulle coordinate delle celle dipinte e sulla posizione del `Player`.\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
+ "ragionamento": 3723,
+ "quando": "2026-11-09T08:13:07.938Z",
+ "ruolo": "revisore"
+}
