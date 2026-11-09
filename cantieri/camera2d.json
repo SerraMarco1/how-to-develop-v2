@@ -1,0 +1,91 @@
+{
+ "creato": "2026-11-09T08:17:42.816Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "La telecamera: seguire il custode e fermarsi ai bordi",
+  "sommario": "Scopri come usare il nodo Camera2D per far seguire il protagonista in modo naturale durante l'esplorazione. Imparerai ad ammorbidire il movimento della visuale e a calcolare i limiti della telecamera direttamente dalla mappa a tessere per non mostrare il vuoto oltre il livello.",
+  "concetti": [
+   "Camera2D",
+   "position_smoothing_enabled",
+   "position_smoothing_speed",
+   "limit_left, limit_top, limit_right, limit_bottom",
+   "TileMapLayer.get_used_rect()",
+   "Rect2i",
+   "Camera2D.reset_smoothing()"
+  ],
+  "obiettivi": [
+   "Camera2D che segue il personaggio",
+   "Limiti: non mostrare ciò che sta fuori dal livello",
+   "Ammorbidire il movimento"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "In un videogioco d'azione bidimensionale il mondo di gioco è quasi sempre più esteso della finestra dello schermo. Se lasci la visuale fissa sull'origine, non appena il custode si allontana esce dall'inquadratura e scompare nel nulla. Per esplorare il dungeon serve una telecamera che si sposti insieme al personaggio, mantenendolo sempre al centro dell'attenzione del giocatore."
+   },
+   {
+    "tipo": "testo",
+    "md": "In Godot la visuale bidimensionale è gestita dal nodo **Camera2D**. Quando una Camera2D è attiva nella scena, trasla tutto il mondo disegnato in modo che il punto in cui si trova il nodo coincida con il centro dello schermo. Sfruttando la gerarchia dell'albero dei nodi, basta inserire la telecamera come figlia del custode: muovendosi, il personaggio trascina automaticamente con sé anche la telecamera, senza dover scrivere una sola riga di codice per il movimento."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Aggiungere la telecamera al personaggio",
+    "passi": [
+     "Nel pannello *Scene* seleziona il nodo **Player**.",
+     "Premi il pulsante **+** in alto a sinistra (oppure la scorciatoia da tastiera Ctrl+A) per aprire la finestra *Create New Node*.",
+     "Nel campo *Search* scrivi `Camera2D`.",
+     "Seleziona **Camera2D** nella lista dei risultati e premi il pulsante **Create** in basso a destra."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "finestra-nuovo-nodo",
+    "didascalia": "La finestra Create New Node: cerca Camera2D per aggiungerlo come nodo figlio del Player."
+   },
+   {
+    "tipo": "testo",
+    "md": "Se provi a muovere il personaggio con la telecamera agganciata direttamente, noterai che la visuale si sposta in modo rigido e istantaneo a ogni minimo cambio di direzione, risultando poco piacevole per gli occhi. Per rendere il movimento naturale si usa l'ammorbidimento della posizione (*position smoothing*): la telecamera non scatta sul bersaglio, ma scivola dolcemente verso di lui inseguendolo a una velocità controllata."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Attivare l'ammorbidimento nell'Inspector",
+    "passi": [
+     "Nel pannello *Scene* seleziona il nodo **Camera2D** appena aggiunto sotto **Player**.",
+     "Nel pannello *Inspector* a destra cerca la sezione **Position Smoothing**.",
+     "Spunta la casella accanto a **Enabled** per attivarla (lascia il valore di **Speed** su `5 px/s`, che offre una risposta fluida e bilanciata)."
+    ]
+   },
+   {
+    "tipo": "testo",
+    "md": "Quando il custode si avvicina ai margini esterni della stanza, una telecamera puntata su di lui finirebbe per inquadrare lo sfondo vuoto e grigio all'esterno del dungeon. Per impedirlo, il nodo `Camera2D` mette a disposizione quattro proprietà numeriche: `limit_left`, `limit_top`, `limit_right` e `limit_bottom`. Sono valori misurati in pixel: quando la visuale raggiunge uno di questi confini, si blocca su quell'asse lasciando che il personaggio continui a muoversi verso il bordo senza mai mostrare ciò che sta fuori."
+   },
+   {
+    "tipo": "testo",
+    "md": "Invece di inserire questi numeri a mano nell'ispettore, rischiando di doverli ricalcolare a ogni modifica del livello, possiamo ricavarli direttamente dal livello a tessere. Il metodo `get_used_rect()` del nodo `TileMapLayer` restituisce un oggetto **Rect2i**, ovvero un rettangolo in coordinate intere che racchiude tutte le celle occupate della mappa. Moltiplicando le coordinate di questo rettangolo per la dimensione di una singola tessera (`tile_size` del `TileSet`), otteniamo con precisione millimetrica l'area del livello espressa in pixel."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Node2D\n\n@onready var ground: TileMapLayer = $Ground\n@onready var walls: TileMapLayer = $Walls\n@onready var decoration: TileMapLayer = $Decoration\n@onready var camera: Camera2D = $Player/Camera2D\n\n\nfunc _ready() -> void:\n\t# Crea una stanza 50x35 tessere per dare respiro al livello\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tground.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))\n\t\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tif (x == 0 or x == 49 or y == 0 or y == 34) and not (x == 25 and y == 34):\n\t\t\t\twalls.set_cell(Vector2i(x, y), 0, Vector2i(3, 0))\n\t\t\telse:\n\t\t\t\twalls.set_cell(Vector2i(x, y), -1)\n\t\n\tdecoration.set_cell(Vector2i(3, 3), 0, Vector2i(2, 1))\n\t\n\tsetup_camera_limits()\n\n\nfunc setup_camera_limits() -> void:\n\tvar used_rect: Rect2i = ground.get_used_rect()\n\tvar tile_size: Vector2i = ground.tile_set.tile_size\n\t\n\tcamera.limit_left = used_rect.position.x * tile_size.x\n\tcamera.limit_top = used_rect.position.y * tile_size.y\n\tcamera.limit_right = used_rect.end.x * tile_size.x\n\tcamera.limit_bottom = used_rect.end.y * tile_size.y\n\tcamera.reset_smoothing()",
+    "spiegazione": "Nello script `main.gd` ampliamo la stanza a 50 per 35 tessere così da superare le dimensioni della finestra e dare spazio alla telecamera per scorrere. Nella funzione `setup_camera_limits()` interroghiamo il nodo `ground` con `get_used_rect()`, leggiamo la grandezza delle tessere da `tile_set.tile_size` e calcoliamo i quattro limiti moltiplicando le posizioni delle celle per i pixel di ciascuna tessera. La proprietà `end` di `Rect2i` rappresenta l'angolo in basso a destra del rettangolo (`position + size`). Infine, `camera.reset_smoothing()` allinea subito la visuale sul personaggio all'avvio."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Se attivi l'ammorbidimento della telecamera senza chiamare `reset_smoothing()` subito dopo aver configurato i limiti, all'avvio della partita la visuale partirà dalle coordinate `(0, 0)` e scivolerà visibilmente verso il custode per mezzo secondo. Chiamare `camera.reset_smoothing()` azzera questa transizione iniziale teletrasportando subito la telecamera sulla sua destinazione corretta."
+   },
+   {
+    "tipo": "testo",
+    "md": "Premendo **F6** per avviare la scena, vedrai lo schermo centrato sul custode. Muovendoti con i tasti direzionali, la telecamera ti seguirà con un movimento morbido e continuo; quando ti sposterai verso uno dei muri perimetrali, l'inquadratura si arresterà dolcemente sul bordo della mappa senza mai rivelare il vuoto che circonda il dungeon."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Un nodo `Camera2D` inserito come figlio di un personaggio segue automaticamente la sua posizione senza bisogno di codice dedicato.\n- L'opzione `position_smoothing_enabled` ammorbidisce gli spostamenti della telecamera, evitando cambi di direzione bruschi o affaticanti per la vista.\n- Le proprietà `limit_left`, `limit_top`, `limit_right` e `limit_bottom` impediscono alla telecamera di mostrare aree esterne al rettangolo di gioco.\n- Il metodo `TileMapLayer.get_used_rect()` unito a `tile_set.tile_size` permette di ricavare le dimensioni esatte della mappa in pixel in modo dinamico e scalabile.\n- Il metodo `Camera2D.reset_smoothing()` evita lo scivolamento indesiderato della telecamera dalle coordinate iniziali verso il giocatore nel primo fotogramma."
+   }
+  ]
+ }
+}
