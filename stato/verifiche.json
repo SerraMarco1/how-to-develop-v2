@@ -553,5 +553,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "porte-chiavi-interruttori": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }

@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-09T11:04:43.398Z",
+ "aggiornato": "2026-11-09T11:18:40.068Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -979,10 +979,10 @@
    "slug": "porte-chiavi-interruttori",
    "numero": "7.6",
    "titolo": "Porte, chiavi e interruttori",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f07-azione-2d/porte-chiavi-interruttori.json",
-   "sha256": "462362e5c7825864e3c704b0d37e71561a7746a2a4fed9b6639f147545c5ac87",
-   "byte": 134021
+   "sha256": "2dbd8832be3572e88b0512c47cdfdea3e205dcabecdbc792429acb5a03c0cf76",
+   "byte": 134199
   }
  ],
  "documentazione": {

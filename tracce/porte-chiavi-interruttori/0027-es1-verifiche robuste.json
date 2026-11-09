@@ -1,0 +1,57 @@
+{
+ "n": 27,
+ "quando": "2026-11-09T11:18:17.650Z",
+ "pezzo": "es1",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Esercizio 1: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 40923,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://door.tscn",
+    "descrizione": "La scena door.tscn esiste nel progetto"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://switch.tscn",
+    "descrizione": "La scena switch.tscn esiste nel progetto"
+   },
+   {
+    "tipo": "azione_input",
+    "nome": "interact",
+    "descrizione": "Nella Input Map esiste l'azione interact"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://main.tscn",
+    "tipoNodo": "StaticBody2D",
+    "nome": "Door",
+    "genitore": "Main",
+    "descrizione": "Nella scena main.tscn è presente l'istanza della porta Door"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://main.tscn",
+    "tipoNodo": "Area2D",
+    "nome": "Switch",
+    "genitore": "Main",
+    "descrizione": "Nella scena main.tscn è presente l'istanza dell'interruttore Switch"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _press_interact() -> void:\n\tvar ev_press := InputEventAction.new()\n\tev_press.action = \"interact\"\n\tev_press.pressed = true\n\tInput.parse_input_event(ev_press)\n\tawait tap_action(\"interact\")\n\tvar ev_release := InputEventAction.new()\n\tev_release.action = \"interact\"\n\tev_release.pressed = false\n\tInput.parse_input_event(ev_release)\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena deve essere presente il nodo Player\"):\n\t\treturn\n\t\n\tvar door := find_by_name(main, \"Door\") as StaticBody2D\n\tif not check(\"door\", door != null, \"Nella scena deve essere presente la porta Door\"):\n\t\treturn\n\t\n\tvar gate := find_by_name(main, \"Gate\") as StaticBody2D\n\tif not check(\"gate\", gate != null, \"Nella scena deve essere presente la porta Gate\"):\n\t\treturn\n\t\n\tvar sw := find_by_name(main, \"Switch\") as Area2D\n\tif not check(\"switch\", sw != null, \"Nella scena deve essere presente l'interruttore Switch\"):\n\t\treturn\n\t\n\t# 1. Porta con chiave senza chiave non si apre\n\tplayer.position = door.global_position\n\tplayer.set(\"keys\", 0)\n\tawait wait_physics_frames(5)\n\tawait _press_interact()\n\tawait wait_physics_frames(5)\n\tvar door_open_no_key = get_prop(door, \"is_open\", false)\n\tcheck(\"door_locked\", door_open_no_key == false, \"La porta con requires_key non deve aprirsi se il giocatore non possiede chiavi\")\n\t\n\t# 2. Porta con chiave si apre se il custode ha 1 chiave, consumandola\n\tplayer.set(\"keys\", 1)\n\tawait _press_interact()\n\tawait wait_physics_frames(5)\n\tvar door_open_with_key = get_prop(door, \"is_open\", false)\n\tvar keys_after = get_prop(player, \"keys\", -1)\n\tcheck(\"door_opened\", door_open_with_key == true, \"La porta deve aprirsi premendo interact quando si ha una chiave\")\n\tcheck(\"key_consumed\", keys_after == 0, \"L'apertura della porta deve consumare 1 chiave dall'inventario\")\n\t\n\t# 3. Interruttore attiva Gate\n\tplayer.position = sw.global_position\n\tawait wait_physics_frames(5)\n\tawait _press_interact()\n\tawait wait_physics_frames(5)\n\tvar sw_active = get_prop(sw, \"is_active\", false)\n\tvar gate_open = get_prop(gate, \"is_open\", false)\n\tcheck(\"switch_active\", sw_active == true, \"Premendo interact vicino a Switch il suo stato is_active deve diventare true\")\n\tcheck(\"gate_opened\", gate_open == true, \"Quando Switch si attiva deve aprire il cancello Gate collegato\")\n\t\n\t# 4. Interruttore disattiva Gate\n\tawait _press_interact()\n\tawait wait_physics_frames(5)\n\tvar sw_inactive = get_prop(sw, \"is_active\", true)\n\tvar gate_closed = get_prop(gate, \"is_open\", true)\n\tcheck(\"switch_inactive\", sw_inactive == false, \"Premendo nuovamente interact lo Switch deve tornare inattivo\")\n\tcheck(\"gate_closed\", gate_closed == false, \"Quando Switch si disattiva deve richiudere il cancello Gate collegato\")\n",
+    "descrizione": "La porta a chiave si apre solo consumando una chiave e l'interruttore apre e chiude il cancello"
+   }
+  ],
+  "consegna": "Nel gioco «Il custode», crea il sistema per gli elementi interattivi del livello: porte chiuse a chiave e interruttori collegati tramite segnali.\n\nPer controllare quali oggetti si trovano dentro un'area, puoi usare il metodo `get_overlapping_bodies()` di un `Area2D`, che restituisce la lista dei corpi fisici presenti (ad esempio: `for body in get_overlapping_bodies():`). Per cercare invece un nodo specifico all'interno di tutta la scena in modo globale, puoi usare `find_child(\"NomeNodo\", true, false)`, che restituisce il nodo cercato tra i discendenti.\n\n1. Nelle impostazioni di progetto (**Project → Project Settings → Input Map**), aggiungi l'azione `interact` e associale il tasto **E**.\n2. Crea la scena `res://door.tscn` con radice un nodo `StaticBody2D` chiamato `Door` e lo script `res://door.gd`:\n   - Imposta `collision_layer = 2` e `collision_mask = 0` sulla radice `Door`.\n   - Aggiungi come figlio uno `Sprite2D` (con texture `res://icon.svg` e scala `Vector2(0.25, 0.5)`).\n   - Aggiungi come figlio un `CollisionShape2D` con sagoma `RectangleShape2D` di dimensioni `Vector2(32, 64)`.\n   - Aggiungi come figlio un `Area2D` chiamato `InteractionArea` (`collision_layer = 0`, `collision_mask = 1`) con all'interno un suo `CollisionShape2D` (`RectangleShape2D` di dimensioni `Vector2(64, 80)`).\n   - Nello script `door.gd` dichiara i segnali `signal opened` e `signal closed`, ed esporta `@export var requires_key: bool = false` e `@export var is_open: bool = false`.\n   - Implementa i metodi pubblici `open()` e `close()`. Quando la porta si apre, imposta `is_open = true`, disabilita la collisione fisica principale con `collision_shape.set_deferred(\"disabled\", true)`, riduci l'opacità con `modulate.a = 0.3` ed emetti `opened`. Quando si chiude, imposta `is_open = false`, riabilita la collisione (`disabled = false` differito), reimposta `modulate.a = 1.0` ed emetti `closed`.\n   - Rileva l'ingresso e l'uscita del nodo `Player` da `InteractionArea`. Se il giocatore si trova nell'area e preme `interact`:\n     - se `requires_key` è `true`, controlla che il giocatore abbia `keys > 0`: in tal caso scala una chiave (`current_player.keys -= 1`) e chiama `open()`;\n     - se `requires_key` è `false`, chiama direttamente `open()`.\n3. Crea la scena `res://switch.tscn` con radice un nodo `Area2D` chiamato `Switch` e lo script `res://switch.gd`:\n   - Imposta `collision_layer = 0` e `collision_mask = 1`.\n   - Aggiungi uno `Sprite2D` (texture `res://icon.svg`, scala `Vector2(0.25, 0.25)`) e un `CollisionShape2D` (`RectangleShape2D` di dimensioni `Vector2(32, 32)`).\n   - Nello script dichiara i segnali `signal activated` e `signal deactivated`, ed esporta `@export var is_active: bool = false`.\n   - Implementa `toggle()`: inverte `is_active`, aggiorna il colore visivo (`modulate = Color(0.4, 1.0, 0.4)` se attivo, `modulate = Color(1.0, 0.4, 0.4)` se inattivo) ed emette `activated` o `deactivated`.\n   - Quando `Player` è dentro l'area e preme `interact`, chiama `toggle()`.\n4. Nella scena `res://main.tscn`:\n   - Istanzia `door.tscn` come figlio di `Main` con nome `Door`, posizione `Vector2(400, 460)` e `requires_key = true`.\n   - Istanzia una seconda porta da `door.tscn` con nome `Gate`, posizione `Vector2(200, 200)` e `requires_key = false`.\n   - Istanzia `switch.tscn` con nome `Switch`, posizione `Vector2(120, 200)`.\n   - Collega i segnali di `Switch` a `Gate`: `activated` al metodo `open`, e `deactivated` al metodo `close`."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 24 s (16731 → 9750 token)"
+ ]
+}
