@@ -1,6 +1,450 @@
 {
  "creato": "2026-11-09T11:04:44.939Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Creare la scena del proiettile e sparare",
+    "consegna": "Aggiungi l'azione di sparo e crea il sistema di proiettili per il custode.\n\n1. Nella **Input Map** del progetto crea l'azione `shoot` abbinandola al tasto sinistro del mouse (`MouseLeft`).\n2. Crea la scena `res://bullet.tscn` con nodo radice `Area2D` chiamato `Bullet`. Aggiungi tre figli:\n   - Uno `Sprite2D` con texture `res://icon.svg` e scala `0.15, 0.15`.\n   - Un `CollisionShape2D` con forma `CircleShape2D` (raggio `10`).\n   - Un `Timer` chiamato `LifetimeTimer` con **Wait Time** a `2.0` e **One Shot** attivo.\n3. Collega a `Bullet` lo script `res://bullet.gd`: sposta il proiettile in `_physics_process` lungo `direction * speed * delta` (velocità `400.0`), avvia il timer in `_ready()` e distruggi il proiettile con `queue_free()` sia quando collide (`body_entered`) sia al timeout del timer.\n4. Aggiorna lo script `res://player.gd` del custode: aggiungi le variabili per precaricare `bullet_scene` e gestire il tempo di ricarica `shoot_cooldown` (0.25 s). In `shoot()`, orienta il proiettile verso `get_global_mouse_position()` e aggiungi l'istanza a `get_tree().current_scene`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "il-custode",
+    "passiGuida": [
+     "Apri **Project → Project Settings → Input Map**, scrivi `shoot` nel campo **Add New Action**, premi **Add** e aggiungi l'evento **Mouse Button → Left Button**.",
+     "Nel pannello *Scene* crea una nuova scena selezionando **Area2D** come nodo radice e rinominalo `Bullet`. Salva la scena come `res://bullet.tscn`.",
+     "Seleziona `Bullet`, premi **+** e aggiungi un nodo `Sprite2D`. Trascina `res://icon.svg` nella proprietà **Texture** e imposta **Scale** a `x: 0.15, y: 0.15`.",
+     "Aggiungi a `Bullet` un nodo `CollisionShape2D`, poi nell'Inspector assegna una nuova forma **CircleShape2D** e imposta il raggio a `10`.",
+     "Aggiungi a `Bullet` un nodo `Timer`, rinominalo `LifetimeTimer`, imposta **Wait Time** a `2.0` e attiva la spunta **One Shot**.",
+     "Seleziona `Bullet`, aggiungi uno script `res://bullet.gd` e gestisci il movimento e la distruzione al contatto o al timeout del timer con `queue_free()`.",
+     "Apri `res://player.gd`, aggiungi il timer di ricarica in `_physics_process` e la funzione `shoot()` che crea l'istanza del proiettile nella scena principale orientandolo verso il mouse."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://bullet.tscn",
+      "descrizione": "La scena res://bullet.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://bullet.gd",
+      "descrizione": "Lo script res://bullet.gd esiste nel progetto"
+     },
+     {
+      "tipo": "azione_input",
+      "nome": "shoot",
+      "descrizione": "L'azione di input shoot è stata aggiunta nella Input Map"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\tplayer.position = Vector2(200, 200)\n\tvar initial_children := main.get_child_count()\n\tawait tap_action(\"shoot\")\n\tawait wait_physics_frames(5)\n\tvar new_children := main.get_child_count()\n\tcheck(\"bullet_created\", new_children > initial_children, \"Premendo il tasto di sparo deve essere creato un proiettile nella scena principale\")\n\t\n\tvar bullets := find_all_by_class(main, \"Area2D\")\n\tvar spawned_bullet: Area2D = null\n\tfor b in bullets:\n\t\tif b.name.begins_with(\"Bullet\"):\n\t\t\tspawned_bullet = b as Area2D\n\t\t\tbreak\n\tif check(\"bullet_found\", spawned_bullet != null, \"È stato creato un nodo chiamato Bullet nella scena\"):\n\t\tvar pos1 := spawned_bullet.global_position\n\t\tawait wait_physics_frames(10)\n\t\tvar pos2 := spawned_bullet.global_position\n\t\tcheck(\"bullet_moves\", pos1.distance_to(pos2) > 10.0, \"Il proiettile si deve muovere nel tempo (distanza percorsa: %.1f px)\" % pos1.distance_to(pos2))",
+      "descrizione": "Il giocatore spara un proiettile verso il puntatore del mouse mantenendo il tempo di ricarica"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 10.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.15, 0.15)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_bullet\")\n\n[node name=\"LifetimeTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\none_shot = true\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 400.0\n\nvar direction: Vector2 = Vector2.RIGHT\n\n@onready var lifetime_timer: Timer = $LifetimeTimer\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tlifetime_timer.timeout.connect(_on_lifetime_timer_timeout)\n\tlifetime_timer.start()\n\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name != \"Player\":\n\t\tqueue_free()\n\n\nfunc _on_lifetime_timer_timeout() -> void:\n\tqueue_free()\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n@export var shoot_cooldown: float = 0.25\n\nvar coins: int = 0\nvar hearts: int = 0\nvar keys: int = 0\n\nvar _time_since_last_shot: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\t_time_since_last_shot += delta\n\t\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\t\n\tif Input.is_action_pressed(\"shoot\") and _time_since_last_shot >= shoot_cooldown:\n\t\tshoot()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\n\nfunc shoot() -> void:\n\t_time_since_last_shot = 0.0\n\t\n\tvar mouse_position: Vector2 = get_global_mouse_position()\n\tvar shoot_direction: Vector2 = global_position.direction_to(mouse_position)\n\t\n\tif shoot_direction == Vector2.ZERO:\n\t\tshoot_direction = Vector2.RIGHT\n\t\n\tvar bullet_instance: Node2D = bullet_scene.instantiate() as Node2D\n\tbullet_instance.global_position = global_position\n\tbullet_instance.rotation = shoot_direction.angle()\n\t\n\tif \"direction\" in bullet_instance:\n\t\tbullet_instance.set(\"direction\", shoot_direction)\n\t\n\tget_tree().current_scene.add_child(bullet_instance)\n\n\nfunc collect(type: String, value: int) -> void:\n\tif type == \"coin\":\n\t\tcoins += value\n\telif type == \"heart\":\n\t\thearts += value\n\telif type == \"key\":\n\t\tkeys += value\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Il custode",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       },
+       {
+        "nome": "sprint",
+        "tasti": [
+         "Shift"
+        ]
+       },
+       {
+        "nome": "interact",
+        "tasti": [
+         "E"
+        ]
+       },
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Abbiamo creato la scena `bullet.tscn` dotata di timer di sopravvivenza ed Area2D. In `player.gd`, ogni volta che il tempo trascorso supera `shoot_cooldown` ed è premuta l'azione `shoot`, viene istanziato un proiettile, orientato verso `get_global_mouse_position()` e aggiunto a `get_tree().current_scene`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Maschere di collisione dei proiettili",
+    "consegna": "Configura i layer e le maschere di collisione di `res://bullet.tscn` per evitare che i proiettili vengano fermati dagli oggetti raccoglibili o dalle zone di messaggio.\n\n1. In `bullet.tscn`, imposta **Collision Layer** a `0` (così i colpi non collidono tra loro).\n2. Imposta **Collision Mask** sui layer `2` (Muri) e `4` (Guardie), disattivando tutti gli altri layer (valore decimale `6`, ovvero bit 2 + 4).\n3. In `bullet.gd`, rimuovi il controllo sul nome del giocatore e fai in modo che qualsiasi corpo con cui il proiettile collide ne provochi l'eliminazione con `queue_free()`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "il-custode",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Nell'Inspector di Bullet, imposta la proprietà Collision Layer su 0 e Collision Mask sul valore 6.",
+     "Nel file bullet.gd, in _on_body_entered(body: Node2D), chiama direttamente queue_free() dato che la maschera fisica filtra già il giocatore e le monete."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bullet_scene: PackedScene = load(\"res://bullet.tscn\")\n\tif not check(\"bullet_exists\", bullet_scene != null, \"La scena res://bullet.tscn deve esistere\"):\n\t\treturn\n\tvar b := bullet_scene.instantiate() as Area2D\n\tif not check(\"is_area\", b != null, \"La radice di bullet.tscn deve essere un Area2D\"):\n\t\treturn\n\t\n\tcheck(\"mask_check\", b.collision_mask == 6, \"La collision_mask del proiettile deve valere 6 (layer 2 Muri + layer 4 Guardie)\")\n\tcheck(\"layer_check\", b.collision_layer == 0, \"Il collision_layer del proiettile deve essere 0\")\n\t\n\tvar main := await instantiate_main_scene()\n\tif main == null:\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif player != null:\n\t\tplayer.position = Vector2(300, 200)\n\t\tawait tap_action(\"shoot\")\n\t\tawait wait_physics_frames(30)\n\t\tvar bullets := find_all_by_class(main, \"Area2D\")\n\t\tvar bullet_count := 0\n\t\tfor item in bullets:\n\t\t\tif item.name.begins_with(\"Bullet\"):\n\t\t\t\tbullet_count += 1\n\t\tcheck(\"bullet_destroyed\", bullet_count == 0, \"Il proiettile deve distruggersi con queue_free() quando impatta contro un muro\")",
+      "descrizione": "La collision_mask del proiettile è impostata sui layer 2 e 4 e il collision_layer è 0"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 10.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 6\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.15, 0.15)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_bullet\")\n\n[node name=\"LifetimeTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\none_shot = true\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 400.0\n\nvar direction: Vector2 = Vector2.RIGHT\n\n@onready var lifetime_timer: Timer = $LifetimeTimer\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tlifetime_timer.timeout.connect(_on_lifetime_timer_timeout)\n\tlifetime_timer.start()\n\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n\n\nfunc _on_body_entered(_body: Node2D) -> void:\n\tqueue_free()\n\n\nfunc _on_lifetime_timer_timeout() -> void:\n\tqueue_free()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Il custode",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       },
+       {
+        "nome": "sprint",
+        "tasti": [
+         "Shift"
+        ]
+       },
+       {
+        "nome": "interact",
+        "tasti": [
+         "E"
+        ]
+       },
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Configurando `collision_layer = 0` e `collision_mask = 6` (ovvero bit 2 per Muri e bit 4 per Guardie), l'Area2D del proiettile rileva unicamente impatti con ostacoli solidi e nemici. In questo modo `_on_body_entered` può chiamare direttamente `queue_free()` senza ignorare il giocatore o far sparire i colpi sopra le monete.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Proiettili infiniti e blocco della memoria",
+    "consegna": "In questo progetto i proiettili non vengono mai eliminati quando volano nel vuoto e, se colpiscono un muro, il gioco va in arresto anomalo. Correggi lo script `res://bullet.gd` in modo che:\n1. Usi `queue_free()` invece di `free()` nella gestione delle collisioni.\n2. Colleghi il segnale `timeout` di `LifetimeTimer` per eliminare il proiettile allo scadere del tempo.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "proiettili-infiniti",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://bullet.gd",
+      "regex": "queue_free\\(\\)",
+      "descrizione": "Lo script bullet.gd usa queue_free() per rimuovere il nodo"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar bullet_scene: PackedScene = load(\"res://bullet.tscn\")\n\tif not check(\"exists\", bullet_scene != null, \"bullet.tscn deve caricarsi correttamente\"):\n\t\treturn\n\tvar b := bullet_scene.instantiate() as Area2D\n\tvar main := await instantiate_main_scene()\n\tmain.add_child(b)\n\tb.global_position = Vector2(100, 100)\n\tawait wait_seconds(2.2)\n\tcheck(\"timer_cleanup\", not is_instance_valid(b), \"Dopo il tempo di sopravvivenza (2s) il proiettile deve essere stato rimosso con queue_free()\")",
+      "descrizione": "Il proiettile scompare al contatto con l'ostacolo e dopo il timeout senza errori"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 10.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 2\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.15, 0.15)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_bullet\")\n\n[node name=\"LifetimeTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\none_shot = true\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 400.0\nvar direction: Vector2 = Vector2.RIGHT\n\n@onready var lifetime_timer: Timer = $LifetimeTimer\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\t# ERRORE: Il timer non viene avviato né collegato al timeout\n\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n\n\nfunc _on_body_entered(_body: Node2D) -> void:\n\t# ERRORE: free() causa arresto anomalo durante le collisioni fisiche\n\tfree()\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://bullet.tscn\" id=\"2_bullet\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 400)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(500, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Proiettili Infiniti",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 10.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 2\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.15, 0.15)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_bullet\")\n\n[node name=\"LifetimeTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\none_shot = true\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 400.0\nvar direction: Vector2 = Vector2.RIGHT\n\n@onready var lifetime_timer: Timer = $LifetimeTimer\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tlifetime_timer.timeout.connect(_on_lifetime_timer_timeout)\n\tlifetime_timer.start()\n\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n\n\nfunc _on_body_entered(_body: Node2D) -> void:\n\tqueue_free()\n\n\nfunc _on_lifetime_timer_timeout() -> void:\n\tqueue_free()\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"PackedScene\" path=\"res://bullet.tscn\" id=\"2_bullet\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 400)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(500, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Proiettili Infiniti",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Proiettili legati al giocatore e raffica incontrollata",
+    "consegna": "In questo progetto il sistema di sparo presenta due gravi difetti:\n1. I proiettili sparati vengono aggiunti come figli del nodo `Player`: se il giocatore si muove, anche i proiettili già in volo cambiano posizione trascinandosi dietro.\n2. Tenendo premuto il tasto di sparo, il tempo di ricarica `shoot_cooldown` viene ignorato e il giocatore spara un proiettile a ogni fotogramma.\n\nApri lo script `res://player.gd` e correggerlo in modo che:\n- I proiettili vengano aggiunti all'albero della scena principale tramite `get_tree().current_scene.add_child(bullet_instance)`.\n- La variabile `_time_since_last_shot` venga azzerata ad ogni colpo effettuato, rispettando il cooldown.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "proiettili-trascinati",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Verifica dove viene fatta la chiamata add_child(): invece di usare self.add_child(...) o add_child(...), usa get_tree().current_scene.add_child(...).",
+     "Assicurati che nella funzione shoot() la variabile _time_since_last_shot venga riportata a 0.0."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\t\n\tawait tap_action(\"shoot\")\n\tawait wait_physics_frames(2)\n\t\n\tvar player_bullets := player.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"not_child_of_player\", player_bullets.size() == 0, \"I proiettili NON devono essere aggiunti come nodi figli del Player\")\n\t\n\tvar main_bullets := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"child_of_main\", main_bullets.size() > 0, \"I proiettili devono essere aggiunti direttamente alla scena principale\")\n\t\n\tawait wait_physics_frames(2)\n\tvar bullet_count_1 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tawait wait_physics_frames(5)\n\tvar bullet_count_2 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tcheck(\"cooldown_works\", bullet_count_1 == bullet_count_2, \"Il proiettile non deve essere sparato a ogni singolo fotogramma durante il cooldown\")",
+      "descrizione": "I proiettili vengono aggiunti alla scena principale e rispettano il cooldown"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 8.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.1, 0.1)\ntexture = ExtResource(\"2_icon\")\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 300.0\nvar direction: Vector2 = Vector2.RIGHT\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n@export var shoot_cooldown: float = 0.3\n\nvar _time_since_last_shot: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\t_time_since_last_shot += delta\n\t\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tvelocity.x = 200.0\n\telse:\n\t\tvelocity.x = 0.0\n\tmove_and_slide()\n\t\n\tif Input.is_action_pressed(\"shoot\") and _time_since_last_shot >= shoot_cooldown:\n\t\tshoot()\n\n\nfunc shoot() -> void:\n\t# ERRORE 1: Mancata azzeramento di _time_since_last_shot\n\t\n\tvar bullet := bullet_scene.instantiate() as Node2D\n\tbullet.global_position = global_position\n\t\n\t# ERRORE 2: Aggiunge il proiettile a se stesso (Player) anziché alla scena principale\n\tadd_child(bullet)\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Proiettili Trascinati",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D"
+        ]
+       },
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 8.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.1, 0.1)\ntexture = ExtResource(\"2_icon\")\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 300.0\nvar direction: Vector2 = Vector2.RIGHT\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n@export var shoot_cooldown: float = 0.3\n\nvar _time_since_last_shot: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\t_time_since_last_shot += delta\n\t\n\tif Input.is_action_pressed(\"move_right\"):\n\t\tvelocity.x = 200.0\n\telse:\n\t\tvelocity.x = 0.0\n\tmove_and_slide()\n\t\n\tif Input.is_action_pressed(\"shoot\") and _time_since_last_shot >= shoot_cooldown:\n\t\tshoot()\n\n\nfunc shoot() -> void:\n\t_time_since_last_shot = 0.0\n\t\n\tvar bullet := bullet_scene.instantiate() as Node2D\n\tbullet.global_position = global_position\n\t\n\tget_tree().current_scene.add_child(bullet)\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Proiettili Trascinati",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D"
+        ]
+       },
+       {
+        "nome": "shoot",
+        "tasti": [
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash"
@@ -79,5 +523,11 @@
     "md": "- Per generare nuovi oggetti da codice si memorizza la scena in una variabile `PackedScene` e si chiama `.instantiate()`.\n- La direzione di mira si calcola trovando il vettore dal giocatore al mouse con `global_position.direction_to(get_global_mouse_position())` e ricavandone l'angolo con `.angle()`.\n- I proiettili vanno aggiunti alla scena principale del livello con `get_tree().current_scene.add_child()` per farli muovere in modo indipendente dal giocatore.\n- Il ritmo di sparo si gestisce con una variabile di ricarica che accumula `delta` per impedire la creazione di colpi a ogni singolo fotogramma.\n- La rimozione dei proiettili all'impatto o dopo un limite di tempo si effettua chiamando `queue_free()` per evitare di saturare la memoria del gioco."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
