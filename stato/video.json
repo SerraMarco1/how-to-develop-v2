@@ -1231,5 +1231,14 @@
    "regole": 2,
    "motivo": "I nodi Wall e Table aggiunti non hanno un componente visivo come uno Sprite2D, quindi le collisioni sono invisibili sullo schermo e non possono essere misurate dal sistema video."
   }
+ },
+ "tilemap": {
+  "es1": {
+   "impronta": "1f701feb1aab6c5d7c7adb0b18955880894855968dc592a66de819555029f049",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "I nodi TileMapLayer sono vuoti e non contengono tessere disegnate, quindi lo schermo del gioco non mostra ancora alcun cambiamento visibile."
+  }
  }
 }

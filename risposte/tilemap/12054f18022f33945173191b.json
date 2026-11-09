@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"ground\",\n      \"cerca\": {\n        \"nome\": \"Ground\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.0,\n      \"a\": 6.0,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Pavimento\"\n    },\n    {\n      \"id\": \"decoration\",\n      \"cerca\": {\n        \"nome\": \"Decoration\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.0,\n      \"a\": 6.0,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Decorazioni\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il pavimento in pietra dipinto sul nodo Ground\",\n      \"da\": 0.5,\n      \"a\": 3.0,\n      \"soggetto\": \"ground\"\n    },\n    {\n      \"testo\": \"Le decorazioni in legno sullo strato Decoration\",\n      \"da\": 3.5,\n      \"a\": 6.0,\n      \"soggetto\": \"decoration\"\n    }\n  ]\n}",
+ "ragionamento": 1153,
+ "quando": "2026-11-09T08:49:06.434Z",
+ "ruolo": "ritocco"
+}
