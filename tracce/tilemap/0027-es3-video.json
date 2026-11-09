@@ -1,0 +1,65 @@
+{
+ "n": 27,
+ "quando": "2026-11-09T08:49:18.556Z",
+ "pezzo": "es3",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 3: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «ground» (nome = Ground; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Ground» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648).\n- Soggetto «decoration» (nome = Decoration; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Decoration» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15672,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "ground",
+     "cerca": {
+      "nome": "Ground"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 6,
+     "deve": "esserci",
+     "etichetta": "Pavimento"
+    },
+    {
+     "id": "decoration",
+     "cerca": {
+      "nome": "Decoration"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 6,
+     "deve": "esserci",
+     "etichetta": "Decorazioni"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il pavimento in pietra dipinto sul nodo Ground",
+     "da": 0.5,
+     "a": 3,
+     "soggetto": "ground"
+    },
+    {
+     "testo": "Le decorazioni in legno sullo strato Decoration",
+     "da": 3.5,
+     "a": 6,
+     "soggetto": "decoration"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «ground» (nome = Ground; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Ground» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648).",
+   "Soggetto «decoration» (nome = Decoration; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Decoration» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (4423 → 328 token)"
+ ]
+}
