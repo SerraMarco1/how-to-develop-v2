@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-09T08:01:10.930Z",
+ "aggiornato": "2026-11-09T08:17:42.798Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "tilemap",
-  "numero": "7.3",
-  "titolo": "Livelli a tessere: TileSet e TileMapLayer"
+  "slug": "camera2d",
+  "numero": "7.4",
+  "titolo": "La telecamera"
  },
- "messaggio": "Sta scrivendo la lezione 7.3 «Livelli a tessere: TileSet e TileMapLayer».",
+ "messaggio": "Sta scrivendo la lezione 7.4 «La telecamera».",
  "riprende": null
 }
