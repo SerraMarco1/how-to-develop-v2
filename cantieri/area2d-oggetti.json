@@ -55,8 +55,20 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "guard.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 120.0\n@export var acceleration: float = 800.0\n@export var friction: float = 600.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 4.0:\n\t\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\tif direction != Vector2.ZERO:\n\t\t\trotation = direction.angle()\n\t\t\tvar target_velocity: Vector2 = direction * speed\n\t\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\t\n\tmove_and_slide()\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\n@onready var ground: TileMapLayer = $Ground\n@onready var walls: TileMapLayer = $Walls\n@onready var decoration: TileMapLayer = $Decoration\n@onready var camera: Camera2D = $Player/Camera2D\n\n\nfunc _ready() -> void:\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tground.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))\n\t\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tif (x == 0 or x == 49 or y == 0 or y == 34) and not (x == 25 and y == 34):\n\t\t\t\twalls.set_cell(Vector2i(x, y), 0, Vector2i(3, 0))\n\t\t\telse:\n\t\t\t\twalls.set_cell(Vector2i(x, y), -1)\n\t\n\tdecoration.set_cell(Vector2i(3, 3), 0, Vector2i(2, 1))\n\t\n\tsetup_camera_limits()\n\n\nfunc setup_camera_limits() -> void:\n\tvar used_rect: Rect2i = ground.get_used_rect()\n\tvar tile_size: Vector2i = ground.tile_set.tile_size\n\t\n\tcamera.limit_left = used_rect.position.x * tile_size.x\n\tcamera.limit_top = used_rect.position.y * tile_size.y\n\tcamera.limit_right = used_rect.end.x * tile_size.x\n\tcamera.limit_bottom = used_rect.end.y * tile_size.y\n\tcamera.reset_smoothing()\n"
+      },
+      {
        "percorso": "message_zone.gd",
-       "contenuto": "extends Area2D\n\n@export var zone_message: String = \"Premi Shift per scattare!\"\n@export var message_label: Label\n\n\nfunc _ready() -> void:\n\tif message_label == null and has_node(\"../UI/MessageLabel\"):\n\t\tmessage_label = get_node(\"../UI/MessageLabel\") as Label\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = zone_message\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = \"\"\n"
+       "contenuto": "extends Area2D\n\n@export var zone_message: String = \"Premi Shift per scattare!\"\n@export var message_label: Label\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = zone_message\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = \"\"\n"
       },
       {
        "percorso": "main.tscn",
@@ -69,13 +81,14 @@
     }
    },
    "genere": "guidato",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "NON SPIEGATO: la soluzione usa `has_node()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es2": {
@@ -248,7 +261,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Area2D: oggetti da raccogliere e zone",
