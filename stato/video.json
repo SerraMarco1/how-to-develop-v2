@@ -1352,5 +1352,53 @@
    },
    "motivo": "La stanza e i personaggi si trovano nell'angolo in alto a sinistra dello schermo e occupano un'area troppo piccola per essere ripresi correttamente dal video di convalida."
   }
+ },
+ "area2d-oggetti": {
+  "es1": {
+   "impronta": "d8110ccf738465d7699731b77e7196672f88ef49f28fb92688b6d3125ad4df66",
+   "tentativi": 3,
+   "esito": "rinuncia",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 4.5,
+     "azioni": [
+      {
+       "azione": "move_right",
+       "inizio": 0.5,
+       "fine": 1.3,
+       "tasto": "D"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "label",
+       "cerca": {
+        "nome": "MessageLabel"
+       },
+       "quanti": 1,
+       "da": 1.2,
+       "a": 3.5,
+       "deve": "mostrare testo",
+       "testo": "Premi Shift per scattare!",
+       "etichetta": "Messaggio"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il messaggio appare quando entri nella zona",
+       "da": 1.5,
+       "a": 3.5,
+       "soggetto": "label"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «label» (nome = MessageLabel; almeno 1 da 1.2 a 3.5 s; deve mostrare il testo «Premi Shift per scattare!»): il testo «Premi Shift per scattare!» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 2 s: «MessageLabel» a (16, 16) 284×23, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "Soggetto «label» (nome = MessageLabel; almeno 1 da 1.2 a 3.5 s; deve mostrare il testo «Premi Shift per scattare!»): il testo «Premi Shift per scattare!» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 2 s: «MessageLabel» a (16, 16) 284×23, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  }
  }
 }

@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main.tscn\",\n  \"durata\": 6,\n  \"azioni\": [\n    {\n      \"azione\": \"move_right\",\n      \"inizio\": 0.5,\n      \"fine\": 1.3,\n      \"tasto\": \"D\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"label\",\n      \"cerca\": {\n        \"nome\": \"MessageLabel\"\n      },\n      \"quanti\": 1,\n      \"da\": 1.2,\n      \"a\": 3.5,\n      \"deve\": \"mostrare testo\",\n      \"testo\": \"Premi Shift per scattare!\",\n      \"etichetta\": \"Messaggio\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il messaggio appare quando entri nella zona\",\n      \"da\": 1.5,\n      \"a\": 3.5,\n      \"soggetto\": \"label\"\n    }\n  ]\n}",
- "ragionamento": 3429,
- "quando": "2026-11-09T09:18:34.711Z",
- "ruolo": "ritocco"
-}
