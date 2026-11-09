@@ -473,7 +473,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il proiettile deve distruggersi con queue_free() quando impatta contro un muro\nOutput di Godot:\n   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)\n   at: cleanup (core/object/object.cpp:2536)\nERROR: 3 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)\nERROR: 1 RID allocations of type 'P11GodotArea2D' were leaked at exit.\nERROR: 1 RID allocations of type 'P12GodotShape2D' were leaked at exit.\nERROR: 1 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
