@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-09T08:29:05.861Z",
+ "aggiornato": "2026-11-09T08:45:52.900Z",
  "stato": "lavora",
  "lezione": {
   "slug": "area2d-oggetti",
   "numero": "7.5",
   "titolo": "Area2D: oggetti da raccogliere e zone"
  },
- "messaggio": "Sta scrivendo la lezione 7.5 «Area2D: oggetti da raccogliere e zone».",
+ "messaggio": "Sta scrivendo la lezione 7.5 «Area2D: oggetti da raccogliere e zone»: riprende al prossimo giro.",
  "riprende": null
 }
