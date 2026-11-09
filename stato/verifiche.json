@@ -538,5 +538,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "tilemap": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "camera2d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
