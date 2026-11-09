@@ -1,0 +1,65 @@
+{
+ "n": 29,
+ "quando": "2026-11-09T08:49:40.625Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «player» (nome = Player; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Player» a (-92.7, 16.7) 128×128, fuori dallo schermo (dentro per il 28%). Lo schermo va da (0, 0) a (1152, 648).\n- Soggetto «ground» (nome = Ground; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Ground» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 13027,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "nome": "Player"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Giocatore"
+    },
+    {
+     "id": "ground",
+     "cerca": {
+      "nome": "Ground"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Pavimento"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il giocatore è posizionato al centro della stanza",
+     "da": 1,
+     "a": 3,
+     "soggetto": "player"
+    },
+    {
+     "testo": "La griglia di tessere forma la stanza di gioco",
+     "da": 3.5,
+     "a": 5.5,
+     "soggetto": "ground"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «player» (nome = Player; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Player» a (-92.7, 16.7) 128×128, fuori dallo schermo (dentro per il 28%). Lo schermo va da (0, 0) a (1152, 648).",
+   "Soggetto «ground» (nome = Ground; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Ground» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (4239 → 331 token)"
+ ]
+}
