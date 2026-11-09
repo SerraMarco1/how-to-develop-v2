@@ -5,7 +5,6 @@
    "stato": "da_fare",
    "grezzo": {
     "tipo": "autonomo",
-    "genere": "obiettivo",
     "titolo": "Porte con chiave e interruttori a muro",
     "consegna": "Nel gioco «Il custode», crea il sistema per gli elementi interattivi del livello: porte chiuse a chiave e interruttori collegati tramite segnali.\n\n1. Nelle impostazioni di progetto (**Project → Project Settings → Input Map**), aggiungi l'azione `interact` e associale il tasto **E**.\n2. Crea la scena `res://door.tscn` con radice un nodo `StaticBody2D` chiamato `Door` e lo script `res://door.gd`:\n   - Imposta `collision_layer = 2` e `collision_mask = 0` sulla radice `Door`.\n   - Aggiungi come figlio uno `Sprite2D` (con texture `res://icon.svg` e scala `Vector2(0.25, 0.5)`).\n   - Aggiungi come figlio un `CollisionShape2D` con sagoma `RectangleShape2D` di dimensioni `Vector2(32, 64)`.\n   - Aggiungi come figlio un `Area2D` chiamato `InteractionArea` (`collision_layer = 0`, `collision_mask = 1`) con all'interno un suo `CollisionShape2D` (`RectangleShape2D` di dimensioni `Vector2(64, 80)`).\n   - Nello script `door.gd` dichiara i segnali `signal opened` e `signal closed`, ed esporta `@export var requires_key: bool = false` e `@export var is_open: bool = false`.\n   - Implementa i metodi pubblici `open()` e `close()`. Quando la porta si apre, imposta `is_open = true`, disabilita la collisione fisica principale con `collision_shape.set_deferred(\"disabled\", true)`, riduci l'opacità con `modulate.a = 0.3` ed emetti `opened`. Quando si chiude, imposta `is_open = false`, riabilita la collisione (`disabled = false` differito), reimposta `modulate.a = 1.0` ed emetti `closed`.\n   - Rileva l'ingresso e l'uscita del nodo `Player` da `InteractionArea`. Se il giocatore si trova nell'area e preme `interact`:\n     - se `requires_key` è `true`, controlla che il giocatore abbia `keys > 0`: in tal caso scala una chiave (`current_player.keys -= 1`) e chiama `open()`;\n     - se `requires_key` è `false`, chiama direttamente `open()`.\n3. Crea la scena `res://switch.tscn` con radice un nodo `Area2D` chiamato `Switch` e lo script `res://switch.gd`:\n   - Imposta `collision_layer = 0` e `collision_mask = 1`.\n   - Aggiungi uno `Sprite2D` (texture `res://icon.svg`, scala `Vector2(0.25, 0.25)`) e un `CollisionShape2D` (`RectangleShape2D` di dimensioni `Vector2(32, 32)`).\n   - Nello script dichiara i segnali `signal activated` e `signal deactivated`, ed esporta `@export var is_active: bool = false`.\n   - Implementa `toggle()`: inverte `is_active`, aggiorna il colore visivo (`modulate = Color(0.4, 1.0, 0.4)` se attivo, `modulate = Color(1.0, 0.4, 0.4)` se inattivo) ed emette `activated` o `deactivated`.\n   - Quando `Player` è dentro l'area e preme `interact`, chiama `toggle()`.\n4. Nella scena `res://main.tscn`:\n   - Istanzia `door.tscn` come figlio di `Main` con nome `Door`, posizione `Vector2(400, 460)` e `requires_key = true`.\n   - Istanzia una seconda porta da `door.tscn` con nome `Gate`, posizione `Vector2(200, 200)` e `requires_key = false`.\n   - Istanzia `switch.tscn` con nome `Switch`, posizione `Vector2(120, 200)`.\n   - Collega i segnali di `Switch` a `Gate`: `activated` al metodo `open`, e `deactivated` al metodo `close`.",
     "modalita": "progetto",
@@ -60,8 +59,32 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "guard.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 120.0\n@export var acceleration: float = 800.0\n@export var friction: float = 600.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 4.0:\n\t\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\tif direction != Vector2.ZERO:\n\t\t\trotation = direction.angle()\n\t\t\tvar target_velocity: Vector2 = direction * speed\n\t\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\t\n\tmove_and_slide()\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node2D\n\n@onready var ground: TileMapLayer = $Ground\n@onready var walls: TileMapLayer = $Walls\n@onready var decoration: TileMapLayer = $Decoration\n@onready var camera: Camera2D = $Player/Camera2D\n\n\nfunc _ready() -> void:\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tground.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))\n\t\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tif (x == 0 or x == 49 or y == 0 or y == 34) and not (x == 25 and y == 34):\n\t\t\t\twalls.set_cell(Vector2i(x, y), 0, Vector2i(3, 0))\n\t\t\telse:\n\t\t\t\twalls.set_cell(Vector2i(x, y), -1)\n\t\n\tdecoration.set_cell(Vector2i(3, 3), 0, Vector2i(2, 1))\n\t\n\tsetup_camera_limits()\n\n\nfunc setup_camera_limits() -> void:\n\tvar used_rect: Rect2i = ground.get_used_rect()\n\tvar tile_size: Vector2i = ground.tile_set.tile_size\n\t\n\tcamera.limit_left = used_rect.position.x * tile_size.x\n\tcamera.limit_top = used_rect.position.y * tile_size.y\n\tcamera.limit_right = used_rect.end.x * tile_size.x\n\tcamera.limit_bottom = used_rect.end.y * tile_size.y\n\tcamera.reset_smoothing()\n"
+      },
+      {
+       "percorso": "message_zone.gd",
+       "contenuto": "extends Area2D\n\n@export var zone_message: String = \"Premi Shift per scattare!\"\n@export var message_label: Label\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = zone_message\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = \"\"\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n\nvar coins: int = 0\nvar hearts: int = 0\nvar keys: int = 0\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction: Vector2 = get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\n\nfunc collect(type: String, value: int) -> void:\n\tif type == \"coin\":\n\t\tcoins += value\n\telif type == \"heart\":\n\t\thearts += value\n\telif type == \"key\":\n\t\tkeys += value\n"
+      },
+      {
+       "percorso": "item.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/coin.png\" id=\"1_coin\"]\n[ext_resource type=\"Script\" path=\"res://item.gd\" id=\"2_item\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_item\"]\nradius = 8.0\n\n[node name=\"Item\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"2_item\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"1_coin\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_item\")\n"
+      },
+      {
+       "percorso": "item.gd",
+       "contenuto": "extends Area2D\n\n@export var item_type: String = \"coin\"\n@export var amount: int = 1\n\n\nfunc _ready() -> void:\n\tif item_type == \"heart\":\n\t\tmodulate = Color(1.0, 0.3, 0.3)\n\telif item_type == \"key\":\n\t\tmodulate = Color(1.0, 0.9, 0.2)\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tif body.has_method(\"collect\"):\n\t\t\tbody.collect(item_type, amount)\n\t\tqueue_free()\n"
+      },
+      {
        "percorso": "door.gd",
-       "contenuto": "extends StaticBody2D\n\nsignal opened\nsignal closed\n\n@export var requires_key: bool = false\n@export var is_open: bool = false\n\n@onready var collision_shape: CollisionShape2D = $CollisionShape2D\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var interaction_area: Area2D = $InteractionArea\n\nvar current_player: CharacterBody2D = null\n\n\nfunc _ready() -> void:\n\tinteraction_area.body_entered.connect(_on_interaction_body_entered)\n\tinteraction_area.body_exited.connect(_on_interaction_body_exited)\n\t_update_appearance()\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif current_player == null or is_open:\n\t\treturn\n\t\n\tif event.is_action_pressed(\"interact\"):\n\t\tif requires_key:\n\t\t\tif current_player.keys > 0:\n\t\t\t\tcurrent_player.keys -= 1\n\t\t\t\topen()\n\t\telse:\n\t\t\topen()\n\n\nfunc open() -> void:\n\tif is_open:\n\t\treturn\n\tis_open = true\n\tcollision_shape.set_deferred(\"disabled\", true)\n\t_update_appearance()\n\topened.emit()\n\n\nfunc close() -> void:\n\tif not is_open:\n\t\treturn\n\tis_open = false\n\tcollision_shape.set_deferred(\"disabled\", false)\n\t_update_appearance()\n\tclosed.emit()\n\n\nfunc _update_appearance() -> void:\n\tif is_open:\n\t\tmodulate.a = 0.3\n\telse:\n\t\tmodulate.a = 1.0\n\n\nfunc _on_interaction_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tcurrent_player = body as CharacterBody2D\n\n\nfunc _on_interaction_body_exited(body: Node2D) -> void:\n\tif body == current_player:\n\t\tcurrent_player = null\n"
+       "contenuto": "extends StaticBody2D\n\nsignal opened\nsignal closed\n\n@export var requires_key: bool = false\n@export var is_open: bool = false\n\n@onready var collision_shape: CollisionShape2D = $CollisionShape2D\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var interaction_area: Area2D = $InteractionArea\n\nvar current_player: CharacterBody2D = null\n\n\nfunc _ready() -> void:\n\tinteraction_area.body_entered.connect(_on_interaction_body_entered)\n\tinteraction_area.body_exited.connect(_on_interaction_body_exited)\n\t_update_appearance()\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif is_open:\n\t\treturn\n\t\n\tif event.is_action_pressed(\"interact\"):\n\t\tvar p: CharacterBody2D = _get_interacting_player()\n\t\tif p != null:\n\t\t\tif requires_key:\n\t\t\t\tif p.keys > 0:\n\t\t\t\t\tp.keys -= 1\n\t\t\t\t\topen()\n\t\t\telse:\n\t\t\t\topen()\n\n\nfunc _get_interacting_player() -> CharacterBody2D:\n\tif current_player != null:\n\t\treturn current_player\n\tfor body in interaction_area.get_overlapping_bodies():\n\t\tif body.name == \"Player\":\n\t\t\treturn body as CharacterBody2D\n\treturn null\n\n\nfunc open() -> void:\n\tif is_open:\n\t\treturn\n\tis_open = true\n\tcollision_shape.set_deferred(\"disabled\", true)\n\t_update_appearance()\n\topened.emit()\n\n\nfunc close() -> void:\n\tif not is_open:\n\t\treturn\n\tis_open = false\n\tcollision_shape.set_deferred(\"disabled\", false)\n\t_update_appearance()\n\tclosed.emit()\n\n\nfunc _update_appearance() -> void:\n\tif is_open:\n\t\tmodulate.a = 0.3\n\telse:\n\t\tmodulate.a = 1.0\n\n\nfunc _on_interaction_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tcurrent_player = body as CharacterBody2D\n\n\nfunc _on_interaction_body_exited(body: Node2D) -> void:\n\tif body == current_player:\n\t\tcurrent_player = null\n"
       },
       {
        "percorso": "door.tscn",
@@ -69,7 +92,7 @@
       },
       {
        "percorso": "switch.gd",
-       "contenuto": "extends Area2D\n\nsignal activated\nsignal deactivated\n\n@export var is_active: bool = false\n\nvar is_player_nearby: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\t_update_visual()\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif is_player_nearby and event.is_action_pressed(\"interact\"):\n\t\ttoggle()\n\n\nfunc toggle() -> void:\n\tis_active = not is_active\n\t_update_visual()\n\tif is_active:\n\t\tactivated.emit()\n\telse:\n\t\tdeactivated.emit()\n\n\nfunc _update_visual() -> void:\n\tif is_active:\n\t\tmodulate = Color(0.4, 1.0, 0.4)\n\telse:\n\t\tmodulate = Color(1.0, 0.4, 0.4)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_nearby = true\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_nearby = false\n"
+       "contenuto": "extends Area2D\n\nsignal activated\nsignal deactivated\n\n@export var is_active: bool = false\n\nvar is_player_nearby: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\t_update_visual()\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"interact\"):\n\t\tif is_player_nearby or _is_player_overlapping():\n\t\t\ttoggle()\n\n\nfunc _is_player_overlapping() -> bool:\n\tfor body in get_overlapping_bodies():\n\t\tif body.name == \"Player\":\n\t\t\treturn true\n\treturn false\n\n\nfunc toggle() -> void:\n\tis_active = not is_active\n\t_update_visual()\n\tif is_active:\n\t\tactivated.emit()\n\telse:\n\t\tdeactivated.emit()\n\n\nfunc _update_visual() -> void:\n\tif is_active:\n\t\tmodulate = Color(0.4, 1.0, 0.4)\n\telse:\n\t\tmodulate = Color(1.0, 0.4, 0.4)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_nearby = true\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_nearby = false\n"
       },
       {
        "percorso": "switch.tscn",
@@ -81,9 +104,43 @@
       }
      ],
      "progetto": {
-      "nome": "",
-      "scenaPrincipale": "",
+      "nome": "Il custode",
+      "scenaPrincipale": "res://main.tscn",
       "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       },
+       {
+        "nome": "sprint",
+        "tasti": [
+         "Shift"
+        ]
+       },
        {
         "nome": "interact",
         "tasti": [
@@ -92,7 +149,28 @@
        }
       ],
       "autoload": [],
-      "impostazioni": []
+      "impostazioni": [
+       {
+        "sezione": "layer_names",
+        "chiave": "2d_physics/layer_1",
+        "valore": "Player"
+       },
+       {
+        "sezione": "layer_names",
+        "chiave": "2d_physics/layer_2",
+        "valore": "Environment"
+       },
+       {
+        "sezione": "layer_names",
+        "chiave": "2d_physics/layer_3",
+        "valore": "Enemies"
+       },
+       {
+        "sezione": "layer_names",
+        "chiave": "2d_physics/layer_4",
+        "valore": "Items"
+       }
+      ]
      },
      "spiegazione": "La porta (`Door`) è un corpo fisico (`StaticBody2D`) dotato di una propria area di rilevamento (`InteractionArea`). Quando il giocatore si trova nell'area e preme il tasto associato all'azione `interact`, la porta controlla se richiede una chiave: se sì, consuma una chiave del custode e si apre disattivando la sagoma con `set_deferred(\"disabled\", true)`. L'interruttore (`Switch`), essendo un `Area2D`, rileva la vicinanza del giocatore e inverte il proprio stato booleano al premere di `interact`, emettendo i segnali `activated` o `deactivated`. Nella scena principale colleghiamo direttamente questi segnali ai metodi `open()` e `close()` del cancello `Gate`.",
      "cambiati": [],
@@ -100,13 +178,14 @@
     }
    },
    "genere": "obiettivo",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La porta deve aprirsi premendo interact quando si ha una chiave\n  - L'apertura della porta deve consumare 1 chiave dall'inventario\n  - Premendo interact vicino a Switch il suo stato is_active deve diventare true\n  - Quando Switch si attiva deve aprire il cancello Gate collegato\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es2": {
@@ -500,7 +579,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-flash-latest",
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Porte, chiavi e interruttori",
