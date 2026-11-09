@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-09T08:29:04.499Z",
+ "aggiornato": "2026-11-09T08:55:17.398Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -965,6 +965,15 @@
    "file": "lezioni/f07-azione-2d/camera2d.json",
    "sha256": "4003e0d5fcbb56d524d1a5aea3fedd077792619ff80b3e8e0724030670bc62d3",
    "byte": 74540
+  },
+  {
+   "slug": "area2d-oggetti",
+   "numero": "7.5",
+   "titolo": "Area2D: oggetti da raccogliere e zone",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/area2d-oggetti.json",
+   "sha256": "22bad5c80318ecb9b79f97a98addf3b2c578b8cd9e37e8bbe2c066e93566b07e",
+   "byte": 93002
   }
  ],
  "documentazione": {
