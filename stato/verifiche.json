@@ -548,5 +548,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "area2d-oggetti": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
