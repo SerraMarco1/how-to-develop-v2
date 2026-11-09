@@ -48,3 +48,5 @@
 {"quando":1794223121857,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"proiettili","ok":true,"contata":true,"durataMs":79777,"tokenInput":19006,"tokenOutput":8753,"ragionamento":10558}
 {"quando":1794223201640,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"proiettili","ok":true,"contata":true,"durataMs":47075,"tokenInput":23097,"tokenOutput":9016,"ragionamento":2818}
 {"quando":1794223254399,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"proiettili","ok":true,"contata":true,"durataMs":23397,"tokenInput":16241,"tokenOutput":9271,"ragionamento":3170}
+{"quando":1794223297429,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"proiettili","ok":false,"contata":true,"durataMs":1191,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794223298629,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"proiettili","ok":false,"contata":true,"durataMs":380,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
