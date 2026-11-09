@@ -1,0 +1,16 @@
+{
+ "n": 28,
+ "quando": "2026-11-09T08:49:27.595Z",
+ "pezzo": "es3",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 3: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Dipingere pavimento e decorazioni su più strati» non si vede sullo schermo: I nodi TileMapLayer non vengono rilevati all'interno dello schermo dal sistema di misura automatico.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9037,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (4898 → 39 token)"
+ ]
+}

@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"I nodi TileMapLayer non vengono rilevati all'interno dello schermo dal sistema di misura automatico.\"\n}",
- "ragionamento": 2499,
- "quando": "2026-11-09T08:49:26.218Z",
- "ruolo": "ritocco"
-}

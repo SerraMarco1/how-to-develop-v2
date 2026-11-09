@@ -1239,6 +1239,62 @@
    "esito": "niente",
    "regole": 2,
    "motivo": "I nodi TileMapLayer sono vuoti e non contengono tessere disegnate, quindi lo schermo del gioco non mostra ancora alcun cambiamento visibile."
+  },
+  "es3": {
+   "impronta": "aa655387ee59e307f6720bd9733593a584084a6e6049b7c2be3c8a0771ec9eb7",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "ground",
+       "cerca": {
+        "nome": "Ground"
+       },
+       "quanti": 1,
+       "da": 0,
+       "a": 6,
+       "deve": "esserci",
+       "etichetta": "Pavimento"
+      },
+      {
+       "id": "decoration",
+       "cerca": {
+        "nome": "Decoration"
+       },
+       "quanti": 1,
+       "da": 0,
+       "a": 6,
+       "deve": "esserci",
+       "etichetta": "Decorazioni"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il pavimento in pietra dipinto sul nodo Ground",
+       "da": 0.5,
+       "a": 3,
+       "soggetto": "ground"
+      },
+      {
+       "testo": "Le decorazioni in legno sullo strato Decoration",
+       "da": 3.5,
+       "a": 6,
+       "soggetto": "decoration"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «ground» (nome = Ground; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Ground» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648).",
+     "Soggetto «decoration» (nome = Decoration; almeno 1 da 0 a 6 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Decoration» a (-8, -8) 16×16, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "I nodi TileMapLayer non vengono rilevati all'interno dello schermo dal sistema di misura automatico."
   }
  }
 }
