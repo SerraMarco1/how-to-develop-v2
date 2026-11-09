@@ -1,0 +1,16 @@
+{
+ "n": 30,
+ "quando": "2026-11-09T08:49:50.249Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Riproduci la stanza di riferimento cella per cella» non si vede sullo schermo: La stanza e i personaggi si trovano nell'angolo in alto a sinistra dello schermo e occupano un'area troppo piccola per essere ripresi correttamente dal video di convalida.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9623,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (4741 → 53 token)"
+ ]
+}
