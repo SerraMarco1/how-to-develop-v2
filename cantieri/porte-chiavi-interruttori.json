@@ -189,7 +189,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La porta deve aprirsi premendo interact quando si ha una chiave\n  - L'apertura della porta deve consumare 1 chiave dall'inventario\n  - Premendo interact vicino a Switch il suo stato is_active deve diventare true\n  - Quando Switch si attiva deve aprire il cancello Gate collegato\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "NON SPIEGATO: la soluzione usa `get_overlapping_bodies()`, `find_child()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
