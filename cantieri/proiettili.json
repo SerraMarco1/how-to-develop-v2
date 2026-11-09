@@ -960,13 +960,12 @@
     "cartella": "proiettili-trascinati",
     "passiGuida": [],
     "suggerimenti": [
-     "Verifica dove viene fatta la chiamata add_child(): invece di usare self.add_child(...) o add_child(...), usa get_tree().current_scene.add_child(...).",
-     "Assicurati che nella funzione shoot() la variabile _time_since_last_shot venga riportata a 0.0."
+     "Verifica dove viene fatta la chiamata add_child(): invece di usare self.add_child(...) o add_child(...), usa get_tree().current_scene.add_child(...)."
     ],
     "verifiche": [
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\t\n\tawait tap_action(\"shoot\")\n\tawait wait_physics_frames(2)\n\t\n\tvar player_bullets := player.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"not_child_of_player\", player_bullets.size() == 0, \"I proiettili NON devono essere aggiunti come nodi figli del Player\")\n\t\n\tvar main_bullets := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"child_of_main\", main_bullets.size() > 0, \"I proiettili devono essere aggiunti direttamente alla scena principale\")\n\t\n\tawait wait_physics_frames(2)\n\tvar bullet_count_1 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tawait wait_physics_frames(5)\n\tvar bullet_count_2 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tcheck(\"cooldown_works\", bullet_count_1 == bullet_count_2, \"Il proiettile non deve essere sparato a ogni singolo fotogramma durante il cooldown\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\t\n\tplayer._time_since_last_shot = 1.0\n\tawait tap_action(\"shoot\")\n\tawait wait_physics_frames(2)\n\t\n\tvar player_bullets := player.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"not_child_of_player\", player_bullets.size() == 0, \"I proiettili NON devono essere aggiunti come nodi figli del Player\")\n\t\n\tvar main_bullets := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\"))\n\tcheck(\"child_of_main\", main_bullets.size() > 0, \"I proiettili devono essere aggiunti direttamente alla scena principale\")\n\t\n\tawait wait_physics_frames(2)\n\tvar bullet_count_1 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tawait wait_physics_frames(5)\n\tvar bullet_count_2 := main.get_children().filter(func(c): return c.name.begins_with(\"Bullet\")).size()\n\tcheck(\"cooldown_works\", bullet_count_1 == bullet_count_2, \"Il proiettile non deve essere sparato a ogni singolo fotogramma durante il cooldown\")",
       "descrizione": "I proiettili vengono aggiunti alla scena principale e rispettano il cooldown"
      }
     ],
@@ -974,6 +973,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Proiettili Trascinati\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\n"
+      },
       {
        "percorso": "bullet.tscn",
        "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 8.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.1, 0.1)\ntexture = ExtResource(\"2_icon\")\n"
@@ -1052,18 +1055,21 @@
       "impostazioni": []
      },
      "spiegazione": "",
-     "cambiati": [],
+     "cambiati": [
+      "player.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - I proiettili devono essere aggiunti direttamente alla scena principale\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
