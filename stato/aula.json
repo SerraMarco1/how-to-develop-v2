@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-09T10:21:33.595Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-09T10:36:56.686Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "porte-chiavi-interruttori",
   "numero": "7.6",
   "titolo": "Porte, chiavi e interruttori"
  },
- "messaggio": "Sta scrivendo la lezione 7.6 «Porte, chiavi e interruttori».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.6 riprende da sola appena rispondono.",
+ "riprende": "2026-11-09T10:46:56.686Z"
 }
