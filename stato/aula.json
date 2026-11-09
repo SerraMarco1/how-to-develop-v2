@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-09T11:04:44.928Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-09T11:06:11.163Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "proiettili",
   "numero": "7.7",
   "titolo": "Proiettili e mira"
  },
- "messaggio": "Sta scrivendo la lezione 7.7 «Proiettili e mira».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.7 riprende da sola appena rispondono.",
+ "riprende": "2026-11-09T11:16:11.163Z"
 }
