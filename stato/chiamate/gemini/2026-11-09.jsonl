@@ -28,3 +28,4 @@
 {"quando":1794215137755,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"porte-chiavi-interruttori","ok":false,"contata":true,"durataMs":319,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794215866437,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"area2d-oggetti","ok":true,"contata":true,"durataMs":4715,"tokenInput":5178,"tokenOutput":257,"ragionamento":1516}
 {"quando":1794215888598,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"area2d-oggetti","ok":true,"contata":true,"durataMs":7373,"tokenInput":5509,"tokenOutput":257,"ragionamento":2614}
+{"quando":1794215904165,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"area2d-oggetti","ok":true,"contata":true,"durataMs":10545,"tokenInput":5509,"tokenOutput":257,"ragionamento":3429}

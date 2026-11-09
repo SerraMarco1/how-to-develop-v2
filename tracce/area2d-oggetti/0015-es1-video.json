@@ -1,0 +1,55 @@
+{
+ "n": 15,
+ "quando": "2026-11-09T09:18:24.163Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 2 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «label» (nome = MessageLabel; almeno 1 da 1.1 a 5 s; deve mostrare il testo «Premi Shift per scattare!»): il testo «Premi Shift per scattare!» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 3 s: «MessageLabel» a (16, 16) 284×23, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15566,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 6,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 0.5,
+     "fine": 1.3,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "label",
+     "cerca": {
+      "nome": "MessageLabel"
+     },
+     "quanti": 1,
+     "da": 1.1,
+     "a": 5,
+     "deve": "mostrare testo",
+     "testo": "Premi Shift per scattare!",
+     "etichetta": "Messaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il messaggio appare quando entri nella zona",
+     "da": 1.5,
+     "a": 4.5,
+     "soggetto": "label"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «label» (nome = MessageLabel; almeno 1 da 1.1 a 5 s; deve mostrare il testo «Premi Shift per scattare!»): il testo «Premi Shift per scattare!» si vede solo nel 0% dell'intervallo (serve il 50%); visibili al massimo 1 nodi. A 3 s: «MessageLabel» a (16, 16) 284×23, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 7 s (5509 → 257 token)"
+ ]
+}
