@@ -1,0 +1,47 @@
+{
+ "n": 46,
+ "quando": "2026-11-10T08:21:21.424Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «proiettile» (scena = res://bullet.tscn; almeno 1 da 1 a 5 s; deve muoversi): nessun nodo della scena in esecuzione corrisponde a scena = res://bullet.tscn.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 28709,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "proiettile",
+     "cerca": {
+      "scena": "res://bullet.tscn"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 5,
+     "deve": "muoversi",
+     "etichetta": "Proiettile"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il proiettile viene istanziato e si muove verso il mouse",
+     "da": 1,
+     "a": 5,
+     "soggetto": "proiettile"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «proiettile» (scena = res://bullet.tscn; almeno 1 da 1 a 5 s; deve muoversi): nessun nodo della scena in esecuzione corrisponde a scena = res://bullet.tscn."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 11 s (8228 → 216 token)"
+ ]
+}
