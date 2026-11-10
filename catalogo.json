@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-09T11:18:40.068Z",
+ "aggiornato": "2026-11-10T08:06:50.948Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -983,6 +983,15 @@
    "file": "lezioni/f07-azione-2d/porte-chiavi-interruttori.json",
    "sha256": "2dbd8832be3572e88b0512c47cdfdea3e205dcabecdbc792429acb5a03c0cf76",
    "byte": 134199
+  },
+  {
+   "slug": "proiettili",
+   "numero": "7.7",
+   "titolo": "Proiettili e mira",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/proiettili.json",
+   "sha256": "38fd8af26b057d5dcba7d077eabfd1da23ca19ceb87980fea48393d3892191e0",
+   "byte": 129982
   }
  ],
  "documentazione": {
