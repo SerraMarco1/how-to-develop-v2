@@ -578,7 +578,10 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "crate.tscn riga 5: la scena usa \"res://health.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile).",
+    "crate.tscn riga 6: la scena usa \"res://hurtbox.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile)."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
