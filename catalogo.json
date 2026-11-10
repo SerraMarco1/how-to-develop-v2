@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-10T08:20:11.564Z",
+ "aggiornato": "2026-11-10T09:28:53.645Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -988,10 +988,10 @@
    "slug": "proiettili",
    "numero": "7.7",
    "titolo": "Proiettili e mira",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f07-azione-2d/proiettili.json",
-   "sha256": "8ee49365b86a5783632611e2142ad8fea5e89bde547c6eec90e8a42ee10e1fb6",
-   "byte": 132274
+   "sha256": "06520c52feed9cc51415f7bce361b5b0e3b73d3aa07b07d7eae40601ddce4333",
+   "byte": 132857
   }
  ],
  "documentazione": {

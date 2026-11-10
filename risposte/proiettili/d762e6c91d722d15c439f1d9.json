@@ -1,6 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main.tscn\",\n  \"durata\": 8,\n  \"azioni\": [\n    {\n      \"azione\": \"shoot\",\n      \"inizio\": 1.0,\n      \"fine\": 4.0,\n      \"tasto\": \"MouseLeft\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"bullet\",\n      \"cerca\": {\n        \"script\": \"res://bullet.gd\"\n      },\n      \"quanti\": 1,\n      \"da\": 1.0,\n      \"a\": 5.0,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Proiettile\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Clicca con il tasto sinistro per sparare un proiettile\",\n      \"da\": 1.0,\n      \"a\": 5.0,\n      \"soggetto\": \"bullet\"\n    }\n  ]\n}",
- "quando": "2026-11-10T09:28:40.328Z",
- "ruolo": "ritocco"
-}

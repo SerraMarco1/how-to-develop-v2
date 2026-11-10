@@ -1404,41 +1404,42 @@
  "proiettili": {
   "es1": {
    "impronta": "2b7efb375c424574657ba9af52f2b35a577dabc3596622b7bae93357291b0836",
-   "tentativi": 1,
-   "esito": "in corso",
+   "tentativi": 2,
+   "esito": "fatto",
    "regole": 2,
-   "ultimo": {
-    "copione": {
-     "scena": "res://main.tscn",
-     "durata": 6,
-     "azioni": [],
-     "soggetti": [
-      {
-       "id": "proiettile",
-       "cerca": {
-        "scena": "res://bullet.tscn"
-       },
-       "quanti": 1,
-       "da": 1,
-       "a": 5,
-       "deve": "muoversi",
-       "etichetta": "Proiettile"
-      }
-     ],
-     "scritte": [
-      {
-       "testo": "Il proiettile viene istanziato e si muove verso il mouse",
-       "da": 1,
-       "a": 5,
-       "soggetto": "proiettile"
-      }
-     ]
-    },
-    "problemi": [
-     "Soggetto «proiettile» (scena = res://bullet.tscn; almeno 1 da 1 a 5 s; deve muoversi): nessun nodo della scena in esecuzione corrisponde a scena = res://bullet.tscn."
+   "copione": {
+    "scena": "res://main.tscn",
+    "durata": 6,
+    "azioni": [
+     {
+      "azione": "shoot",
+      "inizio": 1,
+      "fine": 4,
+      "tasto": "MouseLeft"
+     }
+    ],
+    "soggetti": [
+     {
+      "id": "bullet",
+      "cerca": {
+       "script": "res://bullet.gd"
+      },
+      "quanti": 1,
+      "da": 1,
+      "a": 5,
+      "deve": "muoversi",
+      "etichetta": "Proiettile"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "Clicca con il tasto sinistro per sparare un proiettile",
+      "da": 1,
+      "a": 5,
+      "soggetto": "bullet"
+     }
     ]
-   },
-   "motivo": "Soggetto «proiettile» (scena = res://bullet.tscn; almeno 1 da 1 a 5 s; deve muoversi): nessun nodo della scena in esecuzione corrisponde a scena = res://bullet.tscn."
+   }
   }
  }
 }

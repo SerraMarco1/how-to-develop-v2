@@ -1,0 +1,55 @@
+{
+ "n": 49,
+ "quando": "2026-11-10T09:28:53.634Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 6 s. Soggetti: «Proiettile» (muoversi). Scritte: «Clicca con il tasto sinistro per sparare un proiettile». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 333 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16910,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 6,
+   "azioni": [
+    {
+     "azione": "shoot",
+     "inizio": 1,
+     "fine": 4,
+     "tasto": "MouseLeft"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "bullet",
+     "cerca": {
+      "script": "res://bullet.gd"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 5,
+     "deve": "muoversi",
+     "etichetta": "Proiettile"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Clicca con il tasto sinistro per sparare un proiettile",
+     "da": 1,
+     "a": 5,
+     "soggetto": "bullet"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "786184f8c83667aadd7249f1c89b0fdf516e4d43b22a28220e73fc1644833946",
+   "estensione": "mp4",
+   "byte": 340741
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (8467 → 255 token)"
+ ]
+}
