@@ -366,7 +366,14 @@
    "genere": "collauda",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — verifica 2 riga 19: GDScript.new() serve a creare codice al volo: non si usa nel corso",
+    "controllo di sicurezza — verifica 2 riga 20: source_code non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo",
+    "controllo di sicurezza — verifica 2 riga 30: GDScript.new() serve a creare codice al volo: non si usa nel corso",
+    "controllo di sicurezza — verifica 2 riga 31: source_code non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo",
+    "controllo di sicurezza — verifica 2 riga 41: GDScript.new() serve a creare codice al volo: non si usa nel corso",
+    "controllo di sicurezza — verifica 2 riga 42: source_code non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
