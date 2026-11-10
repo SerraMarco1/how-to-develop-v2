@@ -558,5 +558,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "proiettili": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
