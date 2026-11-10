@@ -315,7 +315,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar tester_script = load(\"res://test_health.gd\")\n\tif not check(\"tester_load\", tester_script != null, \"res://test_health.gd deve caricarsi\"):\n\t\treturn\n\tvar tester: Object = tester_script.new()\n\t\n\t# 1. Versione Corretta\n\tvar good_h: Health = Health.new()\n\tgood_h.max_health = 5\n\tadd_child(good_h)\n\tawait wait_frames(2)\n\tvar passed_good: bool = tester.call(\"run_tests\", good_h)\n\tcheck(\"test_good\", passed_good == true, \"Il tester deve promuovere l'implementazione corretta di Health\")\n\tgood_h.queue_free()\n\t\n\t# 2. Versione Errata 1: Nessun limite verso il basso (vita scende sotto 0)\n\tvar bad1_script = GDScript.new()\n\tbad1_script.source_code = \"extends Health\\nfunc take_damage(a: int) -> void: current_health -= a\"\n\tbad1_script.reload()\n\tvar bad1: Node = bad1_script.new()\n\tadd_child(bad1)\n\tawait wait_frames(2)\n\tvar passed_bad1: bool = tester.call(\"run_tests\", bad1)\n\tcheck(\"test_bad1\", passed_bad1 == false, \"Il tester deve bocciare un componente in cui la salute scende sotto lo 0\")\n\tbad1.queue_free()\n\t\n\t# 3. Versione Errata 2: heal() non ha limite max_health\n\tvar bad2_script = GDScript.new()\n\tbad2_script.source_code = \"extends Health\\nfunc heal(a: int) -> void: current_health += a\"\n\tbad2_script.reload()\n\tvar bad2: Node = bad2_script.new()\n\tadd_child(bad2)\n\tawait wait_frames(2)\n\tvar passed_bad2: bool = tester.call(\"run_tests\", bad2)\n\tcheck(\"test_bad2\", passed_bad2 == false, \"Il tester deve bocciare un componente in cui heal() supera max_health\")\n\tbad2.queue_free()\n\t\n\t# 4. Versione Errata 3: Non rispetta is_invincible\n\tvar bad3_script = GDScript.new()\n\tbad3_script.source_code = \"extends Health\\nfunc take_damage(a: int) -> void: current_health = max(0, current_health - a)\"\n\tbad3_script.reload()\n\tvar bad3: Node = bad3_script.new()\n\tadd_child(bad3)\n\tawait wait_frames(2)\n\tvar passed_bad3: bool = tester.call(\"run_tests\", bad3)\n\tcheck(\"test_bad3\", passed_bad3 == false, \"Il tester deve bocciare un componente che ignora il tempo di intoccabilità\")\n\tbad3.queue_free()",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar tester_script = load(\"res://test_health.gd\")\n\tif not check(\"tester_load\", tester_script != null, \"res://test_health.gd deve caricarsi\"):\n\t\treturn\n\tvar tester: Object = tester_script.new()\n\t\n\t# 1. Versione Corretta\n\tvar good_h: Health = Health.new()\n\tgood_h.max_health = 5\n\tadd_child(good_h)\n\tawait wait_frames(2)\n\tvar passed_good: bool = tester.call(\"run_tests\", good_h)\n\tcheck(\"test_good\", passed_good == true, \"Il tester deve promuovere l'implementazione corretta di Health\")\n\tgood_h.queue_free()\n\t\n\t# 2. Versione Errata 1: Nessun limite verso il basso (vita scende sotto 0)\n\tvar bad1_script = load(\"res://bad_health_1.gd\")\n\tif not check(\"bad1_load\", bad1_script != null, \"res://bad_health_1.gd deve esistere\"):\n\t\treturn\n\tvar bad1: Node = bad1_script.new()\n\tadd_child(bad1)\n\tawait wait_frames(2)\n\tvar passed_bad1: bool = tester.call(\"run_tests\", bad1)\n\tcheck(\"test_bad1\", passed_bad1 == false, \"Il tester deve bocciare un componente in cui la salute scende sotto lo 0\")\n\tbad1.queue_free()\n\t\n\t# 3. Versione Errata 2: heal() non ha limite max_health\n\tvar bad2_script = load(\"res://bad_health_2.gd\")\n\tif not check(\"bad2_load\", bad2_script != null, \"res://bad_health_2.gd deve esistere\"):\n\t\treturn\n\tvar bad2: Node = bad2_script.new()\n\tadd_child(bad2)\n\tawait wait_frames(2)\n\tvar passed_bad2: bool = tester.call(\"run_tests\", bad2)\n\tcheck(\"test_bad2\", passed_bad2 == false, \"Il tester deve bocciare un componente in cui heal() supera max_health\")\n\tbad2.queue_free()\n\t\n\t# 4. Versione Errata 3: Non rispetta is_invincible\n\tvar bad3_script = load(\"res://bad_health_3.gd\")\n\tif not check(\"bad3_load\", bad3_script != null, \"res://bad_health_3.gd deve esistere\"):\n\t\treturn\n\tvar bad3: Node = bad3_script.new()\n\tadd_child(bad3)\n\tawait wait_frames(2)\n\tvar passed_bad3: bool = tester.call(\"run_tests\", bad3)\n\tcheck(\"test_bad3\", passed_bad3 == false, \"Il tester deve bocciare un componente che ignora il tempo di intoccabilità\")\n\tbad3.queue_free()",
       "descrizione": "I test identificano la versione corretta e bocciano le 3 implementazioni errate"
      }
     ],
@@ -347,6 +347,18 @@
        "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(current: int, max_hp: int)\nsignal died\n\n@export var max_health: int = 5\n@export var invincibility_time: float = 0.5\n\nvar current_health: int\nvar is_invincible: bool = false\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif is_invincible or amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = max(0, current_health - amount)\n\thealth_changed.emit(current_health, max_health)\n\t\n\tif current_health == 0:\n\t\tdied.emit()\n\telif invincibility_time > 0.0:\n\t\t_start_invincibility()\n\n\nfunc heal(amount: int) -> void:\n\tif amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = min(max_health, current_health + amount)\n\thealth_changed.emit(current_health, max_health)\n\n\nfunc _start_invincibility() -> void:\n\tis_invincible = true\n\tawait get_tree().create_timer(invincibility_time).timeout\n\tis_invincible = false\n"
       },
       {
+       "percorso": "bad_health_1.gd",
+       "contenuto": "class_name BadHealth1\nextends Health\n\nfunc take_damage(amount: int) -> void:\n\tif amount <= 0:\n\t\treturn\n\tcurrent_health -= amount\n\thealth_changed.emit(current_health, max_health)\n\tif current_health <= 0:\n\t\tdied.emit()\n"
+      },
+      {
+       "percorso": "bad_health_2.gd",
+       "contenuto": "class_name BadHealth2\nextends Health\n\nfunc heal(amount: int) -> void:\n\tif amount <= 0:\n\t\treturn\n\tcurrent_health += amount\n\thealth_changed.emit(current_health, max_health)\n"
+      },
+      {
+       "percorso": "bad_health_3.gd",
+       "contenuto": "class_name BadHealth3\nextends Health\n\nfunc take_damage(amount: int) -> void:\n\tif amount <= 0:\n\t\treturn\n\tcurrent_health = max(0, current_health - amount)\n\thealth_changed.emit(current_health, max_health)\n\tif current_health == 0:\n\t\tdied.emit()\n"
+      },
+      {
        "percorso": "test_health.gd",
        "contenuto": "extends RefCounted\n\nfunc run_tests(target: Health) -> bool:\n\tif target == null:\n\t\treturn false\n\t\n\tvar original_max: int = target.max_health\n\tif target.current_health != original_max:\n\t\treturn false\n\t\n\t# Prova danno normale\n\ttarget.take_damage(1)\n\tif target.current_health != original_max - 1:\n\t\treturn false\n\t\n\t# Durante invincibility, un danno ulteriore deve essere ignorato\n\tif target.invincibility_time > 0.0:\n\t\tif not target.is_invincible:\n\t\t\treturn false\n\t\ttarget.take_damage(1)\n\t\tif target.current_health != original_max - 1:\n\t\t\treturn false\n\t\n\t# Cura non oltre max_health\n\ttarget.is_invincible = false\n\ttarget.heal(100)\n\tif target.current_health > original_max:\n\t\treturn false\n\t\n\t# Danno letale: non sotto lo zero\n\ttarget.take_damage(original_max + 10)\n\tif target.current_health != 0:\n\t\treturn false\n\t\n\treturn true\n"
       }
@@ -364,7 +376,7 @@
     }
    },
    "genere": "collauda",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "controllo di sicurezza — verifica 2 riga 19: GDScript.new() serve a creare codice al volo: non si usa nel corso",
@@ -375,7 +387,8 @@
     "controllo di sicurezza — verifica 2 riga 42: source_code non si può usare nel corso: dà accesso al sistema, a file fuori dal progetto o a codice costruito al volo"
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es3": {
@@ -583,7 +596,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Vita e danno: un componente riutilizzabile",
