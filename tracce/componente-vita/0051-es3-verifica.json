@@ -1,0 +1,139 @@
+{
+ "n": 51,
+ "quando": "2026-11-10T23:40:20.664Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 3 (estendi): 1 problema",
+ "spiegazione": "«Cassa distruggibile con Health e Hurtbox», scritto da gemini/gemini-flash-lite-latest. 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo il primo colpo la cassa deve modulare il colore\n  - A zero punti vita la cassa deve chiamare queue_free()\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 7818,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo il primo colpo la cassa deve modulare il colore\n  - A zero punti vita la cassa deve chiamare queue_free()\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "estendi",
+   "titolo": "Cassa distruggibile con Health e Hurtbox",
+   "consegna": "Ricevi un prototipo con una cassa di legno (`res://crate.tscn` con script `res://crate.gd`).\n\nLa cassa attualmente è solo un ostacolo fisico (`StaticBody2D`). Modificala montando i componenti creati nella lezione:\n1. Aggiungi alla cassa un nodo `Health` come figlio, con `max_health = 2` e `invincibility_time = 0.0`.\n2. Aggiungi un nodo `Hurtbox` come figlio, con la proprietà `health_component` collegata al nodo `Health` e un `CollisionShape2D` con forma rettangolare identica alle dimensioni della cassa (32x32).\n3. Nello script `res://crate.gd`, collega il segnale `died` del nodo `Health` in modo che chiami il metodo `_on_health_died()`: quando riceve il segnale, la cassa deve distruggersi con `queue_free()`.\n4. Ogni volta che la cassa subisce danno (segnale `health_changed`), modulane il colore in rosso chiaro `modulate = Color(1.0, 0.5, 0.5)` per dare un riscontro visivo del colpo.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "cassa-distruggibile",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Puoi collegare i segnali direttamente nel metodo `_ready()` di `crate.gd` prendendo il riferimento a `$Health`.",
+    "Per rilevare il danno puoi connettere il segnale `health_changed` di `Health` a una funzione `_on_health_changed(current: int, max_hp: int)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://crate.tscn",
+     "descrizione": "res://crate.tscn esiste"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://crate.tscn",
+     "tipoNodo": "Node",
+     "nome": "Health",
+     "genitore": "Crate",
+     "descrizione": "Crate contiene un nodo Health"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://crate.tscn",
+     "tipoNodo": "Area2D",
+     "nome": "Hurtbox",
+     "genitore": "Crate",
+     "descrizione": "Crate contiene un nodo Hurtbox"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar crate_scene = load(\"res://crate.tscn\")\n\tif not check(\"crate_load\", crate_scene != null, \"res://crate.tscn deve caricarsi\"):\n\t\treturn\n\tvar crate = crate_scene.instantiate() as Node2D\n\tadd_child(crate)\n\tawait wait_frames(2)\n\t\n\tvar hurtbox := find_by_name(crate, \"Hurtbox\") as Area2D\n\tif not check(\"hurtbox\", hurtbox != null, \"La cassa deve avere un'Hurtbox\"):\n\t\treturn\n\t\n\tvar hitbox = Hitbox.new()\n\thitbox.damage = 1\n\tvar col = CollisionShape2D.new()\n\tvar shape = RectangleShape2D.new()\n\tshape.size = Vector2(32, 32)\n\tcol.shape = shape\n\thitbox.add_child(col)\n\tadd_child(hitbox)\n\tawait wait_physics_frames(2)\n\t\n\tcheck(\"color_changed\", crate.modulate != Color.WHITE, \"Dopo il primo colpo la cassa deve modulare il colore\")\n\t\n\t# Secondo colpo letale\n\tvar health := find_by_name(crate, \"Health\") as Health\n\tif health != null:\n\t\thealth.take_damage(1)\n\tawait wait_frames(2)\n\tcheck(\"crate_destroyed\", crate.is_queued_for_deletion(), \"A zero punti vita la cassa deve chiamare queue_free()\")\n\thitbox.queue_free()\n",
+     "descrizione": "Colpendo la Hurtbox della cassa con una Hitbox, la cassa cambia colore e poi si distrugge"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "CassaDistruggibile",
+     "scenaPrincipale": "res://crate.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CassaDistruggibile\"\nrun/main_scene=\"res://crate.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "health.gd",
+      "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(current: int, max_hp: int)\nsignal died\n\n@export var max_health: int = 2\n@export var invincibility_time: float = 0.0\n\nvar current_health: int\nvar is_invincible: bool = false\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif is_invincible or amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = max(0, current_health - amount)\n\thealth_changed.emit(current_health, max_health)\n\t\n\tif current_health == 0:\n\t\tdied.emit()\n\telif invincibility_time > 0.0:\n\t\t_start_invincibility()\n\n\nfunc heal(amount: int) -> void:\n\tif amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = min(max_health, current_health + amount)\n\thealth_changed.emit(current_health, max_health)\n\n\nfunc _start_invincibility() -> void:\n\tis_invincible = true\n\tawait get_tree().create_timer(invincibility_time).timeout\n\tis_invincible = false\n"
+     },
+     {
+      "percorso": "hitbox.gd",
+      "contenuto": "class_name Hitbox\nextends Area2D\n\n@export var damage: int = 1\n"
+     },
+     {
+      "percorso": "hurtbox.gd",
+      "contenuto": "class_name Hurtbox\nextends Area2D\n\n@export var health_component: Health\n\n\nfunc _ready() -> void:\n\tarea_entered.connect(_on_area_entered)\n\n\nfunc _on_area_entered(area: Area2D) -> void:\n\tif area is Hitbox:\n\t\tvar hitbox := area as Hitbox\n\t\tif health_component != null:\n\t\t\thealth_component.take_damage(hitbox.damage)\n"
+     },
+     {
+      "percorso": "crate.gd",
+      "contenuto": "extends StaticBody2D\n\n# La cassa si trova nel mondo di gioco\nfunc _ready() -> void:\n\tpass\n"
+     },
+     {
+      "percorso": "crate.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://crate.gd\" id=\"1_crate\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_box\"]\nsize = Vector2(32, 32)\n\n[node name=\"Crate\" type=\"StaticBody2D\"]\ncollision_layer = 2\ncollision_mask = 0\nscript = ExtResource(\"1_crate\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_box\")\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"CassaDistruggibile\"\nrun/main_scene=\"res://crate.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "crate.gd",
+      "contenuto": "extends StaticBody2D\n\n@onready var health: Health = $Health\n\n\nfunc _ready() -> void:\n\tif health != null:\n\t\thealth.died.connect(_on_health_died)\n\t\thealth.health_changed.connect(_on_health_changed)\n\n\nfunc _on_health_changed(_current: int, _max_hp: int) -> void:\n\tmodulate = Color(1.0, 0.5, 0.5)\n\n\nfunc _on_health_died() -> void:\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "crate.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://crate.gd\" id=\"1_crate\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"3_health\"]\n[ext_resource type=\"Script\" path=\"res://hurtbox.gd\" id=\"4_hurtbox\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_box\"]\nsize = Vector2(32, 32)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hurt\"]\nsize = Vector2(32, 32)\n\n[node name=\"Crate\" type=\"StaticBody2D\"]\ncollision_layer = 2\ncollision_mask = 0\nscript = ExtResource(\"1_crate\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"3_health\")\nmax_health = 2\ninvincibility_time = 0.0\n\n[node name=\"Hurtbox\" type=\"Area2D\" parent=\".\" node_paths=PackedStringArray(\"health_component\")]\ncollision_layer = 0\ncollision_mask = 0\nscript = ExtResource(\"4_hurtbox\")\nhealth_component = NodePath(\"../Health\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Hurtbox\"]\nshape = SubResource(\"RectangleShape2D_hurt\")\n"
+     },
+     {
+      "percorso": "health.gd",
+      "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(current: int, max_hp: int)\nsignal died\n\n@export var max_health: int = 2\n@export var invincibility_time: float = 0.0\n\nvar current_health: int\nvar is_invincible: bool = false\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif is_invincible or amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = max(0, current_health - amount)\n\thealth_changed.emit(current_health, max_health)\n\t\n\tif current_health == 0:\n\t\tdied.emit()\n\telif invincibility_time > 0.0:\n\t\t_start_invincibility()\n\n\nfunc heal(amount: int) -> void:\n\tif amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = min(max_health, current_health + amount)\n\thealth_changed.emit(current_health, max_health)\n\n\nfunc _start_invincibility() -> void:\n\tis_invincible = true\n\tawait get_tree().create_timer(invincibility_time).timeout\n\tis_invincible = false\n"
+     },
+     {
+      "percorso": "hurtbox.gd",
+      "contenuto": "class_name Hurtbox\nextends Area2D\n\n@export var health_component: Health\n\n\nfunc _ready() -> void:\n\tarea_entered.connect(_on_area_entered)\n\n\nfunc _on_area_entered(area: Area2D) -> void:\n\tif area is Hitbox:\n\t\tvar hitbox := area as Hitbox\n\t\tif health_component != null:\n\t\t\thealth_component.take_damage(hitbox.damage)\n"
+     },
+     {
+      "percorso": "hitbox.gd",
+      "contenuto": "class_name Hitbox\nextends Area2D\n\n@export var damage: int = 1\n"
+     }
+    ],
+    "progetto": {
+     "nome": "CassaDistruggibile",
+     "scenaPrincipale": "res://crate.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Aggiungendo i nodi `Health` e `Hurtbox` come figli di `Crate`, e agganciando i segnali `died` e `health_changed` nello script della cassa, rendiamo un semplice oggetto dello scenario suscettibile ai colpi senza dover riscrivere alcuna logica di danno o salute.",
+    "cambiati": [
+     "crate.gd",
+     "crate.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
