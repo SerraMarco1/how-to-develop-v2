@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-10T23:40:26.320Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-11T00:42:12.022Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "componente-vita",
   "numero": "7.8",
   "titolo": "Vita e danno: un componente riutilizzabile"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.8 riprende da sola appena rispondono.",
- "riprende": "2026-11-11T00:40:26.320Z"
+ "messaggio": "Sta scrivendo la lezione 7.8 «Vita e danno: un componente riutilizzabile».",
+ "riprende": null
 }
