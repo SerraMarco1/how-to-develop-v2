@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-11T11:01:42.429Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-11T12:02:56.966Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "rigidbody2d",
   "numero": "7.11",
   "titolo": "Oggetti spinti dalla fisica"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.11 riprende da sola appena rispondono.",
- "riprende": "2026-11-11T12:01:42.428Z"
+ "messaggio": "Sta scrivendo la lezione 7.11 «Oggetti spinti dalla fisica».",
+ "riprende": null
 }
