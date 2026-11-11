@@ -1450,5 +1450,45 @@
    "regole": 2,
    "motivo": "I componenti Health e Hurtbox gestiscono la logica di vita e collisione ma non aggiungono elementi visivi sullo schermo."
   }
+ },
+ "nemici-pattuglia-e-inseguimento": {
+  "es1": {
+   "impronta": "82c38e901977a6385cb9517b6d1668707d84fffaac81681e11c871de4fdeae76",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://enemy.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "enemy",
+       "cerca": {
+        "scena": "res://enemy.tscn"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.5,
+       "deve": "esserci",
+       "etichetta": "Nemico"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "La scena del nemico con sprite, collisioni e componenti",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "enemy"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «enemy» (scena = res://enemy.tscn; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Enemy» a (-16, -16) 32×32, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "La scena del nemico si avvia alle coordinate (0, 0) e il nodo radice con forma 32x32 centrata si trova parzialmente fuori dallo schermo, non soddisfacendo i requisiti di visibilità."
+  }
  }
 }

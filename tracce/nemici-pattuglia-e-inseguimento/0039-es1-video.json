@@ -1,0 +1,16 @@
+{
+ "n": 39,
+ "quando": "2026-11-11T09:44:04.110Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Crea il nemico base che pattuglia» non si vede sullo schermo: La scena del nemico si avvia alle coordinate (0, 0) e il nodo radice con forma 32x32 centrata si trova parzialmente fuori dallo schermo, non soddisfacendo i requisiti di visibilità.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9927,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (8778 → 62 token)"
+ ]
+}
