@@ -578,5 +578,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "rigidbody2d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
