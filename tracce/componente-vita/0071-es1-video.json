@@ -1,0 +1,16 @@
+{
+ "n": 71,
+ "quando": "2026-11-11T01:39:28.413Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Crea i componenti Health, Hitbox e Hurtbox» non si vede sullo schermo: I componenti Health e Hurtbox gestiscono la logica di vita e collisione ma non aggiungono elementi visivi sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 5839,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (8287 → 44 token)"
+ ]
+}

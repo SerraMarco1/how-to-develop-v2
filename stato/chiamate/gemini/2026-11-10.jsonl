@@ -45,3 +45,5 @@
 {"quando":1794360419886,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"componente-vita","ok":true,"contata":true,"durataMs":7090,"tokenInput":2974,"tokenOutput":677,"ragionamento":2296}
 {"quando":1794360432689,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":false,"contata":true,"durataMs":24432,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794361162576,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"componente-vita","ok":true,"contata":true,"durataMs":4263,"tokenInput":8287,"tokenOutput":44,"ragionamento":1105}
+{"quando":1794361168438,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":36336,"tokenInput":16575,"tokenOutput":2384,"ragionamento":4306}
+{"quando":1794361204778,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":24135,"tokenInput":19022,"tokenOutput":2533,"ragionamento":2643}

@@ -1441,5 +1441,14 @@
     ]
    }
   }
+ },
+ "componente-vita": {
+  "es1": {
+   "impronta": "9fe2e61dd0534bdecb10553e1786eee93c1d455bcb6ce4f6ee4e9644e759d999",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "I componenti Health e Hurtbox gestiscono la logica di vita e collisione ma non aggiungono elementi visivi sullo schermo."
+  }
  }
 }
