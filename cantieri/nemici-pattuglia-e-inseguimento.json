@@ -77,7 +77,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Invalid assignment of property or key 'waypoints' with value of type 'Array' on a base object of type 'CharacterBody2D (enemy.gd)'. (res://htd/verifica_1.gd:19 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Cannot call method 'find_child' on a null value.\n          at: _ready (res://enemy.gd:22)\nSCRIPT ERROR: Invalid assignment of property or key 'waypoints' with value of type 'Array' on a base object of type 'CharacterBody2D (enemy.gd)'.\n          at: _run_tests (res://htd/verifica_1.gd:19)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 19: `enemy.waypoints = [p1, p2]`\n  enemy.gd, riga 22: `var found_player := get_tree().current_scene.find_child(\"Player\", true, false)`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
