@@ -568,5 +568,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "nemici-pattuglia-e-inseguimento": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "navigazione-2d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }

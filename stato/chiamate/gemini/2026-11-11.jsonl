@@ -32,3 +32,4 @@
 {"quando":1794389776024,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"rigidbody2d","ok":true,"contata":true,"durataMs":79152,"tokenInput":13646,"tokenOutput":3118,"ragionamento":6502}
 {"quando":1794389856461,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"rigidbody2d","ok":true,"contata":true,"durataMs":172326,"tokenInput":21223,"tokenOutput":13894,"ragionamento":11713}
 {"quando":1794390137489,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":11907,"tokenInput":2991,"tokenOutput":1000,"ragionamento":2654}
+{"quando":1794390212659,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":8663,"tokenInput":8465,"tokenOutput":203,"ragionamento":2273}
