@@ -40,3 +40,4 @@
 {"quando":1794358313935,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"componente-vita","ok":false,"contata":true,"durataMs":3507,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794358993565,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"componente-vita","ok":false,"contata":true,"durataMs":25279,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794360301992,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"componente-vita","ok":true,"contata":true,"durataMs":47260,"tokenInput":11281,"tokenOutput":3771,"ragionamento":6952}
+{"quando":1794360367820,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"componente-vita","ok":true,"contata":true,"durataMs":24931,"tokenInput":17443,"tokenOutput":10438,"ragionamento":1946}
