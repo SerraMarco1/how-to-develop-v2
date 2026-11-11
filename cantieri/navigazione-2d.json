@@ -599,7 +599,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "main.tscn riga 76: il nodo \"CollisionShape2D\" ha parent=\"Player/Hurtbox\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La funzione _process_return() in enemy.gd deve utilizzare navigation_agent.get_next_path_position()\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
