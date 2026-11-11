@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-11T09:36:14.735Z",
+ "aggiornato": "2026-11-11T09:42:34.034Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1006,10 +1006,10 @@
    "slug": "nemici-pattuglia-e-inseguimento",
    "numero": "7.9",
    "titolo": "Nemici: pattugliare e inseguire",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f07-azione-2d/nemici-pattuglia-e-inseguimento.json",
-   "sha256": "8decb9ed6c70ada5a538ce1ace9a76b2bb33f6fe5e9ba83f4c03f6ed67e8e7bb",
-   "byte": 177358
+   "sha256": "6fd8c79b95e4e3a20286c2565eb322d44aef89f5f3d4525a52af9d94cc7f0ea0",
+   "byte": 179701
   },
   {
    "slug": "navigazione-2d",
