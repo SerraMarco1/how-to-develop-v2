@@ -819,7 +819,9 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Cannot call method 'is_queued_for_deletion' on a previously freed instance. (res://htd/verifica_1.gd:20 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Cannot call method 'is_queued_for_deletion' on a previously freed instance.\n          at: _run_tests (res://htd/verifica_1.gd:20)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 20: `check(\"guard_dead\", guard.is_queued_for_deletion(), \"Con 2 danni la guardia deve chiamare queue_free()\")`"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
