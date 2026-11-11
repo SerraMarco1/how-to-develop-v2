@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-11T09:00:03.014Z",
+ "aggiornato": "2026-11-11T09:36:16.007Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "navigazione-2d",
-  "numero": "7.10",
-  "titolo": "Nemici che trovano la strada"
+  "slug": "rigidbody2d",
+  "numero": "7.11",
+  "titolo": "Oggetti spinti dalla fisica"
  },
- "messaggio": "Sta scrivendo la lezione 7.10 «Nemici che trovano la strada».",
+ "messaggio": "Sta scrivendo la lezione 7.11 «Oggetti spinti dalla fisica».",
  "riprende": null
 }
