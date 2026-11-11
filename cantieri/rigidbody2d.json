@@ -1,0 +1,84 @@
+{
+ "creato": "2026-11-11T09:36:16.020Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Oggetti spinti dalla fisica",
+  "sommario": "Scopri come usare il nodo RigidBody2D per creare casse spingibili, barili che rotolano ed elementi governati dal motore fisico. Imparerai a configurare massa, attrito e smorzamento, a trasmettere spinte dal giocatore e a scegliere il tipo di corpo collisionale corretto per ogni elemento del gioco.",
+  "concetti": [
+   "RigidBody2D",
+   "Differenza tra corpi fisici (StaticBody2D, CharacterBody2D, RigidBody2D)",
+   "Proprietà gravity_scale nei giochi 2D top-down",
+   "Massa, attrito e rimbalzo",
+   "Smorzamento con linear_damp e angular_damp",
+   "Stato di sonno (sleeping) dei corpi fisici",
+   "Spingere corpi fisici con apply_central_impulse()",
+   "Rilevamento collisioni del personaggio con get_slide_collision()"
+  ],
+  "obiettivi": [
+   "RigidBody2D: lo muove la fisica, tu gli dai solo spinte",
+   "Massa, attrito, rimbalzo",
+   "Quale corpo usare per cosa"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nelle lezioni precedenti abbiamo usato due tipi di nodi fisici: `StaticBody2D` per ostacoli impassabili come muri e porte (che restano fermi sul posto), e `CharacterBody2D` per il custode e i nemici (il cui movimento viene deciso al millimetro tramite il codice con `velocity` e `move_and_slide()`).\n\nNei giochi d'azione con vista dall'alto capita spesso di voler inserire oggetti del mondo con cui interagire: una pesante cassa di legno che il custode può spingere per liberare un varco o posizionare su un interruttore, oppure un barile che rotola e rimbalza contro le pareti quando viene urtato. Se provassimo a gestire questi movimenti a mano con uno script, dovremmo calcolare da zero l'inerzia, lo scivolamento sul pavimento, le rotazioni e la reazione ai rimbalzi. Per fare tutto questo in modo naturale, Godot offre il nodo **RigidBody2D**."
+   },
+   {
+    "tipo": "testo",
+    "md": "A differenza di un personaggio, un **RigidBody2D** è un corpo completamente controllato dal **motore fisico** (il sistema interno di Godot che simula le leggi del movimento e degli urti). Questo significa che **non devi modificare la sua posizione o la sua velocità direttamente via codice**; se lo facessi, salteresti i controlli fisici creando scatti visivi o oggetti che attraversano i muri.\n\nAl corpo rigido dai soltanto delle spinte: puoi applicare una forza continua oppure un **impulso** (`impulse`), cioè una spinta istantanea come un calcio o un urto. Il motore fisico calcolerà la traiettoria, l'attrito con il terreno e le deviazioni causate dagli ostacoli. Quando un corpo rigido finisce di scivolare e resta immobile per un certo tempo, entra automaticamente in uno stato di **sonno** (*sleeping*): smette di consumare calcoli finché un altro corpo o un nuovo impulso non lo sveglia urtandolo."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "finestra-nuovo-nodo",
+    "didascalia": "Cercando 'RigidBody2D' nella finestra Create New Node crei un corpo la cui posizione è gestita dal motore fisico."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare la scena di una cassa spingibile (crate.tscn)",
+    "passi": [
+     "Nel pannello *Scene* premi il pulsante **+** per creare un nuovo nodo radice, cerca `RigidBody2D` e premi **Create**.",
+     "Rinomina il nodo appena creato in `Crate`.",
+     "Con `Crate` selezionato, premi **+** e aggiungi un nodo figlio di tipo `Sprite2D`.",
+     "Nel pannello *Inspector*, trascina il file `res://icon.svg` dal pannello *FileSystem* nella proprietà *Texture*, poi espandi la sezione *Transform* e imposta *Scale* su `Vector2(0.4, 0.4)`.",
+     "Seleziona di nuovo `Crate`, premi **+** e aggiungi un figlio `CollisionShape2D`.",
+     "Nell'Inspector di `CollisionShape2D`, clicca sul campo *Shape*, scegli **New RectangleShape2D** e usa i quadratini arancioni nella vista 2D per adattare la forma al disegno della cassa (circa 50x50 pixel).",
+     "Salva la scena premendo Ctrl+S con il nome `res://crate.tscn`."
+    ]
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Di base la fisica 2D di Godot applica una gravità diretta verso il fondo dello schermo, ideale per i giochi a piattaforme. In un gioco con vista dall'alto come «Il custode», una cassa con gravità cadrebbe da sola verso il basso appena avvii la scena. Seleziona il nodo radice `Crate` e nell'Inspector imposta la proprietà **Gravity Scale** a `0.0`: in questo modo la cassa si muoverà solo quando riceverà una spinta."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per regolare il comportamento della cassa, l'Inspector di `RigidBody2D` mette a disposizione parametri fisici fondamentali:\n\n- **Mass** (massa): il peso dell'oggetto espresso in unità arbitrarie. Un oggetto con massa elevata richiederà spinte molto più forti per accelerare, e sposterà con facilità gli oggetti più leggeri che incontra sulla sua traiettoria.\n- **Linear Damp** (smorzamento lineare): nei giochi visti dall'alto svolge il ruolo dell'attrito del pavimento. Indica quanto velocemente l'oggetto perde velocità dopo aver ricevuto una spinta. Con un valore molto basso (es. `0.5`) la cassa scivolerà a lungo come sul ghiaccio; con un valore più alto (es. `6.0` o `10.0`) si fermerà poco dopo che il custode smette di spingerla.\n- **Angular Damp** (smorzamento angolare): definisce quanto rapidamente un oggetto smette di ruotare dopo aver subito un impatto ad angolo.\n- **Lock Rotation**: se spunti questa opzione, il corpo non potrà ruotare su se stesso. Per una cassa quadrata è consigliato attivarla per evitare che si incastri storta nei corridoi stretti; per un barile o una palla va invece lasciata disattivata per consentire il rotolamento."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "# Nel metodo _physics_process del Player, subito dopo move_and_slide()\nmove_and_slide()\n\n# Controlla tutti gli urti avvenuti durante il movimento di questo fotogramma\nfor i: int in range(get_slide_collision_count()):\n\tvar collision: KinematicCollision2D = get_slide_collision(i)\n\tvar collider: Object = collision.get_collider()\n\t\n\t# Se il corpo urtato è un corpo rigido, trasmettigli una spinta\n\tif collider is RigidBody2D:\n\t\tvar push_force: float = 70.0\n\t\tvar push_direction: Vector2 = -collision.get_normal()\n\t\t(collider as RigidBody2D).apply_central_impulse(push_direction * push_force)",
+    "spiegazione": "Quando un `CharacterBody2D` urta un `RigidBody2D`, il motore fisico ferma il personaggio ma non applica automaticamente una forza alla cassa. Con `get_slide_collision_count()` otteniamo quante superfici abbiamo toccato in questo fotogramma. Per ogni urto, `collision.get_normal()` restituisce il vettore perpendicolare alla superficie colpita: moltiplicandolo per `-1` otteniamo la direzione verso cui il giocatore stava spingendo. Con `apply_central_impulse()` applichiamo una spinta diretta al baricentro del corpo rigido."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Area2D\n\nsignal pressed\nsignal released\n\n@export var is_pressed: bool = false\n\nvar _bodies_on_plate: int = 0\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\t_update_visual()\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body is CharacterBody2D or body is RigidBody2D:\n\t\t_bodies_on_plate += 1\n\t\tif not is_pressed:\n\t\t\tis_pressed = true\n\t\t\t_update_visual()\n\t\t\tpressed.emit()\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body is CharacterBody2D or body is RigidBody2D:\n\t\t_bodies_on_plate = maxi(0, _bodies_on_plate - 1)\n\t\tif _bodies_on_plate == 0 and is_pressed:\n\t\t\tis_pressed = false\n\t\t\t_update_visual()\n\t\t\treleased.emit()\n\n\nfunc _update_visual() -> void:\n\tif is_pressed:\n\t\tmodulate = Color(0.4, 1.0, 0.4)\n\t\tscale = Vector2(0.9, 0.9)\n\telse:\n\t\tmodulate = Color(0.8, 0.8, 0.8)\n\t\tscale = Vector2(1.0, 1.0)",
+    "spiegazione": "Questo script gestisce una piastra a pressione (`PressurePlate`) di tipo `Area2D`. Usiamo la variabile `_bodies_on_plate` come contatore: se il giocatore spinge la cassa sopra la piastra e poi ci sale anche lui, il contatore sale a 2. Quando il giocatore si allontana, il contatore scende a 1: la cassa continua a tenere premuto il pulsante, impedendo alla piastra di rilasciarsi finché la cassa non viene spinta via."
+   },
+   {
+    "tipo": "testo",
+    "md": "Ora che conosciamo tutti i corpi fisici di Godot, è fondamentale saper scegliere il tipo giusto per ciascun elemento senza confonderli:\n\n1. **StaticBody2D**: usalo per pareti, rocce giganti, colonne e porte chiuse. Sono oggetti che non devono mai muoversi né subire spinte fisiche da altri corpi.\n2. **CharacterBody2D**: usalo per il protagonista, le guardie e i nemici che pattugliano. È la scelta corretta per qualsiasi elemento che deve muoversi seguendo regole precise programmate da te (tastiera o intelligenza artificiale) tramite `move_and_slide()`.\n3. **RigidBody2D**: usalo per casse da spingere, massi che rotolano, barili o macerie. È il tipo adatto quando vuoi che sia il simulatore fisico a calcolare traiettoria, rimbalzi, rotolamenti e attrito a partire da impulsi esterni.\n4. **Area2D**: usalo per piastre a pressione, trappole sul pavimento o oggetti da raccogliere (monete e chiavi). Non è un ostacolo solido: serve unicamente a rilevare quando un corpo entra o esce dalla sua area."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- `RigidBody2D` è governato dal motore fisico: non ne modifichi posizione e velocità direttamente, ma gli applichi impulsi con `apply_central_impulse()`.\n- Nei giochi con vista dall'alto imposta `gravity_scale = 0.0` sui corpi rigidi per evitare che cadano verso il basso dello schermo.\n- `linear_damp` regola quanto in fretta l'oggetto smette di scivolare sul pavimento, mentre `lock_rotation` impedisce alle casse quadrate di ruotare durante le spinte.\n- Un `CharacterBody2D` può spingere i corpi rigidi leggendo le collisioni avvenute dopo `move_and_slide()` con `get_slide_collision()`.\n- Scegli con attenzione: `StaticBody2D` per gli ostacoli fermi, `CharacterBody2D` per entità comandate via codice, `RigidBody2D` per oggetti spinti dalla fisica e `Area2D` per i sensori immateriali."
+   }
+  ]
+ }
+}
