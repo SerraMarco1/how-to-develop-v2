@@ -1,0 +1,196 @@
+{
+ "n": 11,
+ "quando": "2026-11-11T09:47:41.325Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (ripara): approvato",
+ "spiegazione": "«I sei corpi sbagliati». 7 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: main.tscn",
+ "richieste": 0,
+ "durataMs": 11902,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "I sei corpi sbagliati",
+   "consegna": "Nel progetto «I sei corpi sbagliati» ricevi la scena `res://main.tscn`. Contiene sei oggetti diversi con cui il custode interagisce, ma a ciascuno di essi è stato assegnato il tipo di nodo collisionale errato:\n\n1. `Door` (la porta): al momento cade verso il fondo o si sposta quando urtata, invece di rimanere un solido fisso. Deve diventare uno `StaticBody2D`.\n2. `Crate` (la cassa): è completamente inamovibile come un muro di pietra. Deve diventare un `RigidBody2D` (con `gravity_scale` a `0.0`, `lock_rotation` a `true` e `linear_damp` a `8.0`).\n3. `Platform` (la colonna / barriera impassabile): al momento viene spinta via dal custode. Deve diventare uno `StaticBody2D`.\n4. `Guard` (il nemico che pattuglia con uno script che usa `move_and_slide()`): è stato creato come corpo statico e quindi non può muoversi. Deve diventare un `CharacterBody2D`.\n5. `PressurePlate` (la piastra a pressione): blocca il passaggio del custode come un muro invalicabile invece di essere una zona attraversabile. Deve diventare un `Area2D`.\n6. `Barrel` (il barile rotondo da spingere): è bloccato e non si sposta. Deve diventare un `RigidBody2D` (con `gravity_scale` a `0.0`, `lock_rotation` a `false` e `linear_damp` a `2.0`).\n\nCorreggi il tipo di corpo (e le relative proprietà fisiche) per ognuno dei sei nodi mantenendo i rispettivi nomi, sprite, forme di collisione e script.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "i-sei-corpi-sbagliati",
+   "passiGuida": [],
+   "suggerimenti": [
+    "In Godot puoi cambiare il tipo di un nodo cliccandovi sopra con il tasto destro nella vista Scene e scegliendo **Change Type...**."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "StaticBody2D",
+     "nome": "Door",
+     "descrizione": "Il nodo Door è uno StaticBody2D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "RigidBody2D",
+     "nome": "Crate",
+     "descrizione": "Il nodo Crate è un RigidBody2D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "StaticBody2D",
+     "nome": "Platform",
+     "descrizione": "Il nodo Platform è uno StaticBody2D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "CharacterBody2D",
+     "nome": "Guard",
+     "descrizione": "Il nodo Guard è un CharacterBody2D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "Area2D",
+     "nome": "PressurePlate",
+     "descrizione": "Il nodo PressurePlate è un Area2D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "RigidBody2D",
+     "nome": "Barrel",
+     "descrizione": "Il nodo Barrel è un RigidBody2D"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\t\n\tvar door := find_by_name(main, \"Door\") as StaticBody2D\n\tcheck(\"door_static\", door != null, \"Door deve essere di tipo StaticBody2D\")\n\t\n\tvar platform := find_by_name(main, \"Platform\") as StaticBody2D\n\tcheck(\"plat_static\", platform != null, \"Platform deve essere di tipo StaticBody2D\")\n\t\n\tvar guard := find_by_name(main, \"Guard\") as CharacterBody2D\n\tcheck(\"guard_cb\", guard != null, \"Guard deve essere di tipo CharacterBody2D\")\n\t\n\tvar plate := find_by_name(main, \"PressurePlate\") as Area2D\n\tcheck(\"plate_area\", plate != null, \"PressurePlate deve essere di tipo Area2D\")\n\t\n\tvar crate := find_by_name(main, \"Crate\") as RigidBody2D\n\tif check(\"crate_rb\", crate != null, \"Crate deve essere di tipo RigidBody2D\"):\n\t\tcheck(\"crate_grav\", crate.gravity_scale == 0.0, \"Crate deve avere gravity_scale a 0.0\")\n\t\tcheck(\"crate_lock\", crate.lock_rotation == true, \"Crate deve avere lock_rotation abilitato\")\n\t\n\tvar barrel := find_by_name(main, \"Barrel\") as RigidBody2D\n\tif check(\"barrel_rb\", barrel != null, \"Barrel deve essere di tipo RigidBody2D\"):\n\t\tcheck(\"barrel_grav\", barrel.gravity_scale == 0.0, \"Barrel deve avere gravity_scale a 0.0\")\n\t\tcheck(\"barrel_unlock\", barrel.lock_rotation == false, \"Barrel non deve avere lock_rotation abilitato\")\n\t\n\t# Attendiamo qualche frame fisico e verifichiamo che i corpi rigidi non cadano da soli\n\tvar crate_y: float = crate.global_position.y\n\tawait wait_physics_frames(10)\n\tcheck(\"crate_still\", absf(crate.global_position.y - crate_y) < 1.0, \"Crate non deve cadere verso il basso\")\n",
+     "descrizione": "Tutti i sei corpi reagiscono correttamente a gravità, spinte fisiche e attraversamento"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "ISeiCorpiSbagliati",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ISeiCorpiSbagliati\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "guard.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 60.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tvelocity = Vector2.DOWN * speed\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\nconst SPEED: float = 200.0\n\n\nfunc _physics_process(_delta: float) -> void:\n\tvar input_dir: Vector2 = Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = input_dir * SPEED\n\tmove_and_slide()\n\t\n\tfor i: int in range(get_slide_collision_count()):\n\t\tvar collision: KinematicCollision2D = get_slide_collision(i)\n\t\tvar collider: Object = collision.get_collider()\n\t\tif collider is RigidBody2D:\n\t\t\tvar push_direction: Vector2 = -collision.get_normal()\n\t\t\t(collider as RigidBody2D).apply_central_impulse(push_direction * 100.0)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_box\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(80, 80)\ncollision_layer = 1\ncollision_mask = 2\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Door\" type=\"RigidBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 2\ncollision_mask = 3\ngravity_scale = 1.0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Door\"]\nscale = Vector2(0.25, 0.5)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Door\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Crate\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(300, 100)\ncollision_layer = 2\ncollision_mask = 3\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Crate\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Crate\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Platform\" type=\"RigidBody2D\" parent=\".\"]\nposition = Vector2(400, 100)\ncollision_layer = 2\ncollision_mask = 3\ngravity_scale = 1.0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Platform\"]\nscale = Vector2(0.5, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Platform\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Guard\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 2\ncollision_mask = 3\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"PressurePlate\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(300, 200)\ncollision_layer = 2\ncollision_mask = 3\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"PressurePlate\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"PressurePlate\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Barrel\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 3\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Barrel\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Barrel\"]\nshape = SubResource(\"RectangleShape2D_box\")\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"ISeiCorpiSbagliati\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "guard.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 60.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tvelocity = Vector2.DOWN * speed\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\nconst SPEED: float = 200.0\n\n\nfunc _physics_process(_delta: float) -> void:\n\tvar input_dir: Vector2 = Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = input_dir * SPEED\n\tmove_and_slide()\n\t\n\tfor i: int in range(get_slide_collision_count()):\n\t\tvar collision: KinematicCollision2D = get_slide_collision(i)\n\t\tvar collider: Object = collision.get_collider()\n\t\tif collider is RigidBody2D:\n\t\t\tvar push_direction: Vector2 = -collision.get_normal()\n\t\t\t(collider as RigidBody2D).apply_central_impulse(push_direction * 100.0)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://guard.gd\" id=\"3_guard\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_box\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(80, 80)\ncollision_layer = 1\ncollision_mask = 2\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Door\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 2\ncollision_mask = 3\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Door\"]\nscale = Vector2(0.25, 0.5)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Door\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Crate\" type=\"RigidBody2D\" parent=\".\"]\nposition = Vector2(300, 100)\ncollision_layer = 2\ncollision_mask = 3\ngravity_scale = 0.0\nlock_rotation = true\nlinear_damp = 8.0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Crate\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Crate\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Platform\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 100)\ncollision_layer = 2\ncollision_mask = 3\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Platform\"]\nscale = Vector2(0.5, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Platform\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Guard\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\ncollision_layer = 2\ncollision_mask = 3\nscript = ExtResource(\"3_guard\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Guard\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Guard\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"PressurePlate\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(300, 200)\ncollision_layer = 2\ncollision_mask = 3\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"PressurePlate\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"PressurePlate\"]\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"Barrel\" type=\"RigidBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 3\ngravity_scale = 0.0\nlinear_damp = 2.0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Barrel\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Barrel\"]\nshape = SubResource(\"RectangleShape2D_box\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "ISeiCorpiSbagliati",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Scegliere il tipo di corpo fisico adeguato è fondamentale: `Door` e `Platform` sono ostacoli fissi insensibili alla fisica e vanno definiti come `StaticBody2D`. `Guard` deve muoversi seguendo una velocità determinata dal codice (`move_and_slide()`), quindi richiede `CharacterBody2D`. `PressurePlate` è una zona che rileva ingressi e uscite senza bloccare fisicamente i corpi, ed è quindi un'`Area2D`. Infine, `Crate` e `Barrel` sono oggetti che devono reagire a spinte e urti calcolati dal motore fisico: sono entrambi `RigidBody2D` con `gravity_scale = 0.0`, con la rotazione bloccata per la cassa quadrata e lasciata libera per il barile che rotola.",
+    "cambiati": [
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
