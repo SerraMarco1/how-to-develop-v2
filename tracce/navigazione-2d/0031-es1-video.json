@@ -1,0 +1,16 @@
+{
+ "n": 31,
+ "quando": "2026-11-11T09:44:52.489Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Aggiungi la navigazione e guida il nemico» non si vede sullo schermo: L'esercizio aggiunge componenti non visibili come NavigationAgent2D e Timer, modificando il comportamento di movimento del nemico senza introdurre nuovi elementi visivi sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 11059,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (8535 → 47 token)"
+ ]
+}

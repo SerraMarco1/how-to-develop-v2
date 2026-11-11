@@ -1490,5 +1490,45 @@
    },
    "motivo": "La scena del nemico si avvia alle coordinate (0, 0) e il nodo radice con forma 32x32 centrata si trova parzialmente fuori dallo schermo, non soddisfacendo i requisiti di visibilità."
   }
+ },
+ "navigazione-2d": {
+  "es1": {
+   "impronta": "3f96d3d2b005355a761b2b4f47c32a703342c2867a3c4247bca0ab6d51e2dafb",
+   "tentativi": 3,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 8,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "enemy",
+       "cerca": {
+        "script": "res://enemy.gd"
+       },
+       "quanti": 1,
+       "da": 1,
+       "a": 7,
+       "deve": "esserci",
+       "etichetta": "Nemico"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il nemico è posizionato correttamente sulla mappa",
+       "da": 1.5,
+       "a": 6.5,
+       "soggetto": "enemy"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio aggiunge componenti non visibili come NavigationAgent2D e Timer, modificando il comportamento di movimento del nemico senza introdurre nuovi elementi visivi sullo schermo."
+  }
  }
 }
