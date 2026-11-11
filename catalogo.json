@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-10T09:28:53.645Z",
+ "aggiornato": "2026-11-11T01:27:11.275Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -992,6 +992,15 @@
    "file": "lezioni/f07-azione-2d/proiettili.json",
    "sha256": "06520c52feed9cc51415f7bce361b5b0e3b73d3aa07b07d7eae40601ddce4333",
    "byte": 132857
+  },
+  {
+   "slug": "componente-vita",
+   "numero": "7.8",
+   "titolo": "Vita e danno: un componente riutilizzabile",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/componente-vita.json",
+   "sha256": "29ce9a4a914d1c9409e6132df28d213af0c624d805177e0e19731f73acc276e9",
+   "byte": 144683
   }
  ],
  "documentazione": {
