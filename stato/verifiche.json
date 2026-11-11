@@ -563,5 +563,10 @@
   "versione": 3,
   "fragili": [],
   "tentativi": {}
+ },
+ "componente-vita": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
