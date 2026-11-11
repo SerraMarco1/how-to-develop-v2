@@ -12,3 +12,4 @@
 {"quando":1794386195650,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":553783,"tokenInput":19278,"tokenOutput":11120,"ragionamento":10767}
 {"quando":1794386754808,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":267908,"tokenInput":12035,"tokenOutput":153,"ragionamento":3774}
 {"quando":1794387024343,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":443719,"tokenInput":18631,"tokenOutput":12107,"ragionamento":18123}
+{"quando":1794387597265,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"nemici-pattuglia-e-inseguimento","ok":false,"contata":true,"durataMs":4172,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
