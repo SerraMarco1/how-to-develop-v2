@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-11T09:00:01.446Z",
+ "aggiornato": "2026-11-11T09:36:14.735Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1010,6 +1010,15 @@
    "file": "lezioni/f07-azione-2d/nemici-pattuglia-e-inseguimento.json",
    "sha256": "8decb9ed6c70ada5a538ce1ace9a76b2bb33f6fe5e9ba83f4c03f6ed67e8e7bb",
    "byte": 177358
+  },
+  {
+   "slug": "navigazione-2d",
+   "numero": "7.10",
+   "titolo": "Nemici che trovano la strada",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/navigazione-2d.json",
+   "sha256": "a63c8fda57f83a6c031d5ac91f4b1c78a37b977acc9ea9332fc749314e165cc1",
+   "byte": 177021
   }
  ],
  "documentazione": {
