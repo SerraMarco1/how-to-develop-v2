@@ -1217,5 +1217,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test è una copia identica dell'esercizio es2: presenta lo stesso titolo, la stessa identica consegna e le stesse verifiche, violando la regola che vieta di proporre un test duplicato di un esercizio precedente.",
+    "correzione": "Riscrivere il test come una prova autonoma che verifichi l'effettiva reattività del nemico (ad esempio posizionando il Player in linea visiva per verificare che il nemico passi all'inseguimento, oppure verificando che torni alla ronda se la vista è interrotta).",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
