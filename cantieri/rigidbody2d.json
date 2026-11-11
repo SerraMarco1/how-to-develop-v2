@@ -312,7 +312,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -457,13 +457,157 @@
    "genere": "ripara",
    "correzioni": 1,
    "semplificato": false,
-   "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il barile deve rotolare (la rotazione deve cambiare rispetto a zero, attuale: 0.00 rad)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest",
     "gemini/gemini-flash-latest"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Il barile bloccato",
+    "consegna": "Nel progetto di prova «Il barile bloccato», apri la scena `res://main.tscn` ed esegui con F5.\n\nÈ presente un barile (`Barrel`, definito in `res://barrel.tscn`) che il custode dovrebbe poter spingere lungo la stanza. Al momento però il comportamento fisico del barile ha tre difetti evidenti:\n\n1. Appena avvii il gioco, il barile precipita verso il basso dello schermo e sparisce nel vuoto, anche se la scena ha una visuale dall'alto dove non deve esistere gravità verticale.\n2. La rotazione del barile è completamente bloccata dalle proprietà fisiche (`lock_rotation`), impedendogli qualsiasi rotazione.\n3. Non appena riceve una spinta, si ferma all'istante dopo pochissimi pixel a causa di valori di smorzamento (`linear_damp` e `angular_damp`) esageratamente alti.\n\nCorreggi i parametri fisici di `Barrel` in `res://barrel.tscn` in modo che:\n- Rimanga sul posto senza cadere da solo verso il basso (`gravity_scale` impostato a `0.0`).\n- Abbia la rotazione sbloccata (`lock_rotation` disattivato, cioè `false`).\n- Abbia un attrito naturale (`linear_damp` impostato a `2.0` e `angular_damp` a `2.0`).",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "il-barile-bloccato",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Apri la scena res://barrel.tscn e seleziona il nodo radice Barrel.",
+     "Nell'Inspector controlla le proprietà di RigidBody2D: imposta Gravity Scale a 0, togli la spunta a Lock Rotation e imposta sia Linear Damp che Angular Damp a 2."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://barrel.tscn",
+      "descrizione": "Il file barrel.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar barrel := find_by_name(main, \"Barrel\") as RigidBody2D\n\tif not check(\"barrel\", barrel != null, \"La scena deve contenere il nodo Barrel\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"La scena deve contenere il nodo Player\"):\n\t\treturn\n\t\n\t# Controlliamo che il barile non cada da solo verso il fondo\n\tvar start_y: float = barrel.global_position.y\n\tawait wait_physics_frames(20)\n\tcheck(\"no_gravity\", absf(barrel.global_position.y - start_y) < 1.0, \"Il barile non deve cadere verso il basso da solo: gravity_scale deve essere 0.0\")\n\tcheck(\"no_lock_rot\", barrel.lock_rotation == false, \"lock_rotation deve essere disattivato (false) per consentire la rotazione\")\n\tcheck(\"linear_damp_ok\", barrel.linear_damp <= 5.0, \"linear_damp deve essere contenuto (es. 2.0) per permettere lo scivolamento\")\n\tcheck(\"angular_damp_ok\", barrel.angular_damp <= 5.0, \"angular_damp deve essere contenuto (es. 2.0)\")\n\t\n\t# Spingiamo il barile verso destra\n\tplayer.global_position = barrel.global_position - Vector2(40, 0)\n\tawait hold_action(\"move_right\", 25)\n\tawait wait_physics_frames(15)\n\t\n\tcheck(\"barrel_moved\", barrel.global_position.x > player.global_position.x + 20.0, \"Il barile deve spostarsi verso destra dopo l'urto del custode\")\n",
+      "descrizione": "Il barile non cade verso il basso e scivola verso destra quando viene spinto"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "IlBarileBloccato",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"IlBarileBloccato\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\nconst SPEED: float = 200.0\n\n\nfunc _physics_process(_delta: float) -> void:\n\tvar input_dir: Vector2 = Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = input_dir * SPEED\n\tmove_and_slide()\n\t\n\tfor i: int in range(get_slide_collision_count()):\n\t\tvar collision: KinematicCollision2D = get_slide_collision(i)\n\t\tvar collider: Object = collision.get_collider()\n\t\tif collider is RigidBody2D:\n\t\t\tvar push_direction: Vector2 = -collision.get_normal()\n\t\t\t(collider as RigidBody2D).apply_central_impulse(push_direction * 120.0)\n"
+      },
+      {
+       "percorso": "barrel.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_barrel\"]\nradius = 20.0\n\n[node name=\"Barrel\" type=\"RigidBody2D\"]\ncollision_layer = 2\ncollision_mask = 3\ngravity_scale = 1.0\nlock_rotation = true\nlinear_damp = 80.0\nangular_damp = 50.0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.3, 0.3)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_barrel\")\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://barrel.tscn\" id=\"3_barrel\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 200)\ncollision_layer = 1\ncollision_mask = 2\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n\n[node name=\"Barrel\" parent=\".\" instance=ExtResource(\"3_barrel\")]\nposition = Vector2(250, 200)\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"IlBarileBloccato\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "barrel.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_barrel\"]\nradius = 20.0\n\n[node name=\"Barrel\" type=\"RigidBody2D\"]\ncollision_layer = 2\ncollision_mask = 3\ngravity_scale = 0.0\nlinear_damp = 2.0\nangular_damp = 2.0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.3, 0.3)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_barrel\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\nconst SPEED: float = 200.0\n\n\nfunc _physics_process(_delta: float) -> void:\n\tvar input_dir: Vector2 = Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = input_dir * SPEED\n\tmove_and_slide()\n\t\n\tfor i: int in range(get_slide_collision_count()):\n\t\tvar collision: KinematicCollision2D = get_slide_collision(i)\n\t\tvar collider: Object = collision.get_collider()\n\t\tif collider is RigidBody2D:\n\t\t\tvar push_direction: Vector2 = -collision.get_normal()\n\t\t\t(collider as RigidBody2D).apply_central_impulse(push_direction * 120.0)\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://barrel.tscn\" id=\"3_barrel\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 200)\ncollision_layer = 1\ncollision_mask = 2\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n\n[node name=\"Barrel\" parent=\".\" instance=ExtResource(\"3_barrel\")]\nposition = Vector2(250, 200)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "IlBarileBloccato",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "In una visuale dall'alto, la gravità verticale naturale di Godot va azzerata impostando `gravity_scale = 0.0`. La proprietà `lock_rotation` deve essere disattivata (`false`) per consentire al corpo rigido di ruotare liberamente. Infine, impostando `linear_damp` e `angular_damp` a `2.0`, il barile riduce lo smorzamento e conserva l'inerzia dopo una spinta, scivolando in modo naturale lungo il pavimento.",
+     "cambiati": [
+      "barrel.tscn"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "test": {
    "stato": "da_fare",
