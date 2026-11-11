@@ -15,8 +15,8 @@
    "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1794361832699,
-   "errore": "Fornitore sovraccarico: i suoi modelli rifiutano le richieste (HTTP 503)"
+   "fino": 1794384060342,
+   "errore": "HTTP 429: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Gener"
   },
   "gemini/gemini-flash-lite-latest": {
    "fino": 1794349801630,
@@ -45,5 +45,5 @@
  },
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": 1794361832702
+ "prossimoTentativo": 1794384000346
 }
