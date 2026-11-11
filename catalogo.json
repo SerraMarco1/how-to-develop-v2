@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-11T09:42:34.034Z",
+ "aggiornato": "2026-11-11T12:03:29.406Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1019,6 +1019,15 @@
    "file": "lezioni/f07-azione-2d/navigazione-2d.json",
    "sha256": "a63c8fda57f83a6c031d5ac91f4b1c78a37b977acc9ea9332fc749314e165cc1",
    "byte": 177021
+  },
+  {
+   "slug": "rigidbody2d",
+   "numero": "7.11",
+   "titolo": "Oggetti spinti dalla fisica",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/rigidbody2d.json",
+   "sha256": "7141e268f876bb3c6897cc432e677b9dcb88ecaffcbff8f89dc47d058d2c0623",
+   "byte": 148456
   }
  ],
  "documentazione": {
