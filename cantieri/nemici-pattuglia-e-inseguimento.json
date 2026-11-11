@@ -779,7 +779,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - La scena principale deve funzionare senza errori: Cannot call method 'find_child' on a null value. (res://enemy.gd:22 in _ready)\nRighe citate dagli errori:\n  enemy.gd, riga 22: `var found_player := get_tree().current_scene.find_child(\"Player\", true, false)`"
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
