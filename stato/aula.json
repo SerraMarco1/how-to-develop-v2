@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-11T01:39:28.415Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-11T01:40:32.702Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "nemici-pattuglia-e-inseguimento",
   "numero": "7.9",
   "titolo": "Nemici: pattugliare e inseguire"
  },
- "messaggio": "Sta scrivendo la lezione 7.9 «Nemici: pattugliare e inseguire».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.9 riprende da sola appena rispondono.",
+ "riprende": "2026-11-11T01:50:32.702Z"
 }
