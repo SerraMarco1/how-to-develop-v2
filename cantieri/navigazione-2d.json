@@ -211,7 +211,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://enemy.gd deve caricarsi senza errori: Parse Error: Identifier \"keys\" not declared in the current scope. (res://enemy.gd:67 in GDScript::reload)\nFailed to load script \"res://enemy.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - La scena principale deve funzionare senza errori: Failed to get property 'waypoints' from node 'Enemy'. (scene/resources/packed_scene.cpp:606 in instantiate)\nRighe citate dagli errori:\n  enemy.gd, riga 67: `keys if target == null else null # safeguard`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - PathTimer deve avere autostart attivo\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
