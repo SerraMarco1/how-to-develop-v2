@@ -1246,5 +1246,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test richiede e verifica con una regex l'uso del metodo `is_target_reachable()`, ma questo metodo non è mai stato introdotto né spiegato nella teoria della lezione (blocco 4) né nelle lezioni precedenti.",
+    "correzione": "Rimuovere il requisito di `is_target_reachable()` dal test verificando solo le condizioni spiegate (come `navigation_agent.is_navigation_finished()` e il controllo su `player == null`), oppure aggiungere e spiegare il metodo `is_target_reachable()` nell'elenco delle proprietà e funzioni del blocco 4 della teoria.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
