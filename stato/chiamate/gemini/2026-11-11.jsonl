@@ -1,3 +1,5 @@
 {"quando":1794384099927,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":60771,"tokenInput":20849,"tokenOutput":9210}
 {"quando":1794384166266,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":30950,"tokenInput":19795,"tokenOutput":12815,"ragionamento":3036}
 {"quando":1794384197219,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"nemici-pattuglia-e-inseguimento","ok":true,"contata":true,"durataMs":25455,"tokenInput":24329,"tokenOutput":12591,"ragionamento":820}
+{"quando":1794384227811,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":false,"contata":true,"durataMs":78433,"errore":"HTTP 503: The service is currently unavailable."}
+{"quando":1794384306247,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"nemici-pattuglia-e-inseguimento","ok":false,"contata":true,"durataMs":2738,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
