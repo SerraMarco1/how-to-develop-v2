@@ -1,0 +1,47 @@
+{
+ "n": 38,
+ "quando": "2026-11-11T09:43:54.181Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «enemy» (scena = res://enemy.tscn; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Enemy» a (-16, -16) 32×32, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 21523,
+ "dati": {
+  "copione": {
+   "scena": "res://enemy.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "enemy",
+     "cerca": {
+      "scena": "res://enemy.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Nemico"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "La scena del nemico con sprite, collisioni e componenti",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "enemy"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «enemy» (scena = res://enemy.tscn; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0. A 1 s: «Enemy» a (-16, -16) 32×32, fuori dallo schermo (dentro per il 25%). Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (8465 → 203 token)"
+ ]
+}
