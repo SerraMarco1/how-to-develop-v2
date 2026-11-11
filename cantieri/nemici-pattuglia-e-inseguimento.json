@@ -1,9 +1,231 @@
 {
  "creato": "2026-11-11T01:27:12.683Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Crea il nemico base che pattuglia",
+    "consegna": "In questo esercizio crei la scena autonoma del nemico `Enemy` con la macchina a stati per la ronda e la vista con raggio.\n\n1. Crea la scena `res://enemy.tscn` con radice di tipo `CharacterBody2D` chiamata `Enemy`.\n2. Dentro `Enemy` inserisci:\n   - uno `Sprite2D` con texture `res://assets/sprites/enemy.png`;\n   - un `CollisionShape2D` con una `RectangleShape2D` (dimensione 32x32);\n   - un `RayCast2D` chiamato `RayCast2D`, con `collision_mask = 3` (in modo da intercettare sia il layer 1 del Player sia il layer 2 dei muri);\n   - un componente `Health` (nodo generico `Node` con script `res://health.gd`), impostando `max_health = 2`;\n   - una `Hurtbox` (nodo `Area2D` con script `res://hurtbox.gd` e `CollisionShape2D` 32x32) con `collision_layer = 4` e `collision_mask = 0`, collegata al nodo `Health`;\n   - una `Hitbox` (nodo `Area2D` con script `res://hitbox.gd` e `CollisionShape2D` 32x32) con `collision_layer = 0` e `collision_mask = 1` e `damage = 1`.\n3. Assegna a `Enemy` il layer di collisione fisica `collision_layer = 4` e `collision_mask = 2`.\n4. Crea lo script `res://enemy.gd` associato a `Enemy` che implementa gli stati `PATROL`, `CHASE` e `RETURN` come spiegato nella teoria, esponendo le variabili `@export`:\n   - `speed: float = 70.0`\n   - `chase_speed: float = 110.0`\n   - `vision_distance: float = 180.0`\n   - `waypoints: Array[Node2D] = []`\n   Quando il nodo `Health` emette `died`, il nemico viene rimosso con `queue_free()`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "il-custode",
+    "passiGuida": [
+     "Nel menu in alto premi **Scene → New Scene**.",
+     "Scegli **Other Node**, cerca **CharacterBody2D** e premi **Create**. Rinomina il nodo radice in `Enemy`.",
+     "Nell'Inspector di `Enemy`, imposta **Collision → Layer** sul bit 3 (valore 4) e **Collision → Mask** sul bit 2 (valore 2).",
+     "Aggiungi come figlio di `Enemy` uno **Sprite2D** e trascina `res://assets/sprites/enemy.png` nella proprietà **Texture**.",
+     "Aggiungi un **CollisionShape2D** a `Enemy`, crea un **New RectangleShape2D** e imposta le dimensioni (32x32).",
+     "Aggiungi un **RayCast2D** a `Enemy`. Nell'Inspector metti la spunta sui layer 1 e 2 della sua proprietà **Collision Mask** (valore 3).",
+     "Aggiungi un nodo **Node** chiamato `Health`, assegnagli lo script `res://health.gd` e imposta `max_health = 2`.",
+     "Aggiungi un'**Area2D** chiamata `Hurtbox` con script `res://hurtbox.gd`, imposta `collision_layer = 4`, `collision_mask = 0`, assegna `health_component` a `Health` e inserisci un figlio `CollisionShape2D` (32x32).",
+     "Aggiungi un'**Area2D** chiamata `Hitbox` con script `res://hitbox.gd`, imposta `collision_layer = 0`, `collision_mask = 1`, `damage = 1` e inserisci un figlio `CollisionShape2D` (32x32).",
+     "Collega a `Enemy` lo script `res://enemy.gd` implementando la gestione degli stati e salva la scena come `res://enemy.tscn`."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://enemy.tscn",
+      "descrizione": "Il file res://enemy.tscn esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://enemy.gd",
+      "descrizione": "Il file res://enemy.gd esiste"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://enemy.tscn",
+      "tipoNodo": "RayCast2D",
+      "nome": "RayCast2D",
+      "genitore": "Enemy",
+      "descrizione": "La scena Enemy contiene il nodo RayCast2D"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar scene := await instantiate_scene(\"res://enemy.tscn\")\n\tif not check(\"enemy_scene\", scene != null, \"La scena res://enemy.tscn deve potersi istanziare\"):\n\t\treturn\n\tvar enemy := scene as CharacterBody2D\n\tif not check(\"enemy_cb\", enemy != null, \"La radice di res://enemy.tscn deve essere un CharacterBody2D\"):\n\t\treturn\n\t\n\tvar p1 := Node2D.new()\n\tp1.position = Vector2(0, 0)\n\tvar p2 := Node2D.new()\n\tp2.position = Vector2(100, 0)\n\tscene.get_parent().add_child(p1)\n\tscene.get_parent().add_child(p2)\n\t\n\tenemy.global_position = Vector2(0, 0)\n\tenemy.waypoints = [p1, p2]\n\t\n\tawait wait_physics_frames(20)\n\tcheck(\"patrol_moves\", enemy.global_position.x > 1.0, \"Il nemico deve iniziare a muoversi verso il punto successivo (x attuale: %.1f)\" % enemy.global_position.x)",
+      "descrizione": "Il nemico si muove tra i punti di ronda quando non vede il giocatore"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "enemy.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy_tex\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"3_health\"]\n[ext_resource type=\"Script\" path=\"res://hurtbox.gd\" id=\"4_hurtbox\"]\n[ext_resource type=\"Script\" path=\"res://hitbox.gd\" id=\"5_hitbox\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(32, 32)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hurt\"]\nsize = Vector2(32, 32)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(32, 32)\n\n[node name=\"Enemy\" type=\"CharacterBody2D\"]\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"1_enemy\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy_tex\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"RayCast2D\" type=\"RayCast2D\" parent=\".\"]\ncollision_mask = 3\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"3_health\")\nmax_health = 2\n\n[node name=\"Hurtbox\" type=\"Area2D\" parent=\".\" node_paths=PackedStringArray(\"health_component\")]\ncollision_layer = 4\ncollision_mask = 0\nscript = ExtResource(\"4_hurtbox\")\nhealth_component = NodePath(\"../Health\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Hurtbox\"]\nshape = SubResource(\"RectangleShape2D_hurt\")\n\n[node name=\"Hitbox\" type=\"Area2D\" parent=\".\"]\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"5_hitbox\")\ndamage = 1\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Hitbox\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+      },
+      {
+       "percorso": "enemy.gd",
+       "contenuto": "extends CharacterBody2D\n\nenum State { PATROL, CHASE, RETURN }\n\n@export var speed: float = 70.0\n@export var chase_speed: float = 110.0\n@export var vision_distance: float = 180.0\n@export var waypoints: Array[Node2D] = []\n\nvar current_state: State = State.PATROL\nvar current_waypoint_index: int = 0\nvar player: Node2D = null\n\n@onready var ray_cast: RayCast2D = $RayCast2D\n@onready var health: Health = $Health\n\n\nfunc _ready() -> void:\n\tif health != null:\n\t\thealth.died.connect(_on_died)\n\t\n\tvar found_player := get_tree().current_scene.find_child(\"Player\", true, false)\n\tif found_player is Node2D:\n\t\tplayer = found_player as Node2D\n\n\nfunc _physics_process(delta: float) -> void:\n\tmatch current_state:\n\t\tState.PATROL:\n\t\t\t_process_patrol()\n\t\t\t_check_for_player()\n\t\tState.CHASE:\n\t\t\t_process_chase()\n\t\tState.RETURN:\n\t\t\t_process_return()\n\t\t\t_check_for_player()\n\t\n\tmove_and_slide()\n\n\nfunc _process_patrol() -> void:\n\tif waypoints.is_empty():\n\t\tvelocity = Vector2.ZERO\n\t\treturn\n\t\n\tvar target: Node2D = waypoints[current_waypoint_index]\n\tvar direction := global_position.direction_to(target.global_position)\n\tvelocity = direction * speed\n\t\n\tif global_position.distance_to(target.global_position) < 8.0:\n\t\tcurrent_waypoint_index = (current_waypoint_index + 1) % waypoints.size()\n\n\nfunc _process_chase() -> void:\n\tif player == null:\n\t\treturn\n\tvar direction := global_position.direction_to(player.global_position)\n\tvelocity = direction * chase_speed\n\n\nfunc _process_return() -> void:\n\tif waypoints.is_empty():\n\t\tcurrent_state = State.PATROL\n\t\treturn\n\t\n\tvar target: Node2D = waypoints[current_waypoint_index]\n\tvar direction := global_position.direction_to(target.global_position)\n\tvelocity = direction * speed\n\t\n\tif global_position.distance_to(target.global_position) < 8.0:\n\t\tcurrent_state = State.PATROL\n\n\nfunc _can_see_player() -> bool:\n\tif player == null:\n\t\treturn false\n\t\n\tif global_position.distance_to(player.global_position) > vision_distance:\n\t\treturn false\n\t\n\tray_cast.target_position = ray_cast.to_local(player.global_position)\n\tray_cast.force_raycast_update()\n\t\n\tif ray_cast.is_colliding():\n\t\tvar collider := ray_cast.get_collider()\n\t\treturn collider == player\n\t\n\treturn false\n\n\nfunc _check_for_player() -> void:\n\tif _can_see_player():\n\t\tcurrent_state = State.CHASE\n\n\nfunc _check_lost_player() -> void:\n\tif not _can_see_player():\n\t\tcurrent_state = State.RETURN\n\n\nfunc _on_died() -> void:\n\tqueue_free()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La scena `Enemy` incapsula un nemico pronto all'uso con i componenti di salute (`Health`), ricezione danno (`Hurtbox`) e inflizione danno (`Hitbox`). Lo script `enemy.gd` controlla la logica attraverso l'enumerazione `State`: se si trova in ronda segue i nodi presenti in `waypoints`; calcolando il raggio con `to_local(player.global_position)` verifica se ha linea libera sul bersaglio; se lo vede passa a `CHASE`, e se lo perde ritorna all'ultimo waypoint prima di riprendere la pattuglia.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Colloca il nemico con percorso di pattuglia in main.tscn",
+    "consegna": "Ora inserisci il nemico appena creato nel livello principale e assegna i punti per la ronda.\n\n1. In `main.tscn`, elimina il vecchio nodo `Guard` (non serve più).\n2. Aggiungi due nodi `Marker2D` figli diretti di `Main`:\n   - uno chiamato `PointA` a coordinate (300, 100);\n   - uno chiamato `PointB` a coordinate (500, 100).\n3. Istanzia `res://enemy.tscn` come figlio diretto di `Main` col nome `Enemy`, posizionalo a (300, 100) e assegna al suo array esportato `waypoints` i due nodi `PointA` e `PointB` (in quest'ordine).\n4. All'avvio del livello, il nemico deve iniziare a pattugliare tra `PointA` e `PointB`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "il-custode",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Nel pannello Scene di `main.tscn` puoi cliccare col tasto destro su `Guard` e scegliere Delete per toglierlo.",
+     "Per creare i punti di passaggio usa l'icona + e cerca Marker2D, rinominandoli `PointA` e `PointB`.",
+     "Trascina i due nodi Marker2D nell'elenco Waypoints presente nell'Inspector dell'istanza `Enemy`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "CharacterBody2D",
+      "nome": "Enemy",
+      "genitore": "Main",
+      "descrizione": "In main.tscn è presente il nodo Enemy"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Marker2D",
+      "nome": "PointA",
+      "genitore": "Main",
+      "descrizione": "In main.tscn è presente il punto PointA"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Marker2D",
+      "nome": "PointB",
+      "genitore": "Main",
+      "descrizione": "In main.tscn è presente il punto PointB"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"main.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\tvar enemy := find_by_name(main, \"Enemy\") as CharacterBody2D\n\tif not check(\"enemy_found\", enemy != null, \"Il nodo Enemy deve essere presente\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as Node2D\n\tif player != null:\n\t\tplayer.global_position = Vector2(50, 500)\n\t\n\tenemy.global_position = Vector2(300, 100)\n\tawait wait_physics_frames(40)\n\tcheck(\"enemy_patrols\", enemy.global_position.x > 310.0, \"Il nemico deve avanzare lungo la linea di pattuglia verso PointB (x = %.1f)\" % enemy.global_position.x)",
+      "descrizione": "L'istanza Enemy fa la spola tra PointA e PointB"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://enemy.tscn\" id=\"3_enemy\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"5_main\"]\n[ext_resource type=\"Script\" path=\"res://message_zone.gd\" id=\"6_zone\"]\n[ext_resource type=\"PackedScene\" path=\"res://item.tscn\" id=\"7_item\"]\n[ext_resource type=\"PackedScene\" path=\"res://door.tscn\" id=\"8_door\"]\n[ext_resource type=\"PackedScene\" path=\"res://switch.tscn\" id=\"9_switch\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"10_health\"]\n[ext_resource type=\"Script\" path=\"res://hurtbox.gd\" id=\"11_hurtbox\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n3:0/0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)\n2:1/0 = 0\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player_hurt\"]\nsize = Vector2(64, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall\"]\nsize = Vector2(32, 200)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_table\"]\nsize = Vector2(100, 50)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_chest\"]\nsize = Vector2(40, 40)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_zone\"]\nsize = Vector2(96, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_exit\"]\nsize = Vector2(64, 64)\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"5_main\")\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(80, 80)\ncollision_layer = 1\ncollision_mask = 14\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Camera2D\" type=\"Camera2D\" parent=\"Player\"]\nzoom = Vector2(2, 2)\nlimit_smoothed = true\nposition_smoothing_enabled = true\n\n[node name=\"Health\" type=\"Node\" parent=\"Player\"]\nscript = ExtResource(\"10_health\")\n\n[node name=\"Hurtbox\" type=\"Area2D\" parent=\"Player\" node_paths=PackedStringArray(\"health_component\")]\ncollision_layer = 0\ncollision_mask = 0\nscript = ExtResource(\"11_hurtbox\")\nhealth_component = NodePath(\"../Health\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player/Hurtbox\"]\nshape = SubResource(\"RectangleShape2D_player_hurt\")\n\n[node name=\"PointA\" type=\"Marker2D\" parent=\".\"]\nposition = Vector2(300, 100)\n\n[node name=\"PointB\" type=\"Marker2D\" parent=\".\"]\nposition = Vector2(500, 100)\n\n[node name=\"Enemy\" parent=\".\" node_paths=PackedStringArray(\"waypoints\") instance=ExtResource(\"3_enemy\")]\nposition = Vector2(300, 100)\nwaypoints = [NodePath(\"../PointA\"), NodePath(\"../PointB\")]\n\n[node name=\"Wall\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 200)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Wall\"]\nshape = SubResource(\"RectangleShape2D_wall\")\n\n[node name=\"Table\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 400)\ncollision_layer = 2\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Table\"]\nshape = SubResource(\"RectangleShape2D_table\")\n\n[node name=\"Chest\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 100)\ncollision_layer = 8\ncollision_mask = 0\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Chest\"]\nshape = SubResource(\"RectangleShape2D_chest\")\n\n[node name=\"UI\" type=\"CanvasLayer\" parent=\".\"]\n\n[node name=\"MessageLabel\" type=\"Label\" parent=\"UI\"]\noffset_left = 16.0\noffset_top = 16.0\noffset_right = 300.0\noffset_bottom = 39.0\n\n[node name=\"MessageZone\" type=\"Area2D\" parent=\".\" node_paths=PackedStringArray(\"message_label\")]\nposition = Vector2(250, 80)\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"6_zone\")\nmessage_label = NodePath(\"../UI/MessageLabel\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"MessageZone\"]\nshape = SubResource(\"RectangleShape2D_zone\")\n\n[node name=\"Coin\" parent=\".\" instance=ExtResource(\"7_item\")]\nposition = Vector2(160, 80)\n\n[node name=\"Heart\" parent=\".\" instance=ExtResource(\"7_item\")]\nposition = Vector2(200, 260)\nitem_type = \"heart\"\n\n[node name=\"KeyItem\" parent=\".\" instance=ExtResource(\"7_item\")]\nposition = Vector2(300, 260)\nitem_type = \"key\"\n\n[node name=\"ExitZone\" type=\"Area2D\" parent=\".\" node_paths=PackedStringArray(\"message_label\")]\nposition = Vector2(400, 520)\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"6_zone\")\nzone_message = \"Uscita bloccata: serve una chiave!\"\nmessage_label = NodePath(\"../UI/MessageLabel\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"ExitZone\"]\nshape = SubResource(\"RectangleShape2D_exit\")\n\n[node name=\"Door\" parent=\".\" instance=ExtResource(\"8_door\")]\nposition = Vector2(400, 460)\nrequires_key = true\n\n[node name=\"Gate\" parent=\".\" instance=ExtResource(\"8_door\")]\nposition = Vector2(200, 200)\n\n[node name=\"Switch\" parent=\".\" instance=ExtResource(\"9_switch\")]\nposition = Vector2(120, 200)\n\n[connection signal=\"activated\" from=\"Switch\" to=\"Gate\" method=\"open\"]\n[connection signal=\"deactivated\" from=\"Switch\" to=\"Gate\" method=\"close\"]\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Abbiamo sostituito il vecchio nodo `Guard` con l'istanza riutilizzabile della scena `Enemy`. Aggiungendo i due nodi `PointA` e `PointB` e collegandoli all'array `waypoints`, il nemico conosce la rotta su cui fare la guardia.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Inseguimento e ostacoli nella linea di vista",
+    "consegna": "Rendi reattivo il nemico completando la gestione della linea di vista e dello stato di allerta in `enemy.gd`.\n\nIl nemico deve rispettare queste regole:\n1. Quando il giocatore si trova entro `vision_distance` E il `RayCast2D` colpisce direttamente il giocatore (nessun muro intermedio sul layer 2), `current_state` deve diventare `State.CHASE` e il nemico deve puntare verso `player.global_position` con velocità `chase_speed`.\n2. Se durante l'inseguimento il giocatore esce dalla distanza di vista oppure finisce dietro un ostacolo (il `RayCast2D` intercetta un muro invece del giocatore), `current_state` deve passare a `State.RETURN`.\n3. Nello stato `RETURN`, il nemico si muove verso il waypoint memorizzato in `waypoints[current_waypoint_index]` a velocità `speed`. Appena la sua distanza dal punto diventa inferiore a `8.0` pixel, torna allo stato `State.PATROL`.\n4. Se durante `RETURN` il nemico vede di nuovo il giocatore, deve ripassare immediatamente a `State.CHASE`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "il-custode",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Prima di controllare il raggio, aggiorna `ray_cast.target_position = ray_cast.to_local(player.global_position)` ed esegui `ray_cast.force_raycast_update()`.",
+     "Controlla `ray_cast.is_colliding()` e verifica se `ray_cast.get_collider() == player`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://enemy.gd",
+      "regex": "force_raycast_update",
+      "descrizione": "Lo script enemy.gd aggiorna forzatamente il raggio con force_raycast_update"
+     },
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://enemy.gd",
+      "regex": "to_local",
+      "descrizione": "Lo script enemy.gd converte la posizione del giocatore in coordinate locali con to_local"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_loaded\", main != null, \"main.tscn deve potersi avviare\"):\n\t\treturn\n\tvar enemy := find_by_name(main, \"Enemy\") as CharacterBody2D\n\tvar player := find_by_name(main, \"Player\") as Node2D\n\tif not check(\"nodes_present\", enemy != null and player != null, \"Enemy e Player devono essere presenti\"):\n\t\treturn\n\t\n\t# Caso 1: giocatore visibile e vicino -> deve inseguire\n\tenemy.global_position = Vector2(300, 100)\n\tplayer.global_position = Vector2(350, 100)\n\tawait wait_physics_frames(25)\n\tvar state_val = get_prop(enemy, \"current_state\")\n\tcheck(\"chase_started\", int(state_val) == 1, \"Quando vede il giocatore senza ostacoli, lo stato deve essere CHASE (valore 1, attuale: %s)\" % str(state_val))\n\t\n\t# Caso 2: giocatore dietro la parete (Wall è a x=400, y=200 con altezza 200)\n\tenemy.global_position = Vector2(350, 200)\n\tplayer.global_position = Vector2(450, 200)\n\tenemy.set(\"current_state\", 0) # PATROL\n\tawait wait_physics_frames(25)\n\tvar wall_state = get_prop(enemy, \"current_state\")\n\tcheck(\"not_seeing_through_wall\", int(wall_state) != 1, \"Dietro un muro il nemico non deve entrare in CHASE (stato: %s)\" % str(wall_state))",
+      "descrizione": "Il nemico insegue in linea retta senza ostacoli e ignora il giocatore dietro un muro"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "enemy.gd",
+       "contenuto": "extends CharacterBody2D\n\nenum State { PATROL, CHASE, RETURN }\n\n@export var speed: float = 70.0\n@export var chase_speed: float = 110.0\n@export var vision_distance: float = 180.0\n@export var waypoints: Array[Node2D] = []\n\nvar current_state: State = State.PATROL\nvar current_waypoint_index: int = 0\nvar player: Node2D = null\n\n@onready var ray_cast: RayCast2D = $RayCast2D\n@onready var health: Health = $Health\n\n\nfunc _ready() -> void:\n\tif health != null:\n\t\thealth.died.connect(_on_died)\n\t\n\tvar found_player := get_tree().current_scene.find_child(\"Player\", true, false)\n\tif found_player is Node2D:\n\t\tplayer = found_player as Node2D\n\n\nfunc _physics_process(delta: float) -> void:\n\tmatch current_state:\n\t\tState.PATROL:\n\t\t\t_process_patrol()\n\t\t\t_check_for_player()\n\t\tState.CHASE:\n\t\t\t_process_chase()\n\t\t\t_check_lost_player()\n\t\tState.RETURN:\n\t\t\t_process_return()\n\t\t\t_check_for_player()\n\t\n\tmove_and_slide()\n\n\nfunc _process_patrol() -> void:\n\tif waypoints.is_empty():\n\t\tvelocity = Vector2.ZERO\n\t\treturn\n\t\n\tvar target: Node2D = waypoints[current_waypoint_index]\n\tvar direction := global_position.direction_to(target.global_position)\n\tvelocity = direction * speed\n\t\n\tif global_position.distance_to(target.global_position) < 8.0:\n\t\tcurrent_waypoint_index = (current_waypoint_index + 1) % waypoints.size()\n\n\nfunc _process_chase() -> void:\n\tif player == null:\n\t\treturn\n\tvar direction := global_position.direction_to(player.global_position)\n\tvelocity = direction * chase_speed\n\n\nfunc _process_return() -> void:\n\tif waypoints.is_empty():\n\t\tcurrent_state = State.PATROL\n\t\treturn\n\t\n\tvar target: Node2D = waypoints[current_waypoint_index]\n\tvar direction := global_position.direction_to(target.global_position)\n\tvelocity = direction * speed\n\t\n\tif global_position.distance_to(target.global_position) < 8.0:\n\t\tcurrent_state = State.PATROL\n\n\nfunc _can_see_player() -> bool:\n\tif player == null:\n\t\treturn false\n\t\n\tif global_position.distance_to(player.global_position) > vision_distance:\n\t\treturn false\n\t\n\tray_cast.target_position = ray_cast.to_local(player.global_position)\n\tray_cast.force_raycast_update()\n\t\n\tif ray_cast.is_colliding():\n\t\tvar collider := ray_cast.get_collider()\n\t\treturn collider == player\n\t\n\treturn false\n\n\nfunc _check_for_player() -> void:\n\tif _can_see_player():\n\t\tcurrent_state = State.CHASE\n\n\nfunc _check_lost_player() -> void:\n\tif not _can_see_player():\n\t\tcurrent_state = State.RETURN\n\n\nfunc _on_died() -> void:\n\tqueue_free()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La funzione `_can_see_player()` calcola in primo luogo se la distanza euclidea rientra nella portata massima (`vision_distance`). Se sì, imposta la `target_position` del raggio traducendo la posizione globale del bersaglio nello spazio locale del nodo (`to_local`). Chiamando `force_raycast_update()`, Godot ricalcola immediatamente l'intersezione fisica: se il primo corpo solido colpito è proprio `player`, la visuale è priva di muri e l'inseguimento comincia regolarmente.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Nemici: pattugliare e inseguire",
@@ -69,5 +291,10 @@
     "md": "- Gli **stati** (`enum`) separano la logica di un nemico in modalità chiare: pattuglia, inseguimento e ritorno.\n- Il nodo **RayCast2D** proietta un raggio per rilevare gli ostacoli fisici lungo la linea visiva.\n- La funzione `to_local()` converte una posizione globale di destinazione nello spazio relativo al nodo `RayCast2D`.\n- I **punti di pattuglia** (`Array[Node2D]`) consentono di posizionare nodi nel livello per creare percorsi di ronda dinamici senza cambiare lo script."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
