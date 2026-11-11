@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://main.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"enemy\", \"cerca\": {\"script\": \"res://enemy.gd\"}, \"quanti\": 1, \"da\": 1, \"a\": 7, \"deve\": \"esserci\", \"etichetta\": \"Nemico\"}], \"scritte\": [{\"testo\": \"Il nemico è posizionato correttamente sulla mappa\", \"da\": 1.5, \"a\": 6.5, \"soggetto\": \"enemy\"}]}",
+ "ragionamento": 2679,
+ "quando": "2026-11-11T09:44:30.921Z",
+ "ruolo": "ritocco"
+}

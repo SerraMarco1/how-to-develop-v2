@@ -1,0 +1,54 @@
+{
+ "n": 29,
+ "quando": "2026-11-11T09:44:20.359Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «enemy» (script = res://enemy.gd; almeno 1 da 1 a 7 s; deve muoversi): si vedono, ma si sono spostati di almeno 24 pixel solo 0 nodi su 1 (spostamento massimo 0 pixel). A 4 s: «Enemy» a (704, 168) 64×64, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16240,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 4,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "enemy",
+     "cerca": {
+      "script": "res://enemy.gd"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 7,
+     "deve": "muoversi",
+     "etichetta": "Nemico"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il nemico insegue il custode aggirando le pareti",
+     "da": 1.5,
+     "a": 6.5,
+     "soggetto": "enemy"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «enemy» (script = res://enemy.gd; almeno 1 da 1 a 7 s; deve muoversi): si vedono, ma si sono spostati di almeno 24 pixel solo 0 nodi su 1 (spostamento massimo 0 pixel). A 4 s: «Enemy» a (704, 168) 64×64, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (8298 → 251 token)"
+ ]
+}
