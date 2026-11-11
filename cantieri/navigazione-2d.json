@@ -959,7 +959,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il nemico deve muoversi verso il giocatore su superficie calpestabile\n  - Se il bersaglio non è raggiungibile il nemico azzera la velocità\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Se player è null, _process_chase non genera errori\n  - Se il bersaglio non è raggiungibile il nemico azzera la velocità\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
