@@ -922,7 +922,7 @@
    "correzioni": 2,
    "semplificato": true,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://main.tscn deve caricarsi senza errori: Parse Error: Not all code paths return a value. (res://switch.gd:39 in GDScript::reload)\nFailed to load script \"res://switch.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - Il file res://switch.gd deve caricarsi senza errori\n  - La scena principale deve funzionare senza errori: In Object of type 'Area2D': Attempt to connect nonexistent signal 'activated' to callable 'StaticBody2D(door.gd)::open'. (core/object/object.cpp:1550 in connect)\nIn Object of type 'Area2D': Attempt to connect nonexistent signal 'deactivated' to callable 'StaticBody2D(door.gd)::close'. (core/object/object.cpp:1550 in connect)\nRighe citate dagli errori:\n  switch.gd, riga 39: `func _is_player_near() -> bool:`"
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://door.gd deve caricarsi senza errori: Parse Error: Expected indented block after \"else\" block. (res://door.gd:30 in GDScript::reload)\nFailed to load script \"res://door.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  door.gd, riga 30: `else:`"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
