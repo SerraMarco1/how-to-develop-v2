@@ -1,0 +1,73 @@
+{
+ "creato": "2026-11-11T12:03:30.907Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Riusare il proprio lavoro: menu e salvataggi in un gioco diverso",
+  "sommario": "Impara a riutilizzare il sistema di impostazioni e la struttura di salvataggio creati nella visual novel per applicarli a un gioco d'azione 2D. Scoprirai come identificare in modo univoco gli elementi del livello e come registrare la posizione del giocatore, l'inventario e lo stato del mondo.",
+  "concetti": [
+   "Separazione tra codice generico e dati specifici",
+   "Identificazione univoca dei nodi nel livello (NodePath e ID)",
+   "Struttura dei dati di salvataggio per un gioco d'azione",
+   "Punto di salvataggio (checkpoint) con Area2D",
+   "Ripristino dello stato degli oggetti distrutti o modificati"
+  ],
+  "obiettivi": [
+   "Portare in un altro progetto ciò che hai già scritto: cosa è generico e cosa no",
+   "Salvare un gioco d'azione: posizione, inventario, porte aperte, oggetti presi",
+   "Dare a ogni oggetto del livello un nome che resta uguale tra le partite"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Quando hai creato la tua visual novel, hai scritto codice per salvare le impostazioni di volume, la risoluzione dello schermo e i dati di gioco su un file JSON tramite un Autoload. Quel codice non deve essere riscritto da capo per ogni nuovo progetto: la logica di lettura e scrittura su disco è completamente **generica**.\n\nIn un gioco d'azione come *Il custode*, ciò che cambia non è *come* si salva, ma *cosa* si salva. Invece di registrare il testo corrente o il nome del capitolo, devi registrare coordinate nello spazio 2D, scorte di chiavi, porte aperte e nemici eliminati."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per riutilizzare il lavoro già fatto, occorre dividere nettamente due categorie di codice:\n\n1. **Componenti generici (portabili subito)**: la finestra delle impostazioni, la gestione del volume del bus audio, la funzione che apre e chiude file JSON con `FileAccess`, i cambi di scena con `get_tree().change_scene_to_file()`.\n2. **Dati specifici (da riprogrammare)**: lo stato del giocatore (posizione `global_position`, vita, chiavi) e lo stato degli oggetti presenti nella mappa.\n\nSe un Autoload salva un `Dictionary`, ti basta cambiare i campi scritti in quel dizionario per adattare l'intero sistema a un gioco completamente diverso."
+   },
+   {
+    "tipo": "testo",
+    "md": "Nei giochi d'azione sorge un problema nuovo rispetto alle visual novel: gli oggetti nel livello cambiano stato singolarmente. Una porta può essere aperta, una chiave può essere stata raccolta, un interruttore può essere attivo.\n\nSe ricarichi il livello, Godot ricrea la scena esattamente come l'hai disegnata nell'editor. Per riapplicare le modifiche del salvataggio, devi poter dire al gioco: *\"la porta in posizione X deve aprirsi, l'oggetto in posizione Y non deve comparire perché è stato già preso\"*.\n\nPer far questo, ogni nodo salvabile deve avere un **identificatore univoco e persistente** (un nome o percorso che non cambia mai tra un riavvio e l'altro del gioco). Il modo più semplice e affidabile in Godot è usare il percorso del nodo nell'albero della scena (`get_path()`), oppure assegnare un nome univoco al nodo direttamente nell'Inspector."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "# Aggiunta a door.gd per integrare la gestione dello stato\nfunc get_save_data() -> Dictionary:\n\treturn {\n\t\t\"is_open\": is_open\n\t}\n\n\nfunc load_save_data(data: Dictionary) -> void:\n\tif data.get(\"is_open\", false):\n\t\topen()",
+    "spiegazione": "Aggiungendo due funzioni standard (`get_save_data` e `load_save_data`) ai nodi interattivi come porte e interruttori, permetti al sistema di salvataggio di leggere e ripristinare il loro stato interno senza doversi occupare dei dettagli di ogni singolo oggetto."
+   },
+   {
+    "tipo": "testo",
+    "md": "Ora che gli oggetti sanno descrivere il proprio stato, possiamo definire la struttura del dizionario principale di salvataggio per *Il custode*. Conterrà due sezioni: una per il giocatore e una per il livello."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Node\n# save_manager.gd - Autoload per salvare e caricare lo stato\n\nconst SAVE_FILE_PATH: String = \"user://save_game.json\"\n\n\nfunc save_game(player: CharacterBody2D, level_node: Node) -> void:\n\tvar save_data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"pos_x\": player.global_position.x,\n\t\t\t\"pos_y\": player.global_position.y,\n\t\t\t\"keys\": int(player.get(\"keys\")) if player.get(\"keys\") != null else 0\n\t\t},\n\t\t\"world_objects\": {}\n\t}\n\t\n\t# Registra lo stato di tutti i nodi salvabili nel livello\n\tfor node in level_node.get_children():\n\t\tif node.has_method(\"get_save_data\"):\n\t\t\tvar node_identifier: String = String(node.get_path())\n\t\t\tsave_data[\"world_objects\"][node_identifier] = node.get_save_data()\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tvar json_string: String = JSON.stringify(save_data, \"\\t\")\n\t\tfile.store_string(json_string)\n\t\tfile.close()\n\t\tprint(\"Salvataggio completato!\")\n\n\nfunc load_game(player: CharacterBody2D, level_node: Node) -> void:\n\tif not FileAccess.file_exists(SAVE_FILE_PATH):\n\t\treturn\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\t\n\tvar json_text: String = file.get_as_text()\n\tfile.close()\n\t\n\tvar json := JSON.new()\n\tif json.parse(json_text) != OK:\n\t\treturn\n\t\n\tvar save_data: Dictionary = json.data\n\t\n\t# Ripristina il giocatore\n\tif save_data.has(\"player\"):\n\t\tvar p_data: Dictionary = save_data[\"player\"]\n\t\tplayer.global_position = Vector2(p_data.get(\"pos_x\", 0.0), p_data.get(\"pos_y\", 0.0))\n\t\tplayer.set(\"keys\", p_data.get(\"keys\", 0))\n\t\n\t# Ripristina gli oggetti nel livello\n\tif save_data.has(\"world_objects\"):\n\t\tvar objects_data: Dictionary = save_data[\"world_objects\"]\n\t\tfor node_path_string in objects_data:\n\t\t\tvar target_node: Node = level_node.get_node_or_null(node_path_string)\n\t\t\tif target_node != null and target_node.has_method(\"load_save_data\"):\n\t\t\t\ttarget_node.load_save_data(objects_data[node_path_string])",
+    "spiegazione": "`SaveManager` cicla su tutti i figli del livello. Se un nodo possiede la funzione `get_save_data()`, il suo stato viene registrato sotto la chiave del suo `NodePath`. In fase di caricamento, si ritrova il nodo tramite quel percorso e gli si passa il suo dizionario salvato."
+   },
+   {
+    "tipo": "testo",
+    "md": "Nel gioco, il salvataggio deve essere attivato da un'azione del giocatore. Creeremo una scena per il **Punto di salvataggio** (un'area speciale sulla mappa, come una stele o una piattaforma). Quando il personaggio entra in quest'area e interagisce, il gioco salva lo stato corrente."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Area2D\n# save_point.gd - Punto di salvataggio nel livello\n\n@export var save_point_id: String = \"checkpoint_1\"\n\nvar _is_player_inside: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif _is_player_inside and event.is_action_pressed(\"interact\"):\n\t\t_trigger_save()\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\t_is_player_inside = true\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\t_is_player_inside = false\n\n\nfunc _trigger_save() -> void:\n\tvar current_scene := get_tree().current_scene\n\tif current_scene == null:\n\t\treturn\n\t\n\tvar player: CharacterBody2D = current_scene.find_child(\"Player\", true, false) as CharacterBody2D\n\tif player != null:\n\t\t# Richiama l'autoload SaveManager per registrare lo stato\n\t\tif Engine.has_singleton(\"SaveManager\") or get_node_or_null(\"/root/SaveManager\") != null:\n\t\t\tget_node(\"/root/SaveManager\").save_game(player, current_scene)\n\t\t\tmodulate = Color(0.3, 1.0, 0.3) # Feedback visivo temporaneo",
+    "spiegazione": "Questo script trasforma un'area 2D in un checkpoint. Quando il giocatore è sovrapposto all'area e preme il tasto di interazione `interact`, lo script recupera il nodo `Player` e la scena corrente per passarli a `SaveManager`."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando un oggetto viene raccolto (come una moneta o una chiave in `item.gd`), viene rimosso dal livello con `queue_free()`. Se ricarichi il livello, la scena viene istanziata di nuovo e l'oggetto ricomparirà a meno che il salvataggio non ne tenga traccia!\nPer gli oggetti eliminabili, salva un elenco dei loro percorsi (`collected_items: Array`) e, al caricamento del livello, chiama `queue_free()` su tutti gli oggetti presenti in quella lista prima che il giocatore possa vederli."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Le strutture di base come i file JSON, i menu di pausa e le impostazioni sono generiche e possono essere copiate direttamente da un progetto all'altro.\n- Per salvare un gioco 2D d'azione occorre registrare dati specifici: posizioni dei personaggi, parametri di stato e stato degli elementi interattivi nel mondo.\n- Usare `get_path()` o identificatori univoci permette di ritrovare esattamente i nodi del livello durante il ripristino dei dati.\n- Implementare funzioni standard come `get_save_data()` e `load_save_data()` sugli oggetti rende l'architettura pulita e facile da estendere."
+   }
+  ]
+ }
+}
