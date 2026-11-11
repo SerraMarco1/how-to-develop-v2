@@ -976,7 +976,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Oggetti spinti dalla fisica",
@@ -1058,5 +1059,10 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
