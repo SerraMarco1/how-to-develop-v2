@@ -1,0 +1,247 @@
+{
+ "n": 28,
+ "quando": "2026-11-12T08:27:01.124Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (estendi): 1 problema",
+ "spiegazione": "«Il punto di salvataggio e gli oggetti raccolti», scritto da gemini/gemini-3.6-flash. 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo il ripristino il giocatore deve trovarsi al punto di salvataggio (distanza: 102.0)\n  - L'oggetto già raccolto non deve ricomparire al riavvio del livello\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: le correzioni previste sono finite.",
+ "richieste": 0,
+ "durataMs": 4055,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo il ripristino il giocatore deve trovarsi al punto di salvataggio (distanza: 102.0)\n  - L'oggetto già raccolto non deve ricomparire al riavvio del livello\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "estendi",
+   "titolo": "Il punto di salvataggio e gli oggetti raccolti",
+   "consegna": "Completa l'architettura di salvataggio de **Il custode** aggiungendo il punto di salvataggio interattivo ed evitando che gli oggetti già raccolti ricompaiano dopo aver ricaricato la partita.\n\n1. Crea la scena `res://save_point.tscn` con script `res://save_point.gd`:\n   - Radice: `Area2D` denominata `SavePoint`, con `collision_layer = 0` e `collision_mask = 1`.\n   - Figlio `Sprite2D`: usa `icon.svg`, scala `Vector2(0.25, 0.25)` e colore modulato `Color(0.5, 0.8, 1.0, 1.0)`.\n   - Figlio `CollisionShape2D`: forma rettangolare `RectangleShape2D` di dimensioni 32x32.\n   - Nello script `save_point.gd`:\n     - Connetti i segnali `body_entered` e `body_exited` per tenere traccia se il `Player` è dentro l'area.\n     - In `_unhandled_input(event: InputEvent)`: se il giocatore è dentro l'area e viene premuta l'azione `interact`, trova il giocatore nella scena corrente e chiama `SaveManager.save_game(player, current_scene)`. Imposta `modulate = Color(0.2, 1.0, 0.2, 1.0)` come riscontro visivo dell'avvenuto salvataggio.\n2. Estendi `res://save_manager.gd` per ricordare gli oggetti raccolti:\n   - Dichiara l'array `var collected_items: Array[String] = []`.\n   - Aggiungi il metodo `func mark_item_collected(node_path: String) -> void`: inserisce il percorso in `collected_items` se non è già presente.\n   - In `save_game`: salva nell'oggetto principale del JSON l'elenco `\"collected_items\"`.\n   - In `load_game`: carica la lista salvata in `collected_items` e, per ogni percorso memorizzato, individua il nodo corrispondente con `level_node.get_node_or_null(node_path)` e chiama su di esso `queue_free()`.\n3. Aggiorna `res://item.gd`:\n   - In `_on_body_entered(body: Node2D)`, prima di `queue_free()`, avvisa il gestore richiamando `SaveManager.mark_item_collected(String(get_path()))`.\n4. In `main.tscn` istanzia un nodo `SavePoint` (da `res://save_point.tscn`, posizione Vector2(300, 80)) e un nodo `Item` (da `res://item.tscn`, posizione Vector2(140, 80), con `item_type = \"key\"`).",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "il-custode",
+   "passiGuida": [],
+   "suggerimenti": [
+    "In `item.gd` puoi accedere all'Autoload direttamente con il nome singleton `SaveManager`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://save_point.tscn",
+     "descrizione": "La scena save_point.tscn esiste nel progetto"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "Area2D",
+     "nome": "SavePoint",
+     "genitore": "Main",
+     "descrizione": "Nella scena main.tscn è presente l'istanza di SavePoint"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena main.tscn deve istanziarsi correttamente\"):\n\t\treturn\n\t\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar save_point := find_by_name(main, \"SavePoint\") as Area2D\n\tvar door := find_by_name(main, \"Door\")\n\tvar item := find_by_name(main, \"Item\")\n\t\n\tif not check(\"elements\", player != null and save_point != null and door != null and item != null, \"Nella scena principale servono Player, SavePoint, Door e Item\"):\n\t\treturn\n\t\n\t# 1. Raccogliamo la chiave muovendo il giocatore sopra l'oggetto\n\tplayer.global_position = (item as Node2D).global_position\n\tawait wait_physics_frames(4)\n\t\n\tvar keys_count: int = int(player.get(\"keys\"))\n\tcheck(\"key_picked\", keys_count >= 1, \"Raccogliendo la chiave, player.keys deve essere aumentato ad almeno 1 (trovato: %d)\" % keys_count)\n\t\n\t# 2. Apriamo la porta con la chiave\n\tcall_if_exists(door, \"open\")\n\tawait wait_physics_frames(2)\n\t\n\t# 3. Ci spostiamo sul SavePoint e premiamo interact per salvare\n\tplayer.global_position = save_point.global_position\n\tawait wait_physics_frames(4)\n\tawait tap_action(\"interact\")\n\tawait wait_physics_frames(4)\n\t\n\tvar mod_color: Color = save_point.modulate\n\tcheck(\"save_feedback\", mod_color.g > 0.8, \"Il SavePoint deve dare riscontro visivo diventando verde dopo il salvataggio\")\n\t\n\t# 4. Istanziamo una nuova istanza pulita della scena principale per simulare riavvio/continua\n\tvar fresh_main := await instantiate_main_scene()\n\tvar fresh_player := find_by_name(fresh_main, \"Player\") as CharacterBody2D\n\tvar fresh_door := find_by_name(fresh_main, \"Door\")\n\tvar save_mgr: Node = fresh_main.get_node_or_null(\"/root/SaveManager\")\n\t\n\tcall_if_exists(save_mgr, \"load_game\", [fresh_player, fresh_main])\n\tawait wait_physics_frames(4)\n\t\n\t# Verifichiamo i dati ripristinati\n\tvar p_dist: float = fresh_player.global_position.distance_to(save_point.global_position)\n\tcheck(\"player_at_savepoint\", p_dist < 4.0, \"Dopo il ripristino il giocatore deve trovarsi al punto di salvataggio (distanza: %.1f)\" % p_dist)\n\t\n\tvar is_door_open: bool = bool(get_prop(fresh_door, \"is_open\", false))\n\tcheck(\"door_still_open\", is_door_open == true, \"La porta deve essere ancora aperta nel gioco ricaricato\")\n\t\n\tvar reloaded_item := find_by_name(fresh_main, \"Item\")\n\tcheck(\"item_not_respawned\", reloaded_item == null or reloaded_item.is_queued_for_deletion(), \"L'oggetto già raccolto non deve ricomparire al riavvio del livello\")\n",
+     "descrizione": "Interagire col SavePoint registra porte, posizione e impedisce la ricomparsa degli oggetti raccolti al ricaricamento"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Il custode\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[autoload]\n\nSaveManager=\"*res://save_manager.gd\"\n\n[layer_names]\n\n2d_physics/layer_1=\"Player\"\n2d_physics/layer_2=\"Environment\"\n2d_physics/layer_3=\"Enemies\"\n2d_physics/layer_4=\"Items\"\n\n[input]\n\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nsprint={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194325,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\ninteract={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":69,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "switch.gd",
+      "contenuto": "extends Area2D\n\nsignal activated\nsignal deactivated\n\n@export var is_active: bool = false\n\nvar is_player_nearby: bool = false\nvar _frame_count: int = 0\nvar _last_interact_frame: int = -1\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\t_update_visual()\n\n\nfunc _process(_delta: float) -> void:\n\t_frame_count += 1\n\tif Input.is_action_just_pressed(\"interact\"):\n\t\t_try_interact()\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"interact\"):\n\t\t_try_interact()\n\n\nfunc _try_interact() -> void:\n\tif _last_interact_frame == _frame_count:\n\t\treturn\n\t_last_interact_frame = _frame_count\n\t\n\tif _is_player_near():\n\t\ttoggle()\n\n\nfunc _is_player_near() -> bool:\n\tif is_player_nearby:\n\t\treturn true\n\tfor body in get_overlapping_bodies():\n\t\tif body.name == \"Player\":\n\t\t\treturn true\n\tvar current_scene := get_tree().current_scene\n\tif current_scene != null:\n\t\tvar scene_player: Node = current_scene.find_child(\"Player\", true, false)\n\t\tif scene_player != null and scene_player is Node2D:\n\t\t\tvar n2d := scene_player as Node2D\n\t\t\tif global_position.distance_to(n2d.global_position) < 40.0:\n\t\t\t\treturn true\n\treturn false\n\n\nfunc toggle() -> void:\n\tis_active = not is_active\n\t_update_visual()\n\tif is_active:\n\t\tactivated.emit()\n\telse:\n\t\tdeactivated.emit()\n\n\nfunc _update_visual() -> void:\n\tif is_active:\n\t\tmodulate = Color(0.4, 1.0, 0.4)\n\telse:\n\t\tmodulate = Color(1.0, 0.4, 0.4)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_nearby = true\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_nearby = false\n"
+     },
+     {
+      "percorso": "switch.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://switch.gd\" id=\"1_switch\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_switch\"]\nsize = Vector2(32, 32)\n\n[node name=\"Switch\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"1_switch\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_switch\")\n"
+     },
+     {
+      "percorso": "guard.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 120.0\n@export var acceleration: float = 800.0\n@export var friction: float = 600.0\n@export var target_position: Vector2 = Vector2.ZERO\n\n@onready var health: Health = $Health\n\n\nfunc _ready() -> void:\n\tif health != null:\n\t\thealth.died.connect(_on_died)\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 4.0:\n\t\tvar direction: Vector2 = global_position.direction_to(target_position)\n\t\tif direction != Vector2.ZERO:\n\t\t\trotation = direction.angle()\n\t\t\tvar target_velocity: Vector2 = direction * speed\n\t\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\t\n\tmove_and_slide()\n\n\nfunc _on_died() -> void:\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "message_zone.gd",
+      "contenuto": "extends Area2D\n\n@export var zone_message: String = \"Premi Shift per scattare!\"\n@export var message_label: Label\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = zone_message\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\" and message_label != null:\n\t\tmessage_label.text = \"\"\n"
+     },
+     {
+      "percorso": "item.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/coin.png\" id=\"1_coin\"]\n[ext_resource type=\"Script\" path=\"res://item.gd\" id=\"2_item\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_item\"]\nradius = 8.0\n\n[node name=\"Item\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"2_item\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"1_coin\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_item\")\n"
+     },
+     {
+      "percorso": "bullet.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n[ext_resource type=\"Script\" path=\"res://hitbox.gd\" id=\"3_hitbox\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_bullet\"]\nradius = 10.0\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_hit\"]\nradius = 10.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 6\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.15, 0.15)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_bullet\")\n\n[node name=\"LifetimeTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\none_shot = true\n\n[node name=\"Hitbox\" type=\"Area2D\" parent=\".\"]\ncollision_layer = 0\ncollision_mask = 0\nscript = ExtResource(\"3_hitbox\")\ndamage = 1\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Hitbox\"]\nshape = SubResource(\"CircleShape2D_hit\")\n"
+     },
+     {
+      "percorso": "bullet.gd",
+      "contenuto": "extends Area2D\n\n@export var speed: float = 400.0\n\nvar direction: Vector2 = Vector2.RIGHT\n\n@onready var lifetime_timer: Timer = $LifetimeTimer\n@onready var hitbox: Hitbox = $Hitbox\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tlifetime_timer.timeout.connect(_on_lifetime_timer_timeout)\n\tlifetime_timer.start()\n\tif hitbox != null:\n\t\thitbox.area_entered.connect(_on_hitbox_area_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tglobal_position += direction * speed * delta\n\n\nfunc _on_body_entered(_body: Node2D) -> void:\n\tqueue_free()\n\n\nfunc _on_hitbox_area_entered(area: Area2D) -> void:\n\tif area is Hurtbox:\n\t\tqueue_free()\n\n\nfunc _on_lifetime_timer_timeout() -> void:\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "health.gd",
+      "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(current: int, max_hp: int)\nsignal died\n\n@export var max_health: int = 3\n@export var invincibility_time: float = 0.5\n\nvar current_health: int\nvar is_invincible: bool = false\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif is_invincible or amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = max(0, current_health - amount)\n\thealth_changed.emit(current_health, max_health)\n\t\n\tif current_health == 0:\n\t\tdied.emit()\n\telif invincibility_time > 0.0:\n\t\t_start_invincibility()\n\n\nfunc heal(amount: int) -> void:\n\tif amount <= 0:\n\t\treturn\n\t\n\tcurrent_health = min(max_health, current_health + amount)\n\thealth_changed.emit(current_health, max_health)\n\n\nfunc _start_invincibility() -> void:\n\tis_invincible = true\n\tawait get_tree().create_timer(invincibility_time).timeout\n\tis_invincible = false\n"
+     },
+     {
+      "percorso": "hitbox.gd",
+      "contenuto": "class_name Hitbox\nextends Area2D\n\n@export var damage: int = 1\n"
+     },
+     {
+      "percorso": "hurtbox.gd",
+      "contenuto": "class_name Hurtbox\nextends Area2D\n\n@export var health_component: Health\n\n\nfunc _ready() -> void:\n\tarea_entered.connect(_on_area_entered)\n\n\nfunc _on_area_entered(area: Area2D) -> void:\n\tif area is Hitbox:\n\t\tvar hitbox := area as Hitbox\n\t\tif health_component != null:\n\t\t\thealth_component.take_damage(hitbox.damage)\n"
+     },
+     {
+      "percorso": "enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy_tex\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"3_health\"]\n[ext_resource type=\"Script\" path=\"res://hurtbox.gd\" id=\"4_hurtbox\"]\n[ext_resource type=\"Script\" path=\"res://hitbox.gd\" id=\"5_hitbox\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(32, 32)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hurt\"]\nsize = Vector2(32, 32)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(32, 32)\n\n[node name=\"Enemy\" type=\"CharacterBody2D\"]\ncollision_layer = 4\ncollision_mask = 2\nscript = ExtResource(\"1_enemy\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy_tex\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"RayCast2D\" type=\"RayCast2D\" parent=\".\"]\ncollision_mask = 3\n\n[node name=\"NavigationAgent2D\" type=\"NavigationAgent2D\" parent=\".\"]\n\n[node name=\"PathTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 0.2\nautostart = true\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"3_health\")\nmax_health = 2\n\n[node name=\"Hurtbox\" type=\"Area2D\" parent=\".\" node_paths=PackedStringArray(\"health_component\")]\ncollision_layer = 4\ncollision_mask = 0\nscript = ExtResource(\"4_hurtbox\")\nhealth_component = NodePath(\"../Health\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Hurtbox\"]\nshape = SubResource(\"RectangleShape2D_hurt\")\n\n[node name=\"Hitbox\" type=\"Area2D\" parent=\".\"]\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"5_hitbox\")\ndamage = 1\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Hitbox\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node2D\n\n@onready var ground: TileMapLayer = $Ground\n@onready var walls: TileMapLayer = $Walls\n@onready var decoration: TileMapLayer = $Decoration\n@onready var camera: Camera2D = $Player/Camera2D\n\n\nfunc _ready() -> void:\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tground.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))\n\t\n\tfor x in range(50):\n\t\tfor y in range(35):\n\t\t\tif (x == 0 or x == 49 or y == 0 or y == 34) and not (x == 25 and y == 34):\n\t\t\t\twalls.set_cell(Vector2i(x, y), 0, Vector2i(3, 0))\n\t\t\telse:\n\t\t\t\twalls.set_cell(Vector2i(x, y), -1)\n\t\n\tdecoration.set_cell(Vector2i(3, 3), 0, Vector2i(2, 1))\n\t\n\tsetup_camera_limits()\n\n\nfunc setup_camera_limits() -> void:\n\tvar used_rect: Rect2i = ground.get_used_rect()\n\tvar tile_size: Vector2i = ground.tile_set.tile_size\n\t\n\tcamera.limit_left = used_rect.position.x * tile_size.x\n\tcamera.limit_top = used_rect.position.y * tile_size.y\n\tcamera.limit_right = used_rect.end.x * tile_size.x\n\tcamera.limit_bottom = used_rect.end.y * tile_size.y\n\tcamera.reset_smoothing()\n"
+     },
+     {
+      "percorso": "enemy.gd",
+      "contenuto": "extends CharacterBody2D\n\nenum State { PATROL, CHASE, RETURN }\n\n@export var speed: float = 70.0\n@export var chase_speed: float = 110.0\n@export var vision_distance: float = 180.0\n@export var waypoints: Array[Node2D] = []\n\nvar current_state: State = State.PATROL\nvar current_waypoint_index: int = 0\nvar player: Node2D = null\n\n@onready var ray_cast: RayCast2D = $RayCast2D\n@onready var health: Health = $Health\n@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D\n@onready var path_timer: Timer = $PathTimer\n\n\nfunc _ready() -> void:\n\tif health != null:\n\t\thealth.died.connect(_on_died)\n\t\n\tpath_timer.timeout.connect(_on_path_timer_timeout)\n\t\n\tvar current_scene := get_tree().current_scene\n\tif current_scene != null:\n\t\tvar found_player := current_scene.find_child(\"Player\", true, false)\n\t\tif found_player is Node2D:\n\t\t\tplayer = found_player as Node2D\n\t\n\t_setup_navigation.call_deferred()\n\n\nfunc _setup_navigation() -> void:\n\tawait get_tree().physics_frame\n\t_update_navigation_target()\n\n\nfunc _physics_process(delta: float) -> void:\n\tmatch current_state:\n\t\tState.PATROL:\n\t\t\t_process_patrol()\n\t\t\t_check_for_player()\n\t\tState.CHASE:\n\t\t\t_process_chase()\n\t\t\t_check_lost_player()\n\t\tState.RETURN:\n\t\t\t_process_return()\n\t\t\t_check_for_player()\n\t\n\tmove_and_slide()\n\n\nfunc _process_patrol() -> void:\n\tif waypoints.is_empty():\n\t\tvelocity = Vector2.ZERO\n\t\treturn\n\t\n\tvar target: Node2D = waypoints[current_waypoint_index]\n\tif target == null:\n\t\treturn\n\t\n\tif global_position.distance_to(target.global_position) < 8.0:\n\t\tcurrent_waypoint_index = (current_waypoint_index + 1) % waypoints.size()\n\t\ttarget = waypoints[current_waypoint_index]\n\t\tif target == null:\n\t\t\treturn\n\t\n\tvar direction := global_position.direction_to(target.global_position)\n\tvelocity = direction * speed\n\n\nfunc _process_chase() -> void:\n\tif player == null:\n\t\tvelocity = Vector2.ZERO\n\t\treturn\n\tif navigation_agent.is_navigation_finished():\n\t\tvelocity = Vector2.ZERO\n\t\treturn\n\tvar next_position: Vector2 = navigation_agent.get_next_path_position()\n\tvar direction := global_position.direction_to(next_position)\n\tvelocity = direction * chase_speed\n\n\nfunc _process_return() -> void:\n\tif waypoints.is_empty():\n\t\tcurrent_state = State.PATROL\n\t\treturn\n\t\n\tvar target: Node2D = waypoints[current_waypoint_index]\n\tif target == null:\n\t\treturn\n\t\n\tif navigation_agent.is_navigation_finished() or global_position.distance_to(target.global_position) < 8.0:\n\t\tcurrent_state = State.PATROL\n\t\tvelocity = Vector2.ZERO\n\t\treturn\n\t\n\tvar next_position: Vector2 = navigation_agent.get_next_path_position()\n\tvar direction := global_position.direction_to(next_position)\n\tvelocity = direction * speed\n\n\nfunc _update_navigation_target() -> void:\n\tmatch current_state:\n\t\tState.CHASE:\n\t\t\tif player != null:\n\t\t\t\tnavigation_agent.target_position = player.global_position\n\t\tState.RETURN:\n\t\t\tif not waypoints.is_empty() and waypoints[current_waypoint_index] != null:\n\t\t\t\tnavigation_agent.target_position = waypoints[current_waypoint_index].global_position\n\n\nfunc _on_path_timer_timeout() -> void:\n\tif current_state == State.CHASE or current_state == State.RETURN:\n\t\t_update_navigation_target()\n\n\nfunc _can_see_player() -> bool:\n\tif player == null:\n\t\treturn false\n\t\n\tif global_position.distance_to(player.global_position) > vision_distance:\n\t\treturn false\n\t\n\tray_cast.target_position = ray_cast.to_local(player.global_position)\n\tray_cast.force_raycast_update()\n\t\n\tif ray_cast.is_colliding():\n\t\tvar collider := ray_cast.get_collider()\n\t\treturn collider == player\n\t\n\treturn false\n\n\nfunc _check_for_player() -> void:\n\tif _can_see_player():\n\t\tcurrent_state = State.CHASE\n\t\t_update_navigation_target()\n\n\nfunc _check_lost_player() -> void:\n\tif not _can_see_player():\n\t\tcurrent_state = State.RETURN\n\t\t_update_navigation_target()\n\n\nfunc _on_died() -> void:\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "crate.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_crate\"]\nsize = Vector2(32, 32)\n\n[node name=\"Crate\" type=\"RigidBody2D\"]\ncollision_layer = 2\ncollision_mask = 3\ngravity_scale = 0.0\nlock_rotation = true\nlinear_damp = 8.0\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_crate\")\n"
+     },
+     {
+      "percorso": "pressure_plate.gd",
+      "contenuto": "extends Area2D\n\nsignal pressed\nsignal released\n\n@export var is_pressed: bool = false\n\nvar _bodies_on_plate: int = 0\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\t_update_visual()\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body is CharacterBody2D or body is RigidBody2D:\n\t\t_bodies_on_plate += 1\n\t\tif not is_pressed:\n\t\t\tis_pressed = true\n\t\t\t_update_visual()\n\t\t\tpressed.emit()\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body is CharacterBody2D or body is RigidBody2D:\n\t\t_bodies_on_plate = maxi(0, _bodies_on_plate - 1)\n\t\tif _bodies_on_plate == 0 and is_pressed:\n\t\t\tis_pressed = false\n\t\t\t_update_visual()\n\t\t\treleased.emit()\n\n\nfunc _update_visual() -> void:\n\tif is_pressed:\n\t\tmodulate = Color(0.4, 1.0, 0.4)\n\t\tscale = Vector2(0.9, 0.9)\n\telse:\n\t\tmodulate = Color(0.8, 0.8, 0.8)\n\t\tscale = Vector2(1.0, 1.0)\n"
+     },
+     {
+      "percorso": "pressure_plate.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://pressure_plate.gd\" id=\"1_plate\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_plate\"]\nsize = Vector2(32, 32)\n\n[node name=\"PressurePlate\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 3\nscript = ExtResource(\"1_plate\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_plate\")\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var max_speed: float = 200.0\n@export var acceleration: float = 1200.0\n@export var friction: float = 1000.0\n@export var sprint_multiplier: float = 1.5\n@export var keys: int = 0\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar input_direction := get_input_direction()\n\tupdate_velocity(input_direction, delta)\n\tmove_and_slide()\n\n\nfunc get_input_direction() -> Vector2:\n\treturn Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\n\nfunc update_velocity(direction: Vector2, delta: float) -> void:\n\tif direction != Vector2.ZERO:\n\t\tvar current_max_speed: float = max_speed\n\t\tif Input.is_action_pressed(\"sprint\"):\n\t\t\tcurrent_max_speed *= sprint_multiplier\n\t\tvar target_velocity: Vector2 = direction * current_max_speed\n\t\tvelocity = velocity.move_toward(target_velocity, acceleration * delta)\n\telse:\n\t\tvelocity = velocity.move_toward(Vector2.ZERO, friction * delta)\n\n\nfunc collect(item_type: String, amount: int) -> void:\n\tif item_type == \"key\":\n\t\tkeys += amount\n\n\nfunc get_save_data() -> Dictionary:\n\treturn {\n\t\t\"pos_x\": global_position.x,\n\t\t\"pos_y\": global_position.y,\n\t\t\"keys\": keys\n\t}\n\n\nfunc load_save_data(data: Dictionary) -> void:\n\tglobal_position = Vector2(float(data.get(\"pos_x\", global_position.x)), float(data.get(\"pos_y\", global_position.y)))\n\tkeys = int(data.get(\"keys\", keys))\n"
+     },
+     {
+      "percorso": "door.gd",
+      "contenuto": "extends StaticBody2D\n\nsignal opened\nsignal closed\n\n@export var requires_key: bool = false\n@export var is_open: bool = false\n\n@onready var collision_shape: CollisionShape2D = $CollisionShape2D\n@onready var interaction_area: Area2D = $InteractionArea\n\n\nfunc _ready() -> void:\n\t_update_appearance()\n\n\nfunc open() -> void:\n\tif is_open:\n\t\treturn\n\tis_open = true\n\tif collision_shape != null:\n\t\tcollision_shape.set_deferred(\"disabled\", true)\n\t_update_appearance()\n\topened.emit()\n\n\nfunc close() -> void:\n\tif not is_open:\n\t\treturn\n\tis_open = false\n\tif collision_shape != null:\n\t\tcollision_shape.set_deferred(\"disabled\", false)\n\t_update_appearance()\n\tclosed.emit()\n\n\nfunc _update_appearance() -> void:\n\tif is_open:\n\t\tmodulate.a = 0.3\n\telse:\n\t\tmodulate.a = 1.0\n\n\nfunc get_save_data() -> Dictionary:\n\treturn {\n\t\t\"is_open\": is_open\n\t}\n\n\nfunc load_save_data(data: Dictionary) -> void:\n\tif data.get(\"is_open\", false):\n\t\topen()\n\telse:\n\t\tclose()\n"
+     },
+     {
+      "percorso": "door.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://door.gd\" id=\"1_door\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_door\"]\nsize = Vector2(32, 64)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_area\"]\nsize = Vector2(64, 80)\n\n[node name=\"Door\" type=\"StaticBody2D\"]\ncollision_layer = 2\ncollision_mask = 0\nscript = ExtResource(\"1_door\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_door\")\n\n[node name=\"InteractionArea\" type=\"Area2D\" parent=\".\"]\ncollision_layer = 0\ncollision_mask = 1\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"InteractionArea\"]\nshape = SubResource(\"RectangleShape2D_area\")\n"
+     },
+     {
+      "percorso": "save_point.gd",
+      "contenuto": "extends Area2D\n\nvar is_player_inside: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"interact\") and _check_player_inside():\n\t\t_trigger_save()\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_inside = true\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tis_player_inside = false\n\n\nfunc _check_player_inside() -> bool:\n\tif is_player_inside:\n\t\treturn true\n\tfor body in get_overlapping_bodies():\n\t\tif body.name == \"Player\":\n\t\t\treturn true\n\treturn false\n\n\nfunc _trigger_save() -> void:\n\tvar current_scene := get_tree().current_scene\n\tif current_scene == null or current_scene.find_child(\"Player\", true, false) == null:\n\t\tcurrent_scene = owner if owner != null else get_parent()\n\tif current_scene == null:\n\t\treturn\n\tvar player := current_scene.find_child(\"Player\", true, false) as CharacterBody2D\n\tif player != null:\n\t\tSaveManager.save_game(player, current_scene)\n\t\tmodulate = Color(0.2, 1.0, 0.2, 1.0)\n"
+     },
+     {
+      "percorso": "save_point.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://save_point.gd\" id=\"1_save_point\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_point\"]\nsize = Vector2(32, 32)\n\n[node name=\"SavePoint\" type=\"Area2D\"]\ncollision_layer = 0\ncollision_mask = 1\nscript = ExtResource(\"1_save_point\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nmodulate = Color(0.5, 0.8, 1, 1)\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_point\")\n"
+     },
+     {
+      "percorso": "save_manager.gd",
+      "contenuto": "extends Node\n\nconst SAVE_FILE_PATH: String = \"user://save_game.json\"\n\nvar collected_items: Array[String] = []\n\n\nfunc mark_item_collected(node_path: String) -> void:\n\tif not collected_items.has(node_path):\n\t\tcollected_items.append(node_path)\n\n\nfunc save_game(player: CharacterBody2D, level_node: Node) -> void:\n\tvar save_data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"pos_x\": player.global_position.x,\n\t\t\t\"pos_y\": player.global_position.y,\n\t\t\t\"keys\": int(player.get(\"keys\")) if player.get(\"keys\") != null else 0\n\t\t},\n\t\t\"world_objects\": {},\n\t\t\"collected_items\": collected_items\n\t}\n\t\n\tfor node in level_node.get_children():\n\t\tif node.has_method(\"get_save_data\"):\n\t\t\tvar node_identifier: String = String(node.get_path())\n\t\t\tsave_data[\"world_objects\"][node_identifier] = node.get_save_data()\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tvar json_string: String = JSON.stringify(save_data, \"\\t\")\n\t\tfile.store_string(json_string)\n\t\tfile.close()\n\n\nfunc load_game(player: CharacterBody2D, level_node: Node) -> void:\n\tif not FileAccess.file_exists(SAVE_FILE_PATH):\n\t\treturn\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\t\n\tvar json_text: String = file.get_as_text()\n\tfile.close()\n\t\n\tvar json := JSON.new()\n\tif json.parse(json_text) != OK:\n\t\treturn\n\t\n\tvar save_data: Dictionary = json.data\n\t\n\tif save_data.has(\"player\") and player != null:\n\t\tvar p_data: Dictionary = save_data[\"player\"]\n\t\tplayer.global_position = Vector2(float(p_data.get(\"pos_x\", 0.0)), float(p_data.get(\"pos_y\", 0.0)))\n\t\tif player.get(\"keys\") != null:\n\t\t\tplayer.set(\"keys\", int(p_data.get(\"keys\", 0)))\n\t\n\tif save_data.has(\"world_objects\") and level_node != null:\n\t\tvar objects_data: Dictionary = save_data[\"world_objects\"]\n\t\tfor node_path_string in objects_data:\n\t\t\tvar target_node: Node = level_node.get_node_or_null(node_path_string)\n\t\t\tif target_node == null or not level_node.is_ancestor_of(target_node):\n\t\t\t\ttarget_node = level_node.get_node_or_null(node_path_string.get_file())\n\t\t\t\tif target_node == null:\n\t\t\t\t\ttarget_node = level_node.find_child(node_path_string.get_file(), true, false)\n\t\t\tif target_node != null and target_node.has_method(\"load_save_data\"):\n\t\t\t\ttarget_node.load_save_data(objects_data[node_path_string])\n\t\n\tif save_data.has(\"collected_items\"):\n\t\tcollected_items.clear()\n\t\tfor item_path in save_data[\"collected_items\"]:\n\t\t\tvar str_path := String(item_path)\n\t\t\tcollected_items.append(str_path)\n\t\t\tif level_node != null:\n\t\t\t\tvar item_node: Node = level_node.get_node_or_null(str_path)\n\t\t\t\tif item_node == null or not level_node.is_ancestor_of(item_node):\n\t\t\t\t\titem_node = level_node.get_node_or_null(str_path.get_file())\n\t\t\t\t\tif item_node == null:\n\t\t\t\t\t\titem_node = level_node.find_child(str_path.get_file(), true, false)\n\t\t\t\tif item_node != null:\n\t\t\t\t\titem_node.queue_free()\n"
+     },
+     {
+      "percorso": "item.gd",
+      "contenuto": "extends Area2D\n\n@export var item_type: String = \"coin\"\n@export var amount: int = 1\n\n\nfunc _ready() -> void:\n\tif item_type == \"heart\":\n\t\tmodulate = Color(1.0, 0.3, 0.3)\n\telif item_type == \"key\":\n\t\tmodulate = Color(1.0, 0.9, 0.2)\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\":\n\t\tif body.has_method(\"collect\"):\n\t\t\tbody.collect(item_type, amount)\n\t\tSaveManager.mark_item_collected(String(get_path()))\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"5_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://door.tscn\" id=\"6_door\"]\n[ext_resource type=\"PackedScene\" path=\"res://save_point.tscn\" id=\"7_save_point\"]\n[ext_resource type=\"PackedScene\" path=\"res://item.tscn\" id=\"8_item\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n2:1/0 = 0\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"5_main\")\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(80, 80)\ncollision_layer = 1\ncollision_mask = 2\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Camera2D\" type=\"Camera2D\" parent=\"Player\"]\n\n[node name=\"Door\" parent=\".\" instance=ExtResource(\"6_door\")]\nposition = Vector2(200, 80)\n\n[node name=\"SavePoint\" parent=\".\" instance=ExtResource(\"7_save_point\")]\nposition = Vector2(300, 80)\n\n[node name=\"Item\" parent=\".\" instance=ExtResource(\"8_item\")]\nposition = Vector2(140, 80)\nitem_type = \"key\"\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Il custode",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "shoot",
+       "tasti": [
+        "MouseLeft"
+       ]
+      },
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "sprint",
+       "tasti": [
+        "Shift"
+       ]
+      },
+      {
+       "nome": "interact",
+       "tasti": [
+        "E"
+       ]
+      }
+     ],
+     "autoload": [
+      {
+       "nome": "SaveManager",
+       "percorso": "res://save_manager.gd"
+      }
+     ],
+     "impostazioni": [
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_1",
+       "valore": "Player"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_2",
+       "valore": "Environment"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_3",
+       "valore": "Enemies"
+      },
+      {
+       "sezione": "layer_names",
+       "chiave": "2d_physics/layer_4",
+       "valore": "Items"
+      }
+     ]
+    },
+    "spiegazione": "Abbiamo creato il nodo `SavePoint` che avvia il salvataggio quando il custode interagisce nell'area. Per gestire la permanenza degli oggetti rimossi (`queue_free()`), `item.gd` notifica a `SaveManager` il proprio percorso prima di svanire; al caricamento, `SaveManager` elimina preventivamente tutti i nodi presenti nell'elenco `collected_items`, garantendo che monete o chiavi raccolte non ricompaiano.",
+    "cambiati": [
+     "save_point.gd",
+     "save_point.tscn",
+     "save_manager.gd",
+     "item.gd",
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
