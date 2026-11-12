@@ -588,5 +588,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "profilare": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
