@@ -889,5 +889,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test finale è una copia identica dell'esercizio 2 ('Estendere il salvataggio con monete e allerta'), con il medesimo titolo, la stessa consegna e lo stesso script di verifica.",
+    "correzione": "Sostituisci il test con una prova distinta che verifichi in modo integrato gli obiettivi della lezione (ad esempio verificando il salvataggio e il ripristino contemporaneo di posizione del giocatore, chiavi possedute e stato delle porte nel livello).",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
