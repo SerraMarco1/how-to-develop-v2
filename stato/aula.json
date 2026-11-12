@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-12T09:42:02.150Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-12T10:00:40.719Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "riusare-il-guscio",
-  "numero": "7.12",
-  "titolo": "Riusare il proprio lavoro: menu e salvataggi in un gioco diverso"
+  "slug": "profilare",
+  "numero": "7.13",
+  "titolo": "Quando il gioco rallenta: misurare"
  },
- "messaggio": "Sta scrivendo la lezione 7.12 «Riusare il proprio lavoro: menu e salvataggi in un gioco diverso».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.13 riprende da sola appena rispondono.",
+ "riprende": "2026-11-12T10:10:40.719Z"
 }
