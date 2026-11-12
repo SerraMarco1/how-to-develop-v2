@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-11T12:03:29.406Z",
+ "aggiornato": "2026-11-12T09:45:33.447Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1028,6 +1028,15 @@
    "file": "lezioni/f07-azione-2d/rigidbody2d.json",
    "sha256": "7141e268f876bb3c6897cc432e677b9dcb88ecaffcbff8f89dc47d058d2c0623",
    "byte": 148456
+  },
+  {
+   "slug": "riusare-il-guscio",
+   "numero": "7.12",
+   "titolo": "Riusare il proprio lavoro: menu e salvataggi in un gioco diverso",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/riusare-il-guscio.json",
+   "sha256": "2b0f8c2b3c6740e8669a0ba9b268fb874b6a04af7e3de98b6d0261ea49b789c6",
+   "byte": 128823
   }
  ],
  "documentazione": {
