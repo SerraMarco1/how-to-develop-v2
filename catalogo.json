@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-12T13:13:40.688Z",
+ "aggiornato": "2026-11-12T13:25:30.934Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1042,10 +1042,10 @@
    "slug": "profilare",
    "numero": "7.13",
    "titolo": "Quando il gioco rallenta: misurare",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f07-azione-2d/profilare.json",
-   "sha256": "2df735db455dc1cded616d267caf8c88b3cc6792c1279e557bf9995736d2b104",
-   "byte": 138049
+   "sha256": "b5cc388c4e6993a33947c8236f0b1a285945df4757de930c679423a325a38ce3",
+   "byte": 140131
   }
  ],
  "documentazione": {
