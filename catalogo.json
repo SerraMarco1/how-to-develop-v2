@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-12T09:45:33.447Z",
+ "aggiornato": "2026-11-12T13:13:40.688Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1037,6 +1037,15 @@
    "file": "lezioni/f07-azione-2d/riusare-il-guscio.json",
    "sha256": "2b0f8c2b3c6740e8669a0ba9b268fb874b6a04af7e3de98b6d0261ea49b789c6",
    "byte": 128823
+  },
+  {
+   "slug": "profilare",
+   "numero": "7.13",
+   "titolo": "Quando il gioco rallenta: misurare",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/profilare.json",
+   "sha256": "2df735db455dc1cded616d267caf8c88b3cc6792c1279e557bf9995736d2b104",
+   "byte": 138049
   }
  ],
  "documentazione": {
