@@ -224,7 +224,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "main.tscn: la scena non contiene nessun nodo (`[node name=\"...\" type=\"...\"]`)"
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://save_manager.gd deve caricarsi senza errori"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
