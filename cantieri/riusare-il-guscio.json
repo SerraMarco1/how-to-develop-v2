@@ -729,27 +729,35 @@
    "esercizio": {
     "tipo": "test",
     "genere": "estendi",
-    "titolo": "Estendere il salvataggio con monete e allerta",
-    "consegna": "Ricevi un piccolo prototipo d'azione che salva la posizione del giocatore e il numero di vite in un file JSON tramite la classe `SaveSystem`.\n\nEstendi il sistema senza alterare ciò che funziona già:\n1. Nello script `res://player_data.gd`:\n   - Aggiungi la variabile `var coins: int = 0`.\n   - Aggiungi la variabile `var alert_level: int = 1`.\n   - Aggiungi il metodo `func add_coins(amount: int) -> void` che incrementa `coins` del valore indicato.\n   - Aggiungi il metodo `func set_alert_level(level: int) -> void` che imposta `alert_level`.\n2. Nello script `res://save_system.gd`:\n   - In `save_state(player: Node2D)` salva nel dizionario del giocatore anche le chiavi `\"coins\"` e `\"alert_level\"` con i valori attuali del giocatore.\n   - In `load_state(player: Node2D)` ripristina `coins` e `alert_level` leggendoli dal file. Se una chiave non esiste nel salvataggio, assegna i valori predefiniti rispettivamente `0` e `1`.",
+    "titolo": "Salvare posizione, chiavi e porte in un nuovo gioco",
+    "consegna": "Ricevi il prototipo di un gioco d'avventura che deve riusare il sistema di salvataggio JSON.\n\nEstendi lo script del giocatore `res://player_data.gd` e la classe `SaveSystem` in `res://save_system.gd`:\n\n1. Nello script `res://player_data.gd`:\n   - Aggiungi la variabile `var keys: int = 0`.\n   - Aggiungi la variabile `var unlocked_doors: Array = []`.\n   - Aggiungi il metodo `func add_key() -> void` che incrementa `keys` di 1.\n   - Aggiungi il metodo `func unlock_door(door_name: String) -> void` che aggiunge `door_name` all'array `unlocked_doors` se non è già presente.\n2. Nello script `res://save_system.gd`:\n   - In `save_state(player: Node2D)` salva nel dizionario `\"player\"` anche la chiave `\"keys\"` (con il numero attuale di chiavi) e la chiave `\"unlocked_doors\"` (con l'array delle porte sbloccate).\n   - In `load_state(player: Node2D)` ripristina `keys` e `unlocked_doors` leggendoli dal file salvato. Se una chiave non esiste nel dizionario del salvataggio, usa come valore predefinito rispettivamente `0` e `[]`.",
     "modalita": "progetto",
     "dove": "a-parte",
+    "cartella": "salvare-posizione-chiavi-e-porte",
     "passiGuida": [],
     "suggerimenti": [
-     "Usa `player.get(\"coins\")` o accedi direttamente alla proprietà `player.coins` nel salvataggio."
+     "Usa `player.get(\"keys\")` o la proprietà `player.keys` per accedere ai dati del giocatore durante il salvataggio."
     ],
     "verifiche": [
      {
+      "tipo": "nodo",
+      "scena": "res://level.tscn",
+      "tipoNodo": "CharacterBody2D",
+      "nome": "Player",
+      "descrizione": "La scena level.tscn contiene il nodo Player"
+     },
+     {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar arena := await instantiate_main_scene()\n\tif not check(\"arena\", arena != null, \"La scena arena.tscn deve istanziarsi senza problemi\"):\n\t\treturn\n\t\n\tvar player := find_by_name(arena, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena deve esserci il nodo Player\"):\n\t\treturn\n\t\n\t# Prepariamo dati di prova\n\tplayer.global_position = Vector2(150.0, 220.0)\n\tplayer.set(\"lives\", 2)\n\tcall_if_exists(player, \"add_coins\", [12])\n\tcall_if_exists(player, \"set_alert_level\", [3])\n\tawait wait_frames(2)\n\t\n\tvar coins_before: int = int(player.get(\"coins\"))\n\tcheck(\"coins_added\", coins_before == 12, \"add_coins(12) deve portare le monete a 12 (trovate: %d)\" % coins_before)\n\t\n\t# Salviamo\n\tSaveSystem.save_state(player)\n\tawait wait_frames(2)\n\t\n\t# Azzeriamo lo stato locale\n\tplayer.global_position = Vector2.ZERO\n\tplayer.set(\"lives\", 1)\n\tplayer.set(\"coins\", 0)\n\tplayer.set(\"alert_level\", 1)\n\tawait wait_frames(2)\n\t\n\t# Carichiamo e controlliamo\n\tSaveSystem.load_state(player)\n\tawait wait_frames(2)\n\t\n\tvar dist: float = player.global_position.distance_to(Vector2(150.0, 220.0))\n\tcheck(\"pos_ok\", dist < 1.0, \"La posizione deve essere ripristinata correttamente\")\n\tcheck(\"lives_ok\", int(player.get(\"lives\")) == 2, \"Il conteggio vite deve rimanere 2\")\n\tcheck(\"coins_loaded\", int(player.get(\"coins\")) == 12, \"Le monete salvate devono tornare a 12 (trovate: %d)\" % int(player.get(\"coins\")))\n\tcheck(\"alert_loaded\", int(player.get(\"alert_level\")) == 3, \"Il livello di allerta caricato deve essere 3 (trovato: %d)\" % int(player.get(\"alert_level\")))\n",
-      "descrizione": "Il sistema salva e carica monete e allerta mantenendo attive vite e posizioni"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar level := await instantiate_main_scene()\n\tif not check(\"level\", level != null, \"La scena principale level.tscn deve istanziarsi senza errori\"):\n\t\treturn\n\t\n\tvar player := find_by_name(level, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena deve esserci il nodo Player\"):\n\t\treturn\n\t\n\tplayer.global_position = Vector2(200.0, 150.0)\n\tplayer.set(\"health\", 80)\n\tcall_if_exists(player, \"add_key\")\n\tcall_if_exists(player, \"add_key\")\n\tcall_if_exists(player, \"unlock_door\", [\"door_north\"])\n\tcall_if_exists(player, \"unlock_door\", [\"door_east\"])\n\tawait wait_frames(2)\n\t\n\tvar keys_before: int = int(player.get(\"keys\"))\n\tcheck(\"keys_added\", keys_before == 2, \"add_key() chiamato due volte deve portare le chiavi a 2 (trovate: %d)\" % keys_before)\n\t\n\tvar doors_before = player.get(\"unlocked_doors\")\n\tvar count_before: int = doors_before.size() if typeof(doors_before) == TYPE_ARRAY else 0\n\tcheck(\"doors_added\", count_before == 2, \"unlock_door() deve registrare 2 porte (trovate: %d)\" % count_before)\n\t\n\tSaveSystem.save_state(player)\n\tawait wait_frames(2)\n\t\n\tplayer.global_position = Vector2.ZERO\n\tplayer.set(\"health\", 100)\n\tplayer.set(\"keys\", 0)\n\tplayer.set(\"unlocked_doors\", [])\n\tawait wait_frames(2)\n\t\n\tSaveSystem.load_state(player)\n\tawait wait_frames(2)\n\t\n\tvar dist: float = player.global_position.distance_to(Vector2(200.0, 150.0))\n\tcheck(\"pos_ok\", dist < 1.0, \"La posizione salvata deve essere ripristinata correttamente (distanza: %.1f)\" % dist)\n\tcheck(\"health_ok\", int(player.get(\"health\")) == 80, \"La salute salvata deve tornare a 80\")\n\tcheck(\"keys_loaded\", int(player.get(\"keys\")) == 2, \"Le chiavi salvate devono tornare a 2 (trovate: %d)\" % int(player.get(\"keys\")))\n\t\n\tvar doors_after = player.get(\"unlocked_doors\")\n\tvar doors_arr: Array = doors_after if typeof(doors_after) == TYPE_ARRAY else []\n\tvar contains_both: bool = doors_arr.has(\"door_north\") and doors_arr.has(\"door_east\")\n\tcheck(\"doors_loaded\", contains_both and doors_arr.size() == 2, \"L'array unlocked_doors deve contenere [\\\"door_north\\\", \\\"door_east\\\"] dopo il caricamento\")\n",
+      "descrizione": "Il sistema salva e ripristina contemporaneamente posizione, salute, chiavi possedute e porte sbloccate"
      }
     ],
     "previsioni": [],
     "daTrovare": [],
     "partenza": {
      "progetto": {
-      "nome": "MiniSave",
-      "scenaPrincipale": "res://arena.tscn",
+      "nome": "DungeonSave",
+      "scenaPrincipale": "res://level.tscn",
       "azioni": [],
       "autoload": [],
       "impostazioni": []
@@ -757,19 +765,19 @@
      "file": [
       {
        "percorso": "project.godot",
-       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"MiniSave\"\nrun/main_scene=\"res://arena.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"DungeonSave\"\nrun/main_scene=\"res://level.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
       },
       {
        "percorso": "player_data.gd",
-       "contenuto": "extends CharacterBody2D\n\nvar lives: int = 3\n\n\nfunc take_hit() -> void:\n\tlives = maxi(0, lives - 1)\n"
+       "contenuto": "extends CharacterBody2D\n\nvar health: int = 100\n\n\nfunc take_damage(amount: int) -> void:\n\thealth = maxi(0, health - amount)\n"
       },
       {
        "percorso": "save_system.gd",
-       "contenuto": "class_name SaveSystem\nextends Node\n\nconst SAVE_PATH: String = \"user://mini_save.json\"\n\n\nstatic func save_state(player: Node2D) -> void:\n\tvar data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"x\": player.global_position.x,\n\t\t\t\"y\": player.global_position.y,\n\t\t\t\"lives\": int(player.get(\"lives\")) if player.get(\"lives\") != null else 3\n\t\t}\n\t}\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(JSON.stringify(data))\n\t\tfile.close()\n\n\nstatic func load_state(player: Node2D) -> void:\n\tif not FileAccess.file_exists(SAVE_PATH):\n\t\treturn\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\tvar text := file.get_as_text()\n\tfile.close()\n\tvar json := JSON.new()\n\tif json.parse(text) != OK:\n\t\treturn\n\tvar data: Dictionary = json.data\n\tif data.has(\"player\"):\n\t\tvar p: Dictionary = data[\"player\"]\n\t\tplayer.global_position = Vector2(float(p.get(\"x\", 0.0)), float(p.get(\"y\", 0.0)))\n\t\tif player.get(\"lives\") != null:\n\t\t\tplayer.set(\"lives\", int(p.get(\"lives\", 3)))\n"
+       "contenuto": "class_name SaveSystem\nextends Node\n\nconst SAVE_PATH: String = \"user://dungeon_save.json\"\n\n\nstatic func save_state(player: Node2D) -> void:\n\tvar data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"x\": player.global_position.x,\n\t\t\t\"y\": player.global_position.y,\n\t\t\t\"health\": int(player.get(\"health\")) if player.get(\"health\") != null else 100\n\t\t}\n\t}\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(JSON.stringify(data))\n\t\tfile.close()\n\n\nstatic func load_state(player: Node2D) -> void:\n\tif not FileAccess.file_exists(SAVE_PATH):\n\t\treturn\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\tvar text := file.get_as_text()\n\tfile.close()\n\tvar json := JSON.new()\n\tif json.parse(text) != OK:\n\t\treturn\n\tvar data: Dictionary = json.data\n\tif data.has(\"player\"):\n\t\tvar p: Dictionary = data[\"player\"]\n\t\tplayer.global_position = Vector2(float(p.get(\"x\", 0.0)), float(p.get(\"y\", 0.0)))\n\t\tif player.get(\"health\") != null:\n\t\t\tplayer.set(\"health\", int(p.get(\"health\", 100)))\n"
       },
       {
-       "percorso": "arena.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player_data.gd\" id=\"1_player\"]\n\n[node name=\"Arena\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nscript = ExtResource(\"1_player\")\n"
+       "percorso": "level.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player_data.gd\" id=\"1_player\"]\n\n[node name=\"Level\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nscript = ExtResource(\"1_player\")\n"
       }
      ]
     },
@@ -777,37 +785,36 @@
      "file": [
       {
        "percorso": "project.godot",
-       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"MiniSave\"\nrun/main_scene=\"res://arena.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"DungeonSave\"\nrun/main_scene=\"res://level.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
       },
       {
        "percorso": "player_data.gd",
-       "contenuto": "extends CharacterBody2D\n\nvar lives: int = 3\nvar coins: int = 0\nvar alert_level: int = 1\n\n\nfunc take_hit() -> void:\n\tlives = maxi(0, lives - 1)\n\n\nfunc add_coins(amount: int) -> void:\n\tcoins += amount\n\n\nfunc set_alert_level(level: int) -> void:\n\talert_level = level\n"
+       "contenuto": "extends CharacterBody2D\n\nvar health: int = 100\nvar keys: int = 0\nvar unlocked_doors: Array = []\n\n\nfunc take_damage(amount: int) -> void:\n\thealth = maxi(0, health - amount)\n\n\nfunc add_key() -> void:\n\tkeys += 1\n\n\nfunc unlock_door(door_name: String) -> void:\n\tif not unlocked_doors.has(door_name):\n\t\tunlocked_doors.append(door_name)\n"
       },
       {
        "percorso": "save_system.gd",
-       "contenuto": "class_name SaveSystem\nextends Node\n\nconst SAVE_PATH: String = \"user://mini_save.json\"\n\n\nstatic func save_state(player: Node2D) -> void:\n\tvar data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"x\": player.global_position.x,\n\t\t\t\"y\": player.global_position.y,\n\t\t\t\"lives\": int(player.get(\"lives\")) if player.get(\"lives\") != null else 3,\n\t\t\t\"coins\": int(player.get(\"coins\")) if player.get(\"coins\") != null else 0,\n\t\t\t\"alert_level\": int(player.get(\"alert_level\")) if player.get(\"alert_level\") != null else 1\n\t\t}\n\t}\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(JSON.stringify(data))\n\t\tfile.close()\n\n\nstatic func load_state(player: Node2D) -> void:\n\tif not FileAccess.file_exists(SAVE_PATH):\n\t\treturn\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\tvar text := file.get_as_text()\n\tfile.close()\n\tvar json := JSON.new()\n\tif json.parse(text) != OK:\n\t\treturn\n\tvar data: Dictionary = json.data\n\tif data.has(\"player\"):\n\t\tvar p: Dictionary = data[\"player\"]\n\t\tplayer.global_position = Vector2(float(p.get(\"x\", 0.0)), float(p.get(\"y\", 0.0)))\n\t\tif player.get(\"lives\") != null:\n\t\t\tplayer.set(\"lives\", int(p.get(\"lives\", 3)))\n\t\tif player.get(\"coins\") != null:\n\t\t\tplayer.set(\"coins\", int(p.get(\"coins\", 0)))\n\t\tif player.get(\"alert_level\") != null:\n\t\t\tplayer.set(\"alert_level\", int(p.get(\"alert_level\", 1)))\n"
+       "contenuto": "class_name SaveSystem\nextends Node\n\nconst SAVE_PATH: String = \"user://dungeon_save.json\"\n\n\nstatic func save_state(player: Node2D) -> void:\n\tvar data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"x\": player.global_position.x,\n\t\t\t\"y\": player.global_position.y,\n\t\t\t\"health\": int(player.get(\"health\")) if player.get(\"health\") != null else 100,\n\t\t\t\"keys\": int(player.get(\"keys\")) if player.get(\"keys\") != null else 0,\n\t\t\t\"unlocked_doors\": player.get(\"unlocked_doors\") if player.get(\"unlocked_doors\") != null else []\n\t\t}\n\t}\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tfile.store_string(JSON.stringify(data))\n\t\tfile.close()\n\n\nstatic func load_state(player: Node2D) -> void:\n\tif not FileAccess.file_exists(SAVE_PATH):\n\t\treturn\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\tvar text := file.get_as_text()\n\tfile.close()\n\tvar json := JSON.new()\n\tif json.parse(text) != OK:\n\t\treturn\n\tvar data: Dictionary = json.data\n\tif data.has(\"player\"):\n\t\tvar p: Dictionary = data[\"player\"]\n\t\tplayer.global_position = Vector2(float(p.get(\"x\", 0.0)), float(p.get(\"y\", 0.0)))\n\t\tif player.get(\"health\") != null:\n\t\t\tplayer.set(\"health\", int(p.get(\"health\", 100)))\n\t\tif player.get(\"keys\") != null:\n\t\t\tplayer.set(\"keys\", int(p.get(\"keys\", 0)))\n\t\tif player.get(\"unlocked_doors\") != null:\n\t\t\tplayer.set(\"unlocked_doors\", p.get(\"unlocked_doors\", []))\n"
       },
       {
-       "percorso": "arena.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player_data.gd\" id=\"1_player\"]\n\n[node name=\"Arena\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nscript = ExtResource(\"1_player\")\n"
+       "percorso": "level.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player_data.gd\" id=\"1_player\"]\n\n[node name=\"Level\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nscript = ExtResource(\"1_player\")\n"
       }
      ],
      "progetto": {
-      "nome": "MiniSave",
-      "scenaPrincipale": "res://arena.tscn",
+      "nome": "DungeonSave",
+      "scenaPrincipale": "res://level.tscn",
       "azioni": [],
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Abbiamo aggiunto `coins` e `alert_level` allo script del giocatore insieme ai relativi metodi setter/incrementali. In `SaveSystem`, abbiamo incluso queste due nuove voci nel dizionario esportato in JSON e ne abbiamo gestito la lettura nel caricamento con valori di fallback sicuri (`0` per le monete e `1` per l'allerta).",
+     "spiegazione": "In player_data.gd abbiamo aggiunto la variabile `keys` e l'array `unlocked_doors`, insieme ai metodi `add_key()` per incrementare le chiavi e `unlock_door()` per registrare le porte aperte. In `SaveSystem`, abbiamo incluso queste due informazioni nel dizionario JSON di `save_state()` e nella lettura di `load_state()`, inserendo valori di ripiego predefiniti (`0` e `[]`) se le chiavi non vengono trovate.",
      "cambiati": [
       "player_data.gd",
       "save_system.gd"
      ],
      "rimossi": []
     },
-    "id": "test",
-    "cartella": "estendere-il-salvataggio-con-monete-e-al"
+    "id": "test"
    }
   }
  },
@@ -901,6 +908,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
