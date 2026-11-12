@@ -3,3 +3,4 @@
 {"quando":1794470667483,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"riusare-il-guscio","ok":false,"contata":true,"durataMs":3246,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794470670731,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"riusare-il-guscio","ok":false,"contata":true,"durataMs":2203,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794471351830,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"riusare-il-guscio","ok":true,"contata":true,"durataMs":344262,"tokenInput":19503,"tokenOutput":12496,"ragionamento":10646}
+{"quando":1794471702434,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"riusare-il-guscio","ok":true,"contata":true,"durataMs":51960,"tokenInput":19985,"tokenOutput":4749,"ragionamento":8298}
