@@ -114,7 +114,7 @@
       },
       {
        "percorso": "save_manager.gd",
-       "contenuto": "extends Node\n\nconst SAVE_FILE_PATH: String = \"user://save_game.json\"\n\n\nfunc save_game(player: CharacterBody2D, level_node: Node) -> void:\n\tvar save_data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"pos_x\": player.global_position.x,\n\t\t\t\"pos_y\": player.global_position.y,\n\t\t\t\"keys\": int(player.get(\"keys\")) if player.get(\"keys\") != null else 0\n\t\t},\n\t\t\"world_objects\": {}\n\t}\n\t\n\tfor node in level_node.get_children():\n\t\tif node.has_method(\"get_save_data\"):\n\t\t\tvar node_identifier: String = String(node.get_path())\n\t\t\tsave_data[\"world_objects\"][node_identifier] = node.get_save_data()\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tvar json_string: String = JSON.stringify(save_data, \"\\t\")\n\t\tfile.store_string(json_string)\n\t\tfile.close()\n\n\nfunc load_game(player: CharacterBody2D, level_node: Node) -> void:\n\tif not FileAccess.file_exists(SAVE_FILE_PATH):\n\t\treturn\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\t\n\tvar json_text: String = file.get_as_text()\n\tfile.close()\n\t\n\tvar json := JSON.new()\n\tif json.parse(json_text) != OK:\n\t\treturn\n\t\n\tvar save_data: Dictionary = json.data\n\t\n\tif save_data.has(\"player\") and player != null:\n\t\tvar p_data: Dictionary = save_data[\"player\"]\n\t\tplayer.global_position = Vector2(float(p_data.get(\"pos_x\", 0.0)), float(p_data.get(\"pos_y\", 0.0)))\n\t\tif player.get(\"keys\") != null:\n\t\t\tplayer.set(\"keys\", int(p_data.get(\"keys\", 0)))\n\t\n\tif save_data.has(\"world_objects\") and level_node != null:\n\t\tvar objects_data: Dictionary = save_data[\"world_objects\"]\n\t\tfor node_path_string in objects_data:\n\t\t\tvar target_node: Node = level_node.get_node_or_null(node_path_string)\n\t\t\tif target_node != null and target_node.has_method(\"load_save_data\"):\n\t\t\t\ttarget_node.load_save_data(objects_data[node_path_string])\n"
+       "contenuto": "extends Node\n\nconst SAVE_FILE_PATH: String = \"user://save_game.json\"\n\n\nfunc save_game(player: CharacterBody2D, level_node: Node) -> void:\n\tvar save_data: Dictionary = {\n\t\t\"player\": {\n\t\t\t\"pos_x\": player.global_position.x,\n\t\t\t\"pos_y\": player.global_position.y,\n\t\t\t\"keys\": int(player.get(\"keys\")) if player.get(\"keys\") != null else 0\n\t\t},\n\t\t\"world_objects\": {}\n\t}\n\t\n\tfor node in level_node.get_children():\n\t\tif node.has_method(\"get_save_data\"):\n\t\t\tvar node_identifier: String = String(node.get_path())\n\t\t\tsave_data[\"world_objects\"][node_identifier] = node.get_save_data()\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)\n\tif file != null:\n\t\tvar json_string: String = JSON.stringify(save_data, \"\\t\")\n\t\tfile.store_string(json_string)\n\t\tfile.close()\n\n\nfunc load_game(player: CharacterBody2D, level_node: Node) -> void:\n\tif not FileAccess.file_exists(SAVE_FILE_PATH):\n\t\treturn\n\t\n\tvar file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)\n\tif file == null:\n\t\treturn\n\t\n\tvar json_text: String = file.get_as_text()\n\tfile.close()\n\t\n\tvar json := JSON.new()\n\tif json.parse(json_text) != OK:\n\t\treturn\n\t\n\tvar save_data: Dictionary = json.data\n\t\n\tif save_data.has(\"player\") and player != null:\n\t\tvar p_data: Dictionary = save_data[\"player\"]\n\t\tplayer.global_position = Vector2(float(p_data.get(\"pos_x\", 0.0)), float(p_data.get(\"pos_y\", 0.0)))\n\t\tif player.get(\"keys\") != null:\n\t\t\tplayer.set(\"keys\", int(p_data.get(\"keys\", 0)))\n\t\n\tif save_data.has(\"world_objects\") and level_node != null:\n\t\tvar objects_data: Dictionary = save_data[\"world_objects\"]\n\t\tfor node_path_string in objects_data:\n\t\t\tvar target_node: Node = level_node.get_node_or_null(node_path_string)\n\t\t\tif target_node == null:\n\t\t\t\ttarget_node = level_node.get_node_or_null(NodePath(node_path_string).get_name(NodePath(node_path_string).get_name_count() - 1))\n\t\t\tif target_node != null and target_node.has_method(\"load_save_data\"):\n\t\t\t\ttarget_node.load_save_data(objects_data[node_path_string])\n"
       },
       {
        "percorso": "player.gd",
@@ -126,7 +126,7 @@
       },
       {
        "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"5_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://door.tscn\" id=\"6_door\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n2:1/0 = 0\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"Node2D\" id=\"Node2D_1\"]\n"
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"2_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/tiles.png\" id=\"4_tiles\"]\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"5_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://door.tscn\" id=\"6_door\"]\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"TileSetAtlasSource_1\"]\ntexture = ExtResource(\"4_tiles\")\n0:0/0 = 0\n1:0/0 = 0\n2:0/0 = 0\n3:0/0/0 = 0\n2:1/0 = 0\n\n[sub_resource type=\"TileSet\" id=\"TileSet_dungeon\"]\ntile_size = Vector2i(16, 16)\nphysics_layer_0/collision_layer = 2\nsources/0 = SubResource(\"TileSetAtlasSource_1\")\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\nscript = ExtResource(\"5_main\")\n\n[node name=\"Ground\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Walls\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Decoration\" type=\"TileMapLayer\" parent=\".\"]\ntile_set = SubResource(\"TileSet_dungeon\")\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\ncollision_mask = 2\nscript = ExtResource(\"2_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"Camera2D\" type=\"Camera2D\" parent=\"Player\"]\n\n[node name=\"Door\" parent=\".\" instance=ExtResource(\"6_door\")]\nposition = Vector2(200, 100)\n"
       }
      ],
      "progetto": {
@@ -210,19 +210,26 @@
       ]
      },
      "spiegazione": "L'Autoload `SaveManager` raccoglie lo stato del giocatore e itera su tutti i nodi figli della scena principale. Grazie al metodo convenzionale `get_save_data()` e al percorso univoco `get_path()`, qualsiasi elemento interattivo (come le porte) può essere memorizzato nel dizionario e ripristinato fedelmente leggendo il file JSON.",
-     "cambiati": [],
+     "cambiati": [
+      "project.godot",
+      "save_manager.gd",
+      "player.gd",
+      "door.gd",
+      "main.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "main.tscn: la scena non contiene nessun nodo (`[node name=\"...\" type=\"...\"]`)"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "es2": {
@@ -395,7 +402,8 @@
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-latest",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Riusare il proprio lavoro: menu e salvataggi in un gioco diverso",
