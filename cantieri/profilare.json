@@ -315,7 +315,7 @@
     }
    },
    "genere": "ottimizza",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Quando scatta il timer e il giocatore è in vista, il nemico deve passare allo stato CHASE (1)\n  - Quando scatta il timer e il nemico perde di vista il giocatore, deve passare allo stato RETURN (2)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
