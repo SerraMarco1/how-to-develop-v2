@@ -602,7 +602,9 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://main.tscn deve caricarsi senza errori: Parse Error: Parse error. [Resource file res://save_point.tscn:15] (scene/resources/resource_format_text.cpp:293 in _parse_node_tag)\nFailed loading resource: res://save_point.tscn. (core/io/resource_loader.cpp:317 in _load)\nres://main.tscn:57 - Parse Error: [ext_resource] referenced non-existent resource at: res://save_point.tscn. (scene/resources/resource_format_text.cpp:41 in _printerr)\n  - Il file res://save_point.tscn deve caricarsi senza errori: Parse Error: Parse error. [Resource file res://save_point.tscn:15] (scene/resources/resource_format_text.cpp:293 in _parse_node_tag)\nFailed loading resource: res://save_point.tscn. (core/io/resource_loader.cpp:317 in _load)\n  - La scena principale deve funzionare senza errori: Parse Error: Parse error. [Resource file res://save_point.tscn:15] (scene/resources/resource_format_text.cpp:293 in _parse_node_tag)\nFailed loading resource: res://save_point.tscn. (core/io/resource_loader.cpp:317 in _load)\nres://main.tscn:57 - Parse Error: [ext_resource] referenced non-existent resource at: res://save_point.tscn. (scene/resources/resource_format_text.cpp:41 in _printerr)\nRighe citate dagli errori:\n  save_point.tscn, riga 15: `modulate = Color(0.5, 0.8, 1)`\n  main.tscn, riga 57: `[node name=\"SavePoint\" parent=\".\" instance=ExtResource(\"7_save_point\")]`\nSuggerimenti:\n  - La scena `.tscn` ha una riga scritta male (vedi la riga citata). Le intestazioni dei nodi hanno la forma `[node name=\"Nome\" type=\"Tipo\" parent=\".\"]`; le proprietà stanno una per riga come `nome = valore`, con valori di Godot (`Vector2(10, 20)`, `\"testo\"`, `true`, `ExtResource(\"id\")`, `SubResource(\"id\")`)."
+   ],
    "modelli": [
     "gemini/gemini-flash-latest"
    ]
