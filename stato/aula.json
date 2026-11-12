@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-12T10:47:35.408Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-12T11:28:45.163Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "profilare",
   "numero": "7.13",
   "titolo": "Quando il gioco rallenta: misurare"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.13 riprende da sola appena rispondono.",
- "riprende": "2026-11-12T11:27:35.408Z"
+ "messaggio": "Sta scrivendo la lezione 7.13 «Quando il gioco rallenta: misurare».",
+ "riprende": null
 }
