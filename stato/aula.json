@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-12T13:08:27.377Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-12T13:13:50.347Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "profilare",
-  "numero": "7.13",
-  "titolo": "Quando il gioco rallenta: misurare"
+  "slug": "progetto-arena-1",
+  "numero": "7.14",
+  "titolo": "Progetto «Arena» – tappa 1: muoversi e sparare"
  },
- "messaggio": "Sta scrivendo la lezione 7.13 «Quando il gioco rallenta: misurare».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.14 riprende da sola appena rispondono.",
+ "riprende": "2026-11-12T13:23:50.347Z"
 }
