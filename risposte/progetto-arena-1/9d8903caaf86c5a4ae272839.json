@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"La consegna specifica la proprietà 'var current_health: int' senza indicare esplicitamente di inizializzarla al valore di 'max_health' (ad esempio in _ready()), mentre lo script di verifica controlla che 'current_health' sia maggiore di 0 all'avvio. Se uno studente dichiara la variabile senza assegnarle 'max_health', il valore sarà 0 e il test fallirà pur avendo seguito alla lettera il testo.\", \"correzione\": \"Aggiorna il punto 2 della consegna specificando che 'current_health' deve essere inizializzata al valore di 'max_health' (ad esempio all'inizio in _ready()).\"}]}",
- "ragionamento": 2221,
- "quando": "2026-11-13T09:20:17.816Z",
- "ruolo": "revisore"
-}
