@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-13T10:29:06.772Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-13T10:46:00.818Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-arena-2",
   "numero": "7.15",
   "titolo": "Progetto «Arena» – tappa 2: nemici e ondate"
  },
- "messaggio": "Sta scrivendo la lezione 7.15 «Progetto «Arena» – tappa 2: nemici e ondate».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.15 riprende da sola appena rispondono.",
+ "riprende": "2026-11-13T10:56:00.817Z"
 }
