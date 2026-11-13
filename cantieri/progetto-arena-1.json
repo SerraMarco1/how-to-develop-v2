@@ -259,7 +259,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Progetto «Arena» – tappa 1: muoversi e sparare",
@@ -286,5 +287,18 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "La consegna specifica la proprietà 'var current_health: int' senza indicare esplicitamente di inizializzarla al valore di 'max_health' (ad esempio in _ready()), mentre lo script di verifica controlla che 'current_health' sia maggiore di 0 all'avvio. Se uno studente dichiara la variabile senza assegnarle 'max_health', il valore sarà 0 e il test fallirà pur avendo seguito alla lettera il testo.",
+    "correzione": "Aggiorna il punto 2 della consegna specificando che 'current_health' deve essere inizializzata al valore di 'max_health' (ad esempio all'inizio in _ready()).",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
