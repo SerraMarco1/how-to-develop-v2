@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Lo script di verifica presuppone che lo studente utilizzi esattamente i nomi di variabile `current_wave_index`, `spawned_in_wave`, `spawn_timer` e `waiting_for_next_wave` in `arena.gd` chiamando `arena.set(...)`, ma la consegna non specifica affatto questi nomi. Se lo studente implementa lo stato delle ondate con nomi diversi, il test fallirà o non azzererà correttamente lo stato.\",\n      \"correzione\": \"Aggiorna la verifica per non dipendere da variabili interne non specificate nella consegna, oppure specifica chiaramente nella consegna i nomi delle variabili interne richieste per la gestione dello stato delle ondate.\"\n    },\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"La consegna chiede al punto 3 di aggiornare `bullet.gd` per infliggere danni ai nemici, e la descrizione della verifica recita '...e subiscono danni dai proiettili', ma nel codice del test GDScript (`_run_tests`) non c'è alcun controllo che verifichi il comportamento del proiettile o l'inflizione del danno da parte dei proiettili.\",\n      \"correzione\": \"Aggiungi nel test una verifica concreta che istanzi un proiettile, lo faccia collidere con un nemico (o invochi il suo metodo di collisione) e verifichi che la salute del nemico diminuisca.\"\n    }\n  ]\n}",
+ "ragionamento": 2044,
+ "quando": "2026-11-13T13:03:10.728Z",
+ "ruolo": "revisore"
+}
