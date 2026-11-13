@@ -47,6 +47,22 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "health.gd",
+       "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(new_health: int)\nsignal died\n\n@export var max_health: int = 100\nvar current_health: int\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif current_health <= 0:\n\t\treturn\n\tcurrent_health = maxi(0, current_health - amount)\n\thealth_changed.emit(current_health)\n\tif current_health == 0:\n\t\tdied.emit()\n"
+      },
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 4.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 250.0\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n\n@onready var health: Health = $Health\n\nvar shoot_cooldown: float = 0.2\nvar shoot_timer: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tshoot_timer -= delta\n\tvar dir := Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = dir * speed\n\tmove_and_slide()\n\n\tif Input.is_action_pressed(\"shoot\") and shoot_timer <= 0.0:\n\t\tshoot()\n\t\tshoot_timer = shoot_cooldown\n\n\nfunc shoot() -> void:\n\tif bullet_scene == null:\n\t\treturn\n\tvar bullet := bullet_scene.instantiate() as Area2D\n\tbullet.global_position = global_position\n\tvar target := get_global_mouse_position()\n\tvar dir := (target - global_position).normalized()\n\tif dir == Vector2.ZERO:\n\t\tdir = Vector2.RIGHT\n\tbullet.set(\"direction\", dir)\n\tget_parent().add_child(bullet)\n"
+      },
+      {
+       "percorso": "player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 16.0\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+      },
+      {
        "percorso": "enemy_data.gd",
        "contenuto": "class_name EnemyData\nextends Resource\n\n@export var speed: float = 100.0\n@export var max_health: int = 20\n@export var damage: int = 10\n"
       },
@@ -80,7 +96,7 @@
       },
       {
        "percorso": "arena.gd",
-       "contenuto": "extends Node2D\n\n@export var enemy_scene: PackedScene = preload(\"res://enemy.tscn\")\n@export var waves: Array[WaveData] = []\n\nvar current_wave_index: int = 0\nvar spawned_in_wave: int = 0\nvar spawn_timer: float = 0.0\nvar wave_delay_timer: float = 0.0\nvar waiting_for_next_wave: bool = false\n\n\nfunc _ready() -> void:\n\tif waves.is_empty():\n\t\t_setup_default_waves()\n\tif not waves.is_empty():\n\t\tspawn_timer = waves[0].spawn_interval\n\n\nfunc _setup_default_waves() -> void:\n\tvar fast_res = load(\"res://enemies/fast_enemy.tres\") as EnemyData\n\tvar normal_res = load(\"res://enemies/normal_enemy.tres\") as EnemyData\n\tvar tank_res = load(\"res://enemies/tank_enemy.tres\") as EnemyData\n\n\tvar w1 := WaveData.new()\n\tw1.spawn_count = 5\n\tw1.spawn_interval = 1.0\n\tif normal_res:\n\t\tw1.enemy_types.append(normal_res)\n\n\tvar w2 := WaveData.new()\n\tw2.spawn_count = 8\n\tw2.spawn_interval = 0.8\n\tif fast_res:\n\t\tw2.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw2.enemy_types.append(normal_res)\n\n\tvar w3 := WaveData.new()\n\tw3.spawn_count = 12\n\tw3.spawn_interval = 0.6\n\tif fast_res:\n\t\tw3.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw3.enemy_types.append(normal_res)\n\tif tank_res:\n\t\tw3.enemy_types.append(tank_res)\n\n\twaves = [w1, w2, w3]\n\n\nfunc _process(delta: float) -> void:\n\tif current_wave_index >= waves.size():\n\t\treturn\n\n\tvar wave := waves[current_wave_index]\n\n\tif waiting_for_next_wave:\n\t\twave_delay_timer -= delta\n\t\tif wave_delay_timer <= 0.0:\n\t\t\twaiting_for_next_wave = false\n\t\t\tcurrent_wave_index += 1\n\t\t\tspawned_in_wave = 0\n\t\t\tif current_wave_index < waves.size():\n\t\t\t\tspawn_timer = waves[current_wave_index].spawn_interval\n\t\treturn\n\n\tif spawned_in_wave < wave.spawn_count:\n\t\tspawn_timer -= delta\n\t\tif spawn_timer <= 0.0:\n\t\t\tspawn_enemy(wave)\n\t\t\tspawned_in_wave += 1\n\t\t\tspawn_timer = wave.spawn_interval\n\telse:\n\t\tvar enemies := get_tree().get_nodes_in_group(\"enemies\")\n\t\tif enemies.is_empty():\n\t\t\twaiting_for_next_wave = true\n\t\t\twave_delay_timer = 2.0\n\n\nfunc spawn_enemy(wave: WaveData) -> void:\n\tif enemy_scene == null or wave.enemy_types.is_empty():\n\t\treturn\n\tvar enemy := enemy_scene.instantiate() as Enemy\n\tvar type_data: EnemyData = wave.enemy_types.pick_random()\n\tenemy.data = type_data\n\n\tvar side := randi() % 4\n\tvar pos := Vector2.ZERO\n\tmatch side:\n\t\t0: pos = Vector2(randf_range(-40, 1192), -40)\n\t\t1: pos = Vector2(randf_range(-40, 1192), 688)\n\t\t2: pos = Vector2(-40, randf_range(-40, 688))\n\t\t3: pos = Vector2(1192, randf_range(-40, 688))\n\tenemy.global_position = pos\n\tadd_child(enemy)\n"
+       "contenuto": "extends Node2D\n\n@export var enemy_scene: PackedScene = preload(\"res://enemy.tscn\")\n@export var waves: Array[WaveData] = []:\n\tset(value):\n\t\twaves = value\n\t\tcurrent_wave_index = 0\n\t\tspawned_in_wave = 0\n\t\tif not waves.is_empty():\n\t\t\tspawn_timer = waves[0].spawn_interval\n\t\telse:\n\t\t\tspawn_timer = 0.0\n\nvar current_wave_index: int = 0\nvar spawned_in_wave: int = 0\nvar spawn_timer: float = 0.0\nvar wave_delay_timer: float = 0.0\nvar waiting_for_next_wave: bool = false\n\n\nfunc _ready() -> void:\n\tif waves.is_empty():\n\t\t_setup_default_waves()\n\telif not waves.is_empty():\n\t\tspawn_timer = waves[0].spawn_interval\n\n\nfunc _setup_default_waves() -> void:\n\tvar fast_res = load(\"res://enemies/fast_enemy.tres\") as EnemyData\n\tvar normal_res = load(\"res://enemies/normal_enemy.tres\") as EnemyData\n\tvar tank_res = load(\"res://enemies/tank_enemy.tres\") as EnemyData\n\n\tvar w1 := WaveData.new()\n\tw1.spawn_count = 5\n\tw1.spawn_interval = 1.0\n\tif normal_res:\n\t\tw1.enemy_types.append(normal_res)\n\n\tvar w2 := WaveData.new()\n\tw2.spawn_count = 8\n\tw2.spawn_interval = 0.8\n\tif fast_res:\n\t\tw2.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw2.enemy_types.append(normal_res)\n\n\tvar w3 := WaveData.new()\n\tw3.spawn_count = 12\n\tw3.spawn_interval = 0.6\n\tif fast_res:\n\t\tw3.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw3.enemy_types.append(normal_res)\n\tif tank_res:\n\t\tw3.enemy_types.append(tank_res)\n\n\twaves = [w1, w2, w3]\n\n\nfunc _process(delta: float) -> void:\n\tif current_wave_index >= waves.size():\n\t\treturn\n\n\tvar wave := waves[current_wave_index]\n\n\tif waiting_for_next_wave:\n\t\twave_delay_timer -= delta\n\t\tif wave_delay_timer <= 0.0:\n\t\t\twaiting_for_next_wave = false\n\t\t\tcurrent_wave_index += 1\n\t\t\tspawned_in_wave = 0\n\t\t\tif current_wave_index < waves.size():\n\t\t\t\tspawn_timer = waves[current_wave_index].spawn_interval\n\t\treturn\n\n\tif spawned_in_wave < wave.spawn_count:\n\t\tspawn_timer -= delta\n\t\tif spawn_timer <= 0.0:\n\t\t\tspawn_enemy(wave)\n\t\t\tspawned_in_wave += 1\n\t\t\tspawn_timer = wave.spawn_interval\n\telse:\n\t\tvar enemies := get_tree().get_nodes_in_group(\"enemies\")\n\t\tif enemies.is_empty():\n\t\t\twaiting_for_next_wave = true\n\t\t\twave_delay_timer = 2.0\n\n\nfunc spawn_enemy(wave: WaveData) -> void:\n\tif enemy_scene == null or wave.enemy_types.is_empty():\n\t\treturn\n\tvar enemy := enemy_scene.instantiate() as Enemy\n\tvar type_data: EnemyData = wave.enemy_types.pick_random()\n\tenemy.data = type_data\n\n\tvar side := randi() % 4\n\tvar pos := Vector2.ZERO\n\tmatch side:\n\t\t0: pos = Vector2(randf_range(-40, 1192), -40)\n\t\t1: pos = Vector2(randf_range(-40, 1192), 688)\n\t\t2: pos = Vector2(-40, randf_range(-40, 688))\n\t\t3: pos = Vector2(1192, randf_range(-40, 688))\n\tenemy.global_position = pos\n\tadd_child(enemy)\n"
       },
       {
        "percorso": "arena.tscn",
@@ -90,7 +106,43 @@
      "progetto": {
       "nome": "Arena",
       "scenaPrincipale": "res://arena.tscn",
-      "azioni": [],
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       },
+       {
+        "nome": "shoot",
+        "tasti": [
+         "Space",
+         "MouseLeft"
+        ]
+       }
+      ],
       "autoload": [],
       "impostazioni": []
      },
@@ -100,19 +152,21 @@
     }
    },
    "genere": "da-zero",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La gestione delle ondate deve far nascere i nemici registrandoli nel gruppo 'enemies'\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Progetto «Arena» – tappa 2: nemici e ondate",
