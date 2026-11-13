@@ -1,8 +1,137 @@
 {
  "creato": "2026-11-12T13:13:42.380Z",
- "pezzi": {},
+ "pezzi": {
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "da-zero",
+    "titolo": "Tappa 1: L'arena, il giocatore e lo sparo",
+    "consegna": "Costruisci la prima tappa del progetto **Arena** partendo dal progetto vuoto.\n\n### 1. Azioni di input\nConfigura nelle impostazioni del progetto le seguenti azioni:\n- `move_left`: tasto **A** o freccia sinistra\n- `move_right`: tasto **D** o freccia destra\n- `move_up`: tasto **W** o freccia su\n- `move_down`: tasto **S** o freccia giù\n- `shoot`: tasto **Space** o pulsante sinistro del mouse (**MouseLeft**)\n\n### 2. Componente Health\nCrea uno script `health.gd` con nome di classe `class_name Health` (derivato da `Node`):\n- Proprietà `@export var max_health: int = 100`\n- Proprietà `var current_health: int`\n- Metodo `take_damage(amount: int) -> void` che sottrae `amount` a `current_health` (senza scendere sotto 0) ed emette il segnale `health_changed(new_health: int)` e, se arriva a 0, il segnale `died`.\n\n### 3. Proiettile (Bullet)\nCrea la scena `res://bullet.tscn` con radice di tipo `Area2D` chiamata `Bullet`:\n- Possiede uno script `bullet.gd` con una direzione (Vector2) e una velocità di movimento in linea retta.\n- Quando collide o supera una durata massima viene rimosso con `queue_free()`.\n\n### 4. Giocatore (Player)\nCrea la scena `res://player.tscn` con radice `CharacterBody2D` chiamata `Player`:\n- Contiene un `CollisionShape2D` per le collisioni fisiche.\n- Contiene un nodo figlio di tipo `Health` chiamato `Health`.\n- Nello script `player.gd`, muovi il personaggio con `move_and_slide()` usando le 4 azioni di movimento vettoriale normalizzato.\n- Quando l'azione `shoot` è premuta o tenuta premuta, genera un'istanza di `res://bullet.tscn` orientata verso il puntatore del mouse (`get_global_mouse_position()`) e aggiungila alla scena.\n\n### 5. Arena principale\nCrea la scena `res://arena.tscn` e impostala come scena principale del progetto:\n- Nodo radice `Node2D` chiamato `Arena`.\n- Un recinto di muri fisici (`StaticBody2D` con `CollisionShape2D`) attorno all'area di gioco per impedire al giocatore di uscire dallo schermo.\n- Un'istanza di `res://player.tscn` posizionata all'interno dell'arena.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "arena",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "run/main_scene",
+      "contiene": "arena.tscn",
+      "descrizione": "La scena principale è impostata su res://arena.tscn"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://health.gd",
+      "descrizione": "Il file health.gd esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://bullet.tscn",
+      "descrizione": "La scena bullet.tscn esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://player.tscn",
+      "descrizione": "La scena player.tscn esiste"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar arena := await instantiate_main_scene()\n\tif not check(\"arena_load\", arena != null, \"La scena arena.tscn deve potersi avviare correttamente\"):\n\t\treturn\n\t\n\tvar player := find_by_name(arena, \"Player\") as CharacterBody2D\n\tif not check(\"player_found\", player != null, \"Nell'arena deve esserci un nodo Player di tipo CharacterBody2D\"):\n\t\treturn\n\t\n\tvar health := find_by_name(player, \"Health\")\n\tif not check(\"health_component\", health != null, \"Il Player deve avere un nodo figlio Health\"):\n\t\treturn\n\t\n\tvar hp_val = get_prop(health, \"current_health\")\n\tcheck(\"health_init\", hp_val != null and hp_val > 0, \"Health deve inizializzare current_health con un valore maggiore di zero\")\n\tif has_function(health, \"take_damage\"):\n\t\tcall_if_exists(health, \"take_damage\", [10])\n\t\tvar damaged_hp = get_prop(health, \"current_health\", 0)\n\t\tcheck(\"health_damage\", damaged_hp < hp_val, \"Chiamando take_damage(10) i punti vita devono diminuire\")\n\telse:\n\t\tcheck(\"health_method\", false, \"Il componente Health deve avere il metodo take_damage(amount)\")\n\t\n\tplayer.global_position = Vector2(400, 300)\n\tvar pos_before := player.global_position\n\tawait hold_action(\"move_right\", 10)\n\tcheck(\"move_right\", player.global_position.x > pos_before.x, \"Premendo move_right il giocatore deve muoversi verso destra\")\n\t\n\tplayer.global_position = Vector2(50, 300)\n\tawait hold_action(\"move_left\", 20)\n\tvar wall_x := player.global_position.x\n\tawait hold_action(\"move_left\", 10)\n\tcheck(\"wall_collision\", absf(player.global_position.x - wall_x) < 2.0, \"I muri dell'arena devono fermare il giocatore impedendogli di uscire\")\n\t\n\tvar child_count_before := arena.get_child_count()\n\tawait tap_action(\"shoot\")\n\tawait wait_physics_frames(2)\n\tvar bullet := find_by_class(arena, \"Area2D\")\n\tcheck(\"bullet_spawn\", bullet != null and arena.get_child_count() > child_count_before, \"Premendo shoot deve essere istanziato un proiettile nell'arena\")\n\tif bullet != null:\n\t\tvar b_pos := (bullet as Node2D).global_position\n\t\tawait wait_physics_frames(10)\n\t\tvar b_pos_after := (bullet as Node2D).global_position\n\t\tcheck(\"bullet_moves\", b_pos != b_pos_after, \"Il proiettile generato deve muoversi nello spazio\")",
+      "descrizione": "Il giocatore si muove con i controlli, sbatte contro i muri dell'arena, spara proiettili e possiede il componente Health funzionante"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "health.gd",
+       "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(new_health: int)\nsignal died\n\n@export var max_health: int = 100\nvar current_health: int\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif current_health <= 0:\n\t\treturn\n\tcurrent_health = maxi(0, current_health - amount)\n\thealth_changed.emit(current_health)\n\tif current_health == 0:\n\t\tdied.emit()\n"
+      },
+      {
+       "percorso": "bullet.gd",
+       "contenuto": "extends Area2D\n\n@export var speed: float = 500.0\nvar direction: Vector2 = Vector2.RIGHT\nvar lifetime: float = 2.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tposition += direction * speed * delta\n\tlifetime -= delta\n\tif lifetime <= 0.0:\n\t\tqueue_free()\n"
+      },
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 4.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 250.0\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n\n@onready var health: Health = $Health\n\nvar shoot_cooldown: float = 0.2\nvar shoot_timer: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tshoot_timer -= delta\n\tvar dir := Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = dir * speed\n\tmove_and_slide()\n\n\tif Input.is_action_pressed(\"shoot\") and shoot_timer <= 0.0:\n\t\tshoot()\n\t\tshoot_timer = shoot_cooldown\n\n\nfunc shoot() -> void:\n\tif bullet_scene == null:\n\t\treturn\n\tvar bullet := bullet_scene.instantiate() as Area2D\n\tbullet.global_position = global_position\n\tvar target := get_global_mouse_position()\n\tvar dir := (target - global_position).normalized()\n\tif dir == Vector2.ZERO:\n\t\tdir = Vector2.RIGHT\n\tbullet.set(\"direction\", dir)\n\tget_parent().add_child(bullet)\n"
+      },
+      {
+       "percorso": "player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 16.0\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+      },
+      {
+       "percorso": "arena.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_h\"]\nsize = Vector2(1200, 40)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_v\"]\nsize = Vector2(40, 700)\n\n[node name=\"Arena\" type=\"Node2D\"]\n\n[node name=\"Walls\" type=\"StaticBody2D\" parent=\".\"]\n\n[node name=\"TopWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, -20)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"BottomWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, 668)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"LeftWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(-20, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"RightWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(1172, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(576, 324)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Arena",
+      "scenaPrincipale": "res://arena.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_up",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_down",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       },
+       {
+        "nome": "shoot",
+        "tasti": [
+         "Space",
+         "MouseLeft"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La prima tappa di Arena definisce le fondamenta del gioco d'azione:\n1. **Health**: script con `class_name Health` per gestire i punti vita in modo indipendente. Tiene traccia di `current_health`, gestisce il calo tramite `take_damage()` ed emette i segnali appropriati.\n2. **Bullet**: nodo `Area2D` che viaggia lungo una traiettoria lineare secondo la proprietà `direction` e si distrugge scaduto il tempo o colpita una superficie.\n3. **Player**: `CharacterBody2D` che raccoglie il vettore di input con `Input.get_vector()` e si sposta con `move_and_slide()`. Quando viene premuto il comando `shoot`, calcola la direzione verso `get_global_mouse_position()` e istanzia un proiettile aggiungendolo alla scena.\n4. **Arena**: contiene il perimetro delimitato da quattro segmenti di collisione `StaticBody2D`, che impediscono fisicamente al giocatore di fuggire dai confini della schermata.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "da-zero",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-flash-latest"
+   ]
+  }
+ },
  "avvisi": [],
- "modelli": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
  "teoria": {
   "titolo": "Progetto «Arena» – tappa 1: muoversi e sparare",
   "sommario": "Arena chiusa, giocatore che si muove, mira e spara, componenti di vita e danno.",
@@ -25,5 +154,8 @@
     "md": "- Nessun passo e nessun suggerimento: decidi tu scene, script e nomi, tranne quelli che la consegna fissa.\n- La piattaforma esegue il tuo progetto e controlla cosa succede.\n- Se ti blocchi, riapri la lezione della fase che tratta quel punto: non c'è fretta."
    }
   ]
- }
+ },
+ "ordine": [
+  "test"
+ ]
 }
