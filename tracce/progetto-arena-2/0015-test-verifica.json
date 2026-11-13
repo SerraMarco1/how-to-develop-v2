@@ -1,0 +1,182 @@
+{
+ "n": 15,
+ "quando": "2026-11-13T10:45:51.748Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "guasto": "contenuto",
+ "titolo": "Test (da-zero): 1 problema",
+ "spiegazione": "«Progetto «Arena» – tappa 2: nemici e ondate», scritto da gemini/gemini-flash-latest. 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- NON SPIEGATO: la soluzione usa `is_node_ready()`, `pick_random()`, `randi()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa.\nReazione: le correzioni previste sono finite e restano solo problemi minori: il pezzo esce lo stesso, con un avviso nella lezione; il ricontrollo delle lezioni pubblicate riproverà a correggerlo.",
+ "richieste": 0,
+ "durataMs": 12042,
+ "dati": {
+  "problemi": [
+   "NON SPIEGATO: la soluzione usa `is_node_ready()`, `pick_random()`, `randi()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "da-zero",
+   "titolo": "Progetto «Arena» – tappa 2: nemici e ondate",
+   "consegna": "Prosegui lo sviluppo del progetto `Arena` nella cartella `arena`.\n\nIn questa seconda tappa implementerai la gestione dei nemici e delle ondate descrivendo i dati tramite risorse `Resource`.\n\nSe vuoi usare gli sprite grafici del pacchetto del corso (come `res://assets/sprites/enemy.png`), copia la cartella `assets` che si trova in `_asset-del-corso` dentro la radice del tuo progetto.\n\n### 1. Dati dei nemici e delle ondate (Resource)\n- Crea lo script `res://enemy_data.gd` con `class_name EnemyData extends Resource` e le seguenti proprietà esportate:\n  - `@export var speed: float = 100.0`\n  - `@export var max_health: int = 20`\n  - `@export var damage: int = 10`\n- Crea lo script `res://wave_data.gd` con `class_name WaveData extends Resource` e le seguenti proprietà esportate:\n  - `@export var enemy_types: Array[EnemyData] = []`\n  - `@export var spawn_count: int = 5`\n  - `@export var spawn_interval: float = 1.0`\n- Crea tre file di risorsa `.tres` nella cartella `res://enemies/`:\n  - `res://enemies/fast_enemy.tres`: risorsa di tipo `EnemyData` con `speed = 180.0`, `max_health = 10`, `damage = 5`.\n  - `res://enemies/normal_enemy.tres`: risorsa di tipo `EnemyData` con `speed = 100.0`, `max_health = 20`, `damage = 10`.\n  - `res://enemies/tank_enemy.tres`: risorsa di tipo `EnemyData` con `speed = 60.0`, `max_health = 50`, `damage = 25`.\n\n### 2. Scena e comportamento del nemico\n- Crea la scena `res://enemy.tscn` con nodo radice `CharacterBody2D` chiamato `Enemy`, inserito nel gruppo `\"enemies\"`.\n- Assegna a `Enemy` lo script `res://enemy.gd` (`class_name Enemy extends CharacterBody2D`).\n- Aggiungi a `Enemy` i figli: `Sprite2D` (con la grafica del nemico), `CollisionShape2D` e un nodo `Health` (istanza dello script `res://health.gd`).\n- In `enemy.gd` dichiara `@export var data: EnemyData`.\n- Quando `data` viene assegnato o all'avvio (`_ready()`), il nodo `Health` del nemico acquisisce la salute da `data.max_health`.\n- In `_physics_process(delta)` il nemico individua il nodo `Player` nell'arena e si muove verso di esso alla velocità `data.speed` usando `move_and_slide()`.\n- Quando il nemico entra in collisione o a stretto contatto con il giocatore (distanza < 24 pixel), infligge `data.damage` al nodo `Health` del giocatore via `take_damage()` e si distrugge con `queue_free()`.\n- Quando il segnale `died` di `Health` scatta (o la vita arriva a 0), il nemico si distrugge con `queue_free()`.\n\n### 3. Collisione dei proiettili\n- Aggiorna `res://bullet.gd` affinché, quando il proiettile tocca un nemico nel gruppo `\"enemies\"`, infligga 10 danni al suo nodo `Health` tramite `take_damage(10)` e si elimini con `queue_free()`.\n\n### 4. Generazione ondate nell'Arena\n- Assegna al nodo radice `Arena` della scena `res://arena.tscn` uno script `res://arena.gd`.\n- In `arena.gd` dichiara:\n  - `@export var enemy_scene: PackedScene = preload(\"res://enemy.tscn\")`\n  - `@export var waves: Array[WaveData] = []`\n- Nell'Inspector della scena `Arena`, imposta in `waves` 3 ondate riutilizzando le risorse create (`fast_enemy.tres`, `normal_enemy.tres`, `tank_enemy.tres`).\n- In `_process(delta)` di `arena.gd`, fai nascere i nemici ai bordi esterni dell'arena (selezionando a caso uno dei quattro bordi).\n- Fai nascere `spawn_count` nemici ad intervalli di `spawn_interval` secondi, scegliendo un `EnemyData` a caso dall'elenco `enemy_types` dell'ondata corrente e assegnandolo alla proprietà `data` del nemico istanziato.\n- Quando tutti i nemici di un'ondata sono nati e sul campo non ce ne sono più di vivi nel gruppo `\"enemies\"`, attendi 2 secondi di pausa prima di far partire l'ondata successiva.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "arena",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://enemy_data.gd",
+     "descrizione": "Lo script res://enemy_data.gd esiste"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://wave_data.gd",
+     "descrizione": "Lo script res://wave_data.gd esiste"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://enemy.tscn",
+     "descrizione": "La scena res://enemy.tscn esiste"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://enemy.tscn",
+     "tipoNodo": "CharacterBody2D",
+     "nome": "Enemy",
+     "descrizione": "La scena res://enemy.tscn contiene un CharacterBody2D chiamato Enemy"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar arena := await instantiate_main_scene()\n\tif not check(\"arena_scene\", arena != null, \"La scena principale arena.tscn deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar enemy_data_script = load(\"res://enemy_data.gd\")\n\tif not check(\"enemy_data_exists\", enemy_data_script != null, \"Lo script res://enemy_data.gd deve esistere\"):\n\t\treturn\n\n\tvar wave_data_script = load(\"res://wave_data.gd\")\n\tif not check(\"wave_data_exists\", wave_data_script != null, \"Lo script res://wave_data.gd deve esistere\"):\n\t\treturn\n\n\tvar enemy_scene_res = load(\"res://enemy.tscn\") as PackedScene\n\tif not check(\"enemy_scene_exists\", enemy_scene_res != null, \"La scena res://enemy.tscn deve esistere\"):\n\t\treturn\n\n\tvar dummy_data = enemy_data_script.new()\n\tdummy_data.set(\"speed\", 200.0)\n\tdummy_data.set(\"max_health\", 30)\n\tdummy_data.set(\"damage\", 15)\n\n\tvar enemy = enemy_scene_res.instantiate() as Node2D\n\tif not check(\"enemy_instantiate\", enemy != null, \"La scena enemy.tscn deve potersi istanziare\"):\n\t\treturn\n\n\tenemy.set(\"data\", dummy_data)\n\tarena.add_child(enemy)\n\tenemy.global_position = Vector2(100, 324)\n\n\tvar health_node = enemy.find_child(\"Health\")\n\tif health_node == null:\n\t\thealth_node = find_by_class(enemy, \"Health\")\n\n\tcheck(\"enemy_health\", health_node != null, \"Il nemico deve contenere un nodo componente Health\")\n\n\tvar player = find_by_name(arena, \"Player\") as Node2D\n\tif player != null:\n\t\tplayer.global_position = Vector2(500, 324)\n\t\tvar start_x: float = enemy.global_position.x\n\t\tawait wait_physics_frames(10)\n\t\tcheck(\"enemy_moves\", enemy.global_position.x > start_x, \"Il nemico deve muoversi verso il giocatore\")\n\n\tfor e in arena.get_tree().get_nodes_in_group(\"enemies\"):\n\t\tif is_instance_valid(e):\n\t\t\te.queue_free()\n\tawait wait_frames(2)\n\n\tvar custom_enemy_data = enemy_data_script.new()\n\tcustom_enemy_data.set(\"speed\", 100.0)\n\tcustom_enemy_data.set(\"max_health\", 20)\n\tcustom_enemy_data.set(\"damage\", 10)\n\n\tvar custom_wave = wave_data_script.new()\n\tvar enemy_types = custom_wave.get(\"enemy_types\") as Array\n\tif enemy_types != null:\n\t\tenemy_types.clear()\n\t\tenemy_types.append(custom_enemy_data)\n\telse:\n\t\tcustom_wave.set(\"enemy_types\", [custom_enemy_data])\n\tcustom_wave.set(\"spawn_count\", 2)\n\tcustom_wave.set(\"spawn_interval\", 0.1)\n\n\tvar waves_list = arena.get(\"waves\") as Array\n\tif waves_list != null:\n\t\twaves_list.clear()\n\t\twaves_list.append(custom_wave)\n\t\tarena.set(\"waves\", waves_list)\n\telse:\n\t\tarena.set(\"waves\", [custom_wave])\n\n\tarena.set(\"current_wave_index\", 0)\n\tarena.set(\"spawned_in_wave\", 0)\n\tarena.set(\"spawn_timer\", 0.0)\n\tarena.set(\"waiting_for_next_wave\", false)\n\n\tawait wait_seconds(0.5)\n\n\tvar enemies = arena.get_tree().get_nodes_in_group(\"enemies\")\n\tcheck(\"spawner_works\", enemies.size() >= 1, \"La gestione delle ondate deve far nascere i nemici registrandoli nel gruppo 'enemies'\")\n",
+     "descrizione": "I nemici nascono durante le ondate, inseguono il giocatore e subiscono danni dai proiettili"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Arena\"\nrun/main_scene=\"res://arena.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "health.gd",
+      "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(new_health: int)\nsignal died\n\n@export var max_health: int = 100\nvar current_health: int\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif current_health <= 0:\n\t\treturn\n\tcurrent_health = maxi(0, current_health - amount)\n\thealth_changed.emit(current_health)\n\tif current_health == 0:\n\t\tdied.emit()\n"
+     },
+     {
+      "percorso": "bullet.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 4.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 250.0\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n\n@onready var health: Health = $Health\n\nvar shoot_cooldown: float = 0.2\nvar shoot_timer: float = 0.0\n\n\nfunc _physics_process(delta: float) -> void:\n\tshoot_timer -= delta\n\tvar dir := Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = dir * speed\n\tmove_and_slide()\n\n\tif Input.is_action_pressed(\"shoot\") and shoot_timer <= 0.0:\n\t\tshoot()\n\t\tshoot_timer = shoot_cooldown\n\n\nfunc shoot() -> void:\n\tif bullet_scene == null:\n\t\treturn\n\tvar bullet := bullet_scene.instantiate() as Area2D\n\tbullet.global_position = global_position\n\tvar target := get_global_mouse_position()\n\tvar dir := (target - global_position).normalized()\n\tif dir == Vector2.ZERO:\n\t\tdir = Vector2.RIGHT\n\tbullet.set(\"direction\", dir)\n\tget_parent().add_child(bullet)\n"
+     },
+     {
+      "percorso": "player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 16.0\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+     },
+     {
+      "percorso": "enemy_data.gd",
+      "contenuto": "class_name EnemyData\nextends Resource\n\n@export var speed: float = 100.0\n@export var max_health: int = 20\n@export var damage: int = 10\n"
+     },
+     {
+      "percorso": "wave_data.gd",
+      "contenuto": "class_name WaveData\nextends Resource\n\n@export var enemy_types: Array[EnemyData] = []\n@export var spawn_count: int = 5\n@export var spawn_interval: float = 1.0\n"
+     },
+     {
+      "percorso": "enemies/fast_enemy.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 180.0\nmax_health = 10\ndamage = 5\n"
+     },
+     {
+      "percorso": "enemies/normal_enemy.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 100.0\nmax_health = 20\ndamage = 10\n"
+     },
+     {
+      "percorso": "enemies/tank_enemy.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 60.0\nmax_health = 50\ndamage = 25\n"
+     },
+     {
+      "percorso": "enemy.gd",
+      "contenuto": "class_name Enemy\nextends CharacterBody2D\n\n@export var data: EnemyData:\n\tset(value):\n\t\tdata = value\n\t\tif is_node_ready() and health and data:\n\t\t\thealth.max_health = data.max_health\n\t\t\thealth.current_health = data.max_health\n\n@onready var health: Health = $Health\n\nvar player: Node2D = null\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"enemies\")\n\tif data:\n\t\thealth.max_health = data.max_health\n\t\thealth.current_health = data.max_health\n\n\thealth.died.connect(_on_died)\n\n\nfunc _physics_process(_delta: float) -> void:\n\tif player == null:\n\t\tplayer = get_parent().get_node_or_null(\"Player\")\n\n\tif player:\n\t\tvar direction := (player.global_position - global_position).normalized()\n\t\tvar spd := data.speed if data else 100.0\n\t\tvelocity = direction * spd\n\t\tmove_and_slide()\n\n\t\tif global_position.distance_to(player.global_position) < 24.0:\n\t\t\tvar player_health := player.get_node_or_null(\"Health\") as Health\n\t\t\tif player_health:\n\t\t\t\tvar dmg := data.damage if data else 10\n\t\t\t\tplayer_health.take_damage(dmg)\n\t\t\tqueue_free()\n\n\nfunc _on_died() -> void:\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"3_sprite\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_enemy\"]\nradius = 14.0\n\n[node name=\"Enemy\" type=\"CharacterBody2D\" groups=[\"enemies\"]]\nscript = ExtResource(\"1_enemy\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"3_sprite\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_enemy\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+     },
+     {
+      "percorso": "bullet.gd",
+      "contenuto": "extends Area2D\n\n@export var speed: float = 500.0\nvar direction: Vector2 = Vector2.RIGHT\nvar lifetime: float = 2.0\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tposition += direction * speed * delta\n\tlifetime -= delta\n\tif lifetime <= 0.0:\n\t\tqueue_free()\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.is_in_group(\"enemies\") or body is Enemy:\n\t\tvar health := body.get_node_or_null(\"Health\") as Health\n\t\tif health:\n\t\t\thealth.take_damage(10)\n\t\tqueue_free()\n\telif body.name == \"Walls\":\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "arena.gd",
+      "contenuto": "extends Node2D\n\n@export var enemy_scene: PackedScene = preload(\"res://enemy.tscn\")\n@export var waves: Array[WaveData] = []:\n\tset(value):\n\t\twaves = value\n\t\tcurrent_wave_index = 0\n\t\tspawned_in_wave = 0\n\t\tspawn_timer = 0.0\n\nvar current_wave_index: int = 0\nvar spawned_in_wave: int = 0\nvar spawn_timer: float = 0.0\nvar wave_delay_timer: float = 0.0\nvar waiting_for_next_wave: bool = false\n\n\nfunc _ready() -> void:\n\tif waves.is_empty():\n\t\t_setup_default_waves()\n\tspawn_timer = 0.0\n\n\nfunc _setup_default_waves() -> void:\n\tvar fast_res = load(\"res://enemies/fast_enemy.tres\") as EnemyData\n\tvar normal_res = load(\"res://enemies/normal_enemy.tres\") as EnemyData\n\tvar tank_res = load(\"res://enemies/tank_enemy.tres\") as EnemyData\n\n\tvar w1 := WaveData.new()\n\tw1.spawn_count = 5\n\tw1.spawn_interval = 1.0\n\tif normal_res:\n\t\tw1.enemy_types.append(normal_res)\n\n\tvar w2 := WaveData.new()\n\tw2.spawn_count = 8\n\tw2.spawn_interval = 0.8\n\tif fast_res:\n\t\tw2.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw2.enemy_types.append(normal_res)\n\n\tvar w3 := WaveData.new()\n\tw3.spawn_count = 12\n\tw3.spawn_interval = 0.6\n\tif fast_res:\n\t\tw3.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw3.enemy_types.append(normal_res)\n\tif tank_res:\n\t\tw3.enemy_types.append(tank_res)\n\n\twaves = [w1, w2, w3]\n\n\nfunc _process(delta: float) -> void:\n\tif current_wave_index >= waves.size():\n\t\treturn\n\n\tvar wave := waves[current_wave_index]\n\n\tif waiting_for_next_wave:\n\t\twave_delay_timer -= delta\n\t\tif wave_delay_timer <= 0.0:\n\t\t\twaiting_for_next_wave = false\n\t\t\tcurrent_wave_index += 1\n\t\t\tspawned_in_wave = 0\n\t\t\tspawn_timer = 0.0\n\t\treturn\n\n\tif spawned_in_wave < wave.spawn_count:\n\t\tspawn_timer -= delta\n\t\tif spawn_timer <= 0.0:\n\t\t\tspawn_enemy(wave)\n\t\t\tspawned_in_wave += 1\n\t\t\tspawn_timer = wave.spawn_interval\n\telse:\n\t\tvar enemies := get_tree().get_nodes_in_group(\"enemies\")\n\t\tif enemies.is_empty():\n\t\t\twaiting_for_next_wave = true\n\t\t\twave_delay_timer = 2.0\n\n\nfunc spawn_enemy(wave: WaveData) -> void:\n\tif enemy_scene == null or wave.enemy_types.is_empty():\n\t\treturn\n\tvar enemy := enemy_scene.instantiate() as Enemy\n\tvar type_data: EnemyData = wave.enemy_types.pick_random()\n\tenemy.data = type_data\n\n\tvar side := randi() % 4\n\tvar pos := Vector2.ZERO\n\tmatch side:\n\t\t0: pos = Vector2(randf_range(-40, 1192), -40)\n\t\t1: pos = Vector2(randf_range(-40, 1192), 688)\n\t\t2: pos = Vector2(-40, randf_range(-40, 688))\n\t\t3: pos = Vector2(1192, randf_range(-40, 688))\n\tenemy.global_position = pos\n\tadd_child(enemy)\n"
+     },
+     {
+      "percorso": "arena.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://arena.gd\" id=\"1_arena\"]\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_h\"]\nsize = Vector2(1200, 40)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_v\"]\nsize = Vector2(40, 700)\n\n[node name=\"Arena\" type=\"Node2D\"]\nscript = ExtResource(\"1_arena\")\n\n[node name=\"Walls\" type=\"StaticBody2D\" parent=\".\"]\n\n[node name=\"TopWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, -20)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"BottomWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, 668)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"LeftWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(-20, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"RightWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(1172, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\nposition = Vector2(576, 324)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Arena",
+     "scenaPrincipale": "res://arena.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "shoot",
+       "tasti": [
+        "Space",
+        "MouseLeft"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "In questa seconda tappa del progetto **Arena** abbiamo separato la descrizione dei nemici e delle ondate dalla logica del gioco usando le risorse (`Resource`).\n\n- `EnemyData` e `WaveData` consentono di creare tipi di nemici e configurazioni di ondate come file `.tres` modificabili nell'Inspector.\n- La scena `Enemy` legge i propri valori (salute e velocità) dalla risorsa `EnemyData` associata.\n- `Arena` gestisce la frequenza e la posizione di spawn ai bordi dell'arena e controlla il passaggio tra un'ondata e l'altra quando tutti i nemici correnti vengono eliminati.\n- I proiettili rilevano i nemici mediante il gruppo `\"enemies\"` e ne riducono la salute attraverso la componente `Health`.",
+    "cambiati": [
+     "enemy_data.gd",
+     "wave_data.gd",
+     "enemies/fast_enemy.tres",
+     "enemies/normal_enemy.tres",
+     "enemies/tank_enemy.tres",
+     "enemy.gd",
+     "enemy.tscn",
+     "bullet.gd",
+     "arena.gd",
+     "arena.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
