@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-13T09:21:13.884Z",
+ "aggiornato": "2026-11-13T10:14:16.014Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1051,10 +1051,10 @@
    "slug": "progetto-arena-1",
    "numero": "7.14",
    "titolo": "Progetto «Arena» – tappa 1: muoversi e sparare",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f07-azione-2d/progetto-arena-1.json",
-   "sha256": "e68a60d0bf4c7f292f77c4d254c590b93bbb6617b7d865ee88c3e57ec13849ee",
-   "byte": 25112
+   "sha256": "27c68d7b73113b527c9931242144f50cf639180534a423cfb867b600a04c588c",
+   "byte": 27434
   }
  ],
  "documentazione": {
