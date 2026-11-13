@@ -26,3 +26,4 @@
 {"quando":1794565746792,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-arena-2","ok":true,"contata":true,"durataMs":100483,"tokenInput":13172,"tokenOutput":6190,"ragionamento":15516}
 {"quando":1794565847277,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-arena-2","ok":true,"contata":true,"durataMs":42148,"tokenInput":17560,"tokenOutput":5943,"ragionamento":3351}
 {"quando":1794565896212,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-arena-2","ok":true,"contata":true,"durataMs":28402,"tokenInput":14214,"tokenOutput":7276,"ragionamento":9240}
+{"quando":1794565929763,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-arena-2","ok":true,"contata":true,"durataMs":807346,"tokenInput":14315,"tokenOutput":6942,"ragionamento":41645}
