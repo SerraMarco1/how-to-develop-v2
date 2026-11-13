@@ -40,3 +40,4 @@
 {"quando":1794576102905,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-arena-2","ok":true,"contata":true,"durataMs":7886,"tokenInput":2775,"tokenOutput":675,"ragionamento":2312}
 {"quando":1794576127609,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"progetto-arena-2","ok":true,"contata":true,"durataMs":22088,"tokenInput":14616,"tokenOutput":7636,"ragionamento":3717}
 {"quando":1794576165425,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-arena-3","ok":false,"contata":true,"durataMs":9911,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794577447094,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-arena-3","ok":false,"contata":true,"durataMs":2099,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
