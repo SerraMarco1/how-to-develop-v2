@@ -598,5 +598,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "progetto-arena-2": {
+  "versione": 3,
+  "fragili": [],
+  "tentativi": {}
  }
 }

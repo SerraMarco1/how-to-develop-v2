@@ -1,0 +1,48 @@
+{
+ "n": 31,
+ "quando": "2026-11-13T13:22:43.656Z",
+ "pezzo": "test",
+ "azione": "verifiche robuste",
+ "esito": "ok",
+ "titolo": "Test: correzione della lezione pubblicata, 1 di 3",
+ "spiegazione": "La correzione di gemini/gemini-flash-lite-latest supera tutti i controlli: le verifiche passano due volte sulla soluzione e sulla sua variante con i valori liberi dimezzati, falliscono sul lavoro non fatto, e la consegna dice ciò che serve; la soluzione non cambia.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 36048,
+ "dati": {
+  "problemi": [],
+  "verifiche": [
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://enemy_data.gd",
+    "descrizione": "Lo script res://enemy_data.gd esiste"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://wave_data.gd",
+    "descrizione": "Lo script res://wave_data.gd esiste"
+   },
+   {
+    "tipo": "file_esiste",
+    "percorso": "res://enemy.tscn",
+    "descrizione": "La scena res://enemy.tscn esiste"
+   },
+   {
+    "tipo": "nodo",
+    "scena": "res://enemy.tscn",
+    "tipoNodo": "CharacterBody2D",
+    "nome": "Enemy",
+    "descrizione": "La scena res://enemy.tscn contiene un CharacterBody2D chiamato Enemy"
+   },
+   {
+    "tipo": "script_godot",
+    "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar arena := await instantiate_main_scene()\n\tif not check(\"arena_scene\", arena != null, \"La scena principale arena.tscn deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar enemy_data_script = load(\"res://enemy_data.gd\")\n\tif not check(\"enemy_data_exists\", enemy_data_script != null, \"Lo script res://enemy_data.gd deve esistere\"):\n\t\treturn\n\n\tvar wave_data_script = load(\"res://wave_data.gd\")\n\tif not check(\"wave_data_exists\", wave_data_script != null, \"Lo script res://wave_data.gd deve esistere\"):\n\t\treturn\n\n\tvar enemy_scene_res = load(\"res://enemy.tscn\") as PackedScene\n\tif not check(\"enemy_scene_exists\", enemy_scene_res != null, \"La scena res://enemy.tscn deve esistere\"):\n\t\treturn\n\n\tvar dummy_data = enemy_data_script.new()\n\tdummy_data.set(\"speed\", 200.0)\n\tdummy_data.set(\"max_health\", 30)\n\tdummy_data.set(\"damage\", 15)\n\n\tvar enemy = enemy_scene_res.instantiate() as Node2D\n\tif not check(\"enemy_instantiate\", enemy != null, \"La scena enemy.tscn deve potersi istanziare\"):\n\t\treturn\n\n\tenemy.set(\"data\", dummy_data)\n\tarena.add_child(enemy)\n\tenemy.global_position = Vector2(100, 324)\n\n\tvar health_node = enemy.find_child(\"Health\")\n\tif health_node == null:\n\t\thealth_node = find_by_class(enemy, \"Health\")\n\n\tcheck(\"enemy_health\", health_node != null, \"Il nemico deve contenere un nodo componente Health\")\n\n\tvar player = find_by_name(arena, \"Player\") as Node2D\n\tif player != null:\n\t\tplayer.global_position = Vector2(500, 324)\n\t\tvar start_x: float = enemy.global_position.x\n\t\tawait wait_physics_frames(10)\n\t\tcheck(\"enemy_moves\", enemy.global_position.x > start_x, \"Il nemico deve muoversi verso il giocatore\")\n\n\tfor e in arena.get_tree().get_nodes_in_group(\"enemies\"):\n\t\tif is_instance_valid(e):\n\t\t\te.queue_free()\n\tawait wait_frames(2)\n\n\tvar custom_enemy_data = enemy_data_script.new()\n\tcustom_enemy_data.set(\"speed\", 100.0)\n\tcustom_enemy_data.set(\"max_health\", 20)\n\tcustom_enemy_data.set(\"damage\", 10)\n\n\tvar custom_wave = wave_data_script.new()\n\tvar enemy_types = custom_wave.get(\"enemy_types\") as Array\n\tif enemy_types != null:\n\t\tenemy_types.clear()\n\t\tenemy_types.append(custom_enemy_data)\n\telse:\n\t\tcustom_wave.set(\"enemy_types\", [custom_enemy_data])\n\tcustom_wave.set(\"spawn_count\", 2)\n\tcustom_wave.set(\"spawn_interval\", 0.1)\n\n\tvar waves_list = arena.get(\"waves\") as Array\n\tif waves_list != null:\n\t\twaves_list.clear()\n\t\twaves_list.append(custom_wave)\n\t\tarena.set(\"waves\", waves_list)\n\telse:\n\t\tarena.set(\"waves\", [custom_wave])\n\n\tarena.set(\"current_wave_index\", 0)\n\tarena.set(\"spawned_in_wave\", 0)\n\tarena.set(\"spawn_timer\", 0.0)\n\tarena.set(\"waiting_for_next_wave\", false)\n\n\tawait wait_seconds(0.5)\n\n\tvar enemies = arena.get_tree().get_nodes_in_group(\"enemies\")\n\tcheck(\"spawner_works\", enemies.size() >= 1, \"La gestione delle ondate deve far nascere i nemici registrandoli nel gruppo 'enemies'\")\n",
+    "descrizione": "I nemici nascono durante le ondate, inseguono il giocatore e subiscono danni dai proiettili"
+   }
+  ],
+  "consegna": "Prosegui lo sviluppo del progetto `Arena` nella cartella `arena`.\n\nIn questa seconda tappa implementerai la gestione dei nemici e delle ondate descrivendo i dati tramite risorse `Resource`.\n\nSe vuoi usare gli sprite grafici del pacchetto del corso (come `res://assets/sprites/enemy.png`), copia la cartella `assets` che si trova in `_asset-del-corso` dentro la radice del tuo progetto.\n\n### Funzioni utili per questo esercizio\n- `is_node_ready()`: restituisce `true` se il nodo e i suoi figli sono pronti (utile nei setter per verificare se i nodi figli esistono già, ad esempio `if is_node_ready(): health.max_health = data.max_health`).\n- `pick_random()`: sceglie un elemento casuale da un array (ad esempio `var tipo = [item1, item2].pick_random()`).\n- `randi()`: genera un numero intero casuale, spesso usato con l'operatore modulo `%` per ottenere un valore in un intervallo (ad esempio `randi() % 4` restituisce un numero intero da 0 a 3).\n\n### 1. Dati dei nemici e delle ondate (Resource)\n- Crea lo script `res://enemy_data.gd` con `class_name EnemyData extends Resource` e le seguenti proprietà esportate:\n  - `@export var speed: float = 100.0`\n  - `@export var max_health: int = 20`\n  - `@export var damage: int = 10`\n- Crea lo script `res://wave_data.gd` con `class_name WaveData extends Resource` e le seguenti proprietà esportate:\n  - `@export var enemy_types: Array[EnemyData] = []`\n  - `@export var spawn_count: int = 5`\n  - `@export var spawn_interval: float = 1.0`\n- Crea tre file di risorsa `.tres` nella cartella `res://enemies/`:\n  - `res://enemies/fast_enemy.tres`: risorsa di tipo `EnemyData` con `speed = 180.0`, `max_health = 10`, `damage = 5`.\n  - `res://enemies/normal_enemy.tres`: risorsa di tipo `EnemyData` con `speed = 100.0`, `max_health = 20`, `damage = 10`.\n  - `res://enemies/tank_enemy.tres`: risorsa di tipo `EnemyData` con `speed = 60.0`, `max_health = 50`, `damage = 25`.\n\n### 2. Scena e comportamento del nemico\n- Crea la scena `res://enemy.tscn` con nodo radice `CharacterBody2D` chiamato `Enemy`, inserito nel gruppo `\"enemies\"`.\n- Assegna a `Enemy` lo script `res://enemy.gd` (`class_name Enemy extends CharacterBody2D`).\n- Aggiungi a `Enemy` i figli: `Sprite2D` (con la grafica del nemico), `CollisionShape2D` e un nodo `Health` (istanza dello script `res://health.gd`).\n- In `enemy.gd` dichiara `@export var data: EnemyData`.\n- Quando `data` viene assegnato o all'avvio (`_ready()`), il nodo `Health` del nemico acquisisce la salute da `data.max_health`.\n- In `_physics_process(delta)` il nemico individua il nodo `Player` nell'arena e si muove verso di esso alla velocità `data.speed` usando `move_and_slide()`.\n- Quando il nemico entra in collisione o a stretto contatto con il giocatore (distanza < 24 pixel), infligge `data.damage` al nodo `Health` del giocatore via `take_damage()` e si distrugge con `queue_free()`.\n- Quando il segnale `died` di `Health` scatta (o la vita arriva a 0), il nemico si distrugge con `queue_free()`.\n\n### 3. Collisione dei proiettili\n- Aggiorna `res://bullet.gd` affinché, quando il proiettile tocca un nemico nel gruppo `\"enemies\"`, infligge 10 danni al suo nodo `Health` tramite `take_damage(10)` e si elimini con `queue_free()`.\n\n### 4. Generazione ondate nell'Arena\n- Assegna al nodo radice `Arena` della scena `res://arena.tscn` uno script `res://arena.gd`.\n- In `arena.gd` dichiara:\n  - `@export var enemy_scene: PackedScene = preload(\"res://enemy.tscn\")`\n  - `@export var waves: Array[WaveData] = []`\n- Nell'Inspector della scena `Arena`, imposta in `waves` 3 ondate riutilizzando le risorse create (`fast_enemy.tres`, `normal_enemy.tres`, `tank_enemy.tres`).\n- In `_process(delta)` di `arena.gd`, fai nascere i nemici ai bordi esterni dell'arena (selezionando a caso uno dei quattro bordi).\n- Fai nascere `spawn_count` nemici ad intervalli di `spawn_interval` secondi, scegliendo un `EnemyData` a caso dall'elenco `enemy_types` dell'ondata corrente e assegnandolo alla proprietà `data` del nemico istanziato.\n- Quando tutti i nemici di un'ondata sono nati e sul campo non ce ne sono più di vivi nel gruppo `\"enemies\"`, attendi 2 secondi di pausa prima di far partire l'ondata successiva."
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 22 s (14616 → 7636 token)"
+ ]
+}
