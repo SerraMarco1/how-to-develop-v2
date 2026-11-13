@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-13T13:07:02.534Z",
+ "aggiornato": "2026-11-13T13:21:56.012Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1060,10 +1060,10 @@
    "slug": "progetto-arena-2",
    "numero": "7.15",
    "titolo": "Progetto «Arena» – tappa 2: nemici e ondate",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f07-azione-2d/progetto-arena-2.json",
-   "sha256": "e53508ce3220727a5edc0899f89ba69a9b289a5b32c26e5241f166ef45cb3263",
-   "byte": 48483
+   "sha256": "11b3dae3ab18f6d6d68a1e3de5f9d3a1c29d62d01cebad537dbbdf583be435a6",
+   "byte": 50048
   }
  ],
  "documentazione": {
