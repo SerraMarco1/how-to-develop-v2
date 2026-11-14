@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-14T10:35:34.507Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-14T11:05:24.523Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-arena-4",
   "numero": "7.17",
   "titolo": "Progetto «Arena» – tappa 4: gioco completo"
  },
- "messaggio": "Sta scrivendo la lezione 7.17 «Progetto «Arena» – tappa 4: gioco completo».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.17 riprende da sola appena rispondono.",
+ "riprende": "2026-11-14T11:15:24.523Z"
 }
