@@ -1,0 +1,67 @@
+{
+ "n": 19,
+ "quando": "2026-11-14T12:31:57.519Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Personaggio» (muoversi). Scritte: «Il personaggio cade e atterra sul terreno» · «Premi Spazio per saltare». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 40 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 27815,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 3,
+     "tasto": "D"
+    },
+    {
+     "azione": "jump",
+     "inizio": 3.5,
+     "fine": 3.8,
+     "tasto": "Spazio"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "nome": "Player"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 8,
+     "deve": "muoversi",
+     "etichetta": "Personaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il personaggio cade e atterra sul terreno",
+     "da": 0.5,
+     "a": 3,
+     "soggetto": "player"
+    },
+    {
+     "testo": "Premi Spazio per saltare",
+     "da": 3.5,
+     "a": 6.5,
+     "soggetto": "player"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "ce45d5e2bf07a8c2ba3605c88b806c2a8baa5fb47773779a7b390af7c46255c3",
+   "estensione": "mp4",
+   "byte": 40833
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 12 s (3402 → 335 token)"
+ ]
+}
