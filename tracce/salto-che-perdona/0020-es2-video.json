@@ -1,0 +1,54 @@
+{
+ "n": 20,
+ "quando": "2026-11-14T12:32:15.008Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 2: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «player» (script = res://player/player.gd; almeno 1 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 1 nodi solo nel 59% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 1. A 5 s: «Player» a (969, 840.4) 32×32, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 16152,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 5,
+     "tasto": "D"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "script": "res://player/player.gd"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "muoversi",
+     "etichetta": "Personaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il personaggio si muove con accelerazione e attrito",
+     "da": 1,
+     "a": 5,
+     "soggetto": "player"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «player» (script = res://player/player.gd; almeno 1 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 1 nodi solo nel 59% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 1. A 5 s: «Player» a (969, 840.4) 32×32, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (3240 → 251 token)"
+ ]
+}
