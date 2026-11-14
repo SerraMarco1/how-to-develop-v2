@@ -2,3 +2,4 @@
 {"quando":1794643266067,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-arena-3","ok":true,"contata":true,"durataMs":144698,"tokenInput":15256,"tokenOutput":9910,"ragionamento":16378}
 {"quando":1794643410770,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-arena-3","ok":true,"contata":true,"durataMs":48657,"tokenInput":19553,"tokenOutput":9047,"ragionamento":3864}
 {"quando":1794643459431,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-arena-3","ok":false,"contata":true,"durataMs":52844,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794644220310,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-arena-3","ok":false,"contata":true,"durataMs":376,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
