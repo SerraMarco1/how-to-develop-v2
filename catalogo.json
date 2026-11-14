@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-14T11:19:12.151Z",
+ "aggiornato": "2026-11-14T11:32:13.428Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1082,6 +1082,15 @@
    "file": "lezioni/f07-azione-2d/progetto-arena-4.json",
    "sha256": "3643205afa1ce777096131afb44bb2cf26016711618acc325433f47254d7cfd9",
    "byte": 100662
+  },
+  {
+   "slug": "gravita-e-salto",
+   "numero": "8.0",
+   "titolo": "Gravità e salto",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/gravita-e-salto.json",
+   "sha256": "0e64c112b2933a38ddc943422df616e2e3e2f31f0d2de1ff83a4509d193c9fa0",
+   "byte": 36325
   }
  ],
  "documentazione": {
