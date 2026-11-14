@@ -379,7 +379,9 @@
    "genere": "imita",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il salto deve attivarsi dentro la finestra di Coyote Time (velocity.y è 53.3)\n  - coyote_timer deve essere azzerato dopo il salto (valore attuale: 0.11666666666667)\n  - jump_buffer_timer deve essere azzerato dopo il salto (valore attuale: -0.06666666666667)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
