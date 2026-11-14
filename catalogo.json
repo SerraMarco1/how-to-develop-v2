@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-14T10:35:33.040Z",
+ "aggiornato": "2026-11-14T11:19:12.151Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1073,6 +1073,15 @@
    "file": "lezioni/f07-azione-2d/progetto-arena-3.json",
    "sha256": "bdfb9e412117db6dac3bdf39d06d5b823797db80b654f9418f51956abfdba1fb",
    "byte": 70575
+  },
+  {
+   "slug": "progetto-arena-4",
+   "numero": "7.17",
+   "titolo": "Progetto «Arena» – tappa 4: gioco completo",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/progetto-arena-4.json",
+   "sha256": "3643205afa1ce777096131afb44bb2cf26016711618acc325433f47254d7cfd9",
+   "byte": 100662
   }
  ],
  "documentazione": {
