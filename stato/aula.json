@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-14T11:32:14.702Z",
+ "aggiornato": "2026-11-14T11:53:45.741Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "salto-che-perdona",
-  "numero": "8.1",
-  "titolo": "Un salto che perdona"
+  "slug": "animatedsprite2d",
+  "numero": "8.2",
+  "titolo": "Animazioni a fotogrammi"
  },
- "messaggio": "Sta scrivendo la lezione 8.1 «Un salto che perdona».",
+ "messaggio": "Sta scrivendo la lezione 8.2 «Animazioni a fotogrammi».",
  "riprende": null
 }
