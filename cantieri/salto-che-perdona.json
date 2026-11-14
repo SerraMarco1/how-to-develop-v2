@@ -346,19 +346,19 @@
      {
       "tipo": "testo_in_file",
       "percorso": "res://player/player.gd",
-      "regex": "coyote_timer = 0\\.0",
-      "descrizione": "Lo script azzera coyote_timer dopo aver eseguito il salto"
+      "regex": "@export_group\\(\"Tolleranze Salto\"\\)",
+      "descrizione": "Le tolleranze del salto sono raggruppate con @export_group(\"Tolleranze Salto\")"
      },
      {
       "tipo": "testo_in_file",
       "percorso": "res://player/player.gd",
-      "regex": "jump_buffer_timer = 0\\.0",
-      "descrizione": "Lo script azzera jump_buffer_timer dopo aver eseguito il salto"
+      "regex": "air_acceleration",
+      "descrizione": "Lo script utilizza air_acceleration per il movimento orizzontale in aria"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena serve un CharacterBody2D chiamato Player\"):\n\t\treturn\n\n\t# Test 1: Coyote Time + Azzeramento timer\n\tplayer.position = Vector2(400, 464)\n\tawait wait_physics_frames(2)\n\tplayer.position = Vector2(400, 400)\n\tawait wait_physics_frames(2)\n\tawait tap_action(\"jump\")\n\tcheck(\"coyote_active\", player.velocity.y < 0.0, \"Il salto deve attivarsi dentro la finestra di Coyote Time (velocity.y è %.1f)\" % player.velocity.y)\n\n\tvar coyote_val = get_prop(player, \"coyote_timer\", 1.0)\n\tvar buffer_val = get_prop(player, \"jump_buffer_timer\", 1.0)\n\tcheck(\"timer_coyote_zero\", float(coyote_val) <= 0.0, \"coyote_timer deve essere azzerato dopo il salto (valore attuale: %s)\" % str(coyote_val))\n\tcheck(\"timer_buffer_zero\", float(buffer_val) <= 0.0, \"jump_buffer_timer deve essere azzerato dopo il salto (valore attuale: %s)\" % str(buffer_val))\n\n\t# Test 2: Jump Buffer all'atterraggio\n\tplayer.position = Vector2(400, 300)\n\tplayer.velocity = Vector2(0, 150)\n\tawait wait_physics_frames(2)\n\tawait tap_action(\"jump\")\n\tawait wait_physics_frames(2)\n\tplayer.position = Vector2(400, 464)\n\tawait wait_physics_frames(3)\n\tcheck(\"buffer_active\", player.velocity.y < 0.0, \"Il salto premuto in volo deve attivarsi appena si tocca terra (velocity.y è %.1f)\" % player.velocity.y)",
-      "descrizione": "Il sistema di salto risponde correttamente a Coyote Time, Jump Buffer e azzera i timer per evitare salti doppi"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena serve un CharacterBody2D chiamato Player\"):\n\t\treturn\n\n\tvar coyote_t = float(get_prop(player, \"coyote_time\", 0.0))\n\tvar buffer_t = float(get_prop(player, \"jump_buffer_time\", 0.0))\n\tcheck(\"coyote_time_val\", absf(coyote_t - 0.15) < 0.01, \"coyote_time deve essere impostata a 0.15 (valore attuale: %.2f)\" % coyote_t)\n\tcheck(\"jump_buffer_val\", absf(buffer_t - 0.15) < 0.01, \"jump_buffer_time deve essere impostata a 0.15 (valore attuale: %.2f)\" % buffer_t)\n\n\tplayer.position = Vector2(400, 464)\n\tawait wait_physics_frames(2)\n\tawait tap_action(\"jump\")\n\tvar c_timer = float(get_prop(player, \"coyote_timer\", -1.0))\n\tvar b_timer = float(get_prop(player, \"jump_buffer_timer\", -1.0))\n\tcheck(\"timer_coyote_zero\", c_timer <= 0.0, \"coyote_timer deve essere azzerato subito dopo il salto (valore attuale: %s)\" % str(c_timer))\n\tcheck(\"timer_buffer_zero\", b_timer <= 0.0, \"jump_buffer_timer deve essere azzerato subito dopo il salto (valore attuale: %s)\" % str(b_timer))\n\n\tplayer.position = Vector2(400, 300)\n\tplayer.velocity = Vector2.ZERO\n\tawait hold_action(\"move_right\", 2)\n\tcheck(\"air_movement\", player.velocity.x > 0.0, \"In aria il personaggio deve muoversi a destra usando air_acceleration (velocity.x è %.1f)\" % player.velocity.x)",
+      "descrizione": "Il personaggio rispetta le tolleranze esportate, azzera i timer durante il salto e accelera in aria"
      }
     ],
     "previsioni": [],
@@ -410,12 +410,13 @@
     }
    },
    "genere": "imita",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
