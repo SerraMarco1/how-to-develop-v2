@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-14T11:32:13.428Z",
+ "aggiornato": "2026-11-14T11:53:44.507Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1091,6 +1091,15 @@
    "file": "lezioni/f08-piattaforme/gravita-e-salto.json",
    "sha256": "0e64c112b2933a38ddc943422df616e2e3e2f31f0d2de1ff83a4509d193c9fa0",
    "byte": 36325
+  },
+  {
+   "slug": "salto-che-perdona",
+   "numero": "8.1",
+   "titolo": "Un salto che perdona",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/salto-che-perdona.json",
+   "sha256": "1ace76afaf62b47c3f10d90d2f513713d0d5724125eb11e92c6cf72d08c26cf1",
+   "byte": 45899
   }
  ],
  "documentazione": {
