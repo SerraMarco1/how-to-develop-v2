@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main.tscn\",\n  \"durata\": 6,\n  \"azioni\": [\n    {\n      \"azione\": \"move_right\",\n      \"inizio\": 1.0,\n      \"fine\": 3.0,\n      \"tasto\": \"D\"\n    },\n    {\n      \"azione\": \"move_left\",\n      \"inizio\": 3.5,\n      \"fine\": 5.5,\n      \"tasto\": \"A\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"player\",\n      \"cerca\": {\n        \"script\": \"res://player/player.gd\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 5.8,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Personaggio\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il personaggio si muove con accelerazione e attrito\",\n      \"da\": 1.0,\n      \"a\": 5.0,\n      \"soggetto\": \"player\"\n    }\n  ]\n}",
- "ragionamento": 2044,
- "quando": "2026-11-14T12:32:28.257Z",
- "ruolo": "ritocco"
-}
