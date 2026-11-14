@@ -1635,6 +1635,69 @@
     ]
    },
    "motivo": "L'esercizio modifica la fisica del movimento del personaggio esistente senza aggiungere nuovi nodi visibili, quindi il risultato non può essere distinto visivamente dal progetto precedente."
+  },
+  "test": {
+   "impronta": "219b51d9c973ece3415f1324f57eebe4be9105d0315752a020e665f54244596d",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 8,
+     "azioni": [
+      {
+       "azione": "move_right",
+       "inizio": 1,
+       "fine": 4,
+       "tasto": "D"
+      },
+      {
+       "azione": "jump",
+       "inizio": 2,
+       "fine": 2.3,
+       "tasto": "Spazio"
+      },
+      {
+       "azione": "move_left",
+       "inizio": 4.5,
+       "fine": 7,
+       "tasto": "A"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "player",
+       "cerca": {
+        "script": "res://player/player.gd"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 8,
+       "deve": "muoversi",
+       "etichetta": "Personaggio"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "A terra l'accelerazione è reattiva",
+       "da": 1,
+       "a": 3.5,
+       "soggetto": "player"
+      },
+      {
+       "testo": "In aria il movimento è più graduale",
+       "da": 4,
+       "a": 7,
+       "soggetto": "player"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio modifica il comportamento del personaggio esistente senza aggiungere nuovi nodi visivi; il personaggio si muoveva anche nel progetto precedente."
   }
  }
 }

@@ -1,0 +1,16 @@
+{
+ "n": 24,
+ "quando": "2026-11-14T12:33:07.250Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Accelerazione e attrito differenziati in aria e a terra» non si vede sullo schermo: L'esercizio modifica il comportamento del personaggio esistente senza aggiungere nuovi nodi visivi; il personaggio si muoveva anche nel progetto precedente.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 6438,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (3565 → 40 token)"
+ ]
+}
