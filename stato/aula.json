@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-14T11:53:45.741Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-14T11:56:07.509Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "animatedsprite2d",
   "numero": "8.2",
   "titolo": "Animazioni a fotogrammi"
  },
- "messaggio": "Sta scrivendo la lezione 8.2 «Animazioni a fotogrammi».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 8.2 riprende da sola appena rispondono.",
+ "riprende": "2026-11-14T12:06:07.509Z"
 }
