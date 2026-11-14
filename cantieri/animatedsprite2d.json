@@ -1,0 +1,76 @@
+{
+ "creato": "2026-11-14T11:53:45.748Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Animazioni a fotogrammi",
+  "sommario": "Impara ad animare il personaggio di un gioco a piattaforme 2D in Godot 4.7 usando AnimatedSprite2D e la risorsa SpriteFrames. Scoprirai come ritagliare le animazioni da un foglio di immagini, orientare lo sprite nella direzione del movimento e scegliere l'animazione corretta in base allo stato fisico del personaggio.",
+  "concetti": [
+   "AnimatedSprite2D e la risorsa SpriteFrames",
+   "Estrazione di fotogrammi da uno sprite sheet",
+   "Orientamento dello sprite tramite la proprietà flip_h",
+   "Selezione dinamica dell'animazione in base a is_on_floor() e alla velocità"
+  ],
+  "obiettivi": [
+   "SpriteFrames: più animazioni ricavate da un foglio di immagini",
+   "Scegliere l'animazione da ciò che il personaggio sta facendo",
+   "Girare il personaggio nel verso in cui va"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Finora il personaggio di «Salti» si è mosso come un blocco immobile. Nei giochi a piattaforme, l'animazione visiva è fondamentale: vedere il personaggio che corre, salta o cade rende i controlli reattivi e piacevoli.\n\nIn questa lezione sostituiremo l'immagine fissa del personaggio con sequenze di animazioni a fotogrammi. Impareremo a ritagliare le sequenze da un foglio di immagini (sprite sheet), a capovolgere lo sprite quando cambia direzione e a scegliere l'animazione giusta in base a cosa sta facendo la fisica."
+   },
+   {
+    "tipo": "testo",
+    "md": "In Godot, il nodo `Sprite2D` mostra una singola immagine fissa. Per riprodurre una sequenza di immagini in rapida successione si usa invece il nodo `AnimatedSprite2D`.\n\nQuesto nodo funziona insieme a una risorsa chiamata `SpriteFrames` (fotogrammi dello sprite). La risorsa `SpriteFrames` contiene tutte le animazioni del personaggio (ad esempio `idle`, `run`, `jump`, `fall`), ciascuna composta da una lista di fotogrammi estratti da un unico file d'immagine (*sprite sheet*)."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Sostituire Sprite2D con AnimatedSprite2D e configurare SpriteFrames",
+    "passi": [
+     "Nel pannello *FileSystem*, fai doppio clic su `player/player.tscn` per aprire la scena del personaggio.",
+     "Nel pannello *Scene*, seleziona il nodo `Sprite2D`, fai clic destro e premi **Delete** per rimuoverlo.",
+     "Seleziona il nodo radice `Player`, premi il pulsante **+** nel pannello *Scene*, cerca `AnimatedSprite2D` e premi **Create**.",
+     "Con `AnimatedSprite2D` selezionato, vai nel pannello *Inspector*, fai clic su `<null>` accanto alla proprietà **SpriteFrames** e seleziona **New SpriteFrames**.",
+     "Fai clic sulla nuova risorsa `SpriteFrames` per aprire il pannello inferiore **SpriteFrames**.",
+     "Nel pannello inferiore, rinomina l'animazione predefinita `default` in `idle` facendo doppio clic sul nome nella colonna di sinistra.",
+     "Premi il pulsante **Add frames from a Sprite Sheet** (icona a griglia nel pannello inferiore) e seleziona il file `assets/sprites/player.png`.",
+     "Imposta il numero di colonne e righe dello sprite sheet, seleziona i fotogrammi da fermo e premi **Add frames**.",
+     "Crea le animazioni `run`, `jump` e `fall` premendo **Add Animation** e selezionando i rispettivi fotogrammi dallo sprite sheet."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "finestra-nuovo-nodo",
+    "didascalia": "La finestra Create New Node per cercare e aggiungere il nodo AnimatedSprite2D al personaggio."
+   },
+   {
+    "tipo": "testo",
+    "md": "I disegni nei giochi 2D sono spesso orientati solo verso destra. Invece di raddoppiare le immagini per creare le animazioni verso sinistra, si usa la proprietà `flip_h` (rifletti orizzontalmente) di `AnimatedSprite2D`.\n\nQuando `flip_h` è `false`, lo sprite guarda nel suo verso normale (destra). Quando impostiamo `flip_h` su `true`, Godot specchia lo sprite sull'asse orizzontale, facendolo guardare a sinistra."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per scegliere l'animazione corretta al momento giusto, verifichiamo lo stato del personaggio dopo aver chiamato `move_and_slide()`:\n\n1. **Se è a terra (`is_on_floor()` è `true`)**: se la velocità orizzontale `abs(velocity.x)` è maggiore di una piccola soglia (es. `10.0`), mostriamo `run`. Se è quasi zero, mostriamo `idle`.\n2. **Se è in aria (`is_on_floor()` è `false`)**: guardiamo il segno della velocità verticale `velocity.y`. Se `velocity.y < 0.0`, il personaggio sta salendo e mostriamo `jump`. Se `velocity.y >= 0.0`, sta cadendo e mostriamo `fall`."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends CharacterBody2D\n\n@export var jump_height: float = 128.0\n@export var jump_time_to_peak: float = 0.4\n@export var speed: float = 200.0\n@export var max_fall_speed: float = 600.0\n\n@export_group(\"Tolleranze Salto\")\n@export var coyote_time: float = 0.15\n@export var jump_buffer_time: float = 0.15\n\n@export_group(\"Accelerazione e Attrito\")\n@export var ground_acceleration: float = 1200.0\n@export var air_acceleration: float = 400.0\n@export var ground_friction: float = 1000.0\n\nvar gravity: float\nvar jump_velocity: float\n\nvar coyote_timer: float = 0.0\nvar jump_buffer_timer: float = 0.0\n\n@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D\n\n\nfunc _ready() -> void:\n\trecalculate_physics()\n\n\nfunc recalculate_physics() -> void:\n\tgravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\tjump_velocity = -(2.0 * jump_height) / jump_time_to_peak\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\t\tif velocity.y > max_fall_speed:\n\t\t\tvelocity.y = max_fall_speed\n\n\tif is_on_floor():\n\t\tcoyote_timer = coyote_time\n\telse:\n\t\tcoyote_timer -= delta\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\tjump_buffer_timer = jump_buffer_time\n\telse:\n\t\tjump_buffer_timer -= delta\n\n\tif jump_buffer_timer > 0.0 and coyote_timer > 0.0:\n\t\tvelocity.y = jump_velocity\n\t\tjump_buffer_timer = 0.0\n\t\tcoyote_timer = 0.0\n\n\tif Input.is_action_just_released(\"jump\") and velocity.y < 0.0:\n\t\tvelocity.y *= 0.5\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tvar accel := ground_acceleration if is_on_floor() else air_acceleration\n\n\tif direction != 0.0:\n\t\tvelocity.x = move_toward(velocity.x, direction * speed, accel * delta)\n\telse:\n\t\tvar decel := ground_friction if is_on_floor() else air_acceleration\n\t\tvelocity.x = move_toward(velocity.x, 0.0, decel * delta)\n\n\tmove_and_slide()\n\tupdate_animation(direction)\n\n\nfunc update_animation(direction: float) -> void:\n\tif direction > 0.0:\n\t\tanimated_sprite.flip_h = false\n\telif direction < 0.0:\n\t\tanimated_sprite.flip_h = true\n\n\tif is_on_floor():\n\t\tif abs(velocity.x) > 10.0:\n\t\t\tanimated_sprite.play(\"run\")\n\t\telse:\n\t\t\tanimated_sprite.play(\"idle\")\n\telse:\n\t\tif velocity.y < 0.0:\n\t\t\tanimated_sprite.play(\"jump\")\n\t\telse:\n\t\t\tanimated_sprite.play(\"fall\")",
+    "spiegazione": "Abbiamo aggiunto `@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D` per accedere allo sprite animato e la funzione `update_animation(direction)`. Se `direction` è positiva impostiamo `flip_h = false` (destra), se è negativa `flip_h = true` (sinistra). Se l'input è 0.0, lo sprite mantiene l'ultimo orientamento. Poi controlliamo `is_on_floor()`, `velocity.x` e `velocity.y` per avviare l'animazione corretta con `.play()`."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "I nomi passati a `animated_sprite.play()` devono coincidere esattamente con quelli definiti nella risorsa `SpriteFrames`, comprese maiuscole e minuscole. Se in `SpriteFrames` l'animazione si chiama `run` e nel codice scrivi `play(\"Run\")`, il gioco darà errore."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Il nodo `AnimatedSprite2D` serve a gestire le animazioni a fotogrammi 2D.\n- La risorsa `SpriteFrames` definisce le animazioni del nodo e contiene i fotogrammi estratti dallo sprite sheet.\n- La proprietà `flip_h` ribalta lo sprite in orizzontale per far guardare il personaggio a destra o a sinistra.\n- La funzione `play(\"nome\")` avvia l'animazione scelta in base a `is_on_floor()` e ai valori di `velocity`."
+   }
+  ]
+ }
+}
