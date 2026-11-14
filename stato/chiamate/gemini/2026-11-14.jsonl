@@ -39,3 +39,4 @@
 {"quando":1794657024281,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":false,"contata":true,"durataMs":28659,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794657052942,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":41965,"tokenInput":9611,"tokenOutput":2770,"ragionamento":7615}
 {"quando":1794657102051,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":38798,"tokenInput":9691,"tokenOutput":2621,"ragionamento":6491}
+{"quando":1794657147977,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":11046,"tokenInput":11263,"tokenOutput":143,"ragionamento":2501}
