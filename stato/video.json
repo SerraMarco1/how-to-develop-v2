@@ -1583,5 +1583,58 @@
     ]
    }
   }
+ },
+ "salto-che-perdona": {
+  "es2": {
+   "impronta": "b686a9db0cdbc909819ddb3e3de08239a2e8a01ced4ec2906fa58a6330d05926",
+   "tentativi": 3,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 6,
+     "azioni": [
+      {
+       "azione": "move_right",
+       "inizio": 1,
+       "fine": 3,
+       "tasto": "D"
+      },
+      {
+       "azione": "move_left",
+       "inizio": 3.5,
+       "fine": 5.5,
+       "tasto": "A"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "player",
+       "cerca": {
+        "script": "res://player/player.gd"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.8,
+       "deve": "muoversi",
+       "etichetta": "Personaggio"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il personaggio si muove con accelerazione e attrito",
+       "da": 1,
+       "a": 5,
+       "soggetto": "player"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio modifica la fisica del movimento del personaggio esistente senza aggiungere nuovi nodi visibili, quindi il risultato non può essere distinto visivamente dal progetto precedente."
+  }
  }
 }

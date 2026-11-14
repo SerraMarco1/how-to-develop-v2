@@ -53,3 +53,4 @@
 {"quando":1794659518857,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":8983,"tokenInput":3240,"tokenOutput":251,"ragionamento":1389}
 {"quando":1794659535010,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":13246,"tokenInput":3573,"tokenOutput":296,"ragionamento":2044}
 {"quando":1794659557305,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":8246,"tokenInput":3523,"tokenOutput":50,"ragionamento":2307}
+{"quando":1794659566829,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":3950,"tokenInput":3240,"tokenOutput":390,"ragionamento":1223}
