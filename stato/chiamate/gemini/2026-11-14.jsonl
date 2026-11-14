@@ -33,3 +33,6 @@
 {"quando":1794655934716,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":24133,"tokenInput":11002,"tokenOutput":2597,"ragionamento":3999}
 {"quando":1794655960162,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"salto-che-perdona","ok":false,"contata":true,"durataMs":2006,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794655962170,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":56869,"tokenInput":13867,"tokenOutput":6210,"ragionamento":10104}
+{"quando":1794656047281,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":false,"contata":true,"durataMs":900087,"errore":"Nessuna risposta entro 900 secondi"}
+{"quando":1794656947370,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"salto-che-perdona","ok":false,"contata":true,"durataMs":1429,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794656948801,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":67904,"tokenInput":9691,"tokenOutput":2754,"ragionamento":12226}
