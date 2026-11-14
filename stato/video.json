@@ -1530,5 +1530,13 @@
    },
    "motivo": "L'esercizio aggiunge componenti non visibili come NavigationAgent2D e Timer, modificando il comportamento di movimento del nemico senza introdurre nuovi elementi visivi sullo schermo."
   }
+ },
+ "gravita-e-salto": {
+  "es1": {
+   "impronta": "ba9f75c56d42bb0f9f5204783c22bf8e7bd46e342da805bd05f7640a588d841b",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
+  }
  }
 }
