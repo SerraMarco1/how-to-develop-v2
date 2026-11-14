@@ -1,0 +1,185 @@
+{
+ "n": 29,
+ "quando": "2026-11-14T10:23:46.327Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (da-zero): approvato",
+ "spiegazione": "«Progetto «Arena» – tappa 3: esperienza e potenziamenti». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato dopo una correzione.\nFile aggiunti o cambiati: upgrade_data.gd, experience_gem.gd, experience_gem.tscn, bullet.gd, player.gd, enemy.gd, upgrade_screen.tscn, upgrade_screen.gd, arena.gd",
+ "richieste": 0,
+ "durataMs": 15533,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "da-zero",
+   "titolo": "Progetto «Arena» – tappa 3: esperienza e potenziamenti",
+   "consegna": "Implementa la terza tappa del progetto «Arena»: i nemici lasciano esperienza e a fine ondata il gioco mostra tre potenziamenti a scelta, i cui effetti si sommano.\n\nPer comunicare la scelta del potenziamento dalla schermata alla scena principale puoi usare un segnale personalizzato nello script della schermata, definito con `signal upgrade_selected(upgrade_id: String)` e inviato con `upgrade_selected.emit(id)` quando un pulsante viene premuto, collegandolo poi nel codice principale.\n\n### Requisiti della tappa\n\n1. **Gemma di Esperienza (`res://experience_gem.tscn` / `res://experience_gem.gd`)**:\n   - Crea la scena `experience_gem.tscn` basata su `Area2D` inserita nel gruppo `\"experience\"`.\n   - Usa una forma di collisione e uno `Sprite2D` con la risorsa `res://assets/sprites/coin.png`.\n   - Quando un nemico muore (`_on_died()`), crea un'istanza di `experience_gem.tscn` nella posizione del nemico prima di venire rimosso con `queue_free()`.\n   - Quando il giocatore entra nell'area della gemma (`body_entered`), la gemma aumenta l'esperienza del giocatore ed esegue `queue_free()`.\n\n2. **Statistiche e Potenziamenti nel Giocatore (`res://player.gd`)**:\n   - Aggiungi a `player.gd` le variabili per le statistiche del giocatore:\n     - `experience: int = 0` (esperienza accumulata)\n     - `bullet_damage: int = 10` (danno base del proiettile)\n     - `bullet_speed: float = 500.0` (velocità del proiettile)\n     - `bullet_lifetime: float = 2.0` (durata del proiettile)\n     - `bullet_scale: float = 1.0` (scala del proiettile)\n   - Crea la funzione `add_experience(amount: int) -> void` che incrementa `experience`.\n   - Quando il giocatore spara (`shoot()`), imposta sul proiettile istanziato anche `damage` e `speed` (es. usando `bullet.set(\"damage\", bullet_damage)` e `bullet.set(\"speed\", bullet_speed)`).\n   - Crea la funzione `apply_upgrade(upgrade_id: String) -> void` che applica gli effetti dei potenziamenti accumulandoli. Supporta i seguenti identificativi:\n     - `\"speed_up\"`: aumenta `speed` di +50.0\n     - `\"fire_rate\"`: riduce `shoot_cooldown` di -0.04 (fino a un minimo di 0.04)\n     - `\"damage_up\"`: aumenta `bullet_damage` di +5\n     - `\"bullet_speed\"`: aumenta `bullet_speed` di +150.0\n     - `\"max_health\"`: aumenta `health.max_health` di +20 e cura di +20\n     - `\"heal\"`: ripristina fino a +30 salute in `health.current_health` (senza superare `max_health`)\n     - `\"bullet_lifetime\"`: aumenta `bullet_lifetime` di +1.0\n     - `\"bullet_scale\"`: aumenta `bullet_scale` di +0.5\n\n3. **Aggiornamento Proiettile (`res://bullet.gd`)**:\n   - In `bullet.gd` aggiungi `@export var damage: int = 10` e infliggi `damage` al componente `Health` del nemico colpito al posto del valore fisso.\n\n4. **Risorsa Potenziamenti (`res://upgrade_data.gd`)**:\n   - Crea lo script `upgrade_data.gd` (`class_name UpgradeData extends Resource`) con le proprietà `@export var id: String = \"\"`, `@export var title: String = \"\"` e `@export var description: String = \"\"`.\n\n5. **Menu di scelta a fine ondata (`res://upgrade_screen.tscn` / `res://upgrade_screen.gd`)**:\n   - Crea l'interfaccia `upgrade_screen.tscn` basata su `CanvasLayer` con `process_mode = 3` (Node -> Process -> Mode: Always) per funzionare anche con il gioco in pausa.\n   - Deve contenere 3 pulsanti (`Button`). Quando viene aperta, sceglie casualmente 3 potenziamenti tra almeno 8 opzioni disponibili.\n   - Quando la schermata viene mostrata, metti in pausa il gioco (`get_tree().paused = true`).\n   - Quando il giocatore clicca su uno dei 3 pulsanti, applica il potenziamento corrispondente sul giocatore con `player.apply_upgrade(...)`, nascondi la schermata, togli la pausa (`get_tree().paused = false`) e fai partire l'ondata successiva.\n\n6. **Gestione Ondate in `arena.gd`**:\n   - Quando tutti i nemici di un'ondata sono stati generati e non ce ne sono più nell'arena (gruppo `\"enemies\"`), la scena principale mostra la schermata dei potenziamenti prima di avanzare all'ondata successiva.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "arena",
+   "passiGuida": [],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://experience_gem.tscn",
+     "descrizione": "Esiste la scena res://experience_gem.tscn per la gemma di esperienza"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://upgrade_screen.tscn",
+     "descrizione": "Esiste la scena res://upgrade_screen.tscn per la scelta dei potenziamenti"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar arena := await instantiate_main_scene()\n\tif not check(\"arena\", arena != null, \"La scena principale arena.tscn deve caricarsi ed essere impostata\"):\n\t\treturn\n\n\tvar player := find_by_name(arena, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena arena.tscn deve esserci il nodo Player\"):\n\t\treturn\n\n\tvar initial_speed: float = get_prop(player, \"speed\", 250.0)\n\tcheck(\"has_apply_upgrade\", has_function(player, \"apply_upgrade\"), \"Il Player deve definire la funzione apply_upgrade(upgrade_id)\")\n\n\tcall_if_exists(player, \"apply_upgrade\", [\"speed_up\"])\n\tvar speed_after_1: float = get_prop(player, \"speed\", 0.0)\n\tcheck(\"speed_inc_1\", speed_after_1 > initial_speed, \"Dopo apply_upgrade('speed_up') la velocità del Player deve aumentare (era %.1f, ora è %.1f)\" % [initial_speed, speed_after_1])\n\n\tcall_if_exists(player, \"apply_upgrade\", [\"speed_up\"])\n\tvar speed_after_2: float = get_prop(player, \"speed\", 0.0)\n\tcheck(\"speed_inc_2\", speed_after_2 > speed_after_1, \"Gli effetti dei potenziamenti devono sommarsi: prendendo speed_up due volte la velocità aumenta ancora (era %.1f, ora è %.1f)\" % [speed_after_1, speed_after_2])\n\n\tvar initial_damage: int = get_prop(player, \"bullet_damage\", 10)\n\tcall_if_exists(player, \"apply_upgrade\", [\"damage_up\"])\n\tvar damage_after: int = get_prop(player, \"bullet_damage\", 0)\n\tcheck(\"damage_inc\", damage_after > initial_damage, \"Dopo apply_upgrade('damage_up') il danno del proiettile del Player deve aumentare (era %d, ora è %d)\" % [initial_damage, damage_after])\n\n\tvar initial_cooldown: float = get_prop(player, \"shoot_cooldown\", 0.2)\n\tcall_if_exists(player, \"apply_upgrade\", [\"fire_rate\"])\n\tvar cooldown_after: float = get_prop(player, \"shoot_cooldown\", 0.0)\n\tcheck(\"cooldown_dec\", cooldown_after < initial_cooldown, \"Dopo apply_upgrade('fire_rate') il tempo di ricarica deve diminuire (era %.2f, ora è %.2f)\" % [initial_cooldown, cooldown_after])\n\n\tcall_if_exists(player, \"add_experience\", [10])\n\tvar current_exp: int = get_prop(player, \"experience\", 0)\n\tcheck(\"exp_added\", current_exp > 0, \"Chiamando add_experience(10) l'esperienza del Player deve incrementarsi\")\n",
+     "descrizione": "I nemici lasciano esperienza, il gioco propone tre potenziamenti a fine ondata e gli effetti si sommano"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Arena\"\nrun/main_scene=\"res://arena.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nshoot={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventMouseButton,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"button_mask\":0,\"position\":Vector2(0, 0),\"global_position\":Vector2(0, 0),\"factor\":1.0,\"button_index\":1,\"canceled\":false,\"pressed\":false,\"double_click\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "health.gd",
+      "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(new_health: int)\nsignal died\n\n@export var max_health: int = 100\nvar current_health: int\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif current_health <= 0:\n\t\treturn\n\tcurrent_health = maxi(0, current_health - amount)\n\thealth_changed.emit(current_health)\n\tif current_health == 0:\n\t\tdied.emit()\n"
+     },
+     {
+      "percorso": "bullet.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 4.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n"
+     },
+     {
+      "percorso": "player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 16.0\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+     },
+     {
+      "percorso": "enemy_data.gd",
+      "contenuto": "class_name EnemyData\nextends Resource\n\n@export var speed: float = 100.0\n@export var max_health: int = 20\n@export var damage: int = 10\n"
+     },
+     {
+      "percorso": "wave_data.gd",
+      "contenuto": "class_name WaveData\nextends Resource\n\n@export var enemy_types: Array[EnemyData] = []\n@export var spawn_count: int = 5\n@export var spawn_interval: float = 1.0\n"
+     },
+     {
+      "percorso": "enemies/fast_enemy.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 180.0\nmax_health = 10\ndamage = 5\n"
+     },
+     {
+      "percorso": "enemies/normal_enemy.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 100.0\nmax_health = 20\ndamage = 10\n"
+     },
+     {
+      "percorso": "enemies/tank_enemy.tres",
+      "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 60.0\nmax_health = 50\ndamage = 25\n"
+     },
+     {
+      "percorso": "enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"3_sprite\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_enemy\"]\nradius = 14.0\n\n[node name=\"Enemy\" type=\"CharacterBody2D\" groups=[\"enemies\"]]\nscript = ExtResource(\"1_enemy\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"3_sprite\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_enemy\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+     },
+     {
+      "percorso": "arena.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://arena.gd\" id=\"1_arena\"]\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_h\"]\nsize = Vector2(1200, 40)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_v\"]\nsize = Vector2(40, 700)\n\n[node name=\"Arena\" type=\"Node2D\"]\nscript = ExtResource(\"1_arena\")\n\n[node name=\"Walls\" type=\"StaticBody2D\" parent=\".\"]\n\n[node name=\"TopWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, -20)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"BottomWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, 668)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"LeftWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(-20, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"RightWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(1172, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\nposition = Vector2(576, 324)\n"
+     },
+     {
+      "percorso": "upgrade_data.gd",
+      "contenuto": "class_name UpgradeData\nextends Resource\n\n@export var id: String = \"\"\n@export var title: String = \"\"\n@export var description: String = \"\"\n"
+     },
+     {
+      "percorso": "experience_gem.gd",
+      "contenuto": "class_name ExperienceGem\nextends Area2D\n\n@export var amount: int = 10\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"experience\")\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.name == \"Player\" or body.has_method(\"add_experience\"):\n\t\tif body.has_method(\"add_experience\"):\n\t\t\tbody.add_experience(amount)\n\t\telif \"experience\" in body:\n\t\t\tbody.set(\"experience\", int(body.get(\"experience\")) + amount)\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "experience_gem.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://experience_gem.gd\" id=\"1_gem\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/coin.png\" id=\"2_coin\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 10.0\n\n[node name=\"ExperienceGem\" type=\"Area2D\" groups=[\"experience\"]]\nscript = ExtResource(\"1_gem\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_coin\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n"
+     },
+     {
+      "percorso": "bullet.gd",
+      "contenuto": "extends Area2D\n\n@export var speed: float = 500.0\n@export var damage: int = 10\nvar direction: Vector2 = Vector2.RIGHT\nvar lifetime: float = 2.0\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tposition += direction * speed * delta\n\tlifetime -= delta\n\tif lifetime <= 0.0:\n\t\tqueue_free()\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.is_in_group(\"enemies\") or body is Enemy:\n\t\tvar health := body.get_node_or_null(\"Health\") as Health\n\t\tif health:\n\t\t\thealth.take_damage(damage)\n\t\tqueue_free()\n\telif body.name == \"Walls\":\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 250.0\n@export var bullet_scene: PackedScene = preload(\"res://bullet.tscn\")\n\n@onready var health: Health = $Health\n\nvar shoot_cooldown: float = 0.2\nvar shoot_timer: float = 0.0\nvar bullet_damage: int = 10\nvar bullet_speed: float = 500.0\nvar bullet_scale: float = 1.0\nvar bullet_lifetime: float = 2.0\nvar experience: int = 0\n\n\nfunc _physics_process(delta: float) -> void:\n\tshoot_timer -= delta\n\tvar dir := Input.get_vector(\"move_left\", \"move_right\", \"move_up\", \"move_down\")\n\tvelocity = dir * speed\n\tmove_and_slide()\n\n\tif Input.is_action_pressed(\"shoot\") and shoot_timer <= 0.0:\n\t\tshoot()\n\t\tshoot_timer = shoot_cooldown\n\n\nfunc shoot() -> void:\n\tif bullet_scene == null:\n\t\treturn\n\tvar bullet := bullet_scene.instantiate() as Area2D\n\tbullet.global_position = global_position\n\tvar target := get_global_mouse_position()\n\tvar dir := (target - global_position).normalized()\n\tif dir == Vector2.ZERO:\n\t\tdir = Vector2.RIGHT\n\tbullet.set(\"direction\", dir)\n\tbullet.set(\"speed\", bullet_speed)\n\tbullet.set(\"damage\", bullet_damage)\n\tbullet.set(\"lifetime\", bullet_lifetime)\n\tbullet.scale = Vector2.ONE * bullet_scale\n\tget_parent().add_child(bullet)\n\n\nfunc add_experience(amount: int) -> void:\n\texperience += amount\n\n\nfunc apply_upgrade(upgrade_id: String) -> void:\n\tmatch upgrade_id:\n\t\t\"speed_up\":\n\t\t\tspeed += 50.0\n\t\t\"fire_rate\":\n\t\t\tshoot_cooldown = maxf(0.04, shoot_cooldown - 0.04)\n\t\t\"damage_up\":\n\t\t\tbullet_damage += 5\n\t\t\"bullet_speed\":\n\t\t\tbullet_speed += 150.0\n\t\t\"max_health\":\n\t\t\tif health:\n\t\t\t\thealth.max_health += 20\n\t\t\t\thealth.current_health += 20\n\t\t\"heal\":\n\t\t\tif health:\n\t\t\t\thealth.current_health = mini(health.max_health, health.current_health + 30)\n\t\t\"bullet_lifetime\":\n\t\t\tbullet_lifetime += 1.0\n\t\t\"bullet_scale\":\n\t\t\tbullet_scale += 0.5\n"
+     },
+     {
+      "percorso": "enemy.gd",
+      "contenuto": "class_name Enemy\nextends CharacterBody2D\n\n@export var data: EnemyData:\n\tset(value):\n\t\tdata = value\n\t\tif is_node_ready() and health and data:\n\t\t\thealth.max_health = data.max_health\n\t\t\thealth.current_health = data.max_health\n\n@export var gem_scene: PackedScene = preload(\"res://experience_gem.tscn\")\n\n@onready var health: Health = $Health\n\nvar player: Node2D = null\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"enemies\")\n\tif data:\n\t\thealth.max_health = data.max_health\n\t\thealth.current_health = data.max_health\n\n\thealth.died.connect(_on_died)\n\n\nfunc _physics_process(_delta: float) -> void:\n\tif player == null:\n\t\tplayer = get_parent().get_node_or_null(\"Player\")\n\n\tif player:\n\t\tvar direction := (player.global_position - global_position).normalized()\n\t\tvar spd := data.speed if data else 100.0\n\t\tvelocity = direction * spd\n\t\tmove_and_slide()\n\n\t\tif global_position.distance_to(player.global_position) < 24.0:\n\t\t\tvar player_health := player.get_node_or_null(\"Health\") as Health\n\t\t\tif player_health:\n\t\t\t\tvar dmg := data.damage if data else 10\n\t\t\t\tplayer_health.take_damage(dmg)\n\t\t\tqueue_free()\n\n\nfunc _on_died() -> void:\n\tif gem_scene:\n\t\tvar gem := gem_scene.instantiate() as Node2D\n\t\tgem.global_position = global_position\n\t\tget_parent().add_child(gem)\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "upgrade_screen.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://upgrade_screen.gd\" id=\"1_screen\"]\n\n[node name=\"UpgradeScreen\" type=\"CanvasLayer\"]\nprocess_mode = 3\nscript = ExtResource(\"1_screen\")\n\n[node name=\"Panel\" type=\"Panel\" parent=\".\"]\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -200.0\noffset_top = -150.0\noffset_right = 200.0\noffset_bottom = 150.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"Label\" type=\"Label\" parent=\"Panel\"]\nlayout_mode = 1\nanchors_preset = 10\nanchor_right = 1.0\noffset_bottom = 40.0\ngrow_horizontal = 2\ntext = \"Scegli un Potenziamento\"\nhorizontal_alignment = 1\nvertical_alignment = 1\n\n[node name=\"VBoxContainer\" type=\"VBoxContainer\" parent=\"Panel\"]\nlayout_mode = 1\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\noffset_left = 20.0\noffset_top = 50.0\noffset_right = -20.0\noffset_bottom = -20.0\ngrow_horizontal = 2\ngrow_vertical = 2\n\n[node name=\"Button1\" type=\"Button\" parent=\"Panel/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Option 1\"\n\n[node name=\"Button2\" type=\"Button\" parent=\"Panel/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Option 2\"\n\n[node name=\"Button3\" type=\"Button\" parent=\"Panel/VBoxContainer\"]\nlayout_mode = 2\ntext = \"Option 3\"\n"
+     },
+     {
+      "percorso": "upgrade_screen.gd",
+      "contenuto": "class_name UpgradeScreen\nextends CanvasLayer\n\nsignal upgrade_selected(upgrade_id: String)\n\n@onready var button1: Button = $Panel/VBoxContainer/Button1\n@onready var button2: Button = $Panel/VBoxContainer/Button2\n@onready var button3: Button = $Panel/VBoxContainer/Button3\n\nvar all_upgrades: Array[Dictionary] = [\n\t{\"id\": \"speed_up\", \"title\": \"Velocità +50\", \"desc\": \"Aumenta la velocità di movimento\"},\n\t{\"id\": \"fire_rate\", \"title\": \"Cadenza di Fuoco\", \"desc\": \"Riduce il tempo tra i colpi\"},\n\t{\"id\": \"damage_up\", \"title\": \"Danno +5\", \"desc\": \"Aumenta il danno dei proiettili\"},\n\t{\"id\": \"bullet_speed\", \"title\": \"Proiettili Veloci\", \"desc\": \"Aumenta la velocità dei proiettili\"},\n\t{\"id\": \"max_health\", \"title\": \"Salute Max +20\", \"desc\": \"Aumenta la salute massima\"},\n\t{\"id\": \"heal\", \"title\": \"Cura +30\", \"desc\": \"Ripristina punti salute\"},\n\t{\"id\": \"bullet_lifetime\", \"title\": \"Gittata Proiettili\", \"desc\": \"I proiettili durano più a lungo\"},\n\t{\"id\": \"bullet_scale\", \"title\": \"Proiettili Grandi\", \"desc\": \"Aumenta la dimensione dei proiettili\"}\n]\n\nvar current_choices: Array[Dictionary] = []\n\n\nfunc _ready() -> void:\n\tvisible = false\n\tbutton1.pressed.connect(func(): _select(0))\n\tbutton2.pressed.connect(func(): _select(1))\n\tbutton3.pressed.connect(func(): _select(2))\n\n\nfunc open() -> void:\n\tvar pool := all_upgrades.duplicate()\n\tpool.shuffle()\n\tcurrent_choices = pool.slice(0, 3)\n\n\tbutton1.text = \"%s: %s\" % [current_choices[0][\"title\"], current_choices[0][\"desc\"]]\n\tbutton2.text = \"%s: %s\" % [current_choices[1][\"title\"], current_choices[1][\"desc\"]]\n\tbutton3.text = \"%s: %s\" % [current_choices[2][\"title\"], current_choices[2][\"desc\"]]\n\n\tvisible = true\n\tget_tree().paused = true\n\n\nfunc _select(index: int) -> void:\n\tif index >= 0 and index < current_choices.size():\n\t\tvar id: String = current_choices[index][\"id\"]\n\t\tupgrade_selected.emit(id)\n\tvisible = false\n\tget_tree().paused = false\n"
+     },
+     {
+      "percorso": "arena.gd",
+      "contenuto": "extends Node2D\n\n@export var enemy_scene: PackedScene = preload(\"res://enemy.tscn\")\n@export var upgrade_screen_scene: PackedScene = preload(\"res://upgrade_screen.tscn\")\n@export var waves: Array[WaveData] = []:\n\tset(value):\n\t\twaves = value\n\t\tcurrent_wave_index = 0\n\t\tspawned_in_wave = 0\n\t\tspawn_timer = 0.0\n\nvar current_wave_index: int = 0\nvar spawned_in_wave: int = 0\nvar spawn_timer: float = 0.0\nvar wave_delay_timer: float = 0.0\nvar waiting_for_next_wave: bool = false\nvar upgrade_screen_instance: UpgradeScreen = null\n\n\nfunc _ready() -> void:\n\tif waves.is_empty():\n\t\t_setup_default_waves()\n\tspawn_timer = 0.0\n\n\tif upgrade_screen_scene:\n\t\tupgrade_screen_instance = upgrade_screen_scene.instantiate() as UpgradeScreen\n\t\tadd_child(upgrade_screen_instance)\n\t\tupgrade_screen_instance.upgrade_selected.connect(_on_upgrade_selected)\n\n\nfunc _setup_default_waves() -> void:\n\tvar fast_res = load(\"res://enemies/fast_enemy.tres\") as EnemyData\n\tvar normal_res = load(\"res://enemies/normal_enemy.tres\") as EnemyData\n\tvar tank_res = load(\"res://enemies/tank_enemy.tres\") as EnemyData\n\n\tvar w1 := WaveData.new()\n\tw1.spawn_count = 5\n\tw1.spawn_interval = 1.0\n\tif normal_res:\n\t\tw1.enemy_types.append(normal_res)\n\n\tvar w2 := WaveData.new()\n\tw2.spawn_count = 8\n\tw2.spawn_interval = 0.8\n\tif fast_res:\n\t\tw2.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw2.enemy_types.append(normal_res)\n\n\tvar w3 := WaveData.new()\n\tw3.spawn_count = 12\n\tw3.spawn_interval = 0.6\n\tif fast_res:\n\t\tw3.enemy_types.append(fast_res)\n\tif normal_res:\n\t\tw3.enemy_types.append(normal_res)\n\tif tank_res:\n\t\tw3.enemy_types.append(tank_res)\n\n\twaves = [w1, w2, w3]\n\n\nfunc _process(delta: float) -> void:\n\tif current_wave_index >= waves.size():\n\t\treturn\n\n\tvar wave := waves[current_wave_index]\n\n\tif waiting_for_next_wave:\n\t\treturn\n\n\tif spawned_in_wave < wave.spawn_count:\n\t\tspawn_timer -= delta\n\t\tif spawn_timer <= 0.0:\n\t\t\tspawn_enemy(wave)\n\t\t\tspawned_in_wave += 1\n\t\t\tspawn_timer = wave.spawn_interval\n\telse:\n\t\tvar enemies := get_tree().get_nodes_in_group(\"enemies\")\n\t\tif enemies.is_empty():\n\t\t\twaiting_for_next_wave = true\n\t\t\tif upgrade_screen_instance:\n\t\t\t\tupgrade_screen_instance.open()\n\t\t\telse:\n\t\t\t\t_start_next_wave()\n\n\nfunc _on_upgrade_selected(upgrade_id: String) -> void:\n\tvar player := get_node_or_null(\"Player\")\n\tif player and player.has_method(\"apply_upgrade\"):\n\t\tplayer.apply_upgrade(upgrade_id)\n\t_start_next_wave()\n\n\nfunc _start_next_wave() -> void:\n\twaiting_for_next_wave = false\n\tcurrent_wave_index += 1\n\tspawned_in_wave = 0\n\tspawn_timer = 0.0\n\n\nfunc spawn_enemy(wave: WaveData) -> void:\n\tif enemy_scene == null or wave.enemy_types.is_empty():\n\t\treturn\n\tvar enemy := enemy_scene.instantiate() as Enemy\n\tvar type_data: EnemyData = wave.enemy_types.pick_random()\n\tenemy.data = type_data\n\n\tvar side := randi() % 4\n\tvar pos := Vector2.ZERO\n\tmatch side:\n\t\t0: pos = Vector2(randf_range(-40, 1192), -40)\n\t\t1: pos = Vector2(randf_range(-40, 1192), 688)\n\t\t2: pos = Vector2(-40, randf_range(-40, 688))\n\t\t3: pos = Vector2(1192, randf_range(-40, 688))\n\tenemy.global_position = pos\n\tadd_child(enemy)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Arena",
+     "scenaPrincipale": "res://arena.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "move_up",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_down",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "shoot",
+       "tasti": [
+        "Space",
+        "MouseLeft"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "In questa tappa abbiamo esteso il ciclo di gioco di «Arena»:\n1. **Gemma di Esperienza (`experience_gem.tscn`)**: Quando un nemico viene sconfitto (`_on_died`), crea un'istanza dell'area di esperienza nel mondo. Il giocatore la raccoglie quando vi entra in contatto.\n2. **Sistema di Potenziamenti nel Giocatore (`apply_upgrade`)**: Invece di usare una serie di `if`, usiamo la struttura `match` sulla stringa `upgrade_id` per modificare e accumulare le variabili stat del giocatore (`speed`, `bullet_damage`, `shoot_cooldown`, `max_health`, ecc.). Ogni potenziamento accumula i propri valori direttamente sulle variabili del giocatore.\n3. **Schermata di Scelta (`upgrade_screen.tscn`)**: Ha `process_mode = 3` (Always) per poter gestire l'input UI mentre il resto del gioco è in pausa con `get_tree().paused = true`. A fine ondata estrae tre opzioni casuali e applica quella scelta prima di riprendere il gioco e far partire l'ondata successiva.",
+    "cambiati": [
+     "upgrade_data.gd",
+     "experience_gem.gd",
+     "experience_gem.tscn",
+     "bullet.gd",
+     "player.gd",
+     "enemy.gd",
+     "upgrade_screen.tscn",
+     "upgrade_screen.gd",
+     "arena.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}

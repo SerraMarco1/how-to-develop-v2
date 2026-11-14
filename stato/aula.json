@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-14T10:21:39.746Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-14T10:23:48.896Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "progetto-arena-3",
   "numero": "7.16",
   "titolo": "Progetto «Arena» – tappa 3: esperienza e potenziamenti"
  },
- "messaggio": "Sta scrivendo la lezione 7.16 «Progetto «Arena» – tappa 3: esperienza e potenziamenti».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 7.16 riprende da sola appena rispondono.",
+ "riprende": "2026-11-14T10:33:48.896Z"
 }
