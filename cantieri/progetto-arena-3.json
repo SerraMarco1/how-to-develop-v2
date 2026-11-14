@@ -7,7 +7,7 @@
     "tipo": "autonomo",
     "genere": "da-zero",
     "titolo": "Progetto «Arena» – tappa 3: esperienza e potenziamenti",
-    "consegna": "Implementa la terza tappa del progetto «Arena»: i nemici lasciano esperienza e a fine ondata il gioco mostra tre potenziamenti a scelta, i cui effetti si sommano.\n\n### Requisiti della tappa\n\n1. **Gemma di Esperienza (`res://experience_gem.tscn` / `res://experience_gem.gd`)**:\n   - Crea la scena `experience_gem.tscn` basata su `Area2D` inserita nel gruppo `\"experience\"`.\n   - Usa una forma di collisione e uno `Sprite2D` con la risorsa `res://assets/sprites/coin.png`.\n   - Quando un nemico muore (`_on_died()`), crea un'istanza di `experience_gem.tscn` nella posizione del nemico prima di venire rimosso con `queue_free()`.\n   - Quando il giocatore entra nell'area della gemma (`body_entered`), la gemma aumenta l'esperienza del giocatore ed esegue `queue_free()`.\n\n2. **Statistiche e Potenziamenti nel Giocatore (`res://player.gd`)**:\n   - Aggiungi a `player.gd` le variabili per le statistiche del giocatore:\n     - `experience: int = 0` (esperienza accumulata)\n     - `bullet_damage: int = 10` (danno base del proiettile)\n     - `bullet_speed: float = 500.0` (velocità del proiettile)\n     - `bullet_lifetime: float = 2.0` (durata del proiettile)\n     - `bullet_scale: float = 1.0` (scala del proiettile)\n   - Crea la funzione `add_experience(amount: int) -> void` che incrementa `experience`.\n   - Quando il giocatore spara (`shoot()`), imposta sul proiettile istanziato anche `damage` e `speed` (es. usando `bullet.set(\"damage\", bullet_damage)` e `bullet.set(\"speed\", bullet_speed)`).\n   - Crea la funzione `apply_upgrade(upgrade_id: String) -> void` che applica gli effetti dei potenziamenti accumulandoli. Supporta i seguenti identificativi:\n     - `\"speed_up\"`: aumenta `speed` di +50.0\n     - `\"fire_rate\"`: riduce `shoot_cooldown` di -0.04 (fino a un minimo di 0.04)\n     - `\"damage_up\"`: aumenta `bullet_damage` di +5\n     - `\"bullet_speed\"`: aumenta `bullet_speed` di +150.0\n     - `\"max_health\"`: aumenta `health.max_health` di +20 e cura di +20\n     - `\"heal\"`: ripristina fino a +30 salute in `health.current_health` (senza superare `max_health`)\n     - `\"bullet_lifetime\"`: aumenta `bullet_lifetime` di +1.0\n     - `\"bullet_scale\"`: aumenta `bullet_scale` di +0.5\n\n3. **Aggiornamento Proiettile (`res://bullet.gd`)**:\n   - In `bullet.gd` aggiungi `@export var damage: int = 10` e infliggi `damage` al componente `Health` del nemico colpito al posto del valore fisso.\n\n4. **Risorsa Potenziamenti (`res://upgrade_data.gd`)**:\n   - Crea lo script `upgrade_data.gd` (`class_name UpgradeData extends Resource`) con le proprietà `@export var id: String = \"\"`, `@export var title: String = \"\"` e `@export var description: String = \"\"`.\n\n5. **Menu di scelta a fine ondata (`res://upgrade_screen.tscn` / `res://upgrade_screen.gd`)**:\n   - Crea l'interfaccia `upgrade_screen.tscn` basata su `CanvasLayer` con `process_mode = 3` (Node -> Process -> Mode: Always) per funzionare anche con il gioco in pausa.\n   - Deve contenere 3 pulsanti (`Button`). Quando viene aperta, sceglie casualmente 3 potenziamenti tra almeno 8 opzioni disponibili.\n   - Quando la schermata viene mostrata, metti in pausa il gioco (`get_tree().paused = true`).\n   - Quando il giocatore clicca su uno dei 3 pulsanti, applica il potenziamento corrispondente sul giocatore con `player.apply_upgrade(...)`, nascondi la schermata, togli la pausa (`get_tree().paused = false`) e fai partire l'ondata successiva.\n\n6. **Gestione Ondate in `arena.gd`**:\n   - Quando tutti i nemici di un'ondata sono stati generati e non ce ne sono più nell'arena (gruppo `\"enemies\"`), la scena principale mostra la schermata dei potenziamenti prima di avanzare all'ondata successiva.",
+    "consegna": "Implementa la terza tappa del progetto «Arena»: i nemici lasciano esperienza e a fine ondata il gioco mostra tre potenziamenti a scelta, i cui effetti si sommano.\n\nPer comunicare la scelta del potenziamento dalla schermata alla scena principale puoi usare un segnale personalizzato nello script della schermata, definito con `signal upgrade_selected(upgrade_id: String)` e inviato con `upgrade_selected.emit(id)` quando un pulsante viene premuto, collegandolo poi nel codice principale.\n\n### Requisiti della tappa\n\n1. **Gemma di Esperienza (`res://experience_gem.tscn` / `res://experience_gem.gd`)**:\n   - Crea la scena `experience_gem.tscn` basata su `Area2D` inserita nel gruppo `\"experience\"`.\n   - Usa una forma di collisione e uno `Sprite2D` con la risorsa `res://assets/sprites/coin.png`.\n   - Quando un nemico muore (`_on_died()`), crea un'istanza di `experience_gem.tscn` nella posizione del nemico prima di venire rimosso con `queue_free()`.\n   - Quando il giocatore entra nell'area della gemma (`body_entered`), la gemma aumenta l'esperienza del giocatore ed esegue `queue_free()`.\n\n2. **Statistiche e Potenziamenti nel Giocatore (`res://player.gd`)**:\n   - Aggiungi a `player.gd` le variabili per le statistiche del giocatore:\n     - `experience: int = 0` (esperienza accumulata)\n     - `bullet_damage: int = 10` (danno base del proiettile)\n     - `bullet_speed: float = 500.0` (velocità del proiettile)\n     - `bullet_lifetime: float = 2.0` (durata del proiettile)\n     - `bullet_scale: float = 1.0` (scala del proiettile)\n   - Crea la funzione `add_experience(amount: int) -> void` che incrementa `experience`.\n   - Quando il giocatore spara (`shoot()`), imposta sul proiettile istanziato anche `damage` e `speed` (es. usando `bullet.set(\"damage\", bullet_damage)` e `bullet.set(\"speed\", bullet_speed)`).\n   - Crea la funzione `apply_upgrade(upgrade_id: String) -> void` che applica gli effetti dei potenziamenti accumulandoli. Supporta i seguenti identificativi:\n     - `\"speed_up\"`: aumenta `speed` di +50.0\n     - `\"fire_rate\"`: riduce `shoot_cooldown` di -0.04 (fino a un minimo di 0.04)\n     - `\"damage_up\"`: aumenta `bullet_damage` di +5\n     - `\"bullet_speed\"`: aumenta `bullet_speed` di +150.0\n     - `\"max_health\"`: aumenta `health.max_health` di +20 e cura di +20\n     - `\"heal\"`: ripristina fino a +30 salute in `health.current_health` (senza superare `max_health`)\n     - `\"bullet_lifetime\"`: aumenta `bullet_lifetime` di +1.0\n     - `\"bullet_scale\"`: aumenta `bullet_scale` di +0.5\n\n3. **Aggiornamento Proiettile (`res://bullet.gd`)**:\n   - In `bullet.gd` aggiungi `@export var damage: int = 10` e infliggi `damage` al componente `Health` del nemico colpito al posto del valore fisso.\n\n4. **Risorsa Potenziamenti (`res://upgrade_data.gd`)**:\n   - Crea lo script `upgrade_data.gd` (`class_name UpgradeData extends Resource`) con le proprietà `@export var id: String = \"\"`, `@export var title: String = \"\"` e `@export var description: String = \"\"`.\n\n5. **Menu di scelta a fine ondata (`res://upgrade_screen.tscn` / `res://upgrade_screen.gd`)**:\n   - Crea l'interfaccia `upgrade_screen.tscn` basata su `CanvasLayer` con `process_mode = 3` (Node -> Process -> Mode: Always) per funzionare anche con il gioco in pausa.\n   - Deve contenere 3 pulsanti (`Button`). Quando viene aperta, sceglie casualmente 3 potenziamenti tra almeno 8 opzioni disponibili.\n   - Quando la schermata viene mostrata, metti in pausa il gioco (`get_tree().paused = true`).\n   - Quando il giocatore clicca su uno dei 3 pulsanti, applica il potenziamento corrispondente sul giocatore con `player.apply_upgrade(...)`, nascondi la schermata, togli la pausa (`get_tree().paused = false`) e fai partire l'ondata successiva.\n\n6. **Gestione Ondate in `arena.gd`**:\n   - Quando tutti i nemici di un'ondata sono stati generati e non ce ne sono più nell'arena (gruppo `\"enemies\"`), la scena principale mostra la schermata dei potenziamenti prima di avanzare all'ondata successiva.",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "arena",
@@ -34,6 +34,46 @@
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": "health.gd",
+       "contenuto": "class_name Health\nextends Node\n\nsignal health_changed(new_health: int)\nsignal died\n\n@export var max_health: int = 100\nvar current_health: int\n\n\nfunc _ready() -> void:\n\tcurrent_health = max_health\n\n\nfunc take_damage(amount: int) -> void:\n\tif current_health <= 0:\n\t\treturn\n\tcurrent_health = maxi(0, current_health - amount)\n\thealth_changed.emit(current_health)\n\tif current_health == 0:\n\t\tdied.emit()\n"
+      },
+      {
+       "percorso": "bullet.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_bullet\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 4.0\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_bullet\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n"
+      },
+      {
+       "percorso": "player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_1\"]\nradius = 16.0\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_1\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+      },
+      {
+       "percorso": "enemy_data.gd",
+       "contenuto": "class_name EnemyData\nextends Resource\n\n@export var speed: float = 100.0\n@export var max_health: int = 20\n@export var damage: int = 10\n"
+      },
+      {
+       "percorso": "wave_data.gd",
+       "contenuto": "class_name WaveData\nextends Resource\n\n@export var enemy_types: Array[EnemyData] = []\n@export var spawn_count: int = 5\n@export var spawn_interval: float = 1.0\n"
+      },
+      {
+       "percorso": "enemies/fast_enemy.tres",
+       "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 180.0\nmax_health = 10\ndamage = 5\n"
+      },
+      {
+       "percorso": "enemies/normal_enemy.tres",
+       "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 100.0\nmax_health = 20\ndamage = 10\n"
+      },
+      {
+       "percorso": "enemies/tank_enemy.tres",
+       "contenuto": "[gd_resource type=\"Resource\" script_class=\"EnemyData\" load_steps=2 format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy_data.gd\" id=\"1_data\"]\n\n[resource]\nscript = ExtResource(\"1_data\")\nspeed = 60.0\nmax_health = 50\ndamage = 25\n"
+      },
+      {
+       "percorso": "enemy.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemy.gd\" id=\"1_enemy\"]\n[ext_resource type=\"Script\" path=\"res://health.gd\" id=\"2_health\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"3_sprite\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_enemy\"]\nradius = 14.0\n\n[node name=\"Enemy\" type=\"CharacterBody2D\" groups=[\"enemies\"]]\nscript = ExtResource(\"1_enemy\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"3_sprite\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_enemy\")\n\n[node name=\"Health\" type=\"Node\" parent=\".\"]\nscript = ExtResource(\"2_health\")\n"
+      },
+      {
+       "percorso": "arena.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://arena.gd\" id=\"1_arena\"]\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_h\"]\nsize = Vector2(1200, 40)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_wall_v\"]\nsize = Vector2(40, 700)\n\n[node name=\"Arena\" type=\"Node2D\"]\nscript = ExtResource(\"1_arena\")\n\n[node name=\"Walls\" type=\"StaticBody2D\" parent=\".\"]\n\n[node name=\"TopWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, -20)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"BottomWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(576, 668)\nshape = SubResource(\"RectangleShape2D_wall_h\")\n\n[node name=\"LeftWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(-20, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"RightWall\" type=\"CollisionShape2D\" parent=\"Walls\"]\nposition = Vector2(1172, 324)\nshape = SubResource(\"RectangleShape2D_wall_v\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\nposition = Vector2(576, 324)\n"
+      },
       {
        "percorso": "upgrade_data.gd",
        "contenuto": "class_name UpgradeData\nextends Resource\n\n@export var id: String = \"\"\n@export var title: String = \"\"\n@export var description: String = \"\"\n"
@@ -115,24 +155,36 @@
       "impostazioni": []
      },
      "spiegazione": "In questa tappa abbiamo esteso il ciclo di gioco di «Arena»:\n1. **Gemma di Esperienza (`experience_gem.tscn`)**: Quando un nemico viene sconfitto (`_on_died`), crea un'istanza dell'area di esperienza nel mondo. Il giocatore la raccoglie quando vi entra in contatto.\n2. **Sistema di Potenziamenti nel Giocatore (`apply_upgrade`)**: Invece di usare una serie di `if`, usiamo la struttura `match` sulla stringa `upgrade_id` per modificare e accumulare le variabili stat del giocatore (`speed`, `bullet_damage`, `shoot_cooldown`, `max_health`, ecc.). Ogni potenziamento accumula i propri valori direttamente sulle variabili del giocatore.\n3. **Schermata di Scelta (`upgrade_screen.tscn`)**: Ha `process_mode = 3` (Always) per poter gestire l'input UI mentre il resto del gioco è in pausa con `get_tree().paused = true`. A fine ondata estrae tre opzioni casuali e applica quella scelta prima di riprendere il gioco e far partire l'ondata successiva.",
-     "cambiati": [],
+     "cambiati": [
+      "upgrade_data.gd",
+      "experience_gem.gd",
+      "experience_gem.tscn",
+      "bullet.gd",
+      "player.gd",
+      "enemy.gd",
+      "upgrade_screen.tscn",
+      "upgrade_screen.gd",
+      "arena.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "da-zero",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "NON SPIEGATO: la soluzione usa `upgrade_selected()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Progetto «Arena» – tappa 3: esperienza e potenziamenti",
