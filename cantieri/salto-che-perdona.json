@@ -327,16 +327,13 @@
    "stato": "da_fare",
    "grezzo": {
     "tipo": "autonomo",
-    "genere": "imita",
-    "titolo": "Calibrazione completa delle tolleranze e reattività del personaggio",
-    "consegna": "Rivedi e verifica l'intero script `player/player.gd` per assicurarti che la logica del salto permissivo e del movimento orizzontale sia completa, ordinata e priva di difetti.\n\nControlla e garantisci che:\n1. Le tolleranze `coyote_time = 0.15` e `jump_buffer_time = 0.15` siano correttamente esportate nel gruppo `\"Tolleranze Salto\"`.\n2. L'azzeramento dei timer (`coyote_timer = 0.0` e `jump_buffer_timer = 0.0`) avvenga nello stesso istante in cui scatta il salto.\n3. Il salto variabile al rilascio del tasto (`Input.is_action_just_released(\"jump\")`) continui a tagliare a metà la velocità di risalita quando `velocity.y < 0.0`.\n4. Il movimento orizzontale utilizzi `move_toward()` sia in accelerazione sia in decelerazione, applicando `ground_acceleration` o `air_acceleration` a seconda di `is_on_floor()`.",
+    "titolo": "Tolleranze al salto",
+    "consegna": "In questa lezione aggiungiamo le tolleranze al salto (Coyote Time e Jump Buffer) per rendere il controllo del personaggio più permissivo e reattivo.\n\nNel file `player/player.gd`:\n1. Aggiungi il gruppo `@export_group(\"Tolleranze Salto\")` con due variabili esportate: `coyote_time: float = 0.15` e `jump_buffer_time: float = 0.15`.\n2. In `_physics_process(delta)` aggiorna i timer `coyote_timer` e `jump_buffer_timer`:\n   - Se il personaggio è a terra (`is_on_floor()`), imposta `coyote_timer = coyote_time`, altrimenti sottrai `delta`.\n   - Se viene premuta l'azione `\"jump\"` (`Input.is_action_just_pressed(\"jump\")`), imposta `jump_buffer_timer = jump_buffer_time`, altrimenti sottrai `delta`.\n3. Quando sia `jump_buffer_timer > 0.0` sia `coyote_timer > 0.0`, esegui il salto impostando `velocity.y = jump_velocity` e azzera subito entrambi i timer (`jump_buffer_timer = 0.0` e `coyote_timer = 0.0`).",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "salti",
     "passiGuida": [],
-    "suggerimenti": [
-     "Rileggi il codice di player.gd per accertarti che l'azzeramento dei due timer avvenga dentro il blocco `if jump_buffer_timer > 0.0 and coyote_timer > 0.0:`."
-    ],
+    "suggerimenti": [],
     "verifiche": [
      {
       "tipo": "file_esiste",
@@ -350,15 +347,9 @@
       "descrizione": "Le tolleranze del salto sono raggruppate con @export_group(\"Tolleranze Salto\")"
      },
      {
-      "tipo": "testo_in_file",
-      "percorso": "res://player/player.gd",
-      "regex": "air_acceleration",
-      "descrizione": "Lo script utilizza air_acceleration per il movimento orizzontale in aria"
-     },
-     {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena serve un CharacterBody2D chiamato Player\"):\n\t\treturn\n\n\tvar coyote_t = float(get_prop(player, \"coyote_time\", 0.0))\n\tvar buffer_t = float(get_prop(player, \"jump_buffer_time\", 0.0))\n\tcheck(\"coyote_time_val\", absf(coyote_t - 0.15) < 0.01, \"coyote_time deve essere impostata a 0.15 (valore attuale: %.2f)\" % coyote_t)\n\tcheck(\"jump_buffer_val\", absf(buffer_t - 0.15) < 0.01, \"jump_buffer_time deve essere impostata a 0.15 (valore attuale: %.2f)\" % buffer_t)\n\n\tplayer.position = Vector2(400, 464)\n\tawait wait_physics_frames(2)\n\tawait tap_action(\"jump\")\n\tvar c_timer = float(get_prop(player, \"coyote_timer\", -1.0))\n\tvar b_timer = float(get_prop(player, \"jump_buffer_timer\", -1.0))\n\tcheck(\"timer_coyote_zero\", c_timer <= 0.0, \"coyote_timer deve essere azzerato subito dopo il salto (valore attuale: %s)\" % str(c_timer))\n\tcheck(\"timer_buffer_zero\", b_timer <= 0.0, \"jump_buffer_timer deve essere azzerato subito dopo il salto (valore attuale: %s)\" % str(b_timer))\n\n\tplayer.position = Vector2(400, 300)\n\tplayer.velocity = Vector2.ZERO\n\tawait hold_action(\"move_right\", 2)\n\tcheck(\"air_movement\", player.velocity.x > 0.0, \"In aria il personaggio deve muoversi a destra usando air_acceleration (velocity.x è %.1f)\" % player.velocity.x)",
-      "descrizione": "Il personaggio rispetta le tolleranze esportate, azzera i timer durante il salto e accelera in aria"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena serve un CharacterBody2D chiamato Player\"):\n\t\treturn\n\n\tvar coyote_t = float(get_prop(player, \"coyote_time\", 0.0))\n\tvar buffer_t = float(get_prop(player, \"jump_buffer_time\", 0.0))\n\tcheck(\"coyote_val\", absf(coyote_t - 0.15) < 0.01, \"coyote_time deve essere impostata a 0.15 (valore attuale: %.2f)\" % coyote_t)\n\tcheck(\"buffer_val\", absf(buffer_t - 0.15) < 0.01, \"jump_buffer_time deve essere impostata a 0.15 (valore attuale: %.2f)\" % buffer_t)\n\n\tplayer.position = Vector2(400, 464)\n\tawait wait_physics_frames(2)\n\tplayer.position = Vector2(400, 400)\n\tawait wait_physics_frames(1)\n\tawait tap_action(\"jump\")\n\tawait wait_physics_frames(1)\n\n\tcheck(\"coyote_jump\", player.velocity.y < 0.0, \"Il personaggio deve poter saltare subito dopo essere staccato da terra (Coyote Time)\")\n\n\tvar c_timer = float(get_prop(player, \"coyote_timer\", -1.0))\n\tvar b_timer = float(get_prop(player, \"jump_buffer_timer\", -1.0))\n\tcheck(\"timers_reset\", c_timer <= 0.0 and b_timer <= 0.0, \"I timer coyote_timer e jump_buffer_timer devono essere azzerati a 0.0 durante il salto\")",
+      "descrizione": "Il personaggio rispetta le tolleranze del Coyote Time e azzera i timer durante il salto"
      }
     ],
     "previsioni": [],
@@ -367,7 +358,7 @@
      "file": [
       {
        "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 400)\n"
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(400, 464)\n"
       },
       {
        "percorso": "player/player.tscn",
@@ -404,18 +395,19 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Lo script del personaggio racchiude ora tutte le caratteristiche necessarie per un controllo di gioco reattivo e naturale: Coyote Time, Jump Buffer, azzeramento immediato dei timer, salto cut variabile e movimento orizzontale progressivo tramite move_toward().",
+     "spiegazione": "Attraverso i due timer `coyote_timer` e `jump_buffer_timer`, il personaggio memorizza sia la finestra di tempo dopo essersi staccato dalla piattaforma, sia la pressione del salto avvenuta un istante prima di toccare il suolo. Quando scatta il salto, entrambi i timer vengono azzerati a 0.0 per evitare salti doppi indesiderati.",
      "cambiati": [],
      "rimossi": []
     }
    },
    "genere": "imita",
    "correzioni": 2,
-   "semplificato": false,
+   "semplificato": true,
    "problemi": [
     "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
