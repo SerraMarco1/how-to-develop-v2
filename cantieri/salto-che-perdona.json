@@ -574,5 +574,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test finale è una copia identica dell'esercizio 2 (es2), mantenendo lo stesso titolo, la stessa consegna e il medesimo codice di verifica. Il test non deve essere un duplicato di un esercizio già svolto.",
+    "correzione": "Riscrivere il test finale per valutare in un'unica prova l'insieme delle meccaniche apprese nella lezione (sia le tolleranze del salto sia l'accelerazione/attrito differenziati), anziché ripetere l'esercizio 2.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
