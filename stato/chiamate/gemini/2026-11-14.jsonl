@@ -30,3 +30,4 @@
 {"quando":1794655634146,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"gravita-e-salto","ok":false,"contata":true,"durataMs":280100,"errore":"Nessuna risposta entro 280 secondi"}
 {"quando":1794655914249,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"gravita-e-salto","ok":true,"contata":true,"durataMs":12579,"tokenInput":12236,"tokenOutput":12,"ragionamento":2909}
 {"quando":1794655928141,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"gravita-e-salto","ok":false,"contata":true,"durataMs":5282,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794655934716,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"salto-che-perdona","ok":true,"contata":true,"durataMs":24133,"tokenInput":11002,"tokenOutput":2597,"ragionamento":3999}
