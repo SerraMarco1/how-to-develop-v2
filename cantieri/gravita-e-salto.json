@@ -1,0 +1,72 @@
+{
+ "creato": "2026-11-14T11:19:13.444Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Gravità e salto: calcolare la fisica del personaggio",
+  "sommario": "Impara a gestire la gravità e la logica di salto per un personaggio 2D in Godot 4.7. Scoprirai come calcolare la gravità e la spinta verso l'alto a partire dall'altezza e dal tempo di risalita desiderati, e come realizzare un salto variabile che risponde alla pressione del tasto.",
+  "concetti": [
+   "Gravità come accelerazione costante in _physics_process()",
+   "Rilevamento del terreno tramite is_on_floor()",
+   "Calcolo cinematico di gravità e spinta (altezza e durata del salto)",
+   "Salto variabile (cut jump) al rilascio del tasto di input"
+  ],
+  "obiettivi": [
+   "La gravità come accelerazione; is_on_floor()",
+   "Altezza e durata del salto calcolate, invece di numeri trovati a tentativi",
+   "Salto più basso se lasci subito il tasto"
+  ],
+  "durataMinuti": 40,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nei giochi a piattaforme, la risposta del personaggio ai comandi di salto (il *game feel*) determina gran parte del divertimento. Un errore comune dei principianti è inserire numeri casuali nel codice per la gravità e la spinta, procedendo a tentativi finché il salto non sembra accettabile. Questo approccio rende difficile la creazione dei livelli: non potrai mai sapere con certezza quante tessere in alto o in lungo il personaggio riesca davvero a superare.\n\nIn questa lezione trasformeremo l'altezza e la durata del salto in parametri matematici precisi che puoi scegliere comodamente nell'Inspector di Godot."
+   },
+   {
+    "tipo": "testo",
+    "md": "### La gravità e il contatto con il terreno\n\nIn un mondo 2D, l'asse Y punta verso il basso: il valore `0` si trova in cima allo schermo e i valori aumentano scendendo. La gravità non è una velocità fissa, ma un'**accelerazione**: ad ogni secondo che passa aumenta la velocità di caduta del personaggio.\n\nIn GDScript, l'accelerazione si applica sommando il valore della gravità moltiplicato per `delta` alla velocità verticale (`velocity.y`) dentro la funzione `_physics_process(delta)`.\n\nQuando usi un nodo `CharacterBody2D` e chiami il metodo `move_and_slide()`, Godot gestisce lo scivolamento sulle superfici. Subito dopo la chiamata a `move_and_slide()`, puoi usare la funzione integrata `is_on_floor()`: restituisce `true` se il personaggio sta toccando il pavimento, oppure `false` se si trova in aria."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Calcolare la fisica del salto anziché andare a tentativi\n\nInvece di inventare numeri per gravità e spinta, stabilisci due dati concreti che desideri per il tuo gioco:\n1. **Altezza del salto** (in pixel, ad esempio 128 pixel per superare 8 tessere da 16 pixel).\n2. **Durata della risalita** (in secondi, ad esempio 0.4 secondi per raggiungere la cima del salto).\n\nUsando le formule della fisica cinematica, si ricavano la gravità esatta e la spinta iniziale necessarie:\n\n* **Gravità**: `(2 * altezza) / (tempo ^ 2)`\n* **Spinta di salto**: `-(2 * altezza) / tempo`\n\nLa spinta ha valore negativo perché verso l'alto l'asse Y di Godot decresce."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Salto variabile: reattività sotto le dita\n\nNei giochi a piattaforme moderni, se sfiori appena il tasto di salto, il personaggio compie un saltetto basso. Se invece lo tieni premuto, raggiunge l'altezza massima.\n\nQuesto effetto si chiama **salto variabile** (o *cut jump*). Per ottenerlo, controlliamo se il giocatore rilascia il tasto mentre il personaggio sta ancora salendo (cioè quando `velocity.y < 0`). In quel momento riduciamo la velocità verso l'alto (ad esempio moltiplicandola per `0.5`), fermando l'ascesa prima del tempo."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Configurare l'azione di input per il salto",
+    "passi": [
+     "Apri il menu **Project → Project Settings** in alto a sinistra.",
+     "Seleziona la scheda **Input Map**.",
+     "Nel campo **Add New Action**, scrivi `jump` e premi il pulsante **Add**.",
+     "Nella lista delle azioni, clicca sul pulsante **+** accanto all'azione `jump` e premi la barra spaziatrice per assegnarla.",
+     "Premi **Close** per chiudere le impostazioni."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "project-settings-input-map",
+    "didascalia": "La scheda Input Map nelle Project Settings dove si definiscono le azioni di input del gioco."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends CharacterBody2D\n\n@export var jump_height: float = 128.0\n@export var jump_time_to_peak: float = 0.4\n@export var speed: float = 200.0\n\nvar gravity: float\nvar jump_velocity: float\n\nfunc _ready() -> void:\n\t_recalculate_physics()\n\nfunc _recalculate_physics() -> void:\n\tgravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\tjump_velocity = -(2.0 * jump_height) / jump_time_to_peak\n\nfunc _physics_process(delta: float) -> void:\n\t# 1. Applicare la gravità quando il personaggio è in aria\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\t# 2. Iniziare il salto quando si preme il tasto mentre si è sul pavimento\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = jump_velocity\n\n\t# 3. Salto variabile: riduce la spinta se il tasto viene rilasciato in salita\n\tif Input.is_action_just_released(\"jump\") and velocity.y < 0.0:\n\t\tvelocity.y *= 0.5\n\n\t# 4. Movimento orizzontale\n\tvar direction := Input.get_axis(\"ui_left\", \"ui_right\")\n\tvelocity.x = direction * speed\n\n\t# 5. Muovere il corpo e aggiornare le collisioni\n\tmove_and_slide()",
+    "spiegazione": "Nello script usiamo `@export` per rendere modificabili nell'Inspector sia `jump_height` che `jump_time_to_peak`. In `_ready()` calcoliamo la gravità e la velocità di salto. Dentro `_physics_process()` applichiamo la gravità ad ogni fotogramma di fisica, gestiamo la spinta iniziale solo se `is_on_floor()` è vero e riduciamo `velocity.y` a metà appena l'azione `jump` viene rilasciata durante l'ascesa."
+   },
+   {
+    "tipo": "testo",
+    "md": "Grazie all'uso delle variabili `@export`, potrai cambiare l'altezza o la durata del salto dal pannello Inspector dell'editor senza dover modificare il codice. Se imposti un'altezza di `64.0` pixel, lo script calcolerà automaticamente i nuovi valori per far saltare il personaggio esattamente di 4 tessere."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- La gravità è un'accelerazione costante verso il basso da sommare a `velocity.y` moltiplicata per `delta` ad ogni fotogramma di fisica.\n- `is_on_floor()` verifica se il `CharacterBody2D` si trova a contatto con il terreno ed è affidabile subito dopo la chiamata a `move_and_slide()`.\n- Calcolare la fisica a partire da altezza e tempo di risalita evita di dover trovare i valori a tentativi e rende precisa la creazione dei livelli.\n- Il salto variabile si ottiene riducendo la velocità di risalita quando si rileva `Input.is_action_just_released(\"jump\")`."
+   }
+  ]
+ }
+}
