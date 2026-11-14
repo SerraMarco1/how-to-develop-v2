@@ -21,3 +21,5 @@
 {"quando":1794655055544,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-arena-4","ok":false,"contata":true,"durataMs":992,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794655056539,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-arena-4","ok":true,"contata":true,"durataMs":71420,"tokenInput":21076,"tokenOutput":14231,"ragionamento":4228}
 {"quando":1794655141011,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-arena-4","ok":true,"contata":true,"durataMs":7307,"tokenInput":2791,"tokenOutput":831,"ragionamento":2299}
+{"quando":1794655153448,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"gravita-e-salto","ok":true,"contata":true,"durataMs":25341,"tokenInput":14128,"tokenOutput":2177,"ragionamento":3125}
+{"quando":1794655178791,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"gravita-e-salto","ok":true,"contata":true,"durataMs":17396,"tokenInput":16370,"tokenOutput":2115,"ragionamento":2091}
