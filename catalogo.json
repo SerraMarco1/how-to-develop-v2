@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-14T11:53:44.507Z",
+ "aggiornato": "2026-11-14T12:31:05.242Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1087,10 +1087,10 @@
    "slug": "gravita-e-salto",
    "numero": "8.0",
    "titolo": "Gravità e salto",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/gravita-e-salto.json",
-   "sha256": "0e64c112b2933a38ddc943422df616e2e3e2f31f0d2de1ff83a4509d193c9fa0",
-   "byte": 36325
+   "sha256": "66e701b5c48d49aa3bac8bd2e655cc601a8df3d890546df2f9f6d3ea23fcbfc0",
+   "byte": 38693
   },
   {
    "slug": "salto-che-perdona",
