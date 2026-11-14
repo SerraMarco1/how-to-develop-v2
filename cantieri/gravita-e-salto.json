@@ -348,7 +348,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "prevedi",
@@ -412,7 +412,63 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Calcolare gravità, spinta e velocità del salto",
+    "consegna": "Leggi i frammenti di codice GDScript e rispondi alle domande sui calcoli della fisica e sullo stato del personaggio senza eseguire lo script.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> float:\n\tvar jump_height: float = 100.0\n\tvar jump_time_to_peak: float = 0.5\n\tvar gravity: float = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\treturn gravity\n",
+      "domanda": "Quanto vale la variabile gravity?",
+      "risposta": "800.0",
+      "spiegazione": "La formula è (2.0 * 100.0) / (0.5 * 0.5) = 200.0 / 0.25 = 800.0.",
+      "id": "es3p1"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar jump_height: float = 144.0\n\tvar jump_time_to_peak: float = 0.6\n\tvar jump_velocity: float = -(2.0 * jump_height) / jump_time_to_peak\n\treturn jump_velocity\n",
+      "domanda": "Quanto vale la variabile jump_velocity?",
+      "risposta": "-480.0",
+      "spiegazione": "La formula è -(2.0 * 144.0) / 0.6 = -288.0 / 0.6 = -480.0. Il valore è negativo perché punta verso l'alto lungo l'asse Y.",
+      "id": "es3p2"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar velocity_y: float = -600.0\n\tvar is_released: bool = true\n\tif is_released and velocity_y < 0.0:\n\t\tvelocity_y *= 0.5\n\treturn velocity_y\n",
+      "domanda": "Quanto diventa velocity_y dopo il rilascio del tasto in risalita?",
+      "risposta": "-300.0",
+      "spiegazione": "Poiché velocity_y è negativa (-600.0) e il tasto viene rilasciato, il valore viene moltiplicato per 0.5 dando -300.0.",
+      "id": "es3p3"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar velocity_y: float = 100.0\n\tvar is_released: bool = true\n\tif is_released and velocity_y < 0.0:\n\t\tvelocity_y *= 0.5\n\treturn velocity_y\n",
+      "domanda": "Quanto vale velocity_y se il tasto viene rilasciato durante la discesa (velocity_y = 100.0)?",
+      "risposta": "100.0",
+      "spiegazione": "Poiché velocity_y è maggiore di 0.0 (il personaggio sta già cadendo), la condizione velocity_y < 0.0 è falsa e il valore non subisce modifiche (rimane 100.0).",
+      "id": "es3p4"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar velocity_y: float = -400.0\n\tvar gravity: float = 1000.0\n\tvar delta: float = 0.1\n\tvelocity_y += gravity * delta\n\treturn velocity_y\n",
+      "domanda": "Quanto vale velocity_y dopo un fotogramma di fisica con delta = 0.1?",
+      "risposta": "-300.0",
+      "spiegazione": "L'incremento è gravity * delta = 1000.0 * 0.1 = 100.0. Sommandolo a -400.0 si ottiene -300.0.",
+      "id": "es3p5"
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "I calcoli cinematici permettono di determinare le costanti fisiche esatte in base ad altezza e tempo desiderati.",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es3"
+   }
   },
   "test": {
    "stato": "da_fare",
