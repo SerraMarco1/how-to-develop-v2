@@ -1,0 +1,107 @@
+{
+ "n": 9,
+ "quando": "2026-11-14T11:50:24.278Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (imita): 1 problema",
+ "spiegazione": "«Calibrazione completa delle tolleranze e reattività del personaggio», scritto da gemini/gemini-3.6-flash. 4 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 6229,
+ "dati": {
+  "problemi": [
+   "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "imita",
+   "titolo": "Calibrazione completa delle tolleranze e reattività del personaggio",
+   "consegna": "Rivedi e verifica l'intero script `player/player.gd` per assicurarti che la logica del salto permissivo e del movimento orizzontale sia completa, ordinata e priva di difetti.\n\nControlla e garantisci che:\n1. Le tolleranze `coyote_time = 0.15` e `jump_buffer_time = 0.15` siano correttamente esportate nel gruppo `\"Tolleranze Salto\"`.\n2. L'azzeramento dei timer (`coyote_timer = 0.0` e `jump_buffer_timer = 0.0`) avvenga nello stesso istante in cui scatta il salto.\n3. Il salto variabile al rilascio del tasto (`Input.is_action_just_released(\"jump\")`) continui a tagliare a metà la velocità di risalita quando `velocity.y < 0.0`.\n4. Il movimento orizzontale utilizzi `move_toward()` sia in accelerazione sia in decelerazione, applicando `ground_acceleration` o `air_acceleration` a seconda di `is_on_floor()`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "salti",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Rileggi il codice di player.gd per accertarti che l'azzeramento dei due timer avvenga dentro il blocco `if jump_buffer_timer > 0.0 and coyote_timer > 0.0:`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://player/player.gd",
+     "descrizione": "Il file player/player.gd esiste"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://player/player.gd",
+     "regex": "coyote_timer = 0\\.0",
+     "descrizione": "Lo script azzera coyote_timer dopo aver eseguito il salto"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://player/player.gd",
+     "regex": "jump_buffer_timer = 0\\.0",
+     "descrizione": "Lo script azzera jump_buffer_timer dopo aver eseguito il salto"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena serve un CharacterBody2D chiamato Player\"):\n\t\treturn\n\n\t# Test 1: Coyote Time + Azzeramento timer\n\tplayer.position = Vector2(400, 464)\n\tawait wait_physics_frames(2)\n\tplayer.position = Vector2(400, 400)\n\tawait wait_physics_frames(2)\n\tawait tap_action(\"jump\")\n\tcheck(\"coyote_active\", player.velocity.y < 0.0, \"Il salto deve attivarsi dentro la finestra di Coyote Time (velocity.y è %.1f)\" % player.velocity.y)\n\n\tvar coyote_val = get_prop(player, \"coyote_timer\", 1.0)\n\tvar buffer_val = get_prop(player, \"jump_buffer_timer\", 1.0)\n\tcheck(\"timer_coyote_zero\", float(coyote_val) <= 0.0, \"coyote_timer deve essere azzerato dopo il salto (valore attuale: %s)\" % str(coyote_val))\n\tcheck(\"timer_buffer_zero\", float(buffer_val) <= 0.0, \"jump_buffer_timer deve essere azzerato dopo il salto (valore attuale: %s)\" % str(buffer_val))\n\n\t# Test 2: Jump Buffer all'atterraggio\n\tplayer.position = Vector2(400, 300)\n\tplayer.velocity = Vector2(0, 150)\n\tawait wait_physics_frames(2)\n\tawait tap_action(\"jump\")\n\tawait wait_physics_frames(2)\n\tplayer.position = Vector2(400, 464)\n\tawait wait_physics_frames(3)\n\tcheck(\"buffer_active\", player.velocity.y < 0.0, \"Il salto premuto in volo deve attivarsi appena si tocca terra (velocity.y è %.1f)\" % player.velocity.y)\n",
+     "descrizione": "Il sistema di salto risponde correttamente a Coyote Time, Jump Buffer e azzera i timer per evitare salti doppi"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Salti\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 400)\n"
+     },
+     {
+      "percorso": "player/player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player/player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player.png\" id=\"2_sprite\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(32, 32)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_sprite\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+     },
+     {
+      "percorso": "player/player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var jump_height: float = 128.0\n@export var jump_time_to_peak: float = 0.4\n@export var speed: float = 200.0\n@export var max_fall_speed: float = 600.0\n\n@export_group(\"Tolleranze Salto\")\n@export var coyote_time: float = 0.15\n@export var jump_buffer_time: float = 0.15\n\n@export_group(\"Accelerazione e Attrito\")\n@export var ground_acceleration: float = 1200.0\n@export var air_acceleration: float = 400.0\n@export var ground_friction: float = 1000.0\n\nvar gravity: float\nvar jump_velocity: float\n\nvar coyote_timer: float = 0.0\nvar jump_buffer_timer: float = 0.0\n\n\nfunc _ready() -> void:\n\trecalculate_physics()\n\n\nfunc recalculate_physics() -> void:\n\tgravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\tjump_velocity = -(2.0 * jump_height) / jump_time_to_peak\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\t\tif velocity.y > max_fall_speed:\n\t\t\tvelocity.y = max_fall_speed\n\n\tif is_on_floor():\n\t\tcoyote_timer = coyote_time\n\telse:\n\t\tcoyote_timer -= delta\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\tjump_buffer_timer = jump_buffer_time\n\telse:\n\t\tjump_buffer_timer -= delta\n\n\tif jump_buffer_timer > 0.0 and coyote_timer > 0.0:\n\t\tvelocity.y = jump_velocity\n\t\tjump_buffer_timer = 0.0\n\t\tcoyote_timer = 0.0\n\n\tif Input.is_action_just_released(\"jump\") and velocity.y < 0.0:\n\t\tvelocity.y *= 0.5\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tvar accel := ground_acceleration if is_on_floor() else air_acceleration\n\n\tif direction != 0.0:\n\t\tvelocity.x = move_toward(velocity.x, direction * speed, accel * delta)\n\telse:\n\t\tvar decel := ground_friction if is_on_floor() else air_acceleration\n\t\tvelocity.x = move_toward(velocity.x, 0.0, decel * delta)\n\n\tmove_and_slide()\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Salti",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Lo script del personaggio racchiude ora tutte le caratteristiche necessarie per un controllo di gioco reattivo e naturale: Coyote Time, Jump Buffer, azzeramento immediato dei timer, salto cut variabile e movimento orizzontale progressivo tramite move_toward().",
+    "cambiati": [],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
