@@ -26,3 +26,6 @@
 {"quando":1794655201660,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"gravita-e-salto","ok":true,"contata":true,"durataMs":58073,"tokenInput":13094,"tokenOutput":5673,"ragionamento":7917}
 {"quando":1794655276305,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"gravita-e-salto","ok":true,"contata":true,"durataMs":21447,"tokenInput":9176,"tokenOutput":1813,"ragionamento":6834}
 {"quando":1794655324147,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"gravita-e-salto","ok":true,"contata":true,"durataMs":17341,"tokenInput":9429,"tokenOutput":2036,"ragionamento":5747}
+{"quando":1794655354041,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"gravita-e-salto","ok":false,"contata":true,"durataMs":280102,"errore":"Nessuna risposta entro 280 secondi"}
+{"quando":1794655634146,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"gravita-e-salto","ok":false,"contata":true,"durataMs":280100,"errore":"Nessuna risposta entro 280 secondi"}
+{"quando":1794655914249,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"gravita-e-salto","ok":true,"contata":true,"durataMs":12579,"tokenInput":12236,"tokenOutput":12,"ragionamento":2909}
