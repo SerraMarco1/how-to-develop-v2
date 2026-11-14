@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-13T13:22:43.661Z",
+ "aggiornato": "2026-11-14T10:35:33.040Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1064,6 +1064,15 @@
    "file": "lezioni/f07-azione-2d/progetto-arena-2.json",
    "sha256": "a4a74d4e584607c1068dc471bd83c0e0c7ea2affb3541227a279c10ba47ace71",
    "byte": 50363
+  },
+  {
+   "slug": "progetto-arena-3",
+   "numero": "7.16",
+   "titolo": "Progetto «Arena» – tappa 3: esperienza e potenziamenti",
+   "versione": 1,
+   "file": "lezioni/f07-azione-2d/progetto-arena-3.json",
+   "sha256": "bdfb9e412117db6dac3bdf39d06d5b823797db80b654f9418f51956abfdba1fb",
+   "byte": 70575
   }
  ],
  "documentazione": {
