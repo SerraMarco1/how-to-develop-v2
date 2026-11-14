@@ -468,5 +468,18 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Nello script di verifica (verifiche[3]), viene utilizzata la riga `var health := player.get_node_or_null(\"Health\") as Health`. L'uso del tipo `as Health` causa un errore di compilazione/parsing in GDScript se lo studente non ha registrato `Health` come `class_name` globale.",
+    "correzione": "Sostituire `var health := player.get_node_or_null(\"Health\") as Health` con `var health := player.get_node_or_null(\"Health\")` per evitare errori di tipo statico.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
