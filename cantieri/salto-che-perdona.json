@@ -1,0 +1,66 @@
+{
+ "creato": "2026-11-14T11:32:14.712Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Un salto che perdona",
+  "sommario": "Impara ad aggiungere Coyote Time, Jump Buffer e accelerazione differenziata tra terra e aria in Godot 4.7. Scoprirai come calibrare i controlli per rendere il salto reattivo, naturale e tollerante verso le imprecisioni del giocatore.",
+  "concetti": [
+   "Coyote Time per saltare subito dopo aver lasciato una piattaforma",
+   "Jump Buffer per registrare l'input prima di toccare il suolo",
+   "Inerzia e accelerazione orizzontale con move_toward()",
+   "Controllo d'aria ridotto (air acceleration) rispetto al terreno",
+   "Calibrazione dei parametri fisici tramite le proprietà esportate"
+  ],
+  "obiettivi": [
+   "Saltare ancora per un istante dopo aver lasciato il bordo",
+   "Ricordare il tasto premuto un istante prima di toccare terra",
+   "Accelerazione diversa a terra e in aria"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nei giochi a piattaforme più riusciti, la fisica non rispetta le regole della realtà ma è progettata per essere gratificante. Se un personaggio risponde ai comandi in modo troppo rigido, il gioco sembra ingiusto: premi il tasto un millisecondo dopo essere caduto da un bordo o un istante prima di toccare il terreno, e il personaggio non salta. In questa lezione aggiungeremo tre meccaniche fondamentali al progetto «Salti» per rendere il controllo fluido e permissivo: il **Coyote Time** (tempo di tolleranza dopo il bordo), il **Jump Buffer** (memoria del tasto premuto) e una variazione dell'accelerazione in aria."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il **Coyote Time** prende il nome dai cartoni animati in cui il personaggio cammina oltre un precipizio e resta sospeso a mezz'aria prima di cadere. In un gioco a piattaforme indica un intervallo di tempo brevissimo (solitamente tra 0.1 e 0.2 secondi) durante il quale il personaggio può ancora saltare anche se ha già lasciato il terreno. Senza questa tolleranza, quando il giocatore corre veloce e premi il tasto appena dopo aver superato il bordo, la funzione `is_on_floor()` restituisce già `false` e il salto fallisce. Per implementarlo usiamo un timer in secondi (`coyote_timer`): finché il personaggio si trova sul pavimento il timer si ricarica al valore massimo, mentre quando si stacca dal suolo il timer inizia a scalare tramite il delta tempo (`delta`)."
+   },
+   {
+    "tipo": "testo",
+    "md": "La seconda tolleranza è il **Jump Buffer** (il buffer di salto). Quando un personaggio sta cadendo verso una piattaforma, il giocatore spesso preme il tasto di salto una frazione di secondo prima dell'impatto. Senza un buffer, quell'input viene ignorato perché il personaggio non è ancora a terra. Il risultato è che il personaggio atterra e resta fermo, costringendo il giocatore a premere nuovamente il tasto. Con il Jump Buffer usiamo un altro temporizzatore (`jump_buffer_timer`): quando il giocatore preme il tasto di salto, impostiamo il timer al suo valore massimo. Se il personaggio tocca il suolo mentre questo timer è attivo (ossia maggiore di zero), il salto scatta immediatamente."
+   },
+   {
+    "tipo": "testo",
+    "md": "L'ultimo aspetto riguarda il **controllo orizzontale in aria**. Nel nostro codice attuale, impostiamo la velocità orizzontale direttamente con `velocity.x = direction * speed`. Questo fa sì che il personaggio cambi direzione o si fermi all'istante, sia a terra sia a mezz'aria. Per dare la sensazione di peso e fisica reale, usiamo un'accelerazione progressiva tramite la funzione `move_toward()`. Questa funzione sposta un valore verso un obiettivo con un passo massimo definito. Utilizzeremo un'accelerazione elevata per il movimento a terra (risposta immediata) e un'accelerazione più ridotta mentre il personaggio si trova in aria, limitando la capacità di virata improvvisa durante il volo."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends CharacterBody2D\n\n@export var jump_height: float = 128.0\n@export var jump_time_to_peak: float = 0.4\n@export var speed: float = 200.0\n@export var max_fall_speed: float = 600.0\n\n@export_group(\"Tolleranze Salto\")\n@export var coyote_time: float = 0.15\n@export var jump_buffer_time: float = 0.15\n\n@export_group(\"Accelerazione e Attrito\")\n@export var ground_acceleration: float = 1200.0\n@export var air_acceleration: float = 400.0\n@export var ground_friction: float = 1000.0\n\nvar gravity: float\nvar jump_velocity: float\n\nvar coyote_timer: float = 0.0\nvar jump_buffer_timer: float = 0.0\n\n\nfunc _ready() -> void:\n\trecalculate_physics()\n\n\nfunc recalculate_physics() -> void:\n\tgravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\tjump_velocity = -(2.0 * jump_height) / jump_time_to_peak\n\n\nfunc _physics_process(delta: float) -> void:\n\t# Gestione gravità\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\t\tif velocity.y > max_fall_speed:\n\t\t\tvelocity.y = max_fall_speed\n\n\t# Aggiornamento timer Coyote Time\n\tif is_on_floor():\n\t\tcoyote_timer = coyote_time\n\telse:\n\t\tcoyote_timer -= delta\n\n\t# Aggiornamento timer Jump Buffer\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\tjump_buffer_timer = jump_buffer_time\n\telse:\n\t\tjump_buffer_timer -= delta\n\n\t# Controllo ed esecuzione del salto\n\tif jump_buffer_timer > 0.0 and coyote_timer > 0.0:\n\t\tvelocity.y = jump_velocity\n\t\tjump_buffer_timer = 0.0\n\t\tcoyote_timer = 0.0\n\n\t# Salto variabile al rilascio del tasto\n\tif Input.is_action_just_released(\"jump\") and velocity.y < 0.0:\n\t\tvelocity.y *= 0.5\n\n\t# Movimento orizzontale con accelerazione e attrito\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tvar accel := ground_acceleration if is_on_floor() else air_acceleration\n\n\tif direction != 0.0:\n\t\tvelocity.x = move_toward(velocity.x, direction * speed, accel * delta)\n\telse:\n\t\tvar decel := ground_friction if is_on_floor() else air_acceleration\n\t\tvelocity.x = move_toward(velocity.x, 0.0, decel * delta)\n\n\tmove_and_slide()",
+    "spiegazione": "1. `@export_group()` organizza le variabili nell'Inspector sotto sezioni pulite.\n2. In `_physics_process()`, se il personaggio è a terra, `coyote_timer` viene costantemente impostato a `coyote_time`. Quando lascia il bordo, inizia a decrescere di `delta` ad ogni fotogramma.\n3. Se premi l'azione `jump`, `jump_buffer_timer` parte da `jump_buffer_time`. Se non la premi, scende anch'esso di `delta`.\n4. La condizione `if jump_buffer_timer > 0.0 and coyote_timer > 0.0` permette di saltare sia quando sei appena caduto da una piattaforma, sia quando premi il tasto poco prima di toccare terra.\n5. `move_toward(velocity.x, target, passo)` cambia la velocità orizzontale in modo graduale. In aria viene usata `air_acceleration`, rendendo i cambi di direzione meno repentini rispetto al terreno."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando esegui il salto dentro il blocco `if jump_buffer_timer > 0.0 and coyote_timer > 0.0:`, è indispensabile azzerare subito entrambi i timer (`jump_buffer_timer = 0.0` e `coyote_timer = 0.0`). Se dimentichi di farlo, il gioco continuerà a rilevare che i timer sono maggiori di zero nei fotogrammi successivi, eseguendo salti multipli indesiderati."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "editor-script",
+    "didascalia": "L'area di lavoro Script di Godot con lo script aggiornato del personaggio."
+   },
+   {
+    "tipo": "testo",
+    "md": "Grazie all'uso delle annotazioni `@export` e `@export_group`, tutte queste variabili sono visibili e modificabili direttamente nel pannello *Inspector* selezionando il nodo `Player`. Non esistono valori universali o perfetti: una cifra per `coyote_time` tra 0.1 e 0.15 secondi rende la risposta naturale, mentre valori superiori a 0.3 secondi daranno l'impressione al giocatore di poter camminare sull'aria. Testare e regolare questi numeri direttamente dall'editor mentre provi la scena (premendo F6) è il modo fondamentale per trovare la sensazione di gioco desiderata."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Il **Coyote Time** è un timer che ti permette di saltare per una breve frazione di secondo dopo aver abbandonato una piattaforma.\n- Il **Jump Buffer** è un timer che memorizza la pressione del tasto di salto se effettuata poco prima di toccare terra.\n- Azzerare i timer immediatamente dopo il salto evita l'attivazione di salti doppi indesiderati.\n- `move_toward()` permette di gestire l'accelerazione orizzontale in modo fluido anziché istantaneo.\n- Un'accelerazione ridotta in aria (`air_acceleration`) dona al personaggio inerzia e un senso di peso naturale."
+   }
+  ]
+ }
+}
