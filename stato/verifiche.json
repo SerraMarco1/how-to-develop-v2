@@ -628,5 +628,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "macchina-a-stati": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
