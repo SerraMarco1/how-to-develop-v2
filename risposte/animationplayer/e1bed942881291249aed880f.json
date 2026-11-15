@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-latest",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test richiede di implementare uno stato dentro una macchina a stati (`PlayerAttackState extends State`, nodo `StateMachine`, modifiche a `player_idle_state.gd` e `player_run_state.gd`), ma il pattern State Machine non è mai stato spiegato nelle lezioni precedenti né fa parte degli argomenti di questa lezione. Inoltre richiede di gestire la fine dell'animazione tramite il segnale `animation_finished`, che non è stato spiegato nella teoria, e la consegna non specifica con quale sintassi o segnale emettere la transizione di stato.\", \"correzione\": \"Riformulare il test concentrandosi sugli obiettivi della lezione (creazione dell'animazione di attacco, abilitazione temporizzata della CollisionShape2D dell'Hitbox e gestione della fine dell'attacco tramite il segnale `animation_finished`) applicati direttamente al Player già esistente o a un controller semplice, senza presupporre una State Machine non ancora introdotta nel corso.\", \"fonte\": \"\"}]}",
- "ragionamento": 8099,
- "quando": "2026-11-15T09:35:56.184Z",
- "ruolo": "revisore"
-}
