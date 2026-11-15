@@ -1,0 +1,86 @@
+{
+ "creato": "2026-11-15T08:54:38.038Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "AnimationPlayer: animare qualsiasi cosa",
+  "sommario": "Scopri come usare il nodo AnimationPlayer per creare animazioni basate su tracce e fotogrammi chiave su qualsiasi proprietà dei nodi. Imparerai ad attivare le hitbox di attacco solo nei fotogrammi corretti, a chiamare funzioni lungo la linea temporale e a gestire la conclusione delle animazioni con i segnali.",
+  "concetti": [
+   "AnimationPlayer e linea temporale",
+   "Tracce di proprietà e fotogrammi chiave (keyframes)",
+   "Traccia RESET per preservare lo stato di riposo",
+   "Attivazione selettiva delle collisioni (hitbox)",
+   "Traccia Call Method Track per chiamare funzioni da animazione",
+   "Segnale animation_finished per le transizioni di stato",
+   "Riproduzione ciclica (loop) e Autoplay on Load"
+  ],
+  "obiettivi": [
+   "Tracce e fotogrammi chiave su qualsiasi proprietà di qualsiasi nodo",
+   "Chiamare una funzione in un punto preciso dell'animazione",
+   "Accorgersi di quando un'animazione finisce"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nelle lezioni precedenti abbiamo usato `AnimatedSprite2D` per mostrare le sequenze di immagini della corsa e del salto del nostro protagonista in «Salti». `AnimatedSprite2D` è ottimo per cambiare i disegni di uno sprite, ma si ferma lì: non può spostare un nodo, non può modificare un valore numerico e non può attivare un'area di danno.\n\nNei videogiochi, un attacco con la spada o un'interazione con l'ambiente coinvolgono molte proprietà contemporaneamente. Quando il personaggio vibra un fendente, la forma di collisione dell'attacco (la **hitbox**, cioè la zona che calcola l'impatto con i nemici) deve restare spenta durante la preparazione del colpo, accendersi per la frazione di secondo in cui la lama taglia l'aria e spegnersi subito dopo. Se una porta si apre, deve ruotare o alzarsi lungo l'asse verticale; se un cartello cigola al vento, deve oscillare da solo a intervalli regolari.\n\nPer fare tutto questo Godot offre **AnimationPlayer**. Non è un semplice visualizzatore di sprite, ma un vero e proprio regista capace di modificare qualunque proprietà di qualsiasi nodo nel tempo e di eseguire codice nei millisecondi stabiliti."
+   },
+   {
+    "tipo": "testo",
+    "md": "Un'animazione in `AnimationPlayer` è formata da una linea temporale graduata in secondi e da una o più **tracce** (*tracks*). Ogni traccia segue una proprietà specifica di un nodo: per esempio la posizione (`position`), la rotazione (`rotation`), il colore di modulazione (`modulate`) o se una forma di collisione è disattivata (`disabled`).\n\nLungo la traccia si posizionano i **fotogrammi chiave** (*keyframes*, detti anche chiavi): registrano il valore esatto che la proprietà deve avere in quel punto del tempo. Godot calcola in automatico il passaggio graduale tra un fotogramma chiave e quello successivo (processo chiamato **interpolazione**).\n\nQuando modifichi le proprietà durante un'animazione, c'è il rischio di salvare la scena con un valore modificato a metà (ad esempio una porta mezza aperta o una collisione rimasta accesa). Per evitare questo problema, Godot utilizza la traccia speciale **RESET**: un'animazione che memorizza lo stato predefinito di riposo di tutte le proprietà al tempo `0.0`. Quando inserisci per la prima volta un fotogramma chiave su una proprietà nell'Inspector, l'editor ti propone in automatico di generare la traccia RESET."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare un'animazione di proprietà nell'editor",
+    "passi": [
+     "Nel pannello *Scene*, seleziona la radice della scena e premi **+** (o premi Ctrl+A) per aggiungere un nodo **AnimationPlayer**.",
+     "Nella barra del pannello inferiore, fai clic sulla scheda **Animation** per aprire l'area di lavoro dell'animazione.",
+     "Nel pannello inferiore, fai clic sul menu **Animation** e scegli **New...**.",
+     "Scrivi il nome della nuova animazione (per esempio `swing` per un'insegna o `attack` per un attacco) e conferma premendo **OK**.",
+     "Seleziona nel pannello *Scene* il nodo di cui vuoi animare una proprietà (ad esempio uno Sprite2D da ruotare).",
+     "Nel pannello *Inspector*, individua la proprietà desiderata (come `rotation` dentro la sezione *Transform*) e fai clic sull'icona a forma di chiave alla sua destra.",
+     "Se compare una finestra che ti chiede di creare una traccia RESET, conferma premendo **Create**.",
+     "Sposta il cursore temporale lungo la linea del tempo (ad esempio a 0.5 secondi), modifica il valore della proprietà nell'Inspector e premi di nuovo l'icona della chiave per fissare il nuovo punto."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "editor-panoramica",
+    "didascalia": "La scheda Animation si trova nella barra inferiore dell'editor, accanto ad Audio e Shader Editor."
+   },
+   {
+    "tipo": "testo",
+    "md": "Un'applicazione fondamentale di questa tecnica è la gestione delle hitbox di attacco. Se aggiungiamo al personaggio un nodo `Area2D` con una `CollisionShape2D` per colpire, quell'area non deve ferire quando il personaggio cammina o salta.\n\nInvece di scrivere timer complicati nello script, inseriamo in `AnimationPlayer` una traccia che comanda la proprietà `disabled` di `CollisionShape2D`:\n- Al tempo `0.0s`: `disabled` impostato su `true` (l'area d'attacco è spenta mentre il personaggio alza la spada).\n- Al tempo `0.15s`: `disabled` impostato su `false` (la spada fende l'aria e l'area diventa attiva per registrare i colpi).\n- Al tempo `0.3s`: `disabled` torna su `true` (il fendente è passato e l'area si spegne di nuovo).\n\nNella traccia `RESET`, la proprietà `disabled` sarà registrata su `true`. In questo modo l'area rimarrà sempre innocua di default, attivandosi unicamente quando l'animazione di attacco la accende per pochi istanti."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando sposti il cursore temporale nell'editor di animazione, Godot applica immediatamente i valori dei fotogrammi chiave agli oggetti nella vista 2D. Se salvi la scena mentre il cursore è posizionato a metà attacco, la proprietà `disabled` potrebbe rimanere salvata su `false` nel file `.tscn`. La presenza della traccia RESET garantisce che, salvando la scena o avviando il gioco, tutte le proprietà tornino automaticamente alla posa di partenza a tempo `0.0`."
+   },
+   {
+    "tipo": "testo",
+    "md": "A volte non basta alterare numeri o caselle di spunta: serve far accadere un'azione programmata in un secondo esatto, come generare un effetto sonoro nel punto d'impatto o richiamare `queue_free()` al termine di una dissolvenza.\n\nPer questo esiste la traccia di chiamata metodo (**Call Method Track**). Per crearla, nel pannello *Animation* premi il pulsante **Add Track**, scegli **Call Method Track** e seleziona il nodo bersaglio che possiede la funzione che ti interessa.\n\nPer stabilire quando chiamarla, fai clic destro sulla linea temporale della traccia nel punto desiderato e seleziona **Insert Key**: si aprirà una finestra con l'elenco di tutti i metodi disponibili su quel nodo. Facendo doppio clic su un metodo (o impostandolo dall'Inspector), Godot lo eseguirà con precisione millimetrica. Per motivi di sicurezza, Godot non esegue le chiamate ai metodi durante l'anteprima dell'animazione nell'editor, ma solo a gioco avviato."
+   },
+   {
+    "tipo": "testo",
+    "md": "Come fa il codice del gioco a sapere quando un'animazione finisce? Quando il nostro personaggio esegue un attacco, deve fermarsi e non deve poter correre finché il colpo non è andato a segno. Una volta finito il colpo, deve tornare allo stato di attesa (`idle`).\n\n`AnimationPlayer` dispone del segnale `animation_finished(anim_name: StringName)`: questo segnale viene emesso automaticamente ogni volta che un'animazione non ciclica giunge al termine. Nel parametro `anim_name` riceve il nome dell'animazione appena conclusa.\n\nGrazie alla macchina a stati che abbiamo costruito nella scorsa lezione, possiamo creare un nuovo stato `PlayerAttackState` che fa partire l'attacco ed ascolta questo segnale per restituire il controllo al giocatore."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name PlayerAttackState\nextends State\n\n@export var player: CharacterBody2D\n@export var animation_player: AnimationPlayer\n\n\nfunc _ready() -> void:\n\tif animation_player:\n\t\tanimation_player.animation_finished.connect(_on_animation_finished)\n\n\nfunc enter() -> void:\n\tplayer.velocity.x = 0.0\n\tif animation_player:\n\t\tanimation_player.play(\"attack\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.move_and_slide()\n\n\nfunc _on_animation_finished(anim_name: StringName) -> void:\n\tif anim_name == &\"attack\":\n\t\ttransitioned.emit(self, \"idle\")",
+    "spiegazione": "Nello script dello stato di attacco, colleghiamo il segnale `animation_finished` di `AnimationPlayer` alla funzione `_on_animation_finished` durante il `_ready()`. Quando si entra nello stato (`enter`), fermiamo il movimento orizzontale e avviamo l'animazione con `play(\"attack\")`. Durante l'attacco applichiamo comunque la gravità in `physics_update` per evitare che il personaggio resti sospeso in aria se attacca mentre scende da un gradino. Non appena l'animazione finisce, `_on_animation_finished` riconosce il nome `&\"attack\"` ed emette `transitioned` per tornare a `idle`."
+   },
+   {
+    "tipo": "testo",
+    "md": "Non tutte le animazioni hanno bisogno di uno script per funzionare. Elementi dello scenario come una torcia accesa, una piattaforma decorativa o un cartello oscillante devono muoversi da soli fin dal primo istante di gioco.\n\nNel pannello di animazione ci sono due pulsanti essenziali per gli elementi autonomi:\n1. **Animation Looping**: l'icona con le due frecce circolari posta in alto a destra sulla timeline. Quando è attiva, l'animazione ricomincia dall'inizio ogni volta che arriva alla fine, creando un ciclo continuo.\n2. **Autoplay on Load**: l'icona con la freccia di riproduzione affiancata da una piccola lettera \"A\". Se la attivi su un'animazione, Godot la farà partire automaticamente non appena la scena entra nel gioco, senza bisogno di scrivere alcuna riga di codice.\n\nUnendo una traccia di rotazione, il ciclo continuo e l'Autoplay, un cartello può oscillare al vento dal primo all'ultimo secondo di partita in completa autonomia."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- **AnimationPlayer** controlla tracce temporali capaci di modificare qualsiasi proprietà di qualsiasi nodo nella scena.\n- I **fotogrammi chiave** (*keyframes*) stabiliscono il valore di una proprietà in un istante temporale preciso, e Godot interpola i valori intermedi.\n- La traccia **RESET** mantiene la posa di riferimento a tempo `0.0`, garantendo che lo stato della scena non resti corrotto dopo le modifiche nell'editor.\n- Modificando la proprietà `disabled` di una forma di collisione tramite una traccia di proprietà, le hitbox si attivano esattamente durante i fotogrammi di contatto.\n- Le tracce **Call Method Track** consentono di richiamare funzioni e metodi personalizzati in punti specifici dell'animazione.\n- Il segnale **animation_finished** segnala il completamento dell'animazione, permettendo alla macchina a stati di tornare a `idle`.\n- Con le impostazioni di **Loop** e **Autoplay on Load**, gli elementi di scenario possono animarsi all'infinito e in autonomia senza codice."
+   }
+  ]
+ }
+}
