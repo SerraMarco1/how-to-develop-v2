@@ -12,3 +12,5 @@
 {"quando":1794731521586,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"macchina-a-stati","ok":true,"contata":true,"durataMs":111846,"tokenInput":15033,"tokenOutput":15945,"ragionamento":15761}
 {"quando":1794731633440,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"macchina-a-stati","ok":true,"contata":true,"durataMs":97511,"tokenInput":19282,"tokenOutput":16723,"ragionamento":6710}
 {"quando":1794731737419,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"macchina-a-stati","ok":true,"contata":true,"durataMs":24883,"tokenInput":13215,"tokenOutput":5405,"ragionamento":7358}
+{"quando":1794731779073,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"macchina-a-stati","ok":false,"contata":true,"durataMs":5160,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1794731784238,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"macchina-a-stati","ok":true,"contata":true,"durataMs":221935,"tokenInput":14034,"tokenOutput":6960,"ragionamento":9206}
