@@ -1211,7 +1211,8 @@
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-lite-latest",
-  "gemini/gemini-flash-latest"
+  "gemini/gemini-flash-latest",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "La macchina a stati",
@@ -1300,5 +1301,10 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
