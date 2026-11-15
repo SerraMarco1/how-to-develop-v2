@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-15T08:31:26.520Z",
+ "aggiornato": "2026-11-15T08:42:00.894Z",
  "stato": "lavora",
  "lezione": {
   "slug": "macchina-a-stati",
   "numero": "8.3",
   "titolo": "La macchina a stati"
  },
- "messaggio": "Sta scrivendo la lezione 8.3 «La macchina a stati».",
+ "messaggio": "Sta scrivendo la lezione 8.3 «La macchina a stati»: riprende al prossimo giro.",
  "riprende": null
 }
