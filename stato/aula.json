@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-15T09:31:31.327Z",
+ "aggiornato": "2026-11-15T09:37:43.684Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "animationplayer",
-  "numero": "8.4",
-  "titolo": "AnimationPlayer: animare qualsiasi cosa"
+  "slug": "animationtree",
+  "numero": "8.5",
+  "titolo": "AnimationTree: comandare le animazioni"
  },
- "messaggio": "Sta scrivendo la lezione 8.4 «AnimationPlayer: animare qualsiasi cosa».",
+ "messaggio": "Sta scrivendo la lezione 8.5 «AnimationTree: comandare le animazioni».",
  "riprende": null
 }
