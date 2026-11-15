@@ -14,7 +14,7 @@
    "errore": "HTTP 500: Internal error encountered."
   },
   "gemini/gemini-flash-lite-latest": {
-   "fino": 1794735762367,
+   "fino": 1794736391403,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   }
  },
@@ -40,5 +40,5 @@
  },
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": 1794736008372
+ "prossimoTentativo": 1794816000101
 }

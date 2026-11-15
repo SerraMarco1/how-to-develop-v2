@@ -633,5 +633,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "animationplayer": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }

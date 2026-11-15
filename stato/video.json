@@ -1811,5 +1811,13 @@
    },
    "motivo": "L'esercizio riorganizza la logica del giocatore in una macchina a stati ma il comportamento visivo e i movimenti del gioco restano identici a prima."
   }
+ },
+ "animationplayer": {
+  "es1": {
+   "impronta": "8b79e44f063a558d24b8a08b0666b9a934490a0e9f10166058c4d6f8d384344c",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
+  }
  }
 }
