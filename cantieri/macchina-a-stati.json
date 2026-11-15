@@ -710,13 +710,13 @@
       "scena": "res://enemy/enemy.tscn",
       "tipoNodo": "Node",
       "nome": "Patrol",
-      "genitore": "Enemy/StateMachine",
+      "genitore": "StateMachine",
       "descrizione": "La StateMachine del nemico contiene il nodo Patrol"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar enemy := find_by_name(main, \"Enemy\") as CharacterBody2D\n\tif not check(\"enemy\", enemy != null, \"Nella scena deve esserci il nemico\"):\n\t\treturn\n\tvar code := source_of(\"res://enemy/enemy.gd\")\n\tcheck(\"no_bools\", not (\"is_patrolling\" in code or \"is_attacking\" in code), \"Le variabili booleane is_patrolling e is_attacking devono essere rimosse da enemy.gd\")",
-      "descrizione": "Il nemico continua a pattugliare e ad attaccare correttamente usando la FSM"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar enemy := find_by_name(main, \"Enemy\") as CharacterBody2D\n\tif not check(\"enemy\", enemy != null, \"Nella scena deve esserci il nemico\"):\n\t\treturn\n\tvar code := source_of(\"res://enemy/enemy.gd\")\n\tcheck(\"no_bools\", not (\"is_patrolling\" in code or \"is_attacking\" in code or \"is_idle\" in code), \"Le variabili booleane is_patrolling, is_attacking e is_idle devono essere rimosse da enemy.gd\")",
+      "descrizione": "Le variabili booleane di stato sono state rimosse da enemy.gd"
      }
     ],
     "previsioni": [],
@@ -760,7 +760,7 @@
       },
       {
        "percorso": "enemy/state_machine.gd",
-       "contenuto": "class_name StateMachine\nextends Node\n\n@export var initial_state: State\n\nvar current_state: State\nvar states: Dictionary = {}\n\nfunc _ready() -> void:\n\tawait owner.ready\n\tfor child in get_children():\n\t\tif child is State:\n\t\t\tstates[child.name.to_lower()] = child\n\t\t\tchild.transitioned.connect(_on_child_transitioned)\n\tif initial_state:\n\t\tinitial_state.enter()\n\t\tcurrent_state = initial_state\n\nfunc _physics_process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.physics_update(delta)\n\nfunc _on_child_transitioned(state: State, new_state_name: String) -> void:\n\tif state != current_state:\n\t\treturn\n\tvar new_state: State = states.get(new_state_name.to_lower())\n\tif not new_state:\n\t\treturn\n\tif current_state:\n\t\tcurrent_state.exit()\n\tnew_state.enter()\n\tcurrent_state = new_state\n"
+       "contenuto": "class_name StateMachine\nextends Node\n\n@export var initial_state: State\n\nvar current_state: State\nvar states: Dictionary = {}\n\nfunc _ready() -> void:\n\tfor child in get_children():\n\t\tif child is State:\n\t\t\tstates[child.name.to_lower()] = child\n\t\t\tchild.transitioned.connect(_on_child_transitioned)\n\tif initial_state:\n\t\tinitial_state.enter()\n\t\tcurrent_state = initial_state\n\nfunc _physics_process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.physics_update(delta)\n\nfunc _on_child_transitioned(state: State, new_state_name: String) -> void:\n\tif state != current_state:\n\t\treturn\n\tvar new_state: State = states.get(new_state_name.to_lower())\n\tif not new_state:\n\t\treturn\n\tif current_state:\n\t\tcurrent_state.exit()\n\tnew_state.enter()\n\tcurrent_state = new_state\n"
       },
       {
        "percorso": "enemy/enemy_idle_state.gd",
@@ -804,14 +804,15 @@
     }
    },
    "genere": "riordina",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La StateMachine del nemico contiene il nodo Patrol: Nodi presenti: Enemy (CharacterBody2D), Sprite2D (Sprite2D), CollisionShape2D (CollisionShape2D), StateMachine (Node), Idle (Node), Patrol (Node), Attack (Node)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   },
   "test": {
