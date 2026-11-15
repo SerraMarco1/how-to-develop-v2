@@ -623,5 +623,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "animatedsprite2d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
