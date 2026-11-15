@@ -463,10 +463,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`",
-    "player/player.tscn riga 3: la scena usa \"res://player/player.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile).",
-    "player/player.tscn riga 5: la scena usa \"res://player/state_machine.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile).",
-    "player/player.tscn riga 8: la scena usa \"res://player/player_fall_state.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile)."
+    "la soluzione cambia anche player/player_idle_state.gd, player/player_run_state.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  player/player_idle_state.gd:\n    + riga 17:   if Input.is_action_just_pressed(\"dash\"):\n    + riga 18:     transitioned.emit(self, \"dash\")\n    + riga 19:     return\n  player/player_run_state.gd:\n    + riga 18:   if Input.is_action_just_pressed(\"dash\"):\n    + riga 19:     transitioned.emit(self, \"dash\")\n    + riga 20:     return\nCon quei file com'erano prima falliscono:\n  - Attivando dash il personaggio deve scattare in avanti velocemente (da 400.0 a 400.0)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
