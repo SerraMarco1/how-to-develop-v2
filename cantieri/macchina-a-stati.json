@@ -105,7 +105,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La StateMachine contiene il nodo Idle: Nodi presenti: Player (CharacterBody2D), AnimatedSprite2D (AnimatedSprite2D), CollisionShape2D (CollisionShape2D), StateMachine (Node), Idle (Node), Run (Node), Jump (Node), Fall (Node)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
