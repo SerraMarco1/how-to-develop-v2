@@ -311,8 +311,19 @@
     ],
     "verifiche": [
      {
+      "tipo": "file_esiste",
+      "percorso": "res://player/player.tscn",
+      "descrizione": "Il file player/player.tscn esiste"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://player/player.tscn",
+      "nodo": "Player",
+      "descrizione": "Il nodo Player ha uno script collegato"
+     },
+     {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena principale deve esserci il Player\"):\n\t\treturn\n\tvar anim_sprite := find_by_name(player, \"AnimatedSprite2D\") as AnimatedSprite2D\n\tif not check(\"anim_sprite\", anim_sprite != null, \"Il Player deve avere AnimatedSprite2D\"):\n\t\treturn\n\tvar frames: SpriteFrames = anim_sprite.sprite_frames\n\tif not check(\"has_anims\", frames != null and frames.has_animation(\"jump\") and frames.has_animation(\"fall\"), \"SpriteFrames deve contenere sia l'animazione jump sia fall\"):\n\t\treturn\n\tplayer.position = Vector2(400, 450)\n\tplayer.velocity = Vector2.ZERO\n\tawait wait_physics_frames(5)\n\tcheck(\"idle_ground\", anim_sprite.animation == &\"idle\", \"A terra da fermo l'animazione deve essere idle\")\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"run_right\", anim_sprite.animation == &\"run\" and anim_sprite.flip_h == false, \"Correndo a destra deve essere in run con flip_h = false\")\n\tawait wait_physics_frames(10)\n\tawait hold_action(\"move_left\", 15)\n\tcheck(\"run_left\", anim_sprite.animation == &\"run\" and anim_sprite.flip_h == true, \"Correndo a sinistra deve essere in run con flip_h = true\")\n\tawait wait_physics_frames(10)\n\tplayer.position = Vector2(400, 450)\n\tplayer.velocity = Vector2(0, -300.0)\n\tawait wait_physics_frames(2)\n\tcheck(\"jump_up\", anim_sprite.animation == &\"jump\", \"Durante la risalita del salto l'animazione deve essere jump (attuale: %s)\" % str(anim_sprite.animation))\n\tplayer.position = Vector2(400, 300)\n\tplayer.velocity = Vector2(0, 100.0)\n\tawait wait_physics_frames(2)\n\tcheck(\"fall_down\", anim_sprite.animation == &\"fall\", \"Durante la discesa in aria l'animazione deve essere fall (attuale: %s)\" % str(anim_sprite.animation))\n\tplayer.position = Vector2(400, 450)\n\tplayer.velocity = Vector2.ZERO\n\tawait wait_physics_frames(5)\n\tcheck(\"land_idle\", anim_sprite.animation == &\"idle\", \"Dopo essere atterrato e fermo deve tornare a idle (attuale: %s)\" % str(anim_sprite.animation))",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena principale deve esserci il Player\"):\n\t\treturn\n\tvar anim_sprite := find_by_name(player, \"AnimatedSprite2D\") as AnimatedSprite2D\n\tif not check(\"anim_sprite\", anim_sprite != null, \"Il Player deve avere AnimatedSprite2D\"):\n\t\treturn\n\tvar frames: SpriteFrames = anim_sprite.sprite_frames\n\tif not check(\"has_anims\", frames != null and frames.has_animation(\"jump\") and frames.has_animation(\"fall\"), \"SpriteFrames deve contenere sia l'animazione jump sia fall\"):\n\t\treturn\n\tplayer.position = Vector2(400, 464)\n\tplayer.velocity = Vector2.ZERO\n\tawait wait_physics_frames(10)\n\tcheck(\"idle_ground\", anim_sprite.animation == &\"idle\", \"A terra da fermo l'animazione deve essere idle (attuale: %s)\" % str(anim_sprite.animation))\n\tawait hold_action(\"move_right\", 15)\n\tcheck(\"run_right\", anim_sprite.animation == &\"run\" and anim_sprite.flip_h == false, \"Correndo a destra deve essere in run con flip_h = false\")\n\tawait wait_physics_frames(10)\n\tawait hold_action(\"move_left\", 15)\n\tcheck(\"run_left\", anim_sprite.animation == &\"run\" and anim_sprite.flip_h == true, \"Correndo a sinistra deve essere in run con flip_h = true\")\n\tawait wait_physics_frames(10)\n\tplayer.position = Vector2(400, 400)\n\tplayer.velocity = Vector2(0, -300.0)\n\tawait wait_physics_frames(2)\n\tcheck(\"jump_up\", anim_sprite.animation == &\"jump\", \"Durante la risalita del salto l'animazione deve essere jump (attuale: %s)\" % str(anim_sprite.animation))\n\tplayer.position = Vector2(400, 300)\n\tplayer.velocity = Vector2(0, 100.0)\n\tawait wait_physics_frames(2)\n\tcheck(\"fall_down\", anim_sprite.animation == &\"fall\", \"Durante la discesa in aria l'animazione deve essere fall (attuale: %s)\" % str(anim_sprite.animation))\n\tplayer.position = Vector2(400, 464)\n\tplayer.velocity = Vector2.ZERO\n\tawait wait_physics_frames(10)\n\tcheck(\"land_idle\", anim_sprite.animation == &\"idle\", \"Dopo essere atterrato e fermo deve tornare a idle (attuale: %s)\" % str(anim_sprite.animation))",
       "descrizione": "Il personaggio riproduce l'animazione corretta e l'orientamento giusto in ogni situazione (idle, corsa, salto, caduta)"
      }
     ],
@@ -360,19 +371,23 @@
       "impostazioni": []
      },
      "spiegazione": "Abbiamo completato la risorsa `SpriteFrames` aggiungendo le animazioni `jump` e `fall`. Nella funzione `update_animation(direction)`, abbiamo aggiunto il ramo `else` per quando `is_on_floor()` è falso (il personaggio è in volo). Se `velocity.y < 0.0`, il personaggio sta salendo contro la gravità ed esegue `animated_sprite.play(\"jump\")`. Quando la velocità verticale si azzera al vertice e diventa positiva (`velocity.y >= 0.0`), il personaggio cade ed esegue `animated_sprite.play(\"fall\")`. La gestione di `flip_h` a monte assicura che il personaggio resti rivolto nella direzione corretta anche a mezz'aria.",
-     "cambiati": [],
+     "cambiati": [
+      "player/player.tscn",
+      "player/player.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - A terra da fermo l'animazione deve essere idle\n  - Dopo essere atterrato e fermo deve tornare a idle (attuale: fall)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-flash-latest"
    ]
   }
  },
@@ -380,7 +395,8 @@
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-3.7-flash",
-  "gemini/gemini-flash-lite-latest"
+  "gemini/gemini-flash-lite-latest",
+  "gemini/gemini-flash-latest"
  ],
  "teoria": {
   "titolo": "Animazioni a fotogrammi",
