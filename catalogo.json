@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-15T08:54:36.457Z",
+ "aggiornato": "2026-11-15T09:30:24.224Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1114,10 +1114,10 @@
    "slug": "macchina-a-stati",
    "numero": "8.3",
    "titolo": "La macchina a stati",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/macchina-a-stati.json",
-   "sha256": "6e729c115c4c436529ee3ab073bd034397b8207c6f524d311c1b861a5319e36e",
-   "byte": 97244
+   "sha256": "4d3e52d8d53e63d5e8400af9ddb09f90d7bacb598227fc60c7c28b3667669558",
+   "byte": 99438
   }
  ],
  "documentazione": {
