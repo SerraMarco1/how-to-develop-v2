@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-15T08:01:51.896Z",
+ "aggiornato": "2026-11-15T08:31:26.520Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "animatedsprite2d",
-  "numero": "8.2",
-  "titolo": "Animazioni a fotogrammi"
+  "slug": "macchina-a-stati",
+  "numero": "8.3",
+  "titolo": "La macchina a stati"
  },
- "messaggio": "Sta scrivendo la lezione 8.2 «Animazioni a fotogrammi».",
+ "messaggio": "Sta scrivendo la lezione 8.3 «La macchina a stati».",
  "riprende": null
 }
