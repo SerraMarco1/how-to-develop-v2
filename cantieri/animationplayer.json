@@ -470,13 +470,13 @@
     "tipo": "autonomo",
     "genere": "obiettivo",
     "titolo": "L'attacco con hitbox temporizzata",
-    "consegna": "Aggiungi al personaggio un'azione di attacco corpo a corpo con un'area di danno attiva solo nei fotogrammi centrali del fendente.\n\n1. Nella Input Map crea l'azione `attack` con il tasto `J`.\n2. In `res://player/player.tscn`, aggiungi a `Player`:\n   - Un nodo `Area2D` chiamato `Hitbox`.\n   - Come figlio di `Hitbox`, un nodo `CollisionShape2D` chiamato `CollisionShape2D` con una forma `RectangleShape2D` (dimensione `Vector2(32, 24)`, posizione `Vector2(24, 0)`).\n   - Un nodo `AnimationPlayer` chiamato `AnimationPlayer`.\n3. In `AnimationPlayer`, crea l'animazione `attack` (durata `0.4` secondi, non ciclica) e la traccia `RESET` per comandare `Hitbox/CollisionShape2D:disabled`:\n   - In `RESET`: a `0.0s` è `true` (la hitbox è normalmente disattivata a riposo).\n   - In `attack`: a `0.0s` è `true`, a `0.15s` diventa `false` (il colpo diventa attivo), a `0.3s` torna `true` (il fendente si è concluso).\n4. Crea lo script `res://player/player_attack_state.gd` (`class_name PlayerAttackState extends State`):\n   - Esporta `player: CharacterBody2D` e `animation_player: AnimationPlayer`.\n   - In `enter()`: azzera la velocità orizzontale (`player.velocity.x = 0.0`), avvia l'animazione `\"attack\"` e connettiti al segnale `animation_finished` di `animation_player`.\n   - In `exit()`: disconnettiti da `animation_finished`.\n   - In `physics_update(delta)`: applica la gravità con `player.apply_gravity(delta)` e chiama `player.move_and_slide()`.\n   - Quando il segnale `animation_finished` comunica la fine di `\"attack\"`, emetti la transizione verso `\"idle\"`.\n5. In `player.tscn`, aggiungi sotto `StateMachine` un nodo chiamato `Attack` con lo script `player_attack_state.gd`, collegando le proprietà `player` e `animation_player`.\n6. In `player_idle_state.gd` e `player_run_state.gd`, se il giocatore preme `attack` (`Input.is_action_just_pressed(\"attack\")`), emetti la transizione verso `\"attack\"`.",
+    "consegna": "Aggiungi al personaggio un'azione di attacco corpo a corpo con un'area di danno attiva solo nei fotogrammi centrali del fendente.\n\n1. Nella Input Map crea l'azione `attack` con il tasto `J`.\n2. In `res://player/player.tscn`, aggiungi a `Player`:\n   - Un nodo `Area2D` chiamato `Hitbox`.\n   - Come figlio di `Hitbox`, un nodo `CollisionShape2D` chiamato `CollisionShape2D` con una forma `RectangleShape2D` (dimensione `Vector2(32, 24)`, posizione `Vector2(24, 0)`).\n   - Un nodo `AnimationPlayer` chiamato `AnimationPlayer`.\n3. In `AnimationPlayer`, crea l'animazione `attack` (durata `0.4` secondi, non ciclica) e la traccia `RESET` per comandare `Hitbox/CollisionShape2D:disabled`:\n   - In `RESET`: a `0.0s` è `true` (la hitbox è normalmente disattivata a riposo).\n   - In `attack`: a `0.0s` è `true`, a `0.15s` diventa `false` (il colpo diventa attivo), a `0.3s` torna `true` (il fendente si è concluso).\n4. Crea lo script `res://player/player_attack_state.gd` (`class_name PlayerAttackState extends State`):\n   - Esporta `player: CharacterBody2D` e `animation_player: AnimationPlayer`.\n   - In `_ready()`: collega il segnale `animation_finished` di `animation_player` a una funzione che, quando l'animazione terminata è `\"attack\"`, emette la transizione verso `\"idle\"`.\n   - In `enter()`: azzera la velocità orizzontale (`player.velocity.x = 0.0`) e avvia l'animazione `\"attack\"`.\n   - In `physics_update(delta)`: applica la gravità con `player.apply_gravity(delta)` e chiama `player.move_and_slide()`.\n5. In `player.tscn`, aggiungi sotto `StateMachine` un nodo chiamato `Attack` con lo script `player_attack_state.gd`, collegando le proprietà `player` e `animation_player`.\n6. In `player_idle_state.gd` e `player_run_state.gd`, se il giocatore preme `attack` (`Input.is_action_just_pressed(\"attack\")`), emetti la transizione verso `\"attack\"`.",
     "modalita": "progetto",
     "dove": "gioco",
     "cartella": "salti",
     "passiGuida": [],
     "suggerimenti": [
-     "Per gestire in sicurezza il collegamento al segnale in `enter()`, verifica prima se è già connesso con `is_connected`: `if not animation_player.animation_finished.is_connected(_on_animation_finished): animation_player.animation_finished.connect(_on_animation_finished)`."
+     "In PlayerAttackState puoi collegare il segnale animation_finished direttamente in _ready(): la connessione rimarrà attiva e riceverà il nome dell'animazione conclusa."
     ],
     "verifiche": [
      {
@@ -557,7 +557,7 @@
       },
       {
        "percorso": "player/player_attack_state.gd",
-       "contenuto": "class_name PlayerAttackState\nextends State\n\n@export var player: CharacterBody2D\n@export var animation_player: AnimationPlayer\n\n\nfunc enter() -> void:\n\tplayer.velocity.x = 0.0\n\tif animation_player:\n\t\tanimated_sprite_play_if_exists()\n\t\tanimation_player.play(\"attack\")\n\t\tif not animation_player.animation_finished.is_connected(_on_animation_finished):\n\t\t\tanimation_player.animation_finished.connect(_on_animation_finished)\n\n\nfunc exit() -> void:\n\tif animation_player and animation_player.animation_finished.is_connected(_on_animation_finished):\n\t\tanimation_player.animation_finished.disconnect(_on_animation_finished)\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.move_and_slide()\n\n\nfunc animated_sprite_play_if_exists() -> void:\n\tpass\n\n\nfunc _on_animation_finished(anim_name: StringName) -> void:\n\tif anim_name == &\"attack\":\n\t\ttransitioned.emit(self, \"idle\")\n"
+       "contenuto": "class_name PlayerAttackState\nextends State\n\n@export var player: CharacterBody2D\n@export var animation_player: AnimationPlayer\n\n\nfunc _ready() -> void:\n\tif animation_player:\n\t\tanimation_player.animation_finished.connect(_on_animation_finished)\n\n\nfunc enter() -> void:\n\tplayer.velocity.x = 0.0\n\tif animation_player:\n\t\tanimation_player.play(\"attack\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.move_and_slide()\n\n\nfunc _on_animation_finished(anim_name: StringName) -> void:\n\tif anim_name == &\"attack\":\n\t\ttransitioned.emit(self, \"idle\")\n"
       },
       {
        "percorso": "player/player_idle_state.gd",
@@ -612,19 +612,27 @@
       "impostazioni": []
      },
      "spiegazione": "L'attacco combina la macchina a stati con `AnimationPlayer`: quando si preme `attack`, il personaggio passa a `PlayerAttackState`, che ferma la corsa e avvia l'animazione. L'AnimationPlayer attiva la hitbox impostando `disabled = false` solo tra 0.15s e 0.3s. Ascoltando il segnale `animation_finished`, lo stato d'attacco rileva quando l'animazione termina e ripristina autonomamente lo stato `Idle`.",
-     "cambiati": [],
+     "cambiati": [
+      "project.godot",
+      "main.tscn",
+      "player/player_attack_state.gd",
+      "player/player_idle_state.gd",
+      "player/player_run_state.gd",
+      "player/player.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "NON SPIEGATO: la soluzione usa `is_connected()`, `disconnect()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-3.7-flash"
    ]
   }
  },
