@@ -947,10 +947,10 @@
     "consegna": "Completa l'architettura a stati del personaggio nel gioco `Salti` aggiungendo lo stato **Accovacciato** (`Crouch`).\n\n1. Nella Input Map configura l'azione `crouch` associando il tasto S e la freccia Giù (Down).\n2. Crea lo script `res://player/player_crouch_state.gd` con la classe `PlayerCrouchState extends State`.\n3. Nello stato `Crouch`:\n   - All'entrata (`enter`), avvia l'animazione `idle` sul nodo `animated_sprite` e imposta `player.velocity.x = 0.0`.\n   - In `physics_update(delta)`, applica la gravità (`player.apply_gravity(delta)`).\n   - Se il personaggio cade in aria (`!player.is_on_floor()`), emetti la transizione verso `fall`.\n   - Se l'azione `crouch` non è più premuta (`!Input.is_action_pressed(\"crouch\")`), emetti la transizione verso `run` (se c'è input orizzontale) oppure verso `idle`.\n4. Negli stati `PlayerIdleState` e `PlayerRunState`, se l'azione `crouch` è premuta (`Input.is_action_pressed(\"crouch\")`) e il personaggio si trova sul terreno, emetti la transizione verso lo stato `crouch`.\n5. Nella scena `res://player/player.tscn`, aggiungi sotto `StateMachine` il nodo `Crouch` con lo script `player_crouch_state.gd` e imposta i suoi riferimenti `@export`.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "salti",
     "passiGuida": [],
     "suggerimenti": [
-     "Usa `Input.is_action_pressed(\"crouch\")` sia per entrare nello stato accovacciato da `Idle` o `Run` sia per verificare se mantenerlo.",
-     "Assicurati di assegnare i riferimenti `player` e `animated_sprite` al nodo `Crouch` nell'Inspector di `player.tscn`."
+     "Usa `Input.is_action_pressed(\"crouch\")` sia per entrare nello stato accovacciato da `Idle` o `Run` sia per verificare se mantenerlo."
     ],
     "verifiche": [
      {
@@ -963,7 +963,7 @@
       "scena": "res://player/player.tscn",
       "tipoNodo": "Node",
       "nome": "Crouch",
-      "genitore": "Player/StateMachine",
+      "genitore": "StateMachine",
       "descrizione": "Il nodo Crouch è stato aggiunto sotto StateMachine in player.tscn"
      },
      {
@@ -982,8 +982,32 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 400)\n"
+      },
+      {
+       "percorso": "player/state.gd",
+       "contenuto": "class_name State\nextends Node\n\nsignal transitioned(state: State, new_state_name: String)\n\n\nfunc enter() -> void:\n\tpass\n\n\nfunc exit() -> void:\n\tpass\n\n\nfunc update(_delta: float) -> void:\n\tpass\n\n\nfunc physics_update(_delta: float) -> void:\n\tpass\n"
+      },
+      {
+       "percorso": "player/state_machine.gd",
+       "contenuto": "class_name StateMachine\nextends Node\n\n@export var initial_state: State\n\nvar current_state: State\nvar states: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tawait owner.ready\n\tfor child in get_children():\n\t\tif child is State:\n\t\t\tstates[child.name.to_lower()] = child\n\t\t\tchild.transitioned.connect(_on_child_transitioned)\n\n\tif initial_state:\n\t\tinitial_state.enter()\n\t\tcurrent_state = initial_state\n\n\nfunc _process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.update(delta)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.physics_update(delta)\n\n\nfunc _on_child_transitioned(state: State, new_state_name: String) -> void:\n\tif state != current_state:\n\t\treturn\n\n\tvar new_state: State = states.get(new_state_name.to_lower())\n\tif not new_state:\n\t\treturn\n\n\tif current_state:\n\t\tcurrent_state.exit()\n\n\tnew_state.enter()\n\tcurrent_state = new_state\n"
+      },
+      {
+       "percorso": "player/player_jump_state.gd",
+       "contenuto": "class_name PlayerJumpState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"jump\")\n\tplayer.velocity.y = player.jump_velocity\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif Input.is_action_just_released(\"jump\") and player.velocity.y < 0.0:\n\t\tplayer.velocity.y *= 0.5\n\n\tif player.velocity.y >= 0.0:\n\t\ttransitioned.emit(self, \"fall\")\n"
+      },
+      {
+       "percorso": "player/player_fall_state.gd",
+       "contenuto": "class_name PlayerFallState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"fall\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif player.is_on_floor():\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+      },
+      {
+       "percorso": "player/player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var jump_height: float = 128.0\n@export var jump_time_to_peak: float = 0.4\n@export var speed: float = 200.0\n@export var max_fall_speed: float = 600.0\n\n@export_group(\"Accelerazione e Attrito\")\n@export var ground_acceleration: float = 1200.0\n@export var air_acceleration: float = 400.0\n@export var ground_friction: float = 1000.0\n\nvar gravity: float\nvar jump_velocity: float\n\n@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D\n\n\nfunc _ready() -> void:\n\trecalculate_physics()\n\n\nfunc recalculate_physics() -> void:\n\tgravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\tjump_velocity = -(2.0 * jump_height) / jump_time_to_peak\n\n\nfunc apply_gravity(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\t\tif velocity.y > max_fall_speed:\n\t\t\tvelocity.y = max_fall_speed\n\n\nfunc apply_movement(direction: float, delta: float) -> void:\n\tvar accel := ground_acceleration if is_on_floor() else air_acceleration\n\tif direction != 0.0:\n\t\tvelocity.x = move_toward(velocity.x, direction * speed, accel * delta)\n\t\tanimated_sprite.flip_h = direction < 0.0\n\telse:\n\t\tvar decel := ground_friction if is_on_floor() else air_acceleration\n\t\tvelocity.x = move_toward(velocity.x, 0.0, decel * delta)\n\tmove_and_slide()\n"
+      },
+      {
        "percorso": "player/player_crouch_state.gd",
-       "contenuto": "class_name PlayerCrouchState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\tplayer.velocity.x = 0.0\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif not Input.is_action_pressed(\"crouch\"):\n\t\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+       "contenuto": "class_name PlayerCrouchState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\tplayer.velocity.x = 0.0\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.move_and_slide()\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif not Input.is_action_pressed(\"crouch\"):\n\t\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
       },
       {
        "percorso": "player/player_idle_state.gd",
@@ -1032,17 +1056,24 @@
       "impostazioni": []
      },
      "spiegazione": "L'aggiunta dello stato accovacciato dimostra la potenza della macchina a stati: è bastato creare uno script `PlayerCrouchState`, connettere il controllo da `Idle` e `Run` e aggiungere il nodo figlio `Crouch`, senza rischiare di rompere gli altri stati esistenti.",
-     "cambiati": [],
+     "cambiati": [
+      "project.godot",
+      "player/player_crouch_state.gd",
+      "player/player_idle_state.gd",
+      "player/player_run_state.gd",
+      "player/player.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "riordina",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Il nodo Crouch è stato aggiunto sotto StateMachine in player.tscn: Nodi presenti: Player (CharacterBody2D), AnimatedSprite2D (AnimatedSprite2D), CollisionShape2D (CollisionShape2D), StateMachine (Node), Idle (Node), Run (Node), Jump (Node), Fall (Node), Crouch (Node)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
   }
