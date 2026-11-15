@@ -1,0 +1,66 @@
+{
+ "n": 29,
+ "quando": "2026-11-15T09:31:26.154Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 22846,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1,
+     "fine": 3,
+     "tasto": "D"
+    },
+    {
+     "azione": "jump",
+     "inizio": 4,
+     "fine": 4.5,
+     "tasto": "Spazio"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "classe": "CharacterBody2D"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 8,
+     "deve": "muoversi",
+     "etichetta": "Giocatore"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il personaggio sfrutta la macchina a stati",
+     "da": 0,
+     "a": 3,
+     "soggetto": "player"
+    },
+    {
+     "testo": "Il salto gestito dallo stato dedicato",
+     "da": 4,
+     "a": 6,
+     "soggetto": "player"
+    }
+   ]
+  },
+  "problemi": [
+   "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (5648 → 339 token)"
+ ]
+}
