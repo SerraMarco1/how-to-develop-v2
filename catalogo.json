@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-14T12:31:57.526Z",
+ "aggiornato": "2026-11-15T08:31:25.368Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1100,6 +1100,15 @@
    "file": "lezioni/f08-piattaforme/salto-che-perdona.json",
    "sha256": "1ace76afaf62b47c3f10d90d2f513713d0d5724125eb11e92c6cf72d08c26cf1",
    "byte": 45899
+  },
+  {
+   "slug": "animatedsprite2d",
+   "numero": "8.2",
+   "titolo": "Animazioni a fotogrammi",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/animatedsprite2d.json",
+   "sha256": "02b990951b2c1028f47825c473aedfc9bafbbb80b4123d5491977a683a16ccea",
+   "byte": 57856
   }
  ],
  "documentazione": {
