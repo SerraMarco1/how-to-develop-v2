@@ -437,7 +437,12 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`",
+    "player/player.tscn riga 3: la scena usa \"res://player/player.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile).",
+    "player/player.tscn riga 5: la scena usa \"res://player/state_machine.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile).",
+    "player/player.tscn riga 8: la scena usa \"res://player/player_fall_state.gd\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile)."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
