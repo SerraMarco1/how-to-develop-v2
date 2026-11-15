@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-15T08:31:25.368Z",
+ "aggiornato": "2026-11-15T08:45:01.036Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1105,10 +1105,10 @@
    "slug": "animatedsprite2d",
    "numero": "8.2",
    "titolo": "Animazioni a fotogrammi",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/animatedsprite2d.json",
-   "sha256": "02b990951b2c1028f47825c473aedfc9bafbbb80b4123d5491977a683a16ccea",
-   "byte": 57856
+   "sha256": "1b2518d86baf3fd8f962be75e880ea4c45c3ed5640f4f431cad2100e34a6054e",
+   "byte": 58630
   }
  ],
  "documentazione": {

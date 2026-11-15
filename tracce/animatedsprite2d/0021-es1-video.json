@@ -1,0 +1,67 @@
+{
+ "n": 21,
+ "quando": "2026-11-15T08:45:01.026Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Sprite animato» (muoversi). Scritte: «AnimatedSprite2D mostra l'animazione del personaggio» · «Lo sprite si specchia in base alla direzione del movimento». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 59 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 20780,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_right",
+     "inizio": 1.5,
+     "fine": 3.5,
+     "tasto": "D"
+    },
+    {
+     "azione": "move_left",
+     "inizio": 4.5,
+     "fine": 6.5,
+     "tasto": "A"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "player_anim",
+     "cerca": {
+      "classe": "AnimatedSprite2D"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "muoversi",
+     "etichetta": "Sprite animato"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "AnimatedSprite2D mostra l'animazione del personaggio",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "player_anim"
+    },
+    {
+     "testo": "Lo sprite si specchia in base alla direzione del movimento",
+     "da": 4,
+     "a": 7.5,
+     "soggetto": "player_anim"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "aad7b9d3edeba15bab63f26f5d75ba09651fd4881a97673fa47a59e9417afbd4",
+   "estensione": "mp4",
+   "byte": 60008
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (4080 → 354 token)"
+ ]
+}

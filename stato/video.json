@@ -1699,5 +1699,58 @@
    },
    "motivo": "L'esercizio modifica il comportamento del personaggio esistente senza aggiungere nuovi nodi visivi; il personaggio si muoveva anche nel progetto precedente."
   }
+ },
+ "animatedsprite2d": {
+  "es1": {
+   "impronta": "ea3770a9bac1ce858c5771882281b2e8609d2cd2f3580cb57049f96a09970b75",
+   "tentativi": 1,
+   "esito": "fatto",
+   "regole": 2,
+   "copione": {
+    "scena": "res://main.tscn",
+    "durata": 8,
+    "azioni": [
+     {
+      "azione": "move_right",
+      "inizio": 1.5,
+      "fine": 3.5,
+      "tasto": "D"
+     },
+     {
+      "azione": "move_left",
+      "inizio": 4.5,
+      "fine": 6.5,
+      "tasto": "A"
+     }
+    ],
+    "soggetti": [
+     {
+      "id": "player_anim",
+      "cerca": {
+       "classe": "AnimatedSprite2D"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 7.5,
+      "deve": "muoversi",
+      "etichetta": "Sprite animato"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "AnimatedSprite2D mostra l'animazione del personaggio",
+      "da": 0.5,
+      "a": 3.5,
+      "soggetto": "player_anim"
+     },
+     {
+      "testo": "Lo sprite si specchia in base alla direzione del movimento",
+      "da": 4,
+      "a": 7.5,
+      "soggetto": "player_anim"
+     }
+    ]
+   }
+  }
  }
 }
