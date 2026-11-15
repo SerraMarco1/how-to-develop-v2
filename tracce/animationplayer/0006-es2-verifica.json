@@ -1,0 +1,164 @@
+{
+ "n": 6,
+ "quando": "2026-11-15T09:19:49.552Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (obiettivo): approvato",
+ "spiegazione": "«La porta che si apre». 5 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: objects/door.gd, objects/door.tscn, main.tscn",
+ "richieste": 0,
+ "durataMs": 17043,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "obiettivo",
+   "titolo": "La porta che si apre",
+   "consegna": "Crea una porta interattiva controllata da un'animazione che solleva la grafica, disattiva la collisione ed esegue una funzione al termine del movimento.\n\n1. Crea la scena `res://objects/door.tscn` con una radice di tipo `StaticBody2D` chiamata `Door`, e collegale lo script `res://objects/door.gd`.\n2. In `Door` aggiungi tre figli:\n   - Uno `Sprite2D` chiamato `Sprite2D` (usa `res://icon.svg`, con scala `Vector2(0.25, 0.75)`).\n   - Un `CollisionShape2D` chiamato `CollisionShape2D` con forma `RectangleShape2D` di dimensioni `Vector2(32, 96)`.\n   - Un `AnimationPlayer` chiamato `AnimationPlayer`.\n3. Nello script `res://objects/door.gd` definisci:\n   - La variabile booleana `var is_open: bool = false`.\n   - La funzione `open() -> void`: avvia l'animazione `open` sull'AnimationPlayer.\n   - La funzione `door_opened() -> void`: imposta `is_open = true`.\n4. In `AnimationPlayer`, crea l'animazione `open` (durata `0.6` secondi, non ciclica) con tre tracce:\n   - Una traccia per `Sprite2D:position`: al tempo `0.0s` è `Vector2(0, 0)`, al tempo `0.6s` sale a `Vector2(0, -96)`.\n   - Una traccia per `CollisionShape2D:disabled`: a `0.0s` vale `false`, a `0.6s` diventa `true`.\n   - Una traccia di tipo chiamata metodo (**Call Method Track**) puntata a `Door` (`.`) che al tempo `0.6s` chiama il metodo `door_opened`.\n5. Istanzia `Door` in `res://main.tscn` come figlio di `Main` alle coordinate `(550, 430)`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "salti",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Nel pannello inferiore dell'animazione, usa il pulsante **Add Track → Property Track** per aggiungere le proprietà `position` dello sprite e `disabled` della collisione, oppure usa l'icona della chiave nell'Inspector.",
+    "Per la chiamata del metodo, clicca su **Add Track → Call Method Track** e seleziona il nodo radice `Door`. Clicca col tasto destro sulla riga temporale al tempo 0.6s, scegli **Insert Key** e seleziona `door_opened`.",
+    "Non dimenticare di creare o aggiornare la traccia `RESET` in modo che `disabled` sia inizialmente `false` e la posizione dello sprite sia a `(0, 0)`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://objects/door.tscn",
+     "descrizione": "La scena res://objects/door.tscn esiste"
+    },
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://objects/door.gd",
+     "descrizione": "Lo script res://objects/door.gd esiste"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://objects/door.tscn",
+     "tipoNodo": "StaticBody2D",
+     "nome": "Door",
+     "descrizione": "La scena door.tscn ha come radice uno StaticBody2D chiamato Door"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "StaticBody2D",
+     "nome": "Door",
+     "genitore": "Main",
+     "descrizione": "La scena main.tscn contiene un'istanza della porta chiamata Door"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar door := await instantiate_scene(\"res://objects/door.tscn\")\n\tif not check(\"door_loaded\", door != null, \"La scena res://objects/door.tscn deve potersi istanziare\"):\n\t\treturn\n\tvar shape := find_by_class(door, \"CollisionShape2D\") as CollisionShape2D\n\tvar sprite := find_by_class(door, \"Sprite2D\") as Sprite2D\n\tif not check(\"nodes\", shape != null and sprite != null, \"Door deve contenere Sprite2D e CollisionShape2D\"):\n\t\treturn\n\tvar initial_open = get_prop(door, \"is_open\")\n\tcheck(\"init_closed\", initial_open == false, \"All'inizio is_open deve essere false\")\n\tcheck(\"init_enabled\", shape.disabled == false, \"All'inizio CollisionShape2D non deve essere disattivata\")\n\tcall_if_exists(door, \"open\")\n\tawait wait_seconds(0.3)\n\tvar mid_open = get_prop(door, \"is_open\")\n\tcheck(\"mid_open\", mid_open == false, \"A metà animazione la porta non deve ancora risultare aperta\")\n\tawait wait_seconds(0.4)\n\tvar final_open = get_prop(door, \"is_open\")\n\tcheck(\"final_open\", final_open == true, \"Al termine dell'animazione is_open deve essere true (impostato da door_opened)\")\n\tcheck(\"final_disabled\", shape.disabled == true, \"Al termine dell'animazione CollisionShape2D deve essere disattivata\")\n\tcheck(\"sprite_moved\", sprite.position.y < -40.0, \"Al termine dell'animazione lo Sprite2D deve essersi spostato verso l'alto (y = %.1f)\" % sprite.position.y)\n",
+     "descrizione": "Chiamando open(), la porta si alza, disattiva la collisione e chiama door_opened al termine"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Salti\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\ncrouch={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "player/state.gd",
+      "contenuto": "class_name State\nextends Node\n\nsignal transitioned(state: State, new_state_name: String)\n\n\nfunc enter() -> void:\n\tpass\n\n\nfunc exit() -> void:\n\tpass\n\n\nfunc update(_delta: float) -> void:\n\tpass\n\n\nfunc physics_update(_delta: float) -> void:\n\tpass\n"
+     },
+     {
+      "percorso": "player/state_machine.gd",
+      "contenuto": "class_name StateMachine\nextends Node\n\n@export var initial_state: State\n\nvar current_state: State\nvar states: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tawait owner.ready\n\tfor child in get_children():\n\t\tif child is State:\n\t\t\tstates[child.name.to_lower()] = child\n\t\t\tchild.transitioned.connect(_on_child_transitioned)\n\n\tif initial_state:\n\t\tinitial_state.enter()\n\t\tcurrent_state = initial_state\n\n\nfunc _process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.update(delta)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.physics_update(delta)\n\n\nfunc _on_child_transitioned(state: State, new_state_name: String) -> void:\n\tif state != current_state:\n\t\treturn\n\n\tvar new_state: State = states.get(new_state_name.to_lower())\n\tif not new_state:\n\t\treturn\n\n\tif current_state:\n\t\tcurrent_state.exit()\n\n\tnew_state.enter()\n\tcurrent_state = new_state\n"
+     },
+     {
+      "percorso": "player/player_jump_state.gd",
+      "contenuto": "class_name PlayerJumpState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"jump\")\n\tplayer.velocity.y = player.jump_velocity\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif Input.is_action_just_released(\"jump\") and player.velocity.y < 0.0:\n\t\tplayer.velocity.y *= 0.5\n\n\tif player.velocity.y >= 0.0:\n\t\ttransitioned.emit(self, \"fall\")\n"
+     },
+     {
+      "percorso": "player/player_fall_state.gd",
+      "contenuto": "class_name PlayerFallState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"fall\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif player.is_on_floor():\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+     },
+     {
+      "percorso": "player/player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var jump_height: float = 128.0\n@export var jump_time_to_peak: float = 0.4\n@export var speed: float = 200.0\n@export var max_fall_speed: float = 600.0\n\n@export_group(\"Accelerazione e Attrito\")\n@export var ground_acceleration: float = 1200.0\n@export var air_acceleration: float = 400.0\n@export var ground_friction: float = 1000.0\n\nvar gravity: float\nvar jump_velocity: float\n\n@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D\n\n\nfunc _ready() -> void:\n\trecalculate_physics()\n\n\nfunc recalculate_physics() -> void:\n\tgravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\tjump_velocity = -(2.0 * jump_height) / jump_time_to_peak\n\n\nfunc apply_gravity(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\t\tif velocity.y > max_fall_speed:\n\t\t\tvelocity.y = max_fall_speed\n\n\nfunc apply_movement(direction: float, delta: float) -> void:\n\tvar accel := ground_acceleration if is_on_floor() else air_acceleration\n\tif direction != 0.0:\n\t\tvelocity.x = move_toward(velocity.x, direction * speed, accel * delta)\n\t\tanimated_sprite.flip_h = direction < 0.0\n\telse:\n\t\tvar decel := ground_friction if is_on_floor() else air_acceleration\n\t\tvelocity.x = move_toward(velocity.x, 0.0, decel * delta)\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player/player_crouch_state.gd",
+      "contenuto": "class_name PlayerCrouchState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\tplayer.velocity.x = 0.0\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.move_and_slide()\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif not Input.is_action_pressed(\"crouch\"):\n\t\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+     },
+     {
+      "percorso": "player/player_idle_state.gd",
+      "contenuto": "class_name PlayerIdleState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.apply_movement(0.0, delta)\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_pressed(\"crouch\"):\n\t\ttransitioned.emit(self, \"crouch\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\ttransitioned.emit(self, \"jump\")\n\t\treturn\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tif direction != 0.0:\n\t\ttransitioned.emit(self, \"run\")\n"
+     },
+     {
+      "percorso": "player/player_run_state.gd",
+      "contenuto": "class_name PlayerRunState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"run\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_pressed(\"crouch\"):\n\t\ttransitioned.emit(self, \"crouch\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\ttransitioned.emit(self, \"jump\")\n\t\treturn\n\n\tif direction == 0.0 and absf(player.velocity.x) < 1.0:\n\t\ttransitioned.emit(self, \"idle\")\n"
+     },
+     {
+      "percorso": "player/player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player/player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player_sheet.png\" id=\"2_sheet\"]\n[ext_resource type=\"Script\" path=\"res://player/state_machine.gd\" id=\"3_sm\"]\n[ext_resource type=\"Script\" path=\"res://player/player_idle_state.gd\" id=\"4_idle\"]\n[ext_resource type=\"Script\" path=\"res://player/player_run_state.gd\" id=\"5_run\"]\n[ext_resource type=\"Script\" path=\"res://player/player_jump_state.gd\" id=\"6_jump\"]\n[ext_resource type=\"Script\" path=\"res://player/player_fall_state.gd\" id=\"7_fall\"]\n[ext_resource type=\"Script\" path=\"res://player/player_crouch_state.gd\" id=\"8_crouch\"]\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle_0\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(0, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle_1\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(32, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_run_0\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(64, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_run_1\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(96, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_jump\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(64, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_fall\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(96, 0, 32, 32)\n\n[sub_resource type=\"SpriteFrames\" id=\"SpriteFrames_player\"]\nanimations = [{\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle_0\")\n}, {\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle_1\")\n}],\n\"loop\": true,\n\"name\": &\"idle\",\n\"speed\": 5.0\n}, {\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_run_0\")\n}, {\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_run_1\")\n}],\n\"loop\": true,\n\"name\": &\"run\",\n\"speed\": 8.0\n}, {\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_jump\")\n}],\n\"loop\": true,\n\"name\": &\"jump\",\n\"speed\": 5.0\n}, {\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_fall\")\n}],\n\"loop\": true,\n\"name\": &\"fall\",\n\"speed\": 5.0\n}]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(32, 32)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"AnimatedSprite2D\" type=\"AnimatedSprite2D\" parent=\".\"]\nsprite_frames = SubResource(\"SpriteFrames_player\")\nanimation = &\"idle\"\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n\n[node name=\"StateMachine\" type=\"Node\" parent=\".\" node_paths=PackedStringArray(\"initial_state\")]\nscript = ExtResource(\"3_sm\")\ninitial_state = NodePath(\"Idle\")\n\n[node name=\"Idle\" type=\"Node\" parent=\"StateMachine\" node_paths=PackedStringArray(\"player\", \"animated_sprite\")]\nscript = ExtResource(\"4_idle\")\nplayer = NodePath(\"../..\")\nanimated_sprite = NodePath(\"../../AnimatedSprite2D\")\n\n[node name=\"Run\" type=\"Node\" parent=\"StateMachine\" node_paths=PackedStringArray(\"player\", \"animated_sprite\")]\nscript = ExtResource(\"5_run\")\nplayer = NodePath(\"../..\")\nanimated_sprite = NodePath(\"../../AnimatedSprite2D\")\n\n[node name=\"Jump\" type=\"Node\" parent=\"StateMachine\" node_paths=PackedStringArray(\"player\", \"animated_sprite\")]\nscript = ExtResource(\"6_jump\")\nplayer = NodePath(\"../..\")\nanimated_sprite = NodePath(\"../../AnimatedSprite2D\")\n\n[node name=\"Fall\" type=\"Node\" parent=\"StateMachine\" node_paths=PackedStringArray(\"player\", \"animated_sprite\")]\nscript = ExtResource(\"7_fall\")\nplayer = NodePath(\"../..\")\nanimated_sprite = NodePath(\"../../AnimatedSprite2D\")\n\n[node name=\"Crouch\" type=\"Node\" parent=\"StateMachine\" node_paths=PackedStringArray(\"player\", \"animated_sprite\")]\nscript = ExtResource(\"8_crouch\")\nplayer = NodePath(\"../..\")\nanimated_sprite = NodePath(\"../../AnimatedSprite2D\")\n"
+     },
+     {
+      "percorso": "objects/sign.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"Animation\" id=\"Animation_reset\"]\nresource_name = \"RESET\"\nlength = 0.001\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:rotation\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 0,\n\"values\": [0.0]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_swing\"]\nresource_name = \"swing\"\nlength = 2.0\nloop_mode = 1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:rotation\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.5, 1.5, 2),\n\"transitions\": PackedFloat32Array(1, 1, 1, 1),\n\"update\": 0,\n\"values\": [0.0, 0.2, -0.2, 0.0]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_sign\"]\n_data = {\n&\"RESET\": SubResource(\"Animation_reset\"),\n&\"swing\": SubResource(\"Animation_swing\")\n}\n\n[node name=\"Sign\" type=\"Node2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n&\"\": SubResource(\"AnimationLibrary_sign\")\n}\nautoplay = \"swing\"\n"
+     },
+     {
+      "percorso": "objects/door.gd",
+      "contenuto": "class_name Door\nextends StaticBody2D\n\nvar is_open: bool = false\n\n@onready var animation_player: AnimationPlayer = $AnimationPlayer\n\n\nfunc open() -> void:\n\tanimation_player.play(\"open\")\n\n\nfunc door_opened() -> void:\n\tis_open = true\n"
+     },
+     {
+      "percorso": "objects/door.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/door.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_door\"]\nsize = Vector2(32, 96)\n\n[sub_resource type=\"Animation\" id=\"Animation_reset\"]\nresource_name = \"RESET\"\nlength = 0.001\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:position\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 0,\n\"values\": [Vector2(0, 0)]\n}\ntracks/1/type = \"value\"\ntracks/1/imported = false\ntracks/1/enabled = true\ntracks/1/path = NodePath(\"CollisionShape2D:disabled\")\ntracks/1/interp = 1\ntracks/1/loop_wrap = true\ntracks/1/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 1,\n\"values\": [false]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_open\"]\nresource_name = \"open\"\nlength = 0.6\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:position\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.6),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 0,\n\"values\": [Vector2(0, 0), Vector2(0, -96)]\n}\ntracks/1/type = \"value\"\ntracks/1/imported = false\ntracks/1/enabled = true\ntracks/1/path = NodePath(\"CollisionShape2D:disabled\")\ntracks/1/interp = 1\ntracks/1/loop_wrap = true\ntracks/1/keys = {\n\"times\": PackedFloat32Array(0, 0.6),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 1,\n\"values\": [false, true]\n}\ntracks/2/type = \"method\"\ntracks/2/imported = false\ntracks/2/enabled = true\ntracks/2/path = NodePath(\".\")\ntracks/2/interp = 1\ntracks/2/loop_wrap = true\ntracks/2/keys = {\n\"times\": PackedFloat32Array(0.6),\n\"transitions\": PackedFloat32Array(1),\n\"values\": [{\n\"args\": [],\n\"method\": &\"door_opened\"\n}]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_door\"]\n_data = {\n&\"RESET\": SubResource(\"Animation_reset\"),\n&\"open\": SubResource(\"Animation_open\")\n}\n\n[node name=\"Door\" type=\"StaticBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.75)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_door\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n&\"\": SubResource(\"AnimationLibrary_door\")\n}\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/sign.tscn\" id=\"2_sign\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/door.tscn\" id=\"3_door\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 400)\n\n[node name=\"Sign\" parent=\".\" instance=ExtResource(\"2_sign\")]\nposition = Vector2(300, 460)\n\n[node name=\"Door\" parent=\".\" instance=ExtResource(\"3_door\")]\nposition = Vector2(550, 430)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Salti",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space"
+       ]
+      },
+      {
+       "nome": "crouch",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "L'animazione `open` controlla simultaneamente lo spostamento grafico dello sprite e la disattivazione del collision shape. Attraverso una **Call Method Track**, all'esatto millesimo `0.6s` Godot invoca il metodo `door_opened()` sullo script della porta, aggiornando la variabile logica `is_open` in perfetto sincronismo con la fine dell'animazione.",
+    "cambiati": [
+     "objects/door.gd",
+     "objects/door.tscn",
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
