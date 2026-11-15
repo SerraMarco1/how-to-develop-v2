@@ -10,6 +10,7 @@
     "consegna": "Riconfigura la gestione dei comportamenti del personaggio nel gioco `Salti` implementando una Macchina a Stati Finita (FSM).\n\n1. Crea la classe base `State` nel file `res://player/state.gd` (`class_name State extends Node`).\n2. Crea il gestore `StateMachine` nel file `res://player/state_machine.gd` (`class_name StateMachine extends Node`).\n3. Crea gli script per i singoli stati nella cartella `res://player/`:\n   - `player_idle_state.gd` (`class_name PlayerIdleState`)\n   - `player_run_state.gd` (`class_name PlayerRunState`)\n   - `player_jump_state.gd` (`class_name PlayerJumpState`)\n   - `player_fall_state.gd` (`class_name PlayerFallState`)\n4. Modifica `res://player/player.gd` aggiungendo le funzioni helper `apply_gravity(delta)` e `apply_movement(direction, delta)` per consentire agli stati di controllare la fisica, rimuovendo la gestione diretta delle animazioni.\n5. Nella scena `res://player/player.tscn`, aggiungi un nodo `Node` chiamato `StateMachine` come figlio di `Player`, e quattro nodi `Node` figli di `StateMachine`: `Idle`, `Run`, `Jump` e `Fall` con i rispettivi script collegati.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "salti",
     "passiGuida": [
      "Nel pannello FileSystem fai clic destro sulla cartella `player`, scegli **New Script**, inserisci il nome `state.gd` e definisci la classe base `State` con i metodi `enter()`, `exit()`, `update()` e `physics_update()`.",
      "Crea lo script `res://player/state_machine.gd` per gestire lo stato corrente `current_state` e connettere il segnale `transitioned` di ogni figlio.",
@@ -44,7 +45,7 @@
       "scena": "res://player/player.tscn",
       "tipoNodo": "Node",
       "nome": "Idle",
-      "genitore": "Player/StateMachine",
+      "genitore": "StateMachine",
       "descrizione": "La StateMachine contiene il nodo Idle"
      },
      {
@@ -57,6 +58,10 @@
     "daTrovare": [],
     "soluzione": {
      "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 400)\n"
+      },
       {
        "percorso": "player/state.gd",
        "contenuto": "class_name State\nextends Node\n\nsignal transitioned(state: State, new_state_name: String)\n\n\nfunc enter() -> void:\n\tpass\n\n\nfunc exit() -> void:\n\tpass\n\n\nfunc update(_delta: float) -> void:\n\tpass\n\n\nfunc physics_update(_delta: float) -> void:\n\tpass\n"
@@ -93,7 +98,26 @@
      "progetto": {
       "nome": "Salti",
       "scenaPrincipale": "res://main.tscn",
-      "azioni": [],
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D"
+        ]
+       },
+       {
+        "nome": "jump",
+        "tasti": [
+         "Space"
+        ]
+       }
+      ],
       "autoload": [],
       "impostazioni": []
      },
@@ -103,13 +127,14 @@
     }
    },
    "genere": "guidato",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La StateMachine contiene il nodo Idle: Nodi presenti: Player (CharacterBody2D), AnimatedSprite2D (AnimatedSprite2D), CollisionShape2D (CollisionShape2D), StateMachine (Node), Idle (Node), Run (Node), Jump (Node), Fall (Node)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "es2": {
@@ -505,7 +530,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "La macchina a stati",
