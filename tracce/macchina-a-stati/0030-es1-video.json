@@ -1,0 +1,16 @@
+{
+ "n": 30,
+ "quando": "2026-11-15T09:31:31.325Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Creare la Macchina a Stati del Giocatore» non si vede sullo schermo: L'esercizio riorganizza la logica del giocatore in una macchina a stati ma il comportamento visivo e i movimenti del gioco restano identici a prima.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 5170,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (5942 → 44 token)"
+ ]
+}

@@ -1752,5 +1752,64 @@
     ]
    }
   }
+ },
+ "macchina-a-stati": {
+  "es1": {
+   "impronta": "ea548f56563edcc38c46742c4635dbe05a89cb938e986da59a25b34da30a924d",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 8,
+     "azioni": [
+      {
+       "azione": "move_right",
+       "inizio": 1,
+       "fine": 3,
+       "tasto": "D"
+      },
+      {
+       "azione": "jump",
+       "inizio": 4,
+       "fine": 4.5,
+       "tasto": "Spazio"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "player",
+       "cerca": {
+        "classe": "CharacterBody2D"
+       },
+       "quanti": 1,
+       "da": 0,
+       "a": 8,
+       "deve": "muoversi",
+       "etichetta": "Giocatore"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il personaggio sfrutta la macchina a stati",
+       "da": 0,
+       "a": 3,
+       "soggetto": "player"
+      },
+      {
+       "testo": "Il salto gestito dallo stato dedicato",
+       "da": 4,
+       "a": 6,
+       "soggetto": "player"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio riorganizza la logica del giocatore in una macchina a stati ma il comportamento visivo e i movimenti del gioco restano identici a prima."
+  }
  }
 }
