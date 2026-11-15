@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-15T09:37:43.684Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-15T09:46:18.373Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "animationtree",
   "numero": "8.5",
   "titolo": "AnimationTree: comandare le animazioni"
  },
- "messaggio": "Sta scrivendo la lezione 8.5 «AnimationTree: comandare le animazioni».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 8.5 riprende da sola appena rispondono.",
+ "riprende": "2026-11-15T09:46:48.372Z"
 }
