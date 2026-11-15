@@ -1,0 +1,112 @@
+{
+ "n": 11,
+ "quando": "2026-11-15T08:23:44.256Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 1 (guidato): approvato",
+ "spiegazione": "«Sostituisci lo sprite fisso con AnimatedSprite2D». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: player/player.tscn, player/player.gd",
+ "richieste": 0,
+ "durataMs": 12741,
+ "dati": {
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Sostituisci lo sprite fisso con AnimatedSprite2D",
+   "consegna": "Il personaggio di «Salti» si muove ancora come un blocco rigido. In questo esercizio sostituirai il nodo `Sprite2D` con `AnimatedSprite2D`, configurerai l'animazione `idle` ritagliandola dal foglio `res://assets/sprites/player_sheet.png` e orienterai lo sprite a destra o a sinistra in base al movimento.\n\n1. Nella scena `player/player.tscn`, elimina il nodo `Sprite2D` e aggiungi come figlio di `Player` un nodo `AnimatedSprite2D`.\n2. Assegna ad `AnimatedSprite2D` una nuova risorsa `SpriteFrames`. Rinomina l'animazione predefinita in `idle` e aggiungi i primi due fotogrammi (colonne 0 e 1) di `res://assets/sprites/player_sheet.png` con velocità di 5 FPS.\n3. Nello script `player/player.gd`, ottieni il riferimento al nodo con `@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D`.\n4. Crea la funzione `update_animation(direction: float) -> void` e richiamala alla fine di `_physics_process(delta)` subito dopo `move_and_slide()`.\n5. Nella funzione `update_animation(direction)`:\n   - Se `direction > 0.0`, imposta `animated_sprite.flip_h = false`.\n   - Se `direction < 0.0`, imposta `animated_sprite.flip_h = true`.\n   - Chiama `animated_sprite.play(\"idle\")`.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "salti",
+   "passiGuida": [
+    "Nel pannello FileSystem, fai doppio clic su `player/player.tscn` per aprire la scena del personaggio.",
+    "Nel pannello Scene, fai clic destro sul nodo `Sprite2D` e seleziona Delete per rimuoverlo.",
+    "Seleziona il nodo radice `Player`, premi il pulsante + nel pannello Scene, cerca `AnimatedSprite2D` e premi Create.",
+    "Con `AnimatedSprite2D` selezionato, vai nel pannello Inspector, fai clic sul menu a tendina accanto a Sprite Frames e scegli New SpriteFrames.",
+    "Fai clic sulla risorsa SpriteFrames appena creata per aprire il pannello inferiore SpriteFrames. Nella colonna delle animazioni a sinistra, fai doppio clic su `default` e rinominala in `idle`.",
+    "Nel pannello inferiore, premi l'icona a griglia Add frames from a Sprite Sheet e seleziona `assets/sprites/player_sheet.png`. Nella finestra di ritaglio imposta Horizontal a 4 e Vertical a 1, seleziona i primi due fotogrammi (0 e 1) e premi Add 2 Frames. Lascia la velocità a 5 FPS.",
+    "Nel pannello FileSystem, fai doppio clic su `player/player.gd`. Sotto le variabili dei timer, aggiungi `@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D`.",
+    "In fondo a `player/player.gd`, scrivi la funzione `update_animation(direction: float) -> void`: usa `if direction > 0.0:` per impostare `animated_sprite.flip_h = false`, `elif direction < 0.0:` per impostare `animated_sprite.flip_h = true`, e infine chiama `animated_sprite.play(\"idle\")`.",
+    "Dentro la funzione `_physics_process(delta: float)`, subito dopo la riga `move_and_slide()`, aggiungi la chiamata `update_animation(direction)`.",
+    "Salva la scena e lo script con Ctrl+S, poi premi F5 per verificare che il personaggio mostri l'animazione da fermo e si specchi quando premi A o D."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://player/player.tscn",
+     "tipoNodo": "AnimatedSprite2D",
+     "nome": "AnimatedSprite2D",
+     "genitore": "Player",
+     "descrizione": "Il personaggio contiene un nodo AnimatedSprite2D figlio di Player"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://player/player.gd",
+     "regex": "animated_sprite\\.flip_h",
+     "descrizione": "Lo script del giocatore imposta la proprietà flip_h di animated_sprite"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Nella scena principale deve esserci il Player\"):\n\t\treturn\n\tvar anim_sprite := find_by_name(player, \"AnimatedSprite2D\") as AnimatedSprite2D\n\tif not check(\"anim_sprite\", anim_sprite != null, \"Il nodo Player deve contenere AnimatedSprite2D\"):\n\t\treturn\n\tvar frames: SpriteFrames = anim_sprite.sprite_frames\n\tif not check(\"frames\", frames != null and frames.has_animation(\"idle\"), \"AnimatedSprite2D deve avere una risorsa SpriteFrames con l'animazione idle\"):\n\t\treturn\n\tawait wait_physics_frames(5)\n\tcheck(\"idle_playing\", anim_sprite.animation == &\"idle\", \"Da fermo il personaggio deve riprodurre l'animazione idle (attuale: %s)\" % str(anim_sprite.animation))\n\tplayer.position = Vector2(400, 480)\n\tawait hold_action(\"move_right\", 10)\n\tcheck(\"facing_right\", anim_sprite.flip_h == false, \"Muovendosi a destra flip_h deve essere false\")\n\tawait hold_action(\"move_left\", 10)\n\tcheck(\"facing_left\", anim_sprite.flip_h == true, \"Muovendosi a sinistra flip_h deve essere true\")\n",
+     "descrizione": "Il personaggio riproduce l'animazione idle e si specchia a destra e a sinistra con i tasti"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Salti\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 400)\n"
+     },
+     {
+      "percorso": "player/player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player/player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player_sheet.png\" id=\"2_sheet\"]\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle_0\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(0, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle_1\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(32, 0, 32, 32)\n\n[sub_resource type=\"SpriteFrames\" id=\"SpriteFrames_player\"]\nanimations = [{\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle_0\")\n}, {\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle_1\")\n}],\n\"loop\": true,\n\"name\": &\"idle\",\n\"speed\": 5.0\n}]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(32, 32)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"AnimatedSprite2D\" type=\"AnimatedSprite2D\" parent=\".\"]\nsprite_frames = SubResource(\"SpriteFrames_player\")\nanimation = &\"idle\"\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+     },
+     {
+      "percorso": "player/player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var jump_height: float = 128.0\n@export var jump_time_to_peak: float = 0.4\n@export var speed: float = 200.0\n@export var max_fall_speed: float = 600.0\n\n@export_group(\"Tolleranze Salto\")\n@export var coyote_time: float = 0.15\n@export var jump_buffer_time: float = 0.15\n\n@export_group(\"Accelerazione e Attrito\")\n@export var ground_acceleration: float = 1200.0\n@export var air_acceleration: float = 400.0\n@export var ground_friction: float = 1000.0\n\nvar gravity: float\nvar jump_velocity: float\n\nvar coyote_timer: float = 0.0\nvar jump_buffer_timer: float = 0.0\n\n@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D\n\n\nfunc _ready() -> void:\n\trecalculate_physics()\n\n\nfunc recalculate_physics() -> void:\n\tgravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)\n\tjump_velocity = -(2.0 * jump_height) / jump_time_to_peak\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\t\tif velocity.y > max_fall_speed:\n\t\t\tvelocity.y = max_fall_speed\n\n\tif is_on_floor():\n\t\tcoyote_timer = coyote_time\n\telse:\n\t\tcoyote_timer -= delta\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\tjump_buffer_timer = jump_buffer_time\n\telse:\n\t\tjump_buffer_timer -= delta\n\n\tif jump_buffer_timer > 0.0 and coyote_timer > 0.0:\n\t\tvelocity.y = jump_velocity\n\t\tjump_buffer_timer = 0.0\n\t\tcoyote_timer = 0.0\n\n\tif Input.is_action_just_released(\"jump\") and velocity.y < 0.0:\n\t\tvelocity.y *= 0.5\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tvar accel := ground_acceleration if is_on_floor() else air_acceleration\n\n\tif direction != 0.0:\n\t\tvelocity.x = move_toward(velocity.x, direction * speed, accel * delta)\n\telse:\n\t\tvar decel := ground_friction if is_on_floor() else air_acceleration\n\t\tvelocity.x = move_toward(velocity.x, 0.0, decel * delta)\n\n\tmove_and_slide()\n\tupdate_animation(direction)\n\n\nfunc update_animation(direction: float) -> void:\n\tif direction > 0.0:\n\t\tanimated_sprite.flip_h = false\n\telif direction < 0.0:\n\t\tanimated_sprite.flip_h = true\n\n\tanimated_sprite.play(\"idle\")\n"
+     }
+    ],
+    "spiegazione": "Abbiamo sostituito il nodo `Sprite2D` con `AnimatedSprite2D`, che consente di visualizzare fotogrammi in sequenza. Abbiamo creato una risorsa `SpriteFrames` contenente l'animazione `idle`, ritagliata dai primi due fotogrammi di `player_sheet.png`. Nello script, `@onready var animated_sprite` mantiene il riferimento al nodo. In `update_animation(direction)`, verifichiamo il segno di `direction`: se è positivo il personaggio guarda a destra (`flip_h = false`), se è negativo guarda a sinistra (`flip_h = true`). Se `direction == 0.0`, `flip_h` non cambia, preservando l'ultimo orientamento del personaggio.",
+    "cambiati": [
+     "player/player.tscn",
+     "player/player.gd"
+    ],
+    "rimossi": [],
+    "progetto": {
+     "nome": "Salti",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    }
+   },
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
