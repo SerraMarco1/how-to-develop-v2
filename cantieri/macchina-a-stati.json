@@ -807,7 +807,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "`soluzione.progetto.scenaPrincipale` è \"res://main.tscn\", ma quel file non è in `soluzione.file`"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La StateMachine del nemico contiene il nodo Patrol: Nodi presenti: Enemy (CharacterBody2D), Sprite2D (Sprite2D), CollisionShape2D (CollisionShape2D), StateMachine (Node), Idle (Node), Patrol (Node), Attack (Node)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
