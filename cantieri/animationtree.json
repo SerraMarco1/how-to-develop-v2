@@ -119,7 +119,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://player/player.gd deve caricarsi senza errori: Parse Error: Identifier \"animated_player\" not declared in the current scope. (res://player/player.gd:18 in GDScript::reload)\nFailed to load script \"res://player/player.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  player/player.gd, riga 18: `animated_player.animation_finished.connect(_on_animation_finished)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Muovendosi con move_right lo stato dell'animazione deve diventare 'run'\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
