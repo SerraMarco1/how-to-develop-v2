@@ -1,0 +1,48 @@
+{
+ "n": 22,
+ "quando": "2026-11-16T08:02:43.159Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 1: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Cartello» (esserci). Scritte: «L'AnimationPlayer fa oscillare il cartello». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 44 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 22775,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "cartello",
+     "cerca": {
+      "scena": "res://objects/sign.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Cartello"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'AnimationPlayer fa oscillare il cartello",
+     "da": 1,
+     "a": 7,
+     "soggetto": "cartello"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "4606c6f30311a8ca0f47f5e2b83b98e1cc67ec768a1691111161e46df1142c17",
+   "estensione": "mp4",
+   "byte": 44977
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (6700 → 205 token)"
+ ]
+}

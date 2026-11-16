@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-16T08:01:50.643Z",
+ "aggiornato": "2026-11-16T08:02:43.167Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1123,10 +1123,10 @@
    "slug": "animationplayer",
    "numero": "8.4",
    "titolo": "AnimationPlayer: animare qualsiasi cosa",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f08-piattaforme/animationplayer.json",
-   "sha256": "4e0f42676ce627931dd00d931ebd7e7e9667ae39ee3ba17600c6eb1aea098b4d",
-   "byte": 114004
+   "sha256": "1577d62792bbe9176be3bdfb3801e87c0dcb5af8b5c9fea5208f3d2a562db573",
+   "byte": 114528
   }
  ],
  "documentazione": {
