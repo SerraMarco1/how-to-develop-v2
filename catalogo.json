@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-16T08:02:43.167Z",
+ "aggiornato": "2026-11-17T08:40:36.317Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1127,6 +1127,15 @@
    "file": "lezioni/f08-piattaforme/animationplayer.json",
    "sha256": "1577d62792bbe9176be3bdfb3801e87c0dcb5af8b5c9fea5208f3d2a562db573",
    "byte": 114528
+  },
+  {
+   "slug": "animationtree",
+   "numero": "8.5",
+   "titolo": "AnimationTree: comandare le animazioni",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/animationtree.json",
+   "sha256": "5cb26e5cd3d384e2a5eff3c39efb2ca9930b655ad105ac3327b1151163fae928",
+   "byte": 131956
   }
  ],
  "documentazione": {

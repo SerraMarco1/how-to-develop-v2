@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-latest",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"es2\", \"problema\": \"La consegna chiede di 'mantenere travel(\\\"attack\\\") quando viene premuto il tasto di attacco', dando per scontato che esista già, ma nell'esercizio 1 sono stati creati solo gli stati 'idle' e 'run', e nelle lezioni precedenti del platformer non è mai stata introdotta un'azione né un'animazione di attacco.\", \"correzione\": \"Rimuovere dalla consegna il riferimento a travel(\\\"attack\\\") e al tasto di attacco, chiedendo semplicemente di sostituire le chiamate playback.travel(\\\"run\\\") e playback.travel(\\\"idle\\\") con l'aggiornamento delle Advance Conditions.\", \"fonte\": \"\"}, {\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"La verifica esegue tap_action(\\\"attack\\\") e controlla il passaggio allo stato 'attack', ma l'azione di input 'attack' e l'animazione 'attack' non sono mai state create o spiegate nel progetto platformer, e la consegna non definisce quale input intercettare né quale animazione associare a tale stato.\", \"correzione\": \"Rimuovere la gestione dello stato 'attack' dalla consegna e dallo script di verifica del test, concentrando il controllo sul corretto funzionamento del BlendSpace1D e del parametro blend_position tra fermo e corsa.\", \"fonte\": \"\"}]}",
- "ragionamento": 4038,
- "quando": "2026-11-17T08:38:21.961Z",
- "ruolo": "revisore"
-}
