@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-16T09:35:15.741Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-17T08:01:53.001Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "animationtree",
   "numero": "8.5",
   "titolo": "AnimationTree: comandare le animazioni"
  },
- "messaggio": "Per oggi la lezione 8.5 ha usato le richieste che le spettano: riprende domani.",
- "riprende": "2026-11-17T08:00:00.741Z"
+ "messaggio": "Sta scrivendo la lezione 8.5 «AnimationTree: comandare le animazioni».",
+ "riprende": null
 }
