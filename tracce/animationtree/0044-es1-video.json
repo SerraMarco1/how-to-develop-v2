@@ -1,0 +1,16 @@
+{
+ "n": 44,
+ "quando": "2026-11-17T09:08:43.226Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Aggiungi l'AnimationTree e pilota gli stati dell'animazione» non si vede sullo schermo: L'esercizio introduce l'AnimationTree per gestire le animazioni, ma il comportamento visivo del personaggio è identico a prima e il risultato non si distingue sullo schermo rispetto al progetto precedente.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 9190,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 8 s (7899 → 50 token)"
+ ]
+}

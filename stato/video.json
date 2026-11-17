@@ -1845,5 +1845,52 @@
     ]
    }
   }
+ },
+ "animationtree": {
+  "es1": {
+   "impronta": "4fb042a7cf89e075149af4e68db1d9f2f024c8a4dfb2843ec0fa7307d133a7f3",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 8,
+     "azioni": [
+      {
+       "azione": "move_right",
+       "inizio": 1.5,
+       "fine": 5,
+       "tasto": "D"
+      }
+     ],
+     "soggetti": [
+      {
+       "id": "player",
+       "cerca": {
+        "classe": "CharacterBody2D"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "muoversi",
+       "etichetta": "Personaggio"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il personaggio si sposta attivando l'animazione di corsa",
+       "da": 1.5,
+       "a": 4.5,
+       "soggetto": "player"
+      }
+     ]
+    },
+    "problemi": [
+     "Il copione passa anche sul progetto com'era PRIMA dell'esercizio: i soggetti c'erano già e facevano già così, quindi il video non mostrerebbe il risultato dell'esercizio. Scegli come soggetti ciò che l'esercizio aggiunge o cambia, nel momento in cui si vede la differenza."
+    ]
+   },
+   "motivo": "L'esercizio introduce l'AnimationTree per gestire le animazioni, ma il comportamento visivo del personaggio è identico a prima e il risultato non si distingue sullo schermo rispetto al progetto precedente."
+  }
  }
 }
