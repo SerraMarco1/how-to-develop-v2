@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-17T08:40:37.618Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-17T08:56:34.602Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "piattaforme-speciali",
   "numero": "8.6",
   "titolo": "Piattaforme mobili, a senso unico, scale"
  },
- "messaggio": "Sta scrivendo la lezione 8.6 «Piattaforme mobili, a senso unico, scale».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 8.6 riprende da sola appena rispondono.",
+ "riprende": "2026-11-17T09:06:34.602Z"
 }
