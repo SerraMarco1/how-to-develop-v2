@@ -1,0 +1,16 @@
+{
+ "n": 34,
+ "quando": "2026-11-17T16:34:54.940Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "titolo": "Test: correzione del revisore scartata",
+ "spiegazione": "La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n- la consegna o i suggerimenti dicono già \"body_entered\", \"body_exited\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "la consegna o i suggerimenti dicono già \"body_entered\", \"body_exited\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo"
+  ]
+ },
+ "chiamate": []
+}
