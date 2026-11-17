@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-17T17:22:33.667Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-17T17:24:56.209Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "pericoli-e-ripartenza",
   "numero": "8.7",
   "titolo": "Pericoli, punti di ripartenza, rinascita"
  },
- "messaggio": "Sta scrivendo la lezione 8.7 «Pericoli, punti di ripartenza, rinascita».",
- "riprende": null
+ "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 8.7 riprende quando si azzerano.",
+ "riprende": "2026-11-18T08:00:00.208Z"
 }
