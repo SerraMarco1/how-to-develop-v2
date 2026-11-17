@@ -1,0 +1,73 @@
+{
+ "creato": "2026-11-17T16:35:02.982Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Pericoli, punti di ripartenza, rinascita",
+  "sommario": "In questa lezione impari a gestire la sconfitta nel gioco a piattaforme: come creare zone pericolose e vuoti sotto il livello, come memorizzare le posizioni delle bandierine di ripartenza e come orchestrare la sequenza di rinascita con l'attesa asincrona. Scoprirai anche cosa si resetta al riavvio e come evitare che il personaggio resti bloccato dopo essere rinato.",
+  "concetti": [
+   "Uso di Area2D per rilevare pericoli e zone di caduta",
+   "Gestione dinamica del punto di ripartenza (spawn_position)",
+   "Sequenze temporizzate di morte con await e SceneTreeTimer",
+   "Persistenza dello stato del livello rispetto al ripristino del personaggio",
+   "Risoluzione delle cause di blocco del movimento dopo la rinascita"
+  ],
+  "obiettivi": [
+   "Riusare i componenti di vita e danno in un gioco diverso",
+   "La sequenza di morte e rinascita scritta con le attese",
+   "Rimetter il livello com'era: cosa torna e cosa resta"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "In un gioco a piattaforme, la morte del personaggio non deve essere una punizione improvvisa o caotica, ma una transizione chiara. Quando il giocatore tocca un ostacolo acuminato o cade nel vuoto sotto la mappa, il gioco deve interrompere temporaneamente i comandi, mostrare una breve sequenza visiva o un'attesa e infine riposizionare il personaggio sull'ultima bandierina attivata (checkpoint).\n\nPer fare questo senza ricaricare l'intera scena del livello ogni volta, occorre separare ciò che appartiene al **livello** (porte già aperte, nemici già sconfitti) da ciò che appartiene al **personaggio** (la sua posizione, la sua velocità e lo stato dei suoi controlli)."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Identificare i pericoli: spine e caduta nel vuoto\n\nI pericoli del livello possono essere oggetti ben visibili (come le spine sul terreno) o invisibili (come un'ampia zona posizionata al di sotto della mappa per intercettare le cadute). In entrambi i casi, il nodo ideale per realizzarli è `Area2D`.\n\nQuando il corpo fisico del giocatore entra nella forma di collisione del pericolo, il segnale `body_entered` si attiva. Anziché duplicare la logica del danno in ogni oggetto, riusiamo il metodo standard di gestione del danno. Il pericolo si limita a verificare se il nodo che entra possiede un metodo per subire colpi (come `take_damage()`) e a invocarlo."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name Hazard\nextends Area2D\n\n# Quantità di danno inflitta dal pericolo\n@export var damage: int = 1\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\t# Verifica se l'oggetto entrato sa subire danno\n\tif body.has_method(\"take_damage\"):\n\t\tbody.take_damage(damage)",
+    "spiegazione": "Questo script generico fa sì che qualsiasi `Area2D` a cui sia collegato agisca da pericolo. Se il nodo entrato è il giocatore (che possiede il metodo `take_damage`), gli viene inflitto il danno specificato."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Le bandierine di ripartenza (checkpoint)\n\nUn punto di ripartenza è un'altra `Area2D` posizionata nel livello. Quando il personaggio la attraversa per la prima volta, la bandierina memorizza la sua posizione globale (`global_position`) come nuova coordinata di rinascita del giocatore.\n\nNel gioco «Salti», riutilizziamo la struttura a nodi e la fisica: il livello non viene ricaricato interamente a ogni morte. Questo significa che:\n- **Cosa resta com'era**: le porte già aperte (come quelle gestite da `door.gd`), i collezionabili già presi o gli interruttori premuti mantengono il loro stato.\n- **Cosa torna com'era**: la posizione del personaggio viene impostata alla coordinata memorizzata, la sua velocità viene azzerata e la sua macchina a stati viene riportata allo stato iniziale (`idle`)."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "class_name Checkpoint\nextends Area2D\n\nsignal activated(new_position: Vector2)\n\nvar is_active: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif is_active:\n\t\treturn\n\n\tif body.is_in_group(\"player\"):\n\t\tis_active = true\n\t\tactivated.emit(global_position)",
+    "spiegazione": "Quando il giocatore entra nell'area del checkpoint per la prima volta, l'area emette il segnale `activated` inviando la propria posizione nel mondo (`global_position`)."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Orchestrare la rinascita con le attese (`await`)\n\nQuando il giocatore subisce un colpo mortale, la rinascita non deve avvenire all'istante: un cambio d'inquadratura improvviso confonderebbe l'utente. Dobbiamo creare una **sequenza temporizzata**:\n1. Disattivare l'elaborazione degli input per impedire al giocatore di muoversi durante la morte.\n2. Azzerare la velocità immediata.\n3. Attendere una breve pausa visiva (per esempio 1 secondo) usando `await get_tree().create_timer(1.0).timeout`.\n4. Spostare il giocatore alla posizione di ripartenza e riattivare lo stato di controllo."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "# Estratto di codice da integrare in player.gd\n@export var state_machine: StateMachine\n\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n\nfunc _ready() -> void:\n\t# La posizione iniziale nel livello è il primo punto di spawn\n\tspawn_position = global_position\n\n\nfunc set_spawn_position(new_position: Vector2) -> void:\n\tspawn_position = new_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\n\tis_dead = true\n\tvelocity = Vector2.ZERO\n\t\n\t# Disattiva temporaneamente la macchina a stati per bloccare gli input\n\tset_physics_process(false)\n\n\t# Attesa di 1 secondo senza bloccare il resto del motore\n\tawait get_tree().create_timer(1.0).timeout\n\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\t\n\t# Ripristina l'elaborazione della fisica e lo stato base\n\tset_physics_process(true)\n\tif state_machine:\n\t\tstate_machine._on_child_transitioned(state_machine.current_state, \"idle\")",
+    "spiegazione": "La funzione `take_damage()` imposta il flag `is_dead` per evitare danni multipli consecutivi, ferma la fisica e attende un secondo con `await`. La funzione `respawn()` riposiziona il corpo, riabilita la fisica e richiede alla `StateMachine` la transizione esplicita a 'idle'."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Diagnosticare il bug del personaggio bloccato\n\nUn problema molto comune nei giochi a piattaforme basati su macchine a stati è il **personaggio che resta bloccato sul posto dopo la rinascita**.\n\nQuesto errore si verifica principalmente per tre motivi:\n1. **Fisica o elaborazione rimaste disattivate**: se si invoca `set_physics_process(false)` durante la morte ma si dimentica di riattivarlo in `respawn()`, il personaggio non risponderà più alla gravità né ai comandi.\n2. **Macchina a stati non aggiornata**: se il personaggio viene spostato mentre si trova ancora in uno stato di caduta (`PlayerFallState`) o di salto, lo stato corrente potrebbe continuare ad attendere condizioni di atterraggio mai verificate o non inviare la transizione a `idle`.\n3. **Collisioni disabilitate**: se durante la sequenza di morte le collisioni del personaggio vengono disattivate (per evitare che i nemici continuino a colpirlo) e non vengono riattivate al respawn, il personaggio rimarrà sospeso o cadrà nel vuoto."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Quando ripristini la posizione del giocatore con `global_position = spawn_position`, ricordati di azzerare sempre `velocity = Vector2.ZERO`. Se la velocità accumulate durante la caduta nel vuoto non viene cancellata, il personaggio schizzerà verso il basso o di lato al primo fotogramma della rinascita!"
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- I pericoli come spine e burroni usano nodi `Area2D` che rilevano il giocatore ed eseguono il metodo `take_damage()`.\n- Le bandierine di ripartenza memorizzano la loro `global_position` nel personaggio al momento dell'ingresso nell'area.\n- Usare `await get_tree().create_timer(...)` permette di creare pause temporizzate di morte senza bloccare la grafica o il resto del livello.\n- Durante la rinascita, gli elementi ambientali (porte aperte, pulsanti) restano alterati, mentre si ripristinano solo posizione, velocità e stato del personaggio.\n- Per evitare che il personaggio resti bloccato dopo il respawn, occorre riattivare `set_physics_process(true)` e forzare la macchina a stati nello stato `idle`."
+   }
+  ]
+ }
+}
