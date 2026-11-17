@@ -444,7 +444,9 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - La scena principale deve funzionare senza errori: The InputMap action \"move_left\" doesn't exist. Did you mean \"ui_left\"? (core/input/input.cpp:534 in get_action_strength)\nThe InputMap action \"move_left\" doesn't exist. Did you mean \"ui_left\"? (core/input/input.cpp:534 in get_action_strength)\nThe InputMap action \"move_left\" doesn't exist. Did you mean \"ui_left\"? (core/input/input.cpp:534 in get_action_strength)\nThe InputMap action \"move_left\" doesn't exist. Did you mean \"ui_left\"? (core/input/input.cpp:534 in get_action_strength)\nThe InputMap action \"move_left\" doesn't exist. Did you mean \"ui_left\"? (core/input/input.cpp:534 in get_action_strength)\nThe InputMap action \"move_left\" doesn't exist. Did you mean \"ui_left\"? (core/input/input.cpp:534 in get_action_strength)\nThe InputMap action \"move_left\" doesn't exist. Did you mean \"ui_left\"? (co"
+    "main.tscn riga 11: il nodo \"Player\" ha parent=\"..\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")",
+    "main.tscn riga 15: il nodo \"Sprite2D\" ha parent=\"Player\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")",
+    "main.tscn riga 19: il nodo \"CollisionShape2D\" ha parent=\"Player\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
