@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-17T16:35:01.170Z",
+ "aggiornato": "2026-11-17T17:22:03.135Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1141,10 +1141,10 @@
    "slug": "piattaforme-speciali",
    "numero": "8.6",
    "titolo": "Piattaforme mobili, a senso unico, scale",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/piattaforme-speciali.json",
-   "sha256": "2f4d4fc1abdb10fea5d4a10fd4fe0f169f9bf1e95626b5f3025b4c685abff3cf",
-   "byte": 141644
+   "sha256": "04d8503a3b7311c2fd5a8d633be67567833cdb8f09236124a8a91c3efdbaec0f",
+   "byte": 143972
   }
  ],
  "documentazione": {
