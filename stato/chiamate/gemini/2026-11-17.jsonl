@@ -9,3 +9,4 @@
 {"quando":1794904464579,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"animationtree","ok":true,"contata":true,"durataMs":186998,"tokenInput":16796,"tokenOutput":8808,"ragionamento":18148}
 {"quando":1794904666429,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"animationtree","ok":true,"contata":true,"durataMs":35530,"tokenInput":12045,"tokenOutput":323,"ragionamento":4038}
 {"quando":1794904703379,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"animationtree","ok":true,"contata":true,"durataMs":104640,"tokenInput":16889,"tokenOutput":7896,"ragionamento":7686}
+{"quando":1794904822552,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"animationtree","ok":true,"contata":true,"durataMs":9795,"tokenInput":2854,"tokenOutput":711,"ragionamento":1902}
