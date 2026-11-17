@@ -1,6 +1,300 @@
 {
  "creato": "2026-11-17T16:35:02.982Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Pericoli, bandierine e sequenza di rinascita",
+    "consegna": "Aggiungi al gioco `Salti` la gestione dei pericoli, del punto di ripartenza e della sequenza temporizzata di rinascita del personaggio.\n\n1. Crea lo script `objects/hazard.gd` per la classe `Hazard` (estende `Area2D`). Nel segnale `body_entered`, controlla se il corpo entrato possiede il metodo `take_damage`: se sì, invoca `take_damage(damage)`. Esporta la variabile `damage: int = 1`.\n2. Crea la scena `objects/hazard.tscn` con radice `Hazard` (`Area2D` con lo script appena creato) e un figlio `CollisionShape2D` (forma rettangolare 32x32).\n3. Crea lo script `objects/checkpoint.gd` per la classe `Checkpoint` (estende `Area2D`). Dichiaragli il segnale `activated(new_position: Vector2)` e la variabile `is_active: bool = false`. Nel segnale `body_entered`, se `is_active` è `false` e il nodo entrato appartiene al gruppo `\"player\"`, imposta `is_active = true` ed emetti `activated(global_position)`.\n4. Crea la scena `objects/checkpoint.tscn` con radice `Checkpoint` (`Area2D` con lo script collegato) e un figlio `CollisionShape2D` (forma rettangolare 32x32).\n5. In `player/player.gd` aggiungi:\n   - In `_ready()` aggiungi il nodo al gruppo `\"player\"` con `add_to_group(\"player\")` e memorizza la posizione iniziale `spawn_position = global_position`.\n   - La variabile `spawn_position: Vector2`, `is_dead: bool = false` e `@export var state_machine: StateMachine`.\n   - Il metodo `set_spawn_position(new_position: Vector2) -> void` che aggiorna `spawn_position = new_position`.\n   - Il metodo `take_damage(_amount: int) -> void`: se `is_dead` è `true` interrompi l'esecuzione. Altrimenti imposta `is_dead = true`, azzera `velocity = Vector2.ZERO`, chiama `set_physics_process(false)`, attendi 1 secondo con `await get_tree().create_timer(1.0).timeout` e invoca `respawn()`.\n   - Il metodo `respawn() -> void`: ripristina `global_position = spawn_position`, azzera `velocity = Vector2.ZERO`, imposta `is_dead = false`, riattiva `set_physics_process(true)` e se `state_machine` non è `null` invoca `state_machine._on_child_transitioned(state_machine.current_state, \"idle\")`.\n6. In `main.tscn` aggiungi:\n   - Un nodo `Spikes` (istanza di `objects/hazard.tscn`) posizionato a `Vector2(350, 470)`.\n   - Un nodo `Void` (istanza di `objects/hazard.tscn`) posizionato a `Vector2(400, 650)` con una `CollisionShape2D` rettangolare di dimensioni `Vector2(1200, 40)`.\n   - Un nodo `Checkpoint` (istanza di `objects/checkpoint.tscn`) posizionato a `Vector2(500, 460)`.\n   - Collega il segnale `activated` di `Checkpoint` al metodo `set_spawn_position` del nodo `Player`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "salti",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In hazard.gd usa body.has_method(\"take_damage\") prima di invocare la funzione.",
+     "Nel checkpoint controlla body.is_in_group(\"player\") ed emetti il segnale passando global_position.",
+     "Ricorda di impostare set_physics_process(false) in take_damage e di riattivarlo con set_physics_process(true) dentro respawn()."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://objects/hazard.gd",
+      "descrizione": "Lo script objects/hazard.gd esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://objects/checkpoint.gd",
+      "descrizione": "Lo script objects/checkpoint.gd esiste"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Area2D",
+      "nome": "Spikes",
+      "descrizione": "La scena main.tscn contiene un'Area2D chiamata Spikes"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Area2D",
+      "nome": "Checkpoint",
+      "descrizione": "La scena main.tscn contiene un'Area2D chiamata Checkpoint"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"La scena deve contenere il nodo Player\"):\n\t\treturn\n\tvar spikes := find_by_name(main, \"Spikes\") as Area2D\n\tif not check(\"spikes\", spikes != null, \"La scena deve contenere l'area Spikes\"):\n\t\treturn\n\tvar checkpoint := find_by_name(main, \"Checkpoint\") as Area2D\n\tif not check(\"checkpoint\", checkpoint != null, \"La scena deve contenere l'area Checkpoint\"):\n\t\treturn\n\tvar initial_pos: Vector2 = player.global_position\n\tplayer.global_position = spikes.global_position\n\tawait wait_physics_frames(5)\n\tvar is_dead = get_prop(player, \"is_dead\", false)\n\tcheck(\"is_dead\", is_dead == true, \"Entrando nelle spine is_dead deve diventare true\")\n\tawait wait_seconds(1.2)\n\tvar pos_after: Vector2 = player.global_position\n\tcheck(\"respawn_start\", pos_after.distance_to(initial_pos) < 10.0, \"Dopo la rinascita il personaggio deve tornare alla posizione di partenza\")\n\tplayer.global_position = checkpoint.global_position\n\tawait wait_physics_frames(5)\n\tvar cp_pos: Vector2 = checkpoint.global_position\n\tplayer.global_position = spikes.global_position\n\tawait wait_physics_frames(5)\n\tawait wait_seconds(1.2)\n\tvar pos_after_cp: Vector2 = player.global_position\n\tcheck(\"respawn_cp\", pos_after_cp.distance_to(cp_pos) < 10.0, \"Dopo la prima bandierina la rinascita deve avvenire al checkpoint\")",
+      "descrizione": "Il contatto con il pericolo avvia la morte e la rinascita all'ultimo checkpoint attivo"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "objects/hazard.gd",
+       "contenuto": "class_name Hazard\nextends Area2D\n\n@export var damage: int = 1\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.has_method(\"take_damage\"):\n\t\tbody.take_damage(damage)\n"
+      },
+      {
+       "percorso": "objects/hazard.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/hazard.gd\" id=\"1_hazard\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hazard\"]\nsize = Vector2(32, 32)\n\n[node name=\"Hazard\" type=\"Area2D\"]\nscript = ExtResource(\"1_hazard\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_hazard\")\n"
+      },
+      {
+       "percorso": "objects/checkpoint.gd",
+       "contenuto": "class_name Checkpoint\nextends Area2D\n\nsignal activated(new_position: Vector2)\n\nvar is_active: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif is_active:\n\t\treturn\n\n\tif body.is_in_group(\"player\"):\n\t\tis_active = true\n\t\tactivated.emit(global_position)\n"
+      },
+      {
+       "percorso": "objects/checkpoint.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/checkpoint.gd\" id=\"1_checkpoint\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_checkpoint\"]\nsize = Vector2(32, 32)\n\n[node name=\"Checkpoint\" type=\"Area2D\"]\nscript = ExtResource(\"1_checkpoint\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_checkpoint\")\n"
+      },
+      {
+       "percorso": "player/player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 200.0\n@export var jump_velocity: float = -400.0\n@export var state_machine: StateMachine\n\nvar gravity: float = 980.0\nvar is_on_ladder: bool = false\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D\n@onready var animation_player: AnimationPlayer = $AnimationPlayer\n@onready var animation_tree: AnimationTree = $AnimationTree\n\nvar playback: AnimationNodeStateMachinePlayback\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"player\")\n\tspawn_position = global_position\n\tif animation_tree:\n\t\tplayback = animation_tree[\"parameters/playback\"]\n\n\nfunc set_spawn_position(new_position: Vector2) -> void:\n\tspawn_position = new_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\n\tis_dead = true\n\tvelocity = Vector2.ZERO\n\tset_physics_process(false)\n\n\tawait get_tree().create_timer(1.0).timeout\n\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\tset_physics_process(true)\n\tif state_machine:\n\t\tstate_machine._on_child_transitioned(state_machine.current_state, \"idle\")\n\n\nfunc _physics_process(delta: float) -> void:\n\tif is_on_ladder:\n\t\tvar climb_dir := 0.0\n\t\tif Input.is_action_pressed(\"jump\"):\n\t\t\tclimb_dir -= 1.0\n\t\tif Input.is_action_pressed(\"crouch\"):\n\t\t\tclimb_dir += 1.0\n\t\tvelocity.y = climb_dir * 150.0\n\telse:\n\t\tif not is_on_floor():\n\t\t\tvelocity.y += gravity * delta\n\n\t\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\t\tvelocity.y = jump_velocity\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tif direction != 0.0:\n\t\tvelocity.x = direction * speed\n\t\tif animated_sprite:\n\t\t\tanimated_sprite.flip_h = direction < 0.0\n\telse:\n\t\tvelocity.x = move_toward(velocity.x, 0.0, speed)\n\n\tvar blend: float = absf(velocity.x) / speed\n\tif animation_tree:\n\t\tanimated_sprite = animated_sprite\n\t\tanimation_tree[\"parameters/move_blend/blend_position\"] = blend\n\n\tmove_and_slide()\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/sign.tscn\" id=\"2_sign\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/door.tscn\" id=\"3_door\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/moving_platform.tscn\" id=\"4_moving_platform\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/one_way_platform.tscn\" id=\"5_one_way_platform\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/ladder.tscn\" id=\"6_ladder\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/hazard.tscn\" id=\"7_hazard\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/checkpoint.tscn\" id=\"8_checkpoint\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_void\"]\nsize = Vector2(1200, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 464)\n\n[node name=\"Sign\" parent=\".\" instance=ExtResource(\"2_sign\")]\nposition = Vector2(300, 460)\n\n[node name=\"Door\" parent=\".\" instance=ExtResource(\"3_door\")]\nposition = Vector2(550, 430)\n\n[node name=\"MovingPlatform\" parent=\".\" instance=ExtResource(\"4_moving_platform\")]\nposition = Vector2(300, 380)\n\n[node name=\"OneWayPlatform\" parent=\".\" instance=ExtResource(\"5_one_way_platform\")]\nposition = Vector2(200, 300)\n\n[node name=\"Ladder\" parent=\".\" instance=ExtResource(\"6_ladder\")]\nposition = Vector2(450, 370)\n\n[node name=\"Spikes\" parent=\".\" instance=ExtResource(\"7_hazard\")]\nposition = Vector2(350, 470)\n\n[node name=\"Void\" parent=\".\" instance=ExtResource(\"7_hazard\")]\nposition = Vector2(400, 650)\n\n[node name=\"CollisionShape2D\" parent=\"Void\" index=\"0\"]\nshape = SubResource(\"RectangleShape2D_void\")\n\n[node name=\"Checkpoint\" parent=\".\" instance=ExtResource(\"8_checkpoint\")]\nposition = Vector2(500, 460)\n\n[connection signal=\"activated\" from=\"Checkpoint\" to=\"Player\" method=\"set_spawn_position\"]\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Salti",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "attack",
+        "tasti": [
+         "J"
+        ]
+       },
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "jump",
+        "tasti": [
+         "Space",
+         "Up"
+        ]
+       },
+       {
+        "nome": "crouch",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "I pericoli usano `Area2D` per invocare `take_damage` quando il giocatore li attraversa. Il checkpoint invia la propria posizione globale al personaggio tramite il segnale `activated`. Nella sequenza di morte del personaggio, `set_physics_process(false)` ferma il movimento durante l'attesa di 1 secondo, mentre `respawn()` ripristina la posizione, azzera la velocità e riabilita la fisica portando la macchina a stati in `idle`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Personaggio bloccato dopo la rinascita",
+    "consegna": "Hai ricevuto un progetto di prova in cui la sequenza di morte funziona, ma dopo la rinascita il personaggio rimane completamente paralizzato e non risponde più ai comandi.\n\nIndividua l'errore nello script di gestione del giocatore e riparalo in modo che, dopo essere rinato al punto di spawn, il personaggio torni a muoversi regolarmente.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "reparazione-respawn-bloccato",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Controlla cosa succede all'elaborazione della fisica durante la morte e se viene ripristinata dentro respawn().",
+     "Verifica che set_physics_process(true) sia chiamato al termine della rinascita."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\tcall_if_exists(player, \"take_damage\", [1])\n\tawait wait_seconds(1.2)\n\tvar start_x: float = player.position.x\n\tawait hold_action(\"move_right\", 20)\n\tcheck(\"movimento\", player.position.x > start_x + 5.0, \"Dopo il respawn il personaggio deve poter andare a destra premendo move_right (x iniziale = %.1f, x attuale = %.1f)\" % [start_x, player.position.x])",
+      "descrizione": "Dopo la rinascita il personaggio torna a muoversi quando si premono i tasti direzionali"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n\nfunc _ready() -> void:\n\tspawn_position = global_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\tis_dead = true\n\tset_physics_process(false)\n\tawait get_tree().create_timer(1.0).timeout\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\t# Errore: manca set_physics_process(true)!\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * 200.0\n\tmove_and_slide()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "ReparazioneRespawn",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n\nfunc _ready() -> void:\n\tspawn_position = global_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\tis_dead = true\n\tset_physics_process(false)\n\tawait get_tree().create_timer(1.0).timeout\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\tset_physics_process(true)\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * 200.0\n\tmove_and_slide()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "ReparazioneRespawn",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Quando si chiama `set_physics_process(false)` durante la morte per disattivare i comandi, occorre sempre riattivare l'elaborazione della fisica con `set_physics_process(true)` dentro la funzione `respawn()`. Altrimenti l'evento `_physics_process` non verrà mai più eseguito e il personaggio resterà fermo.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Rinascita con azzeramento della velocità e protezione pericoli",
+    "consegna": "Nel progetto ricevuto per il test, quando il personaggio cade nel vuoto o subisce un colpo mortale, rinasce alla posizione iniziale ma schizza subito verso il basso a grande velocità ed entra in un ciclo infinito di morti immediate.\n\nSintomi riscontrati:\n1. Alla rinascita la velocità verticale accumulata durante la caduta non viene cancellata.\n2. La chiamata a `take_damage` si riattiva durante l'attesa perché la variabile `is_dead` non blocca i colpi successivi.\n\nRipara lo script `player.gd` garantendo che la velocità venga azzerata al respawn e che `is_dead` impedisca di subire ulteriori danni finché la rinascita non è completata.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "test-rinascita-velocita",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Azzera velocity sia all'inizio del danno sia dentro respawn().",
+     "Verifica che la condizione `if is_dead: return` sia presente all'inizio di take_damage()."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si carica correttamente\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\tplayer.velocity = Vector2(0, 1000.0)\n\tcall_if_exists(player, \"take_damage\", [1])\n\tawait wait_seconds(1.2)\n\tvar vel: Vector2 = player.velocity\n\tcheck(\"velocita_azzerata\", vel.length() < 1.0, \"Dopo il respawn la velocità del giocatore deve essere azzerata (invece è %s)\" % vel)",
+      "descrizione": "Alla rinascita la velocità è zero e non si schizza verso il basso"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n\nfunc _ready() -> void:\n\tspawn_position = global_position\n\n\nfunc take_damage(_amount: int) -> void:\n\t# Errore: manca il controllo su is_dead per ignorare colpi multipli!\n\tis_dead = true\n\tset_physics_process(false)\n\tawait get_tree().create_timer(1.0).timeout\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\t# Errore: manca velocity = Vector2.ZERO!\n\tis_dead = false\n\tset_physics_process(true)\n\n\nfunc _physics_process(delta: float) -> void:\n\tvelocity.y += 980.0 * delta\n\tmove_and_slide()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "TestRinascita",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(200, 200)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody2D\n\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n\nfunc _ready() -> void:\n\tspawn_position = global_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\n\tis_dead = true\n\tvelocity = Vector2.ZERO\n\tset_physics_process(false)\n\tawait get_tree().create_timer(1.0).timeout\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\tset_physics_process(true)\n\n\nfunc _physics_process(delta: float) -> void:\n\tvelocity.y += 980.0 * delta\n\tmove_and_slide()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "TestRinascita",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Per evitare che il personaggio schizzi verso il basso al riavvio occorre azzerare la velocità con `velocity = Vector2.ZERO` sia quando viene subito il danno sia dentro `respawn()`. Inoltre, il controllo `if is_dead: return` all'inizio di `take_damage()` impedisce la riattivazione multipla del danno durante l'attesa asincrona.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "ripara",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash"
@@ -69,5 +363,10 @@
     "md": "- I pericoli come spine e burroni usano nodi `Area2D` che rilevano il giocatore ed eseguono il metodo `take_damage()`.\n- Le bandierine di ripartenza memorizzano la loro `global_position` nel personaggio al momento dell'ingresso nell'area.\n- Usare `await get_tree().create_timer(...)` permette di creare pause temporizzate di morte senza bloccare la grafica o il resto del livello.\n- Durante la rinascita, gli elementi ambientali (porte aperte, pulsanti) restano alterati, mentre si ripristinano solo posizione, velocità e stato del personaggio.\n- Per evitare che il personaggio resti bloccato dopo il respawn, occorre riattivare `set_physics_process(true)` e forzare la macchina a stati nello stato `idle`."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
