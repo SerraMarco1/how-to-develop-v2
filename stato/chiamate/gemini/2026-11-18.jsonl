@@ -5,3 +5,4 @@
 {"quando":1794990318632,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"pericoli-e-ripartenza","ok":true,"contata":true,"durataMs":20968,"tokenInput":9263,"tokenOutput":2000,"ragionamento":6843}
 {"quando":1794990349254,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"pericoli-e-ripartenza","ok":true,"contata":true,"durataMs":20119,"tokenInput":11497,"tokenOutput":12,"ragionamento":2466}
 {"quando":1794990371138,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"pericoli-e-ripartenza","ok":true,"contata":true,"durataMs":5512,"tokenInput":2900,"tokenOutput":897,"ragionamento":1325}
+{"quando":1794990382382,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"nemici-a-piattaforme","ok":true,"contata":true,"durataMs":215834,"tokenInput":14009,"tokenOutput":2491,"ragionamento":3621}
