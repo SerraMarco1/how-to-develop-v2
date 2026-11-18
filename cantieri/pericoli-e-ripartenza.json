@@ -444,9 +444,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "main.tscn riga 11: il nodo \"Player\" ha parent=\"..\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")",
-    "main.tscn riga 15: il nodo \"Sprite2D\" ha parent=\"Player\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")",
-    "main.tscn riga 19: il nodo \"CollisionShape2D\" ha parent=\"Player\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")"
+    "la soluzione cambia anche player.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  player.gd:\n    + riga 24:   set_physics_process(true)\nCon quei file com'erano prima falliscono:\n  - Dopo il respawn il personaggio deve poter andare a destra premendo move_right (x iniziale = 100.0, x attuale = 100.0)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
