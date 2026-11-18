@@ -370,7 +370,7 @@
      "file": [
       {
        "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\"..\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
       },
       {
        "percorso": "player.gd",
@@ -404,7 +404,7 @@
      "file": [
       {
        "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\"..\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_p\"]\nsize = Vector2(32, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Player\" type=\"CharacterBody2D\" parent=\".\"]\nposition = Vector2(100, 100)\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\"Player\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Player\"]\nshape = SubResource(\"RectangleShape2D_p\")\n"
       },
       {
        "percorso": "player.gd",
@@ -441,7 +441,7 @@
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "main.tscn riga 11: il nodo \"Player\" ha parent=\"..\", ma nessun nodo precedente ha quel percorso (i percorsi sono relativi alla radice: \".\", \"Player\", \"Player/Sprite2D\")",
@@ -450,7 +450,8 @@
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "test": {
@@ -530,7 +531,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Pericoli, punti di ripartenza, rinascita",
