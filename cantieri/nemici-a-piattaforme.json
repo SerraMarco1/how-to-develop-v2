@@ -204,7 +204,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Cannot call method 'is_queued_for_deletion' on a previously freed instance. (res://htd/verifica_1.gd:39 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Cannot call method 'is_queued_for_deletion' on a previously freed instance.\n          at: _run_tests (res://htd/verifica_1.gd:39)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 39: `check(\"enemy_freed\", enemy.is_queued_for_deletion(), \"Il nemico deve essere eliminato con queue_free quando viene schiacciato\")`"
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://objects/door.gd deve caricarsi senza errori: Parse Error: Identifier \"animated_sprite\" not declared in the current scope. (res://objects/door.gd:10 in GDScript::reload)\nFailed to load script \"res://objects/door.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  objects/door.gd, riga 10: `animated_sprite.play(\"open\") if has_node(\"AnimatedSprite2D\") else animation_player.play(\"open\")`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
