@@ -648,5 +648,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "pericoli-e-ripartenza": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
