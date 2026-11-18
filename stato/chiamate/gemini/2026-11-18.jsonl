@@ -3,3 +3,4 @@
 {"quando":1794990249468,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"pericoli-e-ripartenza","ok":false,"contata":true,"durataMs":2175,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1794990251645,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"pericoli-e-ripartenza","ok":true,"contata":true,"durataMs":47942,"tokenInput":9944,"tokenOutput":2220,"ragionamento":4317}
 {"quando":1794990318632,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"pericoli-e-ripartenza","ok":true,"contata":true,"durataMs":20968,"tokenInput":9263,"tokenOutput":2000,"ragionamento":6843}
+{"quando":1794990349254,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"pericoli-e-ripartenza","ok":true,"contata":true,"durataMs":20119,"tokenInput":11497,"tokenOutput":12,"ragionamento":2466}
