@@ -335,14 +335,14 @@
     "tipo": "autonomo",
     "genere": "ripara",
     "titolo": "Personaggio bloccato dopo la rinascita",
-    "consegna": "Hai ricevuto un progetto di prova in cui la sequenza di morte funziona, ma dopo la rinascita il personaggio rimane completamente paralizzato e non risponde più ai comandi.\n\nIndividua l'errore nello script di gestione del giocatore e riparalo in modo che, dopo essere rinato al punto di spawn, il personaggio torni a muoversi regolarmente.",
+    "consegna": "Nel progetto di prova, quando il personaggio subisce un danno muore e rinasce, ma dopo la rinascita rimane bloccato e non risponde più ai comandi di movimento.\n\nApri lo script `player.gd`:\n1. Osserva che in `take_damage()` l'elaborazione della fisica viene disattivata con `set_physics_process(false)`.\n2. Nella funzione `respawn()`, riattiva la fisica aggiungendo la chiamata `set_physics_process(true)`, in modo che il personaggio torni a muoversi regolarmente una volta rinato.",
     "modalita": "progetto",
     "dove": "a-parte",
     "cartella": "reparazione-respawn-bloccato",
     "passiGuida": [],
     "suggerimenti": [
-     "Controlla cosa succede all'elaborazione della fisica durante la morte e se viene ripristinata dentro respawn().",
-     "Verifica che set_physics_process(true) sia chiamato al termine della rinascita."
+     "Apri lo script player.gd e individua la funzione respawn().",
+     "Aggiungi la riga set_physics_process(true) dentro respawn() per ripristinare il movimento."
     ],
     "verifiche": [
      {
@@ -356,7 +356,7 @@
       "tipo": "script_collegato",
       "scena": "res://main.tscn",
       "nodo": "Player",
-      "descrizione": "Il nodo Player ha uno script collegato"
+      "descrizione": "Il nodo Player ha lo script collegato"
      },
      {
       "tipo": "script_godot",
@@ -374,7 +374,7 @@
       },
       {
        "percorso": "player.gd",
-       "contenuto": "extends CharacterBody2D\n\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n\nfunc _ready() -> void:\n\tspawn_position = global_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\tis_dead = true\n\tset_physics_process(false)\n\tawait get_tree().create_timer(1.0).timeout\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\t# Errore: manca set_physics_process(true)!\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * 200.0\n\tmove_and_slide()\n"
+       "contenuto": "extends CharacterBody2D\n\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n\nfunc _ready() -> void:\n\tspawn_position = global_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\tis_dead = true\n\tset_physics_process(false)\n\tawait get_tree().create_timer(1.0).timeout\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * 200.0\n\tmove_and_slide()\n"
       }
      ],
      "progetto": {
@@ -433,7 +433,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Quando si chiama `set_physics_process(false)` durante la morte per disattivare i comandi, occorre sempre riattivare l'elaborazione della fisica con `set_physics_process(true)` dentro la funzione `respawn()`. Altrimenti l'evento `_physics_process` non verrà mai più eseguito e il personaggio resterà fermo.",
+     "spiegazione": "Quando si chiama `set_physics_process(false)` durante la morte per bloccare i comandi, occorre riabilitare l'elaborazione della fisica con `set_physics_process(true)` al termine della rinascita in `respawn()`. In questo modo `_physics_process()` riprende a essere eseguito e il personaggio risponde nuovamente ai controlli.",
      "cambiati": [
       "player.gd"
      ],
@@ -442,13 +442,14 @@
    },
    "genere": "ripara",
    "correzioni": 2,
-   "semplificato": false,
+   "semplificato": true,
    "problemi": [
     "la soluzione cambia anche player.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  player.gd:\n    + riga 24:   set_physics_process(true)\nCon quei file com'erano prima falliscono:\n  - Dopo il respawn il personaggio deve poter andare a destra premendo move_right (x iniziale = 100.0, x attuale = 100.0)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash",
+    "gemini/gemini-3.7-flash",
     "gemini/gemini-3.7-flash"
    ]
   },
