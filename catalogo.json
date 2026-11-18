@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-17T17:22:03.135Z",
+ "aggiornato": "2026-11-18T08:26:20.781Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1145,6 +1145,15 @@
    "file": "lezioni/f08-piattaforme/piattaforme-speciali.json",
    "sha256": "04d8503a3b7311c2fd5a8d633be67567833cdb8f09236124a8a91c3efdbaec0f",
    "byte": 143972
+  },
+  {
+   "slug": "pericoli-e-ripartenza",
+   "numero": "8.7",
+   "titolo": "Pericoli, punti di ripartenza, rinascita",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/pericoli-e-ripartenza.json",
+   "sha256": "6e23f6b58b9637f335ecc89a0348660562d761fb3f924878f34b1e36a05a6003",
+   "byte": 114461
   }
  ],
  "documentazione": {
