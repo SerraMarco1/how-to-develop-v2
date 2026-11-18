@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-18T10:10:13.624Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-18T10:42:26.487Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "nemici-a-piattaforme",
   "numero": "8.8",
   "titolo": "Nemici a piattaforme"
  },
- "messaggio": "Sta scrivendo la lezione 8.8 «Nemici a piattaforme».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 8.8 riprende da sola appena rispondono.",
+ "riprende": "2026-11-18T10:52:26.487Z"
 }
