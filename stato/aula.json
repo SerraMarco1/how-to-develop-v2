@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-19T11:46:36.541Z",
+ "aggiornato": "2026-11-19T11:55:07.775Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "livelli-e-sfondi",
-  "numero": "8.9",
-  "titolo": "Livelli: terreni, sfondi in profondità, più livelli"
+  "slug": "particelle-2d",
+  "numero": "8.10",
+  "titolo": "Particelle"
  },
- "messaggio": "Sta scrivendo la lezione 8.9 «Livelli: terreni, sfondi in profondità, più livelli».",
+ "messaggio": "Sta scrivendo la lezione 8.10 «Particelle».",
  "riprende": null
 }
