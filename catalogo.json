@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-19T11:46:35.008Z",
+ "aggiornato": "2026-11-19T11:55:06.285Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1163,6 +1163,15 @@
    "file": "lezioni/f08-piattaforme/nemici-a-piattaforme.json",
    "sha256": "5a5126497a31fba085122fff417675d3f305d86ae55c3b9a01886c26674069ac",
    "byte": 158945
+  },
+  {
+   "slug": "livelli-e-sfondi",
+   "numero": "8.9",
+   "titolo": "Livelli: terreni, sfondi in profondità, più livelli",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/livelli-e-sfondi.json",
+   "sha256": "9544d62f7d2b0812d6041c2c293f94c28af3fa82a6325627044b09fd74aa77bc",
+   "byte": 178195
   }
  ],
  "documentazione": {
