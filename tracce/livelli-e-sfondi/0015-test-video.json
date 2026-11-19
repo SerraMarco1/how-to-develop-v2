@@ -1,0 +1,64 @@
+{
+ "n": 15,
+ "quando": "2026-11-19T13:05:38.093Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «player» (classe = CharacterBody2D; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 3% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 1. A 1 s: «Player» a (84, 882.2) 32×32, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 21622,
+ "dati": {
+  "copione": {
+   "scena": "res://levels/level_1.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "classe": "CharacterBody2D"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Giocatore"
+    },
+    {
+     "id": "goal",
+     "cerca": {
+      "nome": "Goal"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Traguardo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il livello 1 avvia il gioco con il giocatore e il traguardo",
+     "da": 0.5,
+     "a": 3.5,
+     "soggetto": "player"
+    },
+    {
+     "testo": "Il traguardo è posizionato per passare al livello 2",
+     "da": 4,
+     "a": 7.5,
+     "soggetto": "goal"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «player» (classe = CharacterBody2D; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 3% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 1. A 1 s: «Player» a (84, 882.2) 32×32, fuori dallo schermo (dentro per il 0%). Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 11 s (7828 → 348 token)"
+ ]
+}

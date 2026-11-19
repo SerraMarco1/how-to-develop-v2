@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://levels/level_1.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"player\", \"cerca\": {\"classe\": \"CharacterBody2D\"}, \"quanti\": 1, \"da\": 0.0, \"a\": 0.6, \"deve\": \"esserci\", \"etichetta\": \"Giocatore\"}, {\"id\": \"goal\", \"cerca\": {\"nome\": \"Goal\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 7.5, \"deve\": \"esserci\", \"etichetta\": \"Traguardo\"}], \"scritte\": [{\"testo\": \"Il livello 1 avvia il gioco con il giocatore\", \"da\": 0.0, \"a\": 0.6, \"soggetto\": \"player\"}, {\"testo\": \"Il traguardo permette di passare al livello 2\", \"da\": 1.0, \"a\": 7.5, \"soggetto\": \"goal\"}]}",
+ "ragionamento": 2378,
+ "quando": "2026-11-19T13:05:52.959Z",
+ "ruolo": "ritocco"
+}
