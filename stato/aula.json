@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-19T00:48:40.242Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-19T00:49:18.522Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "nemici-a-piattaforme",
   "numero": "8.8",
   "titolo": "Nemici a piattaforme"
  },
- "messaggio": "Sta scrivendo la lezione 8.8 «Nemici a piattaforme».",
- "riprende": null
+ "messaggio": "Per oggi la lezione 8.8 ha usato le richieste che le spettano: riprende domani.",
+ "riprende": "2026-11-19T08:00:00.522Z"
 }
