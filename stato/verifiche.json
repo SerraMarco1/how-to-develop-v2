@@ -653,5 +653,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "nemici-a-piattaforme": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "livelli-e-sfondi": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
