@@ -27,12 +27,12 @@
      {
       "tipo": "file_esiste",
       "percorso": "res://enemies/walker_enemy.tscn",
-      "descrizione": "Il file res://enemies/walker_enemy.tscn esiste nel progetto"
+      "descrizione": "Il file walker_enemy.tscn esiste nella cartella res://enemies/"
      },
      {
       "tipo": "file_esiste",
       "percorso": "res://enemies/walker_enemy.gd",
-      "descrizione": "Lo script res://enemies/walker_enemy.gd esiste nel progetto"
+      "descrizione": "Lo script walker_enemy.gd esiste nella cartella res://enemies/"
      },
      {
       "tipo": "nodo",
@@ -43,9 +43,23 @@
       "descrizione": "La scena main.tscn contiene un'istanza di WalkerEnemy"
      },
      {
+      "tipo": "nodo",
+      "scena": "res://enemies/walker_enemy.tscn",
+      "tipoNodo": "RayCast2D",
+      "nome": "EdgeDetector",
+      "genitore": "WalkerEnemy",
+      "descrizione": "La scena walker_enemy.tscn contiene un RayCast2D chiamato EdgeDetector"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://enemies/walker_enemy.tscn",
+      "nodo": "WalkerEnemy",
+      "descrizione": "Il nodo WalkerEnemy ha lo script walker_enemy.gd collegato"
+     },
+     {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar enemy := find_by_name(main, \"WalkerEnemy\") as CharacterBody2D\n\tif not check(\"enemy_exists\", enemy != null, \"Nella scena main.tscn deve esserci il nodo WalkerEnemy\"):\n\t\treturn\n\n\tvar start_x: float = enemy.global_position.x\n\tawait wait_physics_frames(20)\n\tvar moved: bool = absf(enemy.global_position.x - start_x) > 2.0\n\tcheck(\"movement\", moved, \"Il nemico deve muoversi orizzontalmente con move_and_slide\")\n\n\tvar edge_det := enemy.get_node_or_null(\"EdgeDetector\") as RayCast2D\n\tif not check(\"edge_detector\", edge_det != null, \"WalkerEnemy deve avere un figlio RayCast2D chiamato EdgeDetector\"):\n\t\treturn\n\n\tvar stomp := enemy.get_node_or_null(\"StompArea\") as Area2D\n\tif not check(\"stomp_area\", stomp != null, \"WalkerEnemy deve avere un'Area2D chiamata StompArea\"):\n\t\treturn\n\n\tvar test_player := CharacterBody2D.new()\n\ttest_player.add_to_group(\"player\")\n\ttest_player.velocity = Vector2(0.0, 150.0)\n\tvar col := CollisionShape2D.new()\n\tvar shape := RectangleShape2D.new()\n\tshape.size = Vector2(16.0, 16.0)\n\tcol.shape = shape\n\ttest_player.add_child(col)\n\tmain.add_child(test_player)\n\ttest_player.global_position = enemy.global_position + Vector2(0.0, -18.0)\n\n\tawait wait_physics_frames(4)\n\tcheck(\"bounce\", test_player.velocity.y < 0.0, \"Saltare in testa al nemico deve imprimere un rimbalzo verso l'alto (velocity.y è %.1f)\" % test_player.velocity.y)\n\tvar is_freed: bool = not is_instance_valid(enemy) or enemy.is_queued_for_deletion()\n\tcheck(\"enemy_freed\", is_freed, \"Il nemico deve essere eliminato con queue_free quando viene schiacciato\")\n\ttest_player.queue_free()",
-      "descrizione": "Il nemico pattuglia, inverte la direzione al bordo e viene eliminato rimbalzandoci sopra"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar enemy := find_by_name(main, \"WalkerEnemy\") as CharacterBody2D\n\tif not check(\"enemy_exists\", enemy != null, \"Nella scena main.tscn deve esserci il nodo WalkerEnemy\"):\n\t\treturn\n\n\tvar start_x: float = enemy.global_position.x\n\tawait wait_physics_frames(10)\n\tvar moved: bool = absf(enemy.global_position.x - start_x) > 1.0\n\tcheck(\"movement\", moved, \"Il nemico WalkerEnemy si muove orizzontalmente all'avvio\")",
+      "descrizione": "Il nemico WalkerEnemy si muove orizzontalmente all'avvio della scena"
      }
     ],
     "previsioni": [],
@@ -82,7 +96,7 @@
       },
       {
        "percorso": "objects/door.gd",
-       "contenuto": "class_name Door\nextends StaticBody2D\n\nvar is_open: bool = false\n\n@onready var animation_player: AnimationPlayer = $AnimationPlayer\n\n\nfunc open() -> void:\n\tanimated_sprite.play(\"open\") if has_node(\"AnimatedSprite2D\") else animation_player.play(\"open\")\n\n\nfunc door_opened() -> void:\n\tis_open = true\n"
+       "contenuto": "class_name Door\nextends StaticBody2D\n\nvar is_open: bool = false\n\n@onready var animation_player: AnimationPlayer = $AnimationPlayer\n\n\nfunc open() -> void:\n\tif animation_player:\n\t\tanimation_player.play(\"open\")\n\n\nfunc door_opened() -> void:\n\tis_open = true\n"
       },
       {
        "percorso": "objects/door.tscn",
@@ -193,6 +207,7 @@
      },
      "spiegazione": "Il nodo `RayCast2D` posizionato in avanti controlla che sotto i piedi del nemico ci sia collisione con il terreno. Quando il raggio esce dalla piattaforma (`not edge_detector.is_colliding()`) o quando il corpo urta un muro (`is_on_wall()`), chiamiamo `_turn_around()` che inverte `direction`, orienta lo sprite con `flip_h` e sposta `edge_detector.position.x` sul lato opposto per continuare a controllare il fronte. Le due aree `StompArea` (sulla testa) e `HitArea` (sul corpo) distinguono l'urto dall'alto con velocità discendente (`velocity.y > 0.0`), che schiaccia il nemico e fa rimbalzare il giocatore, dal contatto laterale che danneggia il giocatore.",
      "cambiati": [
+      "objects/door.gd",
       "enemies/walker_enemy.gd",
       "enemies/walker_enemy.tscn",
       "main.tscn"
@@ -202,12 +217,13 @@
    },
    "genere": "guidato",
    "correzioni": 2,
-   "semplificato": false,
+   "semplificato": true,
    "problemi": [
     "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://objects/door.gd deve caricarsi senza errori: Parse Error: Identifier \"animated_sprite\" not declared in the current scope. (res://objects/door.gd:10 in GDScript::reload)\nFailed to load script \"res://objects/door.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  objects/door.gd, riga 10: `animated_sprite.play(\"open\") if has_node(\"AnimatedSprite2D\") else animation_player.play(\"open\")`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
