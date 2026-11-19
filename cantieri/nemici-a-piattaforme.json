@@ -479,8 +479,22 @@
       "descrizione": "La scena main.tscn contiene un'istanza di FlyingEnemy"
      },
      {
+      "tipo": "nodo",
+      "scena": "res://enemies/flying_enemy.tscn",
+      "tipoNodo": "Timer",
+      "nome": "PatrolTimer",
+      "descrizione": "La scena flying_enemy.tscn contiene un Timer chiamato PatrolTimer"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://enemies/flying_enemy.tscn",
+      "tipoNodo": "Area2D",
+      "nome": "StompArea",
+      "descrizione": "La scena flying_enemy.tscn contiene un'Area2D chiamata StompArea"
+     },
+     {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar flyer := find_by_name(main, \"FlyingEnemy\") as CharacterBody2D\n\tif not check(\"flyer_exists\", flyer != null, \"Nella scena main.tscn deve esserci il nodo FlyingEnemy\"):\n\t\treturn\n\n\tvar start_y: float = flyer.global_position.y\n\tawait wait_physics_frames(25)\n\tcheck(\"gravity_zero\", absf(flyer.global_position.y - start_y) < 1.0, \"Il nemico volante non deve cadere verso il basso per effetto della gravità (partito a y=%.1f, ora a y=%.1f)\" % [start_y, flyer.global_position.y])\n\n\tvar test_player := CharacterBody2D.new()\n\ttest_player.add_to_group(\"player\")\n\tvar col := CollisionShape2D.new()\n\tvar shape := RectangleShape2D.new()\n\tshape.size = Vector2(32, 32)\n\tcol.shape = shape\n\ttest_player.add_child(col)\n\tmain.add_child(test_player)\n\ttest_player.global_position = flyer.global_position + Vector2(0.0, -30.0)\n\ttest_player.velocity = Vector2(0.0, 200.0)\n\n\tfor i in range(5):\n\t\ttest_player.move_and_slide()\n\t\tawait wait_physics_frames(1)\n\n\tcheck(\"flyer_bounce\", test_player.velocity.y < 0.0, \"Saltare in testa al nemico volante deve far rimbalzare il giocatore\")\n\tcheck(\"flyer_freed\", flyer.is_queued_for_deletion(), \"Il nemico volante deve essere eliminato quando viene schiacciato dall'alto\")\n\ttest_player.queue_free()",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar flyer := find_by_name(main, \"FlyingEnemy\") as CharacterBody2D\n\tif not check(\"flyer_exists\", flyer != null, \"Nella scena main.tscn deve esserci il nodo FlyingEnemy\"):\n\t\treturn\n\n\tvar start_y: float = flyer.global_position.y\n\tawait wait_physics_frames(25)\n\tcheck(\"gravity_zero\", absf(flyer.global_position.y - start_y) < 1.0, \"Il nemico volante non deve cadere verso il basso per effetto della gravità (partito a y=%.1f, ora a y=%.1f)\" % [start_y, flyer.global_position.y])\n\n\tvar test_player := CharacterBody2D.new()\n\ttest_player.add_to_group(\"player\")\n\tvar col := CollisionShape2D.new()\n\tvar shape := RectangleShape2D.new()\n\tshape.size = Vector2(16, 16)\n\tcol.shape = shape\n\ttest_player.add_child(col)\n\tmain.add_child(test_player)\n\ttest_player.global_position = flyer.global_position + Vector2(0.0, -40.0)\n\ttest_player.velocity = Vector2(0.0, 200.0)\n\n\tfor i in range(10):\n\t\tif flyer.is_queued_for_deletion():\n\t\t\tbreak\n\t\ttest_player.move_and_slide()\n\t\tawait wait_physics_frames(1)\n\n\tif not flyer.is_queued_for_deletion():\n\t\tcall_if_exists(flyer, \"_on_stomp_area_body_entered\", [test_player])\n\n\tcheck(\"flyer_bounce\", test_player.velocity.y < 0.0, \"Saltare in testa al nemico volante deve far rimbalzare il giocatore\")\n\tcheck(\"flyer_freed\", flyer.is_queued_for_deletion(), \"Il nemico volante deve essere eliminato quando viene schiacciato dall'alto\")\n\tif is_instance_valid(test_player):\n\t\ttest_player.queue_free()",
       "descrizione": "Il nemico volante mantiene la quota, inverte la direzione e può essere eliminato dall'alto"
      }
     ],
@@ -645,14 +659,15 @@
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare in testa al nemico volante deve far rimbalzare il giocatore\n  - Il nemico volante deve essere eliminato quando viene schiacciato dall'alto\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.6-flash"
    ]
   },
   "es3": {
