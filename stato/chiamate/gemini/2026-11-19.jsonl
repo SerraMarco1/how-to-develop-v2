@@ -42,3 +42,4 @@
 {"quando":1795093489605,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"livelli-e-sfondi","ok":true,"contata":true,"durataMs":13018,"tokenInput":7950,"tokenOutput":200,"ragionamento":1858}
 {"quando":1795093516473,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"livelli-e-sfondi","ok":true,"contata":true,"durataMs":11278,"tokenInput":7828,"tokenOutput":348,"ragionamento":1724}
 {"quando":1795093538096,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"livelli-e-sfondi","ok":true,"contata":true,"durataMs":14862,"tokenInput":8221,"tokenOutput":239,"ragionamento":2378}
+{"quando":1795093566927,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"particelle-2d","ok":true,"contata":true,"durataMs":559033,"tokenInput":21404,"tokenOutput":9028,"ragionamento":14223}
