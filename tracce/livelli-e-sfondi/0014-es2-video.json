@@ -1,0 +1,48 @@
+{
+ "n": 14,
+ "quando": "2026-11-19T13:05:16.442Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Esercizio 2: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Apri levels/background_parallax.tscn e premi F6, 6 s. Soggetti: «Sfondo» (esserci). Scritte: «Il piano lontano dello sfondo in parallasse». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 17 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 26839,
+ "dati": {
+  "copione": {
+   "scena": "res://levels/background_parallax.tscn",
+   "durata": 6,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "sfondo",
+     "cerca": {
+      "nome": "SpriteFar"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 5.5,
+     "deve": "esserci",
+     "etichetta": "Sfondo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il piano lontano dello sfondo in parallasse",
+     "da": 0.5,
+     "a": 5.5,
+     "soggetto": "sfondo"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "8596ab90489a4e3c038e884f2e7995ae40cfb48888cf38c0f9c01a4d69c1e3f0",
+   "estensione": "mp4",
+   "byte": 17363
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 13 s (7950 → 200 token)"
+ ]
+}

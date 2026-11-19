@@ -1936,41 +1936,35 @@
  "livelli-e-sfondi": {
   "es2": {
    "impronta": "5f1d868b23577d1b839cc89dd99a0bcc6dcc1f5938e623ea2f74d821edf72ef0",
-   "tentativi": 1,
-   "esito": "in corso",
+   "tentativi": 2,
+   "esito": "fatto",
    "regole": 2,
-   "ultimo": {
-    "copione": {
-     "scena": "res://levels/background_parallax.tscn",
-     "durata": 6,
-     "azioni": [],
-     "soggetti": [
-      {
-       "id": "background",
-       "cerca": {
-        "nome": "BackgroundParallax"
-       },
-       "quanti": 1,
-       "da": 0.5,
-       "a": 5.5,
-       "deve": "esserci",
-       "etichetta": "Sfondo"
-      }
-     ],
-     "scritte": [
-      {
-       "testo": "I tre piani dello sfondo sono visibili",
-       "da": 0.5,
-       "a": 5.5,
-       "soggetto": "background"
-      }
-     ]
-    },
-    "problemi": [
-     "Soggetto «background» (nome = BackgroundParallax; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+   "copione": {
+    "scena": "res://levels/background_parallax.tscn",
+    "durata": 6,
+    "azioni": [],
+    "soggetti": [
+     {
+      "id": "sfondo",
+      "cerca": {
+       "nome": "SpriteFar"
+      },
+      "quanti": 1,
+      "da": 0.5,
+      "a": 5.5,
+      "deve": "esserci",
+      "etichetta": "Sfondo"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "Il piano lontano dello sfondo in parallasse",
+      "da": 0.5,
+      "a": 5.5,
+      "soggetto": "sfondo"
+     }
     ]
-   },
-   "motivo": "Soggetto «background» (nome = BackgroundParallax; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+   }
   }
  }
 }
