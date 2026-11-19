@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-19T12:15:55.450Z",
+ "aggiornato": "2026-11-19T13:06:05.103Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1168,10 +1168,10 @@
    "slug": "livelli-e-sfondi",
    "numero": "8.9",
    "titolo": "Livelli: terreni, sfondi in profondità, più livelli",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/livelli-e-sfondi.json",
-   "sha256": "9544d62f7d2b0812d6041c2c293f94c28af3fa82a6325627044b09fd74aa77bc",
-   "byte": 178195
+   "sha256": "e97001e75607bff62c6b1368d7b2c8f4af66b4bb8472baf52f3a75b0e35d403c",
+   "byte": 179453
   }
  ],
  "documentazione": {

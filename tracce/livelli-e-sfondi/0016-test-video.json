@@ -1,0 +1,65 @@
+{
+ "n": 16,
+ "quando": "2026-11-19T13:06:05.011Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "ok",
+ "titolo": "Test: video del risultato atteso registrato",
+ "spiegazione": "Copione di gemini/gemini-flash-lite-latest: Avvia il gioco con F5, 8 s. Soggetti: «Giocatore» (esserci), «Traguardo» (esserci). Scritte: «Il livello 1 avvia il gioco con il giocatore» · «Il traguardo permette di passare al livello 2». I soggetti si vedono come dice il copione, nei fotogrammi c'è ciò che Godot misura, e sul progetto di prima il copione non passa. Video 28 KB.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 26916,
+ "dati": {
+  "copione": {
+   "scena": "res://levels/level_1.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "classe": "CharacterBody2D"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 0.6,
+     "deve": "esserci",
+     "etichetta": "Giocatore"
+    },
+    {
+     "id": "goal",
+     "cerca": {
+      "nome": "Goal"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Traguardo"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il livello 1 avvia il gioco con il giocatore",
+     "da": 0,
+     "a": 0.6,
+     "soggetto": "player"
+    },
+    {
+     "testo": "Il traguardo permette di passare al livello 2",
+     "da": 1,
+     "a": 7.5,
+     "soggetto": "goal"
+    }
+   ]
+  },
+  "media": {
+   "sha256": "e0d8792c69fdc294c575b6bf01fbebfb466ce5bfedb11f332e9ff6eaa649c85f",
+   "estensione": "mp4",
+   "byte": 28200
+  }
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 15 s (8221 → 239 token)"
+ ]
+}
