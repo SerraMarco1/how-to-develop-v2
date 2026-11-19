@@ -1015,7 +1015,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar normal_enemy := find_by_name(main, \"BeetleNormal\") as CharacterBody2D\n\tvar spiky_enemy := find_by_name(main, \"BeetleSpiky\") as CharacterBody2D\n\n\tif not check(\"nodes\", player != null and normal_enemy != null and spiky_enemy != null, \"Nella scena devono esserci Player, BeetleNormal e BeetleSpiky\"):\n\t\treturn\n\n\t# 1. Verifica che BeetleNormal si giri al bordo e non cada\n\tvar start_y: float = normal_enemy.global_position.y\n\tawait wait_physics_frames(60)\n\tcheck(\"edge_turn\", absf(normal_enemy.global_position.y - start_y) < 5.0, \"BeetleNormal deve invertire la marcia sui bordi della piattaforma senza cadere nel vuoto\")\n\n\t# 2. Test schiacciata su BeetleNormal (is_spiky = false)\n\tplayer.velocity = Vector2(0.0, 150.0)\n\tplayer.global_position = normal_enemy.global_position + Vector2(0.0, -16.0)\n\tawait wait_physics_frames(1)\n\n\tcheck(\"normal_bounce\", player.velocity.y < 0.0, \"Saltare sul coleottero normale deve far rimbalzare il giocatore (velocity.y è %.1f)\" % player.velocity.y)\n\tcheck(\"normal_destroyed\", normal_enemy.is_queued_for_deletion(), \"Il coleottero normale deve essere eliminato con queue_free()\")\n\n\t# 3. Test schiacciata su BeetleSpiky (is_spiky = true)\n\tvar initial_health: int = get_prop(player, \"health\", 3)\n\tplayer.velocity = Vector2(0.0, 150.0)\n\tplayer.global_position = spiky_enemy.global_position + Vector2(0.0, -16.0)\n\tawait wait_physics_frames(4)\n\n\tvar current_health: int = get_prop(player, \"health\", 3)\n\tcheck(\"spiky_hurts\", current_health < initial_health, \"Saltare sugli aculei di BeetleSpiky deve infliggere danno al giocatore\")\n\tcheck(\"spiky_survives\", not spiky_enemy.is_queued_for_deletion(), \"BeetleSpiky non deve essere distrutto quando viene schiacciato\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar normal_enemy := find_by_name(main, \"BeetleNormal\") as CharacterBody2D\n\tvar spiky_enemy := find_by_name(main, \"BeetleSpiky\") as CharacterBody2D\n\n\tif not check(\"nodes\", player != null and normal_enemy != null and spiky_enemy != null, \"Nella scena devono esserci Player, BeetleNormal e BeetleSpiky\"):\n\t\treturn\n\n\t# 1. Verifica che BeetleNormal si giri al bordo e non cada\n\tvar start_y: float = normal_enemy.global_position.y\n\tawait wait_physics_frames(60)\n\tcheck(\"edge_turn\", absf(normal_enemy.global_position.y - start_y) < 5.0, \"BeetleNormal deve invertire la marcia sui bordi della piattaforma senza cadere nel vuoto\")\n\n\t# 2. Test schiacciata su BeetleNormal (is_spiky = false)\n\tplayer.velocity = Vector2(0.0, 150.0)\n\tplayer.global_position = normal_enemy.global_position + Vector2(0.0, -34.0)\n\tawait wait_physics_frames(2)\n\n\tcheck(\"normal_bounce\", player.velocity.y < 0.0, \"Saltare sul coleottero normale deve far rimbalzare il giocatore (velocity.y è %.1f)\" % player.velocity.y)\n\tcheck(\"normal_destroyed\", not is_instance_valid(normal_enemy) or normal_enemy.is_queued_for_deletion(), \"Il coleottero normale deve essere eliminato con queue_free()\")\n\n\t# 3. Test schiacciata su BeetleSpiky (is_spiky = true)\n\tvar initial_health = get_prop(player, \"health\", 5)\n\tplayer.velocity = Vector2(0.0, 150.0)\n\tplayer.global_position = spiky_enemy.global_position + Vector2(0.0, -34.0)\n\tawait wait_physics_frames(2)\n\n\tvar current_health = get_prop(player, \"health\", 5)\n\tcheck(\"spiky_hurts\", int(current_health) < int(initial_health), \"Saltare sugli aculei di BeetleSpiky deve infliggere danno al giocatore\")\n\tcheck(\"spiky_survives\", is_instance_valid(spiky_enemy) and not spiky_enemy.is_queued_for_deletion(), \"BeetleSpiky non deve essere distrutto quando viene schiacciato\")",
       "descrizione": "Il nemico si gira ai bordi, la variante normale viene eliminata dal salto e quella spinata ferisce il giocatore"
      }
     ],
@@ -1131,19 +1131,22 @@
       "impostazioni": []
      },
      "spiegazione": "Per evitare che il coleottero cada nel vuoto, la condizione di inversione unisce l'urto contro un ostacolo (`is_on_wall()`) con l'assenza di terreno rilevata da `EdgeDetector` (`is_on_floor() and not edge_detector.is_colliding()`). Nella funzione `_turn_around()` la coordinata X di `EdgeDetector` viene aggiornata moltiplicando per la direzione corrente, garantendo che la scansione del pavimento avvenga sempre davanti al nemico. All'interno di `_on_stomp_area_body_entered`, il parametro esportato `is_spiky` differenzia il comportamento: se il coleottero è spinato infligge danno al giocatore respingendo l'attacco; se invece non è spinato, concede il rimbalzo verticale ed elimina il nemico con `queue_free()`.",
-     "cambiati": [],
+     "cambiati": [
+      "beetle_enemy.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "estendi",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare sul coleottero normale deve far rimbalzare il giocatore (velocity.y è 0.0)\n  - Il coleottero normale deve essere eliminato con queue_free()\n  - Saltare sugli aculei di BeetleSpiky deve infliggere danno al giocatore\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
-    "gemini/gemini-flash-lite-latest"
+    "gemini/gemini-flash-lite-latest",
+    "gemini/gemini-3.7-flash"
    ]
   }
  },
