@@ -1,0 +1,185 @@
+{
+ "n": 80,
+ "quando": "2026-11-19T08:45:35.232Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 3 (estendi): 1 problema",
+ "spiegazione": "«La torretta nemica: proiettili a intervalli», scritto da gemini/gemini-flash-lite-latest. 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare sulla torretta deve far rimbalzare il giocatore\n  - La torretta deve essere eliminata con queue_free quando viene schiacciata\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 2 di 2), questa volta un modello diverso.",
+ "richieste": 0,
+ "durataMs": 12695,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare sulla torretta deve far rimbalzare il giocatore\n  - La torretta deve essere eliminata con queue_free quando viene schiacciata\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "estendi",
+   "titolo": "La torretta nemica: proiettili a intervalli",
+   "consegna": "Ricevi il progetto `TorrettaGuardia`, in cui un altro sviluppatore ha predisposto un livello con un personaggio giocabile e una torretta nemica (`ShooterEnemy`), ma ha lasciato incompleta la logica di fuoco e non ha inserito la possibilità di schiacciare il nemico dall'alto.\n\nCompleta il progetto aggiungendo le seguenti funzioni senza rompere il movimento del giocatore e la struttura esistente:\n\n1. In `res://shooter_enemy.gd`:\n   - In `_ready()`, imposta `shoot_timer.wait_time = shoot_interval`, connetti il segnale `timeout` di `shoot_timer` alla funzione `shoot()` e assicurati che il timer parta con `shoot_timer.start()`.\n   - Completa la funzione `shoot()`: controlla che `bullet_scene` sia valido; se sì, istanzia una copia con `bullet_scene.instantiate()`, aggiungila come figlia del nodo genitore della torretta (`get_parent().add_child(bullet)`), imposta la sua `global_position` uguale a quella della torretta e assegna alla proprietà `direction` del proiettile il valore di `shoot_direction`.\n2. In `res://shooter_enemy.tscn` aggiungi un'Area2D chiamata `StompArea` con un `CollisionShape2D` rettangolare (`Vector2(24, 8)`, posizione `Vector2(0, -14)`). Nello script `shooter_enemy.gd`, connetti il segnale `body_entered` di `StompArea`: se un `CharacterBody2D` entra con velocità verso il basso (`body.velocity.y > 0.0`), imposta `body.velocity.y = -300.0` ed elimina la torretta con `queue_free()`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "torretta-guardia",
+   "passiGuida": [],
+   "suggerimenti": [
+    "In `shoot()`, usa `bullet_scene.instantiate()` per creare il nuovo proiettile, aggiungilo con `get_parent().add_child(bullet)` e scrivi `bullet.global_position = global_position` prima di assegnare la proprietà `direction`.",
+    "Ricorda di verificare `if is_queued_for_deletion(): return` prima di gestire il contatto in `StompArea`, per evitare chiamate ripetute mentre il nodo viene rimosso."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://shooter_enemy.tscn",
+     "tipoNodo": "Area2D",
+     "nome": "StompArea",
+     "descrizione": "La scena shooter_enemy.tscn possiede un'Area2D chiamata StompArea"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\n\tvar shooter := find_by_name(main, \"ShooterEnemy\") as StaticBody2D\n\tif not check(\"shooter\", shooter != null, \"Il nodo ShooterEnemy deve essere presente\"):\n\t\treturn\n\n\t# Aspetta che la torretta spari almeno un proiettile\n\tawait wait_seconds(1.6)\n\tvar found_bullet: bool = false\n\tfor child in main.get_children():\n\t\tif child.name.begins_with(\"Bullet\") or child.is_in_group(\"bullets\") or (child.has_method(\"_physics_process\") and \"direction\" in child):\n\t\t\tfound_bullet = true\n\t\t\tbreak\n\tcheck(\"bullet_spawned\", found_bullet, \"La torretta deve generare e aggiungere alla scena un'istanza di bullet_scene allo scadere del timer\")\n\n\t# Verifica eliminazione con schiacciata dall'alto\n\tvar stomp := shooter.get_node_or_null(\"StompArea\") as Area2D\n\tif not check(\"stomp_exists\", stomp != null, \"ShooterEnemy deve avere il nodo StompArea\"):\n\t\treturn\n\n\tplayer.global_position = shooter.global_position + Vector2(0.0, -40.0)\n\tplayer.velocity = Vector2(0.0, 300.0)\n\tawait wait_physics_frames(10)\n\n\tcheck(\"player_bounce\", player.velocity.y < 0.0, \"Saltare sulla torretta deve far rimbalzare il giocatore\")\n\tcheck(\"shooter_destroyed\", shooter.is_queued_for_deletion(), \"La torretta deve essere eliminata con queue_free quando viene schiacciata\")\n",
+     "descrizione": "La torretta spara proiettili a intervalli regolari e viene distrutta se schiacciata dall'alto"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "TorrettaGuardia",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space",
+        "Up"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TorrettaGuardia\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "bullet.gd",
+      "contenuto": "class_name Bullet\nextends Area2D\n\n@export var speed: float = 180.0\nvar direction: float = -1.0\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tposition.x += direction * speed * delta\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tbody.take_damage(1)\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "bullet.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/bullet.png\" id=\"2_texture\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_bullet\"]\nsize = Vector2(8, 8)\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_texture\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_bullet\")\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 200.0\n@export var jump_velocity: float = -380.0\nvar gravity: float = 980.0\nvar health: int = 3\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"player\")\n\n\nfunc take_damage(amount: int) -> void:\n\thealth -= amount\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = jump_velocity\n\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * speed\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player.png\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(28, 30)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+     },
+     {
+      "percorso": "shooter_enemy.gd",
+      "contenuto": "class_name ShooterEnemy\nextends StaticBody2D\n\n@export var bullet_scene: PackedScene\n@export var shoot_interval: float = 1.5\n@export var shoot_direction: float = -1.0\n\n@onready var shoot_timer: Timer = $ShootTimer\n\n\nfunc _ready() -> void:\n\t# TODO: Imposta il timer e connettilo a shoot()\n\tpass\n\n\nfunc shoot() -> void:\n\t# TODO: Istanzia bullet_scene e configuralo\n\tpass\n"
+     },
+     {
+      "percorso": "shooter_enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://shooter_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n[ext_resource type=\"PackedScene\" path=\"res://bullet.tscn\" id=\"3_bullet\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[node name=\"ShooterEnemy\" type=\"StaticBody2D\"]\nscript = ExtResource(\"1_script\")\nbullet_scene = ExtResource(\"3_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"ShootTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 1.5\nautostart = true\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://shooter_enemy.tscn\" id=\"2_shooter\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(600, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(300, 350)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(80, 320)\n\n[node name=\"ShooterEnemy\" parent=\".\" instance=ExtResource(\"2_shooter\")]\nposition = Vector2(450, 320)\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TorrettaGuardia\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "bullet.gd",
+      "contenuto": "class_name Bullet\nextends Area2D\n\n@export var speed: float = 180.0\nvar direction: float = -1.0\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tposition.x += direction * speed * delta\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tbody.take_damage(1)\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "bullet.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://bullet.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/bullet.png\" id=\"2_texture\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_bullet\"]\nsize = Vector2(8, 8)\n\n[node name=\"Bullet\" type=\"Area2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_texture\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_bullet\")\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 200.0\n@export var jump_velocity: float = -380.0\nvar gravity: float = 980.0\nvar health: int = 3\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"player\")\n\n\nfunc take_damage(amount: int) -> void:\n\thealth -= amount\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = jump_velocity\n\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * speed\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player.png\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(28, 30)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+     },
+     {
+      "percorso": "shooter_enemy.gd",
+      "contenuto": "class_name ShooterEnemy\nextends StaticBody2D\n\n@export var bullet_scene: PackedScene\n@export var shoot_interval: float = 1.5\n@export var shoot_direction: float = -1.0\n\n@onready var shoot_timer: Timer = $ShootTimer\n@onready var stomp_area: Area2D = $StompArea\n\n\nfunc _ready() -> void:\n\tif shoot_timer:\n\t\tshoot_timer.wait_time = shoot_interval\n\t\tshoot_timer.timeout.connect(shoot)\n\t\tshoot_timer.start()\n\n\tif stomp_area:\n\t\tstomp_area.body_entered.connect(_on_stomp_area_body_entered)\n\n\nfunc shoot() -> void:\n\tif not bullet_scene:\n\t\treturn\n\n\tvar bullet := bullet_scene.instantiate()\n\tget_parent().add_child(bullet)\n\tbullet.global_position = global_position\n\tif \"direction\" in bullet:\n\t\tbullet.direction = shoot_direction\n\n\nfunc _on_stomp_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body is CharacterBody2D and body.velocity.y > 0.0:\n\t\tbody.velocity.y = -300.0\n\t\tqueue_free()\n"
+     },
+     {
+      "percorso": "shooter_enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://shooter_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n[ext_resource type=\"PackedScene\" path=\"res://bullet.tscn\" id=\"3_bullet\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_stomp\"]\nsize = Vector2(24, 8)\n\n[node name=\"ShooterEnemy\" type=\"StaticBody2D\"]\nscript = ExtResource(\"1_script\")\nbullet_scene = ExtResource(\"3_bullet\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"ShootTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 1.5\nautostart = true\n\n[node name=\"StompArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, -14)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"StompArea\"]\nshape = SubResource(\"RectangleShape2D_stomp\")\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://shooter_enemy.tscn\" id=\"2_shooter\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(600, 32)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(300, 350)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(80, 320)\n\n[node name=\"ShooterEnemy\" parent=\".\" instance=ExtResource(\"2_shooter\")]\nposition = Vector2(450, 320)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "TorrettaGuardia",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space",
+        "Up"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "La funzione `shoot()` genera un proiettile tramite `bullet_scene.instantiate()`, lo colloca nella gerarchia del livello con `get_parent().add_child(bullet)` e ne fissa coordinate e direzione orizzontale. Il nodo `ShootTimer` chiama ciclicamente questa funzione al segnale `timeout`. Inoltre, l'area `StompArea` permette di applicare il rimbalzo verticale al giocatore distruggendo la torretta tramite `queue_free()` quando viene colpita dall'alto.",
+    "cambiati": [
+     "shooter_enemy.gd",
+     "shooter_enemy.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es3"
+  }
+ },
+ "chiamate": []
+}
