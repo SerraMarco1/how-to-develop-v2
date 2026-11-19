@@ -444,7 +444,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -579,15 +579,234 @@
    "genere": "obiettivo",
    "correzioni": 2,
    "semplificato": true,
-   "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare in testa al nemico volante deve far rimbalzare il giocatore\n  - Il nemico volante deve essere eliminato quando viene schiacciato dall'alto\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-flash-latest",
     "gemini/gemini-flash-lite-latest",
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Il nemico volante: pattugliare a mezz'aria",
+    "consegna": "Aggiungi al gioco «Salti» un nemico volante che pattuglia a mezz'aria senza gravità, invertendo la marcia a tempo o all'impatto con un muro:\n\n1. Crea la scena `res://enemies/flying_enemy.tscn` con radice `CharacterBody2D` chiamata `FlyingEnemy` e script `res://enemies/flying_enemy.gd`.\n2. La scena deve contenere:\n   - Uno `Sprite2D` con texture `res://assets/sprites/enemy.png`.\n   - Un `CollisionShape2D` con forma `RectangleShape2D` (dimensione `Vector2(28, 28)`).\n   - Un `Timer` chiamato `PatrolTimer`, con `autostart` attivo e durata di default `2.0` secondi.\n   - Un'Area2D chiamata `StompArea` sulla parte superiore (`RectangleShape2D` di dimensioni `Vector2(24, 8)`, posizione `Vector2(0, -14)`).\n   - Un'Area2D chiamata `HitArea` attorno al corpo (`RectangleShape2D` di dimensioni `Vector2(28, 20)`, posizione `Vector2(0, 4)`).\n3. Nello script `res://enemies/flying_enemy.gd` esporta `speed: float = 80.0`, `patrol_time: float = 2.0`, `bounce_impulse: float = -320.0` e `damage: int = 1`:\n   - Il nemico mantiene una quota costante (`velocity.y = 0.0`) e viaggia in orizzontale a velocità `speed * direction`.\n   - Quando scade `PatrolTimer`, o quando il nemico tocca un muro (`is_on_wall()`), inverte `direction`, aggiorna `sprite.flip_h` e riavvia `PatrolTimer` con durata `patrol_time`.\n   - Se il giocatore ci salta sopra dall'alto entrando in `StompArea` con `velocity.y > 0.0`, riceve la spinta `bounce_impulse` verso l'alto e il nemico viene eliminato con `queue_free()`.\n   - Se il giocatore entra in `HitArea`, subisce danno tramite `body.take_damage(damage)`.\n4. In `res://main.tscn`, istanzia `res://enemies/flying_enemy.tscn` come figlio di `Main` con il nome `FlyingEnemy` alla posizione `Vector2(250, 240)`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "salti",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per mantenere la quota non sommare la gravità a `velocity.y`: basta mantenere `velocity.y = 0.0` e calcolare solo `velocity.x = direction * speed` prima di chiamare `move_and_slide()`.",
+     "Collega il segnale `timeout` di `PatrolTimer` a una funzione di inversione della direzione (`direction *= -1.0`). Se l'inversione avviene perché `is_on_wall()` è vero, chiama `patrol_timer.start()` per ripartire da capo con il conteggio.",
+     "La gestione di `StompArea` e `HitArea` segue la stessa logica di `WalkerEnemy`: controlla `body.velocity.y > 0.0` su `StompArea` per applicare `bounce_impulse` ed eliminare il nemico con `queue_free()`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://enemies/flying_enemy.tscn",
+      "descrizione": "Il file res://enemies/flying_enemy.tscn esiste nel progetto"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://enemies/flying_enemy.gd",
+      "descrizione": "Lo script res://enemies/flying_enemy.gd esiste nel progetto"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "CharacterBody2D",
+      "nome": "FlyingEnemy",
+      "genitore": "Main",
+      "descrizione": "La scena main.tscn contiene un'istanza di FlyingEnemy"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://enemies/flying_enemy.tscn",
+      "tipoNodo": "Timer",
+      "nome": "PatrolTimer",
+      "descrizione": "La scena flying_enemy.tscn contiene un Timer chiamato PatrolTimer"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://enemies/flying_enemy.tscn",
+      "tipoNodo": "Area2D",
+      "nome": "StompArea",
+      "descrizione": "La scena flying_enemy.tscn contiene un'Area2D chiamata StompArea"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar flyer := find_by_name(main, \"FlyingEnemy\") as CharacterBody2D\n\tif not check(\"flyer_exists\", flyer != null, \"Nella scena main.tscn deve esserci il nodo FlyingEnemy\"):\n\t\treturn\n\n\tvar start_y: float = flyer.global_position.y\n\tawait wait_physics_frames(20)\n\tcheck(\"gravity_zero\", absf(flyer.global_position.y - start_y) < 1.0, \"Il nemico volante non deve cadere verso il basso per effetto della gravità (partito a y=%.1f, ora a y=%.1f)\" % [start_y, flyer.global_position.y])\n\n\tvar test_player := CharacterBody2D.new()\n\ttest_player.velocity = Vector2(0.0, 200.0)\n\n\tif has_function(flyer, \"_on_stomp_area_body_entered\"):\n\t\tflyer.call(\"_on_stomp_area_body_entered\", test_player)\n\n\tcheck(\"flyer_bounce\", test_player.velocity.y < 0.0, \"Saltare in testa al nemico volante deve far rimbalzare il giocatore (velocity.y = %.1f)\" % test_player.velocity.y)\n\tcheck(\"flyer_freed\", flyer.is_queued_for_deletion(), \"Il nemico volante deve essere eliminato quando viene schiacciato dall'alto\")\n\n\tif is_instance_valid(test_player):\n\t\ttest_player.free()\n",
+      "descrizione": "Il nemico volante mantiene la quota e reagisce se schiacciato dall'alto"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Salti\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nattack={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":74,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\ncrouch={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "player/state.gd",
+       "contenuto": "class_name State\nextends Node\n\nsignal transitioned(state: State, new_state_name: String)\n\n\nfunc enter() -> void:\n\tpass\n\n\nfunc exit() -> void:\n\tpass\n\n\nfunc update(_delta: float) -> void:\n\tpass\n\n\nfunc physics_update(_delta: float) -> void:\n\tpass\n"
+      },
+      {
+       "percorso": "player/state_machine.gd",
+       "contenuto": "class_name StateMachine\nextends Node\n\n@export var initial_state: State\n\nvar current_state: State\nvar states: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tawait owner.ready\n\tfor child in get_children():\n\t\tif child is State:\n\t\t\tstates[child.name.to_lower()] = child\n\t\t\tchild.transitioned.connect(_on_child_transitioned)\n\n\tif initial_state:\n\t\tinitial_state.enter()\n\t\tcurrent_state = initial_state\n\n\nfunc _process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.update(delta)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.physics_update(delta)\n\n\nfunc _on_child_transitioned(state: State, new_state_name: String) -> void:\n\tif state != current_state:\n\t\treturn\n\n\tvar new_state: State = states.get(new_state_name.to_lower())\n\tif not new_state:\n\t\treturn\n\n\tif current_state:\n\t\tcurrent_state.exit()\n\n\tnew_state.enter()\n\tcurrent_state = new_state\n"
+      },
+      {
+       "percorso": "player/player_jump_state.gd",
+       "contenuto": "class_name PlayerJumpState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"jump\")\n\tplayer.velocity.y = player.jump_velocity\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif Input.is_action_just_released(\"jump\") and player.velocity.y < 0.0:\n\t\tplayer.velocity.y *= 0.5\n\n\tif player.velocity.y >= 0.0:\n\t\ttransitioned.emit(self, \"fall\")\n"
+      },
+      {
+       "percorso": "player/player_fall_state.gd",
+       "contenuto": "class_name PlayerFallState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"fall\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif player.is_on_floor():\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+      },
+      {
+       "percorso": "player/player_idle_state.gd",
+       "contenuto": "class_name PlayerIdleState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.apply_movement(0.0, delta)\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_pressed(\"crouch\"):\n\t\ttransitioned.emit(self, \"crouch\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\ttransitioned.emit(self, \"jump\")\n\t\treturn\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tif direction != 0.0:\n\t\ttransitioned.emit(self, \"run\")\n"
+      },
+      {
+       "percorso": "player/player_run_state.gd",
+       "contenuto": "class_name PlayerRunState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"run\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_pressed(\"crouch\"):\n\t\ttransitioned.emit(self, \"crouch\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\ttransitioned.emit(self, \"jump\")\n\t\treturn\n\n\tif direction == 0.0 and absf(player.velocity.x) < 1.0:\n\t\ttransitioned.emit(self, \"idle\")\n"
+      },
+      {
+       "percorso": "objects/sign.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"Animation\" id=\"Animation_reset\"]\nresource_name = \"RESET\"\nlength = 0.001\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:rotation\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 0,\n\"values\": [0.0]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_swing\"]\nresource_name = \"swing\"\nlength = 2.0\nloop_mode = 1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:rotation\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.5, 1.5, 2),\n\"transitions\": PackedFloat32Array(1, 1, 1, 1),\n\"update\": 0,\n\"values\": [0.0, 0.2, -0.2, 0.0]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_sign\"]\n_data = {\n&\"RESET\": SubResource(\"Animation_reset\"),\n&\"swing\": SubResource(\"Animation_swing\")\n}\n\n[node name=\"Sign\" type=\"Node2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n&\"\": SubResource(\"AnimationLibrary_sign\")\n}\nautoplay = \"swing\"\n"
+      },
+      {
+       "percorso": "objects/door.gd",
+       "contenuto": "class_name Door\nextends StaticBody2D\n\nvar is_open: bool = false\n\n@onready var animation_player: AnimationPlayer = $AnimationPlayer\n\n\nfunc open() -> void:\n\tif animation_player:\n\t\tanimation_player.play(\"open\")\n\n\nfunc door_opened() -> void:\n\tis_open = true\n"
+      },
+      {
+       "percorso": "objects/door.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/door.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_door\"]\nsize = Vector2(32, 96)\n\n[sub_resource type=\"Animation\" id=\"Animation_reset\"]\nresource_name = \"RESET\"\nlength = 0.001\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:position\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 0,\n\"values\": [Vector2(0, 0)]\n}\ntracks/1/type = \"value\"\ntracks/1/imported = false\ntracks/1/enabled = true\ntracks/1/path = NodePath(\"CollisionShape2D:disabled\")\ntracks/1/interp = 1\ntracks/1/loop_wrap = true\ntracks/1/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 1,\n\"values\": [false]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_open\"]\nresource_name = \"open\"\nlength = 0.6\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:position\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.6),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 0,\n\"values\": [Vector2(0, 0), Vector2(0, -96)]\n}\ntracks/1/type = \"value\"\ntracks/1/imported = false\ntracks/1/enabled = true\ntracks/1/path = NodePath(\"CollisionShape2D:disabled\")\ntracks/1/interp = 1\ntracks/1/loop_wrap = true\ntracks/1/keys = {\n\"times\": PackedFloat32Array(0, 0.6),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 1,\n\"values\": [false, true]\n}\ntracks/2/type = \"method\"\ntracks/2/imported = false\ntracks/2/enabled = true\ntracks/2/path = NodePath(\".\")\ntracks/2/interp = 1\ntracks/2/loop_wrap = true\ntracks/2/keys = {\n\"times\": PackedFloat32Array(0.6),\n\"transitions\": PackedFloat32Array(1),\n\"values\": [{\n\"args\": [],\n\"method\": &\"door_opened\"\n}]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_door\"]\n_data = {\n&\"RESET\": SubResource(\"Animation_reset\"),\n&\"open\": SubResource(\"Animation_open\")\n}\n\n[node name=\"Door\" type=\"StaticBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.75)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_door\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n&\"\": SubResource(\"AnimationLibrary_door\")\n}\n"
+      },
+      {
+       "percorso": "objects/moving_platform.gd",
+       "contenuto": "class_name MovingPlatform\nextends AnimatableBody2D\n\n@export var move_offset: Vector2 = Vector2(200.0, 0.0)\n@export var speed: float = 80.0\n\nvar _start_position: Vector2\nvar _target_position: Vector2\nvar _moving_to_target: bool = true\n\n\nfunc _ready() -> void:\n\t_start_position = global_position\n\t_target_position = _start_position + move_offset\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar destination := _target_position if _moving_to_target else _start_position\n\tglobal_position = global_position.move_toward(destination, speed * delta)\n\n\tif global_position.distance_to(destination) < 1.0:\n\t\t_moving_to_target = not _moving_to_target\n"
+      },
+      {
+       "percorso": "objects/moving_platform.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/moving_platform.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_platform\"]\nsize = Vector2(192, 32)\n\n[node name=\"MovingPlatform\" type=\"AnimatableBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(1.5, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_platform\")\n"
+      },
+      {
+       "percorso": "objects/one_way_platform.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_oneway\"]\nsize = Vector2(128, 12.8)\n\n[node name=\"OneWayPlatform\" type=\"StaticBody2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(1.0, 0.1)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_oneway\")\none_way_collision = true\n"
+      },
+      {
+       "percorso": "player/player_crouch_state.gd",
+       "contenuto": "class_name PlayerCrouchState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\tplayer.velocity.x = 0.0\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.move_and_slide()\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\tplayer.position.y += 2.0\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif not Input.is_action_pressed(\"crouch\"):\n\t\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+      },
+      {
+       "percorso": "objects/ladder.gd",
+       "contenuto": "class_name Ladder\nextends Area2D\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body is CharacterBody2D and \"is_on_ladder\" in body:\n\t\tbody.is_on_ladder = true\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body is CharacterBody2D and \"is_on_ladder\" in body:\n\t\tbody.is_on_ladder = false\n"
+      },
+      {
+       "percorso": "objects/ladder.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/ladder.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_ladder\"]\nsize = Vector2(32, 192)\n\n[node name=\"Ladder\" type=\"Area2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 1.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_ladder\")\n"
+      },
+      {
+       "percorso": "objects/hazard.gd",
+       "contenuto": "class_name Hazard\nextends Area2D\n\n@export var damage: int = 1\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.has_method(\"take_damage\"):\n\t\tbody.take_damage(damage)\n"
+      },
+      {
+       "percorso": "objects/hazard.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/hazard.gd\" id=\"1_hazard\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hazard\"]\nsize = Vector2(32, 32)\n\n[node name=\"Hazard\" type=\"Area2D\"]\nscript = ExtResource(\"1_hazard\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_hazard\")\n"
+      },
+      {
+       "percorso": "objects/checkpoint.gd",
+       "contenuto": "class_name Checkpoint\nextends Area2D\n\nsignal activated(new_position: Vector2)\n\nvar is_active: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif is_active:\n\t\treturn\n\n\tif body.is_in_group(\"player\"):\n\t\tis_active = true\n\t\tactivated.emit(global_position)\n"
+      },
+      {
+       "percorso": "objects/checkpoint.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/checkpoint.gd\" id=\"1_checkpoint\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_checkpoint\"]\nsize = Vector2(32, 32)\n\n[node name=\"Checkpoint\" type=\"Area2D\"]\nscript = ExtResource(\"1_checkpoint\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_checkpoint\")\n"
+      },
+      {
+       "percorso": "player/player.gd",
+       "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 200.0\n@export var jump_velocity: float = -400.0\n\nvar gravity: float = 980.0\nvar spawn_position: Vector2\nvar is_dead: bool = false\n\n@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"player\")\n\tspawn_position = global_position\n\n\nfunc take_damage(_amount: int) -> void:\n\tif is_dead:\n\t\treturn\n\tis_dead = true\n\tvelocity = Vector2.ZERO\n\tset_physics_process(false)\n\tawait get_tree().create_timer(1.0).timeout\n\trespawn()\n\n\nfunc respawn() -> void:\n\tglobal_position = spawn_position\n\tvelocity = Vector2.ZERO\n\tis_dead = false\n\tset_physics_process(true)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = jump_velocity\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tif direction != 0.0:\n\t\tvelocity.x = direction * speed\n\t\tif animated_sprite:\n\t\t\tanimated_sprite.flip_h = direction < 0.0\n\telse:\n\t\tvelocity.x = move_toward(velocity.x, 0.0, speed)\n\n\tmove_and_slide()\n"
+      },
+      {
+       "percorso": "player/player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player/player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player_sheet.png\" id=\"2_sheet\"]\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle_0\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(0, 0, 32, 32)\n\n[sub_resource type=\"AtlasTexture\" id=\"AtlasTexture_idle_1\"]\natlas = ExtResource(\"2_sheet\")\nregion = Rect2(32, 0, 32, 32)\n\n[sub_resource type=\"SpriteFrames\" id=\"SpriteFrames_player\"]\nanimations = [{\n\"frames\": [{\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle_0\")\n}, {\n\"duration\": 1.0,\n\"texture\": SubResource(\"AtlasTexture_idle_1\")\n}],\n\"loop\": true,\n\"name\": &\"idle\",\n\"speed\": 5.0\n}]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(32, 32)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"AnimatedSprite2D\" type=\"AnimatedSprite2D\" parent=\".\"]\nsprite_frames = SubResource(\"SpriteFrames_player\")\nanimation = &\"idle\"\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+      },
+      {
+       "percorso": "enemies/walker_enemy.gd",
+       "contenuto": "class_name WalkerEnemy\nextends CharacterBody2D\n\n@export var speed: float = 60.0\n@export var gravity: float = 980.0\n@export var bounce_impulse: float = -320.0\n@export var damage: int = 1\n\nvar direction: float = 1.0\n\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var edge_detector: RayCast2D = $EdgeDetector\n@onready var stomp_area: Area2D = $StompArea\n@onready var hit_area: Area2D = $HitArea\n\n\nfunc _ready() -> void:\n\tif stomp_area:\n\t\tstomp_area.body_entered.connect(_on_stomp_area_body_entered)\n\tif hit_area:\n\t\thit_area.body_entered.connect(_on_hit_area_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif is_on_wall() or (is_on_floor() and edge_detector and not edge_detector.is_colliding()):\n\t\t_turn_around()\n\n\tvelocity.x = direction * speed\n\tmove_and_slide()\n\n\nfunc _turn_around() -> void:\n\tdirection *= -1.0\n\tif sprite:\n\t\tsprite.flip_h = direction < 0.0\n\tif edge_detector:\n\t\tedge_detector.position.x = absf(edge_detector.position.x) * direction\n\n\nfunc _on_stomp_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body is CharacterBody2D and body.velocity.y > 0.0:\n\t\tbody.velocity.y = bounce_impulse\n\t\tqueue_free()\n\n\nfunc _on_hit_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tif body is CharacterBody2D and body.velocity.y > 0.0 and body.global_position.y < global_position.y:\n\t\t\treturn\n\t\tbody.take_damage(damage)\n"
+      },
+      {
+       "percorso": "enemies/walker_enemy.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemies/walker_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_stomp\"]\nsize = Vector2(24, 8)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(28, 20)\n\n[node name=\"WalkerEnemy\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"EdgeDetector\" type=\"RayCast2D\" parent=\".\"]\nposition = Vector2(14, 0)\ntarget_position = Vector2(0, 20)\n\n[node name=\"StompArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, -14)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"StompArea\"]\nshape = SubResource(\"RectangleShape2D_stomp\")\n\n[node name=\"HitArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, 4)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"HitArea\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+      },
+      {
+       "percorso": "enemies/flying_enemy.gd",
+       "contenuto": "class_name FlyingEnemy\nextends CharacterBody2D\n\n@export var speed: float = 80.0\n@export var patrol_time: float = 2.0\n@export var bounce_impulse: float = -320.0\n@export var damage: int = 1\n\nvar direction: float = 1.0\n\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var patrol_timer: Timer = $PatrolTimer\n@onready var stomp_area: Area2D = $StompArea\n@onready var hit_area: Area2D = $HitArea\n\n\nfunc _ready() -> void:\n\tif patrol_timer:\n\t\tpatrol_timer.wait_time = patrol_time\n\t\tpatrol_timer.timeout.connect(_on_patrol_timer_timeout)\n\t\tpatrol_timer.start()\n\n\tif stomp_area:\n\t\tstomp_area.body_entered.connect(_on_stomp_area_body_entered)\n\tif hit_area:\n\t\thit_area.body_entered.connect(_on_hit_area_body_entered)\n\n\nfunc _physics_process(_delta: float) -> void:\n\tif is_on_wall():\n\t\t_turn_around()\n\t\tif patrol_timer:\n\t\t\tpatrol_timer.start()\n\n\tvelocity.x = direction * speed\n\tvelocity.y = 0.0\n\tmove_and_slide()\n\n\nfunc _turn_around() -> void:\n\tdirection *= -1.0\n\tif sprite:\n\t\tsprite.flip_h = direction < 0.0\n\n\nfunc _on_patrol_timer_timeout() -> void:\n\t_turn_around()\n\n\nfunc _on_stomp_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body is CharacterBody2D and body.velocity.y > 0.0:\n\t\tbody.velocity.y = bounce_impulse\n\t\tqueue_free()\n\n\nfunc _on_hit_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tif body is CharacterBody2D and body.velocity.y > 0.0 and body.global_position.y < global_position.y:\n\t\t\treturn\n\t\tbody.take_damage(damage)\n"
+      },
+      {
+       "percorso": "enemies/flying_enemy.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemies/flying_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_stomp\"]\nsize = Vector2(24, 8)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(28, 20)\n\n[node name=\"FlyingEnemy\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"PatrolTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\nautostart = true\n\n[node name=\"StompArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, -14)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"StompArea\"]\nshape = SubResource(\"RectangleShape2D_stomp\")\n\n[node name=\"HitArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, 4)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"HitArea\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://enemies/walker_enemy.tscn\" id=\"2_walker\"]\n[ext_resource type=\"PackedScene\" path=\"res://enemies/flying_enemy.tscn\" id=\"3_flyer\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 464)\n\n[node name=\"WalkerEnemy\" parent=\".\" instance=ExtResource(\"2_walker\")]\nposition = Vector2(650, 464)\n\n[node name=\"FlyingEnemy\" parent=\".\" instance=ExtResource(\"3_flyer\")]\nposition = Vector2(250, 240)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "Salti",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "attack",
+        "tasti": [
+         "J"
+        ]
+       },
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "jump",
+        "tasti": [
+         "Space",
+         "Up"
+        ]
+       },
+       {
+        "nome": "crouch",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Un nemico volante si ottiene impostando `velocity.y = 0.0` invece di sommare la gravità, preservando la quota lungo l'asse orizzontale. Il nodo `PatrolTimer` innesca periodicamente l'inversione di marcia (`direction *= -1.0`), orientando di conseguenza lo sprite con `flip_h`. La stessa inversione viene invocata se il corpo tocca un muro (`is_on_wall()`), nel qual caso si riavvia il timer per non invertire prematuramente il percorso appena intrapreso.",
+     "cambiati": [
+      "player/player.gd",
+      "player/player.tscn",
+      "enemies/walker_enemy.gd",
+      "enemies/flying_enemy.gd",
+      "enemies/flying_enemy.tscn",
+      "main.tscn"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "es3": {
    "stato": "da_fare",
