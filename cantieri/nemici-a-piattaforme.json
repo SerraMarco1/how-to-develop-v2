@@ -809,7 +809,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "estendi",
@@ -1140,7 +1140,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"La torretta nemica: proiettili a intervalli\" (estendi) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-3.7-flash",
   "gemini/gemini-flash-latest",
