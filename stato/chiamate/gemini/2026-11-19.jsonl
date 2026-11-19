@@ -1,0 +1,3 @@
+{"quando":1795076099492,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"nemici-a-piattaforme","ok":true,"contata":true,"durataMs":462819,"tokenInput":13032,"tokenOutput":1958,"ragionamento":47037}
+{"quando":1795076562313,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"nemici-a-piattaforme","ok":false,"contata":true,"durataMs":681914,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795077244231,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"nemici-a-piattaforme","ok":false,"contata":true,"durataMs":543,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
