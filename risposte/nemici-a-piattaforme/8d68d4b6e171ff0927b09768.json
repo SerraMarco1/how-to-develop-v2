@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://main.tscn\", \"durata\": 8, \"azioni\": [], \"soggetti\": [{\"id\": \"enemy\", \"cerca\": {\"nome\": \"WalkerEnemy\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 7.5, \"deve\": \"muoversi\", \"etichetta\": \"Nemico\"}], \"scritte\": [{\"testo\": \"Il nemico pattuglia la piattaforma e inverte la marcia\", \"da\": 1, \"a\": 7, \"soggetto\": \"enemy\"}]}",
+ "ragionamento": 1259,
+ "quando": "2026-11-19T12:17:31.629Z",
+ "ruolo": "ritocco"
+}
