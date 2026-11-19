@@ -39,3 +39,4 @@
 {"quando":1795092241368,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":true,"contata":true,"durataMs":92907,"tokenInput":21404,"tokenOutput":6808,"ragionamento":10012}
 {"quando":1795092334280,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":59784,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795092394067,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":2094,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795093489605,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"livelli-e-sfondi","ok":true,"contata":true,"durataMs":13018,"tokenInput":7950,"tokenOutput":200,"ragionamento":1858}
