@@ -46,3 +46,5 @@
 {"quando":1795094133078,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"particelle-2d","ok":true,"contata":true,"durataMs":83714,"tokenInput":20260,"tokenOutput":13410,"ragionamento":6657}
 {"quando":1795094234087,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"particelle-2d","ok":false,"contata":true,"durataMs":45946,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795094280040,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"particelle-2d","ok":true,"contata":true,"durataMs":398388,"tokenInput":21108,"tokenOutput":13369,"ragionamento":3346}
+{"quando":1795094684672,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":true,"contata":true,"durataMs":237849,"tokenInput":21125,"tokenOutput":14045,"ragionamento":10906}
+{"quando":1795094922528,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":384,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
