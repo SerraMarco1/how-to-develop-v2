@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-19T11:55:06.285Z",
+ "aggiornato": "2026-11-19T12:15:55.450Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1159,10 +1159,10 @@
    "slug": "nemici-a-piattaforme",
    "numero": "8.8",
    "titolo": "Nemici a piattaforme",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/nemici-a-piattaforme.json",
-   "sha256": "5a5126497a31fba085122fff417675d3f305d86ae55c3b9a01886c26674069ac",
-   "byte": 158945
+   "sha256": "4430531962e4ae6a169eb2f21fe9f6f5bfc01dc8c766c00a45e2ea77235dd0fd",
+   "byte": 160718
   },
   {
    "slug": "livelli-e-sfondi",
