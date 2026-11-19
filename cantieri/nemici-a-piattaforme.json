@@ -833,7 +833,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\n\tvar shooter := find_by_name(main, \"ShooterEnemy\") as StaticBody2D\n\tif not check(\"shooter\", shooter != null, \"Il nodo ShooterEnemy deve essere presente\"):\n\t\treturn\n\n\t# Aspetta che la torretta spari almeno un proiettile\n\tawait wait_seconds(1.6)\n\tvar bullet := find_by_class(main, \"Area2D\")\n\tvar found_bullet: bool = false\n\tfor child in main.get_children():\n\t\tif child.name.begins_with(\"Bullet\") or child.is_in_group(\"bullets\") or child.has_method(\"_physics_process\") and \"direction\" in child:\n\t\t\tfound_bullet = true\n\t\t\tbreak\n\tcheck(\"bullet_spawned\", found_bullet, \"La torretta deve generare e aggiungere alla scena un'istanza di bullet_scene allo scadere del timer\")\n\n\t# Verifica eliminazione con schiacciata dall'alto\n\tvar stomp := shooter.get_node_or_null(\"StompArea\") as Area2D\n\tif not check(\"stomp_exists\", stomp != null, \"ShooterEnemy deve avere il nodo StompArea\"):\n\t\treturn\n\n\tplayer.velocity = Vector2(0.0, 200.0)\n\tplayer.global_position = shooter.global_position + Vector2(0.0, -16.0)\n\tawait wait_physics_frames(4)\n\n\tcheck(\"player_bounce\", player.velocity.y < 0.0, \"Saltare sulla torretta deve far rimbalzare il giocatore\")\n\tcheck(\"shooter_destroyed\", shooter.is_queued_for_deletion(), \"La torretta deve essere eliminata con queue_free quando viene schiacciata\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente\"):\n\t\treturn\n\n\tvar shooter := find_by_name(main, \"ShooterEnemy\") as StaticBody2D\n\tif not check(\"shooter\", shooter != null, \"Il nodo ShooterEnemy deve essere presente\"):\n\t\treturn\n\n\t# Aspetta che la torretta spari almeno un proiettile\n\tawait wait_seconds(1.6)\n\tvar found_bullet: bool = false\n\tfor child in main.get_children():\n\t\tif child.name.begins_with(\"Bullet\") or child.is_in_group(\"bullets\") or (child.has_method(\"_physics_process\") and \"direction\" in child):\n\t\t\tfound_bullet = true\n\t\t\tbreak\n\tcheck(\"bullet_spawned\", found_bullet, \"La torretta deve generare e aggiungere alla scena un'istanza di bullet_scene allo scadere del timer\")\n\n\t# Verifica eliminazione con schiacciata dall'alto\n\tvar stomp := shooter.get_node_or_null(\"StompArea\") as Area2D\n\tif not check(\"stomp_exists\", stomp != null, \"ShooterEnemy deve avere il nodo StompArea\"):\n\t\treturn\n\n\tplayer.global_position = shooter.global_position + Vector2(0.0, -40.0)\n\tplayer.velocity = Vector2(0.0, 300.0)\n\tawait wait_physics_frames(10)\n\n\tcheck(\"player_bounce\", player.velocity.y < 0.0, \"Saltare sulla torretta deve far rimbalzare il giocatore\")\n\tcheck(\"shooter_destroyed\", shooter.is_queued_for_deletion(), \"La torretta deve essere eliminata con queue_free quando viene schiacciata\")",
       "descrizione": "La torretta spara proiettili a intervalli regolari e viene distrutta se schiacciata dall'alto"
      }
     ],
@@ -841,6 +841,10 @@
     "daTrovare": [],
     "partenza": {
      "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"TorrettaGuardia\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
       {
        "percorso": "bullet.gd",
        "contenuto": "class_name Bullet\nextends Area2D\n\n@export var speed: float = 180.0\nvar direction: float = -1.0\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tposition.x += direction * speed * delta\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tbody.take_damage(1)\n\t\tqueue_free()\n"
@@ -961,18 +965,22 @@
       "impostazioni": []
      },
      "spiegazione": "La funzione `shoot()` genera un proiettile tramite `bullet_scene.instantiate()`, lo colloca nella gerarchia del livello con `get_parent().add_child(bullet)` e ne fissa coordinate e direzione orizzontale. Il nodo `ShootTimer` chiama ciclicamente questa funzione al segnale `timeout`. Inoltre, l'area `StompArea` permette di applicare il rimbalzo verticale al giocatore distruggendo la torretta tramite `queue_free()` quando viene colpita dall'alto.",
-     "cambiati": [],
+     "cambiati": [
+      "shooter_enemy.gd",
+      "shooter_enemy.tscn"
+     ],
      "rimossi": []
     }
    },
    "genere": "estendi",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare sulla torretta deve far rimbalzare il giocatore\n  - La torretta deve essere eliminata con queue_free quando viene schiacciata\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
