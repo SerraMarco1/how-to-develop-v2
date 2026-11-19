@@ -28,3 +28,4 @@
 {"quando":1795089307795,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":true,"contata":true,"durataMs":74400,"tokenInput":13434,"tokenOutput":2048,"ragionamento":3864}
 {"quando":1795089383518,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":325,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795089383846,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":3733,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795090531507,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"nemici-a-piattaforme","ok":true,"contata":true,"durataMs":17708,"tokenInput":2889,"tokenOutput":727,"ragionamento":1299}
