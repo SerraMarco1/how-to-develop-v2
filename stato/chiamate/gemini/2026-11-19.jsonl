@@ -21,3 +21,6 @@
 {"quando":1795088793794,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"nemici-a-piattaforme","ok":false,"contata":true,"durataMs":1199,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795088796562,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"livelli-e-sfondi","ok":true,"contata":true,"durataMs":46483,"tokenInput":13768,"tokenOutput":2677,"ragionamento":4470}
 {"quando":1795088844445,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"livelli-e-sfondi","ok":true,"contata":true,"durataMs":89958,"tokenInput":21238,"tokenOutput":5996,"ragionamento":10036}
+{"quando":1795088976634,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"livelli-e-sfondi","ok":false,"contata":true,"durataMs":280061,"errore":"Nessuna risposta entro 280 secondi"}
+{"quando":1795089256700,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"livelli-e-sfondi","ok":false,"contata":true,"durataMs":10741,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795089267445,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"livelli-e-sfondi","ok":true,"contata":true,"durataMs":26574,"tokenInput":11275,"tokenOutput":12,"ragionamento":2683}
