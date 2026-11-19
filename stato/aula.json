@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-19T13:57:49.160Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-19T13:57:57.980Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "particelle-2d",
   "numero": "8.10",
   "titolo": "Particelle"
  },
- "messaggio": "Sta scrivendo la lezione 8.10 «Particelle».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 8.10 riprende da sola appena rispondono.",
+ "riprende": "2026-11-19T14:17:57.980Z"
 }
