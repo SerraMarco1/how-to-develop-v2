@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-18T08:26:20.781Z",
+ "aggiornato": "2026-11-19T11:46:35.008Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1154,6 +1154,15 @@
    "file": "lezioni/f08-piattaforme/pericoli-e-ripartenza.json",
    "sha256": "6e23f6b58b9637f335ecc89a0348660562d761fb3f924878f34b1e36a05a6003",
    "byte": 114461
+  },
+  {
+   "slug": "nemici-a-piattaforme",
+   "numero": "8.8",
+   "titolo": "Nemici a piattaforme",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/nemici-a-piattaforme.json",
+   "sha256": "5a5126497a31fba085122fff417675d3f305d86ae55c3b9a01886c26674069ac",
+   "byte": 158945
   }
  ],
  "documentazione": {
