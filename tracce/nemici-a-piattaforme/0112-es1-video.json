@@ -1,0 +1,47 @@
+{
+ "n": 112,
+ "quando": "2026-11-19T12:17:56.453Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 3 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «enemy» (scena = res://enemies/walker_enemy.tscn; almeno 1 da 0.5 a 7.5 s; deve muoversi): nessun nodo della scena in esecuzione corrisponde a scena = res://enemies/walker_enemy.tscn.\nReazione: tentativi finiti, l'esercizio resta senza video.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 14433,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "enemy",
+     "cerca": {
+      "scena": "res://enemies/walker_enemy.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "muoversi",
+     "etichetta": "Nemico"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il nemico cammina sulla piattaforma e inverte la marcia",
+     "da": 1,
+     "a": 7,
+     "soggetto": "enemy"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «enemy» (scena = res://enemies/walker_enemy.tscn; almeno 1 da 0.5 a 7.5 s; deve muoversi): nessun nodo della scena in esecuzione corrisponde a scena = res://enemies/walker_enemy.tscn."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (8851 → 205 token)"
+ ]
+}
