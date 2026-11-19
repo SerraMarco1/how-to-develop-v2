@@ -1,0 +1,166 @@
+{
+ "n": 95,
+ "quando": "2026-11-19T10:54:18.788Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test (estendi): 1 problema",
+ "spiegazione": "«Variante corazzata: il coleottero spinato», scritto da gemini/gemini-flash-latest. 2 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare sul coleottero normale deve far rimbalzare il giocatore (velocity.y è 0.0)\n  - Il coleottero normale deve essere eliminato con queue_free()\n  - Saltare sugli aculei di BeetleSpiky deve infliggere danno al giocatore\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 8122,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare sul coleottero normale deve far rimbalzare il giocatore (velocity.y è 0.0)\n  - Il coleottero normale deve essere eliminato con queue_free()\n  - Saltare sugli aculei di BeetleSpiky deve infliggere danno al giocatore\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ],
+  "esercizio": {
+   "tipo": "test",
+   "genere": "estendi",
+   "titolo": "Variante corazzata: il coleottero spinato",
+   "consegna": "Nel progetto `GuardianiLivello`, un altro programmatore ha iniziato a scrivere il comportamento dei nemici coleottero (`BeetleEnemy`), creando due istanze nel livello: una normale (`BeetleNormal`, con `is_spiky = false`) e una spinata (`BeetleSpiky`, con `is_spiky = true`). Il nemico però cade nel vuoto perché non controlla i dirupi con il raggio, e la gestione della schiacciata non tiene conto della presenza degli aculei.\n\nCompleta `res://beetle_enemy.gd` realizzando le seguenti funzioni senza rompere ciò che già funziona:\n\n1. **Rilevamento del bordo**: in `_physics_process`, se il nemico urta un muro (`is_on_wall()`) OPPURE se si trova sul pavimento (`is_on_floor()`) e il raggio non tocca terreno (`not edge_detector.is_colliding()`), deve invertire la direzione di marcia chiamando `_turn_around()`.\n2. In `_turn_around()`, oltre a invertire `direction` e aggiornare `sprite.flip_h`, aggiorna la posizione orizzontale del sensore: `edge_detector.position.x = absf(edge_detector.position.x) * direction`.\n3. **Schiacciata differenziata in base alla variante**:\n   - In `_on_stomp_area_body_entered(body: Node2D)`, se il corpo è un `CharacterBody2D` che scende con `body.velocity.y > 0.0`:\n     - Se `is_spiky` è `false`: applica il rimbalzo verso l'alto (`body.velocity.y = bounce_impulse`) ed elimina il nemico con `queue_free()`.\n     - Se `is_spiky` è `true`: il coleottero ha gli aculei sul dorso! Non deve essere eliminato, non fa rimbalzare il giocatore, e infligge danno al giocatore chiamando `body.take_damage(damage)` se il metodo esiste.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "cartella": "guardiani-livello",
+   "passiGuida": [],
+   "suggerimenti": [
+    "In `_on_stomp_area_body_entered`, usa un blocco `if is_spiky:` per chiamare `body.take_damage(damage)` ed `else:` per applicare `bounce_impulse` e `queue_free()`."
+   ],
+   "verifiche": [
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://beetle_enemy.gd",
+     "regex": "is_colliding\\(",
+     "descrizione": "Lo script beetle_enemy.gd controlla la collisione del raggio con is_colliding()"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as CharacterBody2D\n\tvar normal_enemy := find_by_name(main, \"BeetleNormal\") as CharacterBody2D\n\tvar spiky_enemy := find_by_name(main, \"BeetleSpiky\") as CharacterBody2D\n\n\tif not check(\"nodes\", player != null and normal_enemy != null and spiky_enemy != null, \"Nella scena devono esserci Player, BeetleNormal e BeetleSpiky\"):\n\t\treturn\n\n\t# 1. Verifica che BeetleNormal si giri al bordo e non cada\n\tvar start_y: float = normal_enemy.global_position.y\n\tawait wait_physics_frames(60)\n\tcheck(\"edge_turn\", absf(normal_enemy.global_position.y - start_y) < 5.0, \"BeetleNormal deve invertire la marcia sui bordi della piattaforma senza cadere nel vuoto\")\n\n\t# 2. Test schiacciata su BeetleNormal (is_spiky = false)\n\tplayer.velocity = Vector2(0.0, 150.0)\n\tplayer.global_position = normal_enemy.global_position + Vector2(0.0, -16.0)\n\tawait wait_physics_frames(4)\n\n\tcheck(\"normal_bounce\", player.velocity.y < 0.0, \"Saltare sul coleottero normale deve far rimbalzare il giocatore (velocity.y è %.1f)\" % player.velocity.y)\n\tcheck(\"normal_destroyed\", normal_enemy.is_queued_for_deletion(), \"Il coleottero normale deve essere eliminato con queue_free()\")\n\n\t# 3. Test schiacciata su BeetleSpiky (is_spiky = true)\n\tvar initial_health: int = get_prop(player, \"health\", 3)\n\tplayer.velocity = Vector2(0.0, 150.0)\n\tplayer.global_position = spiky_enemy.global_position + Vector2(0.0, -16.0)\n\tawait wait_physics_frames(4)\n\n\tvar current_health: int = get_prop(player, \"health\", 3)\n\tcheck(\"spiky_hurts\", current_health < initial_health, \"Saltare sugli aculei di BeetleSpiky deve infliggere danno al giocatore\")\n\tcheck(\"spiky_survives\", not spiky_enemy.is_queued_for_deletion(), \"BeetleSpiky non deve essere distrutto quando viene schiacciato\")\n",
+     "descrizione": "Il nemico si gira ai bordi, la variante normale viene eliminata dal salto e quella spinata ferisce il giocatore"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "GuardianiLivello",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space",
+        "Up"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"GuardianiLivello\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 200.0\n@export var jump_velocity: float = -380.0\nvar gravity: float = 980.0\nvar health: int = 5\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"player\")\n\n\nfunc take_damage(amount: int) -> void:\n\thealth -= amount\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = jump_velocity\n\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * speed\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player.png\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(28, 30)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+     },
+     {
+      "percorso": "beetle_enemy.gd",
+      "contenuto": "class_name BeetleEnemy\nextends CharacterBody2D\n\n@export var speed: float = 60.0\n@export var gravity: float = 980.0\n@export var bounce_impulse: float = -320.0\n@export var damage: int = 1\n@export var is_spiky: bool = false\n\nvar direction: float = 1.0\n\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var edge_detector: RayCast2D = $EdgeDetector\n@onready var stomp_area: Area2D = $StompArea\n@onready var hit_area: Area2D = $HitArea\n\n\nfunc _ready() -> void:\n\tstomp_area.body_entered.connect(_on_stomp_area_body_entered)\n\thit_area.body_entered.connect(_on_hit_area_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\t# TODO: Aggiungi il controllo del bordo usando edge_detector\n\tif is_on_wall():\n\t\t_turn_around()\n\n\tvelocity.x = direction * speed\n\tmove_and_slide()\n\n\nfunc _turn_around() -> void:\n\tdirection *= -1.0\n\tsprite.flip_h = direction < 0.0\n\t# TODO: Aggiorna la coordinata X di edge_detector\n\n\nfunc _on_stomp_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\t# TODO: Gestisci la schiacciata distinguendo tra is_spiky vero o falso\n\n\nfunc _on_hit_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tif body is CharacterBody2D and body.velocity.y > 0.0 and body.global_position.y < global_position.y:\n\t\t\treturn\n\t\tbody.take_damage(damage)\n"
+     },
+     {
+      "percorso": "beetle_enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://beetle_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_stomp\"]\nsize = Vector2(24, 8)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(28, 20)\n\n[node name=\"BeetleEnemy\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"EdgeDetector\" type=\"RayCast2D\" parent=\".\"]\nposition = Vector2(14, 0)\ntarget_position = Vector2(0, 24)\n\n[node name=\"StompArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, -14)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"StompArea\"]\nshape = SubResource(\"RectangleShape2D_stomp\")\n\n[node name=\"HitArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, 4)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"HitArea\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://beetle_enemy.tscn\" id=\"2_beetle\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_platform\"]\nsize = Vector2(200, 20)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Platform1\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 300)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Platform1\"]\nshape = SubResource(\"RectangleShape2D_platform\")\n\n[node name=\"Platform2\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(450, 300)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Platform2\"]\nshape = SubResource(\"RectangleShape2D_platform\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(80, 260)\n\n[node name=\"BeetleNormal\" parent=\".\" instance=ExtResource(\"2_beetle\")]\nposition = Vector2(200, 276)\n\n[node name=\"BeetleSpiky\" parent=\".\" instance=ExtResource(\"2_beetle\")]\nposition = Vector2(450, 276)\nis_spiky = true\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"GuardianiLivello\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody2D\n\n@export var speed: float = 200.0\n@export var jump_velocity: float = -380.0\nvar gravity: float = 980.0\nvar health: int = 5\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"player\")\n\n\nfunc take_damage(amount: int) -> void:\n\thealth -= amount\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = jump_velocity\n\n\tvar dir := Input.get_axis(\"move_left\", \"move_right\")\n\tvelocity.x = dir * speed\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player.png\" id=\"2_player\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(28, 30)\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_player\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+     },
+     {
+      "percorso": "beetle_enemy.gd",
+      "contenuto": "class_name BeetleEnemy\nextends CharacterBody2D\n\n@export var speed: float = 60.0\n@export var gravity: float = 980.0\n@export var bounce_impulse: float = -320.0\n@export var damage: int = 1\n@export var is_spiky: bool = false\n\nvar direction: float = 1.0\n\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var edge_detector: RayCast2D = $EdgeDetector\n@onready var stomp_area: Area2D = $StompArea\n@onready var hit_area: Area2D = $HitArea\n\n\nfunc _ready() -> void:\n\tstomp_area.body_entered.connect(_on_stomp_area_body_entered)\n\thit_area.body_entered.connect(_on_hit_area_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif is_on_wall() or (is_on_floor() and not edge_detector.is_colliding()):\n\t\t_turn_around()\n\n\tvelocity.x = direction * speed\n\tmove_and_slide()\n\n\nfunc _turn_around() -> void:\n\tdirection *= -1.0\n\tsprite.flip_h = direction < 0.0\n\tedge_detector.position.x = absf(edge_detector.position.x) * direction\n\n\nfunc _on_stomp_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body is CharacterBody2D and body.velocity.y > 0.0:\n\t\tif is_spiky:\n\t\t\tif body.has_method(\"take_damage\"):\n\t\t\t\tbody.take_damage(damage)\n\t\telse:\n\t\t\tbody.velocity.y = bounce_impulse\n\t\t\tqueue_free()\n\n\nfunc _on_hit_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tif body is CharacterBody2D and body.velocity.y > 0.0 and body.global_position.y < global_position.y:\n\t\t\treturn\n\t\tbody.take_damage(damage)\n"
+     },
+     {
+      "percorso": "beetle_enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://beetle_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_stomp\"]\nsize = Vector2(24, 8)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(28, 20)\n\n[node name=\"BeetleEnemy\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"EdgeDetector\" type=\"RayCast2D\" parent=\".\"]\nposition = Vector2(14, 0)\ntarget_position = Vector2(0, 24)\n\n[node name=\"StompArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, -14)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"StompArea\"]\nshape = SubResource(\"RectangleShape2D_stomp\")\n\n[node name=\"HitArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, 4)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"HitArea\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://beetle_enemy.tscn\" id=\"2_beetle\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_platform\"]\nsize = Vector2(200, 20)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Platform1\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(200, 300)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Platform1\"]\nshape = SubResource(\"RectangleShape2D_platform\")\n\n[node name=\"Platform2\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(450, 300)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Platform2\"]\nshape = SubResource(\"RectangleShape2D_platform\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(80, 260)\n\n[node name=\"BeetleNormal\" parent=\".\" instance=ExtResource(\"2_beetle\")]\nposition = Vector2(200, 276)\n\n[node name=\"BeetleSpiky\" parent=\".\" instance=ExtResource(\"2_beetle\")]\nposition = Vector2(450, 276)\nis_spiky = true\n"
+     }
+    ],
+    "progetto": {
+     "nome": "GuardianiLivello",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space",
+        "Up"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Per evitare che il coleottero cada nel vuoto, la condizione di inversione unisce l'urto contro un ostacolo (`is_on_wall()`) con l'assenza di terreno rilevata da `EdgeDetector` (`is_on_floor() and not edge_detector.is_colliding()`). Nella funzione `_turn_around()` la coordinata X di `EdgeDetector` viene aggiornata moltiplicando per la direzione corrente, garantendo che la scansione del pavimento avvenga sempre davanti al nemico. All'interno di `_on_stomp_area_body_entered`, il parametro esportato `is_spiky` differenzia il comportamento: se il coleottero è spinato infligge danno al giocatore respingendo l'attacco; se invece non è spinato, concede il rimbalzo verticale ed elimina il nemico con `queue_free()`.",
+    "cambiati": [
+     "beetle_enemy.gd"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
