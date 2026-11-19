@@ -976,7 +976,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Saltare sulla torretta deve far rimbalzare il giocatore\n  - La torretta deve essere eliminata con queue_free quando viene schiacciata\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Cannot call method 'is_queued_for_deletion' on a previously freed instance. (res://htd/verifica_1.gd:36 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Cannot call method 'is_queued_for_deletion' on a previously freed instance.\n          at: _run_tests (res://htd/verifica_1.gd:36)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 36: `var destroyed: bool = shooter.is_queued_for_deletion()`"
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
