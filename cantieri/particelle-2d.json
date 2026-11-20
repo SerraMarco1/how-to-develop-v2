@@ -1395,5 +1395,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "spiegazione",
+    "dove": "blocco 5",
+    "problema": "Viene utilizzato il nome italiano «Ispettore» invece del nome ufficiale in inglese del pannello («Inspector»), contravvenendo alla regola dell'editor in lingua inglese.",
+    "correzione": "Sostituire «Se attivi la proprietà `one_shot` nell'Ispettore con `emitting = false`» con «Se attivi la proprietà `one_shot` nell'Inspector con `emitting = false`».",
+    "fonte": "L'editor resta **in inglese** per tutto il corso: il corso non fa cambiare la lingua dell'editor."
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
