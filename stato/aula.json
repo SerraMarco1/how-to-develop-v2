@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-20T15:30:54.563Z",
+ "aggiornato": "2026-11-20T16:03:44.438Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "shader-2d-utili",
-  "numero": "8.12",
-  "titolo": "Shader utili: lampeggio e contorno"
+  "slug": "gioco-completo-a-piattaforme",
+  "numero": "8.13",
+  "titolo": "Il gioco completo"
  },
- "messaggio": "Sta scrivendo la lezione 8.12 «Shader utili: lampeggio e contorno».",
+ "messaggio": "Sta scrivendo la lezione 8.13 «Il gioco completo».",
  "riprende": null
 }
