@@ -1,0 +1,275 @@
+{
+ "n": 5,
+ "quando": "2026-11-20T15:35:58.438Z",
+ "pezzo": "es1",
+ "azione": "verifica",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1 (guidato): 1 problema",
+ "spiegazione": "«Lampeggio di danno per il personaggio», scritto da gemini/gemini-3.6-flash. 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire).\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Chiamando take_damage(), il parametro flash_modifier va a 1.0 e poi torna a 0.0 tramite Tween: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var player_scene := instantiate_scene(\"res://player/player.tscn\")`\nSuggerim…\nReazione: i problemi tornano a un modello per correggere solo questo pezzo (correzione 1 di 2).",
+ "richieste": 0,
+ "durataMs": 3284,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Chiamando take_damage(), il parametro flash_modifier va a 1.0 e poi torna a 0.0 tramite Tween: Lo script di verifica non è GDScript valido:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nOutput di Godot:\nSCRIPT ERROR: Parse Error: Function \"instantiate_scene()\" is a coroutine, so it must be called with \"await\".\n          at: GDScript::reload (res://htd/verifica_1.gd:5)\nERROR: Failed to load script \"res://htd/verifica_1.gd\" with error \"Parse error\".\n   at: load (modules/gdscript/gdscript_resource_format.cpp:46)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 5: `var player_scene := instantiate_scene(\"res://player/player.tscn\")`\nSuggerimenti:\n  - Le funzioni della base di verifica che aspettano (`instantiate_scene`, `instantiate_main_scene`, `instantiate_script`, `wait_frames`, `wait_physics_frames`, `wait_seconds`, `hold_action`, `tap_action`, `click_button`) vanno chiamate con `await` davanti."
+  ],
+  "esercizio": {
+   "tipo": "guidato",
+   "genere": "guidato",
+   "titolo": "Lampeggio di danno per il personaggio",
+   "consegna": "Crea uno shader per far lampeggiare di bianco il personaggio quando subisce un colpo, e aggiornalo da codice tramite uno script.\n\n1. Crea il file shader `res://shaders/hit_flash.gdshader`.\n2. Nello shader definisci due variabili uniform: `flash_modifier` (float da 0.0 a 1.0, valore iniziale 0.0) e `flash_color` (vec4 di colore `source_color`, valore iniziale bianco `vec4(1.0, 1.0, 1.0, 1.0)`).\n3. Nella funzione `fragment()`, campiona il colore con `texture(TEXTURE, UV)`, mescola i canali RGB con `mix(color.rgb, flash_color.rgb, flash_modifier)` e assegna il risultato a `COLOR` conservando l'alpha originale (`color.a`).\n4. Nella scena `res://player/player.tscn`, assegna un nuovo `ShaderMaterial` con lo shader `hit_flash.gdshader` allo `Sprite2D` del personaggio.\n5. Nel file `res://player/player.gd`, modifica la funzione `take_damage(amount: int)` in modo che legga il materiale dello sprite. Se è uno `ShaderMaterial`, imposta `flash_modifier` a `1.0` tramite `set_shader_parameter(\"flash_modifier\", 1.0)` e poi usa un `Tween` per far tornare `shader_parameter/flash_modifier` a `0.0` in `0.2` secondi.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [
+    "Nel pannello FileSystem premi tasto destro su res://, crea la cartella shaders e crea il file hit_flash.gdshader.",
+    "Apri hit_flash.gdshader e scrivi shader_type canvas_item; seguito dalle dichiarazioni uniform per flash_modifier e flash_color.",
+    "Nella funzione fragment(), calcola la mescolanza dei colori con mix() e assegna il nuovo vec4 a COLOR.",
+    "Apri res://player/player.tscn, seleziona il nodo Sprite2D e nel pannello Inspector espandi CanvasItem -> Material.",
+    "Crea un nuovo ShaderMaterial, aprilo e imposta lo shader su res://shaders/hit_flash.gdshader.",
+    "Apri res://player/player.gd e trova la funzione take_damage.",
+    "Nel codice di take_damage, controlla se sprite_2d.material è ShaderMaterial, imposta flash_modifier a 1.0 con set_shader_parameter e crea un Tween per portarlo a 0.0 in 0.2 secondi."
+   ],
+   "suggerimenti": [],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://shaders/hit_flash.gdshader",
+     "descrizione": "Il file res://shaders/hit_flash.gdshader esiste"
+    },
+    {
+     "tipo": "testo_in_file",
+     "percorso": "res://shaders/hit_flash.gdshader",
+     "regex": "uniform float flash_modifier",
+     "descrizione": "Lo shader definisce il parametro uniform flash_modifier"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar player_scene := instantiate_scene(\"res://player/player.tscn\")\n\tif not check(\"player_scene\", player_scene != null, \"La scena res://player/player.tscn deve essere caricata senza errori\"):\n\t\treturn\n\tvar sprite := player_scene.get_node_or_null(\"Sprite2D\")\n\tif not check(\"sprite\", sprite != null, \"Il personaggio deve avere uno Sprite2D\"):\n\t\treturn\n\tvar mat = sprite.material\n\tcheck(\"material\", mat is ShaderMaterial, \"Lo sprite del personaggio deve avere un ShaderMaterial assegnato\")\n\tif not (mat is ShaderMaterial):\n\t\treturn\n\tif has_function(player_scene, \"take_damage\"):\n\t\tplayer_scene.call(\"take_damage\", 1)\n\t\tvar val = mat.get_shader_parameter(\"flash_modifier\")\n\t\tcheck(\"flash_start\", val != null and float(val) > 0.5, \"Dopo take_damage(), flash_modifier deve essere impostato vicino a 1.0 (trovato %s)\" % str(val))\n\t\tawait wait_seconds(0.25)\n\t\tvar val_end = mat.get_shader_parameter(\"flash_modifier\")\n\t\tcheck(\"flash_end\", val_end != null and float(val_end) < 0.2, \"Dopo 0.2 secondi, flash_modifier deve sfumare a 0.0 (trovato %s)\" % str(val_end))\n",
+     "descrizione": "Chiamando take_damage(), il parametro flash_modifier va a 1.0 e poi torna a 0.0 tramite Tween"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Salti\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nattack={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":74,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\ncrouch={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "player/state.gd",
+      "contenuto": "class_name State\nextends Node\n\nsignal transitioned(state: State, new_state_name: String)\n\n\nfunc enter() -> void:\n\tpass\n\n\nfunc exit() -> void:\n\tpass\n\n\nfunc update(_delta: float) -> void:\n\tpass\n\n\nfunc physics_update(_delta: float) -> void:\n\tpass\n"
+     },
+     {
+      "percorso": "player/state_machine.gd",
+      "contenuto": "class_name StateMachine\nextends Node\n\n@export var initial_state: State\n\nvar current_state: State\nvar states: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tawait owner.ready\n\tfor child in get_children():\n\t\tif child is State:\n\t\t\tstates[child.name.to_lower()] = child\n\t\t\tchild.transitioned.connect(_on_child_transitioned)\n\n\tif initial_state:\n\t\tinitial_state.enter()\n\t\tcurrent_state = initial_state\n\n\nfunc _process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.update(delta)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif current_state:\n\t\tcurrent_state.physics_update(delta)\n\n\nfunc _on_child_transitioned(state: State, new_state_name: String) -> void:\n\tif state != current_state:\n\t\treturn\n\n\tvar new_state: State = states.get(new_state_name.to_lower())\n\tif not new_state:\n\t\treturn\n\n\tif current_state:\n\t\tcurrent_state.exit()\n\n\tnew_state.enter()\n\tcurrent_state = new_state\n"
+     },
+     {
+      "percorso": "player/player_idle_state.gd",
+      "contenuto": "class_name PlayerIdleState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.apply_movement(0.0, delta)\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_pressed(\"crouch\"):\n\t\ttransitioned.emit(self, \"crouch\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\ttransitioned.emit(self, \"jump\")\n\t\treturn\n\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tif direction != 0.0:\n\t\ttransitioned.emit(self, \"run\")\n"
+     },
+     {
+      "percorso": "player/player_run_state.gd",
+      "contenuto": "class_name PlayerRunState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"run\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_pressed(\"crouch\"):\n\t\ttransitioned.emit(self, \"crouch\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\ttransitioned.emit(self, \"jump\")\n\t\treturn\n\n\tif direction == 0.0 and absf(player.velocity.x) < 1.0:\n\t\ttransitioned.emit(self, \"idle\")\n"
+     },
+     {
+      "percorso": "objects/sign.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"Animation\" id=\"Animation_reset\"]\nresource_name = \"RESET\"\nlength = 0.001\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:rotation\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 0,\n\"values\": [0.0]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_swing\"]\nresource_name = \"swing\"\nlength = 2.0\nloop_mode = 1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:rotation\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.5, 1.5, 2),\n\"transitions\": PackedFloat32Array(1, 1, 1, 1),\n\"update\": 0,\n\"values\": [0.0, 0.2, -0.2, 0.0]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_sign\"]\n_data = {\n&\"RESET\": SubResource(\"Animation_reset\"),\n&\"swing\": SubResource(\"Animation_swing\")\n}\n\n[node name=\"Sign\" type=\"Node2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.25)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n&\"\": SubResource(\"AnimationLibrary_sign\")\n}\nautoplay = \"swing\"\n"
+     },
+     {
+      "percorso": "objects/door.gd",
+      "contenuto": "class_name Door\nextends StaticBody2D\n\nvar is_open: bool = false\n\n@onready var animation_player: AnimationPlayer = $AnimationPlayer\n\n\nfunc open() -> void:\n\tif animation_player:\n\t\tanimation_player.play(\"open\")\n\n\nfunc door_opened() -> void:\n\tis_open = true\n"
+     },
+     {
+      "percorso": "objects/door.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/door.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_door\"]\nsize = Vector2(32, 96)\n\n[sub_resource type=\"Animation\" id=\"Animation_reset\"]\nresource_name = \"RESET\"\nlength = 0.001\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:position\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 0,\n\"values\": [Vector2(0, 0)]\n}\ntracks/1/type = \"value\"\ntracks/1/imported = false\ntracks/1/enabled = true\ntracks/1/path = NodePath(\"CollisionShape2D:disabled\")\ntracks/1/interp = 1\ntracks/1/loop_wrap = true\ntracks/1/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 1,\n\"values\": [false]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_open\"]\nresource_name = \"open\"\nlength = 0.6\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:position\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.6),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 0,\n\"values\": [Vector2(0, 0), Vector2(0, -96)]\n}\ntracks/1/type = \"value\"\ntracks/1/imported = false\ntracks/1/enabled = true\ntracks/1/path = NodePath(\"CollisionShape2D:disabled\")\ntracks/1/interp = 1\ntracks/1/loop_wrap = true\ntracks/1/keys = {\n\"times\": PackedFloat32Array(0, 0.6),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 1,\n\"values\": [false, true]\n}\ntracks/2/type = \"method\"\ntracks/2/imported = false\ntracks/2/enabled = true\ntracks/2/path = NodePath(\".\")\ntracks/2/interp = 1\ntracks/2/loop_wrap = true\ntracks/2/keys = {\n\"times\": PackedFloat32Array(0.6),\n\"transitions\": PackedFloat32Array(1),\n\"values\": [{\n\"args\": [],\n\"method\": &\"door_opened\"\n}]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_door\"]\n_data = {\n&\"RESET\": SubResource(\"Animation_reset\"),\n&\"open\": SubResource(\"Animation_open\")\n}\n\n[node name=\"Door\" type=\"StaticBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.75)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_door\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n&\"\": SubResource(\"AnimationLibrary_door\")\n}\n"
+     },
+     {
+      "percorso": "objects/moving_platform.gd",
+      "contenuto": "class_name MovingPlatform\nextends AnimatableBody2D\n\n@export var move_offset: Vector2 = Vector2(200.0, 0.0)\n@export var speed: float = 80.0\n\nvar _start_position: Vector2\nvar _target_position: Vector2\nvar _moving_to_target: bool = true\n\n\nfunc _ready() -> void:\n\t_start_position = global_position\n\t_target_position = _start_position + move_offset\n\n\nfunc _physics_process(delta: float) -> void:\n\tvar destination := _target_position if _moving_to_target else _start_position\n\tglobal_position = global_position.move_toward(destination, speed * delta)\n\n\tif global_position.distance_to(destination) < 1.0:\n\t\t_moving_to_target = not _moving_to_target\n"
+     },
+     {
+      "percorso": "objects/moving_platform.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/moving_platform.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_platform\"]\nsize = Vector2(192, 32)\n\n[node name=\"MovingPlatform\" type=\"AnimatableBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(1.5, 0.25)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_platform\")\n"
+     },
+     {
+      "percorso": "objects/one_way_platform.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"1_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_oneway\"]\nsize = Vector2(128, 12.8)\n\n[node name=\"OneWayPlatform\" type=\"StaticBody2D\"]\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(1.0, 0.1)\ntexture = ExtResource(\"1_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_oneway\")\none_way_collision = true\n"
+     },
+     {
+      "percorso": "player/player_crouch_state.gd",
+      "contenuto": "class_name PlayerCrouchState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"idle\")\n\tplayer.velocity.x = 0.0\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tplayer.move_and_slide()\n\n\tif not player.is_on_floor():\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\tplayer.position.y += 2.0\n\t\ttransitioned.emit(self, \"fall\")\n\t\treturn\n\n\tif not Input.is_action_pressed(\"crouch\"):\n\t\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+     },
+     {
+      "percorso": "objects/ladder.gd",
+      "contenuto": "class_name Ladder\nextends Area2D\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body is CharacterBody2D and \"is_on_ladder\" in body:\n\t\tbody.is_on_ladder = true\n\n\nfunc _on_body_exited(body: Node2D) -> void:\n\tif body is CharacterBody2D and \"is_on_ladder\" in body:\n\t\tbody.is_on_ladder = false\n"
+     },
+     {
+      "percorso": "objects/ladder.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/ladder.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_ladder\"]\nsize = Vector2(32, 192)\n\n[node name=\"Ladder\" type=\"Area2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 1.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_ladder\")\n"
+     },
+     {
+      "percorso": "objects/hazard.gd",
+      "contenuto": "class_name Hazard\nextends Area2D\n\n@export var damage: int = 1\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body.has_method(\"take_damage\"):\n\t\tbody.take_damage(damage)\n"
+     },
+     {
+      "percorso": "objects/hazard.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/hazard.gd\" id=\"1_hazard\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hazard\"]\nsize = Vector2(32, 32)\n\n[node name=\"Hazard\" type=\"Area2D\"]\nscript = ExtResource(\"1_hazard\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_hazard\")\n"
+     },
+     {
+      "percorso": "objects/checkpoint.gd",
+      "contenuto": "class_name Checkpoint\nextends Area2D\n\nsignal activated(new_position: Vector2)\n\nvar is_active: bool = false\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif is_active:\n\t\treturn\n\n\tif body.is_in_group(\"player\"):\n\t\tis_active = true\n\t\tactivated.emit(global_position)\n"
+     },
+     {
+      "percorso": "objects/checkpoint.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/checkpoint.gd\" id=\"1_checkpoint\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_checkpoint\"]\nsize = Vector2(32, 32)\n\n[node name=\"Checkpoint\" type=\"Area2D\"]\nscript = ExtResource(\"1_checkpoint\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_checkpoint\")\n"
+     },
+     {
+      "percorso": "enemies/walker_enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemies/walker_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_stomp\"]\nsize = Vector2(24, 8)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(28, 20)\n\n[node name=\"WalkerEnemy\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"EdgeDetector\" type=\"RayCast2D\" parent=\".\"]\nposition = Vector2(14, 0)\ntarget_position = Vector2(0, 20)\n\n[node name=\"StompArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, -14)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"StompArea\"]\nshape = SubResource(\"RectangleShape2D_stomp\")\n\n[node name=\"HitArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, 4)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"HitArea\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+     },
+     {
+      "percorso": "enemies/flying_enemy.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://enemies/flying_enemy.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/enemy.png\" id=\"2_enemy\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_body\"]\nsize = Vector2(28, 28)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_stomp\"]\nsize = Vector2(24, 8)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_hit\"]\nsize = Vector2(28, 20)\n\n[node name=\"FlyingEnemy\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_enemy\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_body\")\n\n[node name=\"PatrolTimer\" type=\"Timer\" parent=\".\"]\nwait_time = 2.0\nautostart = true\n\n[node name=\"StompArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, -14)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"StompArea\"]\nshape = SubResource(\"RectangleShape2D_stomp\")\n\n[node name=\"HitArea\" type=\"Area2D\" parent=\".\"]\nposition = Vector2(0, 4)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"HitArea\"]\nshape = SubResource(\"RectangleShape2D_hit\")\n"
+     },
+     {
+      "percorso": "levels/level_manager.gd",
+      "contenuto": "class_name LevelManager\nextends Node\n\nsignal item_collected(current_count: int, total_required: int)\nsignal level_completed\n\n@export var total_items_required: int = 3\n@export_file(\"*.tscn\") var next_level_path: String = \"\"\n\nvar collected_items: int = 0\n\n\nfunc collect_item() -> void:\n\tcollected_items += 1\n\titem_collected.emit(collected_items, total_items_required)\n\n\nfunc can_complete_level() -> bool:\n\treturn collected_items >= total_items_required\n\n\nfunc complete_level() -> void:\n\tif can_complete_level():\n\t\tlevel_completed.emit()\n\t\tif not next_level_path.is_empty():\n\t\t\tget_tree().change_scene_to_file(next_level_path)\n"
+     },
+     {
+      "percorso": "objects/goal.gd",
+      "contenuto": "class_name Goal\nextends Area2D\n\n@export_file(\"*.tscn\") var next_level_path: String = \"\"\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body is CharacterBody2D:\n\t\t_reach_goal()\n\n\nfunc _reach_goal() -> void:\n\tif next_level_path.is_empty():\n\t\treturn\n\tget_tree().change_scene_to_file(next_level_path)\n"
+     },
+     {
+      "percorso": "objects/goal.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/goal.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://icon.svg\" id=\"2_icon\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_goal\"]\nsize = Vector2(32, 64)\n\n[node name=\"Goal\" type=\"Area2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nscale = Vector2(0.25, 0.5)\ntexture = ExtResource(\"2_icon\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_goal\")\n"
+     },
+     {
+      "percorso": "levels/background_parallax.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/background.png\" id=\"1_bg\"]\n\n[node name=\"BackgroundParallax\" type=\"ParallaxBackground\"]\n\n[node name=\"LayerFar\" type=\"ParallaxLayer\" parent=\".\"]\nmotion_scale = Vector2(0.1, 0.1)\nmotion_mirroring = Vector2(640, 0)\n\n[node name=\"SpriteFar\" type=\"Sprite2D\" parent=\"LayerFar\"]\nposition = Vector2(320, 180)\nscale = Vector2(2, 2)\ntexture = ExtResource(\"1_bg\")\n\n[node name=\"LayerMid\" type=\"ParallaxLayer\" parent=\".\"]\nmotion_scale = Vector2(0.3, 0.3)\nmotion_mirroring = Vector2(640, 0)\n\n[node name=\"SpriteMid\" type=\"Sprite2D\" parent=\"LayerMid\"]\nposition = Vector2(320, 180)\nscale = Vector2(2, 2)\ntexture = ExtResource(\"1_bg\")\n\n[node name=\"LayerNear\" type=\"ParallaxLayer\" parent=\".\"]\nmotion_scale = Vector2(0.6, 0.6)\nmotion_mirroring = Vector2(640, 0)\n\n[node name=\"SpriteNear\" type=\"Sprite2D\" parent=\"LayerNear\"]\nposition = Vector2(320, 180)\nscale = Vector2(2, 2)\ntexture = ExtResource(\"1_bg\")\n"
+     },
+     {
+      "percorso": "levels/level_1.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://levels/background_parallax.tscn\" id=\"1_bg\"]\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"2_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/goal.tscn\" id=\"3_goal\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Level1\" type=\"Node2D\"]\n\n[node name=\"BackgroundParallax\" parent=\".\" instance=ExtResource(\"1_bg\")]\n\n[node name=\"Terrain\" type=\"TileMapLayer\" parent=\".\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\nposition = Vector2(100, 400)\n\n[node name=\"Goal\" parent=\".\" instance=ExtResource(\"3_goal\")]\nposition = Vector2(700, 400)\nnext_level_path = \"res://levels/level_2.tscn\"\n"
+     },
+     {
+      "percorso": "levels/level_2.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://levels/background_parallax.tscn\" id=\"1_bg\"]\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"2_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/goal.tscn\" id=\"3_goal\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Level2\" type=\"Node2D\"]\n\n[node name=\"BackgroundParallax\" parent=\".\" instance=ExtResource(\"1_bg\")]\n\n[node name=\"Terrain\" type=\"TileMapLayer\" parent=\".\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\nposition = Vector2(100, 400)\n\n[node name=\"Goal\" parent=\".\" instance=ExtResource(\"3_goal\")]\nposition = Vector2(700, 400)\nnext_level_path = \"res://main.tscn\"\n"
+     },
+     {
+      "percorso": "effects/coin_sparks.gd",
+      "contenuto": "extends GPUParticles2D\n\n\nfunc _ready() -> void:\n\tfinished.connect(queue_free)\n\trestart()\n"
+     },
+     {
+      "percorso": "effects/coin_sparks.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://effects/coin_sparks.gd\" id=\"1_script\"]\n\n[sub_resource type=\"ParticleProcessMaterial\" id=\"ParticleProcessMaterial_sparks\"]\nparticle_flag_disable_z = true\nspread = 180.0\ninitial_velocity_min = 40.0\ninitial_velocity_max = 80.0\ngravity = Vector3(0, 98, 0)\n\n[node name=\"CoinSparks\" type=\"GPUParticles2D\"]\nemitting = true\namount = 12\nprocess_material = SubResource(\"ParticleProcessMaterial_sparks\")\nlifetime = 0.4\none_shot = true\nexplosiveness = 1.0\nscript = ExtResource(\"1_script\")\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/coin.tscn\" id=\"2_coin\"]\n[ext_resource type=\"PackedScene\" path=\"res://enemies/walker_enemy.tscn\" id=\"3_enemy\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\nposition = Vector2(200, 464)\n\n[node name=\"Coin\" parent=\".\" instance=ExtResource(\"2_coin\")]\nposition = Vector2(300, 464)\n\n[node name=\"WalkerEnemy\" parent=\".\" instance=ExtResource(\"3_enemy\")]\nposition = Vector2(400, 464)\n"
+     },
+     {
+      "percorso": "effects/enemy_explosion.gd",
+      "contenuto": "class_name EnemyExplosion\nextends GPUParticles2D\n\n\nfunc _ready() -> void:\n\tfinished.connect(_on_finished)\n\trestart()\n\n\nfunc _on_finished() -> void:\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "effects/enemy_explosion.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://effects/enemy_explosion.gd\" id=\"1_script\"]\n\n[sub_resource type=\"ParticleProcessMaterial\" id=\"ParticleProcessMaterial_fragments\"]\nparticle_flag_disable_z = true\nspread = 180.0\ninitial_velocity_min = 50.0\ninitial_velocity_max = 120.0\ngravity = Vector3(0, 200, 0)\nscale_min = 2.0\nscale_max = 4.0\n\n[node name=\"EnemyExplosion\" type=\"GPUParticles2D\"]\nemitting = true\namount = 16\nprocess_material = SubResource(\"ParticleProcessMaterial_fragments\")\nlifetime = 0.5\none_shot = true\nexplosiveness = 1.0\nscript = ExtResource(\"1_script\")\n"
+     },
+     {
+      "percorso": "enemies/walker_enemy.gd",
+      "contenuto": "class_name WalkerEnemy\nextends CharacterBody2D\n\n@export var speed: float = 60.0\n@export var gravity: float = 980.0\n@export var bounce_impulse: float = -320.0\n@export var damage: int = 1\n@export var death_particles_scene: PackedScene = preload(\"res://effects/enemy_explosion.tscn\")\n\nvar direction: float = 1.0\n\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var edge_detector: RayCast2D = $EdgeDetector\n@onready var stomp_area: Area2D = $StompArea\n@onready var hit_area: Area2D = $HitArea\n\n\nfunc _ready() -> void:\n\tif stomp_area:\n\t\tstomp_area.body_entered.connect(_on_stomp_area_body_entered)\n\tif hit_area:\n\t\thit_area.body_entered.connect(_on_hit_area_body_entered)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\n\tif is_on_wall() or (is_on_floor() and edge_detector and not edge_detector.is_colliding()):\n\t\t_turn_around()\n\n\tvelocity.x = direction * speed\n\tmove_and_slide()\n\n\nfunc _turn_around() -> void:\n\tdirection *= -1.0\n\tif sprite:\n\t\tsprite.flip_h = direction < 0.0\n\tif edge_detector:\n\t\tedge_detector.position.x = absf(edge_detector.position.x) * direction\n\n\nfunc _on_stomp_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body is CharacterBody2D and body.velocity.y >= 0.0:\n\t\tbody.velocity.y = bounce_impulse\n\t\tif death_particles_scene:\n\t\t\tvar particles := death_particles_scene.instantiate() as GPUParticles2D\n\t\t\tparticles.global_position = global_position\n\t\t\tget_parent().add_child(particles)\n\t\tqueue_free()\n\n\nfunc _on_hit_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tif body is CharacterBody2D and body.velocity.y > 0.0 and body.global_position.y < global_position.y:\n\t\t\treturn\n\t\tbody.take_damage(damage)\n"
+     },
+     {
+      "percorso": "enemies/flying_enemy.gd",
+      "contenuto": "class_name FlyingEnemy\nextends CharacterBody2D\n\n@export var speed: float = 80.0\n@export var patrol_time: float = 2.0\n@export var bounce_impulse: float = -320.0\n@export var damage: int = 1\n@export var death_particles_scene: PackedScene = preload(\"res://effects/enemy_explosion.tscn\")\n\nvar direction: float = 1.0\n\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var patrol_timer: Timer = $PatrolTimer\n@onready var stomp_area: Area2D = $StompArea\n@onready var hit_area: Area2D = $HitArea\n\n\nfunc _ready() -> void:\n\tif patrol_timer:\n\t\tpatrol_timer.wait_time = patrol_time\n\t\tpatrol_timer.timeout.connect(_on_patrol_timer_timeout)\n\t\tpatrol_timer.start()\n\n\tif stomp_area:\n\t\tstomp_area.body_entered.connect(_on_stomp_area_body_entered)\n\tif hit_area:\n\t\thit_area.body_entered.connect(_on_hit_area_body_entered)\n\n\nfunc _physics_process(_delta: float) -> void:\n\tif is_on_wall():\n\t\t_turn_around()\n\t\tif patrol_timer:\n\t\t\tpatrol_timer.start()\n\n\tvelocity.x = direction * speed\n\tvelocity.y = 0.0\n\tmove_and_slide()\n\n\nfunc _turn_around() -> void:\n\tdirection *= -1.0\n\tif sprite:\n\t\tsprite.flip_h = direction < 0.0\n\n\nfunc _on_patrol_timer_timeout() -> void:\n\t_turn_around()\n\n\nfunc _on_stomp_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body is CharacterBody2D and body.velocity.y >= 0.0:\n\t\tbody.velocity.y = bounce_impulse\n\t\tif death_particles_scene:\n\t\t\tvar particles := death_particles_scene.instantiate() as GPUParticles2D\n\t\t\tparticles.global_position = global_position\n\t\t\tget_parent().add_child(particles)\n\t\tqueue_free()\n\n\nfunc _on_hit_area_body_entered(body: Node2D) -> void:\n\tif is_queued_for_deletion():\n\t\treturn\n\tif body.is_in_group(\"player\") and body.has_method(\"take_damage\"):\n\t\tif body is CharacterBody2D and body.velocity.y > 0.0 and body.global_position.y < global_position.y:\n\t\t\treturn\n\t\tbody.take_damage(damage)\n"
+     },
+     {
+      "percorso": "player/player_fall_state.gd",
+      "contenuto": "class_name PlayerFallState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"fall\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif player.is_on_floor():\n\t\tvar sprite: Node2D = animated_sprite\n\t\tif not sprite and player:\n\t\t\tsprite = player.get_node_or_null(\"Sprite2D\") as Node2D\n\t\tif sprite:\n\t\t\tsprite.scale = Vector2(1.25, 0.75)\n\t\t\tvar tween := player.create_tween()\n\t\t\ttween.tween_property(sprite, \"scale\", Vector2.ONE, 0.15)\n\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+     },
+     {
+      "percorso": "effects/game_camera.gd",
+      "contenuto": "class_name GameCamera\nextends Camera2D\n\nvar _shake_timer: float = 0.0\nvar _shake_strength: float = 0.0\n\n\nfunc _process(delta: float) -> void:\n\tif _shake_timer > 0.0:\n\t\t_shake_timer -= delta\n\t\toffset = Vector2(\n\t\t\trandf_range(-_shake_strength, _shake_strength),\n\t\t\trandf_range(-_shake_strength, _shake_strength)\n\t\t)\n\telse:\n\t\toffset = Vector2.ZERO\n\n\nfunc apply_shake(strength: float = 8.0, duration: float = 0.15) -> void:\n\t_shake_strength = strength\n\t_shake_timer = duration\n"
+     },
+     {
+      "percorso": "player/player_jump_state.gd",
+      "contenuto": "class_name PlayerJumpState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"jump\")\n\tvar sprite: Node2D = animated_sprite\n\tif not sprite and player:\n\t\tsprite = player.get_node_or_null(\"Sprite2D\") as Node2D\n\tif sprite:\n\t\tsprite.scale = Vector2(0.75, 1.25)\n\t\tvar tween := player.create_tween()\n\t\ttween.tween_property(sprite, \"scale\", Vector2.ONE, 0.15)\n\n\tif player and player.has_method(\"play_jump_sound\"):\n\t\tplayer.play_jump_sound()\n\n\tplayer.velocity.y = player.jump_velocity\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif Input.is_action_just_released(\"jump\") and player.velocity.y < 0.0:\n\t\tplayer.velocity.y *= 0.5\n\n\tif player.velocity.y >= 0.0:\n\t\ttransitioned.emit(self, \"fall\")\n"
+     },
+     {
+      "percorso": "objects/coin.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://objects/coin.gd\" id=\"1_script\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/coin.png\" id=\"2_coin\"]\n[ext_resource type=\"AudioStream\" path=\"res://assets/audio/coin.wav\" id=\"3_audio\"]\n\n[sub_resource type=\"CircleShape2D\" id=\"CircleShape2D_coin\"]\nradius = 8.0\n\n[node name=\"Coin\" type=\"Area2D\"]\nscript = ExtResource(\"1_script\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_coin\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"CircleShape2D_coin\")\n\n[node name=\"CoinAudio\" type=\"AudioStreamPlayer2D\" parent=\".\"]\nstream = ExtResource(\"3_audio\")\n"
+     },
+     {
+      "percorso": "objects/coin.gd",
+      "contenuto": "extends Area2D\n\n@export var sparks_scene: PackedScene = preload(\"res://effects/coin_sparks.tscn\")\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif not body.is_in_group(\"player\"):\n\t\treturn\n\n\tif sparks_scene:\n\t\tvar sparks := sparks_scene.instantiate() as GPUParticles2D\n\t\tsparks.global_position = global_position\n\t\tget_parent().add_child(sparks)\n\n\tvar audio := get_node_or_null(\"CoinAudio\") as AudioStreamPlayer2D\n\tif audio:\n\t\taudio.pitch_scale = randf_range(0.95, 1.25)\n\t\taudio.play()\n\t\t$Sprite2D.visible = false\n\t\t$CollisionShape2D.set_deferred(\"disabled\", true)\n\t\tawait audio.finished\n\n\tqueue_free()\n"
+     },
+     {
+      "percorso": "shaders/hit_flash.gdshader",
+      "contenuto": "shader_type canvas_item;\n\nuniform float flash_modifier : hint_range(0.0, 1.0) = 0.0;\nuniform vec4 flash_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);\n\nvoid fragment() {\n\tvec4 color = texture(TEXTURE, UV);\n\tvec3 mixed_rgb = mix(color.rgb, flash_color.rgb, flash_modifier);\n\tCOLOR = vec4(mixed_rgb, color.a);\n}\n"
+     },
+     {
+      "percorso": "player/player.gd",
+      "contenuto": "class_name Player\nextends CharacterBody2D\n\nsignal health_changed(new_health: int)\n\n@export var max_health: int = 3\nvar health: int = 3\n\n@onready var sprite_2d: Sprite2D = $Sprite2D\n\n\nfunc _ready() -> void:\n\tadd_to_group(\"player\")\n\thealth = max_health\n\n\nfunc apply_gravity(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y += 980.0 * delta\n\n\nfunc apply_movement(direction: float, _delta: float) -> void:\n\tvelocity.x = direction * 200.0\n\tif direction != 0.0 and sprite_2d:\n\t\tsprite_2d.flip_h = direction < 0.0\n\tmove_and_slide()\n\n\nfunc take_damage(amount: int = 1) -> void:\n\thealth -= amount\n\thealth_changed.emit(health)\n\t\n\tif sprite_2d and sprite_2d.material is ShaderMaterial:\n\t\tvar mat := sprite_2d.material as ShaderMaterial\n\t\tmat.set_shader_parameter(\"flash_modifier\", 1.0)\n\t\tvar tween := create_tween()\n\t\ttween.tween_property(mat, \"shader_parameter/flash_modifier\", 0.0, 0.2)\n"
+     },
+     {
+      "percorso": "player/player.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player/player.gd\" id=\"1_player\"]\n[ext_resource type=\"Shader\" path=\"res://shaders/hit_flash.gdshader\" id=\"2_shader\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player.png\" id=\"3_texture\"]\n\n[sub_resource type=\"ShaderMaterial\" id=\"ShaderMaterial_flash\"]\nshader = ExtResource(\"2_shader\")\nshader_parameter/flash_modifier = 0.0\nshader_parameter/flash_color = Vector4(1, 1, 1, 1)\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_player\"]\nsize = Vector2(24, 30)\n\n[node name=\"Player\" type=\"CharacterBody2D\" groups=[\"player\"]]\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\nmaterial = SubResource(\"ShaderMaterial_flash\")\ntexture = ExtResource(\"3_texture\")\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nshape = SubResource(\"RectangleShape2D_player\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Salti",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "attack",
+       "tasti": [
+        "J"
+       ]
+      },
+      {
+       "nome": "crouch",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space",
+        "Up"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Lo shader `hit_flash.gdshader` usa la funzione `mix()` per combinare i colori originali con il colore del flash. Nello script del personaggio (`player.gd`), all'interno di `take_damage()`, impostiamo `flash_modifier` a 1.0 e creiamo un `Tween` sulla proprietà `shader_parameter/flash_modifier` per riportarlo a 0.0 in 0.2 secondi.",
+    "cambiati": [
+     "shaders/hit_flash.gdshader",
+     "player/player.gd",
+     "player/player.tscn"
+    ],
+    "rimossi": []
+   },
+   "cartella": "salti",
+   "id": "es1"
+  }
+ },
+ "chiamate": []
+}
