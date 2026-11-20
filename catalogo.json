@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-20T15:13:41.077Z",
+ "aggiornato": "2026-11-20T15:30:53.115Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1181,6 +1181,15 @@
    "file": "lezioni/f08-piattaforme/particelle-2d.json",
    "sha256": "1a4771a8cbc7bba1e8821353185b0916ecfdeb7fa88e0fdf97bc7722e41a512a",
    "byte": 194284
+  },
+  {
+   "slug": "sensazione",
+   "numero": "8.11",
+   "titolo": "Dare peso alle azioni",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/sensazione.json",
+   "sha256": "0000be74a773286b22deab730fd7ff08c63462e6db80850649e14f75478c1cdb",
+   "byte": 206426
   }
  ],
  "documentazione": {
