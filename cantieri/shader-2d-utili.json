@@ -790,7 +790,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://objects/door.gd deve caricarsi senza errori: Parse Error: Identifier \"animated_player\" not declared in the current scope. (res://objects/door.gd:11 in GDScript::reload)\nFailed to load script \"res://objects/door.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  objects/door.gd, riga 11: `animated_player.play(\"open\")`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://player/player_fall_state.gd deve caricarsi senza errori: Parse Error: Identifier \"tween\" not declared in the current scope. (res://player/player_fall_state.gd:25 in GDScript::reload)\nFailed to load script \"res://player/player_fall_state.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  player/player_fall_state.gd, riga 25: `tween.tween_property(sprite, \"scale\", Vector2.ONE, 0.15)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
