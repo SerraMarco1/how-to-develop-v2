@@ -1679,5 +1679,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test è una copia identica dell'esercizio 2 (es2), in cui cambia soltanto l'oggetto da cartello (Sign) a porta (Door) e il valore di line_thickness da 1.5 a 2.0. Questo viola la regola secondo cui il test non deve essere una semplice copia di un esercizio con i nomi cambiati.",
+    "correzione": "Riscrivi il test in modo che verifichi gli obiettivi della lezione con una struttura differente, ad esempio applicando lo shader di lampeggio (hit_flash) a un nemico o a un oggetto distruttibile quando viene colpito.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
