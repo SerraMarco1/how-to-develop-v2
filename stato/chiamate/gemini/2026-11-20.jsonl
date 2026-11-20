@@ -28,3 +28,5 @@
 {"quando":1795188886631,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"shader-2d-utili","ok":true,"contata":true,"durataMs":67078,"tokenInput":25956,"tokenOutput":7774,"ragionamento":1453}
 {"quando":1795188958443,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"shader-2d-utili","ok":false,"contata":true,"durataMs":6570,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795188965019,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"shader-2d-utili","ok":true,"contata":true,"durataMs":99566,"tokenInput":22887,"tokenOutput":13932,"ragionamento":4953}
+{"quando":1795189080350,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"shader-2d-utili","ok":false,"contata":true,"durataMs":4615,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795189084968,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"shader-2d-utili","ok":true,"contata":true,"durataMs":105090,"tokenInput":23885,"tokenOutput":15854,"ragionamento":2670}
