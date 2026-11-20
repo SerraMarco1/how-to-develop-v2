@@ -1,0 +1,16 @@
+{
+ "n": 24,
+ "quando": "2026-11-20T16:03:34.239Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "saltato",
+ "titolo": "Test: correzione del revisore scartata",
+ "spiegazione": "La versione corretta non supera più i controlli, quindi si tiene quella già approvata:\n- la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo l'animazione di 0.2s, flash_modifier deve tornare a 0.0 (trovato 0.86)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa.",
+ "richieste": 0,
+ "dati": {
+  "problemi": [
+   "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo l'animazione di 0.2s, flash_modifier deve tornare a 0.0 (trovato 0.86)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+  ]
+ },
+ "chiamate": []
+}
