@@ -1,3 +1,6 @@
 {"quando":1795161678750,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":900023,"errore":"Nessuna risposta entro 900 secondi"}
 {"quando":1795162578776,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":true,"contata":true,"durataMs":168714,"tokenInput":21170,"tokenOutput":3183,"ragionamento":14145}
 {"quando":1795162768948,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"particelle-2d","ok":true,"contata":true,"durataMs":27855,"tokenInput":20449,"tokenOutput":13536,"ragionamento":1801}
+{"quando":1795162801294,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":900033,"errore":"Nessuna risposta entro 900 secondi"}
+{"quando":1795163701330,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":1071,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795163702403,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"particelle-2d","ok":false,"contata":true,"durataMs":4657,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
