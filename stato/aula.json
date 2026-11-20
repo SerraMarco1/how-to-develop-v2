@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-20T15:29:42.595Z",
+ "aggiornato": "2026-11-20T15:30:54.563Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "sensazione",
-  "numero": "8.11",
-  "titolo": "Dare peso alle azioni"
+  "slug": "shader-2d-utili",
+  "numero": "8.12",
+  "titolo": "Shader utili: lampeggio e contorno"
  },
- "messaggio": "Sta scrivendo la lezione 8.11 «Dare peso alle azioni».",
+ "messaggio": "Sta scrivendo la lezione 8.12 «Shader utili: lampeggio e contorno».",
  "riprende": null
 }
