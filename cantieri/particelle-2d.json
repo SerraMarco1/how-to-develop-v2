@@ -1363,7 +1363,7 @@
    },
    {
     "tipo": "attenzione",
-    "md": "Se attivi la proprietà `one_shot` nell'Ispettore con `emitting = false`, l'effetto non parte automaticamente durante il gioco. Per farlo scattare da uno script occorre impostare `emitting = true` oppure chiamare il metodo `restart()` sul nodo."
+    "md": "Se attivi la proprietà `one_shot` nell'Inspector con `emitting = false`, l'effetto non parte automaticamente durante il gioco. Per farlo scattare da uno script occorre impostare `emitting = true` oppure chiamare il metodo `restart()` sul nodo."
    },
    {
     "tipo": "testo",
