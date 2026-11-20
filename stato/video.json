@@ -2015,5 +2015,13 @@
     ]
    }
   }
+ },
+ "particelle-2d": {
+  "es1": {
+   "impronta": "ba539df026a3aa644ec26e1ee6563284649bdc3b1cbb66e8c4e3b645d36a0ac7",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
+  }
  }
 }

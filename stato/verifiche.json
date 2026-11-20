@@ -663,5 +663,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "particelle-2d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
