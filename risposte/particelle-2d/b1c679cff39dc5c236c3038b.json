@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-latest",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"spiegazione\", \"dove\": \"blocco 5\", \"problema\": \"Viene utilizzato il nome italiano «Ispettore» invece del nome ufficiale in inglese del pannello («Inspector»), contravvenendo alla regola dell'editor in lingua inglese.\", \"correzione\": \"Sostituire «Se attivi la proprietà `one_shot` nell'Ispettore con `emitting = false`» con «Se attivi la proprietà `one_shot` nell'Inspector con `emitting = false`».\", \"fonte\": \"L'editor resta **in inglese** per tutto il corso: il corso non fa cambiare la lingua dell'editor.\"}]}",
- "ragionamento": 4652,
- "quando": "2026-11-20T15:12:03.200Z",
- "ruolo": "revisore"
-}

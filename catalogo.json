@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-19T13:06:05.103Z",
+ "aggiornato": "2026-11-20T15:13:41.077Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1172,6 +1172,15 @@
    "file": "lezioni/f08-piattaforme/livelli-e-sfondi.json",
    "sha256": "e97001e75607bff62c6b1368d7b2c8f4af66b4bb8472baf52f3a75b0e35d403c",
    "byte": 179453
+  },
+  {
+   "slug": "particelle-2d",
+   "numero": "8.10",
+   "titolo": "Particelle",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/particelle-2d.json",
+   "sha256": "1a4771a8cbc7bba1e8821353185b0916ecfdeb7fa88e0fdf97bc7722e41a512a",
+   "byte": 194284
   }
  ],
  "documentazione": {
