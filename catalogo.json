@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-21T14:46:55.398Z",
+ "aggiornato": "2026-11-21T14:54:24.636Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1226,6 +1226,15 @@
    "file": "lezioni/f08-piattaforme/progetto-piattaforme-2.json",
    "sha256": "f5dba3dbbca5110139009cafb16afdcc6428e5617a5652ad938c0a63126d8aff",
    "byte": 43278
+  },
+  {
+   "slug": "progetto-piattaforme-3",
+   "numero": "8.16",
+   "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 3: livelli e nemici",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/progetto-piattaforme-3.json",
+   "sha256": "1f754d7fc70cc8cd0ffbb3687c112b1c75d83394ee248dd086b9bae7dbc7e896",
+   "byte": 69897
   }
  ],
  "documentazione": {
