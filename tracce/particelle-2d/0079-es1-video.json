@@ -1,0 +1,54 @@
+{
+ "n": 79,
+ "quando": "2026-11-21T09:09:41.435Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «dust» (nome = DustParticles; almeno 1 da 1 a 2.5 s; deve comparire): si vedono già all'inizio dell'intervallo (1 s): non compaiono durante. A 2 s: «DustParticles» a (92, 472) 16×16, si vede. Lo schermo va da (0, 0) a (1152, 648).\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 20822,
+ "dati": {
+  "copione": {
+   "scena": "res://levels/level_1.tscn",
+   "durata": 4,
+   "azioni": [
+    {
+     "azione": "jump",
+     "inizio": 1,
+     "fine": 1.3,
+     "tasto": "Spazio"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "dust",
+     "cerca": {
+      "nome": "DustParticles"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 2.5,
+     "deve": "comparire",
+     "etichetta": "Polvere"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "L'effetto di polvere compare quando il personaggio salta",
+     "da": 1,
+     "a": 2.5,
+     "soggetto": "dust"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «dust» (nome = DustParticles; almeno 1 da 1 a 2.5 s; deve comparire): si vedono già all'inizio dell'intervallo (1 s): non compaiono durante. A 2 s: «DustParticles» a (92, 472) 16×16, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 6 s (8182 → 249 token)"
+ ]
+}

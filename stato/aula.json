@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-21T08:47:44.306Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-21T09:09:42.053Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "gioco-completo-a-piattaforme",
   "numero": "8.13",
   "titolo": "Il gioco completo"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 8.13 riprende da sola appena rispondono.",
- "riprende": "2026-11-21T09:07:44.306Z"
+ "messaggio": "Sta scrivendo la lezione 8.13 «Il gioco completo».",
+ "riprende": null
 }
