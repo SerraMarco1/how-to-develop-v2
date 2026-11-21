@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"L'esercizio aggiunge effetti sonori e variazioni di intonazione audio, che non producono cambiamenti visibili sullo schermo.\"\n}",
- "ragionamento": 984,
- "quando": "2026-11-21T09:52:00.456Z",
- "ruolo": "ritocco"
-}

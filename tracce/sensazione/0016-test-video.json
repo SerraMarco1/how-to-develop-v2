@@ -1,0 +1,16 @@
+{
+ "n": 16,
+ "quando": "2026-11-21T09:52:01.692Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Suoni con intonazione variabile» non si vede sullo schermo: L'esercizio aggiunge effetti sonori e variazioni di intonazione audio, che non producono cambiamenti visibili sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 5443,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (7874 → 44 token)"
+ ]
+}

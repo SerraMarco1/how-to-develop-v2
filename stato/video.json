@@ -2064,6 +2064,21 @@
    "esito": "niente",
    "regole": 2,
    "motivo": "Lo scuotimento della telecamera e il fermo immagine si attivano solo subendo danno da un pericolo nella scena di gioco."
+  },
+  "test": {
+   "impronta": "69ecad087ce700f5c216aa0825a483c7d35596807f7ae05f34c680c2a0046bc8",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "L'esercizio aggiunge effetti sonori e variazioni di intonazione audio, che non producono cambiamenti visibili sullo schermo."
+  }
+ },
+ "shader-2d-utili": {
+  "es1": {
+   "impronta": "0b50bfbabb9eba2d61ca1ece6ff4be9041dec5c916c486b82e26295a537934eb",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
   }
  }
 }
