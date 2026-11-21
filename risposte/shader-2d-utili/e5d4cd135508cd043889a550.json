@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"player\",\n      \"cerca\": {\n        \"classe\": \"CharacterBody2D\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"deve\": \"cambiare colore\",\n      \"etichetta\": \"Personaggio\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il personaggio lampeggia di bianco perché subisce un colpo\",\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"soggetto\": \"player\"\n    }\n  ]\n}",
+ "ragionamento": 3524,
+ "quando": "2026-11-21T10:53:32.796Z",
+ "ruolo": "ritocco"
+}
