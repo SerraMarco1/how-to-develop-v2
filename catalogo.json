@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-21T08:13:32.810Z",
+ "aggiornato": "2026-11-21T08:13:45.745Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1195,10 +1195,10 @@
    "slug": "shader-2d-utili",
    "numero": "8.12",
    "titolo": "Shader utili: lampeggio e contorno",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/shader-2d-utili.json",
-   "sha256": "432ddd5c24b0501e90c665eee224120975cf8d09aabd655dd9ea5d1b06e83c45",
-   "byte": 225871
+   "sha256": "d4645267f530249cea9e2005f9eda4978b1d7769a3a8bc5a0ccebe9461b047e2",
+   "byte": 227848
   }
  ],
  "documentazione": {
