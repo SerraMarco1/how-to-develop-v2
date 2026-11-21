@@ -90,7 +90,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://autoload/save_manager.gd deve caricarsi senza errori\n  - Il file res://levels/level_1.tscn deve caricarsi senza errori: Parse Error: Cannot call non-static function \"unlock_next_level()\" on the class \"SaveManager\" directly. Make an instance instead. (res://objects/goal.gd:19 in GDScript::reload)\nFailed to load script \"res://objects/goal.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\n  - Il file res://objects/goal.gd deve caricarsi senza errori\n  - Il file res://ui/level_select.gd deve caricarsi senza errori: Parse Error: Cannot find member \"unlocked_levels\" in base \"SaveManager\". (res://ui/level_select.gd:9 in GDScript::reload)\nFailed to load script \"res://ui/level_select.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  objects/goal.gd, riga 19: `SaveManager.unlock_next_level(unlocks_level)`\n  ui/level_select.gd, riga 9: `var unlocked: int = SaveManager.unlocked_levels`"
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
