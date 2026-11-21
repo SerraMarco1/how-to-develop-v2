@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-21T14:41:51.753Z",
+ "aggiornato": "2026-11-21T14:43:26.872Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1208,6 +1208,15 @@
    "file": "lezioni/f08-piattaforme/gioco-completo-a-piattaforme.json",
    "sha256": "55cebd471516a768eb25d76b42dd5a499f49b526cf4854b9e670b4b5f7f96885",
    "byte": 165902
+  },
+  {
+   "slug": "progetto-piattaforme-1",
+   "numero": "8.14",
+   "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 1: il personaggio",
+   "versione": 1,
+   "file": "lezioni/f08-piattaforme/progetto-piattaforme-1.json",
+   "sha256": "93829330cba9346b04d084a1da3e699f47f5932909ea825862d44e576725787c",
+   "byte": 24976
   }
  ],
  "documentazione": {
