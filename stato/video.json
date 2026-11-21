@@ -2056,5 +2056,14 @@
     ]
    }
   }
+ },
+ "sensazione": {
+  "es2": {
+   "impronta": "1f7cb18b480a96220bfa04cdf0ee9a97b231e8e1db798cb1251e24be435f7b23",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Lo scuotimento della telecamera e il fermo immagine si attivano solo subendo danno da un pericolo nella scena di gioco."
+  }
  }
 }
