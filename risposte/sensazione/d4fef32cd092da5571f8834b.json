@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": false,\n  \"perche\": \"Lo scuotimento della telecamera e il fermo immagine si attivano solo subendo danno da un pericolo nella scena di gioco.\"\n}",
+ "ragionamento": 1416,
+ "quando": "2026-11-21T09:51:54.355Z",
+ "ruolo": "ritocco"
+}

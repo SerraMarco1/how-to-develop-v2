@@ -21,3 +21,4 @@
 {"quando":1795252181438,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"particelle-2d","ok":false,"contata":true,"durataMs":611,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795252185369,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"gioco-completo-a-piattaforme","ok":false,"contata":true,"durataMs":2511,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795254683702,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"particelle-2d","ok":true,"contata":true,"durataMs":6060,"tokenInput":8478,"tokenOutput":252,"ragionamento":1753}
+{"quando":1795254709185,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"sensazione","ok":true,"contata":true,"durataMs":5169,"tokenInput":7838,"tokenOutput":44,"ragionamento":1416}
