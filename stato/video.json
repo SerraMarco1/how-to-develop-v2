@@ -2076,9 +2076,41 @@
  "shader-2d-utili": {
   "es1": {
    "impronta": "0b50bfbabb9eba2d61ca1ece6ff4be9041dec5c916c486b82e26295a537934eb",
-   "tentativi": 0,
-   "esito": "in corso",
-   "regole": 2
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "player",
+       "cerca": {
+        "classe": "CharacterBody2D"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.5,
+       "deve": "cambiare colore",
+       "etichetta": "Personaggio"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il personaggio lampeggia di bianco perché subisce un colpo",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "player"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «player» (classe = CharacterBody2D; almeno 1 da 0.5 a 5.5 s; deve cambiare colore): si vedono, ma hanno cambiato colore solo 0 nodi su 1 (cambio massimo 0 su 1, ne serve 0.2). A 3 s: «Player» a (184, 448) 32×32, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+    ]
+   },
+   "motivo": "Il lampeggio di danno usa uno shader personalizzato e non la proprietà modulate del nodo, quindi il sistema automatico non può rilevarne il cambiamento visivo di colore."
   }
  }
 }
