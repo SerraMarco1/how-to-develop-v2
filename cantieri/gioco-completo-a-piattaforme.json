@@ -2,7 +2,7 @@
  "creato": "2026-11-20T16:03:44.453Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -411,7 +411,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Salvataggio e selezione dei livelli\" (obiettivo) non superava i controlli ed è stato tolto: questa lezione ha solo il test."
+ ],
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-3.7-flash",
