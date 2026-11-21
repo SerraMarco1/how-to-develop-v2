@@ -3,3 +3,4 @@
 {"quando":1795248124848,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"gioco-completo-a-piattaforme","ok":false,"contata":true,"durataMs":272,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795248787521,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"particelle-2d","ok":true,"contata":true,"durataMs":7091,"tokenInput":2848,"tokenOutput":618,"ragionamento":2282}
 {"quando":1795248800547,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"sensazione","ok":true,"contata":true,"durataMs":9042,"tokenInput":2899,"tokenOutput":930,"ragionamento":1600}
+{"quando":1795248814208,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"shader-2d-utili","ok":true,"contata":true,"durataMs":7864,"tokenInput":2864,"tokenOutput":794,"ragionamento":2533}
