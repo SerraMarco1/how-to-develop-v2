@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-21T15:03:07.140Z",
+ "aggiornato": "2026-11-21T15:03:19.752Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1222,10 +1222,10 @@
    "slug": "progetto-piattaforme-2",
    "numero": "8.15",
    "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 2: la tua meccanica",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/progetto-piattaforme-2.json",
-   "sha256": "f5dba3dbbca5110139009cafb16afdcc6428e5617a5652ad938c0a63126d8aff",
-   "byte": 43278
+   "sha256": "0aca53133be6b3c7e912217f856588f377be4ad9948807d28b658686cac0e2ff",
+   "byte": 45386
   },
   {
    "slug": "progetto-piattaforme-3",
