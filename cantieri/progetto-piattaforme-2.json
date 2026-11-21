@@ -149,9 +149,10 @@
     "tipo": "autonomo",
     "genere": "da-zero",
     "titolo": "Tappa 2: Implementa la tua meccanica",
-    "consegna": "Completa la seconda tappa del tuo gioco a piattaforme implementando una meccanica aggiuntiva a tua scelta dall'elenco.\n\nScegli **una** tra le seguenti meccaniche:\n- **Doppio salto**: premendo l'azione `jump` in aria, il personaggio esegue un secondo salto se ha ancora la possibilità di farlo (ripristinata toccando il suolo).\n- **Scatto (Dash)**: aggiungi un'azione di input `dash` nella Input Map che aumenta drasticamente la velocità orizzontale in avanti per una breve durata.\n- **Salto sul muro (Wall Jump)**: quando il personaggio si trova in aria ed è a contatto con un muro, premere `jump` lo spinge verso l'alto e nella direzione opposta alla parete.\n- **Gravità invertita**: un'azione o una zona ribalta la direzione della gravità (invertendo `up_direction` o modificando la spinta verticale).\n- **Interruttori e piattaforme**: un nodo interruttore nel livello o nello script attiva il movimento o lo stato di una piattaforma mobile.\n\nAssicurati che la meccanica scelta sia ben integrata nello script del personaggio o nelle scene e non interrompa le funzionalità esistenti.",
+    "consegna": "Completa la seconda tappa del tuo gioco a piattaforme implementando una meccanica aggiuntiva a tua scelta dall'elenco. Per le meccaniche legate al movimento, modifica lo script del personaggio `player/player.gd`.\n\nScegli **una** tra le seguenti meccaniche:\n- **Doppio salto**: nello script `player/player.gd`, aggiungi una variabile booleana (ad esempio `has_double_jump`) inizializzata a `true`, che viene ripristinata a `true` quando il personaggio è a terra (`is_on_floor()`). Quando il personaggio è in aria e viene premuta l'azione `jump`, se `has_double_jump` è `true`, imposta `velocity.y = JUMP_VELOCITY` e imposta `has_double_jump` a `false` per consentire un secondo salto.\n- **Scatto (Dash)**: aggiungi un'azione di input `dash` nella Input Map e nello script `player/player.gd` aumenta la velocità orizzontale in avanti per una breve durata quando `dash` viene premuto.\n- **Salto sul muro (Wall Jump)**: nello script `player/player.gd`, quando il personaggio è in aria ed è a contatto con un muro (`is_on_wall()`), premere `jump` lo spinge verso l'alto e nella direzione opposta alla parete.\n- **Gravità invertita**: nello script `player/player.gd` o nel livello, aggiungi la possibilità di invertire la direzione della gravità o la spinta verticale.\n- **Interruttori e piattaforme**: aggiungi una scena o un nodo interruttore che attiva il movimento o lo stato di una piattaforma mobile.\n\nAssicurati che la meccanica scelta sia ben integrata nello script del personaggio `player/player.gd` o nelle scene e non interrompa le funzionalità esistenti.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "il-mio-gioco-a-piattaforme",
     "passiGuida": [],
     "suggerimenti": [],
     "verifiche": [
@@ -170,29 +171,62 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "player/player.tscn",
+       "contenuto": "[gd_scene load_steps=9 format=3]\n\n[ext_resource type=\"Script\" path=\"res://player/player.gd\" id=\"1_player\"]\n[ext_resource type=\"Texture2D\" path=\"res://assets/sprites/player_sheet.png\" id=\"2_sheet\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_box\"]\nsize = Vector2(20, 28)\n\n[sub_resource type=\"Animation\" id=\"Animation_idle\"]\nresource_name = \"idle\"\nlength = 0.4\nloop_mode = 1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:frame\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.2),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 1,\n\"values\": [0, 1]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_run\"]\nresource_name = \"run\"\nlength = 0.4\nloop_mode = 1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:frame\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0, 0.2),\n\"transitions\": PackedFloat32Array(1, 1),\n\"update\": 1,\n\"values\": [2, 3]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_jump\"]\nresource_name = \"jump\"\nlength = 0.1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:frame\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 1,\n\"values\": [2]\n}\n\n[sub_resource type=\"Animation\" id=\"Animation_fall\"]\nresource_name = \"fall\"\nlength = 0.1\ntracks/0/type = \"value\"\ntracks/0/imported = false\ntracks/0/enabled = true\ntracks/0/path = NodePath(\"Sprite2D:frame\")\ntracks/0/interp = 1\ntracks/0/loop_wrap = true\ntracks/0/keys = {\n\"times\": PackedFloat32Array(0),\n\"transitions\": PackedFloat32Array(1),\n\"update\": 1,\n\"values\": [3]\n}\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_player\"]\n_data = {\n\"fall\": SubResource(\"Animation_fall\"),\n\"idle\": SubResource(\"Animation_idle\"),\n\"jump\": SubResource(\"Animation_jump\"),\n\"run\": SubResource(\"Animation_run\")\n}\n\n[node name=\"Player\" type=\"CharacterBody2D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"Sprite2D\" type=\"Sprite2D\" parent=\".\"]\ntexture = ExtResource(\"2_sheet\")\nhframes = 4\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\".\"]\nposition = Vector2(0, 2)\nshape = SubResource(\"RectangleShape2D_box\")\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n\"\": SubResource(\"AnimationLibrary_player\")\n}\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene load_steps=3 format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"1_player_scene\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Main\" type=\"Node2D\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player_scene\")]\nposition = Vector2(400, 400)\n"
+      },
+      {
        "percorso": "player/player.gd",
        "contenuto": "extends CharacterBody2D\n\nenum State { IDLE, RUN, JUMP, FALL, DOUBLE_JUMP }\n\nconst SPEED := 160.0\nconst JUMP_VELOCITY := -360.0\nconst COYOTE_TIME := 0.15\nconst JUMP_BUFFER_TIME := 0.15\n\nvar state := State.IDLE\nvar gravity: float = ProjectSettings.get_setting(\"physics/2d/default_gravity\", 980.0)\n\nvar coyote_timer := 0.0\nvar jump_buffer_timer := 0.0\nvar is_touching_wall := false\nvar has_double_jump := true\n\n@onready var sprite: Sprite2D = $Sprite2D\n@onready var anim_player: AnimationPlayer = $AnimationPlayer\n\n\nfunc _physics_process(delta: float) -> void:\n\t# Gestione gravità e timer Coyote Time\n\tif not is_on_floor():\n\t\tvelocity.y += gravity * delta\n\t\tcoyote_timer -= delta\n\telse:\n\t\tcoyote_timer = COYOTE_TIME\n\t\thas_double_jump = true\n\n\t# Gestione timer Jump Buffer\n\tif Input.is_action_just_pressed(\"jump\"):\n\t\tjump_buffer_timer = JUMP_BUFFER_TIME\n\telse:\n\t\tjump_buffer_timer -= delta\n\n\t# Esecuzione salto con tolleranza o doppio salto\n\tif jump_buffer_timer > 0.0 and coyote_timer > 0.0:\n\t\tvelocity.y = JUMP_VELOCITY\n\t\tjump_buffer_timer = 0.0\n\t\tcoyote_timer = 0.0\n\telif Input.is_action_just_pressed(\"jump\") and not is_on_floor() and has_double_jump:\n\t\tvelocity.y = JUMP_VELOCITY\n\t\thas_double_jump = false\n\n\t# Movimento orizzontale\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tif direction != 0.0:\n\t\tvelocity.x = direction * SPEED\n\t\tif sprite != null:\n\t\t\tsprite.flip_h = (direction < 0.0)\n\telse:\n\t\tvelocity.x = move_toward(velocity.x, 0.0, SPEED)\n\n\tmove_and_slide()\n\tis_touching_wall = is_on_wall()\n\t_update_state()\n\n\nfunc _update_state() -> void:\n\tif is_on_floor():\n\t\tif absf(velocity.x) > 10.0:\n\t\t\tstate = State.RUN\n\t\telse:\n\t\t\tstate = State.IDLE\n\telse:\n\t\tif velocity.y < 0.0:\n\t\t\tstate = State.JUMP\n\t\telse:\n\t\t\tstate = State.FALL\n\n\t_update_animation()\n\n\nfunc _update_animation() -> void:\n\tif anim_player == null:\n\t\treturn\n\n\tmatch state:\n\t\tState.IDLE:\n\t\t\tanim_player.play(\"idle\")\n\t\tState.RUN:\n\t\t\tanim_player.play(\"run\")\n\t\tState.JUMP, State.DOUBLE_JUMP:\n\t\t\tanim_player.play(\"jump\")\n\t\tState.FALL:\n\t\t\tanim_player.play(\"fall\")\n"
       }
      ],
      "progetto": {
       "nome": "Il mio gioco a piattaforme",
-      "scenaPrincipale": "",
-      "azioni": [],
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "jump",
+        "tasti": [
+         "Space",
+         "Up"
+        ]
+       }
+      ],
       "autoload": [],
       "impostazioni": []
      },
      "spiegazione": "In questa soluzione di riferimento è stato implementato il **Doppio salto**. Dichiariamo una variabile booleana `has_double_jump := true`, che si ricarica quando `is_on_floor()` è vero. Quando il personaggio è in aria ed effettua un ulteriore impulso di salto premendo `jump`, impostiamo `velocity.y = JUMP_VELOCITY` e poniamo `has_double_jump = false` per evitare salti infiniti.",
-     "cambiati": [],
+     "cambiati": [
+      "player/player.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "da-zero",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione cambia anche player/player.gd, ma il testo dell'esercizio non lo nomina: chi segue la consegna lascia quei file com'erano, e così le verifiche non passano. Le modifiche che la consegna non dice:\n  player/player.gd:\n    - riga 3: enum State { IDLE, RUN, JUMP, FALL }\n    + riga 3: enum State { IDLE, RUN, JUMP, FALL, DOUBLE_JUMP }\n    + riga 16: var has_double_jump := true\n    + riga 29:     has_double_jump = true\n    + riga 42:   elif Input.is_action_just_pressed(\"jump\") and not is_on_floor() and has_double_jump:\n    + riga 43:     velocity.y = JUMP_VELOCITY\n    + riga 44:     has_double_jump = false\n    - riga 79:     State.JUMP:\n    + riga 84:     State.JUMP, State.DOUBLE_JUMP:\nCon quei file com'erano prima falliscono:\n  - Devi implementare almeno una delle meccaniche richieste (Doppio salto, Scatto, Salto sul muro, Gravità invertita o Interruttori/Piattaforme)\nSe quelle modifiche servono, scrivile nella consegna con il nome del file (cosa cambiare e perché); se non servono, toglile dalla soluzione."
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
   }
