@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-21T08:13:45.745Z",
+ "aggiornato": "2026-11-21T09:51:47.163Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1177,10 +1177,10 @@
    "slug": "particelle-2d",
    "numero": "8.10",
    "titolo": "Particelle",
-   "versione": 2,
+   "versione": 3,
    "file": "lezioni/f08-piattaforme/particelle-2d.json",
-   "sha256": "5fb4febb5619633356d1d0ee8cb5dc314759ebc38c41d96e11f89239b318a34f",
-   "byte": 195922
+   "sha256": "a66419cffe13b07982242861f13bbe4ecf0912b3d427c7970e0c85fc2c75c613",
+   "byte": 196499
   },
   {
    "slug": "sensazione",

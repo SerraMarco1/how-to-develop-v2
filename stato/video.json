@@ -2019,48 +2019,42 @@
  "particelle-2d": {
   "es1": {
    "impronta": "ba539df026a3aa644ec26e1ee6563284649bdc3b1cbb66e8c4e3b645d36a0ac7",
-   "tentativi": 1,
-   "esito": "in corso",
+   "tentativi": 2,
+   "esito": "fatto",
    "regole": 2,
-   "ultimo": {
-    "copione": {
-     "scena": "res://levels/level_1.tscn",
-     "durata": 4,
-     "azioni": [
-      {
-       "azione": "jump",
-       "inizio": 1,
-       "fine": 1.3,
-       "tasto": "Spazio"
-      }
-     ],
-     "soggetti": [
-      {
-       "id": "dust",
-       "cerca": {
-        "nome": "DustParticles"
-       },
-       "quanti": 1,
-       "da": 1,
-       "a": 2.5,
-       "deve": "comparire",
-       "etichetta": "Polvere"
-      }
-     ],
-     "scritte": [
-      {
-       "testo": "L'effetto di polvere compare quando il personaggio salta",
-       "da": 1,
-       "a": 2.5,
-       "soggetto": "dust"
-      }
-     ]
-    },
-    "problemi": [
-     "Soggetto «dust» (nome = DustParticles; almeno 1 da 1 a 2.5 s; deve comparire): si vedono già all'inizio dell'intervallo (1 s): non compaiono durante. A 2 s: «DustParticles» a (92, 472) 16×16, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+   "copione": {
+    "scena": "res://levels/level_1.tscn",
+    "durata": 8,
+    "azioni": [
+     {
+      "azione": "jump",
+      "inizio": 1,
+      "fine": 1.3,
+      "tasto": "Spazio"
+     }
+    ],
+    "soggetti": [
+     {
+      "id": "dust",
+      "cerca": {
+       "nome": "DustParticles"
+      },
+      "quanti": 1,
+      "da": 1,
+      "a": 7,
+      "deve": "esserci",
+      "etichetta": "Polvere"
+     }
+    ],
+    "scritte": [
+     {
+      "testo": "L'effetto di polvere si attiva quando salti e atterri",
+      "da": 1,
+      "a": 7,
+      "soggetto": "dust"
+     }
     ]
-   },
-   "motivo": "Soggetto «dust» (nome = DustParticles; almeno 1 da 1 a 2.5 s; deve comparire): si vedono già all'inizio dell'intervallo (1 s): non compaiono durante. A 2 s: «DustParticles» a (92, 472) 16×16, si vede. Lo schermo va da (0, 0) a (1152, 648)."
+   }
   }
  }
 }
