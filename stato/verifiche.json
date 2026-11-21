@@ -668,5 +668,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "sensazione": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "shader-2d-utili": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
