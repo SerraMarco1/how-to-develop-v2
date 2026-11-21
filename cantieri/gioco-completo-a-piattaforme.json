@@ -168,7 +168,7 @@
       },
       {
        "percorso": "player/player_fall_state.gd",
-       "contenuto": "class_name PlayerFallState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"fall\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif player.is_on_floor():\n\t\tvar sprite: Node2D = animated_sprite\n\t\tif not sprite and player:\n\t\t\tsprite = player.get_node_or_null(\"Sprite2D\") as Node2D\n\t\tif sprite:\n\t\t\tsprite.scale = Vector2(1.25, 0.75)\n\t\t\tvar tween := player.create_tween()\n\t\ttween.tween_property(sprite, \"scale\", Vector2.ONE, 0.15)\n\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
+       "contenuto": "class_name PlayerFallState\nextends State\n\n@export var player: CharacterBody2D\n@export var animated_sprite: AnimatedSprite2D\n\n\nfunc enter() -> void:\n\tif animated_sprite:\n\t\tanimated_sprite.play(\"fall\")\n\n\nfunc physics_update(delta: float) -> void:\n\tplayer.apply_gravity(delta)\n\tvar direction := Input.get_axis(\"move_left\", \"move_right\")\n\tplayer.apply_movement(direction, delta)\n\n\tif player.is_on_floor():\n\t\tvar sprite: Node2D = animated_sprite\n\t\tif not sprite and player:\n\t\t\tsprite = player.get_node_or_null(\"Sprite2D\") as Node2D\n\t\tif sprite:\n\t\t\tsprite.scale = Vector2(1.25, 0.75)\n\t\t\tvar tween := player.create_tween()\n\t\t\ttween.tween_property(sprite, \"scale\", Vector2.ONE, 0.15)\n\n\t\tif direction != 0.0:\n\t\t\ttransitioned.emit(self, \"run\")\n\t\telse:\n\t\t\ttransitioned.emit(self, \"idle\")\n"
       },
       {
        "percorso": "effects/game_camera.gd",
@@ -285,6 +285,7 @@
      "spiegazione": "`SaveManager` usa `FileAccess` e `JSON` per scrivere e leggere da `user://save_data.json`, garantendo la persistenza dei dati. Registrandolo come Autoload senza `class_name` concorrente, il nome `SaveManager` fa riferimento all'istanza globale in tutto il progetto. `LevelSelect` interroga `SaveManager.unlocked_levels` in `_ready()` per impostare la proprietà `disabled` dei pulsanti.",
      "cambiati": [
       "project.godot",
+      "player/player_fall_state.gd",
       "autoload/save_manager.gd",
       "objects/goal.gd",
       "ui/level_select.gd",
@@ -294,14 +295,15 @@
     }
    },
    "genere": "obiettivo",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://player/player_fall_state.gd deve caricarsi senza errori: Parse Error: Identifier \"tween\" not declared in the current scope. (res://player/player_fall_state.gd:25 in GDScript::reload)\nFailed to load script \"res://player/player_fall_state.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  player/player_fall_state.gd, riga 25: `tween.tween_property(sprite, \"scale\", Vector2.ONE, 0.15)`\nSuggerimenti:\n  - Stai usando un nome che non esiste in quel punto: una variabile mai dichiarata, una funzione della base di verifica scritta male, oppure una classe/costante che in Godot 4.7 ha un altro nome. Controlla il nome esatto."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
-    "gemini/gemini-flash-latest"
+    "gemini/gemini-flash-latest",
+    "gemini/gemini-3.7-flash"
    ]
   },
   "test": {
