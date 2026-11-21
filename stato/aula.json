@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-21T14:47:08.033Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-21T14:56:30.141Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "progetto-piattaforme-3",
-  "numero": "8.16",
-  "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 3: livelli e nemici"
+  "slug": "progetto-piattaforme-4",
+  "numero": "8.17",
+  "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 4: finire"
  },
- "messaggio": "Sta scrivendo la lezione 8.16 «Progetto «Il tuo gioco a piattaforme» – tappa 3: livelli e nemici».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 8.17 riprende da sola appena rispondono.",
+ "riprende": "2026-11-21T15:01:30.141Z"
 }
