@@ -1,9 +1,208 @@
 {
  "creato": "2026-11-20T16:03:44.453Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Salvataggio e selezione dei livelli",
+    "consegna": "Nel progetto `Salti`, crea il sistema di salvataggio persistente dei progressi e la schermata di selezione dei livelli:\n\n1. Crea lo script `autoload/save_manager.gd` (estende `Node`) con `class_name SaveManager`:\n   - Costante `SAVE_PATH := \"user://save_data.json\"`.\n   - Variabili: `unlocked_levels: int = 1` e `best_times: Dictionary = {}`.\n   - In `_ready()`, invoca `load_game()`.\n   - Metodo `save_game() -> void`: apre `SAVE_PATH` con `FileAccess.WRITE`, serializza in JSON un dizionario con le chiavi `\"unlocked_levels\"` e `\"best_times\"` e salva il testo.\n   - Metodo `load_game() -> void`: se `FileAccess.file_exists(SAVE_PATH)` è vero, apre il file in lettura con `FileAccess.READ`, legge il testo ed esegue il parsing con `JSON.new()`. Se l'operazione ha successo (`OK`), aggiorna `unlocked_levels` e `best_times`.\n   - Metodo `unlock_next_level(level_number: int) -> void`: se `level_number > unlocked_levels`, aggiorna `unlocked_levels = level_number` e chiama `save_game()`.\n   - Metodo `save_best_time(level_name: String, time_seconds: float) -> void`: legge il tempo record per `level_name` (default `999999.0`); se `time_seconds` è inferiore, aggiorna `best_times[level_name] = time_seconds` e chiama `save_game()`.\n   - Configura `SaveManager` come **Autoload** del progetto con percorso `res://autoload/save_manager.gd`.\n2. Modifica `objects/goal.gd`:\n   - Aggiungi la variabile esportata `@export var unlocks_level: int = 2`.\n   - Nel metodo `_reach_goal()`, prima del cambio scena, se `unlocks_level > 0` chiama `SaveManager.unlock_next_level(unlocks_level)`.\n3. Crea la scena `ui/level_select.tscn` con radice di tipo `Control` chiamata `LevelSelect` e script associato `ui/level_select.gd`:\n   - Aggiungi due figli di tipo `Button`: `Level1Button` (con testo `\"Livello 1\"`) e `Level2Button` (con testo `\"Livello 2\"`).\n   - In `_ready()` di `ui/level_select.gd`, leggi `SaveManager.unlocked_levels`: imposta `disabled = false` per i livelli già sbloccati e `disabled = true` per quelli non ancora raggiunti.\n   - Connetti la pressione di `Level1Button` al caricamento di `\"res://levels/level_1.tscn\"` e `Level2Button` al caricamento di `\"res://levels/level_2.tscn\"` tramite `get_tree().change_scene_to_file(...)`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per salvare e caricare i dati usa la classe FileAccess con FileAccess.open() e JSON.stringify() o JSON.parse_string().",
+     "Nel file di configurazione del progetto, aggiungi l'Autoload con nome SaveManager e percorso res://autoload/save_manager.gd.",
+     "In LevelSelect, un livello N è abilitato solo quando SaveManager.unlocked_levels >= N: imposta button.disabled = SaveManager.unlocked_levels < N."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://autoload/save_manager.gd",
+      "descrizione": "Lo script res://autoload/save_manager.gd esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/level_select.tscn",
+      "descrizione": "La scena res://ui/level_select.tscn esiste"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://ui/level_select.tscn",
+      "tipoNodo": "Button",
+      "nome": "Level1Button",
+      "genitore": "LevelSelect",
+      "descrizione": "LevelSelect contiene il pulsante Level1Button"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://ui/level_select.tscn",
+      "tipoNodo": "Button",
+      "nome": "Level2Button",
+      "genitore": "LevelSelect",
+      "descrizione": "LevelSelect contiene il pulsante Level2Button"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tsmoke_test()\n\n\tif not check(\"save_manager_node\", is_instance_valid(SaveManager), \"L'autoload SaveManager deve essere attivo nel progetto\"):\n\t\treturn\n\n\t# Ripristina lo stato iniziale per la verifica\n\tSaveManager.unlocked_levels = 1\n\tSaveManager.best_times = {}\n\tSaveManager.save_game()\n\n\tcheck(\"file_written\", FileAccess.file_exists(\"user://save_data.json\"), \"save_game() deve creare il file user://save_data.json\")\n\n\tSaveManager.unlock_next_level(2)\n\tcheck(\"unlock_level_2\", SaveManager.unlocked_levels == 2, \"unlock_next_level(2) deve portare unlocked_levels a 2 (è %d)\" % SaveManager.unlocked_levels)\n\n\t# Verifica l'interfaccia di selezione dei livelli\n\tSaveManager.unlocked_levels = 1\n\tvar scene := await instantiate_scene(\"res://ui/level_select.tscn\")\n\tif not check(\"level_select_loaded\", scene != null, \"La scena res://ui/level_select.tscn deve caricarsi correttamente\"):\n\t\treturn\n\n\tvar btn1 := find_by_name(scene, \"Level1Button\") as Button\n\tvar btn2 := find_by_name(scene, \"Level2Button\") as Button\n\tif not check(\"buttons_found\", btn1 != null and btn2 != null, \"Devono essere presenti Level1Button e Level2Button\"):\n\t\treturn\n\n\tcheck(\"btn1_active\", not btn1.disabled, \"Level1Button deve essere abilitato quando unlocked_levels è 1\")\n\tcheck(\"btn2_disabled\", btn2.disabled, \"Level2Button deve essere disabilitato quando unlocked_levels è 1\")\n\n\t# Ricarica la scena con livello 2 sbloccato\n\tSaveManager.unlocked_levels = 2\n\tscene.queue_free()\n\tawait wait_frames(2)\n\tscene = await instantiate_scene(\"res://ui/level_select.tscn\")\n\tbtn2 = find_by_name(scene, \"Level2Button\") as Button\n\tcheck(\"btn2_unlocked\", btn2 != null and not btn2.disabled, \"Level2Button deve essere abilitato quando unlocked_levels è 2\")",
+      "descrizione": "SaveManager gestisce la persistenza e LevelSelect abilita i pulsanti in base ai progressi"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "autoload/save_manager.gd",
+       "contenuto": "class_name SaveManager\nextends Node\n\nconst SAVE_PATH := \"user://save_data.json\"\n\nvar unlocked_levels: int = 1\nvar best_times: Dictionary = {}\n\n\nfunc _ready() -> void:\n\tload_game()\n\n\nfunc save_game() -> void:\n\tvar data := {\n\t\t\"unlocked_levels\": unlocked_levels,\n\t\t\"best_times\": best_times\n\t}\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)\n\tif file:\n\t\tvar json_string := JSON.stringify(data, \"\\t\")\n\t\tfile.store_string(json_string)\n\t\tfile.close()\n\n\nfunc load_game() -> void:\n\tif not FileAccess.file_exists(SAVE_PATH):\n\t\treturn\n\n\tvar file := FileAccess.open(SAVE_PATH, FileAccess.READ)\n\tif file:\n\t\tvar json_string := file.get_as_text()\n\t\tfile.close()\n\n\t\tvar json := JSON.new()\n\t\tvar error := json.parse(json_string)\n\t\tif error == OK and json.data is Dictionary:\n\t\t\tvar data: Dictionary = json.data\n\t\t\tunlocked_levels = int(data.get(\"unlocked_levels\", 1))\n\t\t\tbest_times = data.get(\"best_times\", {})\n\n\nfunc unlock_next_level(level_number: int) -> void:\n\tif level_number > unlocked_levels:\n\t\tunlocked_levels = level_number\n\t\tsave_game()\n\n\nfunc save_best_time(level_name: String, time_seconds: float) -> void:\n\tvar current_best: float = float(best_times.get(level_name, 999999.0))\n\tif time_seconds < current_best:\n\t\tbest_times[level_name] = time_seconds\n\t\tsave_game()\n"
+      },
+      {
+       "percorso": "objects/goal.gd",
+       "contenuto": "class_name Goal\nextends Area2D\n\n@export_file(\"*.tscn\") var next_level_path: String = \"\"\n@export var unlocks_level: int = 2\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node2D) -> void:\n\tif body is CharacterBody2D:\n\t\t_reach_goal()\n\n\nfunc _reach_goal() -> void:\n\tif unlocks_level > 0:\n\t\tSaveManager.unlock_next_level(unlocks_level)\n\n\tif next_level_path.is_empty():\n\t\treturn\n\tget_tree().change_scene_to_file(next_level_path)\n"
+      },
+      {
+       "percorso": "ui/level_select.gd",
+       "contenuto": "class_name LevelSelect\nextends Control\n\n@onready var level_1_button: Button = $Level1Button\n@onready var level_2_button: Button = $Level2Button\n\n\nfunc _ready() -> void:\n\tvar unlocked: int = SaveManager.unlocked_levels\n\tif level_1_button:\n\t\tlevel_1_button.disabled = unlocked < 1\n\t\tlevel_1_button.pressed.connect(_on_level_1_pressed)\n\tif level_2_button:\n\t\tlevel_2_button.disabled = unlocked < 2\n\t\tlevel_2_button.pressed.connect(_on_level_2_pressed)\n\n\nfunc _on_level_1_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://levels/level_1.tscn\")\n\n\nfunc _on_level_2_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://levels/level_2.tscn\")\n"
+      },
+      {
+       "percorso": "ui/level_select.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/level_select.gd\" id=\"1_script\"]\n\n[node name=\"LevelSelect\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_script\")\n\n[node name=\"Level1Button\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 100.0\noffset_top = 100.0\noffset_right = 220.0\noffset_bottom = 140.0\ntext = \"Livello 1\"\n\n[node name=\"Level2Button\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 260.0\noffset_top = 100.0\noffset_right = 380.0\noffset_bottom = 140.0\ntext = \"Livello 2\"\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [],
+      "autoload": [
+       {
+        "nome": "SaveManager",
+        "percorso": "res://autoload/save_manager.gd"
+       }
+      ],
+      "impostazioni": []
+     },
+     "spiegazione": "`SaveManager` usa `FileAccess` e `JSON` per scrivere e leggere da `user://save_data.json`, garantendo la persistenza dei dati. Registrandolo come Autoload, è accessibile ovunque senza riferimenti diretti. `LevelSelect` interroga `SaveManager.unlocked_levels` in `_ready()` per impostare la proprietà `disabled` dei pulsanti.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Il gioco completo: menu principale e pausa",
+    "consegna": "Completa il guscio attorno a «Salti» assemblando il menu principale, la pausa e il collegamento completo delle scene:\n\n1. Crea la scena `ui/main_menu.tscn` con radice di tipo `Control` chiamata `MainMenu` e script `ui/main_menu.gd`:\n   - Due figli `Button`: `PlayButton` (testo `\"Gioca\"`) e `QuitButton` (testo `\"Esci\"`).\n   - Cliccando su `PlayButton`, carica `\"res://ui/level_select.tscn\"` con `get_tree().change_scene_to_file(...)`.\n   - Cliccando su `QuitButton`, chiama `get_tree().quit()`.\n2. Imposta `res://ui/main_menu.tscn` come scena principale del progetto.\n3. Aggiorna `ui/level_select.tscn` e `ui/level_select.gd`:\n   - Aggiungi un pulsante `BackButton` (testo `\"Indietro\"`).\n   - Quando premuto, torna a `\"res://ui/main_menu.tscn\"`.\n4. Crea la scena `ui/pause_menu.tscn` con radice `Control` chiamata `PauseMenu` e script `ui/pause_menu.gd` (con `class_name PauseMenu`):\n   - In `_ready()`, nascondi il menu con `hide()` e imposta `process_mode = Node.PROCESS_MODE_ALWAYS`.\n   - In `_unhandled_input(event: InputEvent)`: se l'azione `\"ui_cancel\"` è appena stata premuta, se `get_tree().paused` è vero chiama `resume()`, altrimenti chiama `pause()`.\n   - Metodo `pause() -> void`: rende visibile il menu (`show()`) e imposta `get_tree().paused = true`.\n   - Metodo `resume() -> void`: nasconde il menu (`hide()`) e imposta `get_tree().paused = false`.\n   - Figli `Button`:\n     - `ResumeButton` (testo `\"Riprendi\"`): chiama `resume()`.\n     - `MainMenuButton` (testo `\"Menu Principale\"`): chiama `resume()` e cambia scena a `\"res://ui/main_menu.tscn\"`.\n5. Inserisci il menu di pausa nei livelli `levels/level_1.tscn` e `levels/level_2.tscn`:\n   - Aggiungi un nodo `CanvasLayer` chiamato `UI`.\n   - All'interno di `UI`, istanzia la scena `res://ui/pause_menu.tscn`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Non dimenticare di impostare process_mode = Node.PROCESS_MODE_ALWAYS sul nodo PauseMenu, altrimenti quando il gioco è in pausa il menu non potrà ricevere né elaborare l'input del giocatore.",
+     "Prima di cambiare scena da PauseMenu verso il menu principale, ricorda di azzerare la pausa chiamando resume() o impostando get_tree().paused = false."
+    ],
+    "verifiche": [
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/main_menu.tscn",
+      "descrizione": "La scena res://ui/main_menu.tscn esiste"
+     },
+     {
+      "tipo": "file_esiste",
+      "percorso": "res://ui/pause_menu.tscn",
+      "descrizione": "La scena res://ui/pause_menu.tscn esiste"
+     },
+     {
+      "tipo": "impostazione",
+      "sezione": "application",
+      "chiave": "run/main_scene",
+      "contiene": "main_menu.tscn",
+      "descrizione": "La scena principale del progetto è res://ui/main_menu.tscn"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://ui/pause_menu.tscn",
+      "tipoNodo": "Button",
+      "nome": "ResumeButton",
+      "genitore": "PauseMenu",
+      "descrizione": "PauseMenu contiene il pulsante ResumeButton"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tsmoke_test()\n\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_is_main_menu\", main != null and main.name == \"MainMenu\", \"La scena principale deve essere MainMenu\"):\n\t\treturn\n\n\tvar play_btn := find_by_name(main, \"PlayButton\") as Button\n\tif not check(\"play_btn_found\", play_btn != null, \"MainMenu deve contenere PlayButton\"):\n\t\treturn\n\n\t# Verifica il menu di pausa\n\tvar pause_scene := await instantiate_scene(\"res://ui/pause_menu.tscn\")\n\tif not check(\"pause_loaded\", pause_scene != null, \"La scena ui/pause_menu.tscn deve istanziarsi\"):\n\t\treturn\n\n\tvar pause_menu := pause_scene as PauseMenu\n\tcheck(\"pause_mode\", pause_menu.process_mode == Node.PROCESS_MODE_ALWAYS, \"PauseMenu deve avere process_mode impostato su PROCESS_MODE_ALWAYS\")\n\tcheck(\"initially_hidden\", not pause_menu.visible, \"PauseMenu deve essere nascosto all'inizio\")\n\n\tpause_menu.pause()\n\tcheck(\"tree_is_paused\", get_tree().paused, \"pause() deve impostare get_tree().paused a true\")\n\tcheck(\"menu_is_shown\", pause_menu.visible, \"pause() deve mostrare il menu\")\n\n\tvar resume_btn := find_by_name(pause_menu, \"ResumeButton\") as Button\n\tif check(\"resume_btn_found\", resume_btn != null, \"PauseMenu deve contenere un pulsante ResumeButton\"):\n\t\tawait click_button(resume_btn)\n\t\tcheck(\"tree_is_resumed\", not get_tree().paused, \"Premere ResumeButton deve togliere la pausa (get_tree().paused = false)\")\n\t\tcheck(\"menu_is_hidden\", not pause_menu.visible, \"Premere ResumeButton deve nascondere il menu\")\n\n\t# Verifica il pulsante indietro nella scelta dei livelli\n\tvar select_scene := await instantiate_scene(\"res://ui/level_select.tscn\")\n\tvar back_btn := find_by_name(select_scene, \"BackButton\") as Button\n\tcheck(\"back_btn_found\", back_btn != null, \"LevelSelect deve contenere BackButton\")",
+      "descrizione": "Il menu principale avvia il flusso e il menu di pausa gestisce get_tree().paused"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "ui/main_menu.gd",
+       "contenuto": "class_name MainMenu\nextends Control\n\n@onready var play_button: Button = $PlayButton\n@onready var quit_button: Button = $QuitButton\n\n\nfunc _ready() -> void:\n\tif play_button:\n\t\tplay_button.pressed.connect(_on_play_button_pressed)\n\tif quit_button:\n\t\tquit_button.pressed.connect(_on_quit_button_pressed)\n\n\nfunc _on_play_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://ui/level_select.tscn\")\n\n\nfunc _on_quit_button_pressed() -> void:\n\tget_tree().quit()\n"
+      },
+      {
+       "percorso": "ui/main_menu.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/main_menu.gd\" id=\"1_script\"]\n\n[node name=\"MainMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_script\")\n\n[node name=\"PlayButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 260.0\noffset_top = 160.0\noffset_right = 380.0\noffset_bottom = 200.0\ntext = \"Gioca\"\n\n[node name=\"QuitButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 260.0\noffset_top = 220.0\noffset_right = 380.0\noffset_bottom = 260.0\ntext = \"Esci\"\n"
+      },
+      {
+       "percorso": "ui/pause_menu.gd",
+       "contenuto": "class_name PauseMenu\nextends Control\n\n@onready var resume_button: Button = $ResumeButton\n@onready var main_menu_button: Button = $MainMenuButton\n\n\nfunc _ready() -> void:\n\thide()\n\tprocess_mode = Node.PROCESS_MODE_ALWAYS\n\n\tif resume_button:\n\t\tresume_button.pressed.connect(_on_resume_button_pressed)\n\tif main_menu_button:\n\t\tmain_menu_button.pressed.connect(_on_main_menu_button_pressed)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"ui_cancel\"):\n\t\tif get_tree().paused:\n\t\t\tresume()\n\t\telse:\n\t\t\tpause()\n\n\nfunc pause() -> void:\n\tshow()\n\tget_tree().paused = true\n\n\nfunc resume() -> void:\n\thide()\n\tget_tree().paused = false\n\n\nfunc _on_resume_button_pressed() -> void:\n\tresume()\n\n\nfunc _on_main_menu_button_pressed() -> void:\n\tresume()\n\tget_tree().change_scene_to_file(\"res://ui/main_menu.tscn\")\n"
+      },
+      {
+       "percorso": "ui/pause_menu.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/pause_menu.gd\" id=\"1_script\"]\n\n[node name=\"PauseMenu\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_script\")\n\n[node name=\"ResumeButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 260.0\noffset_top = 140.0\noffset_right = 380.0\noffset_bottom = 180.0\ntext = \"Riprendi\"\n\n[node name=\"MainMenuButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 260.0\noffset_top = 200.0\noffset_right = 380.0\noffset_bottom = 240.0\ntext = \"Menu Principale\"\n"
+      },
+      {
+       "percorso": "ui/level_select.gd",
+       "contenuto": "class_name LevelSelect\nextends Control\n\n@onready var level_1_button: Button = $Level1Button\n@onready var level_2_button: Button = $Level2Button\n@onready var back_button: Button = $BackButton\n\n\nfunc _ready() -> void:\n\tvar unlocked: int = SaveManager.unlocked_levels\n\tif level_1_button:\n\t\tlevel_1_button.disabled = unlocked < 1\n\t\tlevel_1_button.pressed.connect(_on_level_1_pressed)\n\tif level_2_button:\n\t\tlevel_2_button.disabled = unlocked < 2\n\t\tlevel_2_button.pressed.connect(_on_level_2_pressed)\n\tif back_button:\n\t\tback_button.pressed.connect(_on_back_button_pressed)\n\n\nfunc _on_level_1_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://levels/level_1.tscn\")\n\n\nfunc _on_level_2_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://levels/level_2.tscn\")\n\n\nfunc _on_back_button_pressed() -> void:\n\tget_tree().change_scene_to_file(\"res://ui/main_menu.tscn\")\n"
+      },
+      {
+       "percorso": "ui/level_select.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ui/level_select.gd\" id=\"1_script\"]\n\n[node name=\"LevelSelect\" type=\"Control\"]\nlayout_mode = 3\nanchors_preset = 15\nanchor_right = 1.0\nanchor_bottom = 1.0\ngrow_horizontal = 2\ngrow_vertical = 2\nscript = ExtResource(\"1_script\")\n\n[node name=\"Level1Button\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 100.0\noffset_top = 100.0\noffset_right = 220.0\noffset_bottom = 140.0\ntext = \"Livello 1\"\n\n[node name=\"Level2Button\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 260.0\noffset_top = 100.0\noffset_right = 380.0\noffset_bottom = 140.0\ntext = \"Livello 2\"\n\n[node name=\"BackButton\" type=\"Button\" parent=\".\"]\nlayout_mode = 0\noffset_left = 100.0\noffset_top = 180.0\noffset_right = 220.0\noffset_bottom = 220.0\ntext = \"Indietro\"\n"
+      },
+      {
+       "percorso": "levels/level_1.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://levels/background_parallax.tscn\" id=\"1_bg\"]\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"2_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/goal.tscn\" id=\"3_goal\"]\n[ext_resource type=\"PackedScene\" path=\"res://ui/pause_menu.tscn\" id=\"4_pause\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Level1\" type=\"Node2D\"]\n\n[node name=\"BackgroundParallax\" parent=\".\" instance=ExtResource(\"1_bg\")]\n\n[node name=\"Terrain\" type=\"TileMapLayer\" parent=\".\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\nposition = Vector2(100, 400)\n\n[node name=\"Goal\" parent=\".\" instance=ExtResource(\"3_goal\")]\nposition = Vector2(700, 400)\nnext_level_path = \"res://levels/level_2.tscn\"\n\n[node name=\"UI\" type=\"CanvasLayer\" parent=\".\"]\n\n[node name=\"PauseMenu\" parent=\"UI\" instance=ExtResource(\"4_pause\")]\n"
+      },
+      {
+       "percorso": "levels/level_2.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://levels/background_parallax.tscn\" id=\"1_bg\"]\n[ext_resource type=\"PackedScene\" path=\"res://player/player.tscn\" id=\"2_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://objects/goal.tscn\" id=\"3_goal\"]\n[ext_resource type=\"PackedScene\" path=\"res://ui/pause_menu.tscn\" id=\"4_pause\"]\n\n[sub_resource type=\"RectangleShape2D\" id=\"RectangleShape2D_floor\"]\nsize = Vector2(800, 40)\n\n[node name=\"Level2\" type=\"Node2D\"]\n\n[node name=\"BackgroundParallax\" parent=\".\" instance=ExtResource(\"1_bg\")]\n\n[node name=\"Terrain\" type=\"TileMapLayer\" parent=\".\"]\n\n[node name=\"Floor\" type=\"StaticBody2D\" parent=\".\"]\nposition = Vector2(400, 500)\n\n[node name=\"CollisionShape2D\" type=\"CollisionShape2D\" parent=\"Floor\"]\nshape = SubResource(\"RectangleShape2D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\nposition = Vector2(100, 400)\n\n[node name=\"Goal\" parent=\".\" instance=ExtResource(\"3_goal\")]\nposition = Vector2(700, 400)\nnext_level_path = \"res://ui/main_menu.tscn\"\n\n[node name=\"UI\" type=\"CanvasLayer\" parent=\".\"]\n\n[node name=\"PauseMenu\" parent=\"UI\" instance=ExtResource(\"4_pause\")]\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "res://ui/main_menu.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La scena principale del gioco diventa `MainMenu`. Da lì si apre `LevelSelect`, che a sua volta carica i livelli o permette di tornare indietro con `BackButton`. Ogni livello istanzia `PauseMenu` dentro un `CanvasLayer`: grazie a `process_mode = Node.PROCESS_MODE_ALWAYS`, il menu può catturare `ui_cancel` e i clic sui pulsanti anche quando `get_tree().paused` è attivo.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Il gioco completo: menu, salvataggi ed esportazione",
@@ -81,5 +280,9 @@
     "md": "- Il guscio (*game shell*) gestisce la progressione, il menu principale, la selezione dei livelli e la pausa attorno alla logica di gioco.\n- I salvataggi si memorizzano nel percorso `user://` tramite `FileAccess` e `JSON`, garantendo la persistenza dei dati anche dopo l'esportazione.\n- I pulsanti della scelta del livello usano la proprietà `disabled` e il metodo `.bind()` sui segnali per caricare i livelli sbloccati.\n- La pausa si attiva con `get_tree().paused = true`; il menu di pausa deve avere `process_mode = Node.PROCESS_MODE_ALWAYS` per rimanere interattivo.\n- L'esportazione da **Project → Export...** genera i file eseguibili autonomi per Windows o i file HTML5 per i browser Web."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "test"
+ ]
 }
