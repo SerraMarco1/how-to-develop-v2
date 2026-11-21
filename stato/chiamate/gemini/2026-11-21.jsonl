@@ -41,3 +41,5 @@
 {"quando":1795271795476,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"gioco-completo-a-piattaforme","ok":false,"contata":true,"durataMs":280101,"errore":"Nessuna risposta entro 280 secondi"}
 {"quando":1795272075580,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"gioco-completo-a-piattaforme","ok":true,"contata":true,"durataMs":22315,"tokenInput":11518,"tokenOutput":12,"ragionamento":2064}
 {"quando":1795272099698,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"gioco-completo-a-piattaforme","ok":true,"contata":true,"durataMs":6304,"tokenInput":2889,"tokenOutput":951,"ragionamento":1496}
+{"quando":1795272113806,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"progetto-piattaforme-1","ok":false,"contata":true,"durataMs":1091,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795272114900,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-piattaforme-1","ok":true,"contata":true,"durataMs":64940,"tokenInput":11951,"tokenOutput":4112,"ragionamento":7970}
