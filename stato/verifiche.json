@@ -678,5 +678,25 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "gioco-completo-a-piattaforme": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "progetto-piattaforme-1": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "progetto-piattaforme-2": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "progetto-piattaforme-3": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
