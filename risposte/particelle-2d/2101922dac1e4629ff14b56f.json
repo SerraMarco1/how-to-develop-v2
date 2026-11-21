@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": true,\n  \"scena\": \"res://levels/level_1.tscn\",\n  \"durata\": 8,\n  \"azioni\": [\n    {\n      \"azione\": \"jump\",\n      \"inizio\": 1.0,\n      \"fine\": 1.3,\n      \"tasto\": \"Spazio\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"dust\",\n      \"cerca\": {\n        \"nome\": \"DustParticles\"\n      },\n      \"quanti\": 1,\n      \"da\": 1.0,\n      \"a\": 7.0,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Polvere\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"L'effetto di polvere si attiva quando salti e atterri\",\n      \"da\": 1.0,\n      \"a\": 7.0,\n      \"soggetto\": \"dust\"\n    }\n  ]\n}",
+ "ragionamento": 1753,
+ "quando": "2026-11-21T09:51:29.764Z",
+ "ruolo": "ritocco"
+}
