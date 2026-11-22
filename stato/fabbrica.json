@@ -1,13 +1,8 @@
 {
- "sovraccarico": {
-  "gemini": {
-   "volte": 1,
-   "fino": 1795336301148
-  }
- },
+ "sovraccarico": {},
  "fermi": {
   "gemini/gemini-flash-latest": {
-   "fino": 1795336301148,
+   "fino": 1795336801013,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.7-flash": {
@@ -34,10 +29,6 @@
  },
  "maxToken": {},
  "troncate": {
-  "gemini/gemini-3.7-flash:14000": {
-   "volte": 2,
-   "quando": 1794730446928
-  },
   "gemini/gemini-flash-latest:9000": {
    "volte": 2,
    "quando": 1795080482038
