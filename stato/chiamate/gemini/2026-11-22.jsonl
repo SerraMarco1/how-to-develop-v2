@@ -16,3 +16,5 @@
 {"quando":1795336915744,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-piattaforme-4","ok":false,"contata":true,"durataMs":4747,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795336922748,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"spazio-3d","ok":false,"contata":true,"durataMs":3178,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795336925928,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":59400,"tokenInput":11697,"tokenOutput":1976,"ragionamento":3716}
+{"quando":1795336987441,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":81763,"tokenInput":12987,"tokenOutput":7167,"ragionamento":8528}
+{"quando":1795337069209,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":55800,"tokenInput":17377,"tokenOutput":5848,"ragionamento":4525}
