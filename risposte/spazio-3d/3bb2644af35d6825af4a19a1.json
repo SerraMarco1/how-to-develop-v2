@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-3.6-flash",
+ "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"es3\",\n      \"problema\": \"Le risposte alle domande 1 e 3 delle previsioni sono errate. Nel primo frammento la posizione globale del nodo figlio è la somma delle posizioni parent (1, 2, -3) e child (0, 5, -1), ovvero (1.0, 7.0, -4.0) e non (0.0, 0.0, 0.0). Nel terzo frammento la coordinata X della posizione globale del figlio scalato di 2 è 3.0 * 2.0 = 6.0 e non 0.0.\",\n      \"correzione\": \"Imposta la risposta della prima previsione a \\\"(1.0, 7.0, -4.0)\\\" e la risposta della terza previsione a \\\"6.0\\\".\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
+ "ragionamento": 2912,
+ "quando": "2026-11-22T08:46:40.520Z",
+ "ruolo": "revisore"
+}

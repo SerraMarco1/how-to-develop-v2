@@ -18,3 +18,4 @@
 {"quando":1795336925928,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":59400,"tokenInput":11697,"tokenOutput":1976,"ragionamento":3716}
 {"quando":1795336987441,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":81763,"tokenInput":12987,"tokenOutput":7167,"ragionamento":8528}
 {"quando":1795337069209,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":55800,"tokenInput":17377,"tokenOutput":5848,"ragionamento":4525}
+{"quando":1795337155434,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":45084,"tokenInput":12774,"tokenOutput":233,"ragionamento":2912}
