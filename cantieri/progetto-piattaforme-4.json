@@ -285,7 +285,8 @@
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-3.6-flash"
  ],
  "teoria": {
   "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 4: finire",
@@ -312,5 +313,10 @@
  },
  "ordine": [
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
