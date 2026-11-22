@@ -1,0 +1,14 @@
+{
+ "n": 11,
+ "quando": "2026-11-22T08:51:14.413Z",
+ "pezzo": "es3",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 3: correzione del revisore accettata",
+ "spiegazione": "La versione corretta supera tutti i controlli e sostituisce la precedente.",
+ "richieste": 0,
+ "dati": {
+  "problemi": []
+ },
+ "chiamate": []
+}
