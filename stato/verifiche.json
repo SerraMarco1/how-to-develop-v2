@@ -698,5 +698,15 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "progetto-piattaforme-4": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "spazio-3d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }

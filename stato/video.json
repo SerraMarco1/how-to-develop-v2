@@ -2112,5 +2112,13 @@
    },
    "motivo": "Il lampeggio di danno usa uno shader personalizzato e non la proprietà modulate del nodo, quindi il sistema automatico non può rilevarne il cambiamento visivo di colore."
   }
+ },
+ "spazio-3d": {
+  "es1": {
+   "impronta": "775c71143d02bd795b289006f1e1535cb9ab3dcf9367234c18802c7bb0b7e18e",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
+  }
  }
 }
