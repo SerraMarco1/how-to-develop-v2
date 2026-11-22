@@ -2,7 +2,7 @@
  "creato": "2026-11-22T08:51:28.343Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "prevedi",
@@ -65,7 +65,70 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Calcoli con vettori e rotazioni 3D",
+    "consegna": "Leggi ciascun frammento di codice GDScript e scrivi il valore preciso restituito dalla funzione `run()`, senza eseguirlo nell'editor.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> Vector3:\n\tvar pos_a := Vector3(1.0, 0.0, 2.0)\n\tvar pos_b := Vector3(4.0, 0.0, -2.0)\n\treturn pos_b - pos_a\n",
+      "domanda": "Quanto vale il vettore di direzione da pos_a a pos_b restituito da run()?",
+      "risposta": "(3.0, 0.0, -4.0)",
+      "spiegazione": "La sottrazione b - a sottrae le componenti corrispondenti: (4 - 1, 0 - 0, -2 - 2), ottenendo Vector3(3, 0, -4).",
+      "id": "es1p1"
+     },
+     {
+      "codice": "func run() -> Vector3:\n\tvar node := Node3D.new()\n\tvar forward: Vector3 = -node.global_transform.basis.z\n\tnode.free()\n\treturn forward\n",
+      "domanda": "Qual è il vettore avanti locale (-basis.z) di un nodo non ruotato?",
+      "risposta": "(0.0, 0.0, -1.0)",
+      "spiegazione": "In Godot 3D, l'asse Z esce dallo schermo (+Z). Di conseguenza la direzione avanti (-Z) per un nodo non ruotato è Vector3(0, 0, -1).",
+      "id": "es1p2"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar degrees := 180.0\n\tvar radians: float = deg_to_rad(degrees)\n\treturn rad_to_deg(radians)\n",
+      "domanda": "Quanto vale il valore numerico in gradi restituito da run()?",
+      "risposta": "180.0",
+      "spiegazione": "deg_to_rad(180.0) converte 180 gradi in radianti (PI ≈ 3.14159). rad_to_deg riconverte i radianti in gradi, riottenendo 180.0.",
+      "id": "es1p3"
+     },
+     {
+      "codice": "func run() -> Vector3:\n\tvar pos := Vector3(0.0, 0.0, 0.0)\n\tvar forward := Vector3(0.0, 0.0, -1.0)\n\tvar speed := 5.0\n\tvar delta := 0.2\n\tpos += forward * speed * delta\n\treturn pos\n",
+      "domanda": "Qual è la posizione risultante dopo uno spostamento di 0.2 secondi a velocità 5.0 m/s?",
+      "risposta": "(0.0, 0.0, -1.0)",
+      "spiegazione": "Spostandosi lungo forward * speed * delta si applica un vettore di offset pari a (0, 0, -1) * 5.0 * 0.2 = (0, 0, -1.0). Sommandolo all'origine si ottiene Vector3(0, 0, -1).",
+      "id": "es1p4"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar start := Vector3(1.0, 10.0, 2.0)\n\tvar end := Vector3(4.0, -5.0, 6.0)\n\tvar dir := end - start\n\tdir.y = 0.0\n\treturn dir.length()\n",
+      "domanda": "Quanto vale la distanza orizzontale sul piano XZ restituita da run()?",
+      "risposta": "5.0",
+      "spiegazione": "Il vettore dir è (3, -15, 4). Azzerando la componente Y si ottiene Vector3(3, 0, 4). La sua lunghezza è sqrt(3^2 + 0^2 + 4^2) = sqrt(9 + 16) = sqrt(25) = 5.0.",
+      "id": "es1p5"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar current_y := 0.0\n\tvar target_y := 1.5\n\tvar max_step := 0.5\n\treturn rotate_toward(current_y, target_y, max_step)\n",
+      "domanda": "Quanto vale l'angolo Y restituito dalla funzione rotate_toward()?",
+      "risposta": "0.5",
+      "spiegazione": "rotate_toward fa avanzare l'angolo corrente (0.0) verso l'angolo bersaglio (1.5) per al massimo max_step (0.5 radianti). L'angolo finale dopo un passo è quindi 0.5.",
+      "id": "es1p6"
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "I calcoli vettoriali e le conversioni trigonometriche in 3D seguono le regole di Transform3D e basis in Godot 4.7: l'asse avanti è -Z, la distanza orizzontale azzera Y e rotate_toward limita il passo angolare.",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es1"
+   }
   },
   "es2": {
    "stato": "da_fare",
