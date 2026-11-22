@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-22T09:35:12.740Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-22T09:41:50.264Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "vettori-e-rotazioni-3d",
   "numero": "9.1",
   "titolo": "Vettori e rotazioni in 3D"
  },
- "messaggio": "Sta scrivendo la lezione 9.1 «Vettori e rotazioni in 3D».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.1 riprende da sola appena rispondono.",
+ "riprende": "2026-11-22T09:51:50.264Z"
 }
