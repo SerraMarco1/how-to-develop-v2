@@ -630,5 +630,18 @@
   "es2",
   "es3",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "es3",
+    "problema": "Le risposte alle domande 1 e 3 delle previsioni sono errate. Nel primo frammento la posizione globale del nodo figlio è la somma delle posizioni parent (1, 2, -3) e child (0, 5, -1), ovvero (1.0, 7.0, -4.0) e non (0.0, 0.0, 0.0). Nel terzo frammento la coordinata X della posizione globale del figlio scalato di 2 è 3.0 * 2.0 = 6.0 e non 0.0.",
+    "correzione": "Imposta la risposta della prima previsione a \"(1.0, 7.0, -4.0)\" e la risposta della terza previsione a \"6.0\".",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
