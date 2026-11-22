@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-22T08:51:26.439Z",
+ "aggiornato": "2026-11-22T10:17:04.006Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1240,10 +1240,10 @@
    "slug": "progetto-piattaforme-4",
    "numero": "8.17",
    "titolo": "Progetto «Il tuo gioco a piattaforme» – tappa 4: finire",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f08-piattaforme/progetto-piattaforme-4.json",
-   "sha256": "806fc002e7e0593c81c4cdc891ce2389022f7689b1403ae14574946e1e986292",
-   "byte": 95458
+   "sha256": "4c71f215f72d86b0e1d3c8373bf34f0eff81c91bb5d6b564e188a95c741a4eb9",
+   "byte": 97129
   },
   {
    "slug": "spazio-3d",
