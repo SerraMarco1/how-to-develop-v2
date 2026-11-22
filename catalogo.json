@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-22T08:42:00.499Z",
+ "aggiornato": "2026-11-22T08:51:26.439Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1244,6 +1244,15 @@
    "file": "lezioni/f08-piattaforme/progetto-piattaforme-4.json",
    "sha256": "806fc002e7e0593c81c4cdc891ce2389022f7689b1403ae14574946e1e986292",
    "byte": 95458
+  },
+  {
+   "slug": "spazio-3d",
+   "numero": "9.0",
+   "titolo": "Lo spazio 3D",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/spazio-3d.json",
+   "sha256": "7a96088e37457886f1379d94f24e86ab50837e0351c78753020af83fc1746302",
+   "byte": 29579
   }
  ],
  "documentazione": {
