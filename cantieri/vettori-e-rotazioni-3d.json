@@ -339,7 +339,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo 15 frame la torretta deve aver iniziato a ruotare (iniziale: 0.000, attuale: 0.000)\n  - Dopo tempo sufficiente la torretta deve essere rivolta verso il bersaglio (rotazione Y attuale: 0.00, attesa: -1.57)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La proprietà target_node del nodo Turret deve essere assegnata nella scena\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
