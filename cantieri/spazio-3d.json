@@ -1,6 +1,287 @@
 {
  "creato": "2026-11-22T08:42:02.745Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "La struttura base dell'Isola in 3D",
+    "consegna": "Crea la scena principale del gioco «L'isola» nello spazio 3D.\n\n1. Crea la scena `main.tscn` con un nodo radice di tipo `Node3D` chiamato `Island` e impostala come scena principale del progetto.\n2. Dentro `Island`, aggiungi un nodo figlio `Node3D` chiamato `BlockBase` con posizione locale `(2.0, 0.0, -4.0)`.\n3. Dentro `BlockBase`, aggiungi un nodo figlio `Node3D` chiamato `BlockTop` con posizione locale `(0.0, 3.0, 0.0)`.\n4. Collega a `Island` lo script `main.gd` che nella funzione `_ready()` legge e stampa la posizione globale del nodo `BlockTop`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello *Scene*, fai clic su **3D Scene** per creare il nodo radice `Node3D` e rinominalo `Island`.",
+     "Salva la scena premendo **Ctrl+S** nella radice del progetto con il nome `main.tscn`.",
+     "Apri **Project -> Project Settings -> Run** e imposta `main.tscn` come **Main Scene**.",
+     "Seleziona `Island` nel pannello *Scene*, premi **+** e aggiungi un nodo `Node3D`; rinominalo in `BlockBase`.",
+     "Nel pannello *Inspector* con `BlockBase` selezionato, apri la sezione **Transform -> Position** e imposta i valori `X = 2.0`, `Y = 0.0`, `Z = -4.0`.",
+     "Seleziona `BlockBase` nel pannello *Scene*, premi **+** e aggiungi un nodo figlio `Node3D` chiamato `BlockTop`.",
+     "Nell'*Inspector* di `BlockTop`, imposta **Transform -> Position** a `(0.0, 3.0, 0.0)`.",
+     "Seleziona la radice `Island`, fai clic sull'icona della pergamena per creare lo script `main.gd` e scrivi in `_ready()` la stampa di `$BlockBase/BlockTop.global_position`."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node3D",
+      "nome": "Island",
+      "descrizione": "La scena main.tscn ha un nodo radice Node3D chiamato Island"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node3D",
+      "nome": "BlockBase",
+      "genitore": "Island",
+      "descrizione": "Il nodo Island ha un figlio Node3D chiamato BlockBase"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node3D",
+      "nome": "BlockTop",
+      "genitore": "BlockBase",
+      "descrizione": "Il nodo BlockBase ha un figlio Node3D chiamato BlockTop"
+     },
+     {
+      "tipo": "script_collegato",
+      "scena": "res://main.tscn",
+      "nodo": "Island",
+      "descrizione": "Il nodo radice Island ha lo script main.gd collegato"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale main.tscn deve caricarsi senza errori\"):\n\t\treturn\n\tvar base := main.get_node_or_null(\"BlockBase\") as Node3D\n\tif not check(\"base\", base != null, \"Nella scena serve un Node3D chiamato BlockBase figlio di Island\"):\n\t\treturn\n\tvar top := main.get_node_or_null(\"BlockBase/BlockTop\") as Node3D\n\tif not check(\"top\", top != null, \"BlockBase deve avere un figlio Node3D chiamato BlockTop\"):\n\t\treturn\n\tcheck(\"base_pos\", base.position.is_equal_approx(Vector3(2.0, 0.0, -4.0)), \"BlockBase deve avere posizione locale (2, 0, -4) (trovata: %s)\" % str(base.position))\n\tcheck(\"top_pos\", top.position.is_equal_approx(Vector3(0.0, 3.0, 0.0)), \"BlockTop deve avere posizione locale (0, 3, 0) (trovata: %s)\" % str(top.position))\n\tcheck(\"top_global\", top.global_position.is_equal_approx(Vector3(2.0, 3.0, -4.0)), \"La posizione globale di BlockTop deve essere (2, 3, -4) (trovata: %s)\" % str(top.global_position))",
+      "descrizione": "I nodi BlockBase e BlockTop hanno le posizioni locali e globali corrette"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "L'isola",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Creiamo il nodo radice `Island` di tipo `Node3D`. Aggiungiamo `BlockBase` con posizione locale `(2, 0, -4)` e come suo figlio `BlockTop` con posizione locale `(0, 3, 0)`. Poiché `BlockTop` è figlio di `BlockBase`, la sua posizione globale nel mondo risulta dalla somma delle due posizioni: `(2 + 0, 0 + 3, -4 + 0) = (2, 3, -4)`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "imita",
+    "titolo": "Costruire la prima piattaforma di blocchi",
+    "consegna": "Mantenendo la struttura creata nella lezione, espandi la scena `main.tscn` aggiungendo un secondo ramo di blocchi con specifiche trasformazioni di posizione, rotazione e scala:\n\n1. Sotto la radice `Island`, crea un nuovo nodo figlio `Node3D` chiamato `BlockWest` con:\n   - Position: `(-5.0, 0.0, 2.0)`\n   - Rotation (in gradi attorno all'asse Y): `45.0` gradi (cioè `(0.0, 45.0, 0.0)`)\n   - Scale: `(2.0, 1.0, 2.0)`\n2. Dentro `BlockWest`, aggiungi un nodo figlio `Node3D` chiamato `BlockWestBridge` con:\n   - Position locale: `(0.0, 2.0, -3.0)`",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Aggiungi BlockWest come figlio diretto della radice Island, non dentro BlockBase.",
+     "Nell'Inspector di Godot, le rotazioni si modificano in gradi sotto la voce Transform -> Rotation.",
+     "BlockWestBridge deve essere figlio di BlockWest: le sue coordinate saranno quindi misurate a partire dal centro di BlockWest."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node3D",
+      "nome": "BlockWest",
+      "genitore": "Island",
+      "descrizione": "Il nodo Island contiene un figlio Node3D chiamato BlockWest"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node3D",
+      "nome": "BlockWestBridge",
+      "genitore": "BlockWest",
+      "descrizione": "Il nodo BlockWest contiene un figlio Node3D chiamato BlockWestBridge"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar west := main.get_node_or_null(\"BlockWest\") as Node3D\n\tif not check(\"west\", west != null, \"Nella scena serve un Node3D chiamato BlockWest figlio di Island\"):\n\t\treturn\n\tvar bridge := main.get_node_or_null(\"BlockWest/BlockWestBridge\") as Node3D\n\tif not check(\"bridge\", bridge != null, \"BlockWest deve avere un figlio Node3D chiamato BlockWestBridge\"):\n\t\treturn\n\tcheck(\"west_pos\", west.position.is_equal_approx(Vector3(-5.0, 0.0, 2.0)), \"BlockWest deve avere posizione locale (-5, 0, 2) (trovata: %s)\" % str(west.position))\n\tcheck(\"west_rot\", absf(west.rotation_degrees.y - 45.0) < 0.1, \"BlockWest deve avere rotazione Y di 45 gradi (trovata: %.1f)\" % west.rotation_degrees.y)\n\tcheck(\"west_scale\", west.scale.is_equal_approx(Vector3(2.0, 1.0, 2.0)), \"BlockWest deve avere scala (2, 1, 2) (trovata: %s)\" % str(west.scale))\n\tcheck(\"bridge_pos\", bridge.position.is_equal_approx(Vector3(0.0, 2.0, -3.0)), \"BlockWestBridge deve avere posizione locale (0, 2, -3) (trovata: %s)\" % str(bridge.position))",
+      "descrizione": "BlockWest e BlockWestBridge hanno posizione, rotazione e scala impostate secondo le specifiche"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "L'isola",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Aggiungiamo `BlockWest` come figlio della radice `Island` impostando le sue proprietà Transform: posizione `(-5, 0, 2)`, rotazione attorno a Y di 45 gradi (`0.785398` radianti nel file `.tscn`) e scala `(2, 1, 2)`. Come suo figlio creiamo `BlockWestBridge` a posizione locale `(0, 2, -3)`.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "imita",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "es3": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Calcolare posizioni e trasformazioni 3D",
+    "consegna": "Leggi ogni pezzo di codice GDScript e rispondi alle domande sulle posizioni e trasformazioni 3D, senza eseguire lo script.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> Vector3:\n\tvar parent := Node3D.new()\n\tparent.position = Vector3(1.0, 2.0, -3.0)\n\tvar child := Node3D.new()\n\tchild.position = Vector3(0.0, 5.0, -1.0)\n\tparent.add_child(child)\n\treturn child.global_position",
+      "domanda": "Qual è la posizione globale del nodo child?",
+      "risposta": "",
+      "spiegazione": "La posizione globale si ottiene sommando la posizione locale del figlio (0, 5, -1) a quella del genitore (1, 2, -3): (1, 7, -4)."
+     },
+     {
+      "codice": "func run() -> Vector3:\n\tvar node := Node3D.new()\n\tnode.position = Vector3(0.0, 1.0, 0.0)\n\tnode.position += Vector3(0.0, 0.0, -4.0)\n\treturn node.position",
+      "domanda": "Qual è la posizione finale del nodo dopo lo spostamento?",
+      "risposta": "",
+      "spiegazione": "Partendo da (0, 1, 0) e aggiungendo -4 lungo l'asse Z (verso l'avanti), si ottiene Vector3(0, 1, -4)."
+     },
+     {
+      "codice": "func run() -> float:\n\tvar parent := Node3D.new()\n\tparent.scale = Vector3(2.0, 2.0, 2.0)\n\tvar child := Node3D.new()\n\tchild.position = Vector3(3.0, 0.0, 0.0)\n\tparent.add_child(child)\n\treturn child.global_position.x",
+      "domanda": "Qual è la coordinata X della posizione globale di child?",
+      "risposta": "",
+      "spiegazione": "La posizione locale X del figlio (3.0) viene moltiplicata per la scala del genitore (2.0), ottenendo 6.0."
+     },
+     {
+      "codice": "func run() -> bool:\n\tvar node_a := Node3D.new()\n\tnode_a.position = Vector3(0.0, 5.0, 0.0)\n\tvar node_b := Node3D.new()\n\tnode_b.position = Vector3(0.0, 2.0, 0.0)\n\treturn node_a.position.y > node_b.position.y",
+      "domanda": "Il confronto node_a.position.y > node_b.position.y restituisce true o false?",
+      "risposta": "",
+      "spiegazione": "In Godot 3D l'asse Y punta verso l'alto. Poiché 5.0 è maggiore di 2.0, la condizione è vera (true)."
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "prevedi",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "imita",
+    "titolo": "Test finale: La torre ad est",
+    "consegna": "Nel progetto «L'isola», completa la struttura aggiungendo un terzo settore ad est e aggiornando lo script di gestione.\n\n1. Apri la scena `main.tscn`.\n2. Sotto il nodo radice `Island`, aggiungi un nuovo nodo figlio `Node3D` chiamato `BlockEast` con:\n   - Position: `(6.0, 0.0, 1.0)`\n   - Rotation (in gradi attorno a Y): `-30.0` gradi (cioè `(0.0, -30.0, 0.0)`)\n   - Scale: `(1.0, 2.0, 1.0)`\n3. Dentro `BlockEast`, aggiungi un nodo figlio `Node3D` chiamato `BlockEastTop` con:\n   - Position locale: `(0.0, 2.5, 0.0)`\n4. Nel file `main.gd`, aggiungi una funzione `get_top_block_positions() -> Array[Vector3]` che restituisce un array contenente le posizioni globali dei tre punti più alti dei tre blocchi nell'ordine: `$BlockBase/BlockTop.global_position`, `$BlockWest/BlockWestBridge.global_position` e `$BlockEast/BlockEastTop.global_position`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "BlockEast deve essere figlio diretto di Island, mentre BlockEastTop deve essere figlio di BlockEast.",
+     "Assicurati di usare .global_position sia per BlockTop, sia per BlockWestBridge che per BlockEastTop nella funzioneget_top_block_positions()."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node3D",
+      "nome": "BlockEast",
+      "genitore": "Island",
+      "descrizione": "Il nodo Island contiene un figlio Node3D chiamato BlockEast"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "Node3D",
+      "nome": "BlockEastTop",
+      "genitore": "BlockEast",
+      "descrizione": "Il nodo BlockEast contiene un figlio Node3D chiamato BlockEastTop"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale main.tscn deve caricarsi senza errori\"):\n\t\treturn\n\tvar east := main.get_node_or_null(\"BlockEast\") as Node3D\n\tif not check(\"east\", east != null, \"Nella scena serve un Node3D chiamato BlockEast figlio di Island\"):\n\t\treturn\n\tvar east_top := main.get_node_or_null(\"BlockEast/BlockEastTop\") as Node3D\n\tif not check(\"east_top\", east_top != null, \"BlockEast deve avere un figlio Node3D chiamato BlockEastTop\"):\n\t\treturn\n\tcheck(\"east_pos\", east.position.is_equal_approx(Vector3(6.0, 0.0, 1.0)), \"BlockEast deve avere posizione (6, 0, 1) (trovata: %s)\" % str(east.position))\n\tcheck(\"east_rot\", absf(east.rotation_degrees.y - (-30.0)) < 0.1, \"BlockEast deve avere rotazione Y di -30 gradi (trovata: %.1f)\" % east.rotation_degrees.y)\n\tcheck(\"east_scale\", east.scale.is_equal_approx(Vector3(1.0, 2.0, 1.0)), \"BlockEast deve avere scala (1, 2, 1) (trovata: %s)\" % str(east.scale))\n\tcheck(\"east_top_pos\", east_top.position.is_equal_approx(Vector3(0.0, 2.5, 0.0)), \"BlockEastTop deve avere posizione locale (0, 2.5, 0) (trovata: %s)\" % str(east_top.position))\n\tif check(\"has_fn\", has_function(main, \"get_top_block_positions\"), \"main.gd deve contenere la funzione get_top_block_positions\"):\n\t\tvar res = main.call(\"get_top_block_positions\")\n\t\tif check(\"res_array\", res is Array and res.size() == 3, \"get_top_block_positions deve restituire un Array con 3 elementi\"):\n\t\t\tvar expected_top: Vector3 = (main.get_node(\"BlockBase/BlockTop\") as Node3D).global_position\n\t\t\tvar expected_bridge: Vector3 = (main.get_node(\"BlockWest/BlockWestBridge\") as Node3D).global_position\n\t\t\tvar expected_east_top: Vector3 = east_top.global_position\n\t\t\tcheck(\"pos_0\", (res[0] as Vector3).is_equal_approx(expected_top), \"Il primo elemento deve essere la posizione globale di BlockTop\")\n\t\t\tcheck(\"pos_1\", (res[1] as Vector3).is_equal_approx(expected_bridge), \"Il secondo elemento deve essere la posizione globale di BlockWestBridge\")\n\t\t\tcheck(\"pos_2\", (res[2] as Vector3).is_equal_approx(expected_east_top), \"Il terzo elemento deve essere la posizione globale di BlockEastTop\")",
+      "descrizione": "BlockEast è configurato correttamente e get_top_block_positions restituisce le 3 posizioni globali"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n"
+      }
+     ],
+     "progetto": {
+      "nome": "L'isola",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Aggiungiamo `BlockEast` come terzo settore sotto `Island` con posizione `(6, 0, 1)`, rotazione di -30 gradi (-0.523599 radianti) attorno a Y e scala `(1, 2, 1)`. Al suo interno posizioniamo `BlockEastTop` a `(0, 2.5, 0)` in coordinate locali. La funzione `get_top_block_positions()` raccoglie e restituisce in un Array le proprietà `global_position` dei tre nodi sommando le trasformazioni dei rispettivi genitori.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "imita",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.6-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash"
@@ -68,5 +349,11 @@
     "md": "- Gli assi 3D di Godot: X è la destra (rosso), Y è l'alto (verde), Z è l'indietro (blu). La direzione in avanti corrisponde a −Z.\n- 1 unità nello spazio 3D corrisponde a 1 metro reale.\n- Node3D è la classe base per tutti gli oggetti 3D e ne gestisce posizione, rotazione e scala.\n- position indica le coordinate locali (rispetto al genitore), mentre global_position indica le coordinate assolute nel mondo.\n- Qualsiasi trasformazione applicata a un nodo genitore si ripercuote su tutti i suoi nodi figli."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "es3",
+  "test"
+ ]
 }
