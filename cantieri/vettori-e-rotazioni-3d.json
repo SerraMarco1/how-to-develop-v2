@@ -264,11 +264,10 @@
     "consegna": "Aggiungi al gioco «L'isola» una torretta difensiva che ruota gradualmente sull'asse Y verso un bersaglio a velocità limitata, senza scatti immediati.\n\n1. Apri la scena `main.tscn` e aggiungi alla radice `Island` due nodi `Node3D`:\n   - Un nodo chiamato `Turret` (posizione `Vector3(0, 0, 0)`).\n   - Un nodo chiamato `Target` (posizione `Vector3(5, 0, 5)`).\n2. Crea lo script `turret.gd` nella radice del progetto e collegalo al nodo `Turret`:\n   - Dichiarare due variabili esportate con tipo statico:\n     - `@export var target_node: Node3D`\n     - `@export var turn_speed_degrees: float = 90.0`\n   - In `_process(delta: float)`:\n     - Se `target_node` è nullo, interrompi l'esecuzione con `return`.\n     - Calcola la direzione verso il bersaglio: `var dir: Vector3 = target_node.global_position - global_position`.\n     - Azzera la componente verticale della direzione: `dir.y = 0.0`.\n     - Se la lunghezza al quadrato del vettore `dir` (`dir.length_squared()`) è maggiore di `0.001`:\n       - Calcola l'angolo desiderato con `var target_angle: float = atan2(-dir.x, -dir.z)`.\n       - Calcola il passo massimo di rotazione per il fotogramma corrente con `var max_step: float = deg_to_rad(turn_speed_degrees) * delta`.\n       - Aggiorna `rotation.y` usando `rotate_toward(rotation.y, target_angle, max_step)`.\n3. Nella scena `main.tscn`, assegna il nodo `Target` alla proprietà `target_node` del nodo `Turret`.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "l-isola",
     "passiGuida": [],
     "suggerimenti": [
-     "La funzione `atan2(-dir.x, -dir.z)` converte la direzione orizzontale XZ in un angolo in radianti compatibile con la convenzione -Z avanti di Godot.",
-     "Per limitare la velocità di rotazione ad ogni fotogramma, si moltiplicano i radianti al secondo (`deg_to_rad(turn_speed_degrees)`) per `delta`.",
-     "In `main.tscn`, assegna la proprietà `target_node` sul nodo `Turret` indicando il percorso del nodo `Target`."
+     "La funzione `atan2(-dir.x, -dir.z)` converte la direzione orizzontale XZ in un angolo in radianti compatibile con la convenzione -Z avanti di Godot."
     ],
     "verifiche": [
      {
@@ -300,7 +299,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar turret := find_by_name(main, \"Turret\") as Node3D\n\tif not check(\"turret\", turret != null, \"La scena deve contenere un nodo chiamato Turret\"):\n\t\treturn\n\tvar target := find_by_name(main, \"Target\") as Node3D\n\tif not check(\"target\", target != null, \"La scena deve contenere un nodo chiamato Target\"):\n\t\treturn\n\n\ttarget.global_position = Vector3(10.0, 0.0, 0.0)\n\tvar initial_rot_y: float = turret.rotation.y\n\n\tawait wait_physics_frames(10)\n\tvar mid_rot_y: float = turret.rotation.y\n\n\tcheck(\"turning\", mid_rot_y != initial_rot_y, \"Dopo 10 frame la torretta deve aver iniziato a ruotare (iniziale: %.3f, attuale: %.3f)\" % [initial_rot_y, mid_rot_y])\n\n\tawait wait_seconds(2.0)\n\tvar final_rot_y: float = turret.rotation.y\n\tvar expected_angle: float = atan2(-10.0, 0.0)\n\tvar diff: float = absf(angle_difference(final_rot_y, expected_angle))\n\tcheck(\"aimed\", diff < 0.1, \"Dopo tempo sufficiente la torretta deve essere rivolta verso il bersaglio (rotazione Y attuale: %.2f, attesa: %.2f)\" % [final_rot_y, expected_angle])",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar turret := find_by_name(main, \"Turret\") as Node3D\n\tif not check(\"turret\", turret != null, \"La scena deve contenere un nodo chiamato Turret\"):\n\t\treturn\n\tvar target := find_by_name(main, \"Target\") as Node3D\n\tif not check(\"target\", target != null, \"La scena deve contenere un nodo chiamato Target\"):\n\t\treturn\n\n\ttarget.global_position = Vector3(10.0, 0.0, 0.0)\n\tvar initial_rot_y: float = turret.rotation.y\n\n\tawait wait_frames(15)\n\tvar mid_rot_y: float = turret.rotation.y\n\n\tcheck(\"turning\", absf(angle_difference(mid_rot_y, initial_rot_y)) > 0.01, \"Dopo 15 frame la torretta deve aver iniziato a ruotare (iniziale: %.3f, attuale: %.3f)\" % [initial_rot_y, mid_rot_y])\n\n\tawait wait_frames(120)\n\tvar final_rot_y: float = turret.rotation.y\n\tvar expected_angle: float = atan2(-10.0, 0.0)\n\tvar diff: float = absf(angle_difference(final_rot_y, expected_angle))\n\tcheck(\"aimed\", diff < 0.1, \"Dopo tempo sufficiente la torretta deve essere rivolta verso il bersaglio (rotazione Y attuale: %.2f, attesa: %.2f)\" % [final_rot_y, expected_angle])",
       "descrizione": "La torretta ruota gradualmente attorno all'asse Y verso il bersaglio usando rotate_toward"
      }
     ],
@@ -329,17 +328,21 @@
       "impostazioni": []
      },
      "spiegazione": "Nello script `turret.gd`, calcoliamo la direzione verso `target_node` ed eliminiamo la componente Y per evitare rotazioni indesiderate su altri assi. Usiamo poi `atan2(-dir.x, -dir.z)` per trovare l'angolo orizzontale corretto e `rotate_toward()` per ruotare `rotation.y` in modo morbido senza scatti, limitando lo spostamento angolare ad un massimo di `deg_to_rad(turn_speed_degrees) * delta` per ciascun fotogramma.",
-     "cambiati": [],
+     "cambiati": [
+      "main.tscn",
+      "turret.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "obiettivo",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Dopo 10 frame la torretta deve aver iniziato a ruotare (iniziale: 0.000, attuale: 0.000)\n  - Dopo tempo sufficiente la torretta deve essere rivolta verso il bersaglio (rotazione Y attuale: 0.00, attesa: -1.57)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
   }
