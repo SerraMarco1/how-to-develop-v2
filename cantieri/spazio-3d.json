@@ -646,5 +646,7 @@
   "corretti": [
    "es3"
   ]
- }
+ },
+ "teoriaRivista": true,
+ "praticaRivista": true
 }
