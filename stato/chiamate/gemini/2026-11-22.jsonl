@@ -46,3 +46,4 @@
 {"quando":1795341225112,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"vettori-e-rotazioni-3d","ok":false,"contata":true,"durataMs":104944,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795342612257,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-piattaforme-4","ok":true,"contata":true,"durataMs":6338,"tokenInput":2841,"tokenOutput":680,"ragionamento":1689}
 {"quando":1795342635267,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"spazio-3d","ok":true,"contata":true,"durataMs":2187,"tokenInput":2536,"tokenOutput":30,"ragionamento":560}
+{"quando":1795342638991,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"spazio-3d","ok":false,"contata":true,"durataMs":648,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}

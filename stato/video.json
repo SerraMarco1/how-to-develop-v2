@@ -2116,6 +2116,13 @@
  "spazio-3d": {
   "es1": {
    "impronta": "775c71143d02bd795b289006f1e1535cb9ab3dcf9367234c18802c7bb0b7e18e",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il risultato dell'esercizio viene stampato nel pannello Output e non si vede sullo schermo."
+  },
+  "es2": {
+   "impronta": "cf94619e024382bc39bf360d6844de8e7da5862cd778aefd0a458ca5348c24e6",
    "tentativi": 0,
    "esito": "in corso",
    "regole": 2

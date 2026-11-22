@@ -1,0 +1,16 @@
+{
+ "n": 14,
+ "quando": "2026-11-22T10:17:18.987Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «La struttura base dell'Isola in 3D» non si vede sullo schermo: Il risultato dell'esercizio viene stampato nel pannello Output e non si vede sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 3721,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 2 s (2536 → 30 token)"
+ ]
+}
