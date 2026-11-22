@@ -316,7 +316,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "prevedi",
@@ -367,7 +367,56 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "prevedi",
+    "titolo": "Calcolare posizioni e trasformazioni 3D",
+    "consegna": "Leggi ogni pezzo di codice GDScript e rispondi alle domande sulle posizioni e trasformazioni 3D, senza eseguire lo script.",
+    "modalita": "previsioni",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [],
+    "previsioni": [
+     {
+      "codice": "func run() -> Vector3:\n\tvar parent := Node3D.new()\n\tparent.position = Vector3(1.0, 2.0, -3.0)\n\tvar child := Node3D.new()\n\tchild.position = Vector3(0.0, 5.0, -1.0)\n\tparent.add_child(child)\n\treturn child.global_position\n",
+      "domanda": "Qual è la posizione globale del nodo child?",
+      "risposta": "(0.0, 0.0, 0.0)",
+      "spiegazione": "La posizione globale si ottiene sommando la posizione locale del figlio (0, 5, -1) a quella del genitore (1, 2, -3): (1, 7, -4).",
+      "id": "es3p1"
+     },
+     {
+      "codice": "func run() -> Vector3:\n\tvar node := Node3D.new()\n\tnode.position = Vector3(0.0, 1.0, 0.0)\n\tnode.position += Vector3(0.0, 0.0, -4.0)\n\treturn node.position\n",
+      "domanda": "Qual è la posizione finale del nodo dopo lo spostamento?",
+      "risposta": "(0.0, 1.0, -4.0)",
+      "spiegazione": "Partendo da (0, 1, 0) e aggiungendo -4 lungo l'asse Z (verso l'avanti), si ottiene Vector3(0, 1, -4).",
+      "id": "es3p2"
+     },
+     {
+      "codice": "func run() -> float:\n\tvar parent := Node3D.new()\n\tparent.scale = Vector3(2.0, 2.0, 2.0)\n\tvar child := Node3D.new()\n\tchild.position = Vector3(3.0, 0.0, 0.0)\n\tparent.add_child(child)\n\treturn child.global_position.x\n",
+      "domanda": "Qual è la coordinata X della posizione globale di child?",
+      "risposta": "0.0",
+      "spiegazione": "La posizione locale X del figlio (3.0) viene moltiplicata per la scala del genitore (2.0), ottenendo 6.0.",
+      "id": "es3p3"
+     },
+     {
+      "codice": "func run() -> bool:\n\tvar node_a := Node3D.new()\n\tnode_a.position = Vector3(0.0, 5.0, 0.0)\n\tvar node_b := Node3D.new()\n\tnode_b.position = Vector3(0.0, 2.0, 0.0)\n\treturn node_a.position.y > node_b.position.y\n",
+      "domanda": "Il confronto node_a.position.y > node_b.position.y restituisce true o false?",
+      "risposta": "true",
+      "spiegazione": "In Godot 3D l'asse Y punta verso l'alto. Poiché 5.0 è maggiore di 2.0, la condizione è vera (true).",
+      "id": "es3p4"
+     }
+    ],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [],
+     "spiegazione": "",
+     "cambiati": [],
+     "rimossi": []
+    },
+    "id": "es3"
+   }
   },
   "test": {
    "stato": "da_fare",

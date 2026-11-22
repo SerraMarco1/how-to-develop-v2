@@ -1,0 +1,83 @@
+{
+ "n": 6,
+ "quando": "2026-11-22T08:45:43.035Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (imita): approvato",
+ "spiegazione": "«Costruire la prima piattaforma di blocchi». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: main.tscn",
+ "richieste": 0,
+ "durataMs": 7881,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "imita",
+   "titolo": "Costruire la prima piattaforma di blocchi",
+   "consegna": "Mantenendo la struttura creata nella lezione, espandi la scena `main.tscn` aggiungendo un secondo ramo di blocchi con specifiche trasformazioni di posizione, rotazione e scala:\n\n1. Sotto la radice `Island`, crea un nuovo nodo figlio `Node3D` chiamato `BlockWest` con:\n   - Position: `(-5.0, 0.0, 2.0)`\n   - Rotation (in gradi attorno all'asse Y): `45.0` gradi (cioè `(0.0, 45.0, 0.0)`)\n   - Scale: `(2.0, 1.0, 2.0)`\n2. Dentro `BlockWest`, aggiungi un nodo figlio `Node3D` chiamato `BlockWestBridge` con:\n   - Position locale: `(0.0, 2.0, -3.0)`",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Aggiungi BlockWest come figlio diretto della radice Island, non dentro BlockBase.",
+    "Nell'Inspector di Godot, le rotazioni si modificano in gradi sotto la voce Transform -> Rotation.",
+    "BlockWestBridge deve essere figlio di BlockWest: le sue coordinate saranno quindi misurate a partire dal centro di BlockWest."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "Node3D",
+     "nome": "BlockWest",
+     "genitore": "Island",
+     "descrizione": "Il nodo Island contiene un figlio Node3D chiamato BlockWest"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "Node3D",
+     "nome": "BlockWestBridge",
+     "genitore": "BlockWest",
+     "descrizione": "Il nodo BlockWest contiene un figlio Node3D chiamato BlockWestBridge"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar west := main.get_node_or_null(\"BlockWest\") as Node3D\n\tif not check(\"west\", west != null, \"Nella scena serve un Node3D chiamato BlockWest figlio di Island\"):\n\t\treturn\n\tvar bridge := main.get_node_or_null(\"BlockWest/BlockWestBridge\") as Node3D\n\tif not check(\"bridge\", bridge != null, \"BlockWest deve avere un figlio Node3D chiamato BlockWestBridge\"):\n\t\treturn\n\tcheck(\"west_pos\", west.position.is_equal_approx(Vector3(-5.0, 0.0, 2.0)), \"BlockWest deve avere posizione locale (-5, 0, 2) (trovata: %s)\" % str(west.position))\n\tcheck(\"west_rot\", absf(west.rotation_degrees.y - 45.0) < 0.1, \"BlockWest deve avere rotazione Y di 45 gradi (trovata: %.1f)\" % west.rotation_degrees.y)\n\tcheck(\"west_scale\", west.scale.is_equal_approx(Vector3(2.0, 1.0, 2.0)), \"BlockWest deve avere scala (2, 1, 2) (trovata: %s)\" % str(west.scale))\n\tcheck(\"bridge_pos\", bridge.position.is_equal_approx(Vector3(0.0, 2.0, -3.0)), \"BlockWestBridge deve avere posizione locale (0, 2, -3) (trovata: %s)\" % str(bridge.position))\n",
+     "descrizione": "BlockWest e BlockWestBridge hanno posizione, rotazione e scala impostate secondo le specifiche"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"L'isola\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node3D\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n"
+     }
+    ],
+    "progetto": {
+     "nome": "L'isola",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Aggiungiamo `BlockWest` come figlio della radice `Island` impostando le sue proprietà Transform: posizione `(-5, 0, 2)`, rotazione attorno a Y di 45 gradi (`0.785398` radianti nel file `.tscn`) e scala `(2, 1, 2)`. Come suo figlio creiamo `BlockWestBridge` a posizione locale `(0, 2, -3)`.",
+    "cambiati": [
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "cartella": "l-isola",
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
