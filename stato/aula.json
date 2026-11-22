@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-22T08:42:02.733Z",
+ "aggiornato": "2026-11-22T08:51:28.332Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "spazio-3d",
-  "numero": "9.0",
-  "titolo": "Lo spazio 3D"
+  "slug": "vettori-e-rotazioni-3d",
+  "numero": "9.1",
+  "titolo": "Vettori e rotazioni in 3D"
  },
- "messaggio": "Sta scrivendo la lezione 9.0 «Lo spazio 3D».",
+ "messaggio": "Sta scrivendo la lezione 9.1 «Vettori e rotazioni in 3D».",
  "riprende": null
 }
