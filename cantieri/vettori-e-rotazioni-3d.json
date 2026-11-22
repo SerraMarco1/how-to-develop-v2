@@ -1,0 +1,75 @@
+{
+ "creato": "2026-11-22T08:51:28.343Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-flash-latest"
+ ],
+ "teoria": {
+  "titolo": "Vettori e rotazioni in 3D",
+  "sommario": "Impara a orientare e muovere gli oggetti nello spazio 3D di Godot 4.7. Scoprirai come ricavare le direzioni proprie di un oggetto con Transform3D e Basis, come ruotare attorno agli assi usando gradi e radianti, come puntare un bersaglio all'istante con look_at() e come farlo girare gradualmente a velocità limitata.",
+  "concetti": [
+   "Direzioni proprie (destra, alto, avanti)",
+   "global_transform.basis",
+   "Radianti e gradi (deg_to_rad, rad_to_deg)",
+   "Rotazione attorno agli assi (rotate_y, rotation.y)",
+   "Metodo look_at()",
+   "Rotazione graduale con rotate_toward()"
+  ],
+  "obiettivi": [
+   "Vector3 e le direzioni proprie di un oggetto: il suo avanti, il suo destra, il suo alto",
+   "Ruotare attorno a un asse, guardare verso un punto, gradi e radianti",
+   "Girarsi con gradualità invece che di scatto"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nello spazio tridimensionale non basta conoscere la posizione di un oggetto: devi sapere anche da che parte è rivolto. In un gioco d'avventura come «L'isola», un personaggio o una piattaforma mobile devono avanzare verso il proprio \"avanti\", una freccia deve indicare il passaggio verso il blocco successivo e una torretta di guardia deve voltarsi a poco a poco verso l'intruso senza scatti improvvisi. In questa lezione impari a controllare le direzioni locali, le rotazioni sugli assi e il puntamento graduale."
+   },
+   {
+    "tipo": "testo",
+    "md": "Ogni nodo spaziale (`Node3D`) possiede un proprio sistema di riferimento locale. Quando posizioni un blocco o una sentinella nel mondo, le sue direzioni non coincidono necessariamente con gli assi globali della mappa:\n- **Destra locale**: punta lungo l'asse **+X**.\n- **Alto locale**: punta lungo l'asse **+Y**.\n- **Avanti locale**: punta lungo l'asse **-Z**.\n\nPerché avanti è -Z? Godot adotta la convenzione classica della grafica 3D: se guardi lo schermo dritto davanti a te, X va verso destra, Y va verso l'alto e Z esce dallo schermo venendo verso di te. Di conseguenza, andare \"in avanti\" significa allontanarsi lungo i valori negativi di Z.\n\nNel codice possiamo leggere queste direzioni dalla proprietà `global_transform.basis`. La *basis* (base) è una matrice che racchiude i tre assi di orientamento del nodo nello spazio globale:\n- Destra nel mondo: `global_transform.basis.x`\n- Alto nel mondo: `global_transform.basis.y`\n- Avanti nel mondo: `-global_transform.basis.z` (con il segno meno, per puntare in avanti e non all'indietro)."
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "editor-3d",
+    "didascalia": "L'area di lavoro 3D di Godot: gli assi X (rosso), Y (verde) e Z (blu) definiscono le tre dimensioni dello spazio."
+   },
+   {
+    "tipo": "testo",
+    "md": "Sapere dove punta l'asse avanti permette di spostare un oggetto nella direzione in cui sta guardando. Se cambiassi la posizione sommando un vettore fisso come `Vector3(0, 0, -1)`, l'oggetto si muoverebbe sempre verso il nord globale del mondo, ignorando la sua rotazione.\n\nSe invece moltiplichi il suo vettore di prua locale per la velocità e per `delta`, l'oggetto avanzerà dritto rispetto alla sua faccia:\n```gdscript\nvar forward: Vector3 = -global_transform.basis.z\nglobal_position += forward * speed * delta\n```\nOgni volta che l'oggetto ruoterà, `-global_transform.basis.z` punterà in una nuova direzione e il movimento seguirà la svolta in modo naturale."
+   },
+   {
+    "tipo": "testo",
+    "md": "Per ruotare un oggetto bisogna prima chiarire l'unità di misura degli angoli. Godot esegue tutti i calcoli interni in **radianti**, non in gradi. Un giro completo di 360 gradi corrisponde a $2\\pi$ radianti (circa 6,28 radianti), mentre un angolo retto di 90 gradi equivale a $\\pi/2$ (circa 1,57 radianti).\n\nNon serve fare conversioni matematiche a mano. GDScript offre due funzioni pronte:\n- `deg_to_rad(gradi)`: converte i gradi in radianti (per esempio `deg_to_rad(90.0)` produce 1.5708).\n- `rad_to_deg(radianti)`: converte i radianti in gradi, comodo quando vuoi stampare un angolo leggibile con `print()`.\n\nPer ruotare un nodo `Node3D` attorno a uno dei suoi assi principali, puoi chiamare i metodi `rotate_x()`, `rotate_y()` e `rotate_z()`, passando l'angolo in radianti. Per esempio, `rotate_y(deg_to_rad(45.0))` ruota l'oggetto di 45 gradi attorno all'asse verticale Y."
+   },
+   {
+    "tipo": "testo",
+    "md": "Se devi orientare un oggetto direttamente verso un punto, per esempio una freccia che indica l'uscita dell'isola situata su `BlockEastTop`, puoi usare il metodo `look_at()` di `Node3D`:\n```gdscript\nlook_at(target_position, Vector3.UP)\n```\nQuesto comando ruota l'oggetto all'istante in modo che il suo asse avanti (-Z) guardi esattamente verso `target_position`. Il secondo parametro (`Vector3.UP`, cioè `Vector3(0, 1, 0)`) indica a Godot quale direzione considerare come \"cielo\", mantenendo l'oggetto dritto senza inclinarlo di sbieco."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "`look_at()` produce un errore se la posizione del bersaglio coincide con quella dell'oggetto (`global_position == target_position`), oppure se il bersaglio si trova esattamente sopra o sotto l'oggetto lungo l'asse Y. In entrambi i casi il motore non può stabilire da che parte orientare l'alto. Prima di chiamare `look_at()`, controlla sempre che la distanza orizzontale dal bersaglio sia maggiore di zero."
+   },
+   {
+    "tipo": "testo",
+    "md": "Il metodo `look_at()` orienta l'oggetto in un solo fotogramma. Per una freccia o una bussola questo scatto immediato va benissimo, ma per una torretta difensiva o un nemico l'effetto visivo risulterebbe finto e poco naturale: serve girarsi con gradualità a velocità controllata.\n\nPer ottenere una rotazione fluida attorno all'asse Y:\n1. Calcoli la direzione orizzontale verso il bersaglio sottraendo le posizioni: `var dir: Vector3 = target_position - global_position`.\n2. Con la funzione trigonometrica `atan2(-dir.x, -dir.z)` ricavi l'angolo in radianti verso cui girarsi sul piano orizzontale. Usando i valori negativi, l'angolo zero corrisponde perfettamente all'avanti naturale (-Z) di Godot.\n3. Usi la funzione `rotate_toward(attuale, desiderato, passo_massimo)` per avvicinare `rotation.y` all'angolo calcolato. `rotate_toward()` sceglie in automatico la direzione più corta (oraria o antioraria) e avanza al massimo del valore che specifichi, impedendo scatti improvvisi."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Node3D\n\n@export var target_marker: Node3D\n@export var turn_speed_degrees: float = 90.0\n@export var move_speed: float = 2.0\n\nfunc _process(delta: float) -> void:\n\tif target_marker == null:\n\t\treturn\n\n\t# 1. Girarsi gradualmente verso il bersaglio sull'asse orizzontale Y\n\tvar target_pos: Vector3 = target_marker.global_position\n\tvar dir: Vector3 = target_pos - global_position\n\tdir.y = 0.0 # Ignoriamo il dislivello per non inclinarci\n\n\tif dir.length_squared() > 0.001:\n\t\tvar target_angle: float = atan2(-dir.x, -dir.z)\n\t\tvar max_step: float = deg_to_rad(turn_speed_degrees) * delta\n\t\trotation.y = rotate_toward(rotation.y, target_angle, max_step)\n\n\t# 2. Avanzare verso la direzione in cui guarda l'oggetto\n\tvar forward: Vector3 = -global_transform.basis.z\n\tglobal_position += forward * move_speed * delta\n\nfunc point_arrow_at(target_position: Vector3) -> void:\n\t# 3. Puntare all'istante verso un punto preciso (es. l'uscita)\n\tvar distance: float = global_position.distance_to(target_position)\n\tif distance > 0.1:\n\t\tlook_at(target_position, Vector3.UP)",
+    "spiegazione": "Nel metodo `_process()`, impostare `dir.y = 0.0` fa sì che il calcolo della rotazione consideri solo il piano del terreno, evitando che la torretta si pieghi verso l'alto o verso il basso. `deg_to_rad(turn_speed_degrees) * delta` calcola quanti radianti l'oggetto può percorrere nel fotogramma corrente, garantendo una velocità costante a qualsiasi frequenza di aggiornamento. La funzione `point_arrow_at()` mostra invece l'uso di `look_at()` con un controllo preventivo sulla distanza per evitare errori."
+   },
+   {
+    "tipo": "testo",
+    "md": "Osserva come cooperano le due parti del movimento: `rotate_toward()` modifica la proprietà `rotation.y`, e di conseguenza aggiorna l'orientamento della base del nodo. Subito dopo, la riga che calcola `forward` legge `-global_transform.basis.z`, che riflette all'istante la rotazione appena applicata. In questo modo l'oggetto curva in modo morbido verso il bersaglio mentre continua ad avanzare."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- In Godot 3D la direzione in avanti locale corrisponde a **-Z**, a destra a **+X** e in alto a **+Y**.\n- I vettori direzionali orientati nel mondo si ricavano da `global_transform.basis`: la direzione in cui guarda un oggetto è `-global_transform.basis.z`.\n- Godot misura gli angoli in radianti; usa `deg_to_rad()` e `rad_to_deg()` per convertire i valori da e verso i gradi.\n- `look_at(bersaglio, Vector3.UP)` orienta l'oggetto all'istante verso un punto 3D, ma bersaglio e oggetto non devono coincidere.\n- Per far ruotare una torretta a velocità costante, calcola l'angolo con `atan2(-dir.x, -dir.z)` e applica `rotate_toward()` a `rotation.y` usando `delta`."
+   }
+  ]
+ }
+}
