@@ -22,3 +22,5 @@
 {"quando":1795337201914,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"spazio-3d","ok":true,"contata":true,"durataMs":268685,"tokenInput":4137,"tokenOutput":846,"ragionamento":1044}
 {"quando":1795337474476,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"spazio-3d","ok":true,"contata":true,"durataMs":7521,"tokenInput":2230,"tokenOutput":895,"ragionamento":2581}
 {"quando":1795337488347,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"vettori-e-rotazioni-3d","ok":true,"contata":true,"durataMs":148813,"tokenInput":14821,"tokenOutput":2845,"ragionamento":9663}
+{"quando":1795337639252,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"vettori-e-rotazioni-3d","ok":false,"contata":true,"durataMs":3267,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795337642522,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"vettori-e-rotazioni-3d","ok":false,"contata":true,"durataMs":2202,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
