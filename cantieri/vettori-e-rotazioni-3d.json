@@ -339,7 +339,7 @@
    "correzioni": 2,
    "semplificato": true,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La proprietà target_node del nodo Turret deve essere assegnata nella scena\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - La torretta deve ruotare verso il bersaglio assegnato (rotazione Y attuale: 0.00)\n  - Dopo tempo sufficiente la torretta deve essere rivolta verso il bersaglio (rotazione Y attuale: 0.00, attesa: -1.57)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
