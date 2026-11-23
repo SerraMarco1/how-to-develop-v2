@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-23T09:54:08.064Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-23T09:57:28.760Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "camera3d",
   "numero": "9.4",
   "titolo": "La telecamera 3D"
  },
- "messaggio": "Sta scrivendo la lezione 9.4 «La telecamera 3D».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.4 riprende da sola appena rispondono.",
+ "riprende": "2026-11-23T10:07:28.760Z"
 }
