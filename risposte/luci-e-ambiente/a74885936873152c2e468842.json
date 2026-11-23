@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\n  \"approvata\": false,\n  \"problemi\": [\n    {\n      \"parte\": \"pratica\",\n      \"dove\": \"test\",\n      \"problema\": \"Il test finale è un duplicato identico dell'esercizio 2 ('Configurare il tramonto e la nebbia atmosferica'), presentando esattamente la stessa consegna e il medesimo codice di verifica.\",\n      \"correzione\": \"Riscrivere il test finale per valutare in modo autonomo le competenze della lezione (ad esempio richiedendo di completare il ciclo con la notte `Atmosphere.NIGHT`, in cui il sole si spegne e la lanterna e il bagliore illuminano la scena), anziché replicare l'esercizio 2.\",\n      \"fonte\": \"\"\n    }\n  ]\n}",
- "ragionamento": 2837,
- "quando": "2026-11-23T08:48:02.845Z",
- "ruolo": "revisore"
-}
