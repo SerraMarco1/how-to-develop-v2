@@ -13,3 +13,4 @@
 {"quando":1795421990770,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"mesh-e-materiali","ok":false,"contata":true,"durataMs":32336,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795422023108,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":24202,"tokenInput":12440,"tokenOutput":12,"ragionamento":2001}
 {"quando":1795422048802,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":5562,"tokenInput":2350,"tokenOutput":742,"ragionamento":1768}
+{"quando":1795422059443,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"luci-e-ambiente","ok":true,"contata":true,"durataMs":59549,"tokenInput":12106,"tokenOutput":3195,"ragionamento":6490}
