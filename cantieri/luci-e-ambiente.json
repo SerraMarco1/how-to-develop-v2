@@ -402,7 +402,7 @@
    "correzioni": 2,
    "semplificato": true,
    "problemi": [
-    "una verifica controlla l'azione di input \"change_atmosphere\", ma la consegna non la nomina"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Premendo change_atmosphere si passa al tramonto\n  - Di notte il sole (SunLight) deve essere disattivato\n  - Di notte la lanterna deve essere accesa ad energia 2.5\n  - Di notte la nebbia deve avere densità 0.03\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
