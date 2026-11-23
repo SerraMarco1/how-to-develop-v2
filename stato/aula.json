@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-23T11:30:30.744Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-23T11:34:40.204Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "camera3d",
-  "numero": "9.4",
-  "titolo": "La telecamera 3D"
+  "slug": "costruire-un-livello-3d",
+  "numero": "9.5",
+  "titolo": "Costruire un livello in fretta"
  },
- "messaggio": "Sta scrivendo la lezione 9.4 «La telecamera 3D».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.5 riprende da sola appena rispondono.",
+ "riprende": "2026-11-23T11:44:40.204Z"
 }
