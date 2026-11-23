@@ -2,3 +2,4 @@
 {"quando":1795420892726,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"spazio-3d","ok":true,"contata":true,"durataMs":3951,"tokenInput":2632,"tokenOutput":44,"ragionamento":1420}
 {"quando":1795420898152,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"vettori-e-rotazioni-3d","ok":false,"contata":true,"durataMs":84554,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795420982710,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"vettori-e-rotazioni-3d","ok":false,"contata":true,"durataMs":2215,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795421665365,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"vettori-e-rotazioni-3d","ok":true,"contata":true,"durataMs":20748,"tokenInput":11612,"tokenOutput":136,"ragionamento":1995}
