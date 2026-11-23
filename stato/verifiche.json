@@ -718,5 +718,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "luci-e-ambiente": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }

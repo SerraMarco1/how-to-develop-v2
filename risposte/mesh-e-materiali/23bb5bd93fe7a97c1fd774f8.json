@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": false,\n  \"perche\": \"I nodi creati non compaiono sullo schermo perché la scena non ha una telecamera attiva.\"\n}",
+ "ragionamento": 1235,
+ "quando": "2026-11-23T09:53:24.285Z",
+ "ruolo": "ritocco"
+}
