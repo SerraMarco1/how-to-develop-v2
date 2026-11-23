@@ -1,0 +1,16 @@
+{
+ "n": 15,
+ "quando": "2026-11-23T09:21:02.808Z",
+ "pezzo": "es2",
+ "azione": "video",
+ "esito": "attesa",
+ "guasto": "fornitore",
+ "titolo": "Esercizio 2: video del risultato atteso, tentativo 2 di 3",
+ "spiegazione": "Nessun modello disponibile per il ruolo \"ritocco\" (ultimi errori: gemini/gemini-flash-lite-latest: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again lat)\nReazione: si riprova al prossimo giro.",
+ "richieste": 1,
+ "durataMs": 4208,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+ ]
+}
