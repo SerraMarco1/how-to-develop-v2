@@ -6,8 +6,8 @@
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.7-flash": {
-   "fino": 1795423419043,
-   "errore": "Nessuna risposta entro 900 secondi"
+   "fino": 1795423894173,
+   "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.6-flash": {
    "fino": 1795421584926,
