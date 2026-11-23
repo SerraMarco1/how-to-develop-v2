@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-23T09:37:26.013Z",
+ "aggiornato": "2026-11-23T11:34:02.562Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1280,6 +1280,15 @@
    "file": "lezioni/f09-3d-basi/luci-e-ambiente.json",
    "sha256": "5755aa56211ed8d3a933c2dfdeea3bc5d140c94bdc766d1ab696e58e4d4fadcb",
    "byte": 69160
+  },
+  {
+   "slug": "camera3d",
+   "numero": "9.4",
+   "titolo": "La telecamera 3D",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/camera3d.json",
+   "sha256": "eee6f191066e07713638e78b61286514fe8bf766f9163094177ac2f1ea7234de",
+   "byte": 76488
   }
  ],
  "documentazione": {
