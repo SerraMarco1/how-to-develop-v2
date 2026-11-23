@@ -2195,8 +2195,8 @@
   },
   "es2": {
    "impronta": "2f16243b5b9572343789c4b4429c34348e7e373d746e6013840be18a36a41fe3",
-   "tentativi": 1,
-   "esito": "in corso",
+   "tentativi": 2,
+   "esito": "niente",
    "regole": 2,
    "ultimo": {
     "copione": {
@@ -2247,7 +2247,7 @@
      "Soggetto «vetro» (nome = MeshBridge; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
     ]
    },
-   "motivo": "Soggetto «plastica» (nome = MeshWest; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+   "motivo": "I nodi creati non compaiono sullo schermo perché la scena non ha una telecamera attiva."
   }
  }
 }
