@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-23T08:20:59.432Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-23T08:48:07.949Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "luci-e-ambiente",
   "numero": "9.3",
   "titolo": "Luci, ombre e ambiente"
  },
- "messaggio": "Sta scrivendo la lezione 9.3 «Luci, ombre e ambiente».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.3 riprende da sola appena rispondono.",
+ "riprende": "2026-11-23T08:58:07.949Z"
 }
