@@ -558,5 +558,18 @@
   "es1",
   "es2",
   "test"
- ]
+ ],
+ "revisione": {
+  "problemi": [
+   {
+    "parte": "pratica",
+    "dove": "test",
+    "problema": "Il test finale è un duplicato identico dell'esercizio 2 ('Configurare il tramonto e la nebbia atmosferica'), presentando esattamente la stessa consegna e il medesimo codice di verifica.",
+    "correzione": "Riscrivere il test finale per valutare in modo autonomo le competenze della lezione (ad esempio richiedendo di completare il ciclo con la notte `Atmosphere.NIGHT`, in cui il sole si spegne e la lanterna e il bagliore illuminano la scena), anziché replicare l'esercizio 2.",
+    "fonte": ""
+   }
+  ],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
