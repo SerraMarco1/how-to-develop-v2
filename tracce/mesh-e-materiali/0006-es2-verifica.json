@@ -1,0 +1,82 @@
+{
+ "n": 6,
+ "quando": "2026-11-23T08:19:41.700Z",
+ "pezzo": "es2",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Esercizio 2 (imita): approvato",
+ "spiegazione": "«Aggiungi ostacolo in plastica e ponte in vetro». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: main.tscn",
+ "richieste": 0,
+ "durataMs": 7973,
+ "dati": {
+  "esercizio": {
+   "tipo": "autonomo",
+   "genere": "imita",
+   "titolo": "Aggiungi ostacolo in plastica e ponte in vetro",
+   "consegna": "Prosegui la costruzione dell'isola aggiungendo la mesh per l'ostacolo ad ovest e una piattaforma in vetro trasparente, applicando i relativi materiali della tabella.\n\nIn `main.tscn`:\n1. Sotto `BlockWest`, aggiungi un nodo `MeshInstance3D` chiamato `MeshWest` con una `BoxMesh` di dimensioni `Vector3(3, 1, 3)`.\n2. Assegna a `MeshWest` un materiale **StandardMaterial3D** in **Material Override** per la **plastica**:\n   - **Albedo → Color**: un colore vivo (ad esempio rosso `Color(0.9, 0.1, 0.1)`).\n   - **Metallic**: `0.0`\n   - **Roughness**: `0.3`\n3. Sotto `BlockWestBridge`, aggiungi un nodo `MeshInstance3D` chiamato `MeshBridge` con una `BoxMesh` di dimensioni `Vector3(2, 0.2, 4)`.\n4. Assegna a `MeshBridge` un materiale **StandardMaterial3D** in **Material Override** per il **vetro**:\n   - **Transparency**: impostata su **Alpha**.\n   - **Albedo → Color**: azzurro chiaro con valore Alfa ridotto a `0.3` (`Color(0.5, 0.8, 1.0, 0.3)`).\n   - **Metallic**: `0.0`\n   - **Roughness**: `0.05`",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "l-isola",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per attivare la trasparenza in StandardMaterial3D, apri la sezione Transparency nell'Inspector e imposta la prima casella su Alpha.",
+    "Per modificare la trasparenza del colore Albedo, fai clic sul rettangolo Albedo → Color e sposta il cursore del canale A (Alpha) sul valore 0.3."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "MeshInstance3D",
+     "nome": "MeshWest",
+     "genitore": "BlockWest",
+     "descrizione": "Nel nodo BlockWest c'è un figlio MeshInstance3D chiamato MeshWest"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "MeshInstance3D",
+     "nome": "MeshBridge",
+     "genitore": "BlockWestBridge",
+     "descrizione": "Nel nodo BlockWestBridge c'è un figlio MeshInstance3D chiamato MeshBridge"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi correttamente\"):\n\t\treturn\n\t\n\tvar mesh_west := find_by_name(main, \"MeshWest\") as MeshInstance3D\n\tif not check(\"mesh_west_exists\", mesh_west != null, \"In BlockWest serve un figlio MeshInstance3D chiamato MeshWest\"):\n\t\treturn\n\tvar box_west := mesh_west.mesh as BoxMesh\n\tif check(\"box_west_mesh\", box_west != null, \"MeshWest deve usare una BoxMesh\"):\n\t\tcheck(\"box_west_size\", box_west.size == Vector3(3, 1, 3), \"La BoxMesh di MeshWest deve avere Size = Vector3(3, 1, 3) (trovato %s)\" % str(box_west.size))\n\t\n\tvar mat_plastic := mesh_west.material_override as StandardMaterial3D\n\tif check(\"mat_plastic_exists\", mat_plastic != null, \"MeshWest deve avere uno StandardMaterial3D in Material Override\"):\n\t\tcheck(\"plastic_metallic\", absf(mat_plastic.metallic - 0.0) < 0.05, \"La plastica deve avere Metallic = 0.0 (trovato %.2f)\" % mat_plastic.metallic)\n\t\tcheck(\"plastic_roughness\", absf(mat_plastic.roughness - 0.3) < 0.05, \"La plastica deve avere Roughness = 0.3 (trovato %.2f)\" % mat_plastic.roughness)\n\t\n\tvar mesh_bridge := find_by_name(main, \"MeshBridge\") as MeshInstance3D\n\tif not check(\"mesh_bridge_exists\", mesh_bridge != null, \"In BlockWestBridge serve un figlio MeshInstance3D chiamato MeshBridge\"):\n\t\treturn\n\tvar box_bridge := mesh_bridge.mesh as BoxMesh\n\tif check(\"box_bridge_mesh\", box_bridge != null, \"MeshBridge deve usare una BoxMesh\"):\n\t\tcheck(\"box_bridge_size\", box_bridge.size == Vector3(2, 0.2, 4), \"La BoxMesh di MeshBridge deve avere Size = Vector3(2, 0.2, 4) (trovato %s)\" % str(box_bridge.size))\n\t\n\tvar mat_glass := mesh_bridge.material_override as StandardMaterial3D\n\tif check(\"mat_glass_exists\", mat_glass != null, \"MeshBridge deve avere uno StandardMaterial3D in Material Override\"):\n\t\tcheck(\"glass_transparency\", mat_glass.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA, \"Il vetro deve avere Transparency impostata su Alpha\")\n\t\tcheck(\"glass_alpha\", mat_glass.albedo_color.a < 0.5, \"Il vetro deve avere un valore Alfa di Albedo ridotto (trovato %.2f)\" % mat_glass.albedo_color.a)\n\t\tcheck(\"glass_roughness\", absf(mat_glass.roughness - 0.05) < 0.05, \"Il vetro deve avere Roughness = 0.05 (trovato %.2f)\" % mat_glass.roughness)\n",
+     "descrizione": "I materiali di plastica e vetro sono configurati correttamente con trasparenza e ruvidità"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"L'isola\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret == null or target == null:\n\t\treturn\n\n\tvar direction: Vector3 = target.global_position - turret.global_position\n\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_wood\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\nmetallic = 0.0\nroughness = 0.8\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plastic\"]\nalbedo_color = Color(0.9, 0.1, 0.1, 1)\nmetallic = 0.0\nroughness = 0.3\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_bridge\"]\nsize = Vector3(2, 0.2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_glass\"]\ntransparency = 1\nalbedo_color = Color(0.5, 0.8, 1, 0.3)\nmetallic = 0.0\nroughness = 0.05\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_turret\"]\ntop_radius = 0.5\nbottom_radius = 0.5\nheight = 1.5\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_metal\"]\nalbedo_color = Color(0.7, 0.7, 0.7, 1)\nmetallic = 1.0\nroughness = 0.1\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"MeshBase\" type=\"MeshInstance3D\" parent=\"BlockBase\"]\nmesh = SubResource(\"BoxMesh_base\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"MeshWest\" type=\"MeshInstance3D\" parent=\"BlockWest\"]\nmesh = SubResource(\"BoxMesh_west\")\nmaterial_override = SubResource(\"StandardMaterial3D_plastic\")\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"MeshBridge\" type=\"MeshInstance3D\" parent=\"BlockWest/BlockWestBridge\"]\nmesh = SubResource(\"BoxMesh_bridge\")\nmaterial_override = SubResource(\"StandardMaterial3D_glass\")\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n\n[node name=\"Turret\" type=\"Node3D\" parent=\".\"]\n\n[node name=\"MeshTurret\" type=\"MeshInstance3D\" parent=\"Turret\"]\nmesh = SubResource(\"CylinderMesh_turret\")\nmaterial_override = SubResource(\"StandardMaterial3D_metal\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "L'isola",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Per creare il materiale della plastica si usa `metallic` a `0.0` con `roughness` a `0.3`, rendendo la superficie liscia con riflessi morbidi. Per il vetro si attiva la modalità di trasparenza `Alpha` (in GDScript `transparency = 1`), si abbassa il valore Alfa del colore `Albedo` a `0.3` e si imposta `roughness` a `0.05` per ottenere una superficie molto liscia ed elevare i riflessi di luce sulla piattaforma trasparente.",
+    "cambiati": [
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "es2"
+  }
+ },
+ "chiamate": []
+}
