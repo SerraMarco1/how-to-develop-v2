@@ -5,3 +5,4 @@
 {"quando":1795421665365,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"vettori-e-rotazioni-3d","ok":true,"contata":true,"durataMs":20748,"tokenInput":11612,"tokenOutput":136,"ragionamento":1995}
 {"quando":1795421687969,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"vettori-e-rotazioni-3d","ok":false,"contata":true,"durataMs":803,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795421688775,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"vettori-e-rotazioni-3d","ok":true,"contata":true,"durataMs":45077,"tokenInput":9674,"tokenOutput":2029,"ragionamento":7987}
+{"quando":1795421746813,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"vettori-e-rotazioni-3d","ok":true,"contata":true,"durataMs":8558,"tokenInput":2393,"tokenOutput":852,"ragionamento":3137}
