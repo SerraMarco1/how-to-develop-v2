@@ -2192,6 +2192,62 @@
     ]
    },
    "motivo": "La scena non ha una telecamera, quindi le mesh 3D non si vedono sullo schermo."
+  },
+  "es2": {
+   "impronta": "2f16243b5b9572343789c4b4429c34348e7e373d746e6013840be18a36a41fe3",
+   "tentativi": 1,
+   "esito": "in corso",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 8,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "plastica",
+       "cerca": {
+        "nome": "MeshWest"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "esserci",
+       "etichetta": "Plastica"
+      },
+      {
+       "id": "vetro",
+       "cerca": {
+        "nome": "MeshBridge"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "esserci",
+       "etichetta": "Vetro"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "L'ostacolo in plastica rossa ad ovest",
+       "da": 1,
+       "a": 3.5,
+       "soggetto": "plastica"
+      },
+      {
+       "testo": "Il ponte in vetro trasparente collegato",
+       "da": 4,
+       "a": 6.5,
+       "soggetto": "vetro"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «plastica» (nome = MeshWest; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0.",
+     "Soggetto «vetro» (nome = MeshBridge; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+    ]
+   },
+   "motivo": "Soggetto «plastica» (nome = MeshWest; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
   }
  }
 }
