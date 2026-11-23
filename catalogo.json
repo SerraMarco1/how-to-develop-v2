@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-23T08:15:59.105Z",
+ "aggiornato": "2026-11-23T08:20:58.109Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1262,6 +1262,15 @@
    "file": "lezioni/f09-3d-basi/vettori-e-rotazioni-3d.json",
    "sha256": "0b3c74ffc95368b926e9a191d43120deb92dabf0bec4a4480783c7389e451303",
    "byte": 31750
+  },
+  {
+   "slug": "mesh-e-materiali",
+   "numero": "9.2",
+   "titolo": "Mesh e materiali",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/mesh-e-materiali.json",
+   "sha256": "9f2de0afbe0355e7e463d641ccd72a5866ab8e4992e6ae1eb751b83fc74184da",
+   "byte": 46946
   }
  ],
  "documentazione": {
