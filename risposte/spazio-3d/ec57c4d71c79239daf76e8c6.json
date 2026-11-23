@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": false,\n  \"perche\": \"I nodi Node3D aggiunti sono invisibili sullo schermo perché non hanno una rappresentazione visiva.\"\n}",
+ "ragionamento": 1445,
+ "quando": "2026-11-23T08:01:30.545Z",
+ "ruolo": "ritocco"
+}
