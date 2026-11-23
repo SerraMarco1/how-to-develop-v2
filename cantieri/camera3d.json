@@ -304,13 +304,13 @@
     "tipo": "autonomo",
     "genere": "trova",
     "titolo": "Inquadratura dinamica e piani di ritaglio",
-    "consegna": "Nel gioco «L'isola», imposteremo i limiti di distanza per le telecamere e faremo muovere la telecamera panoramica per verificare che l'interfaccia continui a seguire il cristallo durante il movimento.\n\nModifica `main.tscn` e `main.gd`:\n\n1. In `main.tscn`, configura la distanza minima di ritaglio (piano vicino) a `0.5` metri e la distanza massima di ritaglio (piano lontano) a `50.0` metri su tutte e tre le telecamere (`CameraOverview`, `CameraWest`, `CameraEast`). Cerca nell'Ispettore di `Camera3D` le proprietà per Near e Far.\n2. In `main.gd`, dichiara una variabile `@export var camera_speed: float = 3.0`.\n3. In `_process(delta: float)`, fai muovere `camera_overview` verso destra lungo l'asse X a velocità `camera_speed * delta` (incrementando `position.x`).\n4. Verifica che `_update_crystal_label_position()` continui ad aggiornare la posizione di `CrystalLabel` ad ogni frame mentre la telecamera è in movimento.",
+    "consegna": "Nel gioco «L'isola», imposteremo i limiti di distanza per le telecamere e faremo muovere la telecamera panoramica per verificare che l'interfaccia continui a seguire il cristallo durante il movimento.\n\nModifica `main.tscn` e `main.gd`:\n\n1. In `main.tscn`, configura la distanza minima di ritaglio a `0.5` metri e la distanza massima di ritaglio a `50.0` metri su tutte e tre le telecamere (`CameraOverview`, `CameraWest`, `CameraEast`). Cerca nella documentazione o nell'Ispettore di `Camera3D` le proprietà adatte per definire questi limiti.\n2. In `main.gd`, dichiara una variabile `@export var camera_speed: float = 3.0`.\n3. In `_process(delta: float)`, fai muovere `camera_overview` verso destra lungo l'asse X a velocità `camera_speed * delta` (incrementando `position.x`).\n4. Verifica che `_update_crystal_label_position()` continui ad aggiornare la posizione di `CrystalLabel` ad ogni frame mentre la telecamera è in movimento.",
     "modalita": "progetto",
     "dove": "gioco",
+    "cartella": "l-isola",
     "passiGuida": [],
     "suggerimenti": [
-     "Cerca le proprietà Near e Far nella sezione Camera3D dell'Ispettore.",
-     "In _process, aumenta la coordinata position.x di camera_overview usando camera_speed * delta."
+     "Cerca nella documentazione o nell'Ispettore di Camera3D le proprietà per controllare la distanza minima e massima di rendering."
     ],
     "verifiche": [
      {
@@ -338,7 +338,14 @@
      "progetto": {
       "nome": "L'isola",
       "scenaPrincipale": "res://main.tscn",
-      "azioni": [],
+      "azioni": [
+       {
+        "nome": "change_atmosphere",
+        "tasti": [
+         "Space"
+        ]
+       }
+      ],
       "autoload": [],
       "impostazioni": []
      },
@@ -348,19 +355,21 @@
     }
    },
    "genere": "trova",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la consegna o i suggerimenti dicono già \"far\", \"near\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo"
    ],
    "modelli": [
-    "gemini/gemini-3.6-flash"
+    "gemini/gemini-3.6-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   }
  },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "La telecamera 3D",
