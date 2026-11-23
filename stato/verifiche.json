@@ -708,5 +708,15 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "vettori-e-rotazioni-3d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "mesh-e-materiali": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
