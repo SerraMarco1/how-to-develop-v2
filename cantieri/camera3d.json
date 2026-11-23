@@ -350,7 +350,9 @@
    "genere": "trova",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la consegna o i suggerimenti dicono già \"far\", \"near\", che invece va trovato nella documentazione: descrivi il risultato da ottenere senza nominarlo"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
