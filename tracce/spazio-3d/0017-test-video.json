@@ -1,0 +1,16 @@
+{
+ "n": 17,
+ "quando": "2026-11-23T08:01:38.099Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Test finale: La torre ad est» non si vede sullo schermo: I nodi aggiunti sono Node3D senza elementi visivi e il risultato dell'esercizio si legge solo nel pannello Output.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 5374,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 4 s (2632 → 44 token)"
+ ]
+}

@@ -2127,6 +2127,13 @@
    "esito": "niente",
    "regole": 2,
    "motivo": "I nodi Node3D aggiunti sono invisibili sullo schermo perché non hanno una rappresentazione visiva."
+  },
+  "test": {
+   "impronta": "d26cb62041b78827618903e47dacf0301bd86face3da1e8da261770680cd4d79",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "I nodi aggiunti sono Node3D senza elementi visivi e il risultato dell'esercizio si legge solo nel pannello Output."
   }
  }
 }
