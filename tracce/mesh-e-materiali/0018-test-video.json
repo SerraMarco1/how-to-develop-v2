@@ -1,0 +1,16 @@
+{
+ "n": 18,
+ "quando": "2026-11-23T09:53:48.651Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Test finale: Il blocco est e il cristallo luminoso» non si vede sullo schermo: I nodi aggiunti non sono visibili sullo schermo perché la scena non contiene una telecamera.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 4652,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 3 s (3979 → 37 token)"
+ ]
+}

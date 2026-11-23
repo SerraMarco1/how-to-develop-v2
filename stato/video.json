@@ -2248,6 +2248,62 @@
     ]
    },
    "motivo": "I nodi creati non compaiono sullo schermo perché la scena non ha una telecamera attiva."
+  },
+  "test": {
+   "impronta": "eb31179f1984fd8fd7c49a37f47bdd7823e7210f1cb9fbd047b3506a7b83168a",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 8,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "blocco_est",
+       "cerca": {
+        "nome": "MeshEast"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "esserci",
+       "etichetta": "Blocco est"
+      },
+      {
+       "id": "cristallo",
+       "cerca": {
+        "nome": "Crystal"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "esserci",
+       "etichetta": "Cristallo"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il blocco est completa la parte visiva dell'isola",
+       "da": 1,
+       "a": 3.5,
+       "soggetto": "blocco_est"
+      },
+      {
+       "testo": "Il cristallo luminoso brilla in cima al blocco",
+       "da": 4,
+       "a": 7,
+       "soggetto": "cristallo"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «blocco_est» (nome = MeshEast; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0.",
+     "Soggetto «cristallo» (nome = Crystal; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+    ]
+   },
+   "motivo": "I nodi aggiunti non sono visibili sullo schermo perché la scena non contiene una telecamera."
   }
  }
 }
