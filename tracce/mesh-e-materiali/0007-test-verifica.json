@@ -1,0 +1,81 @@
+{
+ "n": 7,
+ "quando": "2026-11-23T08:19:50.765Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (imita): approvato",
+ "spiegazione": "«Test finale: Il blocco est e il cristallo luminoso». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: main.tscn",
+ "richieste": 0,
+ "durataMs": 9065,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "imita",
+   "titolo": "Test finale: Il blocco est e il cristallo luminoso",
+   "consegna": "Completa la parte visiva dell'isola aggiungendo la mesh per il blocco est e il cristallo luminoso collezionabile in cima ad esso.\n\nIn `main.tscn`:\n1. Sotto `BlockEast`, aggiungi un nodo `MeshInstance3D` chiamato `MeshEast` con una `BoxMesh` di dimensioni `Vector3(3, 2, 3)`.\n2. Assegna a `MeshEast` il materiale del **legno opaco** in **Material Override** (`Metallic` `0.0`, `Roughness` `0.8`).\n3. Sotto `BlockEastTop`, aggiungi un nodo `MeshInstance3D` chiamato `Crystal` con una risorsa `SphereMesh`.\n4. Assegna a `Crystal` un materiale **StandardMaterial3D** in **Material Override** per il **cristallo luminoso**:\n   - **Emission → Enabled**: attivo (`true`).\n   - **Emission → Color**: azzurro brillante (ad esempio `Color(0.0, 0.8, 1.0)`).\n   - **Metallic**: `0.0`\n   - **Roughness**: `0.2`",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "cartella": "l-isola",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Per far brillare il cristallo, espandi la sezione Emission dell'Inspector nel materiale di Crystal e spunta la casella Enabled, poi scegli un colore azzurro visibile."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "MeshInstance3D",
+     "nome": "MeshEast",
+     "genitore": "BlockEast",
+     "descrizione": "Nel nodo BlockEast c'è un figlio MeshInstance3D chiamato MeshEast"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://main.tscn",
+     "tipoNodo": "MeshInstance3D",
+     "nome": "Crystal",
+     "genitore": "BlockEastTop",
+     "descrizione": "Nel nodo BlockEastTop c'è un figlio MeshInstance3D chiamato Crystal"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi correttamente\"):\n\t\treturn\n\t\n\tvar mesh_east := find_by_name(main, \"MeshEast\") as MeshInstance3D\n\tif not check(\"mesh_east_exists\", mesh_east != null, \"In BlockEast serve un figlio MeshInstance3D chiamato MeshEast\"):\n\t\treturn\n\tvar box_east := mesh_east.mesh as BoxMesh\n\tif check(\"box_east_mesh\", box_east != null, \"MeshEast deve usare una BoxMesh\"):\n\t\tcheck(\"box_east_size\", box_east.size == Vector3(3, 2, 3), \"La BoxMesh di MeshEast deve avere Size = Vector3(3, 2, 3) (trovato %s)\" % str(box_east.size))\n\t\n\tvar mat_wood := mesh_east.material_override as StandardMaterial3D\n\tif check(\"mat_east_wood\", mat_wood != null, \"MeshEast deve avere un materiale StandardMaterial3D\"):\n\t\tcheck(\"wood_roughness\", absf(mat_wood.roughness - 0.8) < 0.05, \"Il blocco est deve usare il materiale Legno opaco con Roughness = 0.8\")\n\t\n\tvar crystal := find_by_name(main, \"Crystal\") as MeshInstance3D\n\tif not check(\"crystal_exists\", crystal != null, \"In BlockEastTop serve un figlio MeshInstance3D chiamato Crystal\"):\n\t\treturn\n\tvar sphere := crystal.mesh as SphereMesh\n\tcheck(\"crystal_mesh\", sphere != null, \"Crystal deve usare una SphereMesh\")\n\t\n\tvar mat_crystal := crystal.material_override as StandardMaterial3D\n\tif check(\"mat_crystal_exists\", mat_crystal != null, \"Crystal deve avere uno StandardMaterial3D in Material Override\"):\n\t\tcheck(\"emission_enabled\", mat_crystal.emission_enabled == true, \"Il cristallo luminoso deve avere Emission abilitato (Enabled = true)\")\n\t\tcheck(\"crystal_roughness\", absf(mat_crystal.roughness - 0.2) < 0.05, \"Il cristallo luminoso deve avere Roughness = 0.2 (trovato %.2f)\" % mat_crystal.roughness)\n\t\tcheck(\"crystal_metallic\", absf(mat_crystal.metallic - 0.0) < 0.05, \"Il cristallo luminoso deve avere Metallic = 0.0 (trovato %.2f)\" % mat_crystal.metallic)\n",
+     "descrizione": "Il blocco est ha la mesh di legno e il cristallo possiede una SphereMesh con emissione luminosa attiva"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"L'isola\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "main.gd",
+      "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret == null or target == null:\n\t\treturn\n\n\tvar direction: Vector3 = target.global_position - turret.global_position\n\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_wood\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\nmetallic = 0.0\nroughness = 0.8\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plastic\"]\nalbedo_color = Color(0.9, 0.1, 0.1, 1)\nmetallic = 0.0\nroughness = 0.3\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_bridge\"]\nsize = Vector3(2, 0.2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_glass\"]\ntransparency = 1\nalbedo_color = Color(0.5, 0.8, 1, 0.3)\nmetallic = 0.0\nroughness = 0.05\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_east\"]\nsize = Vector3(3, 2, 3)\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_crystal\"]\nradius = 0.5\nheight = 1.0\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_crystal\"]\nalbedo_color = Color(0.0, 0.8, 1.0, 1.0)\nroughness = 0.2\nemission_enabled = true\nemission = Color(0.0, 0.8, 1.0, 1.0)\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_turret\"]\ntop_radius = 0.5\nbottom_radius = 0.5\nheight = 1.5\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_metal\"]\nalbedo_color = Color(0.7, 0.7, 0.7, 1)\nmetallic = 1.0\nroughness = 0.1\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"MeshBase\" type=\"MeshInstance3D\" parent=\"BlockBase\"]\nmesh = SubResource(\"BoxMesh_base\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"MeshWest\" type=\"MeshInstance3D\" parent=\"BlockWest\"]\nmesh = SubResource(\"BoxMesh_west\")\nmaterial_override = SubResource(\"StandardMaterial3D_plastic\")\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"MeshBridge\" type=\"MeshInstance3D\" parent=\"BlockWest/BlockWestBridge\"]\nmesh = SubResource(\"BoxMesh_bridge\")\nmaterial_override = SubResource(\"StandardMaterial3D_glass\")\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"MeshEast\" type=\"MeshInstance3D\" parent=\"BlockEast\"]\nmesh = SubResource(\"BoxMesh_east\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n\n[node name=\"Crystal\" type=\"MeshInstance3D\" parent=\"BlockEast/BlockEastTop\"]\nmesh = SubResource(\"SphereMesh_crystal\")\nmaterial_override = SubResource(\"StandardMaterial3D_crystal\")\n\n[node name=\"Turret\" type=\"Node3D\" parent=\".\"]\n\n[node name=\"MeshTurret\" type=\"MeshInstance3D\" parent=\"Turret\"]\nmesh = SubResource(\"CylinderMesh_turret\")\nmaterial_override = SubResource(\"StandardMaterial3D_metal\")\n"
+     }
+    ],
+    "progetto": {
+     "nome": "L'isola",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Assegnando una `SphereMesh` a `Crystal` si definisce la geometria sferica del collezionabile. Abilitando `emission_enabled = true` e fornendo un colore di emissione in `StandardMaterial3D`, l'oggetto emette luce visiva indipendentemente dalla presenza di fonti di illuminazione esterne, distinguendosi nettamente dal terreno circostante.",
+    "cambiati": [
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}

@@ -10,3 +10,5 @@
 {"quando":1795421813092,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"mesh-e-materiali","ok":false,"contata":true,"durataMs":757,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795421813852,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":88187,"tokenInput":13795,"tokenOutput":8403,"ragionamento":10251}
 {"quando":1795421902046,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":62297,"tokenInput":17938,"tokenOutput":8228,"ragionamento":4260}
+{"quando":1795421990770,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"mesh-e-materiali","ok":false,"contata":true,"durataMs":32336,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795422023108,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":24202,"tokenInput":12440,"tokenOutput":12,"ragionamento":2001}
