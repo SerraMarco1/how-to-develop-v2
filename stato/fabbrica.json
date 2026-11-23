@@ -2,12 +2,12 @@
  "sovraccarico": {},
  "fermi": {
   "gemini/gemini-flash-latest": {
-   "fino": 1795422323107,
+   "fino": 1795422789038,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.7-flash": {
-   "fino": 1795422113851,
-   "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+   "fino": 1795423419043,
+   "errore": "Nessuna risposta entro 900 secondi"
   },
   "gemini/gemini-3.6-flash": {
    "fino": 1795421584926,
