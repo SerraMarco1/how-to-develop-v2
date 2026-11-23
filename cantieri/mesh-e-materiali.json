@@ -2,7 +2,7 @@
  "creato": "2026-11-23T08:16:00.381Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -74,7 +74,83 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "guidato",
+    "genere": "guidato",
+    "titolo": "Aggiungi le mesh e i materiali per base e torretta",
+    "consegna": "Inizia a rendere visibile l'isola aggiungendo nodi `MeshInstance3D` e configurando i primi due materiali della tabella: legno opaco e metallo lucido.\n\n1. Nella scena `main.tscn`, sotto il nodo `BlockBase`, aggiungi un nodo figlio `MeshInstance3D` chiamato `MeshBase`.\n2. Assegna a `MeshBase` una risorsa `BoxMesh` con dimensioni `Vector3(4, 2, 4)`.\n3. In `MeshBase`, crea un nuovo `StandardMaterial3D` nella proprietà **Material Override** per il legno opaco:\n   - **Albedo → Color**: un colore marrone (ad esempio R: 0.4, G: 0.2, B: 0.1).\n   - **Metallic**: `0.0`\n   - **Roughness**: `0.8`\n4. Sotto il nodo `Turret`, aggiungi un nodo figlio `MeshInstance3D` chiamato `MeshTurret`.\n5. Assegna a `MeshTurret` una risorsa `CylinderMesh`.\n6. In `MeshTurret`, crea un nuovo `StandardMaterial3D` in **Material Override** per il metallo lucido:\n   - **Albedo → Color**: un grigio chiaro (ad esempio R: 0.7, G: 0.7, B: 0.7).\n   - **Metallic**: `1.0`\n   - **Roughness**: `0.1`",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "l-isola",
+    "passiGuida": [
+     "Apri la scena res://main.tscn nell'editor.",
+     "Seleziona il nodo BlockBase, premi il pulsante + nel pannello Scene, cerca MeshInstance3D e aggiungilo come figlio. Rinominalo in MeshBase.",
+     "Con MeshBase selezionato, fai clic sul campo vuoto della proprietà Mesh nell'Inspector e seleziona New BoxMesh.",
+     "Fai clic sulla BoxMesh appena creata per espanderla e imposta la proprietà Size a Vector3(4, 2, 4).",
+     "Scorri l'Inspector di MeshBase fino a Material Override, fai clic sul campo vuoto e scegli New StandardMaterial3D.",
+     "Fai clic sul nuovo StandardMaterial3D: nella sezione Albedo imposta il colore marrone, in Metallic inserisci 0.0 e in Roughness inserisci 0.8.",
+     "Seleziona il nodo Turret, premi +, aggiungi un MeshInstance3D e rinominalo in MeshTurret.",
+     "Nell'Inspector di MeshTurret, imposta Mesh su New CylinderMesh.",
+     "In Material Override di MeshTurret crea un New StandardMaterial3D: imposta Albedo -> Color su grigio chiaro, Metallic su 1.0 e Roughness su 0.1.",
+     "Salva la scena premendo Ctrl+S."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "MeshInstance3D",
+      "nome": "MeshBase",
+      "genitore": "BlockBase",
+      "descrizione": "Nel nodo BlockBase c'è un nodo figlio MeshInstance3D chiamato MeshBase"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "MeshInstance3D",
+      "nome": "MeshTurret",
+      "genitore": "Turret",
+      "descrizione": "Nel nodo Turret c'è un nodo figlio MeshInstance3D chiamato MeshTurret"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi correttamente\"):\n\t\treturn\n\t\n\tvar mesh_base := find_by_name(main, \"MeshBase\") as MeshInstance3D\n\tif not check(\"mesh_base_exists\", mesh_base != null, \"In BlockBase serve un figlio MeshInstance3D chiamato MeshBase\"):\n\t\treturn\n\t\n\tvar box := mesh_base.mesh as BoxMesh\n\tif check(\"box_mesh\", box != null, \"MeshBase deve usare una risorsa BoxMesh\"):\n\t\tcheck(\"box_size\", box.size == Vector3(4, 2, 4), \"La BoxMesh di MeshBase deve avere Size = Vector3(4, 2, 4) (trovato %s)\" % str(box.size))\n\t\n\tvar mat_wood := mesh_base.material_override as StandardMaterial3D\n\tif check(\"mat_wood_exists\", mat_wood != null, \"MeshBase deve avere uno StandardMaterial3D in Material Override\"):\n\t\tcheck(\"wood_metallic\", absf(mat_wood.metallic - 0.0) < 0.05, \"Il legno opaco di MeshBase deve avere Metallic = 0.0 (trovato %.2f)\" % mat_wood.metallic)\n\t\tcheck(\"wood_roughness\", absf(mat_wood.roughness - 0.8) < 0.05, \"Il legno opaco di MeshBase deve avere Roughness = 0.8 (trovato %.2f)\" % mat_wood.roughness)\n\t\n\tvar mesh_turret := find_by_name(main, \"MeshTurret\") as MeshInstance3D\n\tif not check(\"mesh_turret_exists\", mesh_turret != null, \"In Turret serve un figlio MeshInstance3D chiamato MeshTurret\"):\n\t\treturn\n\t\n\tvar cyl := mesh_turret.mesh as CylinderMesh\n\tcheck(\"cyl_mesh\", cyl != null, \"MeshTurret deve usare una risorsa CylinderMesh\")\n\t\n\tvar mat_metal := mesh_turret.material_override as StandardMaterial3D\n\tif check(\"mat_metal_exists\", mat_metal != null, \"MeshTurret deve avere uno StandardMaterial3D in Material Override\"):\n\t\tcheck(\"metal_metallic\", absf(mat_metal.metallic - 1.0) < 0.05, \"Il metallo lucido deve avere Metallic = 1.0 (trovato %.2f)\" % mat_metal.metallic)\n\t\tcheck(\"metal_roughness\", absf(mat_metal.roughness - 0.1) < 0.05, \"Il metallo lucido deve avere Roughness = 0.1 (trovato %.2f)\" % mat_metal.roughness)\n",
+      "descrizione": "MeshBase e MeshTurret hanno le mesh e le proprietà dei materiali corrette"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"L'isola\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret == null or target == null:\n\t\treturn\n\n\tvar direction: Vector3 = target.global_position - turret.global_position\n\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_wood\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\nmetallic = 0.0\nroughness = 0.8\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_turret\"]\ntop_radius = 0.5\nbottom_radius = 0.5\nheight = 1.5\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_metal\"]\nalbedo_color = Color(0.7, 0.7, 0.7, 1)\nmetallic = 1.0\nroughness = 0.1\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"MeshBase\" type=\"MeshInstance3D\" parent=\"BlockBase\"]\nmesh = SubResource(\"BoxMesh_base\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n\n[node name=\"Turret\" type=\"Node3D\" parent=\".\"]\n\n[node name=\"MeshTurret\" type=\"MeshInstance3D\" parent=\"Turret\"]\nmesh = SubResource(\"CylinderMesh_turret\")\nmaterial_override = SubResource(\"StandardMaterial3D_metal\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "L'isola",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "I nodi `MeshInstance3D` rendono visibili le forme geometriche nello spazio 3D. Assegnando `BoxMesh` a `MeshBase` e `CylinderMesh` a `MeshTurret` definiamo la struttura fisica. Con `StandardMaterial3D` in `Material Override` si personalizza l'interazione della luce con le superfici: impostando `metallic` a `1.0` e `roughness` a `0.1` per la torretta otteniamo un riflesso nitido di tipo metallico, mentre `metallic` a `0.0` e `roughness` a `0.8` restituiscono una superficie opaca come il legno.",
+     "cambiati": [
+      "main.tscn"
+     ],
+     "rimossi": []
+    },
+    "id": "es1"
+   }
   },
   "es2": {
    "stato": "da_fare",
