@@ -2305,5 +2305,45 @@
    },
    "motivo": "I nodi aggiunti non sono visibili sullo schermo perché la scena non contiene una telecamera."
   }
+ },
+ "luci-e-ambiente": {
+  "es1": {
+   "impronta": "a9ea42c8e93073bbf7b936bfbd6b82b17f9f5175ff76de72fecdce40f8a929f7",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "sole",
+       "cerca": {
+        "nome": "SunLight"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.5,
+       "deve": "esserci",
+       "etichetta": "Luce del sole"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "La luce del sole illumina l'isola con ombre e cielo procedurale",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "sole"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «sole» (nome = SunLight; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+    ]
+   },
+   "motivo": "Le luci e l'ambiente 3D sono nodi non visibili direttamente come mesh sullo schermo e non possono essere misurati automaticamente come soggetti dal sistema di verifica."
+  }
  }
 }

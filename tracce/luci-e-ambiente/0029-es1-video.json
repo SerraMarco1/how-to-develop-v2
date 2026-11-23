@@ -1,0 +1,16 @@
+{
+ "n": 29,
+ "quando": "2026-11-23T09:54:08.062Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Illuminare l'isola: sole, lanterna e WorldEnvironment» non si vede sullo schermo: Le luci e l'ambiente 3D sono nodi non visibili direttamente come mesh sullo schermo e non possono essere misurati automaticamente come soggetti dal sistema di verifica.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 7021,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 5 s (5558 → 52 token)"
+ ]
+}
