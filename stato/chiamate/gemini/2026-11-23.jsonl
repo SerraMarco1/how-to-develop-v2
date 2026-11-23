@@ -20,3 +20,5 @@
 {"quando":1795422489040,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"luci-e-ambiente","ok":false,"contata":true,"durataMs":900002,"errore":"Nessuna risposta entro 900 secondi"}
 {"quando":1795423389044,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"luci-e-ambiente","ok":true,"contata":true,"durataMs":71192,"tokenInput":12234,"tokenOutput":4600,"ragionamento":9612}
 {"quando":1795423473274,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"luci-e-ambiente","ok":true,"contata":true,"durataMs":19088,"tokenInput":12526,"tokenOutput":5019,"ragionamento":5136}
+{"quando":1795423497135,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"luci-e-ambiente","ok":false,"contata":true,"durataMs":2784,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795423499922,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"luci-e-ambiente","ok":true,"contata":true,"durataMs":87878,"tokenInput":12523,"tokenOutput":5220,"ragionamento":12423}
