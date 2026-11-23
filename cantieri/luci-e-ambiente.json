@@ -1,9 +1,206 @@
 {
  "creato": "2026-11-23T08:20:59.441Z",
- "pezzi": {},
+ "pezzi": {
+  "es1": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "guidato",
+    "titolo": "Illuminare l'isola: sole, lanterna e WorldEnvironment",
+    "consegna": "Aggiungi le fonti di luce e l'ambiente 3D alla scena principale dell'isola.\n\n1. Nella scena `res://main.tscn`, aggiungi come figli del nodo radice `Island`:\n   - Un nodo `DirectionalLight3D` chiamato `SunLight` con rotazione `Vector3(-45, -30, 0)` in gradi, `light_color = Color(1.0, 0.95, 0.8)`, `light_energy = 1.2` e ombre attive (`shadow_enabled = true`).\n   - Un nodo `OmniLight3D` chiamato `LanternLight` in posizione `Vector3(6, 4, 1)`, con `light_color = Color(1.0, 0.7, 0.3)`, `light_energy = 2.0`, `omni_range = 8.0`, ombre attive (`shadow_enabled = true`) e inizialmente invisibile (`visible = false`).\n   - Un nodo `WorldEnvironment` con una risorsa `Environment`: imposta lo sfondo su cielo procedurale (`ProceduralSkyMaterial`) e attiva il bagliore (`glow_enabled = true`).\n2. Nella Input Map crea l'azione `change_atmosphere` assegnata al tasto **Space**.\n3. In `res://main.gd`:\n   - Salva i riferimenti ai nodi con `@onready var sun_light: DirectionalLight3D = $SunLight`, `@onready var lantern_light: OmniLight3D = $LanternLight` e `@onready var world_environment: WorldEnvironment = $WorldEnvironment`.\n   - Dichiara l'enumerazione `enum Atmosphere { DAY, SUNSET, NIGHT }` e la variabile `var current_atmosphere: Atmosphere = Atmosphere.DAY`.\n   - Crea la funzione `_apply_atmosphere(atmosphere: Atmosphere) -> void` che nello stato `Atmosphere.DAY` imposta il sole visibile con colore `Color(1.0, 0.95, 0.8)`, energia `1.2`, rotazione `Vector3(-45.0, -30.0, 0.0)` e spegne la lanterna (`lantern_light.visible = false`).\n   - In `_ready()`, chiama `_apply_atmosphere(current_atmosphere)`.\n   - In `_unhandled_input(event: InputEvent)` e `_cycle_atmosphere()`, predisponi la ricezione dell'azione `change_atmosphere`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [
+     "Nel pannello *Scene*, seleziona il nodo radice `Island`, premi **+** (Aggiungi nodo figlio), cerca `DirectionalLight3D`, selezionalo e premi **Crea**. Rinominalo in `SunLight`.",
+     "Nell'*Inspector* di `SunLight`, imposta **Transform -> Rotation** su `Vector3(-45, -30, 0)`, espandi la sezione **Light** e imposta **Color** a `Color(1.0, 0.95, 0.8)` ed **Energy** a `1.2`. Poi apri la sezione **Shadow** e attiva la casella **Enabled**.",
+     "Seleziona di nuovo `Island`, premi **+**, cerca `OmniLight3D` e premi **Crea**. Rinominalo in `LanternLight`.",
+     "Nell'*Inspector* di `LanternLight`, imposta **Transform -> Position** a `Vector3(6, 4, 1)`, apri **Light** e imposta **Color** a `Color(1.0, 0.7, 0.3)` ed **Energy** a `2.0`. Apri **Omni** e imposta **Range** a `8.0`. In **Shadow** attiva **Enabled**, e in **Visibility** togli la spunta da **Visible**.",
+     "Seleziona di nuovo `Island`, premi **+**, cerca `WorldEnvironment` e premi **Crea**. Nell'*Inspector*, fai clic accanto a **Environment**, scegli **New Environment**, poi clicca sull'ambiente appena creato per espanderlo: imposta **Background -> Mode** su *Sky*, crea un nuovo **Sky** con **Sky Material -> New ProceduralSkyMaterial**, e sotto **Glow** attiva **Enabled**.",
+     "Apri il menu **Project -> Project Settings -> Input Map**, scrivi `change_atmosphere` nel campo del nome dell'azione, premi **Add**, clicca sul **+** accanto all'azione appena creata e premi il tasto **Space** (Spazio) per assegnarlo.",
+     "Fai doppio clic su `main.gd` nel pannello *FileSystem* per aprirlo. In cima allo script, aggiungi i riferimenti `@onready` per `sun_light`, `lantern_light` e `world_environment`, dichiara `enum Atmosphere { DAY, SUNSET, NIGHT }` e la variabile `var current_atmosphere: Atmosphere = Atmosphere.DAY`.",
+     "In `main.gd`, aggiungi in fondo la funzione `_apply_atmosphere(atmosphere: Atmosphere) -> void` che per `Atmosphere.DAY` imposta `sun_light.visible = true`, il colore `Color(1.0, 0.95, 0.8)`, l'energia `1.2`, `rotation_degrees = Vector3(-45.0, -30.0, 0.0)` e `lantern_light.visible = false`. In `_ready()`, aggiungi la chiamata `_apply_atmosphere(current_atmosphere)`.",
+     "Aggiungi le funzioni `_unhandled_input(event: InputEvent) -> void` per intercettare l'azione `change_atmosphere` e `_cycle_atmosphere() -> void` che richiama `_apply_atmosphere(current_atmosphere)`. Salva con Ctrl+S ed esegui con F5 per ammirare la nuova luce del sole e il cielo."
+    ],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "DirectionalLight3D",
+      "nome": "SunLight",
+      "genitore": "Island",
+      "descrizione": "La scena main.tscn contiene un DirectionalLight3D chiamato SunLight figlio di Island"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "OmniLight3D",
+      "nome": "LanternLight",
+      "genitore": "Island",
+      "descrizione": "La scena main.tscn contiene un OmniLight3D chiamato LanternLight figlio di Island"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "WorldEnvironment",
+      "nome": "WorldEnvironment",
+      "genitore": "Island",
+      "descrizione": "La scena main.tscn contiene un nodo WorldEnvironment figlio di Island"
+     },
+     {
+      "tipo": "azione_input",
+      "nome": "change_atmosphere",
+      "descrizione": "Nella Input Map esiste l'azione change_atmosphere"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar sun := find_by_name(main, \"SunLight\") as DirectionalLight3D\n\tif not check(\"sun_light\", sun != null, \"Nella scena deve esserci un nodo DirectionalLight3D chiamato SunLight\"):\n\t\treturn\n\tcheck(\"sun_shadow\", sun.shadow_enabled, \"Il nodo SunLight deve avere le ombre attive (shadow_enabled = true)\")\n\n\tvar lantern := find_by_name(main, \"LanternLight\") as OmniLight3D\n\tif not check(\"lantern_light\", lantern != null, \"Nella scena deve esserci un nodo OmniLight3D chiamato LanternLight\"):\n\t\treturn\n\tcheck(\"lantern_shadow\", lantern.shadow_enabled, \"Il nodo LanternLight deve avere le ombre attive (shadow_enabled = true)\")\n\tcheck(\"lantern_pos\", lantern.position.distance_to(Vector3(6.0, 4.0, 1.0)) < 0.2, \"LanternLight deve trovarsi vicino a Vector3(6, 4, 1) (è a %s)\" % str(lantern.position))\n\tcheck(\"lantern_range\", absf(lantern.omni_range - 8.0) < 0.2, \"LanternLight deve avere omni_range impostato a 8.0 metri (è a %.1f)\" % lantern.omni_range)\n\n\tvar we := find_by_name(main, \"WorldEnvironment\") as WorldEnvironment\n\tif not check(\"world_env\", we != null, \"Nella scena deve esserci un nodo WorldEnvironment\"):\n\t\treturn\n\tif not check(\"has_env\", we.environment != null, \"Il nodo WorldEnvironment deve avere una risorsa Environment assegnata\"):\n\t\treturn\n\tcheck(\"glow\", we.environment.glow_enabled, \"Nell'Environment deve essere attivo il Glow (bagliore)\")\n\tcheck(\"sky\", we.environment.sky != null, \"Nell'Environment deve essere configurato un cielo (Sky)\")\n\n\tcheck(\"day_sun_visible\", sun.visible, \"All'avvio (atmosfera DAY) SunLight deve essere visibile\")\n\tcheck(\"day_sun_energy\", absf(sun.light_energy - 1.2) < 0.1, \"All'avvio (atmosfera DAY) SunLight deve avere light_energy = 1.2 (è %.2f)\" % sun.light_energy)\n\tcheck(\"day_lantern_off\", not lantern.visible, \"All'avvio (atmosfera DAY) LanternLight deve essere spenta (visible = false)\")",
+      "descrizione": "Luci, ombre, cielo e l'atmosfera iniziale DAY sono configurati correttamente"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_wood\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\nmetallic = 0.0\nroughness = 0.8\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plastic\"]\nalbedo_color = Color(0.9, 0.1, 0.1, 1)\nmetallic = 0.0\nroughness = 0.3\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_bridge\"]\nsize = Vector3(2, 0.2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_glass\"]\ntransparency = 1\nalbedo_color = Color(0.5, 0.8, 1, 0.3)\nmetallic = 0.0\nroughness = 0.05\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_east\"]\nsize = Vector3(3, 2, 3)\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_crystal\"]\nradius = 0.5\nheight = 1.0\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_crystal\"]\nalbedo_color = Color(0.0, 0.8, 1.0, 1.0)\nroughness = 0.2\nemission_enabled = true\nemission = Color(0.0, 0.8, 1.0, 1.0)\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_turret\"]\ntop_radius = 0.5\nbottom_radius = 0.5\nheight = 1.5\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_metal\"]\nalbedo_color = Color(0.7, 0.7, 0.7, 1)\nmetallic = 1.0\nroughness = 0.1\n\n[sub_resource type=\"ProceduralSkyMaterial\" id=\"ProceduralSkyMaterial_sky\"]\n\n[sub_resource type=\"Sky\" id=\"Sky_proc\"]\nsky_material = SubResource(\"ProceduralSkyMaterial_sky\")\n\n[sub_resource type=\"Environment\" id=\"Environment_main\"]\nbackground_mode = 2\nsky = SubResource(\"Sky_proc\")\nglow_enabled = true\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"MeshBase\" type=\"MeshInstance3D\" parent=\"BlockBase\"]\nmesh = SubResource(\"BoxMesh_base\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"MeshWest\" type=\"MeshInstance3D\" parent=\"BlockWest\"]\nmesh = SubResource(\"BoxMesh_west\")\nmaterial_override = SubResource(\"StandardMaterial3D_plastic\")\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"MeshBridge\" type=\"MeshInstance3D\" parent=\"BlockWest/BlockWestBridge\"]\nmesh = SubResource(\"BoxMesh_bridge\")\nmaterial_override = SubResource(\"StandardMaterial3D_glass\")\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"MeshEast\" type=\"MeshInstance3D\" parent=\"BlockEast\"]\nmesh = SubResource(\"BoxMesh_east\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n\n[node name=\"Crystal\" type=\"MeshInstance3D\" parent=\"BlockEast/BlockEastTop\"]\nmesh = SubResource(\"SphereMesh_crystal\")\nmaterial_override = SubResource(\"StandardMaterial3D_crystal\")\n\n[node name=\"Turret\" type=\"Node3D\" parent=\".\"]\n\n[node name=\"MeshTurret\" type=\"MeshInstance3D\" parent=\"Turret\"]\nmesh = SubResource(\"CylinderMesh_turret\")\nmaterial_override = SubResource(\"StandardMaterial3D_metal\")\n\n[node name=\"SunLight\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 0, 0)\nshadow_enabled = true\nlight_color = Color(1, 0.95, 0.8, 1)\nlight_energy = 1.2\n\n[node name=\"LanternLight\" type=\"OmniLight3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4, 1)\nvisible = false\nshadow_enabled = true\nlight_color = Color(1, 0.7, 0.3, 1)\nlight_energy = 2.0\nomni_range = 8.0\n\n[node name=\"WorldEnvironment\" type=\"WorldEnvironment\" parent=\".\"]\nenvironment = SubResource(\"Environment_main\")\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret == null or target == null:\n\t\treturn\n\n\tvar direction: Vector3 = target.global_position - turret.global_position\n\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"change_atmosphere\"):\n\t\t_cycle_atmosphere()\n\n\nfunc _cycle_atmosphere() -> void:\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc _apply_atmosphere(atmosphere: Atmosphere) -> void:\n\tif sun_light == null or lantern_light == null:\n\t\treturn\n\n\tmatch atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.95, 0.8)\n\t\t\tsun_light.light_energy = 1.2\n\t\t\tsun_light.rotation_degrees = Vector3(-45.0, -30.0, 0.0)\n\t\t\tlantern_light.visible = false\n"
+      }
+     ],
+     "progetto": {
+      "nome": "",
+      "scenaPrincipale": "",
+      "azioni": [
+       {
+        "nome": "change_atmosphere",
+        "tasti": [
+         "Space"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Abbiamo aggiunto `SunLight` (`DirectionalLight3D`) per simulare il sole con raggi paralleli e ombre proiettate su tutta l'isola, `LanternLight` (`OmniLight3D`) per illuminare localmente la struttura del cristallo a est, e `WorldEnvironment` con un cielo procedurale dinamico e il bagliore (`glow_enabled`) che fa risplendere il cristallo emissivo creato nella lezione precedente. Nello script `main.gd` memorizziamo i riferimenti con `@onready` e predisponiamo l'applicazione dell'atmosfera `Atmosphere.DAY` al caricamento della scena.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "guidato",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "es2": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "Configurare il tramonto e la nebbia atmosferica",
+    "consegna": "Estendi lo script `res://main.gd` per gestire l'atmosfera al tramonto (`Atmosphere.SUNSET`) e alternarla con il giorno (`Atmosphere.DAY`) premendo l'azione `change_atmosphere`.\n\n1. In `_apply_atmosphere(atmosphere: Atmosphere)` completa la gestione di `Atmosphere.SUNSET`:\n   - `sun_light` resta visibile (`visible = true`), con rotazione abbassata verso l'orizzonte `rotation_degrees = Vector3(-10.0, -60.0, 0.0)`, luce calda arancione `light_color = Color(1.0, 0.5, 0.2)` ed energia ridotta a `0.8`.\n   - `lantern_light` si accende (`visible = true`) con luce calda `light_color = Color(1.0, 0.7, 0.3)` ed energia `1.0`.\n   - Configura la nebbia sull'ambiente (`world_environment.environment`):\n     - Al tramonto: attiva la nebbia (`fog_enabled = true`), imposta il colore su arancione `fog_light_color = Color(0.9, 0.4, 0.2)` e la densità su `fog_density = 0.02`.\n     - Di giorno (`Atmosphere.DAY`): assicurati che la nebbia sia disattivata (`fog_enabled = false`).\n2. In `_cycle_atmosphere()` aggiorna `current_atmosphere`:\n   - Se l'atmosfera corrente è `Atmosphere.DAY`, passa a `Atmosphere.SUNSET`.\n   - Se è `Atmosphere.SUNSET`, torna a `Atmosphere.DAY`.\n   - Applica il cambiamento chiamando `_apply_atmosphere(current_atmosphere)`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Per accedere alle proprietà della nebbia usa `world_environment.environment`. Controlla prima che né `world_environment` né il suo `environment` siano null.",
+     "Ricordati di impostare `fog_enabled = false` nel ramo `Atmosphere.DAY`: se non spegni la nebbia quando torni di giorno, l'isola resterà immersa nella foschia.",
+     "In `_cycle_atmosphere()` puoi usare una condizione `if current_atmosphere == Atmosphere.DAY` oppure un blocco `match` per scambiare il valore prima di chiamare `_apply_atmosphere(current_atmosphere)`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "azione_input",
+      "nome": "change_atmosphere",
+      "descrizione": "L'azione change_atmosphere esiste nella Input Map"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar sun := find_by_name(main, \"SunLight\") as DirectionalLight3D\n\tvar lantern := find_by_name(main, \"LanternLight\") as OmniLight3D\n\tvar we := find_by_name(main, \"WorldEnvironment\") as WorldEnvironment\n\tif not check(\"nodes\", sun != null and lantern != null and we != null and we.environment != null, \"I nodi SunLight, LanternLight e WorldEnvironment devono esistere con le relative risorse\"):\n\t\treturn\n\n\tcheck(\"day_fog_off\", not we.environment.fog_enabled, \"Di giorno (DAY) la nebbia deve essere disattivata (fog_enabled = false)\")\n\n\tawait tap_action(\"change_atmosphere\")\n\tawait wait_frames(2)\n\n\tcheck(\"sunset_sun_vis\", sun.visible, \"Al tramonto SunLight deve essere visibile\")\n\tcheck(\"sunset_sun_energy\", absf(sun.light_energy - 0.8) < 0.1, \"Al tramonto SunLight deve avere light_energy = 0.8 (è %.2f)\" % sun.light_energy)\n\tcheck(\"sunset_sun_color\", sun.light_color.r > 0.8 and sun.light_color.g < 0.7, \"Al tramonto SunLight deve avere una luce calda/arancione (è %s)\" % str(sun.light_color))\n\tcheck(\"sunset_lantern_vis\", lantern.visible, \"Al tramonto LanternLight deve essere accesa (visible = true)\")\n\tcheck(\"sunset_lantern_energy\", absf(lantern.light_energy - 1.0) < 0.1, \"Al tramonto LanternLight deve avere light_energy = 1.0 (è %.2f)\" % lantern.light_energy)\n\tcheck(\"sunset_fog_on\", we.environment.fog_enabled, \"Al tramonto la nebbia deve essere attiva (fog_enabled = true)\")\n\tcheck(\"sunset_fog_density\", absf(we.environment.fog_density - 0.02) < 0.01, \"Al tramonto la densità della nebbia deve essere 0.02 (è %.3f)\" % we.environment.fog_density)\n\tcheck(\"sunset_fog_color\", we.environment.fog_light_color.r > 0.7 and we.environment.fog_light_color.b < 0.4, \"Al tramonto la nebbia deve essere arancione (è %s)\" % str(we.environment.fog_light_color))\n\n\tawait tap_action(\"change_atmosphere\")\n\tawait wait_frames(2)\n\n\tcheck(\"back_day_sun\", absf(sun.light_energy - 1.2) < 0.1, \"Tornando di giorno SunLight deve riavere light_energy = 1.2 (è %.2f)\" % sun.light_energy)\n\tcheck(\"back_day_lantern\", not lantern.visible, \"Tornando di giorno LanternLight deve tornare spenta (visible = false)\")\n\tcheck(\"back_day_fog\", not we.environment.fog_enabled, \"Tornando di giorno la nebbia deve disattivarsi\")",
+      "descrizione": "Premendo change_atmosphere la scena passa tra giorno e tramonto modificando luce solare, lanterna e nebbia"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret == null or target == null:\n\t\treturn\n\n\tvar direction: Vector3 = target.global_position - turret.global_position\n\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"change_atmosphere\"):\n\t\t_cycle_atmosphere()\n\n\nfunc _cycle_atmosphere() -> void:\n\tmatch current_atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tcurrent_atmosphere = Atmosphere.SUNSET\n\t\tAtmosphere.SUNSET:\n\t\t\tcurrent_atmosphere = Atmosphere.DAY\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc _apply_atmosphere(atmosphere: Atmosphere) -> void:\n\tif sun_light == null or lantern_light == null:\n\t\treturn\n\n\tmatch atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.95, 0.8)\n\t\t\tsun_light.light_energy = 1.2\n\t\t\tsun_light.rotation_degrees = Vector3(-45.0, -30.0, 0.0)\n\t\t\tlantern_light.visible = false\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = false\n\t\tAtmosphere.SUNSET:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.5, 0.2)\n\t\t\tsun_light.light_energy = 0.8\n\t\t\tsun_light.rotation_degrees = Vector3(-10.0, -60.0, 0.0)\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 1.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.9, 0.4, 0.2)\n\t\t\t\tworld_environment.environment.fog_density = 0.02\n"
+      }
+     ],
+     "spiegazione": "Al tramonto il sole si abbassa verso l'orizzonte (rotazione X = -10°), l'energia si attenua e il colore vira sull'arancione. Con la luce solare più debole, la lanterna sul blocco est si accende (`lantern_light.visible = true`) a intensità moderata. Inoltre, modificando direttamente le proprietà `fog_enabled`, `fog_light_color` e `fog_density` della risorsa `world_environment.environment`, immergiamo i blocchi lontani in una nebbia arancione coerente con l'ora del giorno.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  },
+  "test": {
+   "stato": "da_fare",
+   "grezzo": {
+    "tipo": "autonomo",
+    "genere": "obiettivo",
+    "titolo": "La notte fonda e il ciclo a tre atmosfere",
+    "consegna": "Completa il sistema atmosferico dell'isola aggiungendo la notte e permettendo di scorrere continuamente le tre fasi (giorno -> tramonto -> notte -> giorno) con il tasto di cambio atmosfera.\n\n1. In `res://main.gd`, aggiorna `_apply_atmosphere(atmosphere: Atmosphere)` per gestire `Atmosphere.NIGHT`:\n   - Il sole scompare del tutto: imposta `sun_light.visible = false`.\n   - La lanterna si accende a piena potenza per rischiarare l'isola: `lantern_light.visible = true`, con `light_color = Color(1.0, 0.7, 0.3)` e `light_energy = 2.5`.\n   - Configura la nebbia notturna su `world_environment.environment`:\n     - Attiva la nebbia (`fog_enabled = true`).\n     - Imposta il colore su una tonalità notturna blu scuro: `fog_light_color = Color(0.05, 0.05, 0.15)`.\n     - Imposta la densità a `fog_density = 0.03`.\n2. In `_cycle_atmosphere()`, aggiorna il passaggio tra gli stati in sequenza continua:\n   - Da `Atmosphere.DAY` passa ad `Atmosphere.SUNSET`.\n   - Da `Atmosphere.SUNSET` passa ad `Atmosphere.NIGHT`.\n   - Da `Atmosphere.NIGHT` torna ad `Atmosphere.DAY`.\n   - Chiama `_apply_atmosphere(current_atmosphere)` per rendere effettivo il passaggio.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Di notte il sole non deve emettere luce: puoi disattivarlo con `sun_light.visible = false`. La lanterna invece deve illuminare il cristallo e i blocchi con `lantern_light.visible = true` ed energia `2.5`.",
+     "Nel blocco `match current_atmosphere:` di `_cycle_atmosphere()` aggiungi il caso `Atmosphere.NIGHT:` che reimposta `current_atmosphere = Atmosphere.DAY`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_collegato",
+      "scena": "res://main.tscn",
+      "nodo": "Island",
+      "descrizione": "Il nodo Island ha lo script main.gd collegato"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\n\tvar sun := find_by_name(main, \"SunLight\") as DirectionalLight3D\n\tvar lantern := find_by_name(main, \"LanternLight\") as OmniLight3D\n\tvar we := find_by_name(main, \"WorldEnvironment\") as WorldEnvironment\n\tif not check(\"nodes\", sun != null and lantern != null and we != null and we.environment != null, \"I nodi SunLight, LanternLight e WorldEnvironment devono esistere\"):\n\t\treturn\n\n\t# Controllo 1: Stato iniziale DAY\n\tcheck(\"day_sun\", sun.visible and absf(sun.light_energy - 1.2) < 0.1, \"Stato DAY: SunLight deve essere visibile con energia 1.2\")\n\tcheck(\"day_lantern\", not lantern.visible, \"Stato DAY: LanternLight deve essere spenta\")\n\tcheck(\"day_fog\", not we.environment.fog_enabled, \"Stato DAY: la nebbia deve essere disattivata\")\n\n\t# Passaggio a SUNSET\n\tawait tap_action(\"change_atmosphere\")\n\tawait wait_frames(2)\n\n\tcheck(\"sunset_sun\", sun.visible and absf(sun.light_energy - 0.8) < 0.1, \"Stato SUNSET: SunLight deve avere energia 0.8\")\n\tcheck(\"sunset_lantern\", lantern.visible and absf(lantern.light_energy - 1.0) < 0.1, \"Stato SUNSET: LanternLight accesa a energia 1.0\")\n\tcheck(\"sunset_fog\", we.environment.fog_enabled and absf(we.environment.fog_density - 0.02) < 0.01, \"Stato SUNSET: nebbia attiva a densità 0.02\")\n\n\t# Passaggio a NIGHT\n\tawait tap_action(\"change_atmosphere\")\n\tawait wait_frames(2)\n\n\tvar sun_is_dark: bool = not sun.visible or sun.light_energy <= 0.01\n\tcheck(\"night_sun\", sun_is_dark, \"Stato NIGHT: SunLight deve essere spenta (visible = false o light_energy = 0)\")\n\tcheck(\"night_lantern_vis\", lantern.visible, \"Stato NIGHT: LanternLight deve essere accesa\")\n\tcheck(\"night_lantern_energy\", absf(lantern.light_energy - 2.5) < 0.1, \"Stato NIGHT: LanternLight deve avere light_energy = 2.5 (è %.2f)\" % lantern.light_energy)\n\tcheck(\"night_fog_on\", we.environment.fog_enabled, \"Stato NIGHT: la nebbia deve essere attiva\")\n\tcheck(\"night_fog_density\", absf(we.environment.fog_density - 0.03) < 0.01, \"Stato NIGHT: nebbia notturna con densità 0.03 (è %.3f)\" % we.environment.fog_density)\n\tcheck(\"night_fog_color\", we.environment.fog_light_color.b > we.environment.fog_light_color.r, \"Stato NIGHT: la nebbia deve avere una tonalità blu scuro notturno (è %s)\" % str(we.environment.fog_light_color))\n\n\t# Ciclo di ritorno a DAY\n\tawait tap_action(\"change_atmosphere\")\n\tawait wait_frames(2)\n\n\tcheck(\"cycle_day_sun\", sun.visible and absf(sun.light_energy - 1.2) < 0.1, \"Completamento ciclo: tornando a DAY il sole deve riaccendersi a energia 1.2\")\n\tcheck(\"cycle_day_lantern\", not lantern.visible, \"Completamento ciclo: tornando a DAY la lanterna deve spegnersi\")\n\tcheck(\"cycle_day_fog\", not we.environment.fog_enabled, \"Completamento ciclo: tornando a DAY la nebbia deve spegnersi\")",
+      "descrizione": "La piattaforma verifica le luci, le ombre e la nebbia delle tre atmosfere scorrendo il ciclo completo DAY -> SUNSET -> NIGHT -> DAY"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\n\nfunc _ready() -> void:\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret == null or target == null:\n\t\treturn\n\n\tvar direction: Vector3 = target.global_position - turret.global_position\n\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"change_atmosphere\"):\n\t\t_cycle_atmosphere()\n\n\nfunc _cycle_atmosphere() -> void:\n\tmatch current_atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tcurrent_atmosphere = Atmosphere.SUNSET\n\t\tAtmosphere.SUNSET:\n\t\t\tcurrent_atmosphere = Atmosphere.NIGHT\n\t\tAtmosphere.NIGHT:\n\t\t\tcurrent_atmosphere = Atmosphere.DAY\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc _apply_atmosphere(atmosphere: Atmosphere) -> void:\n\tif sun_light == null or lantern_light == null:\n\t\treturn\n\n\tmatch atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.95, 0.8)\n\t\t\tsun_light.light_energy = 1.2\n\t\t\tsun_light.rotation_degrees = Vector3(-45.0, -30.0, 0.0)\n\t\t\tlantern_light.visible = false\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = false\n\t\tAtmosphere.SUNSET:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.5, 0.2)\n\t\t\tsun_light.light_energy = 0.8\n\t\t\tsun_light.rotation_degrees = Vector3(-10.0, -60.0, 0.0)\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 1.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.9, 0.4, 0.2)\n\t\t\t\tworld_environment.environment.fog_density = 0.02\n\t\tAtmosphere.NIGHT:\n\t\t\tsun_light.visible = false\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 2.5\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.05, 0.05, 0.15)\n\t\t\t\tworld_environment.environment.fog_density = 0.03\n"
+      }
+     ],
+     "spiegazione": "Nello stato `Atmosphere.NIGHT`, il sole viene disattivato (`sun_light.visible = false`) lasciando l'isola avvolta nell'oscurità. A quel punto la lanterna puntiforme (`LanternLight`) diventa la protagonista assoluta: con `light_energy = 2.5` proietta una luce intensa e ombre definite attorno al cristallo. Modificando i parametri della risorsa `Environment`, la nebbia assume un colore blu scuro (`Color(0.05, 0.05, 0.15)`) e una densità maggiore (`0.03`), completando la transizione continua tra le tre atmosfere.",
+     "cambiati": [],
+     "rimossi": []
+    }
+   },
+   "genere": "obiettivo",
+   "correzioni": 0,
+   "semplificato": false,
+   "problemi": [],
+   "modelli": [
+    "gemini/gemini-3.7-flash"
+   ]
+  }
+ },
  "avvisi": [],
  "modelli": [
-  "gemini/gemini-3.6-flash"
+  "gemini/gemini-3.6-flash",
+  "gemini/gemini-3.7-flash"
  ],
  "teoria": {
   "titolo": "Luci, ombre e ambiente",
@@ -75,5 +272,10 @@
     "md": "- **DirectionalLight3D** simula il sole o la luna; orientamento e colore determinano l'ora del giorno e la lunghezza delle ombre.\n- **OmniLight3D** emette luce a 360 gradi a partire da una posizione nello spazio entro un raggio determinato.\n- **SpotLight3D** concentra la luce in un cono d'apertura definito.\n- Abilitare **shadow_enabled** aggiunge ombre reali ma aumenta il carico di calcolo.\n- **WorldEnvironment** gestisce il cielo (`ProceduralSkyMaterial`), la nebbia e gli effetti di post-processing come il **Glow** (bagliore dei materiali emissivi).\n- È possibile modificare colori, energia e rotazione delle luci da codice GDScript per creare cicli giorno/notte o cambi di atmosfera a tempo di gioco."
    }
   ]
- }
+ },
+ "ordine": [
+  "es1",
+  "es2",
+  "test"
+ ]
 }
