@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-23T11:34:40.204Z",
+ "aggiornato": "2026-11-23T11:47:15.811Z",
  "stato": "aspetta",
  "lezione": {
   "slug": "costruire-un-livello-3d",
   "numero": "9.5",
   "titolo": "Costruire un livello in fretta"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.5 riprende da sola appena rispondono.",
- "riprende": "2026-11-23T11:44:40.204Z"
+ "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 9.5 riprende quando si azzerano.",
+ "riprende": "2026-11-24T08:00:00.811Z"
 }

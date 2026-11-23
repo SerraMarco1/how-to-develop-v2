@@ -723,5 +723,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "camera3d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
