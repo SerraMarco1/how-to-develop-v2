@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\n  \"video\": false,\n  \"perche\": \"I nodi aggiunti sono Node3D senza elementi visivi e il risultato dell'esercizio si legge solo nel pannello Output.\"\n}",
+ "ragionamento": 1420,
+ "quando": "2026-11-23T08:01:36.678Z",
+ "ruolo": "ritocco"
+}

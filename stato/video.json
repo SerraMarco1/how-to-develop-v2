@@ -2123,9 +2123,10 @@
   },
   "es2": {
    "impronta": "cf94619e024382bc39bf360d6844de8e7da5862cd778aefd0a458ca5348c24e6",
-   "tentativi": 0,
-   "esito": "in corso",
-   "regole": 2
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "I nodi Node3D aggiunti sono invisibili sullo schermo perché non hanno una rappresentazione visiva."
   }
  }
 }
