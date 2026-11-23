@@ -376,7 +376,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Stato SUNSET: SunLight deve avere energia 0.8\n  - Stato SUNSET: LanternLight accesa a energia 1.0\n  - Stato SUNSET: nebbia attiva a densità 0.02\n  - Stato NIGHT: SunLight deve essere spenta (visible = false o light_energy = 0)\n  - Stato NIGHT: LanternLight deve essere accesa\n  - Stato NIGHT: LanternLight deve avere light_energy = 2.5 (è 2.00)\n  - Stato NIGHT: la nebbia deve essere attiva\n  - Stato NIGHT: nebbia notturna con densità 0.03 (è 0.010)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
