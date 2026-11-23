@@ -7,3 +7,6 @@
 {"quando":1795421688775,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"vettori-e-rotazioni-3d","ok":true,"contata":true,"durataMs":45077,"tokenInput":9674,"tokenOutput":2029,"ragionamento":7987}
 {"quando":1795421746813,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"vettori-e-rotazioni-3d","ok":true,"contata":true,"durataMs":8558,"tokenInput":2393,"tokenOutput":852,"ragionamento":3137}
 {"quando":1795421760384,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":51130,"tokenInput":11011,"tokenOutput":3048,"ragionamento":6356}
+{"quando":1795421813092,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"mesh-e-materiali","ok":false,"contata":true,"durataMs":757,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795421813852,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":88187,"tokenInput":13795,"tokenOutput":8403,"ragionamento":10251}
+{"quando":1795421902046,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":62297,"tokenInput":17938,"tokenOutput":8228,"ragionamento":4260}
