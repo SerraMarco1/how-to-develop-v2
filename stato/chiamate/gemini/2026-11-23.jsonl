@@ -39,3 +39,4 @@
 {"quando":1795426649997,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"camera3d","ok":false,"contata":true,"durataMs":1346,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795427600496,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":3788,"tokenInput":3811,"tokenOutput":38,"ragionamento":1235}
 {"quando":1795427607296,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":4355,"tokenInput":3582,"tokenOutput":343,"ragionamento":1454}
+{"quando":1795427623999,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":3314,"tokenInput":3979,"tokenOutput":37,"ragionamento":1024}
