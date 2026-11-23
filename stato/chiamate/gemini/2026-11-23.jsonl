@@ -28,3 +28,4 @@
 {"quando":1795423685615,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"luci-e-ambiente","ok":false,"contata":true,"durataMs":2329,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795424407597,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":5504,"tokenInput":3427,"tokenOutput":334,"ragionamento":1496}
 {"quando":1795424428483,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":3533,"tokenInput":3818,"tokenOutput":38,"ragionamento":956}
+{"quando":1795424434042,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"mesh-e-materiali","ok":true,"contata":true,"durataMs":4597,"tokenInput":3421,"tokenOutput":335,"ragionamento":1591}

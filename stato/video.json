@@ -2135,5 +2135,63 @@
    "regole": 2,
    "motivo": "I nodi aggiunti sono Node3D senza elementi visivi e il risultato dell'esercizio si legge solo nel pannello Output."
   }
+ },
+ "mesh-e-materiali": {
+  "es1": {
+   "impronta": "b48ccd61abddf8ae91b91f88a2206752b95d3e86717cffa5089359781fa33ae6",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 8,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "base",
+       "cerca": {
+        "nome": "MeshBase"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "esserci",
+       "etichetta": "Base"
+      },
+      {
+       "id": "turret",
+       "cerca": {
+        "nome": "MeshTurret"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 7.5,
+       "deve": "esserci",
+       "etichetta": "Torretta"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "La base dell'isola con il materiale in legno",
+       "da": 0.5,
+       "a": 3.5,
+       "soggetto": "base"
+      },
+      {
+       "testo": "La torretta con il materiale metallico lucido",
+       "da": 4,
+       "a": 7.5,
+       "soggetto": "turret"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «base» (nome = MeshBase; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0.",
+     "Soggetto «turret» (nome = MeshTurret; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+    ]
+   },
+   "motivo": "La scena non ha una telecamera, quindi le mesh 3D non si vedono sullo schermo."
+  }
  }
 }

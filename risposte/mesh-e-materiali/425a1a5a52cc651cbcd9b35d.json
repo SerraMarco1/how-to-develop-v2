@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": false,\n  \"perche\": \"La scena non ha una telecamera, quindi le mesh 3D non si vedono sullo schermo.\"\n}",
- "ragionamento": 956,
- "quando": "2026-11-23T09:00:32.018Z",
- "ruolo": "ritocco"
-}
