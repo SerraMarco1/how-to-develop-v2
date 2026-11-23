@@ -239,7 +239,9 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Al tramonto SunLight deve avere light_energy = 0.8 (è 1.20)\n  - Al tramonto SunLight deve avere una luce calda/arancione (è (1.0, 0.95, 0.8, 1.0))\n  - Al tramonto LanternLight deve essere accesa (visible = true)\n  - Al tramonto LanternLight deve avere light_energy = 1.0 (è 2.00)\n  - Al tramonto la nebbia deve essere attiva (fog_enabled = true)\n  - Al tramonto la densità della nebbia deve essere 0.02 (è 0.010)\n  - Al tramonto la nebbia deve essere arancione (è (0.518, 0.553, 0.608, 1.0))\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.7-flash"
    ]
