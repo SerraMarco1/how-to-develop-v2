@@ -174,7 +174,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "trova",
@@ -229,7 +229,74 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "trova",
+    "titolo": "Verificare la visibilità con il frustum",
+    "consegna": "Attualmente l'etichetta `CrystalLabel` viene nascosta solo se il cristallo si trova alle spalle della telecamera. Tuttavia, se il cristallo esce dai bordi laterali dell'inquadratura o è troppo lontano, l'etichetta appare ancora sullo schermo!\n\nModifica la funzione `_update_crystal_label_position()` in `main.gd`:\nInvece di controllare soltanto se la posizione è dietro la telecamera, cerca nella documentazione di `Camera3D` il metodo che verifica se una posizione 3D nel mondo si trova effettivamente **all'interno del tronco di vista (frustum)** della telecamera.\n\n- Se la posizione globale del cristallo NON è all'interno del tronco di vista della telecamera attiva, nascondi l'etichetta (`crystal_label.visible = false`).\n- Se si trova all'interno del tronco di vista, rendi l'etichetta visibile (`crystal_label.visible = true`) e calcola la sua posizione con `unproject_position()` mantenendo l'offset `Vector2(-25.0, -30.0)`.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Cerca nella documentazione di Camera3D un metodo che contenga la parola 'frustum'.",
+     "Il metodo accetta una posizione Vector3 globale e restituisce true se il punto ricade nella piramide di visione della telecamera."
+    ],
+    "verifiche": [
+     {
+      "tipo": "testo_in_file",
+      "percorso": "res://main.gd",
+      "regex": "is_position_in_frustum",
+      "descrizione": "Lo script main.gd utilizza il metodo is_position_in_frustum"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar label := find_by_name(main, \"CrystalLabel\") as Label\n\tvar crystal := find_by_name(main, \"Crystal\") as Node3D\n\tif not check(\"nodes\", label != null and crystal != null, \"CrystalLabel e Crystal devono essere presenti\"):\n\t\treturn\n\tvar active_cam := main.get_viewport().get_camera_3d()\n\tif not check(\"cam\", active_cam != null, \"Ci deve essere una telecamera attiva\"):\n\t\treturn\n\tcheck(\"frustum_code\", count_in_code(\"res://main.gd\", \"is_position_in_frustum\") > 0, \"La funzione _update_crystal_label_position deve usare il metodo is_position_in_frustum\")\n\tcrystal.global_position = Vector3(100.0, 0.0, -5.0)\n\tawait wait_frames(2)\n\tcheck(\"label_hidden_frustum\", not label.visible, \"Quando il cristallo si trova fuori dal frustum della telecamera, CrystalLabel deve essere nascosta\")\n",
+      "descrizione": "Quando il cristallo si trova fuori dal frustum della telecamera, l'etichetta viene nascosta"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [
+     "is_position_in_frustum"
+    ],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"L'isola\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nchange_atmosphere={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_wood\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\nmetallic = 0.0\nroughness = 0.8\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plastic\"]\nalbedo_color = Color(0.9, 0.1, 0.1, 1)\nmetallic = 0.0\nroughness = 0.3\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_bridge\"]\nsize = Vector3(2, 0.2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_glass\"]\ntransparency = 1\nalbedo_color = Color(0.5, 0.8, 1, 0.3)\nmetallic = 0.0\nroughness = 0.05\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_east\"]\nsize = Vector3(3, 2, 3)\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_crystal\"]\nradius = 0.5\nheight = 1.0\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_crystal\"]\nalbedo_color = Color(0.0, 0.8, 1.0, 1.0)\nroughness = 0.2\nemission_enabled = true\nemission = Color(0.0, 0.8, 1.0, 1.0)\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_turret\"]\ntop_radius = 0.5\nbottom_radius = 0.5\nheight = 1.5\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_metal\"]\nalbedo_color = Color(0.7, 0.7, 0.7, 1)\nmetallic = 1.0\nroughness = 0.1\n\n[sub_resource type=\"ProceduralSkyMaterial\" id=\"ProceduralSkyMaterial_sky\"]\n\n[sub_resource type=\"Sky\" id=\"Sky_proc\"]\nsky_material = SubResource(\"ProceduralSkyMaterial_sky\")\n\n[sub_resource type=\"Environment\" id=\"Environment_main\"]\nbackground_mode = 2\nsky = SubResource(\"Sky_proc\")\nglow_enabled = true\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"MeshBase\" type=\"MeshInstance3D\" parent=\"BlockBase\"]\nmesh = SubResource(\"BoxMesh_base\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"MeshWest\" type=\"MeshInstance3D\" parent=\"BlockWest\"]\nmesh = SubResource(\"BoxMesh_west\")\nmaterial_override = SubResource(\"StandardMaterial3D_plastic\")\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"MeshBridge\" type=\"MeshInstance3D\" parent=\"BlockWest/BlockWestBridge\"]\nmesh = SubResource(\"BoxMesh_bridge\")\nmaterial_override = SubResource(\"StandardMaterial3D_glass\")\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"MeshEast\" type=\"MeshInstance3D\" parent=\"BlockEast\"]\nmesh = SubResource(\"BoxMesh_east\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n\n[node name=\"Crystal\" type=\"MeshInstance3D\" parent=\"BlockEast/BlockEastTop\"]\nmesh = SubResource(\"SphereMesh_crystal\")\nmaterial_override = SubResource(\"StandardMaterial3D_crystal\")\n\n[node name=\"Turret\" type=\"Node3D\" parent=\".\"]\n\n[node name=\"MeshTurret\" type=\"MeshInstance3D\" parent=\"Turret\"]\nmesh = SubResource(\"CylinderMesh_turret\")\nmaterial_override = SubResource(\"StandardMaterial3D_metal\")\n\n[node name=\"SunLight\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 0, 0)\nshadow_enabled = true\nlight_color = Color(1, 0.95, 0.8, 1)\nlight_energy = 1.2\n\n[node name=\"LanternLight\" type=\"OmniLight3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4, 1)\nvisible = false\nshadow_enabled = true\nlight_color = Color(1, 0.7, 0.3, 1)\nlight_energy = 2.0\nomni_range = 8.0\n\n[node name=\"WorldEnvironment\" type=\"WorldEnvironment\" parent=\".\"]\nenvironment = SubResource(\"Environment_main\")\n\n[node name=\"CameraOverview\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 12)\nfov = 75.0\ncurrent = true\n\n[node name=\"CameraWest\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(0.707107, 0.183013, -0.683013, 0, 0.965926, 0.258819, 0.707107, -0.183013, 0.683013, -8, 4, 6)\nfov = 50.0\n\n[node name=\"CameraEast\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.0868241, 0.492404, 0, 0.984808, 0.173648, -0.5, -0.150384, 0.852869, 8, 5, 4)\nfov = 60.0\n\n[node name=\"CrystalLabel\" type=\"Label\" parent=\".\"]\ntext = \"Cristallo\"\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\n@onready var camera_overview: Camera3D = $CameraOverview\n@onready var camera_west: Camera3D = $CameraWest\n@onready var camera_east: Camera3D = $CameraEast\n@onready var crystal_label: Label = $CrystalLabel\n@onready var crystal: MeshInstance3D = $BlockEast/BlockEastTop/Crystal\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\nvar cameras: Array[Camera3D] = []\nvar active_camera_index: int = 0\n\n\nfunc _ready() -> void:\n\tcameras = [camera_overview, camera_west, camera_east]\n\tif cameras.size() > 0:\n\t\tcameras[0].make_current()\n\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\treturn [top_pos, bridge_pos, east_top_pos]\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret != null and target != null:\n\t\tvar direction: Vector3 = target.global_position - turret.global_position\n\t\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\t\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n\n\tif Input.is_action_just_pressed(\"change_atmosphere\"):\n\t\t_cycle_atmosphere()\n\t\t_cycle_camera()\n\n\t_update_crystal_label_position()\n\n\nfunc _cycle_camera() -> void:\n\tif cameras.is_empty():\n\t\treturn\n\tactive_camera_index = (active_camera_index + 1) % cameras.size()\n\tcameras[active_camera_index].make_current()\n\n\nfunc _update_crystal_label_position() -> void:\n\tvar current_cam: Camera3D = get_viewport().get_camera_3d()\n\tif current_cam == null or crystal == null or crystal_label == null:\n\t\treturn\n\n\tif not current_cam.is_position_in_frustum(crystal.global_position):\n\t\tcrystal_label.visible = false\n\telse:\n\t\tcrystal_label.visible = true\n\t\tvar screen_pos: Vector2 = current_cam.unproject_position(crystal.global_position)\n\t\tcrystal_label.position = screen_pos + Vector2(-25.0, -30.0)\n\n\nfunc _cycle_atmosphere() -> void:\n\tmatch current_atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tcurrent_atmosphere = Atmosphere.SUNSET\n\t\tAtmosphere.SUNSET:\n\t\t\tcurrent_atmosphere = Atmosphere.NIGHT\n\t\tAtmosphere.NIGHT:\n\t\t\tcurrent_atmosphere = Atmosphere.DAY\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc _apply_atmosphere(atmosphere: Atmosphere) -> void:\n\tif sun_light == null or lantern_light == null:\n\t\treturn\n\n\tmatch atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.95, 0.8)\n\t\t\tsun_light.light_energy = 1.2\n\t\t\tsun_light.rotation_degrees = Vector3(-45.0, -30.0, 0.0)\n\t\t\tlantern_light.visible = false\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = false\n\t\tAtmosphere.SUNSET:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.5, 0.2)\n\t\t\tsun_light.light_energy = 0.8\n\t\t\tsun_light.rotation_degrees = Vector3(-10.0, -60.0, 0.0)\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 1.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.9, 0.4, 0.2)\n\t\t\t\tworld_environment.environment.fog_density = 0.02\n\t\tAtmosphere.NIGHT:\n\t\t\tsun_light.visible = false\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 2.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.05, 0.05, 0.15)\n\t\t\t\tworld_environment.environment.fog_density = 0.03\n"
+      }
+     ],
+     "progetto": {
+      "nome": "L'isola",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "change_atmosphere",
+        "tasti": [
+         "Space"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Il metodo `is_position_in_frustum()` della classe `Camera3D` controlla se un punto 3D si trova all'interno del volume di vista a piramide troncata della telecamera. Sostituendo `is_position_behind()` con `is_position_in_frustum()`, la Label viene correttamente nascosta anche quando il cristallo esce dai bordi dello schermo.",
+     "cambiati": [
+      "main.gd"
+     ],
+     "rimossi": []
+    },
+    "cartella": "l-isola",
+    "id": "es2"
+   }
   },
   "test": {
    "stato": "da_fare",
