@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-22T10:17:04.006Z",
+ "aggiornato": "2026-11-23T08:15:59.105Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1253,6 +1253,15 @@
    "file": "lezioni/f09-3d-basi/spazio-3d.json",
    "sha256": "7a96088e37457886f1379d94f24e86ab50837e0351c78753020af83fc1746302",
    "byte": 29579
+  },
+  {
+   "slug": "vettori-e-rotazioni-3d",
+   "numero": "9.1",
+   "titolo": "Vettori e rotazioni in 3D",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/vettori-e-rotazioni-3d.json",
+   "sha256": "0b3c74ffc95368b926e9a191d43120deb92dabf0bec4a4480783c7389e451303",
+   "byte": 31750
   }
  ],
  "documentazione": {

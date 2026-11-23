@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test finale è una copia identica dell'esercizio 2 (es2), con lo stesso titolo, la stessa consegna e le stesse verifiche.\", \"correzione\": \"Sostituire il test con una prova di collaudo differente che verifichi gli obiettivi della lezione (ad esempio implementando la rotazione graduale con `rotate_toward` per una torretta o un nemico, anziché riproporre la stessa freccia con `look_at`).\", \"fonte\": \"\"}]}",
- "ragionamento": 1995,
- "quando": "2026-11-23T08:14:46.116Z",
- "ruolo": "revisore"
-}
