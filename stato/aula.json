@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-24T16:01:46.133Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-24T16:08:23.805Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "collisioni-3d",
   "numero": "9.6",
   "titolo": "Collisioni in 3D"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.6 riprende da sola appena rispondono.",
- "riprende": "2026-11-24T16:06:46.133Z"
+ "messaggio": "Sta scrivendo la lezione 9.6 «Collisioni in 3D».",
+ "riprende": null
 }
