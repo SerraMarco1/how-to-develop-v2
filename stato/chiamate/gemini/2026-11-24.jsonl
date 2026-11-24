@@ -51,3 +51,4 @@
 {"quando":1795536502412,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"costruire-un-livello-3d","ok":false,"contata":true,"durataMs":1389,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795536503829,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collisioni-3d","ok":true,"contata":true,"durataMs":107451,"tokenInput":17527,"tokenOutput":14951,"ragionamento":10724}
 {"quando":1795536654839,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collisioni-3d","ok":true,"contata":true,"durataMs":91867,"tokenInput":15317,"tokenOutput":7987,"ragionamento":13298}
+{"quando":1795536748528,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collisioni-3d","ok":true,"contata":true,"durataMs":51956,"tokenInput":15327,"tokenOutput":7848,"ragionamento":3682}
