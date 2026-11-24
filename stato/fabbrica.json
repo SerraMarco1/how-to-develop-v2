@@ -2,7 +2,7 @@
  "sovraccarico": {},
  "fermi": {
   "gemini/gemini-flash-latest": {
-   "fino": 1795519032617,
+   "fino": 1795519978550,
    "errore": "Nessuna risposta entro 900 secondi"
   },
   "gemini/gemini-3.7-flash": {

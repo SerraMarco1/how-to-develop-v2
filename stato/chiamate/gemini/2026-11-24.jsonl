@@ -27,3 +27,4 @@
 {"quando":1795517202583,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"collisioni-3d","ok":false,"contata":true,"durataMs":900025,"errore":"Nessuna risposta entro 900 secondi"}
 {"quando":1795518102611,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"collisioni-3d","ok":false,"contata":true,"durataMs":900005,"errore":"Nessuna risposta entro 900 secondi"}
 {"quando":1795519002618,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collisioni-3d","ok":true,"contata":true,"durataMs":43283,"tokenInput":17024,"tokenOutput":2276,"ragionamento":3290}
+{"quando":1795519048502,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"collisioni-3d","ok":false,"contata":true,"durataMs":900046,"errore":"Nessuna risposta entro 900 secondi"}
