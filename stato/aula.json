@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-24T16:08:23.805Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-24T16:13:46.220Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "collisioni-3d",
   "numero": "9.6",
   "titolo": "Collisioni in 3D"
  },
- "messaggio": "Sta scrivendo la lezione 9.6 «Collisioni in 3D».",
- "riprende": null
+ "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 9.6 riprende quando si azzerano.",
+ "riprende": "2026-11-25T08:00:00.219Z"
 }
