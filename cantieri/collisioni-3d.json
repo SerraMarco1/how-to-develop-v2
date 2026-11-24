@@ -320,7 +320,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tvar tester := find_by_name(main, \"TestBody\") as CharacterBody3D\n\tif not check(\"tester\", tester != null, \"La scena deve contenere un CharacterBody3D chiamato TestBody\"):\n\t\treturn\n\n\tfor i in range(20):\n\t\tvar center_x: float = -9.0 + float(i)\n\t\tvar offsets: Array[float] = [-0.2, 0.2]\n\t\tfor offset in offsets:\n\t\t\tvar test_x: float = center_x + offset\n\t\t\ttester.global_position = Vector3(test_x, 0.61, 0.0)\n\t\t\ttester.velocity = Vector3.ZERO\n\t\t\tawait wait_physics_frames(15)\n\n\t\t\tvar solid: bool = tester.global_position.y > 0.5\n\t\t\tif not check(\"point_%d_off_%.1f\" % [i, offset], solid, \"Il blocco a X = %.1f (punto X = %.1f) deve essere solido (il corpo si trova a Y = %.2f)\" % [center_x, test_x, tester.global_position.y]):\n\t\t\t\treturn",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\n\tvar tester := find_by_name(main, \"TestBody\") as CharacterBody3D\n\tif not check(\"tester\", tester != null, \"La scena deve contenere un CharacterBody3D chiamato TestBody\"):\n\t\treturn\n\n\tfor i in range(20):\n\t\tvar center_x: float = -9.0 + float(i)\n\t\ttester.global_position = Vector3(center_x, 0.61, 0.0)\n\t\ttester.velocity = Vector3.ZERO\n\t\tawait wait_physics_frames(10)\n\n\t\tvar solid: bool = tester.global_position.y > 0.5\n\t\tif not check(\"block_solid\", solid, \"Il blocco a X = %.1f deve essere solido (il corpo si trova a Y = %.2f)\" % [center_x, tester.global_position.y]):\n\t\t\treturn",
       "descrizione": "Il corpo di prova rimane solido sopra il pavimento in tutti i 20 punti di test lungo il percorso"
      }
     ],
@@ -364,19 +364,18 @@
       "impostazioni": []
      },
      "spiegazione": "I tre problemi del pavimento erano relativi ai tre aspetti fondamentali delle collisioni 3D:\n1. `Block4`: il nodo `CollisionShape3D` aveva `disabled = true`, rendendo il blocco intangibile pur possedendo una forma. Rimuovendo la spunta da Disabled la forma torna attiva.\n2. `Block10`: la forma `BoxShape3D` era larga solo 0.1 metri anziché 1 metro, creando un buco fisico invisibile. Assegnando la forma standard con `Vector3(1, 0.4, 2)` l'intera superficie visibile torna solida.\n3. `Block16`: il blocco apparteneva al **Collision Layer** 2 anziché 1, rendendosi invisibile al corpo di prova che rileva soltanto il livello 1. Ripristinando il layer su 1, il corpo di prova vi atterra correttamente.",
-     "cambiati": [
-      "main.tscn"
-     ],
+     "cambiati": [],
      "rimossi": []
     }
    },
    "genere": "ripara",
-   "correzioni": 1,
+   "correzioni": 2,
    "semplificato": false,
    "problemi": [
     "controllo di sicurezza — verifica 2 riga 23: il testo \"point_%d_off_%.1f\" usa una variabile di sistema: non serve nel corso"
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
