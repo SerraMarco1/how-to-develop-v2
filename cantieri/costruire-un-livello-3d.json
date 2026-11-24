@@ -395,7 +395,9 @@
    "genere": "imita",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - check_surface_supports deve restituire false se l'array di punti è vuoto\nOutput di Godot:\nERROR: Error calling method from 'callv': 'Node3D(main.gd)::check_surface_supports': Cannot convert argument 1 from Array to Array.\n   at: callv (core/object/object.cpp:763)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
