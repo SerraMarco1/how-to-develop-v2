@@ -1,0 +1,2 @@
+{"quando":1795507700055,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"costruire-un-livello-3d","ok":false,"contata":true,"durataMs":1395,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795507701454,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"costruire-un-livello-3d","ok":true,"contata":true,"durataMs":53125,"tokenInput":14008,"tokenOutput":2574,"ragionamento":4011}
