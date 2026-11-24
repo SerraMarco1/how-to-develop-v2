@@ -374,7 +374,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "le verifiche passano anche sul progetto com'è PRIMA dell'esercizio, quindi non controllano ciò che l'esercizio chiede di fare. Devono fallire prima del lavoro e passare dopo: aggiungi una verifica sul comportamento nuovo, o rendi più precise quelle che ci sono"
+    "controllo di sicurezza — verifica 2 riga 23: il testo \"point_%d_off_%.1f\" usa una variabile di sistema: non serve nel corso"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
