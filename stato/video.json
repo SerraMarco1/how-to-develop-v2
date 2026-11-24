@@ -2349,8 +2349,8 @@
  "costruire-un-livello-3d": {
   "es1": {
    "impronta": "ab046a6099bbea1c94ba07f987cde1f4eac4c5eb52a4bb89e647be7118cd0394",
-   "tentativi": 1,
-   "esito": "in corso",
+   "tentativi": 2,
+   "esito": "niente",
    "regole": 2,
    "ultimo": {
     "copione": {
@@ -2383,7 +2383,13 @@
      "Soggetto «grotta» (nome = Cave; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
     ]
    },
-   "motivo": "Soggetto «grotta» (nome = Cave; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+   "motivo": "La grotta creata si trova a z = -12, fuori dalla visuale delle telecamere presenti nella scena principale."
+  },
+  "es2": {
+   "impronta": "7eb0743581e4180a9f6cddd03b695588511a52df28b505e0a16faaa941957784",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
   }
  }
 }

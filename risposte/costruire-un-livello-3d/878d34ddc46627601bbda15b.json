@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": false, \"perche\": \"La grotta creata si trova a z = -12, fuori dalla visuale delle telecamere presenti nella scena principale.\"}",
- "ragionamento": 1544,
- "quando": "2026-11-24T12:53:58.334Z",
- "ruolo": "ritocco"
-}

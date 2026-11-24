@@ -1,0 +1,16 @@
+{
+ "n": 40,
+ "quando": "2026-11-24T12:54:00.507Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Scavare la grotta CSG dell'isola» non si vede sullo schermo: La grotta creata si trova a z = -12, fuori dalla visuale delle telecamere presenti nella scena principale.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 13787,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 12 s (6396 → 38 token)"
+ ]
+}
