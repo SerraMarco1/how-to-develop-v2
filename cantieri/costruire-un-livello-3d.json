@@ -2,5 +2,82 @@
  "creato": "2026-11-23T11:34:03.962Z",
  "pezzi": {},
  "avvisi": [],
- "modelli": []
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Costruire un livello in fretta",
+  "sommario": "Impara a prototipare rapidamente le ambientazioni 3D del gioco «L'isola» usando i nodi CSG per plasmare colline e grotte scavate, e il nodo GridMap per assemblare sotterranei a blocchi su una griglia.",
+  "concetti": [
+   "Prototipazione grezza (Greyboxing)",
+   "Nodi CSG (CSGBox3D, CSGSphere3D, CSGCombiner3D)",
+   "Operazioni CSG (Union, Subtraction, Intersection)",
+   "Proprietà use_collision",
+   "Nodo GridMap",
+   "Risorsa MeshLibrary",
+   "Metodi get_cell_item e set_cell_item"
+  ],
+  "obiettivi": [
+   "Abbozzare elementi 3D complessi sommando e sottrarre forme CSG",
+   "Generare le collisioni automatiche per le forme del prototipo",
+   "Costruire un sotterraneo a blocchi ripetibili usando GridMap",
+   "Comprendere il flusso di lavoro: prima la struttura giocabile, poi la grafica finale"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Prima di dedicare tempo alla modellazione dettagliata o all'inserimento dei materiali definitivi, occorre verificare se il livello è divertente, scalabile e ben proporzionato. Questa fase iniziale si chiama **greyboxing** (o prototipazione grezza): consiste nel costruire il mondo usando forme geometriche di base per definire altezze, ostacoli e percorsi.\n\nIn Godot 4.7 hai a disposizione due strumenti ideali per questo scopo: i nodi **CSG** (Constructive Solid Geometry) per modellare al volo elementi come colline e grotte scavate, e il nodo **GridMap** per assemblare velocemente livelli a blocchi come i sotterranei."
+   },
+   {
+    "tipo": "testo",
+    "md": "La tecnica **CSG** (Constructive Solid Geometry) permette di creare nuove forme 3D combinando solidi geometrici elementari tramite operazioni algebriche. I nodi CSG principali in Godot sono **CSGBox3D**, **CSGSphere3D**, **CSGCylinder3D** e il contenitore **CSGCombiner3D**.\n\nOgni nodo CSG possiede la proprietà **Operation**, che stabilisce come la sua forma interagisce con le altre:\n- **Union** (Unione): unisce le forme sommando i loro volumi.\n- **Subtraction** (Sottrazione): usa la forma del nodo per scavare ed eliminare il volume da un altro solido.\n- **Intersection** (Intersezione): mantiene visibile soltanto la parte di spazio condivisa tra le forme.\n\nAttivando la casella **Use Collision** nell'Inspector del nodo CSG, Godot genera automaticamente i volumi di collisione fisici, permettendo subito al personaggio di camminare sulle superfici o sbattere contro le pareti senza dover configurare nodi fisici separati."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Scavare una grotta nell'isola con le forme CSG",
+    "passi": [
+     "Nel pannello *Scene*, seleziona la radice `Island` e premi **+** per aggiungere un nodo **CSGCombiner3D**, rinominandolo `Cave`.",
+     "Aggiungi come figlio di `Cave` un nodo **CSGBox3D** chiamato `Rock`, imposta la sua dimensione nell'Inspector a `(8, 4, 8)` e spunta **Use Collision**.",
+     "Aggiungi un nodo **CSGSphere3D** chiamato `Hollow` come figlio di `Cave`, imposta il raggio a `2.5` e posizionalo al centro della roccia.",
+     "Nel pannello *Inspector* di `Hollow`, imposta **Operation** su **Subtraction**: la sfera scaverà una cavità all'interno del cubo.",
+     "Aggiungi un altro **CSGBox3D** chiamato `Entrance` come figlio di `Cave`, imposta **Operation** su **Subtraction** e posizionalo su un fianco della roccia per creare la porta d'ingresso della grotta."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "editor-3d",
+    "didascalia": "L'area di lavoro 3D dell'editor con gli assi X, Y, Z che aiutano a posizionare e scavare le forme CSG nello spazio."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "I nodi CSG ricalcolano la propria geometria 3D ogni volta che modifichi una forma o un'operazione. Usali per prototipare e abbozzare i livelli, ma non riempire la scena finale con centinaia di nodi CSG complessi: nei livelli grandi potrebbero ridurre le prestazioni. Per le strutture ripetitive è meglio usare il nodo **GridMap**."
+   },
+   {
+    "tipo": "testo",
+    "md": "Se CSG serve per modellare forme uniche, il nodo **GridMap** permette di costruire ambientazioni 3D posizionando tasselli su una griglia tridimensionale regolare, proprio come si fa con i nodi *TileMapLayer* nel 2D.\n\nPer funzionare, una GridMap richiede una risorsa **MeshLibrary**: una collezione di moduli 3D prefabbricati (pavimenti, pareti, scalinate, pilastri). Quando selezioni un nodo GridMap nell'albero delle scene, nella parte inferiore dell'editor compare la tavoletta con i blocchi della libreria: cliccando nella vista 3D puoi dipingere, ruotare ed eliminare le tessere. La proprietà **Cell Size** stabilisce la dimensione in metri di ogni singola casella (ad esempio 2x2x2 metri)."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Aggiungere un sotterraneo a blocchi con GridMap",
+    "passi": [
+     "Seleziona il nodo radice `Island` nel pannello *Scene*, premi **+** e aggiungi un nodo **GridMap**, rinominandolo `DungeonGrid`.",
+     "Nel pannello *Inspector*, imposta la proprietà **Cell Size** su `(2, 2, 2)` per fare corrispondere le celle a moduli di 2 metri.",
+     "Trascina o assegna una risorsa **MeshLibrary** nel campo **Mesh Library** dell'Inspector.",
+     "Seleziona il blocco desiderato dal pannello inferiore che appare in basso nell'editor.",
+     "Nel pannello *3D*, fai clic con il tasto sinistro del mouse sulla griglia per posizionare i blocchi e costruire le stanze del sotterraneo."
+    ]
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n@export var camera_speed: float = 3.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\n@onready var camera_overview: Camera3D = $CameraOverview\n@onready var camera_west: Camera3D = $CameraWest\n@onready var camera_east: Camera3D = $CameraEast\n@onready var crystal_label: Label = $CrystalLabel\n@onready var crystal: MeshInstance3D = $BlockEast/BlockEastTop/Crystal\n@onready var dungeon_grid: GridMap = $DungeonGrid\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\nvar cameras: Array[Camera3D] = []\nvar active_camera_index: int = 0\n\n\nfunc _ready() -> void:\n\tcameras = [camera_overview, camera_west, camera_east]\n\tif cameras.size() > 0:\n\t\tcameras[0].make_current()\n\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\t\n\t# Controlla programmaticamente se la cella sotterranea alle coordinate (0, -1, 0) è occupata\n\t_check_dungeon_tile(Vector3i(0, -1, 0))\n\n\nfunc _check_dungeon_tile(cell_coords: Vector3i) -> void:\n\tif dungeon_grid == null:\n\t\treturn\n\t\n\t# get_cell_item restituisce l'ID del blocco oppure GridMap.INVALID_CELL_ITEM se la cella è vuota\n\tvar item_id: int = dungeon_grid.get_cell_item(cell_coords)\n\tif item_id != GridMap.INVALID_CELL_ITEM:\n\t\tprint(\"La cella del sotterraneo \", cell_coords, \" contiene il blocco con ID: \", item_id)\n\telse:\n\t\tprint(\"La cella \", cell_coords, \" è vuota.\")",
+    "spiegazione": "Abbiamo collegato il nodo `$DungeonGrid` tramite `@onready`. Nel metodo `_ready()`, la funzione custom `_check_dungeon_tile()` interroga la griglia usando `get_cell_item()`. Questo metodo accetta un `Vector3i` (coordinate intere di cella) e restituisce l'identificatore del blocco presente o la costante `GridMap.INVALID_CELL_ITEM` se la casella è vuota."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- Il **greyboxing** consente di testare il flusso di gioco e la spazialità 3D prima di dedicarsi all'aspetto estetico finale.\n- I nodi CSG (**CSGBox3D**, **CSGSphere3D**, **CSGCombiner3D**) uniscono o sottraggono forme geometriche per creare strutture personalizzate come grotte e ponti.\n- La proprietà **Use Collision** sui nodi CSG attiva al volo la fisica per far camminare il personaggio sulle superfici prototipate.\n- Il nodo **GridMap** assembla livelli 3D a blocchi modulari piazzando le tessere di una **MeshLibrary** su una griglia regolare.\n- Da GDScript puoi verificare o modificare le celle della GridMap con `get_cell_item()` e `set_cell_item()` usando coordinate di tipo `Vector3i`."
+   }
+  ]
+ }
 }
