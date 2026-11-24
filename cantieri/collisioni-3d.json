@@ -126,7 +126,7 @@
    }
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -208,7 +208,93 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Ripara la piattaforma di collisione",
+    "consegna": "Nel progetto `ripara-piattaforma`, c'è una scena di laboratorio (`main.tscn`) con una piattaforma e una sfera di prova che dovrebbe cadere e fermarsi su di essa.\n\nTuttavia, avviando il gioco con F5, la sfera attraversa completamente la piattaforma e cade nel vuoto.\n\nIspeziona le impostazioni della piattaforma nella scena per correggere il problema, in modo che la sfera si fermi correttamente sulla superficie superiore della piattaforma.",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "cartella": "ripara-piattaforma",
+    "passiGuida": [],
+    "suggerimenti": [],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "StaticBody3D",
+      "nome": "Platform",
+      "descrizione": "La scena main.tscn contiene il nodo Platform"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "CharacterBody3D",
+      "nome": "Ball",
+      "descrizione": "La scena main.tscn contiene il nodo Ball"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar ball := find_by_name(main, \"Ball\") as CharacterBody3D\n\tif not check(\"ball\", ball != null, \"Nella scena serve un CharacterBody3D chiamato Ball\"):\n\t\treturn\n\n\tawait wait_physics_frames(60)\n\tcheck(\"ball_stopped\", ball.global_position.y > 0.0, \"La sfera deve fermarsi sulla piattaforma sopra y = 0 (attualmente si trova a y = %.2f)\" % ball.global_position.y)\n",
+      "descrizione": "La sfera si ferma sulla piattaforma anziché cadere nel vuoto"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "RiparaPiattaforma",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RiparaPiattaforma\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ball.gd\" id=\"1_ball\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_plat\"]\nsize = Vector3(6, 0.5, 6)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plat\"]\nalbedo_color = Color(0.2, 0.6, 0.3, 1)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_plat\"]\nsize = Vector3(6, 0.5, 6)\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_ball\"]\nradius = 0.5\nheight = 1.0\n\n[sub_resource type=\"SphereShape3D\" id=\"SphereShape3D_ball\"]\nradius = 0.5\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Platform\" type=\"StaticBody3D\" parent=\".\"]\ncollision_layer = 2\ncollision_mask = 2\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Platform\"]\nmesh = SubResource(\"BoxMesh_plat\")\nmaterial_override = SubResource(\"StandardMaterial3D_plat\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Platform\"]\nshape = SubResource(\"BoxShape3D_plat\")\n\n[node name=\"Ball\" type=\"CharacterBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)\nscript = ExtResource(\"1_ball\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Ball\"]\nmesh = SubResource(\"SphereMesh_ball\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Ball\"]\nshape = SubResource(\"SphereShape3D_ball\")\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 3, 8)\n\n[node name=\"DirectionalLight3D\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
+      },
+      {
+       "percorso": "ball.gd",
+       "contenuto": "extends CharacterBody3D\n\nconst GRAVITY := 9.8\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y -= GRAVITY * delta\n\tmove_and_slide()\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"RiparaPiattaforma\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://ball.gd\" id=\"1_ball\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_plat\"]\nsize = Vector3(6, 0.5, 6)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plat\"]\nalbedo_color = Color(0.2, 0.6, 0.3, 1)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_plat\"]\nsize = Vector3(6, 0.5, 6)\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_ball\"]\nradius = 0.5\nheight = 1.0\n\n[sub_resource type=\"SphereShape3D\" id=\"SphereShape3D_ball\"]\nradius = 0.5\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Platform\" type=\"StaticBody3D\" parent=\".\"]\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Platform\"]\nmesh = SubResource(\"BoxMesh_plat\")\nmaterial_override = SubResource(\"StandardMaterial3D_plat\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Platform\"]\nshape = SubResource(\"BoxShape3D_plat\")\n\n[node name=\"Ball\" type=\"CharacterBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)\nscript = ExtResource(\"1_ball\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Ball\"]\nmesh = SubResource(\"SphereMesh_ball\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Ball\"]\nshape = SubResource(\"SphereShape3D_ball\")\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 3, 8)\n\n[node name=\"DirectionalLight3D\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
+      },
+      {
+       "percorso": "ball.gd",
+       "contenuto": "extends CharacterBody3D\n\nconst GRAVITY := 9.8\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y -= GRAVITY * delta\n\tmove_and_slide()\n"
+      }
+     ],
+     "progetto": {
+      "nome": "RiparaPiattaforma",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "La sfera `Ball` rileva le collisioni sulla sua **Collision Mask** (impostata al livello 1). La piattaforma `Platform` aveva invece il suo **Collision Layer** impostato erroneamente al livello 2. Di conseguenza il motore di fisica non considerava la piattaforma solida per la sfera. Riportando il livello della piattaforma su 1 (oppure includendo il livello 1), la sfera rileva il contatto e si arresta.",
+     "cambiati": [
+      "main.tscn"
+     ],
+     "rimossi": []
+    },
+    "id": "es2"
+   }
   },
   "test": {
    "stato": "da_fare",
