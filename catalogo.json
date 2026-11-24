@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-23T11:34:02.562Z",
+ "aggiornato": "2026-11-24T10:34:40.005Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1289,6 +1289,15 @@
    "file": "lezioni/f09-3d-basi/camera3d.json",
    "sha256": "eee6f191066e07713638e78b61286514fe8bf766f9163094177ac2f1ea7234de",
    "byte": 76488
+  },
+  {
+   "slug": "costruire-un-livello-3d",
+   "numero": "9.5",
+   "titolo": "Costruire un livello in fretta",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/costruire-un-livello-3d.json",
+   "sha256": "8e5ac6c806769fb39e4859b61c13ac2993b5d3924033f5cb9909dfcc514e04bd",
+   "byte": 82931
   }
  ],
  "documentazione": {
