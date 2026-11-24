@@ -343,8 +343,7 @@
     "cartella": "l-isola",
     "passiGuida": [],
     "suggerimenti": [
-     "Assicurati che sia Cave che BridgeCSG abbiano use_collision attivato su true.",
-     "In check_surface_supports(), scorri l'array points con un ciclo for e verifica se ogni punto ricade sul ponte, nella grotta o su una cella occupata di DungeonGrid."
+     "Assicurati che sia Cave che BridgeCSG abbiano use_collision attivato su true."
     ],
     "verifiche": [
      {
@@ -356,7 +355,7 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar bridge := find_by_name(main, \"BridgeCSG\") as CSGBox3D\n\tif not check(\"bridge\", bridge != null, \"Nella scena serve un nodo CSGBox3D chiamato BridgeCSG\"):\n\t\treturn\n\tcheck(\"bridge_collision\", bridge.use_collision == true, \"BridgeCSG deve avere use_collision = true\")\n\t\n\tcheck(\"has_positions\", has_function(main, \"get_top_block_positions\"), \"main.gd deve contenere get_top_block_positions()\")\n\tvar top_positions = call_if_exists(main, \"get_top_block_positions\")\n\tcheck(\"pos_count\", typeof(top_positions) == TYPE_ARRAY and top_positions.size() == 4, \"get_top_block_positions deve restituire un array di 4 elementi\")\n\t\n\tcheck(\"has_check_surf\", has_function(main, \"check_surface_supports\"), \"main.gd deve contenere check_surface_supports(points: Array[Vector3]) -> bool\")\n\t\n\tvar test_points: Array[Vector3] = [\n\t\tVector3(0, 1.5, -3.0),\n\t\tVector3(0, 1.5, -5.0),\n\t\tVector3(0, 2.0, -10.0),\n\t\tVector3(0, 2.0, -14.0),\n\t\tVector3(0, -4.0, 0.0),\n\t\tVector3(1, -4.0, 0.0),\n\t\tVector3(-1, -4.0, 0.0),\n\t\tVector3(0, -4.0, 1.0),\n\t\tVector3(0, -4.0, -1.0),\n\t\tVector3(1, -4.0, 1.0)\n\t]\n\t\n\tvar result = call_if_exists(main, \"check_surface_supports\", [test_points], false)\n\tcheck(\"all_supported\", typeof(result) == TYPE_BOOL and result == true, \"La funzione check_surface_supports deve restituire true per i dieci punti di prova disposti su ponte, grotta e sotterraneo\")\n\t\n\tvar empty_result = call_if_exists(main, \"check_surface_supports\", [[]], true)\n\tcheck(\"empty_false\", typeof(empty_result) == TYPE_BOOL and empty_result == false, \"check_surface_supports deve restituire false se l'array di punti è vuoto\")",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi senza errori\"):\n\t\treturn\n\tvar bridge := find_by_name(main, \"BridgeCSG\") as CSGBox3D\n\tif not check(\"bridge\", bridge != null, \"Nella scena serve un nodo CSGBox3D chiamato BridgeCSG\"):\n\t\treturn\n\tcheck(\"bridge_collision\", bridge.use_collision == true, \"BridgeCSG deve avere use_collision = true\")\n\t\n\tcheck(\"has_positions\", has_function(main, \"get_top_block_positions\"), \"main.gd deve contenere get_top_block_positions()\")\n\tvar top_positions = call_if_exists(main, \"get_top_block_positions\")\n\tcheck(\"pos_count\", typeof(top_positions) == TYPE_ARRAY and top_positions.size() == 4, \"get_top_block_positions deve restituire un array di 4 elementi\")\n\t\n\tcheck(\"has_check_surf\", has_function(main, \"check_surface_supports\"), \"main.gd deve contenere check_surface_supports(points: Array[Vector3]) -> bool\")\n\t\n\tvar test_points: Array[Vector3] = [\n\t\tVector3(0, 1.5, -3.0),\n\t\tVector3(0, 1.5, -5.0),\n\t\tVector3(0, 2.0, -10.0),\n\t\tVector3(0, 2.0, -14.0),\n\t\tVector3(0, -4.0, 0.0),\n\t\tVector3(1, -4.0, 0.0),\n\t\tVector3(-1, -4.0, 0.0),\n\t\tVector3(0, -4.0, 1.0),\n\t\tVector3(0, -4.0, -1.0),\n\t\tVector3(1, -4.0, 1.0)\n\t]\n\t\n\tvar result = call_if_exists(main, \"check_surface_supports\", [test_points], false)\n\tcheck(\"all_supported\", typeof(result) == TYPE_BOOL and result == true, \"La funzione check_surface_supports deve restituire true per i dieci punti di prova disposti su ponte, grotta e sotterraneo\")\n\t\n\tvar empty_points: Array[Vector3] = []\n\tvar empty_result = call_if_exists(main, \"check_surface_supports\", [empty_points], true)\n\tcheck(\"empty_false\", typeof(empty_result) == TYPE_BOOL and empty_result == false, \"check_surface_supports deve restituire false se l'array di punti è vuoto\")",
       "descrizione": "BridgeCSG ha collisioni attive, get_top_block_positions restituisce 4 elementi e dieci punti di prova risultano supportati dalle superfici del livello"
      }
     ],
@@ -388,17 +387,21 @@
       "impostazioni": []
      },
      "spiegazione": "L'aggiunta del nodo `CSGBox3D` chiamato `BridgeCSG` con `use_collision = true` permette di collegare fisicamente le diverse parti del livello grezzo. La funzione `check_surface_supports` verifica che ciascuna posizione indicata ricada su un solido con collisione attiva oppure su una cella occupata della `GridMap`, assicurando che l'ambiente sia pronto e praticabile.",
-     "cambiati": [],
+     "cambiati": [
+      "main.tscn",
+      "main.gd"
+     ],
      "rimossi": []
     }
    },
    "genere": "imita",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - check_surface_supports deve restituire false se l'array di punti è vuoto\nOutput di Godot:\nERROR: Error calling method from 'callv': 'Node3D(main.gd)::check_surface_supports': Cannot convert argument 1 from Array to Array.\n   at: callv (core/object/object.cpp:763)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
+    "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
    ]
   }
