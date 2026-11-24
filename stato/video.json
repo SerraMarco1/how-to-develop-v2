@@ -2345,5 +2345,13 @@
    },
    "motivo": "Le luci e l'ambiente 3D sono nodi non visibili direttamente come mesh sullo schermo e non possono essere misurati automaticamente come soggetti dal sistema di verifica."
   }
+ },
+ "costruire-un-livello-3d": {
+  "es1": {
+   "impronta": "ab046a6099bbea1c94ba07f987cde1f4eac4c5eb52a4bb89e647be7118cd0394",
+   "tentativi": 0,
+   "esito": "in corso",
+   "regole": 2
+  }
  }
 }
