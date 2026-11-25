@@ -752,7 +752,7 @@
     "tipo": "passi",
     "titolo": "Creare la scena del personaggio",
     "passi": [
-     "Nel pannello *Scene* premi il pulsante **+** oppure premi la combinazione di tasti **Ctrl+N** per creare una nuova scena.",
+     "Premi la combinazione di tasti **Ctrl+N** oppure seleziona **Scene → New Scene** dal menu in alto per creare una nuova scena.",
      "Nella scelta del nodo radice seleziona **Other Node** (Altro nodo), cerca **CharacterBody3D** nella finestra e fai clic su **Create** (Crea). Rinomina il nodo radice in `Player`.",
      "Con il nodo `Player` selezionato, premi **+** per aggiungere un nodo figlio di tipo **CollisionShape3D**. Nel pannello *Inspector* fai clic sulla proprietà *Shape* e seleziona **New CapsuleShape3D**.",
      "Aggiungi un altro nodo figlio a `Player` di tipo **MeshInstance3D**. Nel pannello *Inspector* fai clic sulla proprietà *Mesh* e seleziona **New CapsuleMesh** per rendere visibile il corpo del personaggio.",
