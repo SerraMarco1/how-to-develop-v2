@@ -504,7 +504,7 @@
    {
     "tipo": "immagine",
     "immagine": "editor-3d",
-    "didascalia": "Nell'area di lavoro 3D, le forme di collisione assegnate ai nodi vengono disegnate con contorni colorati sovrapposti alla vista."
+    "didascalia": "L'area di lavoro 3D con la griglia e i tre assi colorati (X rosso, Y verde, Z blu)."
    },
    {
     "tipo": "testo",
