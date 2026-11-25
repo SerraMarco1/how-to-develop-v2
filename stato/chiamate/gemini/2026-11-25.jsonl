@@ -26,3 +26,4 @@
 {"quando":1795600698245,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"characterbody3d","ok":true,"contata":true,"durataMs":55761,"tokenInput":15116,"tokenOutput":7867,"ragionamento":18025}
 {"quando":1795600766840,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"characterbody3d","ok":false,"contata":true,"durataMs":178749,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795600945593,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"characterbody3d","ok":false,"contata":true,"durataMs":3343,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795601639020,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"characterbody3d","ok":true,"contata":true,"durataMs":36548,"tokenInput":12715,"tokenOutput":155,"ragionamento":3927}
