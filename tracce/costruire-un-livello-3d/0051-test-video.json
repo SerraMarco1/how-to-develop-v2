@@ -1,0 +1,16 @@
+{
+ "n": 51,
+ "quando": "2026-11-25T08:35:58.335Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Test: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Il ponte CSG e il collaudo del livello» non si vede sullo schermo: Il nodo CSGBox3D aggiunto non produce un rendering visibile rilevabile come mesh autonoma dal sistema di misura automatico nella scena principale.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 15195,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 13 s (6804 → 47 token)"
+ ]
+}

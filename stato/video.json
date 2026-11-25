@@ -2394,9 +2394,41 @@
   },
   "test": {
    "impronta": "c8775dc3e6c66b9723ad3f8f159e9f5bf3c39d2fe277e06e6de7c02b2ce4011e",
-   "tentativi": 0,
-   "esito": "in corso",
-   "regole": 2
+   "tentativi": 3,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://main.tscn",
+     "durata": 4,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "ponte",
+       "cerca": {
+        "nome": "BridgeCSG"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 2.5,
+       "deve": "esserci",
+       "etichetta": "Ponte CSG"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "Il nuovo ponte CSG unisce le sezioni dell'isola",
+       "da": 0.5,
+       "a": 2.5,
+       "soggetto": "ponte"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «ponte» (nome = BridgeCSG; almeno 1 da 0.5 a 2.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+    ]
+   },
+   "motivo": "Il nodo CSGBox3D aggiunto non produce un rendering visibile rilevabile come mesh autonoma dal sistema di misura automatico nella scena principale."
   }
  }
 }
