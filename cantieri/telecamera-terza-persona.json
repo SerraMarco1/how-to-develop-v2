@@ -593,7 +593,7 @@
    }
   },
   "test": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -727,13 +727,146 @@
    "genere": "obiettivo",
    "correzioni": 1,
    "semplificato": false,
-   "problemi": [
-    "NON SPIEGATO: la soluzione usa `has_node()`, che chi studia non ha mai visto: non compare nella teoria di questa lezione né in quelle prima, né nel progetto da cui parte. Un nome dentro un suggerimento non basta.\nUsa solo ciò che la lezione ha spiegato (guarda gli esempi di codice della teoria), oppure spiega nella consegna, in una o due frasi con un esempio, che cosa fa e come si usa."
-   ],
+   "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash",
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "test",
+    "genere": "obiettivo",
+    "titolo": "Test finale: Attivazione della telecamera del personaggio e reazione agli ostacoli",
+    "consegna": "Completa l'integrazione della telecamera in terza persona nel gioco «L'isola» collegandola alla logica principale della scena.\n\n1. Apri `res://main.gd` e aggiorna `_ready()` in modo che recuperi il nodo `Camera3D` presente in `Player` (`$Player/SpringArm3D/Camera3D`).\n2. Inserisci la telecamera del personaggio al primo posto nell'array `cameras` (`cameras = [player_camera, camera_overview, camera_west, camera_east]`).\n3. Attiva la telecamera del personaggio all'avvio del gioco chiamando `cameras[0].make_current()`.\n4. Assicurati che lo `SpringArm3D` sia impostato con `spring_length = 4.0` e `margin = 0.2` in `player.tscn`.\n5. Quando un ostacolo dotato di collisione si trova dietro al personaggio, lo `SpringArm3D` deve accorciare la distanza reale della telecamera evitando compenetrazioni con la geometria.",
+    "modalita": "progetto",
+    "dove": "gioco",
+    "cartella": "l-isola",
+    "passiGuida": [],
+    "suggerimenti": [
+     "In `main.gd`, ottieni il riferimento alla telecamera con `var player_camera: Camera3D = $Player/SpringArm3D/Camera3D`."
+    ],
+    "verifiche": [
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_scene\", main != null, \"La scena principale deve avviarsi correttamente\"):\n\t\treturn\n\n\tawait wait_physics_frames(5)\n\n\tvar active_cam := main.get_viewport().get_camera_3d()\n\tif check(\"active_camera\", active_cam != null, \"Nel Viewport deve essere presente una telecamera attiva\"):\n\t\tvar parent := active_cam.get_parent()\n\t\tvar is_player_cam := parent is SpringArm3D and parent.get_parent() is CharacterBody3D\n\t\tcheck(\"current_is_player_cam\", is_player_cam, \"All'avvio della scena principale la telecamera attiva deve essere quella dentro Player/SpringArm3D\")\n",
+      "descrizione": "All'avvio della scena principale la telecamera attiva è quella del personaggio"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_scene\", main != null, \"La scena principale deve avviarsi\"):\n\t\treturn\n\n\tvar player := find_by_name(main, \"Player\") as CharacterBody3D\n\tif not check(\"player\", player != null, \"Il nodo Player deve essere presente nella scena main.tscn\"):\n\t\treturn\n\n\tvar spring_arm := player.get_node_or_null(\"SpringArm3D\") as SpringArm3D\n\tif not check(\"spring_arm\", spring_arm != null, \"Player deve contenere un nodo SpringArm3D\"):\n\t\treturn\n\n\tvar cam := spring_arm.get_node_or_null(\"Camera3D\") as Camera3D\n\tif not check(\"camera\", cam != null, \"SpringArm3D deve contenere un nodo Camera3D\"):\n\t\treturn\n\n\tawait wait_physics_frames(5)\n\tvar open_distance := player.global_position.distance_to(cam.global_position)\n\n\tvar wall := StaticBody3D.new()\n\twall.position = player.global_position + Vector3(0.0, 1.5, 1.5)\n\tvar col := CollisionShape3D.new()\n\tvar box := BoxShape3D.new()\n\tbox.size = Vector3(4.0, 4.0, 1.0)\n\tcol.shape = box\n\twall.add_child(col)\n\tmain.add_child(wall)\n\n\tawait wait_physics_frames(10)\n\tvar blocked_distance := player.global_position.distance_to(cam.global_position)\n\tcheck(\"arm_shortened\", blocked_distance < open_distance - 0.5, \"Mettendo un muro dietro al personaggio, la distanza della telecamera deve ridursi (da %.2f m a %.2f m)\" % [open_distance, blocked_distance])\n",
+      "descrizione": "In presenza di un ostacolo dietro al personaggio la telecamera si avvicina evitando di compenetrare il muro"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"L'isola\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_forward={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_back={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nrun={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194325,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nchange_atmosphere={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":67,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nlook_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":74,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nlook_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":76,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nlook_up={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":73,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nlook_down={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":75,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"2_player\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_wood\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\nmetallic = 0.0\nroughness = 0.8\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plastic\"]\nalbedo_color = Color(0.9, 0.1, 0.1, 1)\nmetallic = 0.0\nroughness = 0.3\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_bridge\"]\nsize = Vector3(2, 0.2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_glass\"]\ntransparency = 1\nalbedo_color = Color(0.5, 0.8, 1, 0.3)\nmetallic = 0.0\nroughness = 0.05\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_east\"]\nsize = Vector3(3, 2, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_east\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_east\"]\nsize = Vector3(3, 2, 3)\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_crystal\"]\nradius = 0.5\nheight = 1.0\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_crystal\"]\nalbedo_color = Color(0, 0.8, 1, 1)\nroughness = 0.2\nemission_enabled = true\nemission = Color(0, 0.8, 1, 1)\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_turret\"]\ntop_radius = 0.5\nbottom_radius = 0.5\nheight = 1.5\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_metal\"]\nalbedo_color = Color(0.7, 0.7, 0.7, 1)\nmetallic = 1.0\nroughness = 0.1\n\n[sub_resource type=\"ProceduralSkyMaterial\" id=\"ProceduralSkyMaterial_sky\"]\n\n[sub_resource type=\"Sky\" id=\"Sky_proc\"]\nsky_material = SubResource(\"ProceduralSkyMaterial_sky\")\n\n[sub_resource type=\"Environment\" id=\"Environment_main\"]\nbackground_mode = 2\nsky = SubResource(\"Sky_proc\")\nglow_enabled = true\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"MeshBase\" type=\"MeshInstance3D\" parent=\"BlockBase\"]\nmesh = SubResource(\"BoxMesh_base\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\"BlockBase\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"BlockBase/StaticBody3D\"]\nshape = SubResource(\"BoxShape3D_base\")\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"MeshWest\" type=\"MeshInstance3D\" parent=\"BlockWest\"]\nmesh = SubResource(\"BoxMesh_west\")\nmaterial_override = SubResource(\"StandardMaterial3D_plastic\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\"BlockWest\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"BlockWest/StaticBody3D\"]\nshape = SubResource(\"BoxShape3D_west\")\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"MeshBridge\" type=\"MeshInstance3D\" parent=\"BlockWest/BlockWestBridge\"]\nmesh = SubResource(\"BoxMesh_bridge\")\nmaterial_override = SubResource(\"StandardMaterial3D_glass\")\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"MeshEast\" type=\"MeshInstance3D\" parent=\"BlockEast\"]\nmesh = SubResource(\"BoxMesh_east\")\nmaterial_override = SubResource(\"StandardMaterial3D_east\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\"BlockEast\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"BlockEast/StaticBody3D\"]\nshape = SubResource(\"BoxShape3D_east\")\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n\n[node name=\"Crystal\" type=\"MeshInstance3D\" parent=\"BlockEast/BlockEastTop\"]\nmesh = SubResource(\"SphereMesh_crystal\")\nmaterial_override = SubResource(\"StandardMaterial3D_crystal\")\n\n[node name=\"Turret\" type=\"Node3D\" parent=\".\"]\n\n[node name=\"MeshTurret\" type=\"MeshInstance3D\" parent=\"Turret\"]\nmesh = SubResource(\"CylinderMesh_turret\")\nmaterial_override = SubResource(\"StandardMaterial3D_metal\")\n\n[node name=\"SunLight\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 0, 0)\nshadow_enabled = true\nlight_color = Color(1, 0.95, 0.8, 1)\nlight_energy = 1.2\n\n[node name=\"LanternLight\" type=\"OmniLight3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4, 1)\nvisible = false\nshadow_enabled = true\nlight_color = Color(1, 0.7, 0.3, 1)\nlight_energy = 2.0\nomni_range = 8.0\n\n[node name=\"WorldEnvironment\" type=\"WorldEnvironment\" parent=\".\"]\nenvironment = SubResource(\"Environment_main\")\n\n[node name=\"CameraOverview\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 12)\nfov = 75.0\nnear = 0.5\nfar = 50.0\ncurrent = true\n\n[node name=\"CameraWest\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(0.707107, 0.183013, -0.683013, 0, 0.965926, 0.258819, 0.707107, -0.183013, 0.683013, -8, 4, 6)\nfov = 50.0\nnear = 0.5\nfar = 50.0\n\n[node name=\"CameraEast\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.0868241, 0.492404, 0, 0.984808, 0.173648, -0.5, -0.150384, 0.852869, 8, 5, 4)\nfov = 60.0\nnear = 0.5\nfar = 50.0\n\n[node name=\"CrystalLabel\" type=\"Label\" parent=\".\"]\ntext = \"Cristallo\"\n\n[node name=\"Cave\" type=\"CSGCombiner3D\" parent=\".\"]\nuse_collision = true\n\n[node name=\"Rock\" type=\"CSGBox3D\" parent=\"Cave\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -12)\nsize = Vector3(8, 4, 8)\n\n[node name=\"Hollow\" type=\"CSGSphere3D\" parent=\"Cave\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -12)\noperation = 1\nradius = 2.5\n\n[node name=\"Entrance\" type=\"CSGBox3D\" parent=\"Cave\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -8)\noperation = 1\nsize = Vector3(3, 3, 4)\n\n[node name=\"DungeonGrid\" type=\"GridMap\" parent=\".\"]\ncell_size = Vector3(2, 2, 2)\n\n[node name=\"BridgeCSG\" type=\"CSGBox3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -4)\nuse_collision = true\nsize = Vector3(3, 0.4, 6)\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)\n"
+      },
+      {
+       "percorso": "player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n\n[sub_resource type=\"CapsuleShape3D\" id=\"CapsuleShape3D_player\"]\nradius = 0.4\nheight = 1.8\n\n[sub_resource type=\"CapsuleMesh\" id=\"CapsuleMesh_player\"]\nradius = 0.4\nheight = 1.8\n\n[node name=\"Player\" type=\"CharacterBody3D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"CapsuleShape3D_player\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"CapsuleMesh_player\")\n\n[node name=\"SpringArm3D\" type=\"SpringArm3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)\nspring_length = 4.0\nmargin = 0.2\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\"SpringArm3D\"]\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody3D\n\n@export var walk_speed: float = 5.0\n@export var run_speed: float = 8.0\n@export var jump_impulse: float = 4.5\n@export var rotation_speed: float = 10.0\n@export var mouse_sensitivity: float = 0.003\n@export var gamepad_sensitivity: float = 3.0\n@export var min_pitch_deg: float = -80.0\n@export var max_pitch_deg: float = 30.0\n\n@onready var spring_arm: SpringArm3D = $SpringArm3D\n\nvar gravity: float = ProjectSettings.get_setting(\"physics/3d/default_gravity\")\n\n\nfunc _ready() -> void:\n\tInput.mouse_mode = Input.MOUSE_MODE_CAPTURED\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"ui_cancel\"):\n\t\tif Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:\n\t\t\tInput.mouse_mode = Input.MOUSE_MODE_VISIBLE\n\t\telse:\n\t\t\tInput.mouse_mode = Input.MOUSE_MODE_CAPTURED\n\n\tif Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:\n\t\tvar motion: InputEventMouseMotion = event\n\t\trotate_y(-motion.screen_relative.x * mouse_sensitivity)\n\t\tspring_arm.rotate_x(-motion.screen_relative.y * mouse_sensitivity)\n\t\tspring_arm.rotation_degrees.x = clampf(\n\t\t\tspring_arm.rotation_degrees.x,\n\t\t\tmin_pitch_deg,\n\t\t\tmax_pitch_deg\n\t\t)\n\n\nfunc _physics_process(delta: float) -> void:\n\tif global_position.y < -10.0:\n\t\tglobal_position = Vector3(0.0, 3.0, 0.0)\n\t\tvelocity = Vector3.ZERO\n\n\tif not is_on_floor():\n\t\tvelocity.y -= gravity * delta\n\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = jump_impulse\n\n\t_handle_gamepad_look(delta)\n\n\tvar input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_back\")\n\tvar camera := get_viewport().get_camera_3d()\n\tvar move_dir := Vector3.ZERO\n\n\tif camera != null and input_dir != Vector2.ZERO:\n\t\tvar cam_basis := camera.global_transform.basis\n\t\tvar forward := -cam_basis.z\n\t\tvar right := cam_basis.x\n\t\tforward.y = 0.0\n\t\tright.y = 0.0\n\t\tforward = forward.normalized()\n\t\tright = right.normalized()\n\t\tmove_dir = (forward * input_dir.y + right * input_dir.x).normalized()\n\n\tvar current_speed := walk_speed\n\tif is_on_floor() and Input.is_action_pressed(\"run\"):\n\t\tcurrent_speed = run_speed\n\n\tvar target_x := move_dir.x * current_speed\n\tvar target_z := move_dir.z * current_speed\n\n\tif is_on_floor():\n\t\tvelocity.x = target_x\n\t\tvelocity.z = target_z\n\telse:\n\t\tvelocity.x = move_toward(velocity.x, target_x, delta * 5.0 * current_speed)\n\t\tvelocity.z = move_toward(velocity.z, target_z, delta * 5.0 * current_speed)\n\n\tvar target_angle := 0.0\n\tif move_dir != Vector3.ZERO:\n\t\ttarget_angle = atan2(-move_dir.x, -move_dir.z)\n\t\trotation.y = rotate_toward(rotation.y, target_angle, rotation_speed * delta)\n\n\tmove_and_slide()\n\n\nfunc _handle_gamepad_look(delta: float) -> void:\n\tvar look_dir: Vector2 = Input.get_vector(\"look_left\", \"look_right\", \"look_up\", \"look_down\")\n\tif look_dir != Vector2.ZERO:\n\t\trotate_y(-look_dir.x * gamepad_sensitivity * delta)\n\t\tspring_arm.rotate_x(-look_dir.y * gamepad_sensitivity * delta)\n\t\tspring_arm.rotation_degrees.x = clampf(\n\t\t\tspring_arm.rotation_degrees.x,\n\t\t\tmin_pitch_deg,\n\t\t\tmax_pitch_deg\n\t\t)\n"
+      },
+      {
+       "percorso": "main.gd",
+       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n@export var camera_speed: float = 3.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\n@onready var camera_overview: Camera3D = $CameraOverview\n@onready var camera_west: Camera3D = $CameraWest\n@onready var camera_east: Camera3D = $CameraEast\n@onready var crystal_label: Label = $CrystalLabel\n@onready var crystal: MeshInstance3D = $BlockEast/BlockEastTop/Crystal\n@onready var dungeon_grid: GridMap = $DungeonGrid\n@onready var player: CharacterBody3D = $Player\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\nvar cameras: Array[Camera3D] = []\nvar active_camera_index: int = 0\n\n\nfunc _ready() -> void:\n\tvar player_camera: Camera3D = $Player/SpringArm3D/Camera3D\n\tcameras = [player_camera, camera_overview, camera_west, camera_east]\n\n\tif cameras.size() > 0:\n\t\tcameras[0].make_current()\n\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\t\n\tif dungeon_grid != null:\n\t\tfor x in range(-1, 2):\n\t\t\tfor z in range(-1, 2):\n\t\t\t\tdungeon_grid.set_cell_item(Vector3i(x, -2, z), 0)\n\n\nfunc get_dungeon_cell_item(coords: Vector3i) -> int:\n\tif dungeon_grid == null:\n\t\treturn GridMap.INVALID_CELL_ITEM\n\treturn dungeon_grid.get_cell_item(coords)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\tvar bridge_csg_pos: Vector3 = $BridgeCSG.global_position\n\treturn [top_pos, bridge_pos, east_top_pos, bridge_csg_pos]\n\n\nfunc check_surface_supports(points: Array[Vector3]) -> bool:\n\tif points.is_empty():\n\t\treturn false\n\tvar cave: CSGCombiner3D = $Cave\n\tvar bridge: CSGBox3D = $BridgeCSG\n\t\n\tfor p in points:\n\t\tvar supported: bool = false\n\t\tif bridge != null and bridge.use_collision and p.z >= -7.0 and p.z <= -1.0:\n\t\t\tsupported = true\n\t\telif cave != null and cave.use_collision and p.z >= -16.0 and p.z <= -8.0:\n\t\t\tsupported = true\n\t\telif dungeon_grid != null:\n\t\t\tvar cell: Vector3i = Vector3i(floori(p.x / 2.0), floori(p.y / 2.0), floori(p.z / 2.0))\n\t\t\tif dungeon_grid.get_cell_item(cell) != GridMap.INVALID_CELL_ITEM:\n\t\t\t\tsupported = true\n\t\tif not supported:\n\t\t\treturn false\n\treturn true\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret != null and target != null:\n\t\tvar direction: Vector3 = target.global_position - turret.global_position\n\t\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\t\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n\n\tif camera_overview != null:\n\t\tcamera_overview.position.x += camera_speed * delta\n\n\tif Input.is_action_just_pressed(\"change_atmosphere\"):\n\t\t_cycle_atmosphere()\n\t\t_cycle_camera()\n\n\t_update_crystal_label_position()\n\n\nfunc _cycle_camera() -> void:\n\tif cameras.is_empty():\n\t\treturn\n\tactive_camera_index = (active_camera_index + 1) % cameras.size()\n\tcameras[active_camera_index].make_current()\n\n\nfunc _update_crystal_label_position() -> void:\n\tvar current_cam: Camera3D = get_viewport().get_camera_3d()\n\tif current_cam == null or crystal == null or crystal_label == null:\n\t\treturn\n\n\tif not current_cam.is_position_in_frustum(crystal.global_position):\n\t\tcrystal_label.visible = false\n\telse:\n\t\tcrystal_label.visible = true\n\t\tvar screen_pos: Vector2 = current_cam.unproject_position(crystal.global_position)\n\t\tcrystal_label.position = screen_pos + Vector2(-25.0, -30.0)\n\n\nfunc _cycle_atmosphere() -> void:\n\tmatch current_atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tcurrent_atmosphere = Atmosphere.SUNSET\n\t\tAtmosphere.SUNSET:\n\t\t\tcurrent_atmosphere = Atmosphere.NIGHT\n\t\tAtmosphere.NIGHT:\n\t\t\tcurrent_atmosphere = Atmosphere.DAY\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc _apply_atmosphere(atmosphere: Atmosphere) -> void:\n\tif sun_light == null or lantern_light == null:\n\t\treturn\n\n\tmatch atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.95, 0.8)\n\t\t\tsun_light.light_energy = 1.2\n\t\t\tsun_light.rotation_degrees = Vector3(-45.0, -30.0, 0.0)\n\t\t\tlantern_light.visible = false\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = false\n\t\tAtmosphere.SUNSET:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.5, 0.2)\n\t\t\tsun_light.light_energy = 0.8\n\t\t\tsun_light.rotation_degrees = Vector3(-10.0, -60.0, 0.0)\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 1.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.9, 0.4, 0.2)\n\t\t\t\tworld_environment.environment.fog_density = 0.02\n\t\tAtmosphere.NIGHT:\n\t\t\tsun_light.visible = false\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 2.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.05, 0.05, 0.15)\n\t\t\t\tworld_environment.environment.fog_density = 0.03\n"
+      }
+     ],
+     "progetto": {
+      "nome": "L'isola",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_forward",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_back",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       },
+       {
+        "nome": "jump",
+        "tasti": [
+         "Space"
+        ]
+       },
+       {
+        "nome": "run",
+        "tasti": [
+         "Shift"
+        ]
+       },
+       {
+        "nome": "change_atmosphere",
+        "tasti": [
+         "C"
+        ]
+       },
+       {
+        "nome": "look_left",
+        "tasti": [
+         "J"
+        ]
+       },
+       {
+        "nome": "look_right",
+        "tasti": [
+         "L"
+        ]
+       },
+       {
+        "nome": "look_up",
+        "tasti": [
+         "I"
+        ]
+       },
+       {
+        "nome": "look_down",
+        "tasti": [
+         "K"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Recuperando la `Camera3D` dal nodo `$Player/SpringArm3D/Camera3D` all'avvio in `main.gd`, inseriamo la telecamera in terza persona come prima opzione nell'array `cameras` e ne forziamo l'attivazione immediata con `make_current()`. In questo modo, l'inquadratura segue naturalmente il personaggio mentre lo `SpringArm3D` evita la compenetrazione con pareti e ostacoli fisici del mondo 3D.",
+     "cambiati": [
+      "main.gd"
+     ],
+     "rimossi": []
+    },
+    "id": "test"
+   }
   }
  },
  "avvisi": [],
