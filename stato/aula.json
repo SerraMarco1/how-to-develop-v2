@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-25T08:19:13.858Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-25T08:22:16.671Z",
+ "stato": "aspetta",
  "lezione": {
   "slug": "characterbody3d",
   "numero": "9.7",
   "titolo": "Un personaggio in terza persona"
  },
- "messaggio": "Sta scrivendo la lezione 9.7 «Un personaggio in terza persona».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.7 riprende da sola appena rispondono.",
+ "riprende": "2026-11-25T08:32:16.671Z"
 }
