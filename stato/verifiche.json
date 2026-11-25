@@ -733,5 +733,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "collisioni-3d": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
