@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-25T08:34:12.947Z",
+ "aggiornato": "2026-11-25T10:15:16.817Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1307,6 +1307,15 @@
    "file": "lezioni/f09-3d-basi/collisioni-3d.json",
    "sha256": "eed5fe7ec7a2619f7a449ec15b904b50ce025f3e42f58fb9dcb8d9fd5f1f8e9e",
    "byte": 84366
+  },
+  {
+   "slug": "characterbody3d",
+   "numero": "9.7",
+   "titolo": "Un personaggio in terza persona",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/characterbody3d.json",
+   "sha256": "9540a1ee88d85b449949453420e53412c1fb04a287b1447380d4c781668a55e7",
+   "byte": 116106
   }
  ],
  "documentazione": {
