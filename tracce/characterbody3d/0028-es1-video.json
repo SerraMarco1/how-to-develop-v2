@@ -1,0 +1,66 @@
+{
+ "n": 28,
+ "quando": "2026-11-25T10:42:17.767Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «player» (scena = res://player.tscn; almeno 1 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 32376,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_forward",
+     "inizio": 1,
+     "fine": 3,
+     "tasto": "W"
+    },
+    {
+     "azione": "jump",
+     "inizio": 4,
+     "fine": 4.5,
+     "tasto": "Spazio"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "scena": "res://player.tscn"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "muoversi",
+     "etichetta": "Personaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il personaggio si muove nello spazio 3D",
+     "da": 1,
+     "a": 3.5,
+     "soggetto": "player"
+    },
+    {
+     "testo": "Premi Spazio per saltare",
+     "da": 4,
+     "a": 7,
+     "soggetto": "player"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «player» (scena = res://player.tscn; almeno 1 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (8227 → 343 token)"
+ ]
+}

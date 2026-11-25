@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://main.tscn\",\n  \"durata\": 8,\n  \"azioni\": [\n    {\n      \"azione\": \"move_forward\",\n      \"inizio\": 1.0,\n      \"fine\": 3.0,\n      \"tasto\": \"W\"\n    },\n    {\n      \"azione\": \"jump\",\n      \"inizio\": 4.0,\n      \"fine\": 4.5,\n      \"tasto\": \"Spazio\"\n    }\n  ],\n  \"soggetti\": [\n    {\n      \"id\": \"player\",\n      \"cerca\": {\n        \"scena\": \"res://player.tscn\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 7.5,\n      \"deve\": \"muoversi\",\n      \"etichetta\": \"Personaggio\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"Il personaggio si muove nello spazio 3D\",\n      \"da\": 1.0,\n      \"a\": 3.5,\n      \"soggetto\": \"player\"\n    },\n    {\n      \"testo\": \"Premi Spazio per saltare\",\n      \"da\": 4.0,\n      \"a\": 7.0,\n      \"soggetto\": \"player\"\n    }\n  ]\n}",
- "ragionamento": 1545,
- "quando": "2026-11-25T10:41:54.809Z",
- "ruolo": "ritocco"
-}

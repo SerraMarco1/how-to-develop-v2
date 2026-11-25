@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-25T10:29:21.693Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-25T10:42:19.020Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "telecamera-terza-persona",
   "numero": "9.8",
   "titolo": "Telecamera in terza persona"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.8 riprende da sola appena rispondono.",
- "riprende": "2026-11-25T10:39:21.692Z"
+ "messaggio": "Sta scrivendo la lezione 9.8 «Telecamera in terza persona».",
+ "riprende": null
 }
