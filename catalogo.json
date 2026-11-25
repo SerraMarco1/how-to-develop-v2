@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-25T08:19:12.051Z",
+ "aggiornato": "2026-11-25T08:34:12.947Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1303,10 +1303,10 @@
    "slug": "collisioni-3d",
    "numero": "9.6",
    "titolo": "Collisioni in 3D",
-   "versione": 1,
+   "versione": 2,
    "file": "lezioni/f09-3d-basi/collisioni-3d.json",
-   "sha256": "bc9e0fd03d3a61cf2c59d2e3fc7ef643f356d511264de0bf199031e60db2122b",
-   "byte": 82622
+   "sha256": "eed5fe7ec7a2619f7a449ec15b904b50ce025f3e42f58fb9dcb8d9fd5f1f8e9e",
+   "byte": 84366
   }
  ],
  "documentazione": {
