@@ -1,0 +1,47 @@
+{
+ "n": 49,
+ "quando": "2026-11-25T08:35:20.126Z",
+ "pezzo": "test",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Test: video del risultato atteso, tentativo 1 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «ponte» (nome = BridgeCSG; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 32253,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "ponte",
+     "cerca": {
+      "nome": "BridgeCSG"
+     },
+     "quanti": 1,
+     "da": 0.5,
+     "a": 7.5,
+     "deve": "esserci",
+     "etichetta": "Ponte CSG"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il nuovo ponte CSG collega le sezioni principali",
+     "da": 0.5,
+     "a": 7.5,
+     "soggetto": "ponte"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «ponte» (nome = BridgeCSG; almeno 1 da 0.5 a 7.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 10 s (6551 → 201 token)"
+ ]
+}

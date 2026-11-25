@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": true, \"scena\": \"res://main.tscn\", \"durata\": 6, \"azioni\": [], \"soggetti\": [{\"id\": \"ponte\", \"cerca\": {\"nome\": \"BridgeCSG\"}, \"quanti\": 1, \"da\": 0.5, \"a\": 2.5, \"deve\": \"esserci\", \"etichetta\": \"Ponte CSG\"}], \"scritte\": [{\"testo\": \"Il nuovo ponte CSG unisce le sezioni dell'isola\", \"da\": 0.5, \"a\": 2.5, \"soggetto\": \"ponte\"}]}",
+ "ragionamento": 2590,
+ "quando": "2026-11-25T08:35:32.991Z",
+ "ruolo": "ritocco"
+}
