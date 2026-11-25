@@ -33,3 +33,4 @@
 {"quando":1795601719039,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"telecamera-terza-persona","ok":false,"contata":true,"durataMs":39117,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795601758159,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"telecamera-terza-persona","ok":true,"contata":true,"durataMs":56845,"tokenInput":13767,"tokenOutput":2865,"ragionamento":6942}
 {"quando":1795601815008,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"telecamera-terza-persona","ok":true,"contata":true,"durataMs":39552,"tokenInput":16696,"tokenOutput":2828,"ragionamento":6569}
+{"quando":1795601856506,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"telecamera-terza-persona","ok":true,"contata":true,"durataMs":98574,"tokenInput":19059,"tokenOutput":10566,"ragionamento":11002}
