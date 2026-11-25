@@ -1,10 +1,5 @@
 {
- "sovraccarico": {
-  "gemini": {
-   "volte": 1,
-   "fino": 1795594567752
-  }
- },
+ "sovraccarico": {},
  "fermi": {
   "gemini/gemini-flash-latest": {
    "fino": 1795594567752,
@@ -19,7 +14,7 @@
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-flash-lite-latest": {
-   "fino": 1795593989660,
+   "fino": 1795594986965,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   }
  },

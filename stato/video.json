@@ -2387,6 +2387,13 @@
   },
   "es2": {
    "impronta": "7eb0743581e4180a9f6cddd03b695588511a52df28b505e0a16faaa941957784",
+   "tentativi": 1,
+   "esito": "niente",
+   "regole": 2,
+   "motivo": "Il nodo GridMap non ha una libreria di mesh associata, quindi i blocchi impostati non sono visibili sullo schermo."
+  },
+  "test": {
+   "impronta": "c8775dc3e6c66b9723ad3f8f159e9f5bf3c39d2fe277e06e6de7c02b2ce4011e",
    "tentativi": 0,
    "esito": "in corso",
    "regole": 2
