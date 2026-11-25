@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-25T10:13:58.994Z",
+ "aggiornato": "2026-11-25T10:15:19.020Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "characterbody3d",
-  "numero": "9.7",
-  "titolo": "Un personaggio in terza persona"
+  "slug": "telecamera-terza-persona",
+  "numero": "9.8",
+  "titolo": "Telecamera in terza persona"
  },
- "messaggio": "Sta scrivendo la lezione 9.7 «Un personaggio in terza persona».",
+ "messaggio": "Sta scrivendo la lezione 9.8 «Telecamera in terza persona».",
  "riprende": null
 }
