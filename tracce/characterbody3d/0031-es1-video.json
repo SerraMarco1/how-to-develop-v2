@@ -1,0 +1,47 @@
+{
+ "n": 31,
+ "quando": "2026-11-25T11:02:57.552Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 2 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «player» (nome = Player; almeno 1 da 0 a 1 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0.\nReazione: le misure tornano al modello per un copione nuovo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 33093,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 4,
+   "azioni": [],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "nome": "Player"
+     },
+     "quanti": 1,
+     "da": 0,
+     "a": 1,
+     "deve": "esserci",
+     "etichetta": "Personaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il personaggio compare nella scena principale",
+     "da": 0,
+     "a": 1,
+     "soggetto": "player"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «player» (nome = Player; almeno 1 da 0 a 1 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 10 s (8542 → 130 token)"
+ ]
+}

@@ -2434,60 +2434,41 @@
  "characterbody3d": {
   "es1": {
    "impronta": "425a7a04055894940ce3545b00fc339aa6be3b85c52845949e8b96d8f781a338",
-   "tentativi": 1,
+   "tentativi": 2,
    "esito": "in corso",
    "regole": 2,
    "ultimo": {
     "copione": {
      "scena": "res://main.tscn",
-     "durata": 8,
-     "azioni": [
-      {
-       "azione": "move_forward",
-       "inizio": 1,
-       "fine": 3,
-       "tasto": "W"
-      },
-      {
-       "azione": "jump",
-       "inizio": 4,
-       "fine": 4.5,
-       "tasto": "Spazio"
-      }
-     ],
+     "durata": 4,
+     "azioni": [],
      "soggetti": [
       {
        "id": "player",
        "cerca": {
-        "scena": "res://player.tscn"
+        "nome": "Player"
        },
        "quanti": 1,
-       "da": 0.5,
-       "a": 7.5,
-       "deve": "muoversi",
+       "da": 0,
+       "a": 1,
+       "deve": "esserci",
        "etichetta": "Personaggio"
       }
      ],
      "scritte": [
       {
-       "testo": "Il personaggio si muove nello spazio 3D",
-       "da": 1,
-       "a": 3.5,
-       "soggetto": "player"
-      },
-      {
-       "testo": "Premi Spazio per saltare",
-       "da": 4,
-       "a": 7,
+       "testo": "Il personaggio compare nella scena principale",
+       "da": 0,
+       "a": 1,
        "soggetto": "player"
       }
      ]
     },
     "problemi": [
-     "Soggetto «player» (scena = res://player.tscn; almeno 1 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+     "Soggetto «player» (nome = Player; almeno 1 da 0 a 1 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
     ]
    },
-   "motivo": "Soggetto «player» (scena = res://player.tscn; almeno 1 da 0.5 a 7.5 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+   "motivo": "Soggetto «player» (nome = Player; almeno 1 da 0 a 1 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
   }
  }
 }

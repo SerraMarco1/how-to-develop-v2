@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\"video\": true, \"scena\": \"res://main.tscn\", \"durata\": 6, \"azioni\": [], \"soggetti\": [{\"id\": \"player\", \"cerca\": {\"nome\": \"Player\"}, \"quanti\": 1, \"da\": 0.0, \"a\": 1.0, \"deve\": \"esserci\", \"etichetta\": \"Personaggio\"}], \"scritte\": [{\"testo\": \"Il personaggio compare nella scena principale\", \"da\": 0.0, \"a\": 1.0, \"soggetto\": \"player\"}]}",
- "ragionamento": 3200,
- "quando": "2026-11-25T11:02:34.439Z",
- "ruolo": "ritocco"
-}
