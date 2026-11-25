@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-25T08:18:06.968Z",
+ "aggiornato": "2026-11-25T08:19:13.858Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "collisioni-3d",
-  "numero": "9.6",
-  "titolo": "Collisioni in 3D"
+  "slug": "characterbody3d",
+  "numero": "9.7",
+  "titolo": "Un personaggio in terza persona"
  },
- "messaggio": "Sta scrivendo la lezione 9.6 «Collisioni in 3D».",
+ "messaggio": "Sta scrivendo la lezione 9.7 «Un personaggio in terza persona».",
  "riprende": null
 }

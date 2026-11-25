@@ -6,3 +6,4 @@
 {"quando":1795594686984,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"collisioni-3d","ok":true,"contata":true,"durataMs":24135,"tokenInput":11623,"tokenOutput":234,"ragionamento":2770}
 {"quando":1795594712896,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"collisioni-3d","ok":false,"contata":true,"durataMs":4369,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795594717268,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"collisioni-3d","ok":true,"contata":true,"durataMs":32975,"tokenInput":11865,"tokenOutput":2019,"ragionamento":4776}
+{"quando":1795594753872,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"characterbody3d","ok":true,"contata":true,"durataMs":34444,"tokenInput":17658,"tokenOutput":2699,"ragionamento":4427}
