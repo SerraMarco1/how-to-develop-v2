@@ -743,5 +743,10 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "telecamera-terza-persona": {
+  "versione": 2,
+  "fragili": [],
+  "tentativi": {}
  }
 }
