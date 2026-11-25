@@ -559,7 +559,7 @@
     "fonte": "L'area di lavoro \"3D\" (selezionata in alto al centro): una griglia con i tre assi colorati (X rosso, Y verde, Z blu), il menu \"Perspective\" in alto a sinistra della vista e, in alto a destra, il piccolo indicatore degli assi che mostra come è orientata la telecamera."
    }
   ],
-  "teoriaCorretta": false,
+  "teoriaCorretta": true,
   "corretti": []
  }
 }
