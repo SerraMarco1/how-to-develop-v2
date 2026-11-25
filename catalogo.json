@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-25T10:41:19.561Z",
+ "aggiornato": "2026-11-25T10:43:45.936Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1316,6 +1316,15 @@
    "file": "lezioni/f09-3d-basi/characterbody3d.json",
    "sha256": "74c0728e7a4535150888c157609878e2e042ca4bb0d73c344756de60222462dc",
    "byte": 118447
+  },
+  {
+   "slug": "telecamera-terza-persona",
+   "numero": "9.8",
+   "titolo": "Telecamera in terza persona",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/telecamera-terza-persona.json",
+   "sha256": "123e30b1a2ef8c041ea5927454450a1b8f279e1ebb85acd22e5b514917845fd8",
+   "byte": 135518
   }
  ],
  "documentazione": {
