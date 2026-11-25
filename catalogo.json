@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-24T10:34:40.005Z",
+ "aggiornato": "2026-11-25T08:19:12.051Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1298,6 +1298,15 @@
    "file": "lezioni/f09-3d-basi/costruire-un-livello-3d.json",
    "sha256": "8e5ac6c806769fb39e4859b61c13ac2993b5d3924033f5cb9909dfcc514e04bd",
    "byte": 82931
+  },
+  {
+   "slug": "collisioni-3d",
+   "numero": "9.6",
+   "titolo": "Collisioni in 3D",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/collisioni-3d.json",
+   "sha256": "bc9e0fd03d3a61cf2c59d2e3fc7ef643f356d511264de0bf199031e60db2122b",
+   "byte": 82622
   }
  ],
  "documentazione": {
