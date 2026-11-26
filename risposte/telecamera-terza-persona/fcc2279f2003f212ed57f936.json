@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-flash-lite-latest",
- "testo": "{\n  \"video\": true,\n  \"scena\": \"res://player.tscn\",\n  \"durata\": 6,\n  \"azioni\": [],\n  \"soggetti\": [\n    {\n      \"id\": \"giocatore\",\n      \"cerca\": {\n        \"nome\": \"MeshInstance3D\"\n      },\n      \"quanti\": 1,\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"deve\": \"esserci\",\n      \"etichetta\": \"Personaggio\"\n    }\n  ],\n  \"scritte\": [\n    {\n      \"testo\": \"La telecamera in terza persona inquadra il personaggio\",\n      \"da\": 0.5,\n      \"a\": 5.5,\n      \"soggetto\": \"giocatore\"\n    }\n  ]\n}",
- "ragionamento": 2354,
- "quando": "2026-11-26T08:02:33.240Z",
- "ruolo": "ritocco"
-}

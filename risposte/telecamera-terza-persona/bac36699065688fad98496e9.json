@@ -1,0 +1,7 @@
+{
+ "modello": "gemini/gemini-flash-lite-latest",
+ "testo": "{\"video\": false, \"perche\": \"I nodi aggiunti non hanno una rappresentazione visiva sullo schermo.\"}",
+ "ragionamento": 2767,
+ "quando": "2026-11-26T08:02:49.745Z",
+ "ruolo": "ritocco"
+}
