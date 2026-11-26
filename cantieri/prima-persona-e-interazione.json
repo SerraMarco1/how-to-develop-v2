@@ -2,7 +2,7 @@
  "creato": "2026-11-25T10:43:47.696Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -491,7 +491,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Prima persona, raggio d'interazione e leva\" (obiettivo) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-lite-latest",
