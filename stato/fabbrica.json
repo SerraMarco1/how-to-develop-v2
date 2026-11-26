@@ -28,7 +28,12 @@
   "gemini/gemini-flash-latest": 20
  },
  "maxToken": {},
- "troncate": {},
+ "troncate": {
+  "gemini/gemini-3.7-flash:9000": {
+   "volte": 1,
+   "quando": 1795729185592
+  }
+ },
  "scrittoriApprovati": [],
  "corsoFermo": null,
  "prossimoTentativo": 1795726909926
