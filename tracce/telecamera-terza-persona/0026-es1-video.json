@@ -1,0 +1,16 @@
+{
+ "n": 26,
+ "quando": "2026-11-26T08:02:51.537Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "saltato",
+ "titolo": "Esercizio 1: nessun video del risultato atteso",
+ "spiegazione": "gemini/gemini-flash-lite-latest dice che il risultato di «Telecamera con SpringArm3D e controllo mouse» non si vede sullo schermo: I nodi aggiunti non hanno una rappresentazione visiva sullo schermo.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 11429,
+ "dati": null,
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 10 s (8764 → 26 token)"
+ ]
+}

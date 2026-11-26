@@ -2477,5 +2477,45 @@
    },
    "motivo": "Soggetto «player» (nome = Player; almeno 1 da 1 a 7 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
   }
+ },
+ "telecamera-terza-persona": {
+  "es1": {
+   "impronta": "80073b8e311ba9a5334ca2da96577387bda0dd5dfb905fecf1b3b8031905f6e2",
+   "tentativi": 2,
+   "esito": "niente",
+   "regole": 2,
+   "ultimo": {
+    "copione": {
+     "scena": "res://player.tscn",
+     "durata": 6,
+     "azioni": [],
+     "soggetti": [
+      {
+       "id": "giocatore",
+       "cerca": {
+        "nome": "MeshInstance3D"
+       },
+       "quanti": 1,
+       "da": 0.5,
+       "a": 5.5,
+       "deve": "esserci",
+       "etichetta": "Personaggio"
+      }
+     ],
+     "scritte": [
+      {
+       "testo": "La telecamera in terza persona inquadra il personaggio",
+       "da": 0.5,
+       "a": 5.5,
+       "soggetto": "giocatore"
+      }
+     ]
+    },
+    "problemi": [
+     "Soggetto «giocatore» (nome = MeshInstance3D; almeno 1 da 0.5 a 5.5 s; deve esserci): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+    ]
+   },
+   "motivo": "I nodi aggiunti non hanno una rappresentazione visiva sullo schermo."
+  }
  }
 }

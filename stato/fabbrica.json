@@ -2,21 +2,21 @@
  "sovraccarico": {
   "gemini": {
    "volte": 1,
-   "fino": 1795604470374
+   "fino": 1795680869226
   }
  },
  "fermi": {
   "gemini/gemini-flash-latest": {
-   "fino": 1795604470374,
+   "fino": 1795680869226,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.7-flash": {
-   "fino": 1795604470374,
+   "fino": 1795680869226,
    "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-3.6-flash": {
-   "fino": 1795680060104,
-   "errore": "HTTP 429: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Gener"
+   "fino": 1795680869226,
+   "errore": "HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
   },
   "gemini/gemini-flash-lite-latest": {
    "fino": 1795604878290,
@@ -41,5 +41,5 @@
  },
  "scrittoriApprovati": [],
  "corsoFermo": null,
- "prossimoTentativo": 1795680000345
+ "prossimoTentativo": 1795680869230
 }
