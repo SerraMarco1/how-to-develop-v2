@@ -1,0 +1,54 @@
+{
+ "n": 33,
+ "quando": "2026-11-26T08:02:25.779Z",
+ "pezzo": "es1",
+ "azione": "video",
+ "esito": "fallito",
+ "guasto": "contenuto",
+ "titolo": "Esercizio 1: video del risultato atteso, tentativo 3 di 3",
+ "spiegazione": "Il copione di gemini/gemini-flash-lite-latest non supera i controlli:\n- Soggetto «player» (nome = Player; almeno 1 da 1 a 7 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0.\nReazione: tentativi finiti, l'esercizio resta senza video.",
+ "modello": "gemini/gemini-flash-lite-latest",
+ "richieste": 1,
+ "durataMs": 34368,
+ "dati": {
+  "copione": {
+   "scena": "res://main.tscn",
+   "durata": 8,
+   "azioni": [
+    {
+     "azione": "move_forward",
+     "inizio": 1,
+     "fine": 5,
+     "tasto": "W"
+    }
+   ],
+   "soggetti": [
+    {
+     "id": "player",
+     "cerca": {
+      "nome": "Player"
+     },
+     "quanti": 1,
+     "da": 1,
+     "a": 7,
+     "deve": "muoversi",
+     "etichetta": "Personaggio"
+    }
+   ],
+   "scritte": [
+    {
+     "testo": "Il personaggio si muove nella scena principale",
+     "da": 1,
+     "a": 7,
+     "soggetto": "player"
+    }
+   ]
+  },
+  "problemi": [
+   "Soggetto «player» (nome = Player; almeno 1 da 1 a 7 s; deve muoversi): si vedono almeno 1 nodi solo nel 0% dell'intervallo (serve l'80%): trovati fino a 1, visibili al massimo 0."
+  ]
+ },
+ "chiamate": [
+  "gemini-flash-lite-latest: risposta in 9 s (8452 → 242 token)"
+ ]
+}
