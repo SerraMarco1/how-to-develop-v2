@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-27T08:10:06.424Z",
+ "aggiornato": "2026-11-27T09:01:22.411Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1334,6 +1334,15 @@
    "file": "lezioni/f09-3d-basi/prima-persona-e-interazione.json",
    "sha256": "5d1f952806ead2388e604cc047814826f2fc3a05645ff8616124b5764da3439a",
    "byte": 69135
+  },
+  {
+   "slug": "importare-modelli-3d",
+   "numero": "9.10",
+   "titolo": "Importare modelli 3D",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/importare-modelli-3d.json",
+   "sha256": "12c223cd7ab9db61d519f9bf513dc74537791830477045ad793b908fdf105852",
+   "byte": 126957
   }
  ],
  "documentazione": {
