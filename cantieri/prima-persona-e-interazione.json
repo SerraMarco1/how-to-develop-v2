@@ -182,36 +182,32 @@
    "grezzo": {
     "tipo": "autonomo",
     "genere": "estendi",
-    "titolo": "Aggiungere un cartello all'interazione a sguardo",
-    "consegna": "In questo progetto esiste già un personaggio in prima persona che interagisce con una porta (`Door`). Senza modificare il codice del giocatore (`player.gd`), aggiungi un nuovo tipo di oggetto interagibile: un cartello leggibile.\n\n1. Crea lo script `res://sign.gd` che estende `StaticBody3D`.\n2. In `sign.gd` dichiara:\n   - `@export var sign_text: String = \"Benvenuto nel castello!\"`\n   - `var is_reading: bool = false`\n   - la funzione `get_interaction_text() -> String`: se `is_reading` è `false`, restituisce `\"Premi E per leggere il cartello\"`; se è `true`, restituisce `\"Premi E per chiudere il cartello\"`.\n   - la funzione `interact() -> void`: inverte il valore di `is_reading`. Se `is_reading` diventa `true`, stampa con `print()` il contenuto di `sign_text`.\n3. Apri la scena `main.tscn` e aggiungi un nodo `StaticBody3D` chiamato `Sign` posizionato in `Vector3(3, 1, -2)`.\n4. Assegna a `Sign` lo script `res://sign.gd` e aggiungi una forma di collisione `CollisionShape3D` ed una mesh `MeshInstance3D`.",
+    "titolo": "Aggiungi un cartello leggibile",
+    "consegna": "In questo progetto, un altro sviluppatore ha già realizzato il personaggio in prima persona con un raggio `RayCast3D` e una leva (`Lever`). Il personaggio interagisce premendo il tasto `interact` (tasto **E**).\n\nSenza modificare lo script del personaggio (`player.gd`) né la leva (`lever.gd`):\n1. Crea la scena `sign.tscn` con un nodo radice `StaticBody3D` chiamato `Sign`, contenente una `CollisionShape3D` (ad esempio di tipo `BoxShape3D`).\n2. Collega a `Sign` lo script `sign.gd`. Nel codice dichiara una variabile boolean `is_read` inizialmente `false` e il metodo `interact() -> void` che imposta `is_read = true`.\n3. Istanzia la scena `sign.tscn` all'interno di `main.tscn` come figlio di `Main` con il nome `Sign` e posizionala davanti al giocatore (ad esempio a `Vector3(0, 1, -2)`), in modo che il `RayCast3D` possa colpirla guardando in avanti.",
     "modalita": "progetto",
     "dove": "a-parte",
-    "cartella": "primo-personaggio-esteso",
-    "passiGuida": [
-     "Crea un nuovo script chiamato `sign.gd` nella cartella principale res://.",
-     "Scrivi la classe che estende StaticBody3D e aggiungi la variabile esportata `sign_text` e la variabile booleana `is_reading`.",
-     "Implementa i metodi `get_interaction_text()` e `interact()` rispettando i testi specificati.",
-     "Apri `main.tscn`, aggiungi un nodo `StaticBody3D` chiamato `Sign`, collocalo in Vector3(3, 1, -2) e assegna lo script `sign.gd`.",
-     "Aggiungi a `Sign` i nodi figli `CollisionShape3D` e `MeshInstance3D` per renderlo solido e visibile."
+    "passiGuida": [],
+    "suggerimenti": [
+     "Ricorda il principio del Duck Typing: il giocatore controlla solo se l'oggetto colpito dal raggio possiede il metodo interact(). Non serve modificare player.gd se il nuovo oggetto dichiara interact().",
+     "Nel file sign.gd definisci `var is_read: bool = false` e scrivi la funzione `func interact() -> void:` che cambia `is_read` in `true`."
     ],
-    "suggerimenti": [],
     "verifiche": [
      {
       "tipo": "file_esiste",
-      "percorso": "res://sign.gd",
-      "descrizione": "Nel progetto esiste lo script res://sign.gd"
+      "percorso": "res://sign.tscn",
+      "descrizione": "Esiste la scena res://sign.tscn"
      },
      {
       "tipo": "nodo",
       "scena": "res://main.tscn",
       "tipoNodo": "StaticBody3D",
       "nome": "Sign",
-      "descrizione": "La scena main.tscn contiene il nodo StaticBody3D chiamato Sign"
+      "descrizione": "La scena main.tscn contiene il nodo Sign"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si avvia senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody3D\n\tif not check(\"player\", player != null, \"Nella scena deve esserci il Player\"):\n\t\treturn\n\tvar door := find_by_name(main, \"Door\") as StaticBody3D\n\tif not check(\"door\", door != null, \"La porta preesistente Door deve rimanere nella scena\"):\n\t\treturn\n\tvar sign_node := find_by_name(main, \"Sign\") as StaticBody3D\n\tif not check(\"sign\", sign_node != null, \"Nella scena deve esserci il nodo Sign\"):\n\t\treturn\n\tvar label := find_by_name(player, \"InteractionLabel\") as Label\n\tif not check(\"label\", label != null, \"Il Player deve possedere l'etichetta InteractionLabel\"):\n\t\treturn\n\tplayer.global_position = Vector3(0.0, 1.0, 0.0)\n\tplayer.rotation = Vector3.ZERO\n\tawait wait_physics_frames(5)\n\tvar initial_door_open: bool = door.get(\"is_open\") if door.get(\"is_open\") != null else false\n\tawait tap_action(\"interact\")\n\tawait wait_physics_frames(3)\n\tvar door_after: bool = door.get(\"is_open\") if door.get(\"is_open\") != null else false\n\tcheck(\"door_still_works\", door_after != initial_door_open, \"La porta preesistente deve continuare a funzionare\")\n\tclear_printed()\n\tplayer.global_position = Vector3(3.0, 1.0, 0.0)\n\tplayer.rotation = Vector3.ZERO\n\tawait wait_physics_frames(5)\n\tcheck(\"sign_label\", \"leggere\" in label.text.to_lower(), \"Guardando il cartello l'etichetta deve proporre di leggere (trovato: '%s')\" % label.text)\n\tawait tap_action(\"interact\")\n\tawait wait_physics_frames(3)\n\tvar reading: bool = sign_node.get(\"is_reading\") if sign_node.get(\"is_reading\") != null else false\n\tcheck(\"is_reading\", reading == true, \"Premendo il tasto d'interazione sul cartello 'is_reading' deve diventare true\")\n\tcheck(\"printed_text\", \"Benvenuto\" in printed_text(), \"Quando si legge il cartello deve essere stampato il messaggio\")",
-      "descrizione": "Il cartello risponde all'interazione del giocatore mostrando il testo e stampando il messaggio"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve essere impostata e caricarsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\")\n\tif not check(\"player\", player != null, \"La scena deve contenere il nodo Player\"):\n\t\treturn\n\tvar sign_node := find_by_name(main, \"Sign\")\n\tif not check(\"sign\", sign_node != null, \"Nella scena deve esserci il nodo Sign\"):\n\t\treturn\n\tvar has_interact := has_function(sign_node, \"interact\")\n\tif not check(\"has_interact\", has_interact, \"Il nodo Sign deve avere un metodo interact()\"):\n\t\treturn\n\tvar lever := find_by_name(main, \"Lever\")\n\tif check(\"lever\", lever != null, \"La leva preesistente deve rimanere nel livello\"):\n\t\tvar prev_lever_state = get_prop(lever, \"is_on\", false)\n\t\tcall_if_exists(lever, \"interact\")\n\t\tvar new_lever_state = get_prop(lever, \"is_on\", false)\n\t\tcheck(\"lever_works\", new_lever_state != prev_lever_state, \"La leva deve continuare a cambiare stato con interact()\")\n\tvar initial_read = get_prop(sign_node, \"is_read\", true)\n\tcheck(\"initial_false\", initial_read == false, \"La variabile is_read del cartello deve essere inizialmente false\")\n\tif player is Node3D and sign_node is Node3D:\n\t\tvar p3d := player as Node3D\n\t\tvar s3d := sign_node as Node3D\n\t\tp3d.global_position = s3d.global_position + Vector3(0, 0, 1.5)\n\t\tp3d.rotation = Vector3.ZERO\n\t\tawait wait_physics_frames(5)\n\t\tawait tap_action(\"interact\")\n\t\tawait wait_physics_frames(5)\n\tvar after_read = get_prop(sign_node, \"is_read\", false)\n\tif not after_read:\n\t\tcall_if_exists(sign_node, \"interact\")\n\t\tafter_read = get_prop(sign_node, \"is_read\", false)\n\tcheck(\"is_read_true\", after_read == true, \"Dopo l'interazione, la variabile is_read del cartello deve diventare true\")",
+      "descrizione": "Il cartello risponde al metodo interact() e il codice preesistente del giocatore e della leva continua a funzionare"
      }
     ],
     "previsioni": [],
@@ -220,23 +216,23 @@
      "file": [
       {
        "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://door.gd\" id=\"2_door\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_floor\"]\nsize = Vector3(20, 0.2, 20)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_floor\"]\nsize = Vector3(20, 0.2, 20)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_door\"]\nsize = Vector3(1.5, 2.5, 0.2)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_door\"]\nsize = Vector3(1.5, 2.5, 0.2)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Floor\" type=\"StaticBody3D\" parent=\".\"]\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Floor\"]\nmesh = SubResource(\"BoxMesh_floor\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Floor\"]\nshape = SubResource(\"BoxShape3D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3)\n\n[node name=\"Door\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -2)\nscript = ExtResource(\"2_door\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Door\"]\nmesh = SubResource(\"BoxMesh_door\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Door\"]\nshape = SubResource(\"BoxShape3D_door\")\n\n[node name=\"SunLight\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://lever.gd\" id=\"2_lever\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_floor\"]\nsize = Vector3(20, 1, 20)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_floor\"]\nsize = Vector3(20, 1, 20)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_lever\"]\nsize = Vector3(0.4, 0.8, 0.4)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_lever\"]\nsize = Vector3(0.4, 0.8, 0.4)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Floor\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Floor\"]\nmesh = SubResource(\"BoxMesh_floor\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Floor\"]\nshape = SubResource(\"BoxShape3D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)\n\n[node name=\"Lever\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -2)\nscript = ExtResource(\"2_lever\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Lever\"]\nmesh = SubResource(\"BoxMesh_lever\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Lever\"]\nshape = SubResource(\"BoxShape3D_lever\")\n\n[node name=\"DirectionalLight3D\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
       },
       {
        "percorso": "player.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n\n[sub_resource type=\"CapsuleShape3D\" id=\"CapsuleShape3D_player\"]\nradius = 0.4\nheight = 1.8\n\n[node name=\"Player\" type=\"CharacterBody3D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"CapsuleShape3D_player\")\n\n[node name=\"SpringArm3D\" type=\"SpringArm3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)\nspring_length = 0.0\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\"SpringArm3D\"]\n\n[node name=\"RayCast3D\" type=\"RayCast3D\" parent=\"SpringArm3D/Camera3D\"]\ntarget_position = Vector3(0, 0, -4)\n\n[node name=\"UI\" type=\"CanvasLayer\" parent=\".\"]\n\n[node name=\"InteractionLabel\" type=\"Label\" parent=\"UI\"]\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -150.0\noffset_top = 20.0\noffset_right = 150.0\noffset_bottom = 50.0\ngrow_horizontal = 2\ngrow_vertical = 2\nhorizontal_alignment = 1\nvertical_alignment = 1\n"
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n\n[sub_resource type=\"CapsuleShape3D\" id=\"CapsuleShape3D_player\"]\nradius = 0.4\nheight = 1.8\n\n[node name=\"Player\" type=\"CharacterBody3D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"CapsuleShape3D_player\")\n\n[node name=\"SpringArm3D\" type=\"SpringArm3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)\nspring_length = 0.0\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\"SpringArm3D\"]\n\n[node name=\"RayCast3D\" type=\"RayCast3D\" parent=\"SpringArm3D/Camera3D\"]\ntarget_position = Vector3(0, 0, -4)\n"
       },
       {
        "percorso": "player.gd",
-       "contenuto": "extends CharacterBody3D\n\n@export var walk_speed: float = 5.0\n@export var mouse_sensitivity: float = 0.003\n\n@onready var spring_arm: SpringArm3D = $SpringArm3D\n@onready var ray_cast: RayCast3D = $SpringArm3D/Camera3D/RayCast3D\n@onready var interaction_label: Label = $UI/InteractionLabel\n\n\nfunc _ready() -> void:\n\tInput.mouse_mode = Input.MOUSE_MODE_CAPTURED\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:\n\t\trotate_y(-event.screen_relative.x * mouse_sensitivity)\n\t\tspring_arm.rotate_x(-event.screen_relative.y * mouse_sensitivity)\n\n\tif event.is_action_pressed(\"interact\"):\n\t\tif ray_cast.is_colliding():\n\t\t\tvar collider := ray_cast.get_collider()\n\t\t\tif collider != null and collider.has_method(\"interact\"):\n\t\t\t\tcollider.call(\"interact\")\n\n\nfunc _physics_process(_delta: float) -> void:\n\t_update_label()\n\tvar input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_back\")\n\tvar direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()\n\tvelocity.x = direction.x * walk_speed\n\tvelocity.z = direction.z * walk_speed\n\tmove_and_slide()\n\n\nfunc _update_label() -> void:\n\tif ray_cast.is_colliding():\n\t\tvar collider := ray_cast.get_collider()\n\t\tif collider != null and collider.has_method(\"get_interaction_text\"):\n\t\t\tinteraction_label.text = collider.call(\"get_interaction_text\")\n\t\t\treturn\n\tinteraction_label.text = \"\"\n"
+       "contenuto": "extends CharacterBody3D\n\n@export var walk_speed: float = 5.0\n\n@onready var spring_arm: SpringArm3D = $SpringArm3D\n@onready var ray_cast: RayCast3D = $SpringArm3D/Camera3D/RayCast3D\n\n\nfunc _ready() -> void:\n\tInput.mouse_mode = Input.MOUSE_MODE_CAPTURED\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"interact\"):\n\t\tif ray_cast.is_colliding():\n\t\t\tvar collider = ray_cast.get_collider()\n\t\t\tif collider and collider.has_method(\"interact\"):\n\t\t\t\tcollider.interact()\n\n\nfunc _physics_process(_delta: float) -> void:\n\tvar input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_back\")\n\tvar move_dir := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()\n\tvelocity.x = move_dir.x * walk_speed\n\tvelocity.z = move_dir.z * walk_speed\n\tmove_and_slide()\n"
       },
       {
-       "percorso": "door.gd",
-       "contenuto": "extends StaticBody3D\n\nvar is_open: bool = false\n\n\nfunc get_interaction_text() -> String:\n\tif is_open:\n\t\treturn \"Premi E per chiudere la porta\"\n\treturn \"Premi E per aprire la porta\"\n\n\nfunc interact() -> void:\n\tis_open = not is_open\n\tprint(\"Stato porta: \", is_open)\n"
+       "percorso": "lever.gd",
+       "contenuto": "extends StaticBody3D\n\nvar is_on: bool = false\n\n\nfunc interact() -> void:\n\tis_on = not is_on\n"
       }
      ],
      "progetto": {
-      "nome": "PrimoPersonaggioEsteso",
+      "nome": "InterazioneSguardo",
       "scenaPrincipale": "res://main.tscn",
       "azioni": [
        {
@@ -277,28 +273,20 @@
     "soluzione": {
      "file": [
       {
-       "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://door.gd\" id=\"2_door\"]\n[ext_resource type=\"Script\" path=\"res://sign.gd\" id=\"3_sign\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_floor\"]\nsize = Vector3(20, 0.2, 20)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_floor\"]\nsize = Vector3(20, 0.2, 20)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_door\"]\nsize = Vector3(1.5, 2.5, 0.2)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_door\"]\nsize = Vector3(1.5, 2.5, 0.2)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_sign\"]\nsize = Vector3(1.0, 1.2, 0.1)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_sign\"]\nsize = Vector3(1.0, 1.2, 0.1)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Floor\" type=\"StaticBody3D\" parent=\".\"]\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Floor\"]\nmesh = SubResource(\"BoxMesh_floor\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Floor\"]\nshape = SubResource(\"BoxShape3D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3)\n\n[node name=\"Door\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -2)\nscript = ExtResource(\"2_door\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Door\"]\nmesh = SubResource(\"BoxMesh_door\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Door\"]\nshape = SubResource(\"BoxShape3D_door\")\n\n[node name=\"Sign\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, -2)\nscript = ExtResource(\"3_sign\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Sign\"]\nmesh = SubResource(\"BoxMesh_sign\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Sign\"]\nshape = SubResource(\"BoxShape3D_sign\")\n\n[node name=\"SunLight\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
-      },
-      {
-       "percorso": "player.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n\n[sub_resource type=\"CapsuleShape3D\" id=\"CapsuleShape3D_player\"]\nradius = 0.4\nheight = 1.8\n\n[node name=\"Player\" type=\"CharacterBody3D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"CapsuleShape3D_player\")\n\n[node name=\"SpringArm3D\" type=\"SpringArm3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)\nspring_length = 0.0\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\"SpringArm3D\"]\n\n[node name=\"RayCast3D\" type=\"RayCast3D\" parent=\"SpringArm3D/Camera3D\"]\ntarget_position = Vector3(0, 0, -4)\n\n[node name=\"UI\" type=\"CanvasLayer\" parent=\".\"]\n\n[node name=\"InteractionLabel\" type=\"Label\" parent=\"UI\"]\nanchors_preset = 8\nanchor_left = 0.5\nanchor_top = 0.5\nanchor_right = 0.5\nanchor_bottom = 0.5\noffset_left = -150.0\noffset_top = 20.0\noffset_right = 150.0\noffset_bottom = 50.0\ngrow_horizontal = 2\ngrow_vertical = 2\nhorizontal_alignment = 1\nvertical_alignment = 1\n"
-      },
-      {
-       "percorso": "player.gd",
-       "contenuto": "extends CharacterBody3D\n\n@export var walk_speed: float = 5.0\n@export var mouse_sensitivity: float = 0.003\n\n@onready var spring_arm: SpringArm3D = $SpringArm3D\n@onready var ray_cast: RayCast3D = $SpringArm3D/Camera3D/RayCast3D\n@onready var interaction_label: Label = $UI/InteractionLabel\n\n\nfunc _ready() -> void:\n\tInput.mouse_mode = Input.MOUSE_MODE_CAPTURED\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:\n\t\trotate_y(-event.screen_relative.x * mouse_sensitivity)\n\t\tspring_arm.rotate_x(-event.screen_relative.y * mouse_sensitivity)\n\n\tif event.is_action_pressed(\"interact\"):\n\t\tif ray_cast.is_colliding():\n\t\t\tvar collider := ray_cast.get_collider()\n\t\t\tif collider != null and collider.has_method(\"interact\"):\n\t\t\t\tcollider.call(\"interact\")\n\n\nfunc _physics_process(_delta: float) -> void:\n\t_update_label()\n\tvar input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_back\")\n\tvar direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()\n\tvelocity.x = direction.x * walk_speed\n\tvelocity.z = direction.z * walk_speed\n\tmove_and_slide()\n\n\nfunc _update_label() -> void:\n\tif ray_cast.is_colliding():\n\t\tvar collider := ray_cast.get_collider()\n\t\tif collider != null and collider.has_method(\"get_interaction_text\"):\n\t\t\tinteraction_label.text = collider.call(\"get_interaction_text\")\n\t\t\treturn\n\tinteraction_label.text = \"\"\n"
-      },
-      {
-       "percorso": "door.gd",
-       "contenuto": "extends StaticBody3D\n\nvar is_open: bool = false\n\n\nfunc get_interaction_text() -> String:\n\tif is_open:\n\t\treturn \"Premi E per chiudere la porta\"\n\treturn \"Premi E per aprire la porta\"\n\n\nfunc interact() -> void:\n\tis_open = not is_open\n\tprint(\"Stato porta: \", is_open)\n"
-      },
-      {
        "percorso": "sign.gd",
-       "contenuto": "extends StaticBody3D\n\n@export var sign_text: String = \"Benvenuto nel castello!\"\n\nvar is_reading: bool = false\n\n\nfunc get_interaction_text() -> String:\n\tif is_reading:\n\t\treturn \"Premi E per chiudere il cartello\"\n\treturn \"Premi E per leggere il cartello\"\n\n\nfunc interact() -> void:\n\tis_reading = not is_reading\n\tif is_reading:\n\t\tprint(sign_text)\n"
+       "contenuto": "extends StaticBody3D\n\nvar is_read: bool = false\n\n\nfunc interact() -> void:\n\tis_read = true\n"
+      },
+      {
+       "percorso": "sign.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://sign.gd\" id=\"1_sign\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_sign\"]\nsize = Vector3(0.8, 0.6, 0.1)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_sign\"]\nsize = Vector3(0.8, 0.6, 0.1)\n\n[node name=\"Sign\" type=\"StaticBody3D\"]\nscript = ExtResource(\"1_sign\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"BoxMesh_sign\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"BoxShape3D_sign\")\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"Script\" path=\"res://lever.gd\" id=\"2_lever\"]\n[ext_resource type=\"PackedScene\" path=\"res://sign.tscn\" id=\"3_sign\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_floor\"]\nsize = Vector3(20, 1, 20)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_floor\"]\nsize = Vector3(20, 1, 20)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_lever\"]\nsize = Vector3(0.4, 0.8, 0.4)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_lever\"]\nsize = Vector3(0.4, 0.8, 0.4)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Floor\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Floor\"]\nmesh = SubResource(\"BoxMesh_floor\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Floor\"]\nshape = SubResource(\"BoxShape3D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)\n\n[node name=\"Lever\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -2)\nscript = ExtResource(\"2_lever\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Lever\"]\nmesh = SubResource(\"BoxMesh_lever\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Lever\"]\nshape = SubResource(\"BoxShape3D_lever\")\n\n[node name=\"Sign\" parent=\".\" instance=ExtResource(\"3_sign\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -2)\n\n[node name=\"DirectionalLight3D\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
       }
      ],
      "progetto": {
-      "nome": "PrimoPersonaggioEsteso",
+      "nome": "InterazioneSguardo",
       "scenaPrincipale": "res://main.tscn",
       "azioni": [
        {
@@ -335,7 +323,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Grazie al Duck Typing non è necessario modificare `player.gd`. È bastato creare `sign.gd` definendo i due metodi `get_interaction_text()` e `interact()`. Quando il giocatore guarda il cartello, il sistema rileva la presenza di questi metodi e li esegue automaticamente.",
+     "spiegazione": "Grazie al Duck Typing, lo script del giocatore non deve conoscere il tipo esatto degli oggetti. Quando guarda un oggetto e preme il tasto d'interazione, esegue `collider.has_method(\"interact\")`: poiché `sign.gd` definisce la funzione `interact()`, il cartello risponde immediatamente al comando senza che sia stato necessario toccare il codice di `player.gd`.",
      "cambiati": [],
      "rimossi": []
     }
@@ -353,118 +341,130 @@
    "grezzo": {
     "tipo": "autonomo",
     "genere": "estendi",
-    "titolo": "Aggiungere un baule interattivo all'Isola",
-    "consegna": "Estendi il gioco dell'isola aggiungendo un baule interattivo in prima persona che risponde al comando d'interazione senza modificare lo script del giocatore.\n\n1. Crea lo script `res://chest.gd` che eredita da `StaticBody3D`.\n2. In `chest.gd` dichiara due variabili booleane: `var is_open: bool = false` e `var is_empty: bool = false`.\n3. Implementa il metodo `get_interaction_text() -> String` che restituisce:\n   - `\"Premi E per aprire il baule\"` se `is_open` è `false`\n   - `\"Premi E per raccogliere il contenuto\"` se `is_open` è `true` e `is_empty` è `false`\n   - `\"Il baule è vuoto\"` se sia `is_open` che `is_empty` sono `true`\n4. Implementa il metodo `interact() -> void` che:\n   - se `is_open` è `false`, imposta `is_open = true` e stampa `\"Baule aperto!\"`\n   - altrimenti se `is_empty` è `false`, imposta `is_empty = true` e stampa `\"Hai trovato una gemma!\"`\n5. Nella scena `main.tscn`, aggiungi un nodo `StaticBody3D` chiamato `Chest` collocato in `Vector3(-2, 1, -2)`, associagli lo script `res://chest.gd`, una forma di collisione `CollisionShape3D` e una mesh cubo `MeshInstance3D`.",
+    "titolo": "Aggiungi una porta apribile",
+    "consegna": "Nel progetto esistente, il personaggio in prima persona usa il raggio `RayCast3D` per interagire con gli oggetti premendo il tasto `interact` (tasto **E**).\n\nSenza modificare lo script del personaggio (`player.gd`):\n1. Crea la scena `door.tscn` con un nodo radice `StaticBody3D` chiamato `Door` e assegnali una `CollisionShape3D` (es. `BoxShape3D`).\n2. Collega a `Door` lo script `door.gd`. Nel codice definisci la variabile boolean `is_open` (inizialmente `false`) e il metodo `interact() -> void` che inverte lo stato della variabile (`is_open = not is_open`).\n3. Istanzia la scena `door.tscn` nella scena `main.tscn` come figlio del nodo `Main` rinominando l'istanza in `Door` e posizionala davanti al personaggio (es. a `Vector3(0, 1, -2)`).",
     "modalita": "progetto",
-    "dove": "gioco",
+    "dove": "a-parte",
     "passiGuida": [],
     "suggerimenti": [
-     "Crea lo script res://chest.gd applicando la struttura d'interazione basata sui due metodi get_interaction_text() e interact()."
+     "Definisci `var is_open: bool = false` dentro `door.gd` e inverti il valore con `is_open = not is_open` nella funzione `interact()`."
     ],
     "verifiche": [
      {
       "tipo": "file_esiste",
-      "percorso": "res://chest.gd",
-      "descrizione": "Nel progetto è presente lo script res://chest.gd"
+      "percorso": "res://door.tscn",
+      "descrizione": "Esiste la scena res://door.tscn"
      },
      {
       "tipo": "nodo",
       "scena": "res://main.tscn",
       "tipoNodo": "StaticBody3D",
-      "nome": "Chest",
-      "descrizione": "La scena main.tscn contiene un nodo StaticBody3D chiamato Chest"
+      "nome": "Door",
+      "descrizione": "La scena main.tscn contiene il nodo Door"
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale si avvia senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody3D\n\tif not check(\"player\", player != null, \"Nella scena deve esserci il Player\"):\n\t\treturn\n\tvar lever := find_by_name(main, \"Lever\") as StaticBody3D\n\tif not check(\"lever\", lever != null, \"La leva preesistente Lever deve rimanere nella scena\"):\n\t\treturn\n\tvar chest := find_by_name(main, \"Chest\") as StaticBody3D\n\tif not check(\"chest\", chest != null, \"Nella scena deve esserci il nodo Chest\"):\n\t\treturn\n\tvar label := find_by_name(player, \"InteractionLabel\") as Label\n\tif not check(\"label\", label != null, \"Il Player deve contenere l'etichetta InteractionLabel\"):\n\t\treturn\n\tplayer.global_position = Vector3(-2.0, 1.0, 0.0)\n\tplayer.rotation = Vector3.ZERO\n\tvar spring_arm := player.get_node_or_null(\"SpringArm3D\") as Node3D\n\tif spring_arm != null:\n\t\tspring_arm.rotation = Vector3.ZERO\n\tawait wait_physics_frames(5)\n\tcheck(\"open_prompt\", \"aprire\" in label.text.to_lower(), \"Guardando il baule chiuso l'etichetta deve proporre di aprirlo (trovato: '%s')\" % label.text)\n\tawait tap_action(\"interact\")\n\tawait wait_physics_frames(3)\n\tvar is_open: bool = chest.get(\"is_open\") if chest.get(\"is_open\") != null else false\n\tcheck(\"is_open_true\", is_open == true, \"Dopo la prima interazione 'is_open' deve essere true\")\n\tcheck(\"collect_prompt\", \"raccogliere\" in label.text.to_lower(), \"Guardando il baule aperto l'etichetta deve proporre di raccogliere (trovato: '%s')\" % label.text)\n\tawait tap_action(\"interact\")\n\tawait wait_physics_frames(3)\n\tvar is_empty: bool = chest.get(\"is_empty\") if chest.get(\"is_empty\") != null else false\n\tcheck(\"is_empty_true\", is_empty == true, \"Dopo la seconda interazione 'is_empty' deve essere true\")\n\tcheck(\"empty_prompt\", \"vuoto\" in label.text.to_lower(), \"Dopo aver raccolto il contenuto l'etichetta deve indicare che il baule è vuoto (trovato: '%s')\" % label.text)",
-      "descrizione": "Il baule cambia stato e messaggio dopo due interazioni successive mantenendo funzionante la leva preesistente"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\tvar door := find_by_name(main, \"Door\")\n\tif not check(\"door\", door != null, \"Nella scena principale deve esserci il nodo Door\"):\n\t\treturn\n\tvar has_interact := has_function(door, \"interact\")\n\tif not check(\"has_interact\", has_interact, \"La porta deve avere un metodo interact()\"):\n\t\treturn\n\tvar state_0 = get_prop(door, \"is_open\", true)\n\tcheck(\"init_false\", state_0 == false, \"La variabile is_open deve essere inizialmente false\")\n\tcall_if_exists(door, \"interact\")\n\tvar state_1 = get_prop(door, \"is_open\", false)\n\tcheck(\"toggle_true\", state_1 == true, \"Dopo la prima interazione is_open deve diventare true\")\n\tcall_if_exists(door, \"interact\")\n\tvar state_2 = get_prop(door, \"is_open\", true)\n\tcheck(\"toggle_false\", state_2 == false, \"Dopo la seconda interazione is_open deve tornare false\")",
+      "descrizione": "La porta inverte la variabile is_open ogni volta che riceve il comando interact()"
      }
     ],
     "previsioni": [],
     "daTrovare": [],
-    "soluzione": {
+    "partenza": {
      "file": [
       {
-       "percorso": "chest.gd",
-       "contenuto": "extends StaticBody3D\n\nvar is_open: bool = false\nvar is_empty: bool = false\n\n\nfunc get_interaction_text() -> String:\n\tif not is_open:\n\t\treturn \"Premi E per aprire il baule\"\n\tif not is_empty:\n\t\treturn \"Premi E per raccogliere il contenuto\"\n\treturn \"Il baule è vuoto\"\n\n\nfunc interact() -> void:\n\tif not is_open:\n\t\tis_open = true\n\t\tprint(\"Baule aperto!\")\n\telif not is_empty:\n\t\tis_empty = true\n\t\tprint(\"Hai trovato una gemma!\")\n"
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_floor\"]\nsize = Vector3(20, 1, 20)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_floor\"]\nsize = Vector3(20, 1, 20)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Floor\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Floor\"]\nmesh = SubResource(\"BoxMesh_floor\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Floor\"]\nshape = SubResource(\"BoxShape3D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)\n\n[node name=\"DirectionalLight3D\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
       },
       {
-       "percorso": "main.tscn",
-       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://main.gd\" id=\"1_main\"]\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"2_player\"]\n[ext_resource type=\"Script\" path=\"res://lever.gd\" id=\"3_lever\"]\n[ext_resource type=\"Script\" path=\"res://chest.gd\" id=\"4_chest\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_wood\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\nmetallic = 0.0\nroughness = 0.8\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_base\"]\nsize = Vector3(4, 2, 4)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_plastic\"]\nalbedo_color = Color(0.9, 0.1, 0.1, 1)\nmetallic = 0.0\nroughness = 0.3\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_west\"]\nsize = Vector3(3, 1, 3)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_bridge\"]\nsize = Vector3(2, 0.2, 4)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_glass\"]\ntransparency = 1\nalbedo_color = Color(0.5, 0.8, 1, 0.3)\nmetallic = 0.0\nroughness = 0.05\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_east\"]\nsize = Vector3(3, 2, 3)\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_east\"]\nalbedo_color = Color(0.4, 0.2, 0.1, 1)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_east\"]\nsize = Vector3(3, 2, 3)\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_crystal\"]\nradius = 0.5\nheight = 1.0\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_crystal\"]\nalbedo_color = Color(0, 0.8, 1, 1)\nroughness = 0.2\nemission_enabled = true\nemission = Color(0, 0.8, 1, 1)\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_turret\"]\ntop_radius = 0.5\nbottom_radius = 0.5\nheight = 1.5\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_metal\"]\nalbedo_color = Color(0.7, 0.7, 0.7, 1)\nmetallic = 1.0\nroughness = 0.1\n\n[sub_resource type=\"ProceduralSkyMaterial\" id=\"ProceduralSkyMaterial_sky\"]\n\n[sub_resource type=\"Sky\" id=\"Sky_proc\"]\nsky_material = SubResource(\"ProceduralSkyMaterial_sky\")\n\n[sub_resource type=\"Environment\" id=\"Environment_main\"]\nbackground_mode = 2\nsky = SubResource(\"Sky_proc\")\nglow_enabled = true\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_lever\"]\nsize = Vector3(0.5, 1, 0.5)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_lever\"]\nsize = Vector3(0.5, 1, 0.5)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_chest\"]\nsize = Vector3(1, 0.8, 0.8)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_chest\"]\nsize = Vector3(1, 0.8, 0.8)\n\n[node name=\"Island\" type=\"Node3D\"]\nscript = ExtResource(\"1_main\")\n\n[node name=\"BlockBase\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(2, 0, -4)\n\n[node name=\"MeshBase\" type=\"MeshInstance3D\" parent=\"BlockBase\"]\nmesh = SubResource(\"BoxMesh_base\")\nmaterial_override = SubResource(\"StandardMaterial3D_wood\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\"BlockBase\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"BlockBase/StaticBody3D\"]\nshape = SubResource(\"BoxShape3D_base\")\n\n[node name=\"BlockTop\" type=\"Node3D\" parent=\"BlockBase\"]\nposition = Vector3(0, 3, 0)\n\n[node name=\"BlockWest\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(-5, 0, 2)\nrotation = Vector3(0, 0.785398, 0)\nscale = Vector3(2, 1, 2)\n\n[node name=\"MeshWest\" type=\"MeshInstance3D\" parent=\"BlockWest\"]\nmesh = SubResource(\"BoxMesh_west\")\nmaterial_override = SubResource(\"StandardMaterial3D_plastic\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\"BlockWest\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"BlockWest/StaticBody3D\"]\nshape = SubResource(\"BoxShape3D_west\")\n\n[node name=\"BlockWestBridge\" type=\"Node3D\" parent=\"BlockWest\"]\nposition = Vector3(0, 2, -3)\n\n[node name=\"MeshBridge\" type=\"MeshInstance3D\" parent=\"BlockWest/BlockWestBridge\"]\nmesh = SubResource(\"BoxMesh_bridge\")\nmaterial_override = SubResource(\"StandardMaterial3D_glass\")\n\n[node name=\"BlockEast\" type=\"Node3D\" parent=\".\"]\nposition = Vector3(6, 0, 1)\nrotation = Vector3(0, -0.523599, 0)\nscale = Vector3(1, 2, 1)\n\n[node name=\"MeshEast\" type=\"MeshInstance3D\" parent=\"BlockEast\"]\nmesh = SubResource(\"BoxMesh_east\")\nmaterial_override = SubResource(\"StandardMaterial3D_east\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\"BlockEast\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"BlockEast/StaticBody3D\"]\nshape = SubResource(\"BoxShape3D_east\")\n\n[node name=\"BlockEastTop\" type=\"Node3D\" parent=\"BlockEast\"]\nposition = Vector3(0, 2.5, 0)\n\n[node name=\"Crystal\" type=\"MeshInstance3D\" parent=\"BlockEast/BlockEastTop\"]\nmesh = SubResource(\"SphereMesh_crystal\")\nmaterial_override = SubResource(\"StandardMaterial3D_crystal\")\n\n[node name=\"Turret\" type=\"Node3D\" parent=\".\"]\n\n[node name=\"MeshTurret\" type=\"MeshInstance3D\" parent=\"Turret\"]\nmesh = SubResource(\"CylinderMesh_turret\")\nmaterial_override = SubResource(\"StandardMaterial3D_metal\")\n\n[node name=\"SunLight\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 0, 0)\nshadow_enabled = true\nlight_color = Color(1, 0.95, 0.8, 1)\nlight_energy = 1.2\n\n[node name=\"LanternLight\" type=\"OmniLight3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 4, 1)\nvisible = false\nshadow_enabled = true\nlight_color = Color(1, 0.7, 0.3, 1)\nlight_energy = 2.0\nomni_range = 8.0\n\n[node name=\"WorldEnvironment\" type=\"WorldEnvironment\" parent=\".\"]\nenvironment = SubResource(\"Environment_main\")\n\n[node name=\"CameraOverview\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 8, 12)\nfov = 75.0\nnear = 0.5\nfar = 50.0\ncurrent = true\n\n[node name=\"CameraWest\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(0.707107, 0.183013, -0.683013, 0, 0.965926, 0.258819, 0.707107, -0.183013, 0.683013, -8, 4, 6)\nfov = 50.0\nnear = 0.5\nfar = 50.0\n\n[node name=\"CameraEast\" type=\"Camera3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.0868241, 0.492404, 0, 0.984808, 0.173648, -0.5, -0.150384, 0.852869, 8, 5, 4)\nfov = 60.0\nnear = 0.5\nfar = 50.0\n\n[node name=\"CrystalLabel\" type=\"Label\" parent=\".\"]\ntext = \"Cristallo\"\n\n[node name=\"Cave\" type=\"CSGCombiner3D\" parent=\".\"]\nuse_collision = true\n\n[node name=\"Rock\" type=\"CSGBox3D\" parent=\"Cave\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -12)\nsize = Vector3(8, 4, 8)\n\n[node name=\"Hollow\" type=\"CSGSphere3D\" parent=\"Cave\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -12)\noperation = 1\nradius = 2.5\n\n[node name=\"Entrance\" type=\"CSGBox3D\" parent=\"Cave\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -8)\noperation = 1\nsize = Vector3(3, 3, 4)\n\n[node name=\"DungeonGrid\" type=\"GridMap\" parent=\".\"]\ncell_size = Vector3(2, 2, 2)\n\n[node name=\"BridgeCSG\" type=\"CSGBox3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -4)\nuse_collision = true\nsize = Vector3(3, 0.4, 6)\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"2_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)\n\n[node name=\"Lever\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -2)\nscript = ExtResource(\"3_lever\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Lever\"]\nmesh = SubResource(\"BoxMesh_lever\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Lever\"]\nshape = SubResource(\"BoxShape3D_lever\")\n\n[node name=\"Chest\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1, -2)\nscript = ExtResource(\"4_chest\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Chest\"]\nmesh = SubResource(\"BoxMesh_chest\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Chest\"]\nshape = SubResource(\"BoxShape3D_chest\")\n"
+       "percorso": "player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n\n[sub_resource type=\"CapsuleShape3D\" id=\"CapsuleShape3D_player\"]\nradius = 0.4\nheight = 1.8\n\n[node name=\"Player\" type=\"CharacterBody3D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"CapsuleShape3D_player\")\n\n[node name=\"SpringArm3D\" type=\"SpringArm3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)\nspring_length = 0.0\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\"SpringArm3D\"]\n\n[node name=\"RayCast3D\" type=\"RayCast3D\" parent=\"SpringArm3D/Camera3D\"]\ntarget_position = Vector3(0, 0, -4)\n"
+      },
+      {
+       "percorso": "player.gd",
+       "contenuto": "extends CharacterBody3D\n\n@export var walk_speed: float = 5.0\n\n@onready var ray_cast: RayCast3D = $SpringArm3D/Camera3D/RayCast3D\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event.is_action_pressed(\"interact\"):\n\t\tif ray_cast.is_colliding():\n\t\t\tvar collider = ray_cast.get_collider()\n\t\t\tif collider and collider.has_method(\"interact\"):\n\t\t\t\tcollider.interact()\n\n\nfunc _physics_process(_delta: float) -> void:\n\tvar input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_back\")\n\tvar move_dir := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()\n\tvelocity.x = move_dir.x * walk_speed\n\tvelocity.z = move_dir.z * walk_speed\n\tmove_and_slide()\n"
       }
      ],
      "progetto": {
-      "nome": "L'isola",
+      "nome": "PortaInterattiva",
       "scenaPrincipale": "res://main.tscn",
       "azioni": [
        {
         "nome": "move_left",
         "tasti": [
-         "A",
-         "Left"
+         "A"
         ]
        },
        {
         "nome": "move_right",
         "tasti": [
-         "D",
-         "Right"
+         "D"
         ]
        },
        {
         "nome": "move_forward",
         "tasti": [
-         "W",
-         "Up"
+         "W"
         ]
        },
        {
         "nome": "move_back",
         "tasti": [
-         "S",
-         "Down"
+         "S"
         ]
        },
        {
-        "nome": "jump",
+        "nome": "interact",
         "tasti": [
-         "Space"
+         "E"
+        ]
+       }
+      ],
+      "autoload": [],
+      "impostazioni": []
+     }
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "door.gd",
+       "contenuto": "extends StaticBody3D\n\nvar is_open: bool = false\n\n\nfunc interact() -> void:\n\tis_open = not is_open\n"
+      },
+      {
+       "percorso": "door.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://door.gd\" id=\"1_door\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_door\"]\nsize = Vector3(1.2, 2.0, 0.2)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_door\"]\nsize = Vector3(1.2, 2.0, 0.2)\n\n[node name=\"Door\" type=\"StaticBody3D\"]\nscript = ExtResource(\"1_door\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"BoxMesh_door\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"BoxShape3D_door\")\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player\"]\n[ext_resource type=\"PackedScene\" path=\"res://door.tscn\" id=\"2_door\"]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_floor\"]\nsize = Vector3(20, 1, 20)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_floor\"]\nsize = Vector3(20, 1, 20)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Floor\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Floor\"]\nmesh = SubResource(\"BoxMesh_floor\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Floor\"]\nshape = SubResource(\"BoxShape3D_floor\")\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)\n\n[node name=\"Door\" parent=\".\" instance=ExtResource(\"2_door\")]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -2)\n\n[node name=\"DirectionalLight3D\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 5, 0)\n"
+      }
+     ],
+     "progetto": {
+      "nome": "PortaInterattiva",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A"
         ]
        },
        {
-        "nome": "run",
+        "nome": "move_right",
         "tasti": [
-         "Shift"
+         "D"
         ]
        },
        {
-        "nome": "change_atmosphere",
+        "nome": "move_forward",
         "tasti": [
-         "C"
+         "W"
         ]
        },
        {
-        "nome": "look_left",
+        "nome": "move_back",
         "tasti": [
-         "J"
-        ]
-       },
-       {
-        "nome": "look_right",
-        "tasti": [
-         "L"
-        ]
-       },
-       {
-        "nome": "look_up",
-        "tasti": [
-         "I"
-        ]
-       },
-       {
-        "nome": "look_down",
-        "tasti": [
-         "K"
+         "S"
         ]
        },
        {
@@ -477,7 +477,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Lo script `chest.gd` implementa le due funzioni richieste per l'interazione standard. Modificando lo stato interno del baule tra aperto e vuoto ad ogni chiamata di `interact()`, la scritta restituzione da `get_interaction_text()` si aggiorna automaticamente ad ogni sguardo del giocatore.",
+     "spiegazione": "Implementando la funzione `interact()` nella porta e invertendo il valore boolean con `is_open = not is_open`, la porta sfrutta il sistema di Duck Typing preesistente nello script del personaggio senza richiedere alcuna variazione a `player.gd`.",
      "cambiati": [],
      "rimossi": []
     }
@@ -586,5 +586,5 @@
   "es2",
   "test"
  ],
- "restoDaRiscrivere": "es1"
+ "praticaRifatta": true
 }
