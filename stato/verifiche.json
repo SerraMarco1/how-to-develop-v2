@@ -753,5 +753,10 @@
   "versione": 1,
   "fragili": [],
   "tentativi": {}
+ },
+ "importare-modelli-3d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
