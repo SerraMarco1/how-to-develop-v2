@@ -26,3 +26,4 @@
 {"quando":1795769307237,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"importare-modelli-3d","ok":false,"contata":true,"durataMs":41175,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795769348415,"modello":"gemini-3.7-flash","ruolo":"revisore","slug":"importare-modelli-3d","ok":false,"contata":true,"durataMs":3766,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795770057909,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"importare-modelli-3d","ok":true,"contata":true,"durataMs":10214,"tokenInput":11288,"tokenOutput":12,"ragionamento":1892}
+{"quando":1795770070723,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"importare-modelli-3d","ok":true,"contata":true,"durataMs":6086,"tokenInput":2932,"tokenOutput":770,"ragionamento":1546}
