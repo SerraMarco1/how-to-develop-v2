@@ -701,19 +701,26 @@
     "tipo": "test",
     "genere": "estendi",
     "titolo": "Aggiungi una porta apribile",
-    "consegna": "Nel progetto esistente, il personaggio in prima persona usa il raggio `RayCast3D` per interagire con gli oggetti premendo il tasto `interact` (tasto **E**).\n\nSenza modificare lo script del personaggio (`player.gd`):\n1. Crea la scena `door.tscn` con un nodo radice `StaticBody3D` chiamato `Door` e assegnali una `CollisionShape3D` (es. `BoxShape3D`).\n2. Collega a `Door` lo script `door.gd`. Nel codice definisci la variabile boolean `is_open` (inizialmente `false`) e il metodo `interact() -> void` che inverte lo stato della variabile (`is_open = not is_open`).\n3. Istanzia la scena `door.tscn` nella scena `main.tscn` come figlio del nodo `Main` rinominando l'istanza in `Door` e posizionala davanti al personaggio (es. a `Vector3(0, 1, -2)`).",
+    "consegna": "Nel progetto esistente, il personaggio in prima persona usa il raggio `RayCast3D` per interagire con gli oggetti premendo il tasto `interact` (tasto **E**).\n\nSenza modificare lo script del personaggio (`player.gd`):\n1. Crea la scena `door.tscn` con un nodo radice `StaticBody3D` chiamato `Door` e assegnali un figlio `CollisionShape3D` (con forma `BoxShape3D`).\n2. Collega a `Door` lo script `door.gd`. Nel codice definisci il metodo `interact() -> void` in modo che inverta lo stato della proprietà `disabled` del nodo `CollisionShape3D` (`$CollisionShape3D.disabled = not $CollisionShape3D.disabled`), disattivando la collisione alla prima interazione e riattivandola a quella successiva.\n3. Istanzia la scena `door.tscn` nella scena `main.tscn` come figlio del nodo `Main` rinominando l'istanza in `Door` e posizionala a `Vector3(0, 1, -2)`.",
     "modalita": "progetto",
     "dove": "a-parte",
     "cartella": "aggiungi-una-porta-apribile",
     "passiGuida": [],
     "suggerimenti": [
-     "Definisci `var is_open: bool = false` dentro `door.gd` e inverti il valore con `is_open = not is_open` nella funzione `interact()`."
+     "Puoi modificare direttamente la proprietà della forma di collisione nello script con `$CollisionShape3D.disabled = not $CollisionShape3D.disabled` oppure salvare il nodo in una variabile `@onready`."
     ],
     "verifiche": [
      {
       "tipo": "file_esiste",
       "percorso": "res://door.tscn",
       "descrizione": "Esiste la scena res://door.tscn"
+     },
+     {
+      "tipo": "nodo",
+      "scena": "res://door.tscn",
+      "tipoNodo": "CollisionShape3D",
+      "nome": "CollisionShape3D",
+      "descrizione": "La scena door.tscn contiene un nodo CollisionShape3D"
      },
      {
       "tipo": "nodo",
@@ -724,8 +731,8 @@
      },
      {
       "tipo": "script_godot",
-      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\tvar door := find_by_name(main, \"Door\")\n\tif not check(\"door\", door != null, \"Nella scena principale deve esserci il nodo Door\"):\n\t\treturn\n\tvar has_interact := has_function(door, \"interact\")\n\tif not check(\"has_interact\", has_interact, \"La porta deve avere un metodo interact()\"):\n\t\treturn\n\tvar state_0 = get_prop(door, \"is_open\", true)\n\tcheck(\"init_false\", state_0 == false, \"La variabile is_open deve essere inizialmente false\")\n\tcall_if_exists(door, \"interact\")\n\tvar state_1 = get_prop(door, \"is_open\", false)\n\tcheck(\"toggle_true\", state_1 == true, \"Dopo la prima interazione is_open deve diventare true\")\n\tcall_if_exists(door, \"interact\")\n\tvar state_2 = get_prop(door, \"is_open\", true)\n\tcheck(\"toggle_false\", state_2 == false, \"Dopo la seconda interazione is_open deve tornare false\")\n",
-      "descrizione": "La porta inverte la variabile is_open ogni volta che riceve il comando interact()"
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve caricarsi correttamente\"):\n\t\treturn\n\tvar door := find_by_name(main, \"Door\")\n\tif not check(\"door\", door != null, \"Nella scena principale deve esserci il nodo Door\"):\n\t\treturn\n\tvar col_shape := find_by_class(door, \"CollisionShape3D\") as CollisionShape3D\n\tif not check(\"shape\", col_shape != null, \"Il nodo Door deve contenere una CollisionShape3D\"):\n\t\treturn\n\tvar has_interact := has_function(door, \"interact\")\n\tif not check(\"has_interact\", has_interact, \"Il nodo Door deve avere un metodo interact()\"):\n\t\treturn\n\tcheck(\"init_enabled\", col_shape.disabled == false, \"All'inizio la collisione della porta deve essere attiva (disabled == false)\")\n\tcall_if_exists(door, \"interact\")\n\tcheck(\"toggle_disabled\", col_shape.disabled == true, \"Dopo la prima interazione la collisione della porta deve essere disattivata (disabled == true)\")\n\tcall_if_exists(door, \"interact\")\n\tcheck(\"toggle_enabled\", col_shape.disabled == false, \"Dopo la seconda interazione la collisione della porta deve tornare attiva (disabled == false)\")\n",
+      "descrizione": "La funzione interact() inverte la proprietà disabled del nodo CollisionShape3D della porta"
      }
     ],
     "previsioni": [],
@@ -796,7 +803,7 @@
       },
       {
        "percorso": "door.gd",
-       "contenuto": "extends StaticBody3D\n\nvar is_open: bool = false\n\n\nfunc interact() -> void:\n\tis_open = not is_open\n"
+       "contenuto": "extends StaticBody3D\n\n@onready var collision_shape: CollisionShape3D = $CollisionShape3D\n\n\nfunc interact() -> void:\n\tcollision_shape.disabled = not collision_shape.disabled\n"
       },
       {
        "percorso": "door.tscn",
@@ -853,7 +860,7 @@
       "autoload": [],
       "impostazioni": []
      },
-     "spiegazione": "Dichiariamo la variabile `is_open` in `door.gd` e la funzione `interact()` che ne inverte il valore booleano con `not`. Collegando lo script al nodo `Door` in `door.tscn` e istanziando `door.tscn` in `main.tscn`, quando il raggio del personaggio rileva la porta e premi **E**, viene chiamato il metodo `interact()` sulla porta.",
+     "spiegazione": "Dichiariamo il metodo `interact()` in `door.gd` in modo da invertire la proprietà `disabled` del nodo `CollisionShape3D` (`$CollisionShape3D.disabled = not $CollisionShape3D.disabled`). Quando il personaggio inquadra la porta con il raggio e premi **E**, il metodo disattiva la collisione permettendo di passare, e una nuova interazione la riattiva.",
      "cambiati": [
       "door.gd",
       "door.tscn",
@@ -972,6 +979,8 @@
    }
   ],
   "teoriaCorretta": true,
-  "corretti": []
+  "corretti": [
+   "test"
+  ]
  }
 }
