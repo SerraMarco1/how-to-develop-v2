@@ -1,10 +1,5 @@
 {
- "sovraccarico": {
-  "gemini": {
-   "volte": 1,
-   "fino": 1795768927529
-  }
- },
+ "sovraccarico": {},
  "fermi": {
   "gemini/gemini-flash-latest": {
    "fino": 1795768927529,
