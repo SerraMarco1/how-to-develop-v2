@@ -636,7 +636,8 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "main.tscn riga 3: la scena usa \"res://player.tscn\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile)."
+    "una verifica controlla il file \"res://door.tscn\", ma non è in `soluzione.file`",
+    "una verifica controlla la scena \"res://main.tscn\", ma non è in `soluzione.file`"
    ],
    "modelli": [
     "gemini/gemini-3.6-flash",
