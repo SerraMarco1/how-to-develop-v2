@@ -682,7 +682,9 @@
    "genere": "estendi",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "main.tscn riga 3: la scena usa \"res://player.tscn\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile)."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
