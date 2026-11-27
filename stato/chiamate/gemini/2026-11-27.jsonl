@@ -48,3 +48,4 @@
 {"quando":1795783968654,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":143522,"tokenInput":20494,"tokenOutput":10303,"ragionamento":15132}
 {"quando":1795784112185,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":66308,"tokenInput":24447,"tokenOutput":8781,"ragionamento":4193}
 {"quando":1795784178498,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":530886,"tokenInput":20494,"tokenOutput":13416,"ragionamento":33486}
+{"quando":1795784717667,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":34534,"tokenInput":18613,"tokenOutput":11106,"ragionamento":6802}
