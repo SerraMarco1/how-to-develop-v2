@@ -431,7 +431,10 @@
    "genere": "obiettivo",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — bridge.glb: i file .glb non possono far parte di una lezione",
+    "main.tscn riga 5: la scena usa \"res://tree.glb\", ma quel file non è tra i file della soluzione. Aggiungilo a `soluzione.file` oppure, se è un'immagine, usa \"res://icon.svg\" (sempre disponibile)."
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
