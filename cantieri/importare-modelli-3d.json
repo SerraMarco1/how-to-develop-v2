@@ -135,7 +135,9 @@
    "genere": "guidato",
    "correzioni": 0,
    "semplificato": false,
-   "problemi": [],
+   "problemi": [
+    "controllo di sicurezza — tree.glb: i file .glb non possono far parte di una lezione"
+   ],
    "modelli": [
     "gemini/gemini-3.6-flash"
    ]
