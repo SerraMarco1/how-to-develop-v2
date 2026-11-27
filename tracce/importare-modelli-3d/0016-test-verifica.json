@@ -1,0 +1,105 @@
+{
+ "n": 16,
+ "quando": "2026-11-27T08:48:27.231Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (ripara): approvato",
+ "spiegazione": "«Test finale: Sistemare l'asset della lanterna e la sua collisione». 3 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: lantern.tscn, main.tscn",
+ "richieste": 0,
+ "durataMs": 9621,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "ripara",
+   "titolo": "Test finale: Sistemare l'asset della lanterna e la sua collisione",
+   "consegna": "Nel progetto `LanternaTest` la lanterna decorativa ha tre problemi da risolvere prima di poter essere utilizzata:\n\n1. In `main.tscn`, il nodo `Lantern` ha una scala errata: imposta la sua **Scale** a `Vector3(1.0, 1.0, 1.0)` (attualmente è Vector3(4, 4, 4)).\n2. Sempre in `main.tscn`, `Lantern` è ruotata all'indietro: imposta **Rotation Degrees** sull'asse Y (`rotation_degrees.y`) a `0.0`.\n3. Nella scena della lanterna `res://lantern.tscn`, manca la superficie solida: aggiungi un nodo figlio `StaticBody3D` con un sotto-nodo `CollisionShape3D` contenente una forma `CylinderShape3D`.",
+   "modalita": "progetto",
+   "dove": "a-parte",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Apri main.tscn per correggere le trasformazioni di Lantern, poi apri lantern.tscn per aggiungere la collisione fisica."
+   ],
+   "verifiche": [
+    {
+     "tipo": "nodo",
+     "scena": "res://lantern.tscn",
+     "tipoNodo": "StaticBody3D",
+     "nome": "StaticBody3D",
+     "genitore": "Lantern",
+     "descrizione": "La scena lantern.tscn contiene un nodo StaticBody3D"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://lantern.tscn",
+     "tipoNodo": "CollisionShape3D",
+     "nome": "CollisionShape3D",
+     "genitore": "StaticBody3D",
+     "descrizione": "Il nodo StaticBody3D in lantern.tscn contiene un CollisionShape3D"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar lantern := main.get_node_or_null(\"Lantern\") as Node3D\n\tif check(\"lantern_exists\", lantern != null, \"In main.tscn serve il nodo Lantern\"):\n\t\tcheck(\"scale\", lantern.scale.distance_to(Vector3(1, 1, 1)) < 0.05, \"La scala di Lantern deve essere (1, 1, 1) (è %s)\" % str(lantern.scale))\n\t\tcheck(\"rot_y\", absf(lantern.rotation_degrees.y) < 0.1, \"La rotazione Y di Lantern deve essere 0 (è %.1f)\" % lantern.rotation_degrees.y)\n\tvar lantern_scene := await instantiate_scene(\"res://lantern.tscn\")\n\tif check(\"scene_exists\", lantern_scene != null, \"La scena lantern.tscn deve caricarsi correttamente\"):\n\t\tvar col := lantern_scene.find_child(\"CollisionShape3D\", true, false) as CollisionShape3D\n\t\tcheck(\"has_col\", col != null and col.shape is CylinderShape3D, \"lantern.tscn deve contenere una CollisionShape3D con forma CylinderShape3D\")\n",
+     "descrizione": "La lanterna in main.tscn ha scala (1,1,1) e rotazione Y = 0, e lantern.tscn ha una forma di collisione cilindrica"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "partenza": {
+    "progetto": {
+     "nome": "LanternaTest",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"LanternaTest\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "lantern.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_lantern\"]\ntop_radius = 0.3\nbottom_radius = 0.3\nheight = 1.2\n\n[node name=\"Lantern\" type=\"Node3D\"]\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"CylinderMesh_lantern\")\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://lantern.tscn\" id=\"1_lantern\"]\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Lantern\" parent=\".\" instance=ExtResource(\"1_lantern\")]\ntransform = Transform3D(-4, 0, -3.49691e-07, 0, 4, 0, 3.49691e-07, 0, -4, 0, 0, 0)\n"
+     }
+    ]
+   },
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"LanternaTest\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+     },
+     {
+      "percorso": "lantern.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_lantern\"]\ntop_radius = 0.3\nbottom_radius = 0.3\nheight = 1.2\n\n[sub_resource type=\"CylinderShape3D\" id=\"CylinderShape3D_lantern\"]\nheight = 1.2\nradius = 0.3\n\n[node name=\"Lantern\" type=\"Node3D\"]\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"CylinderMesh_lantern\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\".\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"StaticBody3D\"]\nshape = SubResource(\"CylinderShape3D_lantern\")\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://lantern.tscn\" id=\"1_lantern\"]\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Lantern\" parent=\".\" instance=ExtResource(\"1_lantern\")]\n"
+     }
+    ],
+    "progetto": {
+     "nome": "LanternaTest",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "Nel test finale vengono applicate tutte le nozioni compreso il lavoro sulle risorse 3D: azzeramento rotazione e ripristino scala nell'Inspector della scena principale, e aggiunta della struttura fisica (StaticBody3D con CollisionShape3D cilindrica) all'interno del file della lanterna.",
+    "cambiati": [
+     "lantern.tscn",
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "id": "test",
+   "cartella": "test-finale-sistemare-l-asset-della-lant"
+  }
+ },
+ "chiamate": []
+}
