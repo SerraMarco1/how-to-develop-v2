@@ -31,3 +31,4 @@
 {"quando":1795770089520,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"animazioni-3d","ok":false,"contata":true,"durataMs":846,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795770802194,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"importare-modelli-3d","ok":true,"contata":true,"durataMs":2862,"tokenInput":8132,"tokenOutput":200,"ragionamento":816}
 {"quando":1795770824198,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"importare-modelli-3d","ok":true,"contata":true,"durataMs":4966,"tokenInput":8371,"tokenOutput":49,"ragionamento":1719}
+{"quando":1795770831065,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":311869,"tokenInput":15340,"tokenOutput":3695,"ragionamento":5723}
