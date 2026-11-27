@@ -605,7 +605,7 @@
    }
   },
   "es3": {
-   "stato": "da_fare",
+   "stato": "ok",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "ripara",
@@ -674,7 +674,81 @@
    "problemi": [],
    "modelli": [
     "gemini/gemini-3.6-flash"
-   ]
+   ],
+   "esercizio": {
+    "tipo": "autonomo",
+    "genere": "ripara",
+    "titolo": "Sistemare tre modelli importati male",
+    "consegna": "In questo progetto separato sono stati posizionati tre modelli 3D con difetti d'importazione nella scena `main.tscn`:\n\n1. `GiantRock` è spaventosamente grande: imposta la sua **Scale** a `Vector3(0.2, 0.2, 0.2)`.\n2. `FallenColumn` è caduta di lato: imposta la sua rotazione in gradi sull'asse Z (`rotation_degrees.z`) a `0.0` per raddrizzarla.\n3. `UncoloredStatue` non ha colore: seleziona il suo nodo figlio `MeshInstance3D` e assegna un nuovo `StandardMaterial3D` nella proprietà **Material Override** con colore albedo blu (`Color(0.0, 0.5, 1.0)`).",
+    "modalita": "progetto",
+    "dove": "a-parte",
+    "passiGuida": [],
+    "suggerimenti": [
+     "Seleziona ciascun nodo nella scena e controlla le proprietà Transform nell'Inspector.",
+     "Per il materiale della statua, individua il nodo figlio MeshInstance3D ed espandi Material Override."
+    ],
+    "verifiche": [
+     {
+      "tipo": "nodo",
+      "scena": "res://main.tscn",
+      "tipoNodo": "MeshInstance3D",
+      "nome": "GiantRock",
+      "descrizione": "La scena main.tscn contiene il nodo GiantRock"
+     },
+     {
+      "tipo": "script_godot",
+      "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main\", main != null, \"La scena principale deve aprirsi senza errori\"):\n\t\treturn\n\tvar rock := main.get_node_or_null(\"GiantRock\") as Node3D\n\tif check(\"rock_exists\", rock != null, \"La scena deve contenere GiantRock\"):\n\t\tcheck(\"rock_scale\", rock.scale.distance_to(Vector3(0.2, 0.2, 0.2)) < 0.05, \"GiantRock deve avere scala (0.2, 0.2, 0.2) (è %s)\" % str(rock.scale))\n\tvar col := main.get_node_or_null(\"FallenColumn\") as Node3D\n\tif check(\"col_exists\", col != null, \"La scena deve contenere FallenColumn\"):\n\t\tcheck(\"col_rot\", absf(col.rotation_degrees.z) < 0.1, \"FallenColumn deve avere rotation_degrees.z = 0 (è %.1f)\" % col.rotation_degrees.z)\n\tvar statue_mesh := main.get_node_or_null(\"UncoloredStatue/MeshInstance3D\") as MeshInstance3D\n\tif check(\"statue_exists\", statue_mesh != null, \"UncoloredStatue deve avere un figlio MeshInstance3D\"):\n\t\tvar mat = statue_mesh.material_override as StandardMaterial3D\n\t\tcheck(\"statue_mat\", mat != null, \"MeshInstance3D deve avere un StandardMaterial3D assegnato a material_override\")\n\t\tif mat != null:\n\t\t\tcheck(\"statue_color\", mat.albedo_color.b > 0.5, \"Il materiale della statua deve avere un colore albedo blu\")\n",
+      "descrizione": "GiantRock ha scala (0.2, 0.2, 0.2), FallenColumn ha rotazione Z = 0 e UncoloredStatue/MeshInstance3D ha un materiale blu"
+     }
+    ],
+    "previsioni": [],
+    "daTrovare": [],
+    "partenza": {
+     "progetto": {
+      "nome": "SistemazioneModelli",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SistemazioneModelli\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_rock\"]\nsize = Vector3(10, 10, 10)\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_column\"]\nheight = 4.0\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_statue\"]\nradius = 1.0\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"GiantRock\" type=\"MeshInstance3D\" parent=\".\"]\ntransform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -4, 0, 0)\nmesh = SubResource(\"BoxMesh_rock\")\n\n[node name=\"FallenColumn\" type=\"MeshInstance3D\" parent=\".\"]\ntransform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0)\nmesh = SubResource(\"CylinderMesh_column\")\n\n[node name=\"UncoloredStatue\" type=\"Node3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"UncoloredStatue\"]\nmesh = SubResource(\"SphereMesh_statue\")\n"
+      }
+     ]
+    },
+    "soluzione": {
+     "file": [
+      {
+       "percorso": "project.godot",
+       "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"SistemazioneModelli\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n"
+      },
+      {
+       "percorso": "main.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_rock\"]\nsize = Vector3(10, 10, 10)\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_column\"]\nheight = 4.0\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_statue\"]\nradius = 1.0\n\n[sub_resource type=\"StandardMaterial3D\" id=\"StandardMaterial3D_blue\"]\nalbedo_color = Color(0, 0.5, 1, 1)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"GiantRock\" type=\"MeshInstance3D\" parent=\".\"]\ntransform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -4, 0, 0)\nmesh = SubResource(\"BoxMesh_rock\")\n\n[node name=\"FallenColumn\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"CylinderMesh_column\")\n\n[node name=\"UncoloredStatue\" type=\"Node3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"UncoloredStatue\"]\nmesh = SubResource(\"SphereMesh_statue\")\nmaterial_override = SubResource(\"StandardMaterial3D_blue\")\n"
+      }
+     ],
+     "progetto": {
+      "nome": "SistemazioneModelli",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [],
+      "autoload": [],
+      "impostazioni": []
+     },
+     "spiegazione": "Per raddrizzare gli asset importati con difetti si agisce sui parametri dell'Inspector: Scale per ridimensionare oggetti troppo grandi, Rotation Degrees per azzerare l'inclinazione errata, e Material Override per applicare un nuovo StandardMaterial3D agli oggetti privi di colore.",
+     "cambiati": [
+      "main.tscn"
+     ],
+     "rimossi": []
+    },
+    "id": "es3",
+    "cartella": "sistemare-tre-modelli-importati-male"
+   }
   },
   "test": {
    "stato": "da_fare",
