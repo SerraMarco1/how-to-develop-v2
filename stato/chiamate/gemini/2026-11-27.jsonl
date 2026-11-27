@@ -1,0 +1,3 @@
+{"quando":1795766487509,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"prima-persona-e-interazione","ok":false,"contata":true,"durataMs":3474,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795766490986,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"prima-persona-e-interazione","ok":true,"contata":true,"durataMs":87109,"tokenInput":19864,"tokenOutput":9668,"ragionamento":11490}
+{"quando":1795766578099,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"prima-persona-e-interazione","ok":true,"contata":true,"durataMs":33129,"tokenInput":24434,"tokenOutput":6890,"ragionamento":1648}
