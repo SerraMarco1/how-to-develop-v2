@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-27T09:00:57.890Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-27T09:01:30.370Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "importare-modelli-3d",
-  "numero": "9.10",
-  "titolo": "Importare modelli 3D"
+  "slug": "animazioni-3d",
+  "numero": "9.11",
+  "titolo": "Animazioni 3D importate"
  },
- "messaggio": "Sta scrivendo la lezione 9.10 «Importare modelli 3D».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.11 riprende da sola appena rispondono.",
+ "riprende": "2026-11-27T09:11:30.370Z"
 }
