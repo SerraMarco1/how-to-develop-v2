@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-25T10:50:33.051Z",
+ "aggiornato": "2026-11-27T08:10:06.424Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1325,6 +1325,15 @@
    "file": "lezioni/f09-3d-basi/telecamera-terza-persona.json",
    "sha256": "06d3086029bca2cf00171555bc62757ec7acfd5fd70c0049305f98ad540fa2b7",
    "byte": 137179
+  },
+  {
+   "slug": "prima-persona-e-interazione",
+   "numero": "9.9",
+   "titolo": "Prima persona e interazione con lo sguardo",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/prima-persona-e-interazione.json",
+   "sha256": "5d1f952806ead2388e604cc047814826f2fc3a05645ff8616124b5764da3439a",
+   "byte": 69135
   }
  ],
  "documentazione": {

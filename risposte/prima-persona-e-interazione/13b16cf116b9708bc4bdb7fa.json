@@ -1,7 +1,0 @@
-{
- "modello": "gemini/gemini-3.6-flash",
- "testo": "{\"approvata\": false, \"problemi\": [{\"parte\": \"pratica\", \"dove\": \"test\", \"problema\": \"Il test è una copia pressoché identica dell'esercizio es2 con soltanto i nomi cambiati: in es2 si chiede di creare una scena StaticBody3D (sign.tscn/Sign) con lo script sign.gd che definisce la variabile boolean e il metodo interact(), e di istanziarla in main.tscn; nel test si richiede l'esatta stessa sequenza di azioni cambiando solo i nomi in door.tscn/Door e is_open.\", \"correzione\": \"Riformulare il test in modo che verifichi gli obiettivi della lezione con una richiesta differente rispetto a es2 (ad esempio facendo interagire il giocatore con un oggetto che modifica una proprietà fisica o che risponde a interact() alterando lo stato del livello/altri nodi), evitando di replicare la medesima struttura di creazione file/nodo.\", \"fonte\": \"\"}]}",
- "ragionamento": 2464,
- "quando": "2026-11-27T08:07:28.475Z",
- "ruolo": "revisore"
-}
