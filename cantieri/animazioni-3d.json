@@ -308,7 +308,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Correndo blend_position deve valere circa 8.0 (misurato: 3.72611665725708)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Correndo blend_position deve valere circa 8.0 (misurato: 4.17741203308105)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-flash-latest",
