@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-28T10:18:17.746Z",
- "stato": "lavora",
+ "aggiornato": "2026-11-28T10:23:19.843Z",
+ "stato": "aspetta",
  "lezione": {
-  "slug": "progetto-percorso-1",
-  "numero": "9.13",
-  "titolo": "Progetto «Percorso a ostacoli» – tappa 1: personaggio e telecamera"
+  "slug": "progetto-percorso-2",
+  "numero": "9.14",
+  "titolo": "Progetto «Percorso a ostacoli» – tappa 2: il percorso"
  },
- "messaggio": "Sta scrivendo la lezione 9.13 «Progetto «Percorso a ostacoli» – tappa 1: personaggio e telecamera».",
- "riprende": null
+ "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.14 riprende da sola appena rispondono.",
+ "riprende": "2026-11-28T10:33:19.843Z"
 }
