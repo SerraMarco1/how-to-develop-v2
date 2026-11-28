@@ -145,7 +145,7 @@
    ]
   },
   "es2": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "obiettivo",
@@ -388,7 +388,8 @@
   }
  },
  "avvisi": [
-  "L'esercizio \"Creare il BlendSpace1D per il movimento del personaggio\" (guidato) non superava i controlli: è stato tolto."
+  "L'esercizio \"Creare il BlendSpace1D per il movimento del personaggio\" (guidato) non superava i controlli: è stato tolto.",
+  "L'esercizio \"Sfumare la locomozione con il BlendSpace1D\" (obiettivo) non superava i controlli ed è stato tolto: questa lezione ha solo il test."
  ],
  "modelli": [
   "gemini/gemini-3.6-flash",
