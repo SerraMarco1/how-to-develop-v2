@@ -40,3 +40,4 @@
 {"quando":1795861097759,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-percorso-1","ok":false,"contata":true,"durataMs":392,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795861098153,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-percorso-1","ok":true,"contata":true,"durataMs":54371,"tokenInput":11921,"tokenOutput":3712,"ragionamento":9316}
 {"quando":1795861166901,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"progetto-percorso-1","ok":true,"contata":true,"durataMs":12715,"tokenInput":2996,"tokenOutput":12,"ragionamento":1102}
+{"quando":1795861181223,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"progetto-percorso-1","ok":true,"contata":true,"durataMs":5872,"tokenInput":2580,"tokenOutput":648,"ragionamento":2026}
