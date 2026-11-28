@@ -1,0 +1,142 @@
+{
+ "n": 3,
+ "quando": "2026-11-28T10:19:26.897Z",
+ "pezzo": "test",
+ "azione": "verifica",
+ "esito": "ok",
+ "titolo": "Test (da-zero): approvato",
+ "spiegazione": "«Tappa 1: Personaggio e telecamera». 7 verifiche eseguite sulla soluzione (devono passare) e sul progetto com'è prima del lavoro (devono fallire). Approvato al primo colpo.\nFile aggiunti o cambiati: project.godot, player.gd, player.tscn, main.tscn",
+ "richieste": 0,
+ "durataMs": 12743,
+ "dati": {
+  "esercizio": {
+   "tipo": "test",
+   "genere": "da-zero",
+   "titolo": "Tappa 1: Personaggio e telecamera",
+   "consegna": "Crea la prima tappa del progetto **Percorso a ostacoli** da un progetto vuoto nella cartella `percorso-a-ostacoli`.\n\nRequisiti da completare:\n1. **Scena principale**: crea la scena `res://main.tscn` con un terreno di prova 3D (ad esempio un nodo `StaticBody3D` con una collisione a scatola) e una luce (`DirectionalLight3D`). Impostala come scena principale del progetto nelle impostazioni di sistema.\n2. **Personaggio**: crea la scena `res://player.tscn` con radice `CharacterBody3D` chiamata `Player`. Collega uno script al nodo `Player` e istanzia questa scena dentro `main.tscn`.\n3. **Mappa dei comandi (Input Map)**: aggiungi le seguenti azioni di input:\n   - `move_forward` (tasto W)\n   - `move_backward` (tasto S)\n   - `move_left` (tasto A)\n   - `move_right` (tasto D)\n   - `jump` (tasto Spazio)\n4. **Telecamera in terza persona**: aggiungi un nodo `SpringArm3D` (con figlio `Camera3D`) collegato al personaggio per consentire la rotazione della vista ed evitare che la telecamera attraversi le pareti.\n5. **Movimento e Fisica 3D**:\n   - Cattura il puntatore del mouse (`Input.MOUSE_MODE_CAPTURED`) e usa gli eventi del mouse (`InputEventMouseMotion`) per ruotare lo `SpringArm3D`.\n   - Calcola la direzione di movimento del personaggio rispetto all'orientamento della telecamera.\n   - Applica la gravità quando il personaggio è in aria e permetti il salto con l'azione `jump` quando `is_on_floor()` è vero.\n   - Ruota gradualmente il corpo del personaggio verso la direzione verso cui sta camminando.",
+   "modalita": "progetto",
+   "dove": "gioco",
+   "passiGuida": [],
+   "suggerimenti": [
+    "Usa `Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_backward\")` per leggere l'input direzionale della tastiera."
+   ],
+   "verifiche": [
+    {
+     "tipo": "file_esiste",
+     "percorso": "res://player.tscn",
+     "descrizione": "La scena player.tscn esiste nella radice del progetto"
+    },
+    {
+     "tipo": "nodo",
+     "scena": "res://player.tscn",
+     "tipoNodo": "CharacterBody3D",
+     "nome": "Player",
+     "descrizione": "La scena player.tscn ha come radice un CharacterBody3D chiamato Player"
+    },
+    {
+     "tipo": "script_collegato",
+     "scena": "res://player.tscn",
+     "nodo": "Player",
+     "descrizione": "Il nodo Player ha uno script GDScript collegato"
+    },
+    {
+     "tipo": "impostazione",
+     "sezione": "application",
+     "chiave": "run/main_scene",
+     "contiene": "main.tscn",
+     "descrizione": "La scena res://main.tscn è impostata come scena principale del progetto"
+    },
+    {
+     "tipo": "azione_input",
+     "nome": "move_forward",
+     "descrizione": "Nella Input Map esiste l'azione move_forward"
+    },
+    {
+     "tipo": "azione_input",
+     "nome": "jump",
+     "descrizione": "Nella Input Map esiste l'azione jump"
+    },
+    {
+     "tipo": "script_godot",
+     "codice": "extends \"res://htd/htd_test.gd\"\n\n\nfunc _run_tests() -> void:\n\tvar main := await instantiate_main_scene()\n\tif not check(\"main_scene\", main != null, \"La scena principale res://main.tscn deve essere impostata ed aprirsi senza errori\"):\n\t\treturn\n\tvar player := find_by_name(main, \"Player\") as CharacterBody3D\n\tif player == null:\n\t\tplayer = find_by_class(main, \"CharacterBody3D\") as CharacterBody3D\n\tif not check(\"player_exists\", player != null, \"La scena deve contenere un CharacterBody3D chiamato Player\"):\n\t\treturn\n\tvar spring_arm := find_by_class(main, \"SpringArm3D\") as SpringArm3D\n\tcheck(\"spring_arm\", spring_arm != null, \"La scena o il personaggio deve includere un nodo SpringArm3D per la telecamera\")\n\tvar camera := find_by_class(main, \"Camera3D\") as Camera3D\n\tcheck(\"camera\", camera != null, \"La scena deve includere un nodo Camera3D per la visuale\")\n\tvar start_pos := player.global_position\n\tawait hold_action(\"move_forward\", 25)\n\tvar end_pos := player.global_position\n\tvar dist := start_pos.distance_to(end_pos)\n\tcheck(\"move\", dist > 0.4, \"Tenendo premuto move_forward il personaggio si muove nello spazio 3D (distanza percorsa: %.2f)\" % dist)\n\tawait wait_physics_frames(10)\n\tvar y_start := player.global_position.y\n\tawait tap_action(\"jump\")\n\tawait wait_physics_frames(6)\n\tvar y_jump := player.global_position.y\n\tcheck(\"jump\", y_jump > y_start + 0.08, \"Premendo jump il personaggio salta verso l'alto (y iniziale: %.2f, y in salto: %.2f)\" % [y_start, y_jump])\n",
+     "descrizione": "Il personaggio si sposta nello spazio 3D tenendo premuto il comando di movimento e salta quando viene premuta l'azione jump"
+    }
+   ],
+   "previsioni": [],
+   "daTrovare": [],
+   "soluzione": {
+    "file": [
+     {
+      "percorso": "project.godot",
+      "contenuto": "; Engine configuration file.\n; Scritto dalla piattaforma How to Develop.\n\nconfig_version=5\n\n[application]\n\nconfig/name=\"Percorso a ostacoli\"\nrun/main_scene=\"res://main.tscn\"\nconfig/features=PackedStringArray(\"4.7\", \"Forward Plus\")\nconfig/icon=\"res://icon.svg\"\n\n[input]\n\nmove_forward={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":87,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194320,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_backward={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":83,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194322,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_left={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":65,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194319,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\nmove_right={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":68,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null), Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":4194321,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\njump={\n\"deadzone\": 0.2,\n\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":0,\"physical_keycode\":32,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)]\n}\n"
+     },
+     {
+      "percorso": "player.gd",
+      "contenuto": "extends CharacterBody3D\n\nconst SPEED := 5.0\nconst JUMP_VELOCITY := 4.5\nconst MOUSE_SENSITIVITY := 0.003\n\n@onready var spring_arm: SpringArm3D = $SpringArm3D\n\nvar gravity: float = ProjectSettings.get_setting(\"physics/3d/default_gravity\")\n\n\nfunc _ready() -> void:\n\tInput.mouse_mode = Input.MOUSE_MODE_CAPTURED\n\n\nfunc _unhandled_input(event: InputEvent) -> void:\n\tif event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:\n\t\tif spring_arm:\n\t\t\tspring_arm.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)\n\t\t\tspring_arm.rotation.x -= event.relative.y * MOUSE_SENSITIVITY\n\t\t\tspring_arm.rotation.x = clampf(spring_arm.rotation.x, deg_to_rad(-80.0), deg_to_rad(30.0))\n\tif event.is_action_pressed(\"ui_cancel\"):\n\t\tInput.mouse_mode = Input.MOUSE_MODE_VISIBLE\n\n\nfunc _physics_process(delta: float) -> void:\n\tif not is_on_floor():\n\t\tvelocity.y -= gravity * delta\n\n\tif Input.is_action_just_pressed(\"jump\") and is_on_floor():\n\t\tvelocity.y = JUMP_VELOCITY\n\n\tvar input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_backward\")\n\tvar arm_basis := transform.basis\n\tif spring_arm:\n\t\tarm_basis = spring_arm.global_transform.basis\n\n\tvar forward := -arm_basis.z\n\tvar right := arm_basis.x\n\tforward.y = 0.0\n\tright.y = 0.0\n\tforward = forward.normalized()\n\tright = right.normalized()\n\n\tvar direction := (forward * -input_dir.y + right * input_dir.x).normalized()\n\n\tif direction != Vector3.ZERO:\n\t\tvelocity.x = direction.x * SPEED\n\t\tvelocity.z = direction.z * SPEED\n\t\tvar target_angle := atan2(-direction.x, -direction.z)\n\t\trotation.y = rotate_toward(rotation.y, target_angle, delta * 10.0)\n\telse:\n\t\tvelocity.x = move_toward(velocity.x, 0.0, SPEED)\n\t\tvelocity.z = move_toward(velocity.z, 0.0, SPEED)\n\n\tmove_and_slide()\n"
+     },
+     {
+      "percorso": "player.tscn",
+      "contenuto": "[gd_scene load_steps=5 format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n\n[sub_resource type=\"CapsuleShape3D\" id=\"CapsuleShape3D_1\"]\nradius = 0.4\nheight = 1.8\n\n[sub_resource type=\"CapsuleMesh\" id=\"CapsuleMesh_1\"]\nradius = 0.4\nheight = 1.8\n\n[node name=\"Player\" type=\"CharacterBody3D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)\nshape = SubResource(\"CapsuleShape3D_1\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)\nmesh = SubResource(\"CapsuleMesh_1\")\n\n[node name=\"SpringArm3D\" type=\"SpringArm3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)\nspring_length = 3.0\nmargin = 0.2\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\"SpringArm3D\"]\ncurrent = true\n"
+     },
+     {
+      "percorso": "main.tscn",
+      "contenuto": "[gd_scene load_steps=5 format=3]\n\n[ext_resource type=\"PackedScene\" path=\"res://player.tscn\" id=\"1_player_scene\"]\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_ground\"]\nsize = Vector3(50, 1, 50)\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_ground\"]\nsize = Vector3(50, 1, 50)\n\n[node name=\"Main\" type=\"Node3D\"]\n\n[node name=\"Ground\" type=\"StaticBody3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"Ground\"]\nshape = SubResource(\"BoxShape3D_ground\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\"Ground\"]\nmesh = SubResource(\"BoxMesh_ground\")\n\n[node name=\"DirectionalLight3D\" type=\"DirectionalLight3D\" parent=\".\"]\ntransform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 10, 0)\nshadow_enabled = true\n\n[node name=\"Player\" parent=\".\" instance=ExtResource(\"1_player_scene\")]\n"
+     }
+    ],
+    "progetto": {
+     "nome": "Percorso a ostacoli",
+     "scenaPrincipale": "res://main.tscn",
+     "azioni": [
+      {
+       "nome": "move_forward",
+       "tasti": [
+        "W",
+        "Up"
+       ]
+      },
+      {
+       "nome": "move_backward",
+       "tasti": [
+        "S",
+        "Down"
+       ]
+      },
+      {
+       "nome": "move_left",
+       "tasti": [
+        "A",
+        "Left"
+       ]
+      },
+      {
+       "nome": "move_right",
+       "tasti": [
+        "D",
+        "Right"
+       ]
+      },
+      {
+       "nome": "jump",
+       "tasti": [
+        "Space"
+       ]
+      }
+     ],
+     "autoload": [],
+     "impostazioni": []
+    },
+    "spiegazione": "La scena `player.tscn` ha come nodo radice un `CharacterBody3D` con al suo interno un braccio telecamera `SpringArm3D` ed una `Camera3D` figlia. Nello script `player.gd`, la modalità mouse viene bloccata su `MOUSE_MODE_CAPTURED` per ruotare lo `SpringArm3D` tramite gli spostamenti del mouse registrati in `_unhandled_input`.\n\nIn `_physics_process`, il movimento direzionale si calcola ricavando i vettori d'orientamento della telecamera (`arm_basis.z` e `arm_basis.x`), azzerando l'inclinazione verticale (Y) e normalizzando la direzione. Il personaggio viene così mosso con `move_and_slide()` e ruotato verso la direzione di camminata tramite `rotate_toward()`.",
+    "cambiati": [
+     "project.godot",
+     "player.gd",
+     "player.tscn",
+     "main.tscn"
+    ],
+    "rimossi": []
+   },
+   "cartella": "percorso-a-ostacoli",
+   "id": "test"
+  }
+ },
+ "chiamate": []
+}
