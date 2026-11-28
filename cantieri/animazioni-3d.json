@@ -2,7 +2,7 @@
  "creato": "2026-11-27T09:01:24.299Z",
  "pezzi": {
   "es1": {
-   "stato": "da_fare",
+   "stato": "tolto",
    "grezzo": {
     "tipo": "autonomo",
     "genere": "guidato",
@@ -239,7 +239,9 @@
    ]
   }
  },
- "avvisi": [],
+ "avvisi": [
+  "L'esercizio \"Creare il BlendSpace1D per il movimento del personaggio\" (guidato) non superava i controlli: è stato tolto."
+ ],
  "modelli": [
   "gemini/gemini-3.6-flash",
   "gemini/gemini-flash-latest",
