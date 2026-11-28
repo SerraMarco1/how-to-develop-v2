@@ -37,3 +37,5 @@
 {"quando":1795861068946,"modello":"gemini-flash-latest","ruolo":"revisore","slug":"oggetti-fisici-3d","ok":false,"contata":true,"durataMs":1774,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795861070723,"modello":"gemini-3.6-flash","ruolo":"revisore","slug":"oggetti-fisici-3d","ok":true,"contata":true,"durataMs":11675,"tokenInput":12548,"tokenOutput":12,"ragionamento":1592}
 {"quando":1795861084251,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"oggetti-fisici-3d","ok":true,"contata":true,"durataMs":7850,"tokenInput":2919,"tokenOutput":1011,"ragionamento":2934}
+{"quando":1795861097759,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"progetto-percorso-1","ok":false,"contata":true,"durataMs":392,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795861098153,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"progetto-percorso-1","ok":true,"contata":true,"durataMs":54371,"tokenInput":11921,"tokenOutput":3712,"ragionamento":9316}

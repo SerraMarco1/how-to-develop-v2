@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-28T10:04:25.994Z",
+ "aggiornato": "2026-11-28T10:18:17.746Z",
  "stato": "lavora",
  "lezione": {
-  "slug": "oggetti-fisici-3d",
-  "numero": "9.12",
-  "titolo": "Oggetti fisici e zone in 3D"
+  "slug": "progetto-percorso-1",
+  "numero": "9.13",
+  "titolo": "Progetto «Percorso a ostacoli» – tappa 1: personaggio e telecamera"
  },
- "messaggio": "Sta scrivendo la lezione 9.12 «Oggetti fisici e zone in 3D».",
+ "messaggio": "Sta scrivendo la lezione 9.13 «Progetto «Percorso a ostacoli» – tappa 1: personaggio e telecamera».",
  "riprende": null
 }
