@@ -9,3 +9,5 @@
 {"quando":1795855703362,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"animazioni-3d","ok":false,"contata":true,"durataMs":7276,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795855710642,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":599947,"tokenInput":20589,"tokenOutput":9932,"ragionamento":36152}
 {"quando":1795856319511,"modello":"gemini-flash-lite-latest","ruolo":"ritocco","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":35000,"tokenInput":18728,"tokenOutput":11330,"ragionamento":7136}
+{"quando":1795856362464,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"animazioni-3d","ok":false,"contata":true,"durataMs":1182,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795856363649,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":96339,"tokenInput":18728,"tokenOutput":11436,"ragionamento":10326}
