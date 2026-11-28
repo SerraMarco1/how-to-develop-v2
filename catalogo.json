@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-27T09:01:22.411Z",
+ "aggiornato": "2026-11-28T09:04:07.799Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1343,6 +1343,15 @@
    "file": "lezioni/f09-3d-basi/importare-modelli-3d.json",
    "sha256": "12c223cd7ab9db61d519f9bf513dc74537791830477045ad793b908fdf105852",
    "byte": 126957
+  },
+  {
+   "slug": "animazioni-3d",
+   "numero": "9.11",
+   "titolo": "Animazioni 3D importate",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/animazioni-3d.json",
+   "sha256": "034e2feecb0dfb1d2ceacdca7c17d71c95915684963d1a9ae15fa5d26a40bf58",
+   "byte": 104451
   }
  ],
  "documentazione": {
