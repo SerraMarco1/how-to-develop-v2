@@ -182,7 +182,7 @@
    "correzioni": 1,
    "semplificato": false,
    "problemi": [
-    "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://main.gd deve caricarsi senza errori: Parse Error: Expected indented block after \"if\" block. (res://main.gd:95 in GDScript::reload)\nFailed to load script \"res://main.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  main.gd, riga 95: `if dungeon_grid.get_cell_item(cell) != GridMap.INVALID_CELL_ITEM:`"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Cannot call method 'get_parent' on a previously freed instance. (res://htd/verifica_1.gd:32 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Cannot call method 'get_parent' on a previously freed instance.\n          at: _run_tests (res://htd/verifica_1.gd:32)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 32: `var crystal_gone: bool = (crystal.get_parent() == null) or crystal.is_queued_for_deletion()`"
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
