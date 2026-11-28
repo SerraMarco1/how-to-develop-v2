@@ -1,0 +1,102 @@
+{
+ "creato": "2026-11-28T09:04:09.729Z",
+ "pezzi": {},
+ "avvisi": [],
+ "modelli": [
+  "gemini/gemini-3.6-flash"
+ ],
+ "teoria": {
+  "titolo": "Oggetti fisici e zone in 3D",
+  "sommario": "In questa lezione imparerai a utilizzare i nodi RigidBody3D e Area3D per rendere il mondo di gioco 3D dinamico e interattivo. Scoprirai come trasferire le tue conoscenze sulle collisioni 2D nello spazio tridimensionale, realizzando cristalli collezionabili, casse da spingere con la fisica e zone che modificano la velocità o attivano passaggi.",
+  "concetti": [
+   "Nodo RigidBody3D",
+   "Nodo Area3D",
+   "Interazione tra CharacterBody3D e RigidBody3D",
+   "Metodo apply_central_impulse()",
+   "Segnali body_entered e body_exited in 3D",
+   "Applicazione dei concetti di fisica 2D allo spazio 3D"
+  ],
+  "obiettivi": [
+   "Creare oggetti fisici simulati dal motore con RigidBody3D",
+   "Riconoscere ed eseguire il passaggio dei concetti di collisione da 2D a 3D",
+   "Creare zone di rilevamento invisibili o collezionabili usando Area3D",
+   "Spingere oggetti fisici attraverso il movimento del personaggio",
+   "Realizzare piastre a pressione e zone d'acqua che alterano il movimento"
+  ],
+  "durataMinuti": 45,
+  "blocchi": [
+   {
+    "tipo": "testo",
+    "md": "Nei giochi 2D hai usato `Area2D` per raccogliere oggetti e rilevare zone, e nodi fisici per gestire gli ostacoli. Nel mondo 3D il funzionamento della fisica è identico dal punto di vista concettuale: cambiano solo le classi, che aggiungono il suffisso `3D`.\n\nFino a questo momento nell'isola hai usato `StaticBody3D` per gli elementi immobili del terreno e `CharacterBody3D` per il personaggio controllato da codice. Per creare casse da spingere, rocce che rotolano, cristalli da raccogliere e piastre a pressione servono due nodi fondamentali: **`RigidBody3D`** e **`Area3D`**."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Da 2D a 3D: cosa cambia davvero?\n\nTutto ciò che hai imparato sui segnali di collisione (`body_entered`, `body_exited`), su `monitoring`, `monitorable` e sulle maschere di collisione (*Collision Layer* e *Collision Mask*) funziona esattamente allo stesso modo in 3D.\n\nLe uniche differenze pratiche riguardano le forme geometriche: invece di `RectangleShape2D` o `CircleShape2D`, usiamo `BoxShape3D`, `SphereShape3D` o `CylinderShape3D` per definire i volumi nello spazio."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Oggetti collezionabili con Area3D\n\nUn nodo **`Area3D`** non blocca fisicamente i corpi, ma rileva quando un altro nodo entra o esce dal suo volume. È perfetto per raccogliere oggetti come i cristalli sparsi per l'isola.\n\nCome per la controparte 2D, una scena collezionabile 3D richiede tre elementi:\n1. Un nodo radice `Area3D` con uno script allegato.\n2. Un `MeshInstance3D` per mostrare il modello visivo.\n3. Un `CollisionShape3D` con una forma primitiva per definire la zona di contatto."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare la scena di un cristallo collezionabile",
+    "passi": [
+     "Nel pannello *Scene*, crea una nuova scena indipendente premendo **+** e scegliendo **Other Node**, quindi cerca e seleziona `Area3D`. Rinomina la radice in `CrystalPickup`.",
+     "Aggiungi come figlio di `CrystalPickup` un nodo `MeshInstance3D` e assegna un `SphereMesh` per rappresentare il cristallo.",
+     "Aggiungi un nodo `CollisionShape3D` come figlio di `CrystalPickup` e assegna una forma `SphereShape3D` impostandone il raggio leggermente più grande della mesh.",
+     "Salva la scena come `res://crystal_pickup.tscn` e collega uno script alla radice `Area3D`."
+    ]
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Area3D\n\nsignal collected\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\nfunc _on_body_entered(body: Node3D) -> void:\n\tif body is CharacterBody3D:\n\t\tcollected.emit()\n\t\tqueue_free()",
+    "spiegazione": "Lo script di `Area3D` ascolta il segnale `body_entered`. Quando un corpo tridimensionale entra nell'area, controlliamo se si tratta del nostro `CharacterBody3D`. In caso affermativo emettiamo il segnale `collected` e rimuoviamo l'oggetto con `queue_free()`."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Oggetti fisici dinamici con RigidBody3D\n\nA differenza di `CharacterBody3D`, le cui posizioni e velocità vengono scritte direttamente nel codice tramite `move_and_slide()`, un nodo **`RigidBody3D`** è totalmente gestito dal motore fisico di Godot. Subisce la gravità, rimbalza, rotola e reagisce agli urti con altri corpi fisici.\n\nPer creare una cassa spingibile sull'isola, usiamo un `RigidBody3D`. Tuttavia, poiché un `CharacterBody3D` per impostazione predefinita non trasferisce la spinta ai corpi rigidi in automatico, dobbiamo applicare un impulso alla cassa dal codice del personaggio."
+   },
+   {
+    "tipo": "passi",
+    "titolo": "Creare la scena di una cassa spingibile",
+    "passi": [
+     "Crea una nuova scena indipendente con radice `RigidBody3D` e rinominala `PushBox`.",
+     "Aggiungi un nodo `MeshInstance3D` con un `BoxMesh` di dimensione (1, 1, 1) metri.",
+     "Aggiungi un nodo `CollisionShape3D` con una forma `BoxShape3D` di identica dimensione (1, 1, 1).",
+     "Nel pannello *Inspector* del nodo radice `PushBox`, imposta `mass` (massa) a `5.0` kg.",
+     "Salva la scena come `res://push_box.tscn`."
+    ]
+   },
+   {
+    "tipo": "immagine",
+    "immagine": "editor-3d",
+    "didascalia": "L'area di lavoro 3D con la griglia e gli assi colorati usata per posizionare le casse e le zone nella scena."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "# Da inserire nel metodo _physics_process(delta: float) del personaggio, subito dopo move_and_slide()\nfor i in get_slide_collision_count():\n\tvar collision: KinematicCollision3D = get_slide_collision(i)\n\tvar collider: Object = collision.get_collider()\n\t\n\tif collider is RigidBody3D:\n\t\tvar push_direction: Vector3 = -collision.get_normal()\n\t\tpush_direction.y = 0.0\n\t\tpush_direction = push_direction.normalized()\n\t\t\n\t\tvar push_force: float = 3.0\n\t\tcollider.apply_central_impulse(push_direction * push_force)",
+    "spiegazione": "Con `get_slide_collision_count()` leggiamo i punti di contatto generati da `move_and_slide()`. Se l'oggetto toccato è un `RigidBody3D`, calcoliamo la direzione dell'urto e chiamiamo `apply_central_impulse()` per spingere la cassa."
+   },
+   {
+    "tipo": "testo",
+    "md": "### Zone d'effetto e Piastre a Pressione\n\nLe aree tridimensionali `Area3D` possono essere usate anche come sensori volumetrici per rilevare quando un oggetto o il giocatore rimangono al loro interno.\n\nPossiamo realizzarne di due tipi:\n* **Piastra a pressione**: Rileva l'ingresso di una cassa o del giocatore per inviare un segnale e aprire un passaggio.\n* **Zona d'acqua**: Un'area che riduce la velocità di movimento del personaggio quando si trova al suo interno."
+   },
+   {
+    "tipo": "codice",
+    "linguaggio": "gdscript",
+    "codice": "extends Area3D\n\nsignal activated\nsignal deactivated\n\nvar objects_inside: int = 0\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\tbody_exited.connect(_on_body_exited)\n\nfunc _on_body_entered(body: Node3D) -> void:\n\tif body is CharacterBody3D or body is RigidBody3D:\n\t\tobjects_inside += 1\n\t\tif objects_inside == 1:\n\t\t\tactivated.emit()\n\nfunc _on_body_exited(body: Node3D) -> void:\n\tif body is CharacterBody3D or body is RigidBody3D:\n\t\tobjects_inside -= 1\n\t\tif objects_inside == 0:\n\t\t\tdeactivated.emit()",
+    "spiegazione": "La piastra a pressione conta gli oggetti al suo interno con `objects_inside`. Emette `activated` quando entra il primo corpo ed `deactivated` quando tutti gli oggetti sono usciti dall'area."
+   },
+   {
+    "tipo": "attenzione",
+    "md": "Non modificare direttamente la proprietà position o global_position di un RigidBody3D durante il gioco. Spostare a forza un corpo rigido interrompe la simulazione fisica. Usa sempre gli impulsi con apply_central_impulse()."
+   },
+   {
+    "tipo": "riepilogo",
+    "md": "- I concetti di fisica 2D (maschere di collisione, segnale body_entered) si applicano al 3D usufruendo dei nodi con suffisso 3D.\n- Area3D rileva l'ingresso e l'uscita di corpi tridimensionali senza ostacolarne il movimento: è ideale per collezionabili, zone ambientali e piastre a pressione.\n- RigidBody3D viene simulato direttamente dal motore fisico di Godot, subendo gravità e forze.\n- CharacterBody3D può spingere i nodi RigidBody3D analizzando i dati di collisione restituiti da move_and_slide() e applicando impulsi con apply_central_impulse()."
+   }
+  ]
+ }
+}
