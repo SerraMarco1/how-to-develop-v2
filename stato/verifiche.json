@@ -763,5 +763,15 @@
   "versione": 2,
   "fragili": [],
   "tentativi": {}
+ },
+ "oggetti-fisici-3d": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
+ },
+ "progetto-percorso-1": {
+  "versione": 1,
+  "fragili": [],
+  "tentativi": {}
  }
 }
