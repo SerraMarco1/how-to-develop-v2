@@ -621,5 +621,10 @@
   "es2",
   "test"
  ],
- "praticaRifatta": true
+ "praticaRifatta": true,
+ "revisione": {
+  "problemi": [],
+  "teoriaCorretta": false,
+  "corretti": []
+ }
 }
