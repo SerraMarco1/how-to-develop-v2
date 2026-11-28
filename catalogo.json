@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-28T09:35:26.559Z",
+ "aggiornato": "2026-11-28T10:18:15.981Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1352,6 +1352,15 @@
    "file": "lezioni/f09-3d-basi/animazioni-3d.json",
    "sha256": "9bef0013eda52b7532e7f82269980e5fbe67c181f9fad6cecc68f16b6c694b84",
    "byte": 106741
+  },
+  {
+   "slug": "oggetti-fisici-3d",
+   "numero": "9.12",
+   "titolo": "Oggetti fisici e zone in 3D",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/oggetti-fisici-3d.json",
+   "sha256": "3ac2bacc5fed86c4c515f224a008ec1c351021044e7d9b4178c8e8fca45cf5e5",
+   "byte": 163482
   }
  ],
  "documentazione": {
