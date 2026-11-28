@@ -51,6 +51,18 @@
     "soluzione": {
      "file": [
       {
+       "percorso": "tree.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[sub_resource type=\"CylinderMesh\" id=\"CylinderMesh_trunk\"]\ntop_radius = 0.2\nbottom_radius = 0.3\nheight = 2.0\n\n[sub_resource type=\"SphereMesh\" id=\"SphereMesh_foliage\"]\nradius = 1.0\nheight = 2.0\n\n[sub_resource type=\"CylinderShape3D\" id=\"CylinderShape3D_tree\"]\nheight = 2.0\nradius = 0.5\n\n[node name=\"Tree\" type=\"Node3D\"]\n\n[node name=\"Trunk\" type=\"MeshInstance3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)\nmesh = SubResource(\"CylinderMesh_trunk\")\n\n[node name=\"Foliage\" type=\"MeshInstance3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)\nmesh = SubResource(\"SphereMesh_foliage\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\".\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"StaticBody3D\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)\nshape = SubResource(\"CylinderShape3D_tree\")\n"
+      },
+      {
+       "percorso": "bridge.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[sub_resource type=\"BoxMesh\" id=\"BoxMesh_plank\"]\nsize = Vector3(3, 0.4, 6)\n\n[sub_resource type=\"BoxShape3D\" id=\"BoxShape3D_bridge\"]\nsize = Vector3(3, 0.4, 6)\n\n[node name=\"BridgeModel\" type=\"Node3D\"]\n\n[node name=\"Mesh\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"BoxMesh_plank\")\n\n[node name=\"StaticBody3D\" type=\"StaticBody3D\" parent=\".\"]\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\"StaticBody3D\"]\nshape = SubResource(\"BoxShape3D_bridge\")\n"
+      },
+      {
+       "percorso": "player.tscn",
+       "contenuto": "[gd_scene format=3]\n\n[ext_resource type=\"Script\" path=\"res://player.gd\" id=\"1_player\"]\n\n[sub_resource type=\"CapsuleShape3D\" id=\"CapsuleShape3D_player\"]\nradius = 0.4\nheight = 1.8\n\n[sub_resource type=\"CapsuleMesh\" id=\"CapsuleMesh_player\"]\nradius = 0.4\nheight = 1.8\n\n[sub_resource type=\"Animation\" id=\"Animation_idle\"]\nresource_name = \"idle\"\nlength = 1.0\nloop_mode = 1\n\n[sub_resource type=\"Animation\" id=\"Animation_walk\"]\nresource_name = \"walk\"\nlength = 1.0\nloop_mode = 1\n\n[sub_resource type=\"Animation\" id=\"Animation_run\"]\nresource_name = \"run\"\nlength = 1.0\nloop_mode = 1\n\n[sub_resource type=\"Animation\" id=\"Animation_jump\"]\nresource_name = \"jump\"\nlength = 1.0\n\n[sub_resource type=\"Animation\" id=\"Animation_fall\"]\nresource_name = \"fall\"\nlength = 1.0\n\n[sub_resource type=\"AnimationLibrary\" id=\"AnimationLibrary_player\"]\n_data = {\n\"fall\": SubResource(\"Animation_fall\"),\n\"idle\": SubResource(\"Animation_idle\"),\n\"jump\": SubResource(\"Animation_jump\"),\n\"run\": SubResource(\"Animation_run\"),\n\"walk\": SubResource(\"Animation_walk\")\n}\n\n[sub_resource type=\"AnimationNodeAnimation\" id=\"AnimationNodeAnimation_idle\"]\nanimation = &\"idle\"\n\n[sub_resource type=\"AnimationNodeAnimation\" id=\"AnimationNodeAnimation_walk\"]\nanimation = &\"walk\"\n\n[sub_resource type=\"AnimationNodeAnimation\" id=\"AnimationNodeAnimation_run\"]\nanimation = &\"run\"\n\n[sub_resource type=\"AnimationNodeBlendSpace1D\" id=\"AnimationNodeBlendSpace1D_ground\"]\nmax_space = 8.0\nblend_point_0/node = SubResource(\"AnimationNodeAnimation_idle\")\nblend_point_0/pos = 0.0\nblend_point_1/node = SubResource(\"AnimationNodeAnimation_walk\")\nblend_point_1/pos = 5.0\nblend_point_2/node = SubResource(\"AnimationNodeAnimation_run\")\nblend_point_2/pos = 8.0\n\n[sub_resource type=\"AnimationNodeAnimation\" id=\"AnimationNodeAnimation_jump\"]\nanimation = &\"jump\"\n\n[sub_resource type=\"AnimationNodeAnimation\" id=\"AnimationNodeAnimation_fall\"]\nanimation = &\"fall\"\n\n[sub_resource type=\"AnimationNodeStateMachineTransition\" id=\"AnimationNodeStateMachineTransition_start\"]\nadvance_mode = 2\n\n[sub_resource type=\"AnimationNodeStateMachineTransition\" id=\"AnimationNodeStateMachineTransition_ground_jump\"]\n\n[sub_resource type=\"AnimationNodeStateMachineTransition\" id=\"AnimationNodeStateMachineTransition_jump_fall\"]\n\n[sub_resource type=\"AnimationNodeStateMachineTransition\" id=\"AnimationNodeStateMachineTransition_fall_ground\"]\n\n[sub_resource type=\"AnimationNodeStateMachineTransition\" id=\"AnimationNodeStateMachineTransition_ground_fall\"]\n\n[sub_resource type=\"AnimationNodeStateMachine\" id=\"AnimationNodeStateMachine_tree\"]\nstates/Fall/node = SubResource(\"AnimationNodeAnimation_fall\")\nstates/Fall/position = Vector2(550, 150)\nstates/Ground/node = SubResource(\"AnimationNodeBlendSpace1D_ground\")\nstates/Ground/position = Vector2(350, 100)\nstates/Jump/node = SubResource(\"AnimationNodeAnimation_jump\")\nstates/Jump/position = Vector2(550, 50)\ntransitions = [\"Start\", \"Ground\", SubResource(\"AnimationNodeStateMachineTransition_start\"), \"Ground\", \"Jump\", SubResource(\"AnimationNodeStateMachineTransition_ground_jump\"), \"Jump\", \"Fall\", SubResource(\"AnimationNodeStateMachineTransition_jump_fall\"), \"Fall\", \"Ground\", SubResource(\"AnimationNodeStateMachineTransition_fall_ground\"), \"Ground\", \"Fall\", SubResource(\"AnimationNodeStateMachineTransition_ground_fall\")]\n\n[node name=\"Player\" type=\"CharacterBody3D\"]\nscript = ExtResource(\"1_player\")\n\n[node name=\"CollisionShape3D\" type=\"CollisionShape3D\" parent=\".\"]\nshape = SubResource(\"CapsuleShape3D_player\")\n\n[node name=\"MeshInstance3D\" type=\"MeshInstance3D\" parent=\".\"]\nmesh = SubResource(\"CapsuleMesh_player\")\n\n[node name=\"SpringArm3D\" type=\"SpringArm3D\" parent=\".\"]\ntransform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)\nspring_length = 4.0\nmargin = 0.2\n\n[node name=\"Camera3D\" type=\"Camera3D\" parent=\"SpringArm3D\"]\n\n[node name=\"AnimationPlayer\" type=\"AnimationPlayer\" parent=\".\"]\nlibraries = {\n\"\": SubResource(\"AnimationLibrary_player\")\n}\n\n[node name=\"AnimationTree\" type=\"AnimationTree\" parent=\".\"]\ntree_root = SubResource(\"AnimationNodeStateMachine_tree\")\nanim_player = NodePath(\"../AnimationPlayer\")\n"
+      },
+      {
        "percorso": "crystal_pickup.gd",
        "contenuto": "extends Area3D\n\nsignal collected\n\n\nfunc _ready() -> void:\n\tbody_entered.connect(_on_body_entered)\n\n\nfunc _on_body_entered(body: Node3D) -> void:\n\tif body is CharacterBody3D:\n\t\tcollected.emit()\n\t\tqueue_free()\n"
       },
@@ -76,7 +88,7 @@
       },
       {
        "percorso": "main.gd",
-       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n@export var camera_speed: float = 3.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\n@onready var camera_overview: Camera3D = $CameraOverview\n@onready var camera_west: Camera3D = $CameraWest\n@onready var camera_east: Camera3D = $CameraEast\n@onready var crystal_label: Label = $CrystalLabel\n@onready var crystal: MeshInstance3D = $BlockEast/BlockEastTop/Crystal\n@onready var dungeon_grid: GridMap = $DungeonGrid\n@onready var player: CharacterBody3D = $Player\n@onready var passage_gate: StaticBody3D = $PassageGate\n@onready var pressure_plate: Area3D = $PressurePlate\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\nvar cameras: Array[Camera3D] = []\nvar active_camera_index: int = 0\nvar is_passage_open: bool = false\n\n\nfunc _ready() -> void:\n\tvar player_camera: Camera3D = $Player/SpringArm3D/Camera3D\n\tcameras = [player_camera, camera_overview, camera_west, camera_east]\n\n\tif cameras.size() > 0:\n\t\tcameras[0].make_current()\n\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\t\n\tif dungeon_grid != null:\n\t\tfor x in range(-1, 2):\n\t\t\tfor z in range(-1, 2):\n\t\t\t\tdungeon_grid.set_cell_item(Vector3i(x, -2, z), 0)\n\n\tif pressure_plate != null:\n\t\tpressure_plate.activated.connect(_on_pressure_plate_activated)\n\t\tpressure_plate.deactivated.connect(_on_pressure_plate_deactivated)\n\n\nfunc _on_pressure_plate_activated() -> void:\n\tis_passage_open = true\n\tif passage_gate != null:\n\t\tpassage_gate.visible = false\n\t\tvar col: CollisionShape3D = passage_gate.get_node_or_null(\"CollisionShape3D\")\n\t\tif col != null:\n\t\t\tcol.disabled = true\n\n\nfunc _on_pressure_plate_deactivated() -> void:\n\tis_passage_open = false\n\tif passage_gate != null:\n\t\tpassage_gate.visible = true\n\t\tvar col: CollisionShape3D = passage_gate.get_node_or_null(\"CollisionShape3D\")\n\t\tif col != null:\n\t\t\tcol.disabled = false\n\n\nfunc get_dungeon_cell_item(coords: Vector3i) -> int:\n\tif dungeon_grid == null:\n\t\treturn GridMap.INVALID_CELL_ITEM\n\treturn dungeon_grid.get_cell_item(coords)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\tvar bridge_csg_pos: Vector3 = $BridgeCSG.global_position\n\treturn [top_pos, bridge_pos, east_top_pos, bridge_csg_pos]\n\n\nfunc check_surface_supports(points: Array[Vector3]) -> bool:\n\tif points.is_empty():\n\t\treturn false\n\tvar cave: CSGCombiner3D = $Cave\n\tvar bridge: CSGBox3D = $BridgeCSG\n\t\n\tfor p in points:\n\t\tvar supported: bool = false\n\t\tif bridge != null and bridge.use_collision and p.z >= -7.0 and p.z <= -1.0:\n\t\t\tsupported = true\n\t\telif cave != null and cave.use_collision and p.z >= -16.0 and p.z <= -8.0:\n\t\t\tsupported = true\n\t\telif dungeon_grid != null:\n\t\t\tvar cell: Vector3i = Vector3i(floori(p.x / 2.0), floori(p.y / 2.0), floori(p.z / 2.0))\n\t\t\tif dungeon_grid.get_cell_item(cell) != GridMap.INVALID_CELL_ITEM:\n\t\t\tsupported = true\n\t\tif not supported:\n\t\t\treturn false\n\treturn true\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret != null and target != null:\n\t\tvar direction: Vector3 = target.global_position - turret.global_position\n\t\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\t\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n\n\tif camera_overview != null:\n\t\tcamera_overview.position.x += camera_speed * delta\n\n\tif Input.is_action_just_pressed(\"change_atmosphere\"):\n\t\t_cycle_atmosphere()\n\t\t_cycle_camera()\n\n\t_update_crystal_label_position()\n\n\nfunc _cycle_camera() -> void:\n\tif cameras.is_empty():\n\t\treturn\n\tactive_camera_index = (active_camera_index + 1) % cameras.size()\n\tcameras[active_camera_index].make_current()\n\n\nfunc _update_crystal_label_position() -> void:\n\tvar current_cam: Camera3D = get_viewport().get_camera_3d()\n\tif current_cam == null or crystal == null or crystal_label == null:\n\t\treturn\n\n\tif not current_cam.is_position_in_frustum(crystal.global_position):\n\t\tcrystal_label.visible = false\n\telse:\n\t\tcrystal_label.visible = true\n\t\tvar screen_pos: Vector2 = current_cam.unproject_position(crystal.global_position)\n\t\tcrystal_label.position = screen_pos + Vector2(-25.0, -30.0)\n\n\nfunc _cycle_atmosphere() -> void:\n\tmatch current_atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tcurrent_atmosphere = Atmosphere.SUNSET\n\t\tAtmosphere.SUNSET:\n\t\t\tcurrent_atmosphere = Atmosphere.NIGHT\n\t\tAtmosphere.NIGHT:\n\t\t\tcurrent_atmosphere = Atmosphere.DAY\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc _apply_atmosphere(atmosphere: Atmosphere) -> void:\n\tif sun_light == null or lantern_light == null:\n\t\treturn\n\n\tmatch atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tsun_light.visible = true\n\t\tsun_light.light_color = Color(1.0, 0.95, 0.8)\n\t\tsun_light.light_energy = 1.2\n\t\tsun_light.rotation_degrees = Vector3(-45.0, -30.0, 0.0)\n\t\tlantern_light.visible = false\n\t\tif world_environment != null and world_environment.environment != null:\n\t\t\tworld_environment.environment.fog_enabled = false\n\t\tAtmosphere.SUNSET:\n\t\tsun_light.visible = true\n\t\tsun_light.light_color = Color(1.0, 0.5, 0.2)\n\t\tsun_light.light_energy = 0.8\n\t\tsun_light.rotation_degrees = Vector3(-10.0, -60.0, 0.0)\n\t\tlantern_light.visible = true\n\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\tlantern_light.light_energy = 1.0\n\t\tif world_environment != null and world_environment.environment != null:\n\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\tworld_environment.environment.fog_light_color = Color(0.9, 0.4, 0.2)\n\t\t\tworld_environment.environment.fog_density = 0.02\n\t\tAtmosphere.NIGHT:\n\t\tsun_light.visible = false\n\t\tlantern_light.visible = true\n\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\tlantern_light.light_energy = 2.0\n\t\tif world_environment != null and world_environment.environment != null:\n\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\tworld_environment.environment.fog_light_color = Color(0.05, 0.05, 0.15)\n\t\t\tworld_environment.environment.fog_density = 0.03\n"
+       "contenuto": "extends Node3D\n\n@export var rotation_speed: float = 2.0\n@export var camera_speed: float = 3.0\n\n@onready var sun_light: DirectionalLight3D = $SunLight\n@onready var lantern_light: OmniLight3D = $LanternLight\n@onready var world_environment: WorldEnvironment = $WorldEnvironment\n\n@onready var camera_overview: Camera3D = $CameraOverview\n@onready var camera_west: Camera3D = $CameraWest\n@onready var camera_east: Camera3D = $CameraEast\n@onready var crystal_label: Label = $CrystalLabel\n@onready var crystal: MeshInstance3D = $BlockEast/BlockEastTop/Crystal\n@onready var dungeon_grid: GridMap = $DungeonGrid\n@onready var player: CharacterBody3D = $Player\n@onready var passage_gate: StaticBody3D = $PassageGate\n@onready var pressure_plate: Area3D = $PressurePlate\n\nenum Atmosphere { DAY, SUNSET, NIGHT }\nvar current_atmosphere: Atmosphere = Atmosphere.DAY\n\nvar cameras: Array[Camera3D] = []\nvar active_camera_index: int = 0\nvar is_passage_open: bool = false\n\n\nfunc _ready() -> void:\n\tvar player_camera: Camera3D = $Player/SpringArm3D/Camera3D\n\tcameras = [player_camera, camera_overview, camera_west, camera_east]\n\n\tif cameras.size() > 0:\n\t\tcameras[0].make_current()\n\n\tvar block_top: Node3D = $BlockBase/BlockTop\n\tprint(\"Posizione globale BlockTop: \", block_top.global_position)\n\t_apply_atmosphere(current_atmosphere)\n\t\n\tif dungeon_grid != null:\n\t\tfor x in range(-1, 2):\n\t\t\tfor z in range(-1, 2):\n\t\t\t\tdungeon_grid.set_cell_item(Vector3i(x, -2, z), 0)\n\n\tif pressure_plate != null:\n\t\tpressure_plate.activated.connect(_on_pressure_plate_activated)\n\t\tpressure_plate.deactivated.connect(_on_pressure_plate_deactivated)\n\n\nfunc _on_pressure_plate_activated() -> void:\n\tis_passage_open = true\n\tif passage_gate != null:\n\t\tpassage_gate.visible = false\n\t\tvar col: CollisionShape3D = passage_gate.get_node_or_null(\"CollisionShape3D\")\n\t\tif col != null:\n\t\t\tcol.disabled = true\n\n\nfunc _on_pressure_plate_deactivated() -> void:\n\tis_passage_open = false\n\tif passage_gate != null:\n\t\tpassage_gate.visible = true\n\t\tvar col: CollisionShape3D = passage_gate.get_node_or_null(\"CollisionShape3D\")\n\t\tif col != null:\n\t\t\tcol.disabled = false\n\n\nfunc get_dungeon_cell_item(coords: Vector3i) -> int:\n\tif dungeon_grid == null:\n\t\treturn GridMap.INVALID_CELL_ITEM\n\treturn dungeon_grid.get_cell_item(coords)\n\n\nfunc get_top_block_positions() -> Array[Vector3]:\n\tvar top_pos: Vector3 = $BlockBase/BlockTop.global_position\n\tvar bridge_pos: Vector3 = $BlockWest/BlockWestBridge.global_position\n\tvar east_top_pos: Vector3 = $BlockEast/BlockEastTop.global_position\n\tvar bridge_csg_pos: Vector3 = $BridgeCSG.global_position\n\treturn [top_pos, bridge_pos, east_top_pos, bridge_csg_pos]\n\n\nfunc check_surface_supports(points: Array[Vector3]) -> bool:\n\tif points.is_empty():\n\t\treturn false\n\tvar cave: CSGCombiner3D = $Cave\n\tvar bridge: CSGBox3D = $BridgeCSG\n\t\n\tfor p in points:\n\t\tvar supported: bool = false\n\t\tif bridge != null and bridge.use_collision and p.z >= -7.0 and p.z <= -1.0:\n\t\t\tsupported = true\n\t\telif cave != null and cave.use_collision and p.z >= -16.0 and p.z <= -8.0:\n\t\t\tsupported = true\n\t\telif dungeon_grid != null:\n\t\t\tvar cell: Vector3i = Vector3i(floori(p.x / 2.0), floori(p.y / 2.0), floori(p.z / 2.0))\n\t\t\tif dungeon_grid.get_cell_item(cell) != GridMap.INVALID_CELL_ITEM:\n\t\t\t\tsupported = true\n\t\tif not supported:\n\t\t\treturn false\n\treturn true\n\n\nfunc _process(delta: float) -> void:\n\tvar turret: Node3D = $Turret\n\tvar target: Node3D = $BlockEast/BlockEastTop\n\tif turret != null and target != null:\n\t\tvar direction: Vector3 = target.global_position - turret.global_position\n\t\tvar target_angle: float = atan2(-direction.x, -direction.z)\n\t\tturret.rotation.y = rotate_toward(turret.rotation.y, target_angle, rotation_speed * delta)\n\n\tif camera_overview != null:\n\t\tcamera_overview.position.x += camera_speed * delta\n\n\tif Input.is_action_just_pressed(\"change_atmosphere\"):\n\t\t_cycle_atmosphere()\n\t\t_cycle_camera()\n\n\t_update_crystal_label_position()\n\n\nfunc _cycle_camera() -> void:\n\tif cameras.is_empty():\n\t\treturn\n\tactive_camera_index = (active_camera_index + 1) % cameras.size()\n\tcameras[active_camera_index].make_current()\n\n\nfunc _update_crystal_label_position() -> void:\n\tvar current_cam: Camera3D = get_viewport().get_camera_3d()\n\tif current_cam == null or crystal == null or crystal_label == null:\n\t\treturn\n\n\tif not current_cam.is_position_in_frustum(crystal.global_position):\n\t\tcrystal_label.visible = false\n\telse:\n\t\tcrystal_label.visible = true\n\t\tvar screen_pos: Vector2 = current_cam.unproject_position(crystal.global_position)\n\t\tcrystal_label.position = screen_pos + Vector2(-25.0, -30.0)\n\n\nfunc _cycle_atmosphere() -> void:\n\tmatch current_atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tcurrent_atmosphere = Atmosphere.SUNSET\n\t\tAtmosphere.SUNSET:\n\t\t\tcurrent_atmosphere = Atmosphere.NIGHT\n\t\tAtmosphere.NIGHT:\n\t\t\tcurrent_atmosphere = Atmosphere.DAY\n\t_apply_atmosphere(current_atmosphere)\n\n\nfunc _apply_atmosphere(atmosphere: Atmosphere) -> void:\n\tif sun_light == null or lantern_light == null:\n\t\treturn\n\n\tmatch atmosphere:\n\t\tAtmosphere.DAY:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.95, 0.8)\n\t\t\tsun_light.light_energy = 1.2\n\t\t\tsun_light.rotation_degrees = Vector3(-45.0, -30.0, 0.0)\n\t\t\tlantern_light.visible = false\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = false\n\t\tAtmosphere.SUNSET:\n\t\t\tsun_light.visible = true\n\t\t\tsun_light.light_color = Color(1.0, 0.5, 0.2)\n\t\t\tsun_light.light_energy = 0.8\n\t\t\tsun_light.rotation_degrees = Vector3(-10.0, -60.0, 0.0)\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 1.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.9, 0.4, 0.2)\n\t\t\t\tworld_environment.environment.fog_density = 0.02\n\t\tAtmosphere.NIGHT:\n\t\t\tsun_light.visible = false\n\t\t\tlantern_light.visible = true\n\t\t\tlantern_light.light_color = Color(1.0, 0.7, 0.3)\n\t\t\tlantern_light.light_energy = 2.0\n\t\t\tif world_environment != null and world_environment.environment != null:\n\t\t\t\tworld_environment.environment.fog_enabled = true\n\t\t\t\tworld_environment.environment.fog_light_color = Color(0.05, 0.05, 0.15)\n\t\t\t\tworld_environment.environment.fog_density = 0.03\n"
       },
       {
        "percorso": "main.tscn",
@@ -84,9 +96,80 @@
       }
      ],
      "progetto": {
-      "nome": "",
-      "scenaPrincipale": "",
-      "azioni": [],
+      "nome": "L'isola",
+      "scenaPrincipale": "res://main.tscn",
+      "azioni": [
+       {
+        "nome": "move_left",
+        "tasti": [
+         "A",
+         "Left"
+        ]
+       },
+       {
+        "nome": "move_right",
+        "tasti": [
+         "D",
+         "Right"
+        ]
+       },
+       {
+        "nome": "move_forward",
+        "tasti": [
+         "W",
+         "Up"
+        ]
+       },
+       {
+        "nome": "move_back",
+        "tasti": [
+         "S",
+         "Down"
+        ]
+       },
+       {
+        "nome": "jump",
+        "tasti": [
+         "Space"
+        ]
+       },
+       {
+        "nome": "run",
+        "tasti": [
+         "Shift"
+        ]
+       },
+       {
+        "nome": "change_atmosphere",
+        "tasti": [
+         "C"
+        ]
+       },
+       {
+        "nome": "look_left",
+        "tasti": [
+         "J"
+        ]
+       },
+       {
+        "nome": "look_right",
+        "tasti": [
+         "L"
+        ]
+       },
+       {
+        "nome": "look_up",
+        "tasti": [
+         "I"
+        ]
+       },
+       {
+        "nome": "look_down",
+        "tasti": [
+         "K"
+        ]
+       }
+      ],
       "autoload": [],
       "impostazioni": []
      },
@@ -96,13 +179,14 @@
     }
    },
    "genere": "obiettivo",
-   "correzioni": 0,
+   "correzioni": 1,
    "semplificato": false,
    "problemi": [
     "i file della soluzione NON funzionano in Godot 4.7 (prima di tutto vanno corretti questi errori):\n  - Il file res://main.gd deve caricarsi senza errori: Parse Error: Expected indented block after \"if\" block. (res://main.gd:95 in GDScript::reload)\nFailed to load script \"res://main.gd\" with error \"Parse error\". (modules/gdscript/gdscript_resource_format.cpp:46 in load)\nRighe citate dagli errori:\n  main.gd, riga 95: `if dungeon_grid.get_cell_item(cell) != GridMap.INVALID_CELL_ITEM:`"
    ],
    "modelli": [
-    "gemini/gemini-3.7-flash"
+    "gemini/gemini-3.7-flash",
+    "gemini/gemini-flash-lite-latest"
    ]
   },
   "test": {
@@ -183,7 +267,8 @@
  "avvisi": [],
  "modelli": [
   "gemini/gemini-3.6-flash",
-  "gemini/gemini-3.7-flash"
+  "gemini/gemini-3.7-flash",
+  "gemini/gemini-flash-lite-latest"
  ],
  "teoria": {
   "titolo": "Oggetti fisici e zone in 3D",
