@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-27T13:05:58.776Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-28T08:01:28.100Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "animazioni-3d",
   "numero": "9.11",
   "titolo": "Animazioni 3D importate"
  },
- "messaggio": "Le richieste gratuite di oggi sono finite: la lezione 9.11 riprende quando si azzerano.",
- "riprende": "2026-11-28T08:00:00.775Z"
+ "messaggio": "Sta scrivendo la lezione 9.11 «Animazioni 3D importate».",
+ "riprende": null
 }
