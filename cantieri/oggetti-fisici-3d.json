@@ -191,7 +191,7 @@
    "correzioni": 2,
    "semplificato": false,
    "problemi": [
-    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - [ERRORE NELLO SCRIPT DI VERIFICA] Lo script di verifica contiene un errore: Cannot call method 'get_parent' on a previously freed instance. (res://htd/verifica_1.gd:32 in _run_tests)\nOutput di Godot:\nSCRIPT ERROR: Cannot call method 'get_parent' on a previously freed instance.\n          at: _run_tests (res://htd/verifica_1.gd:32)\nATTENZIONE: i punti segnati [ERRORE NELLO SCRIPT DI VERIFICA] sono errori nel `codice` della verifica `script_godot`, non nella soluzione: correggi quello script.\nRighe citate dagli errori:\n  script di verifica, riga 32: `var crystal_gone: bool = (crystal.get_parent() == null) or crystal.is_queued_for_deletion()`"
+    "la soluzione di riferimento NON supera le verifiche in Godot 4.7.\nControlli falliti:\n  - Camminando contro PushBox, il giocatore deve spingerla applicando un impulso fisico\nOutput di Godot:\nERROR: Can't change this state while flushing queries. Use call_deferred() or set_deferred() to change monitoring state instead.\n   at: body_set_shape_disabled (modules/godot_physics_3d/godot_physics_server_3d.cpp:540)\nERROR: Can't change this state while flushing queries. Use call_deferred() or set_deferred() to change monitoring state instead.\n   at: body_set_shape_disabled (modules/godot_physics_3d/godot_physics_server_3d.cpp:540)\nDecidi se è sbagliata la soluzione o la verifica, e correggi quella sbagliata. La consegna, le verifiche e la soluzione devono dire la stessa cosa."
    ],
    "modelli": [
     "gemini/gemini-3.7-flash",
