@@ -1,11 +1,11 @@
 {
- "aggiornato": "2026-11-28T09:23:56.522Z",
- "stato": "aspetta",
+ "aggiornato": "2026-11-28T09:35:43.008Z",
+ "stato": "lavora",
  "lezione": {
   "slug": "oggetti-fisici-3d",
   "numero": "9.12",
   "titolo": "Oggetti fisici e zone in 3D"
  },
- "messaggio": "I modelli gratuiti sono sovraccarichi: la lezione 9.12 riprende da sola appena rispondono.",
- "riprende": "2026-11-28T09:33:56.522Z"
+ "messaggio": "Sta scrivendo la lezione 9.12 «Oggetti fisici e zone in 3D».",
+ "riprende": null
 }

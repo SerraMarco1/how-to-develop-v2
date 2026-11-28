@@ -26,3 +26,5 @@
 {"quando":1795857828851,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"oggetti-fisici-3d","ok":false,"contata":true,"durataMs":4526,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795857833380,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"oggetti-fisici-3d","ok":false,"contata":true,"durataMs":3137,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
 {"quando":1795858513239,"modello":"gemini-flash-lite-latest","ruolo":"ripasso","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":7141,"tokenInput":2932,"tokenOutput":872,"ragionamento":1762}
+{"quando":1795858543028,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"oggetti-fisici-3d","ok":true,"contata":true,"durataMs":525678,"tokenInput":21347,"tokenOutput":20459,"ragionamento":23529}
+{"quando":1795859068718,"modello":"gemini-3.7-flash","ruolo":"scrittore","slug":"oggetti-fisici-3d","ok":true,"contata":true,"durataMs":497090,"tokenInput":25600,"tokenOutput":20547,"ragionamento":27348}
