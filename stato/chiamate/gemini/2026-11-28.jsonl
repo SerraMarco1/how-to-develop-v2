@@ -1,0 +1,2 @@
+{"quando":1795852895740,"modello":"gemini-flash-latest","ruolo":"scrittore","slug":"animazioni-3d","ok":false,"contata":true,"durataMs":1543,"errore":"HTTP 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."}
+{"quando":1795852897286,"modello":"gemini-3.6-flash","ruolo":"scrittore","slug":"animazioni-3d","ok":true,"contata":true,"durataMs":127383,"tokenInput":18561,"tokenOutput":10672,"ragionamento":20992}
