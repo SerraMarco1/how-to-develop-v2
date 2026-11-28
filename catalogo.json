@@ -1,6 +1,6 @@
 {
  "formato": 1,
- "aggiornato": "2026-11-28T10:18:15.981Z",
+ "aggiornato": "2026-11-28T10:19:51.045Z",
  "lezioniNelPiano": 179,
  "lezioni": [
   {
@@ -1361,6 +1361,15 @@
    "file": "lezioni/f09-3d-basi/oggetti-fisici-3d.json",
    "sha256": "3ac2bacc5fed86c4c515f224a008ec1c351021044e7d9b4178c8e8fca45cf5e5",
    "byte": 163482
+  },
+  {
+   "slug": "progetto-percorso-1",
+   "numero": "9.13",
+   "titolo": "Progetto «Percorso a ostacoli» – tappa 1: personaggio e telecamera",
+   "versione": 1,
+   "file": "lezioni/f09-3d-basi/progetto-percorso-1.json",
+   "sha256": "bc7d186e542f2cfdd529e5b8d6326813b0f9c1df3c6c8abcd3bcb17b4305290d",
+   "byte": 24845
   }
  ],
  "documentazione": {
